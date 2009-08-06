@@ -1,0 +1,56 @@
+= Cobol.tokens =
+
+An update of a Cobol.tokens file does not trigger a rebuild of grammars (tree 
+parsers). This may/will cause problems in matching. Current solution is to
+manually trigger a rebuild of the relevant files, but this is not nice...
+
+
+= Customizing the generated ANTLR tree parser =
+
+Due to a bug in ANTLR I can't use the generated tree parser in a composite
+grammar. This means that any actions will have to be placed either in the
+original tree parser or a copy of that one. Either way, this is not nice when
+we're evolving the grammar.
+
+Bug details: http://www.antlr.org/jira/browse/ANTLR-375;jsessionid=10155AFC751AEEF9A46B87FDBD3DA9DA?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+
+
+= Comment entries =
+
+Error on testsuite/cobol85/OBNC1M.CBL.
+
+"Comment-entry can consist of any combination of characters from the computer
+ character set.  Comment-entries can span several lines in Area B.  However,
+ they cannot be continued by using a hyphen in the indicator area.  The end of
+ comment-entry is the line before the next entry in Area A."
+
+This was obsoleted in the 1985 standard. I'm not sure whether I should bother
+with parsing this.
+
+
+= Save to srcml ? =
+
+http://www.sdml.info/projects/srcml/
+
+
+= Permutation =
+
+Syntax for: "The clauses may be written in any order."
+This needs something like a permutation symbol.
+
+Suggestions:
+
+	level dataName [redefines] !( usage | picture | value ) .
+	level dataName [redefines] %( usage | picture | value ) .
+	level dataName [redefines] @( usage | picture | value ) .
+	level dataName [redefines] ~( usage | picture | value ) .
+
+	level dataName [redefines] %%( usage | picture | value ) .
+
+
+== Mark up the tokens ==
+
+Possible syntax in grammar for water:
+
+  Ç IDENTIFICATION DIVISION . È
+  Ü IDENTIFICATION DIVISION . Ý

@@ -1,0 +1,173 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target atEnd;
+
++[ AT END DISPLAY ¥ "FOO" ]
++[ END DISPLAY ¥ "FOO" ]
+
+
+target notAtEnd;
+
++[ NOT AT END DISPLAY ¥ "FOO" ]
++[ NOT END DISPLAY ¥ "FOO" ]
+
+
+target searchStatement;
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        NEXT SENTENCE ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        NEXT SENTENCE
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES VARYING EMPLOYEE-NUMBER
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH EMPLOYEES VARYING EMPLOYEE-NUMBER
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES
+   AT END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH EMPLOYEES
+   AT END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES VARYING EMPLOYEE-NUMBER
+   AT END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH EMPLOYEES VARYING EMPLOYEE-NUMBER
+   AT END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES
+   END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH EMPLOYEES
+   END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES VARYING EMPLOYEE-NUMBER
+   END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH EMPLOYEES VARYING EMPLOYEE-NUMBER
+   END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+        DISPLAY ¥ "Really!" ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+        DISPLAY "Really!"
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+   WHEN FALSE
+        DISPLAY ¥ "Found one... not!" ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+   WHEN FALSE
+        DISPLAY "Found one... not!"
+   END-SEARCH ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+        DISPLAY "Really!"
+   WHEN FALSE
+        DISPLAY ¥ "Found one... not!" ]
+
++[ SEARCH EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+        DISPLAY "Really!"
+   WHEN FALSE
+        DISPLAY "Found one... not!"
+   END-SEARCH ]
+
++[ SEARCH ALL EMPLOYEES
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH ALL EMPLOYEES
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH ALL EMPLOYEES
+   AT END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH ALL EMPLOYEES
+   AT END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
++[ SEARCH ALL EMPLOYEES
+   END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY ¥ "Found one." ]
+
++[ SEARCH ALL EMPLOYEES
+   END
+        DISPLAY "No-one found."
+   WHEN TRUE
+        DISPLAY "Found one."
+   END-SEARCH ]
+
+-[ SEARCH ALL EMPLOYEES VARYING EMPLOYEE-NUMBER
+   WHEN TRUE
+        DISPLAY "Found one." ]

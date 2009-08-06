@@ -1,0 +1,357 @@
+// Note: If you add/remove parsers in the kg-usercode file
+// you will need to update the antlr-tokens and antlr-rules
+// files as well!
+
+// ========================================================
+// cobolWord
+// ........................................................
+
+private Parser cobolWordParser = null;
+
+public Parser cobolWord() {
+	if (cobolWordParser == null) {
+	    FutureParser future = scoped("cobolWord");
+	    cobolWordParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+	            final Token token = stream.nextToken();
+	
+	            if (token != null
+	                    && token.hasTag(SyntacticTag.CHARACTER_STRING)
+	                    && !RESERVED_WORDS.contains(token.getText().toUpperCase())
+	                    && isCobolWord(token.getText())) {
+	
+	                returnToken(token);
+	                return true;
+	
+	            } else
+	                return false;
+	        }
+	
+	        private boolean isCobolWord(String text) {
+	            /*
+	             * A word consists of 1-31 characters from the following set:
+	             * A-Z, a-z, 0-9, - (hyphen). No distinction is made between
+	             * uppercase and lowercase letters. A word may neither begin nor
+	             * end with a hyphen, must not contain space characters, and
+	             * must contain at least one letter.
+	             * 
+	             * Description from: Fujitsu Siemens, document
+	             * U41112-J-Z125-3-76.
+	             */
+	            final int len = text.length();
+	            if (len < 1 || len > 31)
+	                return false;
+	
+	            if (text.charAt(0) == '-')
+	                return false;
+	
+	            if (text.charAt(len - 1) == '-')
+	                return false;
+	
+	            boolean hasALetter = false;
+	            for (int i = 0; i < len; i++) {
+	                final char c = text.charAt(i);
+	
+	                if (c >= 'A' && c <= 'Z') {
+	                    hasALetter = true;
+	                    continue;
+	                }
+	
+	                if (c >= 'a' && c <= 'z') {
+	                    hasALetter = true;
+	                    continue;
+	                }
+	
+	                if (c >= '0' && c <= '9') {
+	                    continue;
+	                }
+	
+	                if (c == '-') {
+	                    continue;
+	                }
+	
+	                return false;
+	            }
+	
+	            return hasALetter;
+	        }
+	    });
+	}
+    return cobolWordParser;
+}
+
+// ========================================================
+// integer
+// ........................................................
+
+private Parser integerParser = null;
+
+public Parser integer() {
+	if (integerParser == null) {
+	    FutureParser future = scoped("integer");
+	    integerParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				final Token token = stream.nextToken();
+	
+				if (token != null
+						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+					if (token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
+	
+						returnToken(token);
+						return true;
+	
+					} else
+						return false;
+	
+				} else
+					return false;
+			}
+		});
+	}
+	return integerParser;
+}
+
+// ========================================================
+// decimal
+// ........................................................
+
+private Parser decimalParser = null;
+
+public Parser decimal() {
+	if (decimalParser == null) {
+	    FutureParser future = scoped("decimal");
+	    decimalParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				final Token token = stream.nextToken();
+	
+				if (token != null
+						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+					if (token.hasTag(SyntacticTag.DECIMAL_LITERAL)) {
+	
+						returnToken(token);
+						return true;
+	
+					} else
+						return false;
+	
+				} else
+					return false;
+			}
+		});
+	}
+	return decimalParser;
+}
+
+// ========================================================
+// alphanumeric
+// ........................................................
+
+private Parser alphanumericParser = null;
+
+public Parser alphanumeric() {
+	if (alphanumericParser == null) {
+	    FutureParser future = scoped("alphanumeric");
+	    alphanumericParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				final Token token = stream.nextToken();
+	
+				if (token != null
+						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+					if (token.hasTag(SyntacticTag.STRING_LITERAL)) {
+	
+						returnToken(token);
+						return true;
+	
+					} else
+						return false;
+	
+				} else
+					return false;
+			}
+		});
+	}
+	return alphanumericParser;
+}
+
+// ========================================================
+// pictureString
+// ........................................................
+
+private Parser pictureStringParser = null;
+
+public Parser pictureString() {
+	if (pictureStringParser == null) {
+	    FutureParser future = scoped("pictureString");
+	    pictureStringParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+	
+				boolean inParen = false;
+				int count = 0;
+				CompositeToken picture = new CompositeToken();
+				int lastPosition = -1;
+				while (true) {
+					final Token token = stream.nextToken();
+	
+					if (token == null) {
+						break;
+					}
+	
+					if (lastPosition >= 0
+							&& token.getStart().getPositionInFile() != lastPosition + 1) {
+						// Token is separated from rest of picture. Hence it is
+						// not part of the picture.
+						stream.pushback(token);
+						break;
+	
+					} else {
+						lastPosition = token.getEnd().getPositionInFile();
+					}
+	
+					if (!inParen && token.hasTag(SyntacticTag.SEPARATOR)
+							&& token.getText().equals("(")) {
+						picture.addToken(token);
+						inParen = true;
+						count = 0;
+						continue;
+					}
+	
+					if (inParen && token.hasTag(SyntacticTag.SEPARATOR)
+							&& token.getText().equals(")")) {
+						picture.addToken(token);
+						inParen = false;
+						count = 0;
+						continue;
+					}
+	
+					if (inParen && count == 0
+							&& token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
+						picture.addToken(token);
+						count = 1;
+						continue;
+					}
+	
+					if (!inParen
+							&& count == 0
+							&& token
+									.hasTag(SyntacticTag.CHARACTER_STRING)) {
+						// TODO Should check if text is valid in a picture.
+						picture.addToken(token);
+						count = 1;
+						continue;
+					}
+	
+					// Token not part of picture.
+					stream.pushback(token);
+					break;
+				}
+	
+				if (!inParen && picture.size() > 0) {
+					returnToken(picture.size() == 1 ? picture.getToken(0)
+							: picture);
+					return true;
+	
+				} else
+					return false;
+			}
+		});
+	}
+	return pictureStringParser;
+}
+
+// ========================================================
+// levelNumber
+// ........................................................
+
+private Parser levelNumberParser = null;
+
+public Parser levelNumber() {
+	if (levelNumberParser == null) {
+	    FutureParser future = scoped("levelNumber");
+	    levelNumberParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+	            final Token token = stream.nextToken();
+	
+	            if (token != null
+	                    && token.hasTag(SyntacticTag.CHARACTER_STRING)
+	                    && isLevelNumber(token.getText())) {
+	
+	                returnToken(token);
+	                return true;
+	
+	            } else
+	                return false;
+	        }
+	
+	        private boolean isLevelNumber(String text) {
+	            /*
+	             * The level number is a special numeric literal consisting of one
+	             * to two digits. A level number which is less than 10 may be
+	             * written either as a single digit or with a leading zero. 
+	             * 
+	             * Description from: Fujitsu Siemens, document
+	             * U41112-J-Z125-3-76.
+	             */
+	            final int len = text.length();
+	            if (len == 0 || len > 2) {
+	                return false;
+	            }
+	
+	            final char c = text.charAt(0);
+	            if (c < '0' || c > '9') {
+	                return false;
+	            }
+	
+	            if (len == 2) {
+	                final char d = text.charAt(0);
+	                if (d < '0' || d > '9') {
+	                    return false;
+	                }
+	            }
+	
+	            int val = Integer.parseInt(text);
+	
+	            return (val > 0 && val <= 49) || (val == 77);
+	        }
+	    });
+	}
+    return levelNumberParser;
+}
+
+// ========================================================
+// pseudo literal
+// ........................................................
+
+private Parser pseudoLiteralParser = null;
+
+public Parser pseudoLiteral() {
+	if (pseudoLiteralParser == null) {
+	    FutureParser future = scoped("pseudoLiteral");
+	    pseudoLiteralParser = future;
+	    future.setParser(new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				final Token token = stream.nextToken();
+	
+				if (token != null
+						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+					if (token.hasTag(SyntacticTag.PSEUDO_LITERAL)) {
+	
+						returnToken(token);
+						return true;
+	
+					} else
+						return false;
+	
+				} else
+					return false;
+			}
+		});
+	}
+	return pseudoLiteralParser;
+}
+

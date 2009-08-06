@@ -1,0 +1,71 @@
+group TreeGrammar;
+
+treegrammar(name, date, pack, rule, literal, usercode) ::= <<
+tree grammar $name$TreeParser;
+
+options {
+  tokenVocab = $name$;
+  language = Java;
+  output = none;
+}
+
+@header {
+  package $pack$;
+}
+
+$rule; separator="\n\n"$
+
+// ========================================================
+
+water
+  : ^(WATER token*)
+  ;
+
+token
+  : TOKEN
+  $literal:otherChoice(); separator="\n"$
+  ;
+
+// ========================================================
+
+$usercode$
+>>
+
+rule(name, tag, body) ::= <<
+// ========================================================
+// $name$
+// ........................................................
+
+$name$
+$if(body)$
+  : ^($tag$
+      $body$
+    )
+  ;
+$else$
+  : $tag$
+  ;
+$endif$
+>>
+
+star(body) ::= <<( $body$ )*>>
+
+plus(body) ::= <<( $body$ )+>>
+
+opt(body) ::= <<( $body$ )?>>
+
+choice(step) ::= <<
+( $first(step)$
+$rest(step):otherChoice(); separator="\n"$
+)
+>>
+
+otherChoice() ::= <<| $it$>>
+
+sequence(step) ::= <<
+( $first(step)$
+  $rest(step); separator="\n"$
+)
+>>
+
+water() ::= <<(water)?>>

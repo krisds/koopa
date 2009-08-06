@@ -1,0 +1,56 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target identifier;
+
++[ MY-FIELD ]
+
+-[ 42 ]
+-[ 42.42 ]
+-[ "TEXT" ]
+
++[ MY-FIELD OF MY-RECORD ]
++[ MY-FIELD IN MY-RECORD ]
+
++[ MY-FIELD OF MY-RECORD-1 IN MY-RECORD-2 ]
++[ MY-FIELD IN MY-RECORD-1 OF MY-RECORD-2 ]
+
++[ MY-FIELD ( 42 ) ]
++[ MY-FIELD ¥ ( 42.0 ) ]
+
++[ MY-FIELD ( MY-INDEX ) ]
+
++[ MY-FIELD ( MY-INDEX + 42 ) ]
++[ MY-FIELD ( MY-INDEX - 42 ) ]
+
++[ MY-FIELD ( MY-INDEX : 42 ) ]
++[ MY-FIELD ( MY-INDEX : MY-LENGTH ) ]
+
++[ MY-FIELD ( 42 : ) ]
++[ MY-FIELD ( MY-INDEX : ) ]
+
++[ MY-FIELD ( 1 2 3 ) ( 42 : 11 ) ]
++[ MY-FIELD ( A B C ) ( POSITION : LENGTH ) ]
++[ MY-FIELD ( A + 1 B C - 2 ) ( 42 : ) ]
+
+
++[ FUNCTION CAT ]
++[ FUNCTION CAT ( 1 : 7 ) ]
+
++[ FUNCTION CAT ( 3 ) ]
++[ FUNCTION CAT ( 3 ) ( 1 : 7 ) ]
+
++[ FUNCTION CAT ( 3 ) ]
++[ FUNCTION CAT ( 3 ) ( 1 : 7 ) ]
+
++[ FUNCTION CAT ( 3 " bottles of beer" ) ]
++[ FUNCTION CAT ( 3 " bottles of beer" ) ( 1 : 7 ) ]
+
++[ FUNCTION SUM ( 1 FUNCTION INC ( 1 ) ) ]
+
++[ FUNCTION CHAR ( IND ( 5 ) ) ]
++[ FUNCTION CHAR ( IND ( C ) ) ]
++[ FUNCTION NUMVAL ( "4738" ) ]
++[ FUNCTION MAX ( WS-TABLE ( ALL ALL ALL ) ) ]
++[ AX-2 IN AX ( CX-SUB OF CX ) ]
++[ UNQUAL-ITEM ( SUB1 OF SUBSCRIPTS OF SUBSCRIPTS-PART1 ) ]

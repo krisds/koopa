@@ -1,0 +1,163 @@
+## #############################################################################
+## This flags places where we no longer expect water.
+## -----------------------------------------------------------------------------
+
+verify water
+- workingStorageSection !copyStatement !replaceStatement !execStatement : warn "Water in the working storage section."
+
+
+## #############################################################################
+## The following rules are for statements which have been fully implemented.
+## -----------------------------------------------------------------------------
+
+verify COPY
+- !copyStatement water : warn "COPY in the water."
+- copyStatement statement : warn "COPY not in copy statement."
+- statement !execStatement !copyStatement : warn "COPY not in copy statement."
+
+verify CALL
+- !execStatement water : warn "CALL in the water."
+- callStatement statement : warn "CALL not in call statement."
+- statement !execStatement !callStatement : warn "CALL not in call statement."
+
+verify CANCEL
+- !execStatement water : warn "CANCEL in the water."
+- cancelStatement statement : warn "CANCEL not in cancel statement."
+- statement !execStatement !cancelStatement : warn "CANCEL not in cancel statement."
+
+verify ENTRY
+- !execStatement water : warn "ENTRY in the water."
+- entryStatement statement : warn "ENTRY not in entry statement."
+- statement !execStatement !entryStatement : warn "ENTRY not in entry statement."
+
+verify EVALUATE
+- !execStatement water : warn "EVALUATE in the water."
+- evaluateStatement statement : warn "EVALUATE not in evaluate statement."
+- statement !execStatement !evaluateStatement : warn "EVALUATE not in evaluate statement."
+
+verify EXEC
+- !execStatement water : warn "EXEC in the water."
+- execStatement statement : warn "EXEC not in exec statement."
+- statement !execStatement !execStatement : warn "EXEC not in exec statement."
+
+verify EXIT
+- !execStatement water : warn "EXIT in the water."
+- exitStatement statement : warn "EXIT not in exit statement."
+- statement !execStatement !exitStatement : warn "EXIT not in exit statement."
+
+verify GOBACK
+- !execStatement water : warn "GOBACK in the water."
+- gobackStatement statement : warn "GOBACK not in goback statement."
+- statement !execStatement !gobackStatement : warn "GOBACK not in goback statement."
+
+verify GO
+- !execStatement water : warn "GO in the water."
+- goToStatement statement : warn "GO not in go statement."
+- statement !execStatement !goToStatement : warn "GO not in go statement."
+
+verify IF
+- !execStatement water : warn "IF in the water."
+- ifStatement statement : warn "IF not in if statement."
+- statement !execStatement !ifStatement : warn "IF not in if statement."
+
+verify MOVE
+- !execStatement water : warn "MOVE in the water."
+- moveStatement statement : warn "MOVE not in move statement."
+- statement !execStatement !moveStatement : warn "MOVE not in move statement."
+
+verify PERFORM
+- !execStatement water : warn "PERFORM in the water."
+- performStatement statement : warn "PERFORM not in perform statement."
+- statement !execStatement !performStatement : warn "PERFORM not in perform statement."
+
+verify RETURN
+- !execStatement water : warn "RETURN in the water."
+- returnStatement statement : warn "RETURN not in return statement."
+- statement !execStatement !returnStatement : warn "RETURN not in return statement."
+
+verify SEARCH
+- !execStatement water : warn "SEARCH in the water."
+- searchStatement statement : warn "SEARCH not in search statement."
+- statement !execStatement !searchStatement : warn "SEARCH not in search statement."
+
+verify STOP
+- !execStatement water : warn "STOP in the water."
+- stopStatement statement : warn "STOP not in stop statement."
+- statement !execStatement !stopStatement : warn "STOP not in stop statement."
+
+
+## #############################################################################
+## The following rules are for statements which have only been partly
+## implemented.
+## -----------------------------------------------------------------------------
+
+verify ADD
+- !addStatement water : warn "ADD in the water."
+- addStatement statement : warn "ADD not in add statement."
+- statement !execStatement !addStatement : warn "ADD not in add statement."
+
+verify END-ADD
+- !addStatement water : warn "END-ADD in the water."
+- addStatement statement : warn "END-ADD not in add statement."
+- statement !execStatement !addStatement : warn "END-ADD not in add statement."
+
+verify COMPUTE
+- !computeStatement water : warn "COMPUTE in the water."
+- computeStatement statement : warn "COMPUTE not in compute statement."
+- statement !execStatement !computeStatement : warn "COMPUTE not in compute statement."
+
+verify END-COMPUTE
+- !computeStatement water : warn "END-COMPUTE in the water."
+- computeStatement statement : warn "END-COMPUTE not in compute statement."
+- statement !execStatement !computeStatement : warn "END-COMPUTE not in compute statement."
+
+verify DIVIDE
+- !divideStatement water : warn "DIVIDE in the water."
+- divideStatement statement : warn "DIVIDE not in divide statement."
+- statement !execStatement !divideStatement : warn "DIVIDE not in divide statement."
+
+verify END-DIVIDE
+- !divideStatement water : warn "END-DIVIDE in the water."
+- divideStatement statement : warn "END-DIVIDE not in divide statement."
+- statement !execStatement !divideStatement : warn "END-DIVIDE not in divide statement."
+
+verify MULTIPLY
+- !multiplyStatement water : warn "MULTIPLY in the water."
+- multiplyStatement statement : warn "MULTIPLY not in multiply statement."
+- statement !execStatement !multiplyStatement : warn "MULTIPLY not in multiply statement."
+
+verify END-MULTIPLY
+- !multiplyStatement water : warn "END-MULTIPLY in the water."
+- multiplyStatement statement : warn "END-MULTIPLY not in multiply statement."
+- statement !execStatement !multiplyStatement : warn "END-MULTIPLY not in multiply statement."
+
+verify STRING
+- !stringStatement water : warn "STRING in the water."
+- stringStatement statement : warn "STRING not in string statement."
+- statement !execStatement !stringStatement : warn "STRING not in string statement."
+
+verify END-STRING
+- !stringStatement water : warn "END-STRING in the water."
+- stringStatement statement : warn "END-STRING not in string statement."
+- statement !execStatement !stringStatement : warn "END-STRING not in string statement."
+
+verify SUBTRACT
+- !subtractStatement water : warn "SUBTRACT in the water."
+- subtractStatement statement : warn "SUBTRACT not in subtract statement."
+- statement !execStatement !subtractStatement : warn "SUBTRACT not in subtract statement."
+
+verify END-SUBTRACT
+- !subtractStatement water : warn "END-SUBTRACT in the water."
+- subtractStatement statement : warn "END-SUBTRACT not in subtract statement."
+- statement !execStatement !subtractStatement : warn "END-SUBTRACT not in subtract statement."
+
+verify UNSTRING
+- !unstringStatement water : warn "UNSTRING in the water."
+- unstringStatement statement : warn "UNSTRING not in unstring statement."
+- statement !execStatement !unstringStatement : warn "UNSTRING not in unstring statement."
+
+verify END-UNSTRING
+- !unstringStatement water : warn "END-UNSTRING in the water."
+- unstringStatement statement : warn "END-UNSTRING not in unstring statement."
+- statement !execStatement !unstringStatement : warn "END-UNSTRING not in unstring statement."
+

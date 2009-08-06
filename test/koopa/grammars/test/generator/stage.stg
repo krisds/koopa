@@ -1,0 +1,39 @@
+group CSS;
+
+stage(name, date, package, grammah, test) ::= <<
+package $package$;
+
+import junit.framework.TestCase;
+import koopa.parsers.Parser;
+import koopa.tokenizers.test.TestTokenizer;
+
+import org.junit.Test;
+
+public class $name$Test extends TestCase {
+
+  private static $grammah$ grammar = new $grammah$();
+
+  $test; separator="\n\n"$
+}
+>>
+
+accept(name, number, target, token, processedCount) ::= <<
+  @Test
+  public void test$name$_$number$() {
+    Parser parser = grammar.$target$();
+    assertNotNull(parser);
+    TestTokenizer tokenizer = new TestTokenizer($token; separator=", ", wrap="\n      "$);
+    assertTrue(parser.accepts(tokenizer));
+    assertEquals($processedCount$, tokenizer.getNumberOfProcessedTokens());
+  }
+>>
+
+reject(name, number, target, token) ::= <<
+  @Test
+  public void test$name$_$number$() {
+    Parser parser = grammar.$target$();
+    assertNotNull(parser);
+    TestTokenizer tokenizer = new TestTokenizer($token; separator=", ", wrap="\n      "$);
+    assertFalse(parser.accepts(tokenizer));
+  }
+>>

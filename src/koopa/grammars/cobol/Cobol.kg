@@ -1,0 +1,1093 @@
+## #############################################################################
+## Top level definitions.
+## -----------------------------------------------------------------------------
+
+# Compilation group.
+def compilationGroup =
+	( compilationUnit )*
+end
+
+# Copybook. This is just a guess at the likely suspect(s).
+def copybook =
+    ( copybookHoldingData
+    | copybookHoldingBehaviour
+    )
+end
+
+def copybookHoldingData =
+    ( dataDescriptionEntry
+    | copyStatement
+    | replaceStatement
+    | execStatement [.]
+    )+
+end
+
+def copybookHoldingBehaviour =
+    (sentence)*
+    (paragraph)*
+    (section)*
+end
+
+## #############################################################################
+## Compilation unit.
+## -----------------------------------------------------------------------------
+
+# Compilation unit.
+def compilationUnit =
+	identificationDivision
+ 	[environmentDivision]
+ 	[dataDivision]
+	[procedureDivision
+	  (compilationUnit)*
+	]
+	[END PROGRAM programName .]
+end
+
+## #############################################################################
+## IDENTIFICATION DIVISION .
+## -----------------------------------------------------------------------------
+
+def identificationDivision =
+	IDENTIFICATION DIVISION .
+	PROGRAM-ID .
+	programName
+	[ [IS]
+	  ( INITIAL [COMMON]
+	  | COMMON [INITIAL] 
+	  )
+	  [PROGRAM]
+	]
+	[.]
+	[--> divisionStart]
+end
+
+## #############################################################################
+## ENVIRONMENT DIVISION .
+## -----------------------------------------------------------------------------
+
+def environmentDivision =
+	ENVIRONMENT DIVISION .
+	[--> divisionStart]
+end
+
+## #############################################################################
+## DATA DIVISION .
+## -----------------------------------------------------------------------------
+
+def dataDivision =
+	DATA DIVISION .
+	[fileSection]
+	[workingStorageSection]
+	[linkageSection]
+	[communicationSection]
+	[reportSection]
+#	[--> divisionStart]
+end
+
+def fileSection =
+	FILE SECTION .
+    [--> (dataSectionStart | divisionStart)]
+end
+
+def workingStorageSection =
+	WORKING-STORAGE SECTION .
+    ( dataDescriptionEntry
+    | copyStatement
+    | replaceStatement
+    | execStatement [.]
+    )*
+#    [--> (dataSectionStart | divisionStart)]
+end
+
+def linkageSection =
+	LINKAGE SECTION .
+    [--> (dataSectionStart | divisionStart)]
+end
+
+def communicationSection =
+	COMMUNICATION SECTION .
+    [--> (dataSectionStart | divisionStart)]
+end
+
+def reportSection =
+	REPORT SECTION .
+    [--> (dataSectionStart | divisionStart)]
+end
+
+def dataDescriptionEntry =
+    ( dataDescriptionEntry_format1
+    | dataDescriptionEntry_format2
+    | dataDescriptionEntry_format3
+    )
+end
+
+def dataDescriptionEntry_format1 =
+    levelNumber [FILLER | dataName]
+    [redefines]
+   !( blankWhenZero
+    | external
+    | global
+    | justified
+    | occurs
+    | picture
+    | sign
+    | sync
+    | usage
+    | value
+    )
+    (--> .)  # TODO Handle skipped.
+    .
+end
+
+def dataDescriptionEntry_format2 =
+    66 dataName
+    RENAMES dataName (qualifier)*
+    [(THROUGH | THRU) dataName (qualifier)*]
+    . 
+end
+
+def dataDescriptionEntry_format3 =
+    88 cobolWord 
+    ( VALUE [IS]
+    | VALUES [ARE]
+    )
+    ( ( literal | figurativeConstant )
+      [(THROUGH | THRU) ( literal | figurativeConstant )]
+    )+
+    .
+end
+
+def redefines =
+    REDEFINES cobolWord
+end
+
+def blankWhenZero =
+    BLANK [WHEN] (ZERO |  ZEROS  |  ZEROES )
+end
+
+def external =
+    [IS] EXTERNAL
+end
+
+def global =
+    [IS] GLOBAL
+end
+
+def justified =
+    (JUSTIFIED | JUST) [RIGHT]
+end
+
+def occurs =
+    # TODO The "TO numeric" part should only occur when "DEPENDING ON" occurs.
+    OCCURS integer [TO integer] [TIMES]
+    [ DEPENDING [ON] dataName (qualifier)* ]
+    ((ASCENDING | DESCENDING) [KEY] [IS] (dataName)+)* 
+    [INDEXED [BY] (indexName)+]
+end
+
+def picture =
+    ( PIC | PICTURE ) [IS] pictureString
+end
+
+def sign =
+    [SIGN [IS]] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
+end
+
+def sync =
+    (SYNCHRONIZED | SYNC) [LEFT | RIGHT]
+end
+
+def usage =
+    [USAGE [IS]] (
+      BINARY
+    | COMPUTATIONAL
+    | COMP
+    | DISPLAY
+    | INDEX
+    | PACKED-DECIMAL
+    | COMPUTATIONAL-1 
+    | COMP-1 
+    | COMPUTATIONAL-2 
+    | COMP-2 
+    | COMPUTATIONAL-3 
+    | COMP-3 
+    | COMPUTATIONAL-5 
+    | COMP-5
+    | POINTER
+    )
+end
+
+def value =
+    VALUE [IS] (figurativeConstant | literal)
+end
+
+## #############################################################################
+## PROCEDURE DIVISION .
+## -----------------------------------------------------------------------------
+
+# I have seen descriptions of the format for procedure divisions where if you
+# use sections everything must be inside a section. That is, there can be no
+# leading statements or paragraphs. This however conflicts with actual code I
+# have seen. I therefore do not enforce this rule and accept leading statements
+# and paragraphs.
+
+def procedureDivision =
+	PROCEDURE DIVISION [usingPhrase] .
+	[declaratives]
+    (sentence)*
+    (paragraph)*
+    (section)*
+#	[--> divisionStart]
+end
+
+def usingPhrase =
+    USING (dataName)+
+end
+
+def declaratives =
+    DECLARATIVES .
+    (declarativeSection)+
+    END DECLARATIVES .
+end
+
+def declarativeSection =
+    sectionName SECTION .
+    useStatement
+    (paragraph)*
+end
+
+def useStatement =
+    USE (--> .) .
+end
+
+def section =
+    sectionName SECTION [segmentNumber] .
+    (sentence)*
+    (paragraph)*
+end
+
+def paragraph =
+    paragraphName .
+    (sentence)*
+end
+
+def sentence =
+    ( statement (statement | continuationOfStatement)* [.]
+    | copyStatement
+    | replaceStatement
+    | .
+    )
+end
+
+def statement =
+    ( addStatement
+    | callStatement
+    | cancelStatement
+    | computeStatement
+    | divideStatement
+    | entryStatement
+    | evaluateStatement
+    | execStatement
+    | exitStatement
+    | gobackStatement
+    | goToStatement
+    | ifStatement
+    | moveStatement
+    | multiplyStatement
+    | performStatement
+    | returnStatement
+    | searchStatement
+    | stopStatement
+    | stringStatement
+    | subtractStatement
+    | unstringStatement
+    
+    | verb
+      [--> ( . | endOfStatement )]
+    )
+end
+
+def continuationOfStatement (Token t) =
+    ( t=eventPhrase 
+      { warn(t, "Nested statement found out of line."); }
+      statement
+
+    | t=endOfStatementMarker
+      { warn(t, "Loose end of statement."); }
+    )
+end
+
+def eventPhrase (Token t) returns t =
+    [NOT] [ON | AT]
+    ( t=EXCEPTION
+    | t=SIZE ERROR
+    | t=OVERFLOW
+    | t=INVALID [KEY]
+    | t=END
+    | t=END-OF-PAGE
+    | t=EOP
+    )
+end
+
+def endOfStatementMarker (Token t) returns t =
+    ( t=END-ACCEPT
+    | t=END-ADD
+    | t=END-CALL
+    | t=END-COMPUTE
+    | t=END-DELETE
+    | t=END-DISPLAY
+    | t=END-DIVIDE
+    | t=END-EVALUATE
+    | t=END-EXEC
+    | t=END-IF
+    | t=END-MULTIPLY
+    | t=END-PERFORM
+    | t=END-READ
+    | t=END-RETURN
+    | t=END-REWRITE
+    | t=END-SEARCH
+    | t=END-START
+    | t=END-STRING
+    | t=END-SUBTRACT
+    | t=END-UNSTRING
+    | t=END-WRITE
+    )
+end
+
+def verb =
+    ( CALL
+    | CANCEL
+    | ENTRY
+    | EVALUATE
+    | EXEC
+    | EXIT
+    | GOBACK
+    | GO
+    | IF
+    | MOVE
+    | PERFORM
+    | RETURN
+    | SEARCH
+    | STOP
+
+    # Verbs for statements which have a skeletal implementation:
+    | ADD
+    | COMPUTE
+    | DIVIDE
+    | MULTIPLY
+    | STRING
+    | SUBTRACT
+    | UNSTRING
+
+    # Verbs for statements which remain to be implemented:
+    | ACCEPT
+    | ALTER
+    | CLOSE
+    | CONTINUE
+    | DELETE
+    | DISPLAY
+    | INITIALIZE
+    | INSPECT
+    | MERGE
+    | OPEN
+    | READ
+    | RELEASE
+    | REWRITE
+    | SET
+    | SORT
+    | START
+    | USE
+    | WRITE
+    
+    # Following are verbs found in testsuite, not in documentation.
+    | ENABLE
+    | DISABLE
+    | SEND
+    | RECEIVE
+    | PURGE
+    | INITIATE
+    | GENERATE
+    | TERMINATE
+    )
+end
+
+## #############################################################################
+## ADD statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def addStatement =
+    ADD
+    ( -->
+      ( [NOT] [ON] SIZE ERROR
+      | END-ADD
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] SIZE ERROR (statement)+]
+    [NOT [ON] SIZE ERROR (statement)+]
+    [END-ADD]
+end
+
+## #############################################################################
+## CALL statement.
+## -----------------------------------------------------------------------------
+
+def callStatement =
+    CALL (identifier | alphanumeric)
+    [USING (identifier)*
+      ( [BY] REFERENCE (identifier)+
+      | [BY] CONTENT (identifier)+
+      )*
+    ]
+    [ # Call statement format 1.
+      onOverflow
+    
+    | # Call statement format 2.
+      onException
+      [notOnException]
+
+    | # Call statement format 2.
+      notOnException
+    ]
+    [END-CALL]
+end
+
+def onOverflow =
+    [ON] OVERFLOW (statement)+
+end
+
+def onException =
+    [ON] EXCEPTION (statement)+
+end
+
+def notOnException =
+    NOT [ON] EXCEPTION (statement)+
+end
+
+## #############################################################################
+## CANCEL statement.
+## -----------------------------------------------------------------------------
+
+def cancelStatement =
+    CANCEL (identifier | alphanumeric)+
+end
+
+## #############################################################################
+## COMPUTE statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def computeStatement =
+    COMPUTE
+    ( -->
+      ( [NOT] [ON] SIZE ERROR
+      | END-COMPUTE
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] SIZE ERROR (statement)+]
+    [NOT [ON] SIZE ERROR (statement)+]
+    [END-COMPUTE]
+end
+
+## #############################################################################
+## DIVIDE statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def divideStatement =
+    DIVIDE
+    ( -->
+      ( [NOT] [ON] SIZE ERROR
+      | END-DIVIDE
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] SIZE ERROR (statement)+]
+    [NOT [ON] SIZE ERROR (statement)+]
+    [END-DIVIDE]
+end
+
+## #############################################################################
+## ENTRY statement.
+## -----------------------------------------------------------------------------
+
+def entryStatement =
+    ENTRY alphanumeric [USING (dataName)+]
+end
+
+## #############################################################################
+## EVALUATE statement.
+## -----------------------------------------------------------------------------
+
+def evaluateStatement =
+    EVALUATE subject (ALSO subject)* 
+    (when)+ 
+    [whenOther]
+    [END-EVALUATE]
+end
+
+def subject =
+    (--> (WHEN | ALSO))
+end
+
+def when =
+    ( WHEN object
+      (ALSO object)*
+    )+ 
+    (statement)+
+end
+
+def whenOther =
+    WHEN OTHER
+      (statement)+
+end
+
+def object =
+    ( ANY
+    | condition
+    | TRUE
+    | FALSE
+    | [NOT] (
+        identifier
+      | literal
+      | arithmeticExpression
+      )
+      [ ( THROUGH | THRU )
+        ( identifier
+        | literal
+        | arithmeticExpression
+        )
+      ]
+    )
+end
+
+## #############################################################################
+## EXEC statement.
+## -----------------------------------------------------------------------------
+
+def execStatement =
+   EXEC cobolWord
+   [--> END-EXEC]
+   END-EXEC
+end
+
+## #############################################################################
+## EXIT statement.
+## -----------------------------------------------------------------------------
+
+def exitStatement =
+    EXIT [PROGRAM]
+end
+
+## #############################################################################
+## GOBACK statement.
+## -----------------------------------------------------------------------------
+
+def gobackStatement =
+    GOBACK
+end
+
+## #############################################################################
+## GO TO statement.
+## -----------------------------------------------------------------------------
+
+def goToStatement =
+    GO [TO] procedureName
+        [ (procedureName)*
+          DEPENDING [ON] identifier
+        ]
+end
+
+## #############################################################################
+## IF statement.
+## -----------------------------------------------------------------------------
+
+def ifStatement =
+    IF condition [THEN]
+      ( (statement)+
+      | NEXT SENTENCE
+      )
+    [ELSE
+      ( (statement)+
+      | NEXT SENTENCE
+      )
+    ]
+    [END-IF]
+end
+
+## #############################################################################
+## MOVE statement.
+## -----------------------------------------------------------------------------
+
+def moveStatement =
+    MOVE 
+      ( [CORRESPONDING | CORR] identifier
+      | literal
+      | figurativeConstant
+      )
+    TO (identifier)+
+end
+
+## #############################################################################
+## MULTIPLY statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def multiplyStatement =
+    MULTIPLY
+    ( -->
+      ( [NOT] [ON] SIZE ERROR
+      | END-MULTIPLY
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] SIZE ERROR (statement)+]
+    [NOT [ON] SIZE ERROR (statement)+]
+    [END-MULTIPLY]
+end
+
+## #############################################################################
+## PERFORM statement.
+## -----------------------------------------------------------------------------
+
+# The order here is important! If you want to correctly recognize:
+#   PERFORM 7 TIMES  ...
+# Then you need to check in-line first. If not, the parser will understand the
+# number as a procedureName (yes, 7 is a valid procedure name).
+def performStatement =
+    PERFORM 
+    ( # "in-line"
+      [ times | until | varying ]
+      (statement)+
+      END-PERFORM
+
+    | # "out-of-line"
+      procedureName [(THROUGH | THRU) procedureName]
+      [ times | until | varying ]
+    )
+end
+
+def times =
+    (identifier | integer) TIMES
+end
+
+def until =
+    [[WITH] TEST (BEFORE | AFTER)]
+    UNTIL condition
+end
+
+# The documentation also explicitly mentions indices. Matching these, however,
+# requires tracking their definition in the data section. This is something we
+# don't do. This doesn't matter that much, as indices are a degenerate form of
+# identifiers, which we are able to match. So the catch is that while we do
+# match indices it is up to the end-user to distinguish them from identifiers.
+def varying =
+    [[WITH] TEST (BEFORE | AFTER)]
+    
+    VARYING identifier
+        FROM (literal | identifier)
+        BY (literal | identifier)
+        UNTIL condition
+    
+    (AFTER  identifier
+        FROM (literal | identifier)
+        BY (literal | identifier)
+        UNTIL condition
+    )*
+end
+
+## #############################################################################
+## RETURN statement.
+## -----------------------------------------------------------------------------
+
+def returnStatement =
+    RETURN fileName [RECORD] [INTO identifier] 
+    atEnd 
+    [notAtEnd]
+    [END-RETURN]
+end
+
+## #############################################################################
+## SEARCH statement.
+## -----------------------------------------------------------------------------
+
+def searchStatement =
+    SEARCH 
+    ( ALL identifier
+    | identifier [VARYING (identifier | indexName)]
+    )
+   
+    [atEnd]
+   
+    ( WHEN condition
+      ( (statement)+
+      | NEXT SENTENCE
+      )
+    )+ 
+   
+    [END-SEARCH]
+end
+
+def atEnd =
+    [AT] END (statement)+
+end
+
+def notAtEnd =
+    NOT [AT] END (statement)+
+end
+
+## #############################################################################
+## STOP statement.
+## -----------------------------------------------------------------------------
+
+def stopStatement =
+    STOP (RUN | literal)
+end
+
+## #############################################################################
+## STRING statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def stringStatement =
+    STRING
+    ( -->
+      ( [NOT] [ON] OVERFLOW
+      | END-STRING
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] OVERFLOW (statement)+]
+    [NOT [ON] OVERFLOW (statement)+]
+    [END-STRING]
+end
+
+## #############################################################################
+## SUBTRACT statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def subtractStatement =
+    SUBTRACT
+    ( -->
+      ( [NOT] [ON] SIZE ERROR
+      | END-SUBTRACT
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] SIZE ERROR (statement)+]
+    [NOT [ON] SIZE ERROR (statement)+]
+    [END-SUBTRACT]
+end
+
+## #############################################################################
+## UNSTRING statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def unstringStatement =
+    UNSTRING
+    ( -->
+      ( [NOT] [ON] OVERFLOW
+      | END-UNSTRING
+      | .
+      | endOfStatement
+      )
+    )
+    [[ON] OVERFLOW (statement)+]
+    [NOT [ON] OVERFLOW (statement)+]
+    [END-UNSTRING]
+end
+
+## #############################################################################
+## Controlling the compiler.
+## -----------------------------------------------------------------------------
+
+def copyStatement =
+    COPY textName [ (OF | IN) libraryName ]
+    [REPLACING
+      ( (identifier | literal | pseudoLiteral)
+        BY (identifier | literal | pseudoLiteral)
+      )+
+    ]
+    .
+end
+
+def replaceStatement =
+    REPLACE (--> .) .
+end
+
+## #############################################################################
+## Lookaheads used for skipping.
+## -----------------------------------------------------------------------------
+
+# Division start
+def divisionStart =
+    ( IDENTIFICATION
+    | ENVIRONMENT
+    | DATA
+    | PROCEDURE
+    ) DIVISION
+    [usingPhrase]
+    .
+end
+
+# Start of section in data division.
+def dataSectionStart =
+    ( FILE
+    | WORKING-STORAGE
+    | LINKAGE
+    | COMMUNICATION
+    | REPORT
+    ) SECTION .
+end
+
+# End of a (nested) statement.
+def endOfStatement =
+    ( verb
+
+    | ELSE             # IF statement
+    | WHEN             # SEARCH, EVALUATE statement
+
+    | END-ACCEPT
+    | END-ADD
+    | END-CALL
+    | END-COMPUTE
+    | END-DELETE
+    | END-DISPLAY
+    | END-DIVIDE
+    | END-EVALUATE
+    | END-EXEC
+    | END-IF
+    | END-MULTIPLY
+    | END-PERFORM
+    | END-READ
+    | END-RETURN
+    | END-REWRITE
+    | END-SEARCH
+    | END-START
+    | END-STRING
+    | END-SUBTRACT
+    | END-UNSTRING
+    | END-WRITE
+
+    | [NOT] [ON | AT]
+      ( OVERFLOW       # CALL statement
+      | EXCEPTION      # CALL statement
+      | SIZE ERROR
+      | INVALID [KEY]
+      | END            # RETURN statement
+      | END-OF-PAGE
+      | EOP
+      )
+    )
+end
+
+## #############################################################################
+## Identifiers.
+## -----------------------------------------------------------------------------
+
+# TODO Qualifiers, subscripts and reference modifiers.
+# TODO FUNCTION format.
+
+def identifier =
+    ( identifier_format1
+    | identifier_format2
+    )
+end
+
+def identifier_format1 =
+    FUNCTION functionName ['(' (argument)+ ')'] [referenceModifier]
+end
+
+def identifier_format2 =
+    dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
+end
+
+def argument =
+    ( identifier
+    | arithmeticExpression
+    | literal
+    )
+end
+
+def qualifier =
+    (IN | OF) dataName
+end
+
+def subscript =
+    # The order is important here ! Relative and direct subscripts overlap
+    # somewhat. A direct may be a simple dataName; a relative a dataName
+    # followed by an offset. If we matched the direct first we would never
+    # check for the offset.
+    ( relativeSubscript
+    | directSubscript
+    )
+end
+
+def directSubscript = 
+    ( integer
+    | identifier
+    | ALL
+    )
+end
+
+def relativeSubscript =
+    identifier ('+' | '-') integer
+end
+
+def referenceModifier =
+    '(' arithmeticExpression ':' [arithmeticExpression] ')'
+end
+
+## #############################################################################
+## Arithmetic expressions.
+## -----------------------------------------------------------------------------
+
+def arithmeticExpression =
+    timesDiv (('+' | '-') timesDiv)*
+end
+
+def timesDiv =
+    power (('*' | '/') power)*
+end
+
+def power =
+    [('+' | '-')] basis ('**' basis)*
+end
+
+def basis =
+    ( identifier
+    | numeric
+    | '(' arithmeticExpression ')'
+    )
+end
+
+## #############################################################################
+## Conditions.
+## -----------------------------------------------------------------------------
+
+# TODO Conditions
+def condition =
+--> ( THEN             # IF statement
+    | verb             # IF statement
+    | NEXT SENTENCE    # IF statement
+    | END-PERFORM      # PERFORM statement
+    | AFTER            # PERFORM statement
+    | WHEN             # EVALUATE statement
+    | ALSO             # EVALUATE statement
+    | .
+    )
+end
+
+## #############################################################################
+## Low level stuff.
+## -----------------------------------------------------------------------------
+
+# Program name.
+#
+# "[A] program-name can be specified either as a user-defined word or in an
+# alphanumeric literal. Either way, program-name must follow the rules for
+# forming a user-defined word. program-name cannot be a figurative constant.
+# Any lowercase letters in the literal are folded to uppercase."
+#
+# Src: "COBOL for AIX, V3.1"
+# http://publib.boulder.ibm.com/infocenter/comphelp/v101v121/index.jsp?topic=/com.ibm.aix.cbl.doc/PGandLR/ref/rlprg.htm
+#
+def programName =
+	( cobolWord
+	| alphanumeric
+	)
+end
+
+# Data name.
+def dataName =
+	cobolWord
+end
+
+# Section name.
+def sectionName =
+	( cobolWord
+	| integer
+	)
+end
+
+# Paragraph name.
+def paragraphName =
+	( cobolWord
+	| integer
+	)
+end
+
+# Procedure name.
+def procedureName =
+    ( cobolWord
+    | integer
+    )
+    [ ( IN | OF ) cobolWord ]
+end
+
+# Segment number.
+def segmentNumber =
+    # TODO Should be two digits only. 
+    integer
+end
+
+def indexName =
+    cobolWord
+end
+
+def fileName =
+    cobolWord
+end
+
+def functionName =
+    cobolWord
+end
+
+def textName =
+    cobolWord
+end
+
+def libraryName =
+    cobolWord
+end
+
+# TODO [ALL] symbolic-character
+def figurativeConstant =
+    ( ALL literal
+    | [ALL]
+      ( ZERO
+      | ZEROS
+      | ZEROES 
+      | SPACE
+      | SPACES 
+      | HIGH-VALUE 
+      | HIGH-VALUES 
+      | LOW-VALUE 
+      | LOW-VALUES 
+      | QUOTE
+      | QUOTES 
+      )
+    )
+end
+
+def literal =
+    ( numeric
+    | alphanumeric
+    )
+end
+
+def numeric =
+    ( integer
+    | decimal
+    )
+end

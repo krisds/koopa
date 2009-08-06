@@ -1,0 +1,14 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target copyStatement;
+
++[ COPY FOO . ]
+
++[ COPY FOO IN FUM . ]
+
++[ COPY FOO REPLACING ==FEE== BY ==FUM== . ]
+
++[ COPY FOO REPLACING FEE BY FUM . ]
+
++[ COPY FOO REPLACING "FEE" BY "FUM" . ]

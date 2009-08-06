@@ -1,0 +1,59 @@
+group Scoring;
+
+scoring(name, pack, verification) ::= <<
+package $pack$;
+
+import koopa.tokens.Token;
+import koopa.verifiers.Verifier;
+import koopa.verifiers.VerifyingSink;
+
+public class $name$Verifier extends VerifyingSink {
+  protected void initialize() {
+    $verification; separator="\n\n"$
+  }
+}
+>>
+
+verification(target, assertion) ::= <<
+register("$target$", new Verifier() {
+  public void verify(Token t) {
+    $assertion; separator="\n\n"$
+  }
+});
+>>
+
+accept(items, test, response) ::= <<
+{ final int p0 = 0;
+  $items:pos(); separator="\n"$
+
+  if ($test$) {
+  } else {
+    $response$
+  }
+}
+>>
+
+reject(items, test, response) ::= <<
+{ final int p0 = 0;
+  $items:pos(); separator="\n"$
+
+  if ($test$) {
+    $response$
+  }
+}
+>>
+
+pos() ::= <<final int p$i$ = lastIndexOf("$it$");>>
+
+initialTest() ::= <<p0 <= p1>>
+furtherTest() ::= << < p$it$ >>
+
+yes(i) ::= <<yes($i$)>>
+no(i) ::= <<no($i$)>>
+
+seq(step) ::= <<
+$step; separator="\n\n"$
+>>
+
+warn(msg) ::= <<warn(t, $msg$);>>
+error(msg) ::= <<error(t, $msg$);>>

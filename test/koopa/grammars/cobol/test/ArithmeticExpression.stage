@@ -1,0 +1,64 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target arithmeticExpression;
+
++[ 42 ]
++[ 42.0 ]
++[ FORTY-TWO ]
+-[ "42" ]
+
++[ + 42 ]
++[ + 42.0 ]
++[ + FORTY-TWO ]
+
++[ - 42 ]
++[ - 42.0 ]
++[ - FORTY-TWO ]
+
++[ 42 ** 7 ]
++[ 42.0 ** 7 ]
++[ FORTY-TWO ** 7 ]
+
++[ + 42 ** 7 ]
++[ + 42.0 ** 7 ]
++[ + FORTY-TWO ** 7 ]
+
++[ - 42 ** 7 ]
++[ - 42.0 ** 7 ]
++[ - FORTY-TWO ** 7 ]
+
++[ 42 ** 7 ** ELEVENTY ]
++[ 42.0 ** 7 ** ELEVENTY ]
++[ FORTY-TWO ** 7 ** ELEVENTY ]
+
++[ + 42 ** 7 ** ELEVENTY ]
++[ + 42.0 ** 7 ** ELEVENTY ]
++[ + FORTY-TWO ** 7 ** ELEVENTY ]
+
++[ - 42 ** 7 ** ELEVENTY ]
++[ - 42.0 ** 7 ** ELEVENTY ]
++[ - FORTY-TWO ** 7 ** ELEVENTY ]
+
++[ 42 * ELEVENTY ]
++[ 42 / ELEVENTY ]
+
++[ 42 * ELEVENTY / 7 ]
++[ 42 / ELEVENTY * 7 ]
+
++[ + 42 * + ELEVENTY ]
++[ - 42 / - ELEVENTY ]
+
++[ 42 + ELEVENTY ]
++[ 42 - ELEVENTY ]
+
++[ - 42 + ELEVENTY ]
++[ + 42 - ELEVENTY ]
+
++[ 42 * 7 + ELEVENTY / FORTY-TWO ]
++[ 42 / 7 - ELEVENTY * FORTY-TWO ]
+
++[ 42 ** 7 + ELEVENTY ]
++[ 42 - ELEVENTY ** 7 ]
+
++[ ( 42 + ELEVENTY ) * ( 7 / FORTY-TWO ) ]

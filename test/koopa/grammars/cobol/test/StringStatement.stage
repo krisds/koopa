@@ -1,0 +1,46 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target stringStatement;
+
++[ STRING A B C INTO TEXT ¥ . ]
+
++[ STRING A B C INTO TEXT
+   END-STRING ]
+
++[ STRING A B C INTO TEXT
+     ON OVERFLOW DISPLAY ¥ "Oops." ]
+
++[ STRING A B C INTO TEXT
+     ON OVERFLOW DISPLAY "Oops."
+   END-STRING ]
+
++[ STRING A B C INTO TEXT
+     NOT ON OVERFLOW DISPLAY ¥ "AOK." ]
+
++[ STRING A B C INTO TEXT
+     NOT ON OVERFLOW DISPLAY "AOK."
+   END-STRING ]
+
++[ STRING A B C INTO TEXT
+     OVERFLOW DISPLAY ¥ "Oops." ]
+
++[ STRING A B C INTO TEXT
+     OVERFLOW DISPLAY "Oops."
+   END-STRING ]
+
++[ STRING A B C INTO TEXT
+     NOT OVERFLOW DISPLAY ¥ "AOK." ]
+
++[ STRING A B C INTO TEXT
+     NOT OVERFLOW DISPLAY "AOK."
+   END-STRING ]
+
++[ STRING A B C INTO TEXT
+     OVERFLOW DISPLAY "Oops."
+     NOT OVERFLOW DISPLAY ¥ "AOK." ]
+
++[ STRING A B C INTO TEXT
+     OVERFLOW DISPLAY "Oops."
+     NOT OVERFLOW DISPLAY "AOK."
+   END-STRING ]

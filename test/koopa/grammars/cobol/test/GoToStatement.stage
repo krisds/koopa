@@ -1,0 +1,37 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target goToStatement;
+
++[ GO TO OTHER-PLACE ]
++[ GO OTHER-PLACE ]
+
++[ GO TO 42 ]
++[ GO 42 ]
+
++[ GO TO OTHER-PLACE
+     DEPENDING ON SOME-VALUE ]
+
++[ GO OTHER-PLACE
+     DEPENDING ON SOME-VALUE ]
+
++[ GO TO OTHER-PLACE
+         YET-ANOTHER-PLACE
+         STILL-SOME-OTHER-PLACE
+     DEPENDING ON SOME-VALUE ]
+
++[ GO OTHER-PLACE
+         YET-ANOTHER-PLACE
+         STILL-SOME-OTHER-PLACE
+     DEPENDING ON SOME-VALUE ]
+
++[ GO TO OTHER-PLACE
+         YET-ANOTHER-PLACE
+         STILL-SOME-OTHER-PLACE
+     DEPENDING SOME-VALUE ]
+
++[ GO OTHER-PLACE
+         YET-ANOTHER-PLACE
+         STILL-SOME-OTHER-PLACE
+     DEPENDING SOME-VALUE ]
+     

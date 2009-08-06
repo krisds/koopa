@@ -1,0 +1,5 @@
+package koopa.tokenizers.cobol.tags;
+
+public enum SyntacticTag {
+	STRING_LITERAL, DECIMAL_LITERAL, CHARACTER_STRING, SEPARATOR, PICTURE, INTEGER_LITERAL, SIGNED, UNSIGNED, PSEUDO_LITERAL
+}

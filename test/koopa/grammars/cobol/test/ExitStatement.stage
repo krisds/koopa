@@ -1,0 +1,7 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target exitStatement;
+
++[ EXIT ]
++[ EXIT PROGRAM ]

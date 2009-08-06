@@ -1,0 +1,22 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target entryStatement;
+
+-[ ENTRY ]
+
++[ ENTRY "MAIN-ENTRANCE" ]
+
++[ ENTRY "MAIN-ENTRANCE"
+         USING FIELD-A ]
+
++[ ENTRY "MAIN-ENTRANCE"
+         USING FIELD-A FIELD-B ]
+
+
++[ ENTRY "MAIN-ENTRANCE"
+         ¥ FIELD-A ]
+
++[ ENTRY "MAIN-ENTRANCE"
+         USING FIELD-A
+         ¥ USING FIELD-B ]

@@ -1,0 +1,118 @@
+group CSS;
+
+koopa(name, date, package, imports, reserved, rule, support_code) ::= <<
+package $package$;
+
+import java.util.Set;
+import java.util.HashSet;
+
+import koopa.parsers.Block;
+import koopa.parsers.KoopaGrammar;
+import koopa.parsers.Parser;
+import koopa.parsers.FutureParser;
+
+$if(imports)$
+$imports$
+
+$endif$
+public class $name$Grammar extends KoopaGrammar {
+    public $name$Grammar() {
+    }
+
+    // ========================================================
+    // Reserved keywords. This set is generated from the
+    // grammar.
+    // --------------------------------------------------------
+
+    public static final Set<String> RESERVED_WORDS = new HashSet<String>();
+
+    static {
+      $reserved:staticRegistration(); separator="\n"$
+    }
+
+    // ========================================================
+    // Compiled grammar rules. These were generated from the
+    // grammar.
+    // --------------------------------------------------------
+
+    $rule; separator="\n\n"$
+
+    $if(support_code)$
+    // ========================================================
+    // Code provided by the user.
+    // --------------------------------------------------------
+
+    $support_code$$endif$
+}
+>>
+
+staticRegistration() ::= <<RESERVED_WORDS.add("$it$");>>
+
+rule(name, body) ::= <<
+// ========================================================
+// $name$
+// ........................................................
+
+private Parser $name$Parser = null;
+
+public Parser $name$() {
+    if ($name$Parser == null) {
+       FutureParser future = scoped("$name$");
+       $name$Parser = future;
+       future.setParser(
+           $body$
+       );
+    }
+
+    return $name$Parser;
+}
+>>
+
+returning(name) ::= <<returning("$name$")>>
+
+sequence(step) ::= <<sequence(
+    $step; separator=",\n"$
+)
+>>
+
+bind(type, name) ::= <<$type$ $name$ = ($type$) scope().get("$name$");>>
+
+unbind(name) ::= <<scope().put("$name$", $name$);>>
+
+apply(bind, native_code, unbind) ::= <<apply(new Block() {
+    public void apply() {
+        $bind; separator="\n"$
+        $native_code$
+        $unbind; separator="\n"$
+    }
+})>>
+
+token(text) ::= <<token("$text$")>>
+
+call(name) ::= <<$name$()>>
+
+star(body) ::= <<star(
+    $body$
+)>>
+
+plus(body) ::= <<plus(
+    $body$
+)>>
+
+choice(step) ::= <<choice(
+    $step; separator=",\n"$
+)>>
+
+optional(body) ::= <<optional(
+    $body$
+)>>
+
+skipto(body) ::= <<skipto(
+    $body$
+)>>
+
+permuted(choice) ::= <<permuted(
+    $choice; separator=",\n"$
+)>>
+
+assign(name, value) ::= <<assign("$name$", $value$)>>

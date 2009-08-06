@@ -1,0 +1,93 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target object;
+
++[ ANY ]
++[ TRUE ]
++[ FALSE ]
+
++[ MY-IDENTIFIER ]
++[ "A literal." ]
++[ 1234567 ]
++[ 123.456 ]
+
++[ NOT MY-IDENTIFIER ]
++[ NOT "A literal." ]
++[ NOT 1234567 ]
++[ NOT 123.456 ]
+
++[ MY-IDENTIFIER THROUGH ANOTHER-IDENTIFIER ]
++[ "A literal." THROUGH "Another literal." ]
++[ 1234567 THROUGH 7654321 ]
++[ 123.456 THROUGH 654.321 ]
+
++[ NOT MY-IDENTIFIER THROUGH ANOTHER-IDENTIFIER ]
++[ NOT "A literal." THROUGH "Another literal." ]
++[ NOT 1234567 THROUGH 7654321 ]
++[ NOT 123.456 THROUGH 654.321 ]
+
++[ MY-IDENTIFIER THRU ANOTHER-IDENTIFIER ]
++[ "A literal." THRU "Another literal." ]
++[ 1234567 THRU 7654321 ]
++[ 123.456 THRU 654.321 ]
+
++[ NOT MY-IDENTIFIER THRU ANOTHER-IDENTIFIER ]
++[ NOT "A literal." THRU "Another literal." ]
++[ NOT 1234567 THRU 7654321 ]
++[ NOT 123.456 THRU 654.321 ]
+
+
+target whenOther;
+
+-[ WHEN OTHER ]
+
++[ WHEN OTHER
+        DISPLAY ¥ "Other." ]
+
++[ WHEN OTHER
+        DISPLAY "Other."
+        DISPLAY ¥ "More." ]
+
+
+target when;
+
++[ WHEN ANY
+        DISPLAY ¥ "Good." ]
+
++[ WHEN TRUE ALSO ANY
+        DISPLAY ¥ "Good." ]
+
++[ WHEN TRUE ALSO ANY ALSO 42
+        DISPLAY ¥ "Good." ]
+
++[ WHEN ANY
+   WHEN TRUE ALSO ANY
+   WHEN TRUE ALSO ANY ALSO 42
+        DISPLAY ¥ "Good." ]
+
+
+target evaluateStatement;
+
++[ EVALUATE FOO
+   WHEN 42
+        DISPLAY "Meaning of life, the universe and everything."
+   END-EVALUATE ]
+
++[ EVALUATE FOO
+   WHEN 42
+        DISPLAY ¥ "Meaning of life, the universe and everything." ]
+
++[ EVALUATE FOO
+   WHEN 42
+        DISPLAY "Meaning of life, the universe and everything."
+   WHEN OTHER
+        DISPLAY "Nothing special."
+   END-EVALUATE ]
+
++[ EVALUATE TRUE
+   WHEN PROCESSING < 100
+        DISPLAY "Keep going."
+   WHEN OTHER
+        DISPLAY ¥ "Done." ]
+

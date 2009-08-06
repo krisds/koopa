@@ -1,0 +1,72 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target divideStatement;
+
++[ DIVIDE A BY B ¥ . ]
+
++[ DIVIDE A BY B GIVING C ¥ . ]
+
++[ DIVIDE A BY B
+     ON SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ DIVIDE A BY B GIVING C
+     ON SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ DIVIDE A BY B
+     SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ DIVIDE A BY B GIVING C
+     SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ DIVIDE A BY B
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ DIVIDE A BY B GIVING C
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ DIVIDE A BY B
+     NOT SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ DIVIDE A BY B GIVING C
+     NOT SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ DIVIDE A BY B
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ DIVIDE A BY B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ DIVIDE A BY B
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK"
+   END-DIVIDE ]
+
++[ DIVIDE A BY B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK"
+   END-DIVIDE ]
+
++[ DIVIDE A BY B
+   END-DIVIDE ]
+
++[ DIVIDE A BY B GIVING C
+   END-DIVIDE ]

@@ -1,0 +1,15 @@
+= Development Environment =
+
+Koopa is currently being developed using:
+
+* Eclipse 3.5        (http://www.eclipse.org/)
+* ANTLR IDE v2.0.0   (http://antlrv3ide.sourceforge.net/)
+
+The ANTLR IDE will need an ANTLR package to function properly. The source
+package currently in use is ANTLR v3.1.1. (http://www.antlr.org/)
+
+= Building =
+
+Run the regenerate target from build.xml, and refresh your eclipse environment
+afterwards (you can configure Eclipse to do the latter automatically every
+time).

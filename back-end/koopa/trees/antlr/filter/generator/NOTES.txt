@@ -1,0 +1,6 @@
+ANTLRv3.g and ANTLRv3Tree.g are essentially unchanged versions of the ones by
+Terence Parr, found at http://www.antlr.org/grammar/ANTLR. Only the package has
+been updated.
+
+ANTLRv3TreeFilter.g is a customised version of ANTLRv3Tree.g.
+ 

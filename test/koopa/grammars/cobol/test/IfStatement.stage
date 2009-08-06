@@ -1,0 +1,99 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target ifStatement;
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD 
+   END-IF ]
+
++[ IF 1 < 2
+     DISPLAY GOOD
+   END-IF ]
+
++[ IF 1 < 2 THEN
+     DISPLAY ¥ GOOD ]
+
++[ IF 1 < 2
+     DISPLAY ¥ GOOD ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY BEST
+   END-IF ]
+
++[ IF 1 < 2
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY BEST
+   END-IF ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY ¥ BEST ]
+
++[ IF 1 < 2 
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY ¥ BEST ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+   ELSE
+     DISPLAY BAD
+   END-IF ]
+
++[ IF 1 < 2
+     DISPLAY GOOD
+   ELSE
+     DISPLAY BAD
+   END-IF ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY BEST
+   ELSE
+     DISPLAY BAD
+     DISPLAY WORSE
+     DISPLAY WORST
+   END-IF ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY BEST
+   ELSE
+     DISPLAY BAD
+     DISPLAY WORSE
+     DISPLAY ¥ WORST ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+   ELSE
+     DISPLAY ¥ BAD ]
+
++[ IF 1 < 2
+     DISPLAY GOOD
+   ELSE
+     DISPLAY ¥ BAD ]
+
++[ IF 1 < 2 THEN
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY BEST
+   ELSE
+     DISPLAY BAD
+     DISPLAY WORSE
+     DISPLAY ¥ WORST ]
+
++[ IF 1 < 2
+     DISPLAY GOOD
+     DISPLAY BETTER
+     DISPLAY BEST
+   ELSE
+     DISPLAY BAD
+     DISPLAY WORSE
+     DISPLAY ¥ WORST ]

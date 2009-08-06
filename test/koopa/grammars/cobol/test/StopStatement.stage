@@ -1,0 +1,10 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target stopStatement;
+
++[ STOP RUN ]
++[ STOP "FOO" ]
++[ STOP 42 ]
+
+# TODO The literal can't be anything other than an unsigned integer+

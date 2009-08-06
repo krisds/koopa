@@ -1,0 +1,5 @@
+package koopa.tokenizers.cobol.tags;
+
+public enum AreaTag {
+	SEQUENCE_NUMBER_AREA, INDICATOR_AREA, PROGRAM_TEXT_AREA, IDENTIFICATION_AREA, END_OF_LINE, COMMENT
+}

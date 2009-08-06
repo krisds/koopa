@@ -1,0 +1,72 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target multiplyStatement;
+
++[ MULTIPLY A BY B ¥ . ]
+
++[ MULTIPLY A BY B GIVING C ¥ . ]
+
++[ MULTIPLY A BY B
+     ON SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ MULTIPLY A BY B GIVING C
+     ON SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ MULTIPLY A BY B
+     SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ MULTIPLY A BY B GIVING C
+     SIZE ERROR
+        DISPLAY ¥ "OOPS" ]
+
++[ MULTIPLY A BY B
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ MULTIPLY A BY B GIVING C
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ MULTIPLY A BY B
+     NOT SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ MULTIPLY A BY B GIVING C
+     NOT SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ MULTIPLY A BY B
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ MULTIPLY A BY B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY ¥ "AOK" ]
+
++[ MULTIPLY A BY B
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK"
+   END-MULTIPLY ]
+
++[ MULTIPLY A BY B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK"
+   END-MULTIPLY ]
+
++[ MULTIPLY A BY B
+   END-MULTIPLY ]
+
++[ MULTIPLY A BY B GIVING C
+   END-MULTIPLY ]

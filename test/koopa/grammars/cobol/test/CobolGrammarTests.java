@@ -20,6 +20,7 @@ public class CobolGrammarTests {
 		suite.addTestSuite(ComputeStatementTest.class);
 		suite.addTestSuite(CopyStatementTest.class);
 		suite.addTestSuite(DataDivisionTest.class);
+		suite.addTestSuite(DeleteStatementTest.class);
 		suite.addTestSuite(DivideStatementTest.class);
 		suite.addTestSuite(EntryStatementTest.class);
 		suite.addTestSuite(EvaluateStatementTest.class);
@@ -31,13 +32,17 @@ public class CobolGrammarTests {
 		suite.addTestSuite(MoveStatementTest.class);
 		suite.addTestSuite(MultiplyStatementTest.class);
 		suite.addTestSuite(PerformStatementTest.class);
+		suite.addTestSuite(ReadStatementTest.class);
 		suite.addTestSuite(ProcedureDivisionTest.class);
 		suite.addTestSuite(ReturnStatementTest.class);
+		suite.addTestSuite(RewriteStatementTest.class);
 		suite.addTestSuite(SearchStatementTest.class);
+		suite.addTestSuite(StartStatementTest.class);
 		suite.addTestSuite(StopStatementTest.class);
 		suite.addTestSuite(StringStatementTest.class);
 		suite.addTestSuite(SubtractStatementTest.class);
 		suite.addTestSuite(UnstringStatementTest.class);
+		suite.addTestSuite(WriteStatementTest.class);
 
 		return suite;
 	}

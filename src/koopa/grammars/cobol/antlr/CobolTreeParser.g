@@ -636,6 +636,7 @@ statement
       | callStatement
       | cancelStatement
       | computeStatement
+      | deleteStatement
       | divideStatement
       | entryStatement
       | evaluateStatement
@@ -647,12 +648,16 @@ statement
       | moveStatement
       | multiplyStatement
       | performStatement
+      | readStatement
       | returnStatement
+      | rewriteStatement
       | searchStatement
+      | startStatement
       | stopStatement
       | stringStatement
       | subtractStatement
       | unstringStatement
+      | writeStatement
       | ( verb
         (water)?
       )
@@ -739,6 +744,7 @@ verb
   : ^(VERB
       ( 'CALL'
       | 'CANCEL'
+      | 'DELETE'
       | 'ENTRY'
       | 'EVALUATE'
       | 'EXEC'
@@ -749,33 +755,32 @@ verb
       | 'MOVE'
       | 'PERFORM'
       | 'RETURN'
+      | 'REWRITE'
       | 'SEARCH'
       | 'STOP'
       | 'ADD'
       | 'COMPUTE'
       | 'DIVIDE'
       | 'MULTIPLY'
+      | 'READ'
+      | 'START'
       | 'STRING'
       | 'SUBTRACT'
       | 'UNSTRING'
+      | 'WRITE'
       | 'ACCEPT'
       | 'ALTER'
       | 'CLOSE'
       | 'CONTINUE'
-      | 'DELETE'
       | 'DISPLAY'
       | 'INITIALIZE'
       | 'INSPECT'
       | 'MERGE'
       | 'OPEN'
-      | 'READ'
       | 'RELEASE'
-      | 'REWRITE'
       | 'SET'
       | 'SORT'
-      | 'START'
       | 'USE'
-      | 'WRITE'
       | 'ENABLE'
       | 'DISABLE'
       | 'SEND'
@@ -919,6 +924,29 @@ computeStatement
           ( statement )+
         ) )?
         ( 'END-COMPUTE' )?
+      )
+    )
+  ;
+
+// ========================================================
+// deleteStatement
+// ........................................................
+
+deleteStatement
+  : ^(DELETE_STATEMENT
+      ( 'DELETE'
+        fileName
+        ( 'RECORD' )?
+        ( ( 'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( 'END-DELETE' )?
       )
     )
   ;
@@ -1277,6 +1305,37 @@ varying
   ;
 
 // ========================================================
+// readStatement
+// ........................................................
+
+readStatement
+  : ^(READ_STATEMENT
+      ( 'READ'
+        (water)?
+        ( ( ( 'AT' )?
+          'END'
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          ( 'AT' )?
+          'END'
+          ( statement )+
+        ) )?
+        ( ( 'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( 'END-READ' )?
+      )
+    )
+  ;
+
+// ========================================================
 // returnStatement
 // ........................................................
 
@@ -1291,6 +1350,31 @@ returnStatement
         atEnd
         ( notAtEnd )?
         ( 'END-RETURN' )?
+      )
+    )
+  ;
+
+// ========================================================
+// rewriteStatement
+// ........................................................
+
+rewriteStatement
+  : ^(REWRITE_STATEMENT
+      ( 'REWRITE'
+        recordName
+        ( ( 'FROM'
+          identifier
+        ) )?
+        ( ( 'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( 'END-REWRITE' )?
       )
     )
   ;
@@ -1350,6 +1434,28 @@ notAtEnd
         ( 'AT' )?
         'END'
         ( statement )+
+      )
+    )
+  ;
+
+// ========================================================
+// startStatement
+// ........................................................
+
+startStatement
+  : ^(START_STATEMENT
+      ( 'START'
+        (water)?
+        ( ( 'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( 'END-START' )?
       )
     )
   ;
@@ -1432,6 +1538,41 @@ unstringStatement
           ( statement )+
         ) )?
         ( 'END-UNSTRING' )?
+      )
+    )
+  ;
+
+// ========================================================
+// writeStatement
+// ........................................................
+
+writeStatement
+  : ^(WRITE_STATEMENT
+      ( 'WRITE'
+        (water)?
+        ( ( ( 'AT' )?
+          ( 'END-OF-PAGE'
+          | 'EOP'
+          )
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          ( 'AT' )?
+          ( 'END-OF-PAGE'
+          | 'EOP'
+          )
+          ( statement )+
+        ) )?
+        ( ( 'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( ( 'NOT'
+          'INVALID'
+          ( 'KEY' )?
+          ( statement )+
+        ) )?
+        ( 'END-WRITE' )?
       )
     )
   ;
@@ -1889,6 +2030,16 @@ textName
 
 libraryName
   : ^(LIBRARY_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// recordName
+// ........................................................
+
+recordName
+  : ^(RECORD_NAME
       cobolWord
     )
   ;

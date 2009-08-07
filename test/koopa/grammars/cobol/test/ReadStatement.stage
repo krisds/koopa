@@ -1,0 +1,81 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target readStatement;
+
++[ READ MY-FILE ¥ . ]
+
++[ READ MY-FILE
+   END-READ ]
+
++[ READ MY-FILE 
+   AT END
+      DISPLAY ¥ "Nothing more to see here." ]
+
++[ READ MY-FILE 
+   END
+      DISPLAY ¥ "Nothing more to see here." ]
+
++[ READ MY-FILE 
+   NOT AT END
+      DISPLAY ¥ "Look at that..." ]
+
++[ READ MY-FILE 
+   NOT END
+      DISPLAY ¥ "Look at that..." ]
+
++[ READ MY-FILE 
+   INVALID KEY
+      DISPLAY ¥ "Oops." ]
+
++[ READ MY-FILE 
+   INVALID
+      DISPLAY ¥ "Oops." ]
+
++[ READ MY-FILE 
+   NOT INVALID KEY
+      DISPLAY ¥ "A-OK." ]
+
++[ READ MY-FILE 
+   NOT INVALID
+      DISPLAY ¥ "A-OK." ]
+
++[ READ MY-FILE 
+   AT END
+      DISPLAY "Nothing more to see here." 
+   END-READ ]
+
++[ READ MY-FILE 
+   END
+      DISPLAY "Nothing more to see here." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT AT END
+      DISPLAY "Look at that..." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT END
+      DISPLAY "Look at that..." 
+   END-READ ]
+
++[ READ MY-FILE 
+   INVALID KEY
+      DISPLAY "Oops." 
+   END-READ ]
+
++[ READ MY-FILE 
+   INVALID
+      DISPLAY "Oops." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT INVALID KEY
+      DISPLAY "A-OK." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT INVALID
+      DISPLAY "A-OK." 
+   END-READ ]

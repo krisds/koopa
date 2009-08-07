@@ -284,6 +284,7 @@ def statement =
     | callStatement
     | cancelStatement
     | computeStatement
+    | deleteStatement
     | divideStatement
     | entryStatement
     | evaluateStatement
@@ -295,12 +296,16 @@ def statement =
     | moveStatement
     | multiplyStatement
     | performStatement
+    | readStatement
     | returnStatement
+    | rewriteStatement
     | searchStatement
+    | startStatement
     | stopStatement
     | stringStatement
     | subtractStatement
     | unstringStatement
+    | writeStatement
     
     | verb
       [--> ( . | endOfStatement )]
@@ -357,6 +362,7 @@ end
 def verb =
     ( CALL
     | CANCEL
+    | DELETE
     | ENTRY
     | EVALUATE
     | EXEC
@@ -367,6 +373,7 @@ def verb =
     | MOVE
     | PERFORM
     | RETURN
+    | REWRITE
     | SEARCH
     | STOP
 
@@ -375,29 +382,27 @@ def verb =
     | COMPUTE
     | DIVIDE
     | MULTIPLY
+    | READ
+    | START
     | STRING
     | SUBTRACT
     | UNSTRING
+    | WRITE
 
     # Verbs for statements which remain to be implemented:
     | ACCEPT
     | ALTER
     | CLOSE
     | CONTINUE
-    | DELETE
     | DISPLAY
     | INITIALIZE
     | INSPECT
     | MERGE
     | OPEN
-    | READ
     | RELEASE
-    | REWRITE
     | SET
     | SORT
-    | START
     | USE
-    | WRITE
     
     # Following are verbs found in testsuite, not in documentation.
     | ENABLE
@@ -491,6 +496,19 @@ def computeStatement =
     [[ON] SIZE ERROR (statement)+]
     [NOT [ON] SIZE ERROR (statement)+]
     [END-COMPUTE]
+end
+
+## #############################################################################
+## DELETE statement.
+## -----------------------------------------------------------------------------
+
+def deleteStatement =
+    DELETE fileName [RECORD]
+    
+    [INVALID [KEY] (statement)+]
+    [NOT INVALID [KEY] (statement)+]
+    
+    [END-DELETE]
 end
 
 ## #############################################################################
@@ -703,6 +721,31 @@ def varying =
 end
 
 ## #############################################################################
+## READ statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def readStatement =
+    READ
+    ( -->
+      ( [NOT] [AT] END
+      | [NOT] INVALID [KEY]
+      | END-READ
+      | .
+      | endOfStatement
+      )
+    )
+    
+    [[AT] END (statement)+]
+    [NOT [AT] END (statement)+]
+    
+    [INVALID [KEY] (statement)+]
+    [NOT INVALID [KEY] (statement)+]
+    
+    [END-READ]
+end
+
+## #############################################################################
 ## RETURN statement.
 ## -----------------------------------------------------------------------------
 
@@ -711,6 +754,19 @@ def returnStatement =
     atEnd 
     [notAtEnd]
     [END-RETURN]
+end
+
+## #############################################################################
+## REWRITE statement.
+## -----------------------------------------------------------------------------
+
+def rewriteStatement =
+    REWRITE recordName [FROM identifier]
+    
+    [INVALID [KEY] (statement)+]
+    [NOT INVALID [KEY] (statement)+]
+    
+    [END-REWRITE]
 end
 
 ## #############################################################################
@@ -740,6 +796,27 @@ end
 
 def notAtEnd =
     NOT [AT] END (statement)+
+end
+
+## #############################################################################
+## START statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def startStatement =
+    START
+    ( -->
+      ( [NOT] INVALID [KEY]
+      | END-START
+      | .
+      | endOfStatement
+      )
+    )
+    
+    [INVALID [KEY] (statement)+]
+    [NOT INVALID [KEY] (statement)+]
+    
+    [END-START]
 end
 
 ## #############################################################################
@@ -805,6 +882,31 @@ def unstringStatement =
     [[ON] OVERFLOW (statement)+]
     [NOT [ON] OVERFLOW (statement)+]
     [END-UNSTRING]
+end
+
+## #############################################################################
+## WRITE statement.
+## -----------------------------------------------------------------------------
+
+# TODO So far a skeletal implementation only.
+def writeStatement =
+    WRITE
+    ( -->
+      ( [NOT] [AT] (END-OF-PAGE | EOP)
+      | [NOT] INVALID [KEY]
+      | END-WRITE
+      | .
+      | endOfStatement
+      )
+    )
+    
+    [[AT] (END-OF-PAGE | EOP) (statement)+]
+    [NOT [AT] (END-OF-PAGE | EOP) (statement)+]
+    
+    [INVALID [KEY] (statement)+]
+    [NOT INVALID [KEY] (statement)+]
+    
+    [END-WRITE]
 end
 
 ## #############################################################################
@@ -1058,6 +1160,10 @@ def textName =
 end
 
 def libraryName =
+    cobolWord
+end
+
+def recordName =
     cobolWord
 end
 

@@ -948,5 +948,325 @@ public class CobolVerifier extends VerifyingSink {
         }
       }
     });
+
+    register("WRITE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("writeStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "WRITE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("writeStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "WRITE not in write statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("writeStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "WRITE not in write statement.");
+          }
+        }
+      }
+    });
+
+    register("END-WRITE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("writeStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "END-WRITE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("writeStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "END-WRITE not in write statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("writeStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "END-WRITE not in write statement.");
+          }
+        }
+      }
+    });
+
+    register("READ", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("readStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "READ in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("readStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "READ not in read statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("readStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "READ not in read statement.");
+          }
+        }
+      }
+    });
+
+    register("END-READ", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("readStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "END-READ in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("readStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "END-READ not in read statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("readStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "END-READ not in read statement.");
+          }
+        }
+      }
+    });
+
+    register("START", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("startStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "START in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("startStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "START not in start statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("startStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "START not in start statement.");
+          }
+        }
+      }
+    });
+
+    register("END-START", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("startStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "END-START in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("startStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "END-START not in start statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("startStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "END-START not in start statement.");
+          }
+        }
+      }
+    });
+
+    register("DELETE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("deleteStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "DELETE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("deleteStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "DELETE not in delete statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("deleteStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "DELETE not in delete statement.");
+          }
+        }
+      }
+    });
+
+    register("END-DELETE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("deleteStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "END-DELETE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("deleteStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "END-DELETE not in delete statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("deleteStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "END-DELETE not in delete statement.");
+          }
+        }
+      }
+    });
+
+    register("REWRITE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("rewriteStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "REWRITE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("rewriteStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "REWRITE not in rewrite statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("rewriteStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "REWRITE not in rewrite statement.");
+          }
+        }
+      }
+    });
+
+    register("END-REWRITE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("rewriteStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "END-REWRITE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("rewriteStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "END-REWRITE not in rewrite statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("rewriteStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "END-REWRITE not in rewrite statement.");
+          }
+        }
+      }
+    });
   }
 }

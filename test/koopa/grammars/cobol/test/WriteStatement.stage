@@ -1,0 +1,117 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target writeStatement;
+
++[ WRITE MY-RECORD ¥ . ]
+
++[ WRITE MY-RECORD
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   AT END-OF-PAGE
+      DISPLAY ¥ "End of page." ]
+
++[ WRITE MY-RECORD 
+   AT EOP
+      DISPLAY ¥ "End of page." ]
+
++[ WRITE MY-RECORD 
+   END-OF-PAGE
+      DISPLAY ¥ "End of page." ]
+
++[ WRITE MY-RECORD 
+   EOP
+      DISPLAY ¥ "End of page." ]
+
++[ WRITE MY-RECORD 
+   NOT AT END-OF-PAGE
+      DISPLAY ¥ "Elsewhere on page." ]
+
++[ WRITE MY-RECORD 
+   NOT AT EOP
+      DISPLAY ¥ "Elsewhere on page." ]
+
++[ WRITE MY-RECORD 
+   NOT END-OF-PAGE
+      DISPLAY ¥ "Elsewhere on page." ]
+
++[ WRITE MY-RECORD 
+   NOT EOP
+      DISPLAY ¥ "Elsewhere on page." ]
+
++[ WRITE MY-RECORD 
+   INVALID KEY
+      DISPLAY ¥ "Oops." ]
+
++[ WRITE MY-RECORD 
+   INVALID
+      DISPLAY ¥ "Oops." ]
+
++[ WRITE MY-RECORD 
+   NOT INVALID KEY
+      DISPLAY ¥ "A-OK." ]
+
++[ WRITE MY-RECORD 
+   NOT INVALID
+      DISPLAY ¥ "A-OK." ]
+
++[ WRITE MY-RECORD 
+   AT END-OF-PAGE
+      DISPLAY "End of page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   AT EOP
+      DISPLAY "End of page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   END-OF-PAGE
+      DISPLAY "End of page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   EOP
+      DISPLAY "End of page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   NOT AT END-OF-PAGE
+      DISPLAY "Elsewhere on page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   NOT AT EOP
+      DISPLAY "Elsewhere on page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   NOT END-OF-PAGE
+      DISPLAY "Elsewhere on page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   NOT EOP
+      DISPLAY "Elsewhere on page." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   INVALID KEY
+      DISPLAY "Oops." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   INVALID
+      DISPLAY "Oops." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   NOT INVALID KEY
+      DISPLAY "A-OK." 
+   END-WRITE ]
+
++[ WRITE MY-RECORD 
+   NOT INVALID
+      DISPLAY "A-OK." 
+   END-WRITE ]

@@ -1,0 +1,86 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target deleteStatement;
+
++[ DELETE MY-FILE ¥ . ]
+
++[ DELETE MY-FILE RECORD ¥ . ]
+
++[ DELETE MY-FILE
+   END-DELETE ]
+
++[ DELETE MY-FILE RECORD
+   END-DELETE ]
+
++[ DELETE MY-FILE 
+   INVALID KEY
+      DISPLAY ¥ "Oops." ]
+
++[ DELETE MY-FILE RECORD
+   INVALID KEY
+      DISPLAY ¥ "Oops." ]
+
++[ DELETE MY-FILE 
+   INVALID
+      DISPLAY ¥ "Oops." ]
+
++[ DELETE MY-FILE RECORD
+   INVALID
+      DISPLAY ¥ "Oops." ]
+
++[ DELETE MY-FILE 
+   NOT INVALID KEY
+      DISPLAY ¥ "A-OK." ]
+
++[ DELETE MY-FILE RECORD
+   NOT INVALID KEY
+      DISPLAY ¥ "A-OK." ]
+
++[ DELETE MY-FILE 
+   NOT INVALID
+      DISPLAY ¥ "A-OK." ]
+
++[ DELETE MY-FILE RECORD
+   NOT INVALID
+      DISPLAY ¥ "A-OK." ]
+
++[ DELETE MY-FILE 
+   INVALID KEY
+      DISPLAY "Oops." 
+   END-DELETE ]
+
++[ DELETE MY-FILE RECORD
+   INVALID KEY
+      DISPLAY "Oops." 
+   END-DELETE ]
+
++[ DELETE MY-FILE 
+   INVALID
+      DISPLAY "Oops." 
+   END-DELETE ]
+
++[ DELETE MY-FILE RECORD
+   INVALID
+      DISPLAY "Oops." 
+   END-DELETE ]
+
++[ DELETE MY-FILE 
+   NOT INVALID KEY
+      DISPLAY "A-OK." 
+   END-DELETE ]
+
++[ DELETE MY-FILE RECORD
+   NOT INVALID KEY
+      DISPLAY "A-OK." 
+   END-DELETE ]
+
++[ DELETE MY-FILE 
+   NOT INVALID
+      DISPLAY "A-OK." 
+   END-DELETE ]
+
++[ DELETE MY-FILE RECORD
+   NOT INVALID
+      DISPLAY "A-OK." 
+   END-DELETE ]

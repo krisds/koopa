@@ -157,8 +157,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("RELEASE");
       RESERVED_WORDS.add("HIGH-VALUE");
       RESERVED_WORDS.add("RECEIVE");
-      RESERVED_WORDS.add("START");
       RESERVED_WORDS.add("MERGE");
+      RESERVED_WORDS.add("START");
       RESERVED_WORDS.add("SEPARATE");
       RESERVED_WORDS.add("USE");
       RESERVED_WORDS.add("END-DELETE");
@@ -1399,6 +1399,7 @@ public class CobolGrammar extends KoopaGrammar {
                    callStatement(),
                    cancelStatement(),
                    computeStatement(),
+                   deleteStatement(),
                    divideStatement(),
                    entryStatement(),
                    evaluateStatement(),
@@ -1410,12 +1411,16 @@ public class CobolGrammar extends KoopaGrammar {
                    moveStatement(),
                    multiplyStatement(),
                    performStatement(),
+                   readStatement(),
                    returnStatement(),
+                   rewriteStatement(),
                    searchStatement(),
+                   startStatement(),
                    stopStatement(),
                    stringStatement(),
                    subtractStatement(),
                    unstringStatement(),
+                   writeStatement(),
                    sequence(
                        verb(),
                        optional(
@@ -1579,6 +1584,7 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    token("CALL"),
                    token("CANCEL"),
+                   token("DELETE"),
                    token("ENTRY"),
                    token("EVALUATE"),
                    token("EXEC"),
@@ -1589,33 +1595,32 @@ public class CobolGrammar extends KoopaGrammar {
                    token("MOVE"),
                    token("PERFORM"),
                    token("RETURN"),
+                   token("REWRITE"),
                    token("SEARCH"),
                    token("STOP"),
                    token("ADD"),
                    token("COMPUTE"),
                    token("DIVIDE"),
                    token("MULTIPLY"),
+                   token("READ"),
+                   token("START"),
                    token("STRING"),
                    token("SUBTRACT"),
                    token("UNSTRING"),
+                   token("WRITE"),
                    token("ACCEPT"),
                    token("ALTER"),
                    token("CLOSE"),
                    token("CONTINUE"),
-                   token("DELETE"),
                    token("DISPLAY"),
                    token("INITIALIZE"),
                    token("INSPECT"),
                    token("MERGE"),
                    token("OPEN"),
-                   token("READ"),
                    token("RELEASE"),
-                   token("REWRITE"),
                    token("SET"),
                    token("SORT"),
-                   token("START"),
                    token("USE"),
-                   token("WRITE"),
                    token("ENABLE"),
                    token("DISABLE"),
                    token("SEND"),
@@ -1933,6 +1938,56 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return computeStatementParser;
+    }
+
+    // ========================================================
+    // deleteStatement
+    // ........................................................
+
+    private Parser deleteStatementParser = null;
+
+    public Parser deleteStatement() {
+        if (deleteStatementParser == null) {
+           FutureParser future = scoped("deleteStatement");
+           deleteStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("DELETE"),
+                   fileName(),
+                   optional(
+                       token("RECORD")
+                   ),
+                   optional(
+                       sequence(
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-DELETE")
+                   )
+               )
+           );
+        }
+
+        return deleteStatementParser;
     }
 
     // ========================================================
@@ -2623,6 +2678,100 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // readStatement
+    // ........................................................
+
+    private Parser readStatementParser = null;
+
+    public Parser readStatement() {
+        if (readStatementParser == null) {
+           FutureParser future = scoped("readStatement");
+           readStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("READ"),
+                   skipto(
+                       choice(
+                           sequence(
+                               optional(
+                                   token("NOT")
+                               ),
+                               optional(
+                                   token("AT")
+                               ),
+                               token("END")
+                           ),
+                           sequence(
+                               optional(
+                                   token("NOT")
+                               ),
+                               token("INVALID"),
+                               optional(
+                                   token("KEY")
+                               )
+                           ),
+                           token("END-READ"),
+                           token("."),
+                           endOfStatement()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("AT")
+                           ),
+                           token("END"),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           optional(
+                               token("AT")
+                           ),
+                           token("END"),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-READ")
+                   )
+               )
+           );
+        }
+
+        return readStatementParser;
+    }
+
+    // ========================================================
     // returnStatement
     // ........................................................
 
@@ -2657,6 +2806,59 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return returnStatementParser;
+    }
+
+    // ========================================================
+    // rewriteStatement
+    // ........................................................
+
+    private Parser rewriteStatementParser = null;
+
+    public Parser rewriteStatement() {
+        if (rewriteStatementParser == null) {
+           FutureParser future = scoped("rewriteStatement");
+           rewriteStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("REWRITE"),
+                   recordName(),
+                   optional(
+                       sequence(
+                           token("FROM"),
+                           identifier()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-REWRITE")
+                   )
+               )
+           );
+        }
+
+        return rewriteStatementParser;
     }
 
     // ========================================================
@@ -2769,6 +2971,68 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return notAtEndParser;
+    }
+
+    // ========================================================
+    // startStatement
+    // ........................................................
+
+    private Parser startStatementParser = null;
+
+    public Parser startStatement() {
+        if (startStatementParser == null) {
+           FutureParser future = scoped("startStatement");
+           startStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("START"),
+                   skipto(
+                       choice(
+                           sequence(
+                               optional(
+                                   token("NOT")
+                               ),
+                               token("INVALID"),
+                               optional(
+                                   token("KEY")
+                               )
+                           ),
+                           token("END-START"),
+                           token("."),
+                           endOfStatement()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-START")
+                   )
+               )
+           );
+        }
+
+        return startStatementParser;
     }
 
     // ========================================================
@@ -2982,6 +3246,109 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return unstringStatementParser;
+    }
+
+    // ========================================================
+    // writeStatement
+    // ........................................................
+
+    private Parser writeStatementParser = null;
+
+    public Parser writeStatement() {
+        if (writeStatementParser == null) {
+           FutureParser future = scoped("writeStatement");
+           writeStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("WRITE"),
+                   skipto(
+                       choice(
+                           sequence(
+                               optional(
+                                   token("NOT")
+                               ),
+                               optional(
+                                   token("AT")
+                               ),
+                               choice(
+                                   token("END-OF-PAGE"),
+                                   token("EOP")
+                               )
+                           ),
+                           sequence(
+                               optional(
+                                   token("NOT")
+                               ),
+                               token("INVALID"),
+                               optional(
+                                   token("KEY")
+                               )
+                           ),
+                           token("END-WRITE"),
+                           token("."),
+                           endOfStatement()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("AT")
+                           ),
+                           choice(
+                               token("END-OF-PAGE"),
+                               token("EOP")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           optional(
+                               token("AT")
+                           ),
+                           choice(
+                               token("END-OF-PAGE"),
+                               token("EOP")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NOT"),
+                           token("INVALID"),
+                           optional(
+                               token("KEY")
+                           ),
+                           plus(
+                               statement()
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-WRITE")
+                   )
+               )
+           );
+        }
+
+        return writeStatementParser;
     }
 
     // ========================================================
@@ -3787,6 +4154,24 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // recordName
+    // ........................................................
+
+    private Parser recordNameParser = null;
+
+    public Parser recordName() {
+        if (recordNameParser == null) {
+           FutureParser future = scoped("recordName");
+           recordNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return recordNameParser;
+    }
+
+    // ========================================================
     // figurativeConstant
     // ........................................................
 
@@ -3872,6 +4257,10 @@ public class CobolGrammar extends KoopaGrammar {
     // ========================================================
     // Code provided by the user.
     // --------------------------------------------------------
+
+    // Note: If you add/remove parsers in the kg-usercode file
+    // you will need to update the antlr-tokens and antlr-rules
+    // files as well!
 
     // ========================================================
     // cobolWord

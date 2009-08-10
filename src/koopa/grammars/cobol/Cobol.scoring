@@ -4,6 +4,7 @@
 
 verify water
 - workingStorageSection !copyStatement !replaceStatement !execStatement : warn "Water in the working storage section."
+- linkageSection !copyStatement !replaceStatement !execStatement : warn "Water in the linkage section."
 
 
 ## #############################################################################

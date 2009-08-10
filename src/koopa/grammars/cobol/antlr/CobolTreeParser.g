@@ -185,7 +185,13 @@ linkageSection
       ( 'LINKAGE'
         'SECTION'
         '.'
-        (water)?
+        ( ( dataDescriptionEntry
+        | copyStatement
+        | replaceStatement
+        | ( execStatement
+          ( '.' )?
+        )
+        ) )*
       )
     )
   ;

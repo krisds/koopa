@@ -101,7 +101,12 @@ end
 
 def linkageSection =
 	LINKAGE SECTION .
-    [--> (dataSectionStart | divisionStart)]
+    ( dataDescriptionEntry
+    | copyStatement
+    | replaceStatement
+    | execStatement [.]
+    )*
+#    [--> (dataSectionStart | divisionStart)]
 end
 
 def communicationSection =

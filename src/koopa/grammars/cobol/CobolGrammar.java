@@ -563,11 +563,16 @@ public class CobolGrammar extends KoopaGrammar {
                    token("LINKAGE"),
                    token("SECTION"),
                    token("."),
-                   optional(
-                       skipto(
-                           choice(
-                               dataSectionStart(),
-                               divisionStart()
+                   star(
+                       choice(
+                           dataDescriptionEntry(),
+                           copyStatement(),
+                           replaceStatement(),
+                           sequence(
+                               execStatement(),
+                               optional(
+                                   token(".")
+                               )
                            )
                        )
                    )

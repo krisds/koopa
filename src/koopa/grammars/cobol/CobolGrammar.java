@@ -1480,6 +1480,26 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // nestedStatements
+    // ........................................................
+
+    private Parser nestedStatementsParser = null;
+
+    public Parser nestedStatements() {
+        if (nestedStatementsParser == null) {
+           FutureParser future = scoped("nestedStatements");
+           nestedStatementsParser = future;
+           future.setParser(
+               plus(
+                   statement()
+               )
+           );
+        }
+
+        return nestedStatementsParser;
+    }
+
+    // ========================================================
     // eventPhrase
     // ........................................................
 
@@ -1673,9 +1693,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -1686,9 +1704,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -1786,9 +1802,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("ON")
                    ),
                    token("OVERFLOW"),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -1812,9 +1826,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("ON")
                    ),
                    token("EXCEPTION"),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -1839,9 +1851,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("ON")
                    ),
                    token("EXCEPTION"),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -1912,9 +1922,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -1925,9 +1933,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -1963,9 +1969,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -1975,9 +1979,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2027,9 +2029,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2040,9 +2040,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2167,9 +2165,7 @@ public class CobolGrammar extends KoopaGrammar {
                            )
                        )
                    ),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -2191,9 +2187,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("WHEN"),
                    token("OTHER"),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -2369,9 +2363,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("THEN")
                    ),
                    choice(
-                       plus(
-                           statement()
-                       ),
+                       nestedStatements(),
                        sequence(
                            token("NEXT"),
                            token("SENTENCE")
@@ -2381,9 +2373,7 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            token("ELSE"),
                            choice(
-                               plus(
-                                   statement()
-                               ),
+                               nestedStatements(),
                                sequence(
                                    token("NEXT"),
                                    token("SENTENCE")
@@ -2475,9 +2465,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2488,9 +2476,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2525,9 +2511,7 @@ public class CobolGrammar extends KoopaGrammar {
                                    varying()
                                )
                            ),
-                           plus(
-                               statement()
-                           ),
+                           nestedStatements(),
                            token("END-PERFORM")
                        ),
                        sequence(
@@ -2721,9 +2705,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("AT")
                            ),
                            token("END"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2733,9 +2715,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("AT")
                            ),
                            token("END"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2744,9 +2724,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2756,9 +2734,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2834,9 +2810,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2846,9 +2820,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -2900,9 +2872,7 @@ public class CobolGrammar extends KoopaGrammar {
                            token("WHEN"),
                            condition(),
                            choice(
-                               plus(
-                                   statement()
-                               ),
+                               nestedStatements(),
                                sequence(
                                    token("NEXT"),
                                    token("SENTENCE")
@@ -2936,9 +2906,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("AT")
                    ),
                    token("END"),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -2963,9 +2931,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("AT")
                    ),
                    token("END"),
-                   plus(
-                       statement()
-                   )
+                   nestedStatements()
                )
            );
         }
@@ -3008,9 +2974,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3020,9 +2984,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3094,9 +3056,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("OVERFLOW"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3106,9 +3066,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("OVERFLOW"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3158,9 +3116,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3171,9 +3127,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            token("SIZE"),
                            token("ERROR"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3221,9 +3175,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("OVERFLOW"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3233,9 +3185,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("OVERFLOW"),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3298,9 +3248,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("END-OF-PAGE"),
                                token("EOP")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3313,9 +3261,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("END-OF-PAGE"),
                                token("EOP")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3324,9 +3270,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -3336,9 +3280,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("KEY")
                            ),
-                           plus(
-                               statement()
-                           )
+                           nestedStatements()
                        )
                    ),
                    optional(

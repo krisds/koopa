@@ -77,7 +77,7 @@
 			<arg value="app/" />
 			<arg value="back-end/" />
 			<arg value="sandbox/" />
-			<arg value="xperimental/" />
+			<arg value="processing/" />
 			<classpath>
 				<pathelement path="build" />
 				<fileset dir="lib">

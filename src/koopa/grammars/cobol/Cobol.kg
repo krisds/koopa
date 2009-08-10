@@ -322,6 +322,10 @@ def continuationOfStatement (Token t) =
     )
 end
 
+def nestedStatements =
+    (statement)+
+end
+
 def eventPhrase (Token t) returns t =
     [NOT] [ON | AT]
     ( t=EXCEPTION
@@ -430,8 +434,8 @@ def addStatement =
       | endOfStatement
       )
     )
-    [[ON] SIZE ERROR (statement)+]
-    [NOT [ON] SIZE ERROR (statement)+]
+    [[ON] SIZE ERROR nestedStatements]
+    [NOT [ON] SIZE ERROR nestedStatements]
     [END-ADD]
 end
 
@@ -460,15 +464,15 @@ def callStatement =
 end
 
 def onOverflow =
-    [ON] OVERFLOW (statement)+
+    [ON] OVERFLOW nestedStatements
 end
 
 def onException =
-    [ON] EXCEPTION (statement)+
+    [ON] EXCEPTION nestedStatements
 end
 
 def notOnException =
-    NOT [ON] EXCEPTION (statement)+
+    NOT [ON] EXCEPTION nestedStatements
 end
 
 ## #############################################################################
@@ -493,8 +497,8 @@ def computeStatement =
       | endOfStatement
       )
     )
-    [[ON] SIZE ERROR (statement)+]
-    [NOT [ON] SIZE ERROR (statement)+]
+    [[ON] SIZE ERROR nestedStatements]
+    [NOT [ON] SIZE ERROR nestedStatements]
     [END-COMPUTE]
 end
 
@@ -505,8 +509,8 @@ end
 def deleteStatement =
     DELETE fileName [RECORD]
     
-    [INVALID [KEY] (statement)+]
-    [NOT INVALID [KEY] (statement)+]
+    [INVALID [KEY] nestedStatements]
+    [NOT INVALID [KEY] nestedStatements]
     
     [END-DELETE]
 end
@@ -525,8 +529,8 @@ def divideStatement =
       | endOfStatement
       )
     )
-    [[ON] SIZE ERROR (statement)+]
-    [NOT [ON] SIZE ERROR (statement)+]
+    [[ON] SIZE ERROR nestedStatements]
+    [NOT [ON] SIZE ERROR nestedStatements]
     [END-DIVIDE]
 end
 
@@ -557,12 +561,12 @@ def when =
     ( WHEN object
       (ALSO object)*
     )+ 
-    (statement)+
+    nestedStatements
 end
 
 def whenOther =
     WHEN OTHER
-      (statement)+
+      nestedStatements
 end
 
 def object =
@@ -627,11 +631,11 @@ end
 
 def ifStatement =
     IF condition [THEN]
-      ( (statement)+
+      ( nestedStatements
       | NEXT SENTENCE
       )
     [ELSE
-      ( (statement)+
+      ( nestedStatements
       | NEXT SENTENCE
       )
     ]
@@ -665,8 +669,8 @@ def multiplyStatement =
       | endOfStatement
       )
     )
-    [[ON] SIZE ERROR (statement)+]
-    [NOT [ON] SIZE ERROR (statement)+]
+    [[ON] SIZE ERROR nestedStatements]
+    [NOT [ON] SIZE ERROR nestedStatements]
     [END-MULTIPLY]
 end
 
@@ -682,7 +686,7 @@ def performStatement =
     PERFORM 
     ( # "in-line"
       [ times | until | varying ]
-      (statement)+
+      nestedStatements
       END-PERFORM
 
     | # "out-of-line"
@@ -736,11 +740,11 @@ def readStatement =
       )
     )
     
-    [[AT] END (statement)+]
-    [NOT [AT] END (statement)+]
+    [[AT] END nestedStatements]
+    [NOT [AT] END nestedStatements]
     
-    [INVALID [KEY] (statement)+]
-    [NOT INVALID [KEY] (statement)+]
+    [INVALID [KEY] nestedStatements]
+    [NOT INVALID [KEY] nestedStatements]
     
     [END-READ]
 end
@@ -763,8 +767,8 @@ end
 def rewriteStatement =
     REWRITE recordName [FROM identifier]
     
-    [INVALID [KEY] (statement)+]
-    [NOT INVALID [KEY] (statement)+]
+    [INVALID [KEY] nestedStatements]
+    [NOT INVALID [KEY] nestedStatements]
     
     [END-REWRITE]
 end
@@ -782,7 +786,7 @@ def searchStatement =
     [atEnd]
    
     ( WHEN condition
-      ( (statement)+
+      ( nestedStatements
       | NEXT SENTENCE
       )
     )+ 
@@ -791,11 +795,11 @@ def searchStatement =
 end
 
 def atEnd =
-    [AT] END (statement)+
+    [AT] END nestedStatements
 end
 
 def notAtEnd =
-    NOT [AT] END (statement)+
+    NOT [AT] END nestedStatements
 end
 
 ## #############################################################################
@@ -813,8 +817,8 @@ def startStatement =
       )
     )
     
-    [INVALID [KEY] (statement)+]
-    [NOT INVALID [KEY] (statement)+]
+    [INVALID [KEY] nestedStatements]
+    [NOT INVALID [KEY] nestedStatements]
     
     [END-START]
 end
@@ -841,8 +845,8 @@ def stringStatement =
       | endOfStatement
       )
     )
-    [[ON] OVERFLOW (statement)+]
-    [NOT [ON] OVERFLOW (statement)+]
+    [[ON] OVERFLOW nestedStatements]
+    [NOT [ON] OVERFLOW nestedStatements]
     [END-STRING]
 end
 
@@ -860,8 +864,8 @@ def subtractStatement =
       | endOfStatement
       )
     )
-    [[ON] SIZE ERROR (statement)+]
-    [NOT [ON] SIZE ERROR (statement)+]
+    [[ON] SIZE ERROR nestedStatements]
+    [NOT [ON] SIZE ERROR nestedStatements]
     [END-SUBTRACT]
 end
 
@@ -879,8 +883,8 @@ def unstringStatement =
       | endOfStatement
       )
     )
-    [[ON] OVERFLOW (statement)+]
-    [NOT [ON] OVERFLOW (statement)+]
+    [[ON] OVERFLOW nestedStatements]
+    [NOT [ON] OVERFLOW nestedStatements]
     [END-UNSTRING]
 end
 
@@ -900,11 +904,11 @@ def writeStatement =
       )
     )
     
-    [[AT] (END-OF-PAGE | EOP) (statement)+]
-    [NOT [AT] (END-OF-PAGE | EOP) (statement)+]
+    [[AT] (END-OF-PAGE | EOP) nestedStatements]
+    [NOT [AT] (END-OF-PAGE | EOP) nestedStatements]
     
-    [INVALID [KEY] (statement)+]
-    [NOT INVALID [KEY] (statement)+]
+    [INVALID [KEY] nestedStatements]
+    [NOT INVALID [KEY] nestedStatements]
     
     [END-WRITE]
 end

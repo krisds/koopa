@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="app"/>
 	<classpathentry kind="src" path="back-end"/>
+	<classpathentry kind="src" path="processing"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/swingx-1.0.jar"/>

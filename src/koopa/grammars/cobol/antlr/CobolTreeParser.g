@@ -680,6 +680,16 @@ continuationOfStatement
   ;
 
 // ========================================================
+// nestedStatements
+// ........................................................
+
+nestedStatements
+  : ^(NESTED_STATEMENTS
+      ( statement )+
+    )
+  ;
+
+// ========================================================
 // eventPhrase
 // ........................................................
 
@@ -804,13 +814,13 @@ addStatement
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-ADD' )?
       )
@@ -858,7 +868,7 @@ onOverflow
   : ^(ON_OVERFLOW
       ( ( 'ON' )?
         'OVERFLOW'
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -871,7 +881,7 @@ onException
   : ^(ON_EXCEPTION
       ( ( 'ON' )?
         'EXCEPTION'
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -885,7 +895,7 @@ notOnException
       ( 'NOT'
         ( 'ON' )?
         'EXCEPTION'
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -915,13 +925,13 @@ computeStatement
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-COMPUTE' )?
       )
@@ -939,12 +949,12 @@ deleteStatement
         ( 'RECORD' )?
         ( ( 'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-DELETE' )?
       )
@@ -962,13 +972,13 @@ divideStatement
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-DIVIDE' )?
       )
@@ -1030,7 +1040,7 @@ when
           object
         ) )*
       ) )+
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -1043,7 +1053,7 @@ whenOther
   : ^(WHEN_OTHER
       ( 'WHEN'
         'OTHER'
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -1139,13 +1149,13 @@ ifStatement
       ( 'IF'
         condition
         ( 'THEN' )?
-        ( ( statement )+
+        ( nestedStatements
         | ( 'NEXT'
           'SENTENCE'
         )
         )
         ( ( 'ELSE'
-          ( ( statement )+
+          ( nestedStatements
           | ( 'NEXT'
             'SENTENCE'
           )
@@ -1188,13 +1198,13 @@ multiplyStatement
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-MULTIPLY' )?
       )
@@ -1212,7 +1222,7 @@ performStatement
         | until
         | varying
         ) )?
-          ( statement )+
+          nestedStatements
           'END-PERFORM'
         )
         | ( procedureName
@@ -1314,21 +1324,21 @@ readStatement
         (water)?
         ( ( ( 'AT' )?
           'END'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'AT' )?
           'END'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-READ' )?
       )
@@ -1367,12 +1377,12 @@ rewriteStatement
         ) )?
         ( ( 'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-REWRITE' )?
       )
@@ -1400,7 +1410,7 @@ searchStatement
         ( atEnd )?
         ( ( 'WHEN'
           condition
-          ( ( statement )+
+          ( nestedStatements
           | ( 'NEXT'
             'SENTENCE'
           )
@@ -1419,7 +1429,7 @@ atEnd
   : ^(AT_END
       ( ( 'AT' )?
         'END'
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -1433,7 +1443,7 @@ notAtEnd
       ( 'NOT'
         ( 'AT' )?
         'END'
-        ( statement )+
+        nestedStatements
       )
     )
   ;
@@ -1448,12 +1458,12 @@ startStatement
         (water)?
         ( ( 'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-START' )?
       )
@@ -1484,12 +1494,12 @@ stringStatement
         (water)?
         ( ( ( 'ON' )?
           'OVERFLOW'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'OVERFLOW'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-STRING' )?
       )
@@ -1507,13 +1517,13 @@ subtractStatement
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'SIZE'
           'ERROR'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-SUBTRACT' )?
       )
@@ -1530,12 +1540,12 @@ unstringStatement
         (water)?
         ( ( ( 'ON' )?
           'OVERFLOW'
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'OVERFLOW'
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-UNSTRING' )?
       )
@@ -1554,23 +1564,23 @@ writeStatement
           ( 'END-OF-PAGE'
           | 'EOP'
           )
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'AT' )?
           ( 'END-OF-PAGE'
           | 'EOP'
           )
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( ( 'NOT'
           'INVALID'
           ( 'KEY' )?
-          ( statement )+
+          nestedStatements
         ) )?
         ( 'END-WRITE' )?
       )

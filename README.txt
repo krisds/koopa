@@ -6,16 +6,16 @@ differently in the actual file or folder.
 
 = Generation =
 
-Grammar files end in ".gg" (for "Koopa grammar"). These are processed by the
-koopa.grammars.generator.GGG class, which needs three arguments:
+Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the
+koopa.grammars.generator.KGG class, which needs three arguments:
 
-  1. The name of the grammar, without the ".gg" extension.
+  1. The name of the grammar, without the ".kg" extension.
   2. The target java package the generated parser will be part of.
   3. The target folder to save the generated parser in.
 
 Koopa can also take these grammar files and translate them into an equivalent
 ANTLR tree grammar. These tree grammars may then be used (modified or not) in
-the backend. The generator is class koopa.trees.antlr.generator.GGToANTLR.
+the backend. The generator is class koopa.trees.antlr.generator.KGToANTLR.
 
 All generation phases may be triggered manually. Alternatively you can also use
 the ANT build script found in the root folder. Choose the "regenerate" target.
@@ -55,11 +55,11 @@ in doubt, contact the maintainers.
 
 = GG.tokens =
 
-In koopa.trees.antlr.generator, GG.tokens is a manual copy of the file with
+In koopa.trees.antlr.generator, KG.tokens is a manual copy of the file with
 the same name from koopa.grammars.generator. If the original ever changes this
-means that the GGToANTLR generator is broken. In that case you need to update
+means that the KGToANTLR generator is broken. In that case you need to update
 its tokens file. The ANT build script has a target to do this for you
-(SynchronizeGGTokens). 
+(SynchronizeKGTokens). 
 
 Do note that if a tokens file has changed, the grammar may not automatically
 get recompiled! If it doesn't you will likely start seeing very strange errors.

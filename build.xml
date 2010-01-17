@@ -4,7 +4,7 @@
 		<echo message="Use target regenerate to rebuild all parts. Or pick one of the other targets to rebuild selected parts (recommended only if you know what you're doing)." />
 	</target>
 
-	<target name="regenerate" depends="KGG,GenerateVerifications,KGToANTLR,SynchronizeCobolTokens,GenerateANTLRv3TreeFilters,GenerateUnitTests" />
+	<target name="regenerate" depends="KGG,GenerateVerifications,KGToANTLR,SynchronizeKGTokens,SynchronizeCobolTokens,GenerateANTLRv3TreeFilters,GenerateUnitTests" />
 
 	<target name="KGG">
 		<java classname="koopa.grammars.generator.KGG" fork="true">
@@ -88,7 +88,7 @@
 		</java>
 	</target>
 
-	<target name="SynchronizeGGTokens">
+	<target name="SynchronizeKGTokens">
 		<java classname="koopa.util.ANTSynchronize" fork="true">
 			<jvmarg value="-ea" />
 			<arg value="src/koopa/grammars/generator/KG.tokens" />

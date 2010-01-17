@@ -1,15 +1,20 @@
 package koopa.util;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class ANTSynchronize {
+	private static Set<File> affectedFolders = new HashSet<File>();
+
 	public static void main(String[] args) throws IOException {
 		if (args == null || args.length < 2) {
 			System.out.println("Need a source file and a path.");
@@ -42,6 +47,10 @@ public class ANTSynchronize {
 
 			copy(source, matched);
 		}
+
+		for (File folder : affectedFolders) {
+			touchGrammarsInFolder(folder);
+		}
 	}
 
 	private static void process(File file, String name, List<File> matches) {
@@ -61,6 +70,7 @@ public class ANTSynchronize {
 
 		} else if (file.getName().equals(name)) {
 			matches.add(file);
+			affectedFolders.add(file.getParentFile());
 		}
 	}
 
@@ -81,5 +91,23 @@ public class ANTSynchronize {
 		in.close();
 
 		System.out.println("  Done.");
+	}
+
+	private static void touchGrammarsInFolder(File folder) {
+		if (folder == null) {
+			return;
+		}
+
+		File[] grammars = folder.listFiles(new FileFilter() {
+			public boolean accept(File pathname) {
+				return pathname.isFile() && pathname.getName().endsWith(".g");
+			}
+		});
+
+		long now = System.currentTimeMillis();
+		for (File grammar : grammars) {
+			System.out.println("Touching grammar " + grammar);
+			grammar.setLastModified(now);
+		}
 	}
 }

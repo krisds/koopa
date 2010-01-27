@@ -1,0 +1,433 @@
+\documentclass[a4paper]{article}
+
+\usepackage{times}
+\usepackage{url}
+
+\usepackage[usenames]{color}
+\definecolor{Gray}{rgb}{0.5,0.5,0.5} 
+\definecolor{Black}{rgb}{0,0,0} 
+
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\ttfamily,
+  identifierstyle=\ttfamily,
+  commentstyle=\ttfamily
+}
+
+\lstset{
+  xleftmargin=1.7em,
+  numberstyle=\tiny,
+  stepnumber=2, 
+  numbersep=5pt,
+  numbers=left
+}
+
+\lstset{
+  moredelim=[is][\color{Black}\bfseries\underbar\ttfamily\small\underbar]{<}{>}
+}
+
+\newcommand{\note}[1]{\textcolor{red}{{\textit{((---#1---))}}}}
+
+\begin{document}
+
+\title{The Koopa Cobol Parser Generator}
+\author{Kris De Schutter}
+\date{}
+
+\maketitle
+\begin{abstract}
+Koopa is a Cobol parser generator with a plan for growth. It is able to handle Cobol source files in isolation (no preprocessing required) and accepts CICS/SQL fragments. Due to its design it is easily extensible in a way which limits the impact on the overall project. It achieves this by means of a custom DSL for specifying Cobol island grammars in a concise way, and through a unit testing framework for such grammars which aids in rapid and accurate fault detection. This is complemented by support for both ad-hoc and serial handling of the generated syntax trees in a structure-shy manner.
+\end{abstract}
+
+% =============================================================================
+
+\section{Some background}
+\label{background}
+
+The Koopa project was born out of a need to process industrial Cobol source code for a variety of purposes. One was the verification of industrial software with respect to an architectural requirements document~\cite{conf:csmr:KellensSDJP09}. Another was the extraction of interdependencies between programs, subprograms and copy books in such systems.
+
+Due to my research into legacy systems I had some prior experience with the creation of Cobol parsers. In fact, the Koopa system, as it is now on Sourcefourge, would be the fourth or fifth attempt. One was based on cobc (now OpenCobol\footnote{\scriptsize\url{http://www.opencobol.org/}}). Another two were built using the grammar tools from the Vrije Universiteit Amsterdam, on which they had already built the VS-Cobol-II parser (see~\cite{LV01-SPE}). All these versions had one major drawback: they tried to be \emph{complete} Cobol parsers. This proved to be too much of a problem with the Cobol code we had to process.
+
+Our input consisted of complex source code making use of SQL and CICS\footnote{\scriptsize CICS (Customer Information Control System) is a transaction manager for online processing.} extensions. In addition, we only had access to the source code for part of the system, not all of it. We couldn't really count on having a complete compilable (or even preprocessable) module. What we really needed was a parser with the following properties:
+\begin{itemize}
+    \item \textbf{One file at a time.} The parser should be able to process Cobol source files in isolation. In particular it should not assume that the sources have been preprocessed. This helps us deal with incomplete code bases.
+    \item \textbf{Accept ``foreign'' (CICS, SQL,\ldots) fragments.} While the parser does not need to understand the contents of these fragments, it must be able to handle and track their presence. This is needed, for instance, in control flow analysis as CICS fragments may hold calls to subprograms.
+    \item \textbf{No spurious development effort.} The time spent developing the parser should be in proportion to the subset of statements holding the required information, not the entire Cobol language. Put differently: we do not want to have to specify a complete Cobol grammar unless we need every single piece of information that's in the source code.
+    \item \textbf{Extensible.} The parser should be extensible when the need for extracting new kinds of information establishes itself. The effort required should again be in proportion to the subset of statements holding the information we need, not the entire Cobol language.
+\end{itemize}
+
+These requirements drove the development of Koopa. It is the reason we based it on a very different technology: \emph{island grammars}. Island grammars allow partial definition of grammars where most of the input is simply skipped. This property already solves most of the problems we had, as we will now see.
+% =============================================================================
+
+\section{Island grammars}
+\label{islandgrammars}
+
+Of the requirements set forth in the previous section, the most difficult one to deal with is that of effort: how do we get a parser going in such a way that we only have to specify those parts we're interested in? As we said, the solution was found in \emph{island grammars}. Moonen~\cite{conf:wcre:Moonen01} defines these as follows:
+\begin{quotation}
+An island grammar is a grammar that consists of detailed productions describing certain constructs of interest (the \emph{islands}) and liberal productions that catch the remainder (the \emph{water}). 
+\end{quotation}
+
+Figure~\ref{fig:all-keywords-view} illustrates how this works in practice. On the left is a simple Cobol program (taken from~\cite{conf/aosd/LammelS05}) with all reserved keywords displayed in bold. It should be clear even from this simple program that there are too many keywords to be handled, to consider writing a full parser. (A full Cobol parser typically has to deal with over 500 such keywords, many of which are context dependent.) In contrast, figure~\ref{fig:island-view} shows the approach taken by an island-based parser where we only care about reconstructing the control flow. As can be seen, most of the code is now ignored (the \emph{water}, shown in gray). Instead the parser scans for the \lstinline!PROCEDURE DIVISION! marker, and then looks out for verbs (e.g. \lstinline!OPEN!, \lstinline!SET!, \lstinline!MOVE!, etc.) and dots (shown underlined) from which we can deduce the control flow (the \emph{islands}). The effort required here is reduced to but a few keywords, and a few structural rules (see figure~\ref{fig:classic-grammar}, with details in the next section).
+
+By skipping things we don't care about we can also see how to handle the one-file-at-a-time and foreign-fragments requirement: anything related to the preprocessor (in Cobol this is mainly about \lstinline|COPY| statements), or to CICS/SQL, is simply put into the water. While in theory this might make the remainder of the source code badly formed (due to important parts being inside ``copy books'' or include files), in practice this is rarely a problem.
+
+\begin{figure}
+\centering
+\begin{lstlisting}[
+    alsoletter={-},
+    keywords={IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE, DIVISION, PROGRAM-ID,
+              FILE, INPUT-OUTPUT, FILE-CONTROL, WORKING-STORAGE, LINKAGE, SECTION,
+              SELECT, ASSIGN, TO, ORGANIZATION, IS, SEQUENTIAL,
+              FD, DATA, RECORD, PIC, VALUE, ZERO, USING,
+              IF, NOT, OPEN, SET, TRUE, MOVE, WRITE, GOBACK}]
+IDENTIFICATION DIVISION.
+ PROGRAM-ID. TOOLS/LOGFILE.
+ENVIRONMENT DIVISION.
+ INPUT-OUTPUT SECTION.
+  FILE-CONTROL.
+   SELECT LOGFILE ASSIGN TO "FILES/LOGFILE.TXT",
+   ORGANIZATION IS SEQUENTIAL.
+DATA DIVISION.
+ FILE SECTION.
+   FD LOGFILE DATA RECORD IS LOGFILE-RECORD.
+   01 LOGFILE-RECORD PIC X(2048).
+ WORKING-STORAGE SECTION.
+   01 LOGFILE-STATUS     PIC 9 VALUE ZERO.
+      88 LOGFILE-IS-OPEN       VALUE 1.
+ LINKAGE SECTION.
+   01 LOGFILE-ENTRY.
+      05 LOGFILE-VERB  PIC X(12).
+      05 LOGFILE-NAME  PIC X(32).
+      05 LOGFILE-DATA  PIC X(1024).
+PROCEDURE DIVISION USING LOGFILE-ENTRY.
+ OPEN EXTEND LOGFILE
+ SET LOGFILE-IS-OPEN TO TRUE.
+ MOVE LOGFILE-ENTRY TO LOGFILE-RECORD.
+ WRITE LOGFILE-RECORD.
+ GOBACK.
+\end{lstlisting}
+\vspace{-5mm}
+\caption{A Cobol program (based on~\cite{conf/aosd/LammelS05}) showing all keywords in bold.}
+\label{fig:all-keywords-view}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{lstlisting}[
+    basicstyle=\color{Gray}\ttfamily\small,
+    keywordstyle=\color{Black}\bfseries\ttfamily\small,
+    numbers=none]
+IDENTIFICATION DIVISION.
+ PROGRAM-ID. TOOLS/LOGFILE.
+ENVIRONMENT DIVISION.
+ INPUT-OUTPUT SECTION.
+  FILE-CONTROL.
+   SELECT LOGFILE ASSIGN TO "FILES/LOGFILE.TXT",
+   ORGANIZATION IS SEQUENTIAL.
+DATA DIVISION.
+ FILE SECTION.
+   FD LOGFILE DATA RECORD IS LOGFILE-RECORD.
+   01 LOGFILE-RECORD PIC X(2048).
+ WORKING-STORAGE SECTION.
+   01 LOGFILE-STATUS     PIC 9 VALUE ZERO.
+      88 LOGFILE-IS-OPEN       VALUE 1.
+ LINKAGE SECTION.
+   01 LOGFILE-ENTRY.
+      05 LOGFILE-VERB  PIC X(12).
+      05 LOGFILE-NAME  PIC X(32).
+      05 LOGFILE-DATA  PIC X(1024).
+\end{lstlisting}
+\vspace{-4mm}
+\begin{lstlisting}[
+        basicstyle=\color{Gray}\ttfamily\small,
+        keywordstyle=\color{Black}\bfseries\ttfamily\small,
+        numbers=none,
+        alsoletter={-},
+        keywords={PROCEDURE, DIVISION, 
+                  IF, OPEN, SET, MOVE, WRITE, GOBACK}]
+PROCEDURE DIVISION USING LOGFILE-ENTRY<.>
+ OPEN EXTEND LOGFILE
+ SET LOGFILE-IS-OPEN TO TRUE<.>
+ MOVE LOGFILE-ENTRY TO LOGFILE-RECORD<.>
+ WRITE LOGFILE-RECORD<.>
+ GOBACK<.>
+\end{lstlisting}
+\vspace{-5mm}
+\caption{The same Cobol program as seen through the eyes of an island grammar with a focus on control flow. Everything in grey is water and gets ignored. The bold/underlined parts are the islands used to reconstruct the control flow.}
+\label{fig:island-view}
+\end{figure}
+
+% =============================================================================
+
+\section{Writing island grammars}
+\label{classic-approach}
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+source ::=
+  (water)*
+  "PROCEDURE" "DIVISION" DOT
+  (sentence)*
+
+sentence ::= (statement)* DOT
+
+statement ::= verb
+
+verb ::=
+ "OPEN" | "SET" |
+ "MOVE" | "WRITE" | "GOBACK"
+
+water ::= DOT
+\end{lstlisting}
+\caption{Island grammar for the view taken in figure~\ref{fig:island-view}.}
+\label{fig:classic-grammar}
+\end{figure}
+
+Defining an island grammar requires the definition of two things: the islands and the water. Consider again the example in figure~\ref{fig:island-view}. The island grammar alluded to here would look something\footnote{\scriptsize The example uses an EBNF-like syntax, similar to those found in most parser generators, but not from a specific generator.} like figure~\ref{fig:classic-grammar}. Assuming that the tokenizer backing this grammar would only return tokens visible in the grammar (i.e. \lstinline|"PROCEDURE"|, \lstinline|"DIVISION"|, \lstinline|DOT|, etc.), then this definition would be sufficient to handle the example code. The \lstinline|water| definition eats up any dot occurring before the procedure division. Once beyond that point we look for series of statements, where we recognise a statement by looking for verbs. Everything is quite straightforward (especially as we ignore nested statements in this example), with the required effort being very low.
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+source ::=
+  (water-1)*
+  "PROCEDURE" "DIVISION" (water-2)* DOT
+  (sentence)*
+
+sentence ::= (statement)* DOT
+
+statement ::= call | verb (water-2)*
+
+call ::= "CALL" (STRING | IDENTIFIER)
+
+verb ::=
+ ( "OPEN" | "SET" | "MOVE"
+ | "WRITE" | "GOBACK" | "CALL" )
+
+water-1 ::= DOT | STRING | IDENTIFIER
+water-2 ::= STRING | IDENTIFIER
+\end{lstlisting}
+\caption{Extended version of the grammar in figure~\ref{fig:classic-grammar} for dealing with \lstinline|CALL| statements.}
+\label{fig:extended-grammar}
+\end{figure}
+
+Let us now consider the extensibility of this grammar. Assume we want to add support for \lstinline|CALL| statements, where we want to know which external programs get invoked. A simple grammar rule for this statement would be:
+\begin{lstlisting}[numbers=none]
+call ::= "CALL" (STRING | IDENTIFIER)
+\end{lstlisting}
+
+Integrating this into the island grammar of figure~\ref{fig:classic-grammar} is not as straightforward as adding it as an extra alternative to \lstinline|statement|. The reason is that the grammar will now have to deal with two new tokens: \lstinline|STRING| and \lstinline|IDENTIFIER|. These two, however, can occur in any number of places, which means we will have to handle more water in our grammar. Figure~\ref{fig:extended-grammar} presents a possible updated version. Note that not only did we have to extend the definition of water, we now have two different types of water depending on their location in the grammar: before the procedure division all dots should be ignored, and are therefore in the water; inside the procedure division, however, we need the dots to recognise the end of statements, and so they become part of the islands. We also had to extend existing grammar rules with the new occurrences of water, which were previously handled by the tokenizer.
+
+The extent of the effort required for extending the grammar is now no longer based on the rule one wants to add, but on the number of existing rules. Any new rule will have to deal with tokens established by existing rules and, worse, every existing rule will have to deal with any tokens established by the new rule. This quickly puts a cap on what can be added in a reasonable amount of time.
+
+It is important to note that the problem we find here is not related to the concept of island grammars, but rather to the limited expressiveness offered by classic parser generators. What we need here is a way to define water such that it can evolve along with the remainder of the grammar \emph{without further help from the developer}.
+
+% =============================================================================
+
+\section{Koopa: island grammars using a custom DSL}
+\label{koopa}
+
+In order to be able to better handle definitions of water in island grammars for Cobol we have opted for establishing a custom DSL, named Koopa, for specifying such grammars. Koopa works very much like classic EBNF-style languages, but makes some optimisations for Cobol specifications. For instance, it is not necessary to quote keywords. Every uppercase identifier is considered to be a keyword to be matched against the input. This fits nicely with the usual Cobol style, where uppercase is the default rather than the exception. Dots can also be written down freely, and will be matched against the input.
+
+%  ----------------------------------------------------------------------------
+
+\subsection{Support for skipping water}
+
+The most important contribution is the handling of water. Figure~\ref{fig:koopa-grammar} presents a Koopa version of the grammar found in figure~\ref{fig:extended-grammar}, and presented in the previous section. Every occurence of water has been replaced by a construct which looks like this:
+\begin{lstlisting}[numbers=none]
+  [--> pattern]
+\end{lstlisting}
+The \lstinline|-->| operator is the \emph{skip-to} operator, and does as its name implies: it skips anything it encounters up to the provided pattern. The pattern itself is not consumed by the parser. The advantage here is that no matter how the grammar grows, whatever new tokens have to be parsed, as long as a good marker pattern is chosen then you won't have to change anything in the existing grammar rules.
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+def source =
+    [--> PROCEDURE DIVISION]
+    PROCEDURE DIVISION [--> .] .
+    (sentence)*
+end
+
+def sentence =
+    (statement)* .
+end
+
+def statement =
+    ( call
+    | verb [--> (verb | .)]
+    )
+end
+
+def call = 
+    CALL (string | identifier)
+end
+
+def verb =
+    ( OPEN | SET | MOVE
+    | WRITE | GOBACK | CALL )
+end
+\end{lstlisting}
+\caption{Koopa version of the grammar in figure~\ref{fig:extended-grammar}. Uppercase identifiers are keywords to be matched. Lowercase identifiers refer to other rules. \lstinline|-->| is the ``skip-to'' operator, as explained in section~\ref{koopa}.}
+\end{figure}
+
+\begin{figure}
+\centering
+\label{fig:koopa-grammar}
+\begin{lstlisting}
+def goto =
+    GO TO identifier
+        [ (identifier)+
+          DEPENDING [ON] identifier ]
+end
+\end{lstlisting}
+\caption{Definition of \lstinline|GO TO| statements. Anything between square brackets is considered optional.}
+\label{fig:koopa-goto-rule}
+\end{figure}
+
+As a proof of concept, consider adding support for the \lstinline|GO TO| statement. We add the definition in figure~\ref{fig:koopa-goto-rule} to our grammar. Despite the addition of new tokens (e.g. \lstinline|DEPENDING|, \lstinline|ON|) the only extra required modifications are to add this rule as an alternative in \lstinline|statement| (so that it is used in the parsing), and to add \lstinline|GO TO| as another verb (if it was not already listed). Nothing else needs to change. Specifically, no other rules have to be updated to handle the new tokens (e.g. \lstinline|DEPENDING|, \lstinline|ON|), and the \lstinline|goto| rule is not bothered by anything defined by existing rules.
+
+%  ----------------------------------------------------------------------------
+
+\subsection{Support for rule permutations}
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+*> These are valid:
+01 FILLER   PICTURE 9999   VALUE   ZERO.
+01 FILLER   VALUE   ZERO   PICTURE 9999.
+*> This is not valid:
+01 FILLER   PICTURE 9999   PICTURE 9999.
+\end{lstlisting}
+\caption{An example of permutation of clauses in Cobol.}
+\label{fig:permutation-example}
+\end{figure}
+
+Koopa also has a provision for dealing with ``permutation'' of a set of grammar rules. That is, in Cobol it is possible in some locations for a certain set of grammar rules to appear in any order. A typical example here is the different set of options on data definitions. Figure~\ref{fig:permutation-example} shows this. The first two data definitions (lines~2 and~3) are basically equivalent: both define a four digit data item with initial value set to zero. The order in which these clauses appear is not important. What is important is that no clause may appear more than once. It is for this reason that the definition on line~5 fails, even though both picture clauses specify the same picture.
+
+The obvious way of dealing with this in a classic parser generator would be to define the grammar rule along the following lines:
+\begin{lstlisting}[numbers=none]
+level-number data-name
+  ( picture | value )*
+\end{lstlisting}
+This would parse the correct definitions, but would also accept definitions with duplicate clauses. A fix would be to set flags on every clause and throw an exception whenever a clause is seen again after its corresponding flag has been set. This, however, is tedious, error-prone. It also makes the specification of the grammar less readable as it gets mixed with native code to make it work.
+
+Koopa overcomes this problem by establishing a special operator for dealing with permutations. A Koopa definition which would correctly accept the input in figure~\ref{fig:permutation-example} is:
+\begin{lstlisting}[numbers=none]
+level-number data-name
+  !( picture | value )
+\end{lstlisting}
+In Koopa, \lstinline|!| is the permutation operator. It is followed by a list of alternative grammar rules. Any input where these grammar rules match, gets accepted, but only if no rule matches more than once (zero matches are also allowed). In this way our specification for data items remains concise and to the point, without the need for native code to make it work.
+
+% =============================================================================
+
+\section{Tokenising Cobol}
+\label{tokenisation}
+
+In order to keep grammar rule interactions to a minimum Koopa tries not to distinguish different types of tokens until the very last moment\footnote{\scriptsize Notable exception are literals (strings and numbers), which are never context dependent.}, and then only does so based on the grammar rule. Consider again the definitions in figure~\ref{fig:koopa-grammar}. The tokenizer in Koopa will not distinguish the \lstinline|CALL| verb from generic identifiers. Only when the grammar needs to know ``Is the next token a \lstinline|CALL| keyword ?'' will the tokenizer check if it is. The advantage here is that keywords are always local to grammar rules, and will therefore never interfere with other rules.
+
+To make this work Koopa provides a specialised tokenizer. Cobol programs consist of three\footnote{\scriptsize Technically there are also picture character strings, but these can be handled in a later stage of the parsing process.} basic types of tokens: Cobol words, literals, and separators. Cobol words make up the identifiers and keywords of the language. Literals are strings, integers and decimals, as you would expect. Separators are special: they consist of sequences of whitespace and some special characters (commas, colons, parens, etc.). The easiest way of tokenising Cobol code is to split up the text based on separators. Anything that's not a separator then is either a Cobol word or a literal. Distinguishing literals from Cobol words is, of course, quite straightforward. The tokenizer will therefore return a stream made up of these three basic types of tokens. It is only in a later phase (by request of the parser) that the differentiation of keywords versus identifiers is made. An added advantage of this approach is that the tokenizer does not have to co-evolve with the grammar, which again reduces the amount of effort for developing and extending the Cobol grammar.
+
+% =============================================================================
+
+\section{Unit testing Koopa grammars}
+\label{testing}
+
+In order to detect problems as early as possible, thereby keeping the required effort for extending grammar definitions further in check, Koopa provides support for unit testing grammar rules. In Koopa, any grammar rule may be accessed as if it were a full parser. It can then be used to parse any piece of relevant input; it need not be a full source file.
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+target goto;
+
++[ GO TO SUB-A ]
++[ GO TO SUB-A SUB-B DEPENDING ON A-VALUE ]
++[ GO TO SUB-A SUB-B DEPENDING A-VALUE ]
+\end{lstlisting}
+\caption{Unit test for the grammar rule in figure~\ref{fig:koopa-goto-rule}.}
+\label{fig:koopa-goto-test}
+\end{figure}
+
+Consider again the \lstinline|goto| rule from figure~\ref{fig:koopa-goto-rule}. Given this definition we can now set up a set of tests, as is shown in figure~\ref{fig:koopa-goto-test}. Line~1 of figure~\ref{fig:koopa-goto-test} declares which grammar rule will be tested. Lines~3, 4 and~5 each define a single test. Everything between square brackets is used as tokens to be parsed. The leading \lstinline|+| (or \lstinline|-|) flags whether the parser should accept this input (or not).
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+target addStatement;
+
++[ ADD A TO B @ . ]
++[ ADD A TO B GIVING C @ . ]
+\end{lstlisting}
+\caption{Unit test for a partially defined Cobol construct.}
+\label{fig:koopa-test-with-marker}
+\end{figure}
+
+Unit testing is not limited to grammar rules or which you have a complete definition. You can test rules which rely on skipping skipping tokens to do their work. The problem is that this skipping is not greedy, but the unit tests do expect you to consume all tokens. If there are tokens left, this is considered an error. You can overcome this by giving only a partial input, but it is nicer to go for the option of marking the end of what gets consumed by your parser. Figure~\ref{fig:koopa-test-with-marker} shows an example. The ``at'' sign~\footnote{\scriptsize In reality we don't use an ``at'' sign but a unicode character. Check the sources for a real example.} marks the exit point. So in this case there should always be one token left after each test.
+
+These unit tests, together with the grammar, should quickly tell a developer whether or not he or she is breaking any existing feature of the grammar and, more importantly, where exactly he or she is breaking it. Being able to pinpoint any problems as fast as possible is another key factor in keeping development overhead in check.
+
+% =============================================================================
+
+\section{Grammar development cycle}
+\label{development-cycle}
+
+The development cycle for Cobol island grammars in Koopa follows an iterative waterfall model, with a limited number of steps:
+
+\textbf{1. Define and add the new grammar rule.} You can do this based on existing documentation, code examples, or even on existing definitions such as those found in~\cite{LV01-SPE}.
+
+\textbf{2. Add unit tests, and run them.} This includes running all other unit tests! Experience shows that most problems here are with respect to the newly added rule, which is ideal. If problems occur in existing rules, then any fix should include a new test case which tests the problem encountered.
+
+\textbf{3. Run the full parser on a representative body of code.} Ideally this is the code for whatever project you're working on. This will help you establish support for that code as fast as possible. In addition, we also run tests on a Cobol 85 test suite\footnote{\scriptsize\url{http://www.itl.nist.gov/div897/ctg/cobol_form.htm}}.
+
+And, finally, repeat as needed. Given enough iterations the grammar under development will approach a full Cobol grammar; that is, one where there is no more water left. This, however, is an incidental feature of our approach, not a required one.
+
+% =============================================================================
+
+\section{Koopa back-end}
+\label{backend}
+
+The back-end provided by Koopa is left open. The default output is a tokenstream tagged with the names of grammar rules. This is easily transformed into an abstract syntax tree. In fact, Koopa already provides support for building an ANTLR\footnote{\scriptsize\url{http://www.antlr.org/}} syntax tree, which may then be further processed using ANTLR tree parsers. For convenience Koopa also knows how to generate a basic ANTLR tree grammar from the Cobol island grammar.
+
+Here again we encounter a possible maintenance problem: ANTLR tree parsers have to be complete and exact. So if we want to process the abstract syntax tree we're again faced with setting up a complete parser. And while Koopa knows how to generate such a tree grammar from the Koopa grammar, it does not know how to update an existing one. So updating the Koopa grammar will likely break the tree grammar.
+
+\begin{figure}
+\centering
+\begin{lstlisting}
+tree grammar MyAdaptiveTreeParser;
+
+options { /* ... */ }
+
+compilationGroup : compilationUnit* ;
+
+compilationUnit : ^(COMPILATION_UNIT PROGRAM_NAME) ;
+\end{lstlisting}
+\caption{Island tree grammar in ANTLR.}
+\label{fig:island-tree-grammar}
+\end{figure}
+
+Koopa provides a solution for this problem by again going back to island grammars. It is possible in Koopa to define an island ANTLR tree grammar. Figure~\ref{fig:island-tree-grammar} shows an example of such a grammar which only looks at the compilation units defined in a source file. Koopa will analyse this grammar and generate a filter which can be applied to the abstract syntax tree. This filter filters out any tokens which the ANTLR generated tree parser would not expect. For the example this would mean anything which is not a \lstinline|COMPILATION_UNIT| or a \lstinline|PROGRAM_NAME|. In essence it generates a run-time view on the full abstract syntax tree so that your tree parsers see what they expect to see. The result is that changes in your Koopa grammars will mean changes in the abstract syntax trees, but will not necessarily require you (or others) to update your (or their) tree grammars.
+
+% =============================================================================
+
+\section{Discussion/Conclusion}
+\label{conclusion}
+
+I realise that there are a lot of claims in these pages and I feel that I should back them up with some real data. As I have only got my own experiences to fall back on this conclusion will, of necessity, be a personal one.
+
+The generated parsers are able to process real-life industrial Cobol code, warts and all, even if you do not have a complete system. I know this because I have had the chance to test it agains several real-life examples, totalling several million lines of code. So I'm not worried there.
+
+I know that the island grammar approach helps a lot in the piecemeal definition of Cobol grammars. I know this because I have tried it both ways. I'm able to contrast it agains a non-island grammar approach, using the grammarware toolkits from the Vrije Universiteit Amsterdam, YACC and basic ANTLR. The grammars I made in these environments have proved much harder to maintain. Still, I'm not even close to a full Cobol grammar in Koopa, and I don't know how it will cope with such a thing. But I'm hopeful.
+
+The grammar unit testing is also a very welcome tool. It allows you to make changes to the grammar, and to verify (to some extent) that you haven't broken previous work. And if you do happen to break it you can quickly spot where it went wrong. My experiences with previous toolchains were never this nice. I would always have to run the complete parser on a complete Cobol file, and if something went wrong spend a long time trying to figure out why it went wrong. True, the quality of testing in Koopa stands and falls with the quality of the unit tests written by the developer, but it is much easier to set up unit tests which cover all eventualities in Koopa than it is by writing a full Cobol file.
+
+The biggest question mark is the back-end. I have only had to do simple processing so far, and for that the solution using the ANTLR island tree grammars works just fine. The real proof here will be in how others use it, and that is now entirely up to you.
+
+
+% =============================================================================
+
+\bibliographystyle{abbrv}
+\bibliography{guide}
+
+\end{document}

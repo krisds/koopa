@@ -1,6 +1,5 @@
 package koopa.app.showit;
 
-
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
@@ -17,24 +16,32 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.antlr.runtime.tree.CommonTree;
+
 import koopa.app.ApplicationSupport;
 import koopa.app.ConfigurableApplication;
+import koopa.app.actions.ExportASTToXMLAction;
 import koopa.app.actions.FileManager;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
+import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
 import koopa.tokens.Token;
+import koopa.util.Getter;
 
 @SuppressWarnings("serial")
 public class ShowIt extends JFrame implements FileManager,
 		ConfigurableApplication {
 
+	private ParseResults results = null;
 	private ParsingCoordinator coordinator = null;
 	private SourceView pane = null;
 	private CobolOutline outline = null;
+
+	private JMenuItem saveXML = null;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -45,19 +52,17 @@ public class ShowIt extends JFrame implements FileManager,
 	}
 
 	public ShowIt() {
-		this(new File("testsuite/cobol85/CM101M.CBL"));
-
-		setupMenuBar();
-
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this(new File("testsuite/cobol85/CM101M.CBL"), false);
 	}
 
-	public ShowIt(File file) {
+	public ShowIt(File file, boolean isDialog) {
 		super("Koopa Show It - " + file);
 
 		this.coordinator = new ParsingCoordinator();
 
 		ApplicationSupport.configureFromProperties("showit.properties", this);
+
+		setupMenuBar();
 
 		setupComponents();
 		openFile(file);
@@ -65,7 +70,12 @@ public class ShowIt extends JFrame implements FileManager,
 		setSize(900, 600);
 		setLocationRelativeTo(null);
 
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		if (isDialog) {
+			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		} else {
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+		}
 	}
 
 	public void setOption(String name, String value) {
@@ -111,12 +121,36 @@ public class ShowIt extends JFrame implements FileManager,
 					}
 
 					public String getDescription() {
-						return "Cobol file (*.CPY, *.CBL)";
+						return "Cobol file (*.cpy, *.cbl)";
 					}
 				}, this));
 
 		open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
 		file.add(open);
+
+		file.addSeparator();
+
+		saveXML = new JMenuItem(new ExportASTToXMLAction(
+				new Getter<CommonTree>() {
+					public CommonTree getIt() {
+						return results.getTree();
+					}
+				}, new FileFilter() {
+					public boolean accept(File f) {
+						if (!f.isFile())
+							return false;
+						final String name = f.getName().toUpperCase();
+						return name.endsWith(".XML");
+					}
+
+					public String getDescription() {
+						return "XML file (*.xml)";
+					}
+				}, this));
+
+		saveXML.setEnabled(false);
+		saveXML.setAccelerator(KeyStroke.getKeyStroke("meta E"));
+		file.add(saveXML);
 
 		bar.add(file);
 
@@ -155,8 +189,18 @@ public class ShowIt extends JFrame implements FileManager,
 	public void openFile(File file) {
 		setTitle("Koopa Show It - " + file);
 
+		if (saveXML != null) {
+			saveXML.setEnabled(false);
+		}
+
 		try {
-			this.coordinator.parse(file);
+			results = this.coordinator.parse(file);
+
+			if (saveXML != null && results.getErrorCount() == 0
+					&& results.getTree() != null) {
+				saveXML.setEnabled(true);
+			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

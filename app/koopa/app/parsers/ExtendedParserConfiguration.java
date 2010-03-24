@@ -1,6 +1,5 @@
 package koopa.app.parsers;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import koopa.grammars.cobol.CobolGrammar;
 import koopa.grammars.cobol.CobolVerifier;
@@ -256,6 +254,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 					return results;
 				}
 
+				results.setTree(tree);
+
 				// We then allow all tree processors to have a go at the tree.
 				for (CommonTreeProcessor processor : getCommonTreeProcessors()) {
 					if (processor.processes(tree, file)) {
@@ -285,9 +285,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 	private TokenTypes getTokenTypes() {
 		if (tokenTypes == null) {
 			try {
-				Properties types = new ANTLRTokenTypesLoader()
+				tokenTypes = new ANTLRTokenTypesLoader()
 						.load("/koopa/grammars/cobol/antlr/Cobol.tokens");
-				tokenTypes = new TokenTypes(types);
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

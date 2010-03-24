@@ -7,7 +7,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import koopa.grammars.cobol.CobolGrammar;
 import koopa.grammars.cobol.CobolVerifier;
@@ -296,9 +295,6 @@ public class SkippedTreeFilterTest {
 	private static TokenTypes getTokenTypes(String name, String path)
 			throws IOException {
 
-		Properties types = new ANTLRTokenTypesLoader().load(path + name
-				+ ".tokens");
-
-		return new TokenTypes(types);
+		return new ANTLRTokenTypesLoader().load(path + name + ".tokens");
 	}
 }

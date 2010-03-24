@@ -21,14 +21,14 @@ options {
 
 @members {
   private Set<String> tokens = new HashSet<String>();
-  private Map<String, Integer> numbers = new HashMap<String, Integer>();
+  private TokenTypes numbers = new TokenTypes();
   private int count = 13;
 
   public void node(String text) {
     if (!tokens.contains(text)) {
       // System.out.println("node " + text + "=" + count);
       tokens.add(text);
-      numbers.put(ANTLRNaming.forNode(text), count++);
+      numbers.put(ANTLRNaming.forNode(text), count++, false);
     }
   }
 
@@ -36,20 +36,20 @@ options {
     if (!tokens.contains(text)) {
       // System.out.println("token " + text + "=" + count);
       tokens.add(text);
-      numbers.put(ANTLRNaming.forLiteral(text), count++);
+      numbers.put(ANTLRNaming.forLiteral(text), count++, true);
     }
   }
   
   public TokenTypes getTokenTypes() {
-    if (!numbers.containsKey("TOKEN")) {
-      numbers.put("TOKEN", 11);
+    if (!numbers.contains("TOKEN")) {
+      numbers.put("TOKEN", 11, false);
     }
     
-    if (!numbers.containsKey("WATER")) {
-      numbers.put("WATER", 12);
+    if (!numbers.contains("WATER")) {
+      numbers.put("WATER", 12, false);
     }
     
-    return new TokenTypes(numbers);
+    return numbers;
   }
 }
 

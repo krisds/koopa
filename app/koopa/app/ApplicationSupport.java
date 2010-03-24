@@ -16,8 +16,8 @@ public class ApplicationSupport {
 
 	private static Properties properties = getProperties();
 
-	public static File askUserForFile(String key, FileFilter filter,
-			Component parent) {
+	public static File askUserForFile(boolean openFile, String key,
+			FileFilter filter, Component parent) {
 		File start = null;
 		if (properties.containsKey(key)) {
 			File lastUsed = new File(properties.getProperty(key));
@@ -33,7 +33,9 @@ public class ApplicationSupport {
 			chooser.setFileFilter(filter);
 		}
 
-		int returnVal = chooser.showOpenDialog(parent);
+		int returnVal = openFile ? chooser.showOpenDialog(parent) : chooser
+				.showSaveDialog(parent);
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
 

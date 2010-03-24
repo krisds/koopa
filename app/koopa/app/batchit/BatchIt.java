@@ -152,7 +152,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 								.convertRowIndexToModel(row);
 						final File file = results.getResults(selected)
 								.getFile();
-						new ShowIt(file).setVisible(true);
+						new ShowIt(file, true).setVisible(true);
 					}
 				}
 			}

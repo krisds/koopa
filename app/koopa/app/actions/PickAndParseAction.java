@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -22,11 +21,11 @@ public class PickAndParseAction extends AbstractAction implements Action {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new ThreadGroup("parsing"), new Runnable() {
+		new Thread(new ThreadGroup("actions"), new Runnable() {
 
 			public void run() {
-				File file = ApplicationSupport.askUserForFile("last-folder",
-						null, parent);
+				File file = ApplicationSupport.askUserForFile(true,
+						"last-folder", null, parent);
 
 				if (file != null) {
 					PickAndParseAction.this.provider.walkAndParse(file);

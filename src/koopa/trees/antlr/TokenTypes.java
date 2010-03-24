@@ -1,53 +1,40 @@
 package koopa.trees.antlr;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Set;
 
 public class TokenTypes {
-	private Properties types = null;
+	private Map<String, Integer> types = null;
+	private Set<Integer> literals = null;
 
-	private int tokenType;
-
-	public TokenTypes(Properties types) {
-		assert (types != null);
-		this.types = types;
-		this.tokenType = Integer.parseInt(this.types.getProperty("TOKEN"));
-	}
-
-	public TokenTypes(Map<String, Integer> types) {
-		assert (types != null);
-		this.types = new Properties();
-		this.types.putAll(types);
-		this.tokenType = types.get("TOKEN");
+	public TokenTypes() {
+		this.types = new HashMap<String, Integer>();
+		this.literals = new HashSet<Integer>();
 	}
 
 	public int forNode(String name) {
-		String type = this.types.getProperty(ANTLRNaming.forNode(name));
-		try {
-			return Integer.parseInt(type);
-
-		} catch (NumberFormatException e) {
-			System.err.println("Conversion error for " + name + "=" + type);
-			throw e;
-		}
+		Integer type = this.types.get(ANTLRNaming.forNode(name));
+		return type.intValue();
 	}
 
 	public int forLiteral(String text) {
-		String type = this.types.getProperty(ANTLRNaming.forLiteral(text));
+		Integer type = this.types.get(ANTLRNaming.forLiteral(text));
 
 		if (type == null) {
 			// TODO I'm assuming that all literals are in uppercase. This is
 			// required by the GG file format, so it should be a safe
 			// assumption. Still, I wouldn't mind taking another look at this
 			// and see if there isn't a more robust solution.
-			type = this.types.getProperty(ANTLRNaming.forLiteral(text
-					.toUpperCase()));
+			type = this.types.get(ANTLRNaming.forLiteral(text.toUpperCase()));
 		}
 
 		if (type != null) {
-			return Integer.parseInt(type);
+			return type.intValue();
+
 		} else {
-			return tokenType;
+			return this.types.get("TOKEN").intValue();
 		}
 	}
 
@@ -62,5 +49,24 @@ public class TokenTypes {
 		}
 
 		return buffer.toString();
+	}
+
+	public void put(String key, int value, boolean literal) {
+		this.types.put(key, value);
+		if (literal) {
+			this.literals.add(value);
+		}
+	}
+
+	public boolean contains(String key) {
+		return this.types.containsKey(key);
+	}
+
+	public boolean isLiteral(int value) {
+		return this.literals.contains(value);
+	}
+
+	public boolean isToken(int value) {
+		return this.types.get("TOKEN").intValue() == value;
 	}
 }

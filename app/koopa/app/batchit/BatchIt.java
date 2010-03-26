@@ -1,6 +1,5 @@
 package koopa.app.batchit;
 
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
@@ -11,13 +10,15 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -39,7 +40,7 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 public class BatchIt extends JFrame implements ParsingProvider,
 		ConfigurableApplication {
 
-	private JButton pick = null;
+	private JMenuItem pick = null;
 
 	private JProgressBar progress = null;
 
@@ -64,6 +65,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 
 		ApplicationSupport.configureFromProperties("batchit.properties", this);
 
+		setupMenuBar();
 		setupToolBar();
 		setupComponents();
 
@@ -72,15 +74,32 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
+	private void setupMenuBar() {
+		// Be nice to mac users.
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+		JMenuBar bar = new JMenuBar();
+
+		JMenu file = new JMenu("File");
+		this.pick = new JMenuItem(new PickAndParseAction(this, this));
+
+		this.pick.setAccelerator(KeyStroke.getKeyStroke("meta O"));
+		file.add(this.pick);
+
+		bar.add(file);
+
+		setJMenuBar(bar);
+	}
+
 	private void setupToolBar() {
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
-		add(toolBar, BorderLayout.PAGE_START);
+		add(toolBar, BorderLayout.PAGE_END);
 
-		pick = new JButton(new PickAndParseAction(this, this));
-		toolBar.add(pick);
+		// pick = new JButton(new PickAndParseAction(this, this));
+		// toolBar.add(pick);
 
-		toolBar.add(new JLabel("  "));
+		// toolBar.add(new JLabel("  "));
 
 		progress = new JProgressBar();
 		toolBar.add(progress);

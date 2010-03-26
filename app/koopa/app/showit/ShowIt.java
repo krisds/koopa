@@ -62,7 +62,7 @@ public class ShowIt extends JFrame implements FileManager,
 
 		ApplicationSupport.configureFromProperties("showit.properties", this);
 
-		setupMenuBar();
+		setupMenuBar(isDialog);
 
 		setupComponents();
 		openFile(file);
@@ -104,31 +104,35 @@ public class ShowIt extends JFrame implements FileManager,
 		}
 	}
 
-	private void setupMenuBar() {
+	private void setupMenuBar(boolean isDialog) {
 		// Be nice to mac users.
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 
 		JMenuBar bar = new JMenuBar();
 
 		JMenu file = new JMenu("File");
-		JMenuItem open = new JMenuItem(new OpenFileAction(this,
-				new FileFilter() {
-					public boolean accept(File f) {
-						if (!f.isFile())
-							return false;
-						final String name = f.getName().toUpperCase();
-						return name.endsWith(".CBL") || name.endsWith(".CPY");
-					}
 
-					public String getDescription() {
-						return "Cobol file (*.cpy, *.cbl)";
-					}
-				}, this));
+		if (!isDialog) {
+			JMenuItem open = new JMenuItem(new OpenFileAction(this,
+					new FileFilter() {
+						public boolean accept(File f) {
+							if (!f.isFile())
+								return false;
+							final String name = f.getName().toUpperCase();
+							return name.endsWith(".CBL")
+									|| name.endsWith(".CPY");
+						}
 
-		open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
-		file.add(open);
+						public String getDescription() {
+							return "Cobol file (*.cpy, *.cbl)";
+						}
+					}, this));
 
-		file.addSeparator();
+			open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
+			file.add(open);
+
+			file.addSeparator();
+		}
 
 		saveXML = new JMenuItem(new ExportASTToXMLAction(
 				new Getter<CommonTree>() {

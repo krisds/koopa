@@ -29,6 +29,7 @@ import koopa.app.components.sourceview.SourceView;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
+import koopa.tokenizers.generic.IntermediateTokenizer;
 import koopa.tokens.Token;
 import koopa.util.Getter;
 
@@ -81,6 +82,30 @@ public class ShowIt extends JFrame implements FileManager,
 	public void setOption(String name, String value) {
 		if (name.startsWith("parsing-listener")) {
 			installParsingListener(value);
+
+		} else if (name.startsWith("intermediate-tokenizer")) {
+			installIntermediateTokenizer(value);
+		}
+	}
+
+	private void installIntermediateTokenizer(String classname) {
+		try {
+			Class<?> clazz = Class.forName(classname);
+			Object o = clazz.newInstance();
+			if (o instanceof IntermediateTokenizer) {
+				this.coordinator
+						.addIntermediateTokenizer((IntermediateTokenizer) o);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

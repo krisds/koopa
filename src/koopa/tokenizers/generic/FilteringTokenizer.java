@@ -4,9 +4,8 @@ import koopa.tokenizers.Tokenizer;
 import koopa.tokens.Token;
 import koopa.tokens.TokenFilter;
 
-public class FilteringTokenizer implements Tokenizer {
-
-	private Tokenizer tokenizer = null;
+public class FilteringTokenizer extends IntermediateTokenizer implements
+		Tokenizer {
 
 	private TokenFilter test = null;
 
@@ -20,11 +19,14 @@ public class FilteringTokenizer implements Tokenizer {
 		assert (tag != null);
 	}
 
+	public FilteringTokenizer(TokenFilter test) {
+		this(null, test);
+	}
+
 	public FilteringTokenizer(Tokenizer tokenizer, TokenFilter test) {
-		assert (tokenizer != null);
 		assert (test != null);
 
-		this.tokenizer = tokenizer;
+		this.previousTokenizer = tokenizer;
 		this.test = test;
 	}
 
@@ -32,13 +34,9 @@ public class FilteringTokenizer implements Tokenizer {
 		Token token = null;
 
 		do {
-			token = tokenizer.nextToken();
+			token = this.previousTokenizer.nextToken();
 		} while (token != null && !test.accepts(token));
 
 		return token;
-	}
-
-	public void quit() {
-		tokenizer.quit();
 	}
 }

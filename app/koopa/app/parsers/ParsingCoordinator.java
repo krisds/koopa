@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.tokenizers.generic.IntermediateTokenizer;
+
 public class ParsingCoordinator {
+	private List<IntermediateTokenizer> intermediateTokenizers = new LinkedList<IntermediateTokenizer>();
+
 	private List<ParsingListener> parsingListeners = new LinkedList<ParsingListener>();
 
 	public void addParsingListener(ParsingListener listener) {
@@ -14,6 +18,10 @@ public class ParsingCoordinator {
 
 	public ParseResults parse(File file) throws IOException {
 		ExtendedParserConfiguration config = new ExtendedParserConfiguration();
+
+		for (IntermediateTokenizer intermediateTokenizer : this.intermediateTokenizers) {
+			config.addIntermediateTokenizer(intermediateTokenizer);
+		}
 
 		fireBeforeParsing(file, config);
 
@@ -34,5 +42,9 @@ public class ParsingCoordinator {
 		for (ParsingListener listener : this.parsingListeners) {
 			listener.afterParsing(file, results);
 		}
+	}
+
+	public void addIntermediateTokenizer(IntermediateTokenizer tokenizer) {
+		this.intermediateTokenizers.add(tokenizer);
 	}
 }

@@ -32,6 +32,7 @@ import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
 import koopa.app.showit.ShowIt;
+import koopa.tokenizers.generic.IntermediateTokenizer;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -237,6 +238,30 @@ public class BatchIt extends JFrame implements ParsingProvider,
 	public void setOption(String name, String value) {
 		if (name.startsWith("parsing-listener")) {
 			installParsingListener(value);
+
+		} else if (name.startsWith("intermediate-tokenizer")) {
+			installIntermediateTokenizer(value);
+		}
+	}
+
+	private void installIntermediateTokenizer(String classname) {
+		try {
+			Class<?> clazz = Class.forName(classname);
+			Object o = clazz.newInstance();
+			if (o instanceof IntermediateTokenizer) {
+				this.coordinator
+						.addIntermediateTokenizer((IntermediateTokenizer) o);
+			}
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

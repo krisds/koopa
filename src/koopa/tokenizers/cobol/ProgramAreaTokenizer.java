@@ -1,6 +1,5 @@
 package koopa.tokenizers.cobol;
 
-
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
@@ -90,6 +89,8 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 			} else {
 				// Unexpected char.
 				System.err.println("Unexpected char at " + markStart());
+				// TODO Should throw an exception instead. Exiting hard is not
+				// nice.
 				System.exit(1);
 			}
 		}

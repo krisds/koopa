@@ -15,12 +15,18 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Date;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.SizeSequence;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -177,6 +183,9 @@ public class LineNumberView extends JComponent {
 		int height = textFontHeight;
 		try {
 			Element map = text.getDocument().getDefaultRootElement();
+			if (map == null || map.getElement(index) == null) {
+				return height;
+			}
 			int lastChar = map.getElement(index).getEndOffset() - 1;
 			Rectangle r = text.modelToView(lastChar);
 			height = (r.y - lastPos) + r.height;

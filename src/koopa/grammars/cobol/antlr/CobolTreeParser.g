@@ -88,7 +88,9 @@ compilationUnit
 
 identificationDivision
   : ^(IDENTIFICATION_DIVISION
-      ( 'IDENTIFICATION'
+      ( ( 'ID'
+      | 'IDENTIFICATION'
+      )
         'DIVISION'
         '.'
         'PROGRAM-ID'
@@ -2220,6 +2222,7 @@ token
   | 'GOBACK'
   | 'HIGH-VALUE'
   | 'HIGH-VALUES'
+  | 'ID'
   | 'IDENTIFICATION'
   | 'IF'
   | 'IN'

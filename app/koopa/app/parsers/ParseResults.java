@@ -1,20 +1,22 @@
 package koopa.app.parsers;
 
-
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.antlr.runtime.tree.CommonTree;
-
+import koopa.tokenizers.cobol.TokenTracker;
 import koopa.tokens.Token;
 import koopa.util.Tuple;
+
+import org.antlr.runtime.tree.CommonTree;
 
 public class ParseResults {
 
 	private File file = null;
 
 	private boolean validInput = false;
+
+	private TokenTracker tokenTracker = null;
 
 	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
 
@@ -67,11 +69,27 @@ public class ParseResults {
 		return this.warnings.get(i);
 	}
 
-	public void setTree(CommonTree tree) {
-		this.tree  = tree;
+	public TokenTracker getTokenTracker() {
+		return tokenTracker;
 	}
-	
+
+	public void setTokenTracker(TokenTracker tokenTracker) {
+		this.tokenTracker = tokenTracker;
+	}
+
+	public void setTree(CommonTree tree) {
+		this.tree = tree;
+	}
+
 	public CommonTree getTree() {
 		return this.tree;
+	}
+
+	public void clearTree() {
+		this.tree = null;
+	}
+
+	public void clearTokens() {
+		this.tokenTracker = null;
 	}
 }

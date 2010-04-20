@@ -1,6 +1,5 @@
 package koopa.tokenizers.cobol;
 
-
 import java.io.IOException;
 import java.util.LinkedList;
 
@@ -12,10 +11,13 @@ import koopa.tokenizers.util.ThreadedTokenizerBase;
 import koopa.tokens.CompositeToken;
 import koopa.tokens.Token;
 
+import org.apache.log4j.Logger;
+
 public class ContinuedTokenizer extends ThreadedTokenizerBase implements
 		Tokenizer {
 
-	private static final boolean DEBUG = false;
+	private static final Logger LOGGER = Logger
+			.getLogger("tokenising.continued");
 
 	private Tokenizer tokenizer = null;
 
@@ -34,15 +36,7 @@ public class ContinuedTokenizer extends ThreadedTokenizerBase implements
 
 		while (!hasQuit()) {
 			final Token token = tokenizer.nextToken();
-			if (DEBUG) {
-				System.out.println("  <- " + token);
-			}
-
 			if (token == null) {
-				if (DEBUG) {
-					System.out.println("End of input.");
-				}
-
 				enqueue(null);
 				break;
 
@@ -57,19 +51,15 @@ public class ContinuedTokenizer extends ThreadedTokenizerBase implements
 						&& (token.getText().equals("\"") || token.getText()
 								.equals("'"))) {
 
-					if (DEBUG) {
-						System.out.println(token
-								+ " marks continuation of string literal.");
-					}
+					LOGGER.trace(token
+							+ " marks continuation of string literal.");
 
 					skippedStringLiteralMarker = !token
 							.hasTag(PseudoTag.CONTINUED);
 					seriesIsForStringLiteral = true;
 
 				} else if (token.hasTag(PseudoTag.CONTINUED)) {
-					if (DEBUG) {
-						System.out.println(token + " continues a series.");
-					}
+					LOGGER.trace(token + " continues a series.");
 
 					continuePreviousLine = true;
 					skippedStringLiteralMarker = false;
@@ -105,9 +95,8 @@ public class ContinuedTokenizer extends ThreadedTokenizerBase implements
 					}
 
 				} else {
-					if (DEBUG) {
-						System.out.println(token + " closes a series.");
-					}
+					LOGGER.trace(token + " closes a series.");
+
 					continuePreviousLine = false;
 					skippedStringLiteralMarker = false;
 
@@ -146,18 +135,12 @@ public class ContinuedTokenizer extends ThreadedTokenizerBase implements
 
 			} else {
 				if (token.hasTag(PseudoTag.CONTINUED)) {
-					if (DEBUG) {
-						System.out.println(token + " starts a series.");
-					}
+					LOGGER.trace(token + " starts a series.");
 
 					continuePreviousLine = true;
 					enqueue(token);
 
 				} else {
-					if (DEBUG) {
-						System.out.println(token + " stands alone.");
-					}
-
 					enqueue(token);
 					continuePreviousLine = false;
 				}
@@ -201,19 +184,10 @@ public class ContinuedTokenizer extends ThreadedTokenizerBase implements
 
 		} else {
 			if (this.lastNonBlank != null) {
-				if (DEBUG
-						&& this.lastNonBlank.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
-					System.out.println("  -> " + this.lastNonBlank);
-				}
-
 				super.enqueue(this.lastNonBlank);
 			}
 
 			for (Token blank : this.lastBlanks) {
-				if (DEBUG && blank.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
-					System.out.println("  -> " + blank);
-				}
-
 				super.enqueue(blank);
 			}
 

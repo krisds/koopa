@@ -13,24 +13,19 @@ import koopa.tokenstreams.TokenStream;
 import koopa.tokenstreams.generic.SubordinateTokenStream;
 import koopa.util.Tuple;
 
+import org.apache.log4j.Logger;
 
 public abstract class KoopaGrammar {
+
+	private static final Logger LOGGER = Logger.getLogger("grammar");
+
 	// The dictionary will have to get pushed and popped as we enter/leave
 	// certain parsers. Otherwise, recursion will screw up the lexical scopes.
 	final Stack<Map<String, Object>> scope = new Stack<Map<String, Object>>();
 
 	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
 
-	protected final static boolean DEBUG_MODE = false;
-	private static final int LOD = 1;
-
 	public KoopaGrammar() {
-	}
-
-	protected final static void log(String msg, int lod) {
-		if (lod <= LOD) {
-			System.err.println(msg);
-		}
 	}
 
 	protected void warn(Token t, String msg) {
@@ -50,9 +45,7 @@ public abstract class KoopaGrammar {
 	protected FutureParser scoped(final String name) {
 		return new FutureParser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("Enter " + name, 1);
-				}
+				LOGGER.trace("Enter " + name);
 
 				Assign assign = null;
 
@@ -73,9 +66,7 @@ public abstract class KoopaGrammar {
 
 				scope.pop();
 
-				if (DEBUG_MODE) {
-					log((accepts ? "Exit " : "Fail ") + name, 1);
-				}
+				LOGGER.trace((accepts ? "Exit " : "Fail ") + name);
 
 				return accepts;
 			}
@@ -135,9 +126,7 @@ public abstract class KoopaGrammar {
 	protected Parser skipto(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[skip>", 1);
-				}
+				LOGGER.trace("[skip>");
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
@@ -168,9 +157,7 @@ public abstract class KoopaGrammar {
 					sub.mark(KoopaMarkers.land());
 				}
 
-				if (DEBUG_MODE) {
-					log("<skip]", 1);
-				}
+				LOGGER.trace("<skip]");
 
 				return true;
 			}
@@ -180,9 +167,7 @@ public abstract class KoopaGrammar {
 	protected Parser star(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[star>", 2);
-				}
+				LOGGER.trace("[star>");
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
@@ -192,9 +177,7 @@ public abstract class KoopaGrammar {
 
 				sub.restore();
 
-				if (DEBUG_MODE) {
-					log("<star]", 2);
-				}
+				LOGGER.trace("<star]");
 
 				return true;
 			}
@@ -204,18 +187,14 @@ public abstract class KoopaGrammar {
 	protected Parser plus(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[plus>", 2);
-				}
+				LOGGER.trace("[plus>");
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
 				if (!parser.accepts(sub)) {
 					sub.restore();
 
-					if (DEBUG_MODE) {
-						log("<plus]", 2);
-					}
+					LOGGER.trace("<plus]");
 
 					return false;
 				}
@@ -226,9 +205,7 @@ public abstract class KoopaGrammar {
 
 				sub.restore();
 
-				if (DEBUG_MODE) {
-					log("<plus]", 2);
-				}
+				LOGGER.trace("<plus]");
 
 				return true;
 			}
@@ -238,18 +215,15 @@ public abstract class KoopaGrammar {
 	protected Parser sequence(final Parser... parsers) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[sequence>", 2);
-				}
+				LOGGER.trace("[sequence>");
 
 				for (Parser parser : parsers) {
-					if (!parser.accepts(stream))
+					if (!parser.accepts(stream)) {
 						return false;
+					}
 				}
 
-				if (DEBUG_MODE) {
-					log("<sequence]", 2);
-				}
+				LOGGER.trace("<sequence]");
 
 				return true;
 			}
@@ -259,26 +233,20 @@ public abstract class KoopaGrammar {
 	protected Parser choice(final Parser... parsers) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[choice>", 2);
-				}
+				LOGGER.trace("[choice>");
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
 				for (Parser parser : parsers) {
 					if (parser.accepts(sub)) {
-						if (DEBUG_MODE) {
-							log("<choice]", 2);
-						}
+						LOGGER.trace("<choice]");
 
 						return true;
 					}
 					sub.restore();
 				}
 
-				if (DEBUG_MODE) {
-					log("<choice]", 2);
-				}
+				LOGGER.trace("<choice]");
 
 				return false;
 			}
@@ -293,9 +261,7 @@ public abstract class KoopaGrammar {
 
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[permuted>", 2);
-				}
+				LOGGER.trace("[permuted>");
 
 				List<Parser> remaining = new ArrayList<Parser>(choices);
 				TokenStream sub = new SubordinateTokenStream(stream);
@@ -313,9 +279,7 @@ public abstract class KoopaGrammar {
 					}
 				}
 
-				if (DEBUG_MODE) {
-					log("<permuted]", 2);
-				}
+				LOGGER.trace("<permuted]");
 
 				return true;
 			}
@@ -325,18 +289,14 @@ public abstract class KoopaGrammar {
 	protected Parser optional(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				if (DEBUG_MODE) {
-					log("[optional>", 2);
-				}
+				LOGGER.trace("[optional>");
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
 				if (parser.accepts(sub)) {
 					sub.commit();
 
-					if (DEBUG_MODE) {
-						log("<optional]", 2);
-					}
+					LOGGER.trace("<optional]");
 
 					return true;
 
@@ -344,9 +304,7 @@ public abstract class KoopaGrammar {
 					sub.restore();
 				}
 
-				if (DEBUG_MODE) {
-					log("<optional]", 2);
-				}
+				LOGGER.trace("<optional]");
 
 				return true;
 			}
@@ -358,9 +316,7 @@ public abstract class KoopaGrammar {
 			protected boolean accepts(TokenStream stream) {
 				final Token token = stream.nextToken();
 
-				if (DEBUG_MODE) {
-					log(token + " =~ " + text + " ?", 1);
-				}
+				LOGGER.trace(token + " =~ " + text + " ?");
 
 				if (token != null && token.getText().equalsIgnoreCase(text)) {
 

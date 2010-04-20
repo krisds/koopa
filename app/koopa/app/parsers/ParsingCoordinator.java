@@ -12,12 +12,16 @@ public class ParsingCoordinator {
 
 	private List<ParsingListener> parsingListeners = new LinkedList<ParsingListener>();
 
+	private boolean keepingTrackOfTokens = false;
+
 	public void addParsingListener(ParsingListener listener) {
 		this.parsingListeners.add(listener);
 	}
 
 	public ParseResults parse(File file) throws IOException {
 		ExtendedParserConfiguration config = new ExtendedParserConfiguration();
+
+		config.setKeepingTrackOfTokens(keepingTrackOfTokens);
 
 		for (IntermediateTokenizer intermediateTokenizer : this.intermediateTokenizers) {
 			config.addIntermediateTokenizer(intermediateTokenizer);
@@ -46,5 +50,13 @@ public class ParsingCoordinator {
 
 	public void addIntermediateTokenizer(IntermediateTokenizer tokenizer) {
 		this.intermediateTokenizers.add(tokenizer);
+	}
+
+	public boolean isKeepingTrackOfTokens() {
+		return keepingTrackOfTokens;
+	}
+
+	public void setKeepingTrackOfTokens(boolean keepingTrackOfTokens) {
+		this.keepingTrackOfTokens = keepingTrackOfTokens;
 	}
 }

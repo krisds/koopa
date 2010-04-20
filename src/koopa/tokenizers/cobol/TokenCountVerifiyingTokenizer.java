@@ -7,9 +7,12 @@ import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokens.Token;
 
+import org.apache.log4j.Logger;
 
 public class TokenCountVerifiyingTokenizer implements Tokenizer {
-	private static final boolean DEBUG = false;
+
+	private static final Logger LOGGER = Logger
+			.getLogger("tokenising.count_verifying");
 
 	private Tokenizer tokenizer = null;
 	private int count = 0;
@@ -27,15 +30,9 @@ public class TokenCountVerifiyingTokenizer implements Tokenizer {
 
 		if (token != null) {
 			if (token.hasTag(AreaTag.END_OF_LINE)) {
-				if (DEBUG) {
-					System.out.println("reset");
-				}
 				count = 0;
 
 			} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
-				if (DEBUG) {
-					System.out.println("+1: " + token);
-				}
 				count += 1;
 
 			} else if (token.hasTag(AreaTag.IDENTIFICATION_AREA)) {
@@ -45,15 +42,10 @@ public class TokenCountVerifiyingTokenizer implements Tokenizer {
 					int expected = Integer.parseInt(text.substring(pos + 1)
 							.trim());
 
-					if (DEBUG) {
-						System.out.println(count + " == " + expected + " ?");
-					}
-
 					if (expected != count) {
-						errorMessages.add("Line "
-								+ token.getStart().getLinenumber() + ": found "
-								+ count + " token(s); expected " + expected
-								+ ".");
+						LOGGER.error("Line " + token.getStart().getLinenumber()
+								+ ": found " + count + " token(s); expected "
+								+ expected + ".");
 					}
 				}
 			}

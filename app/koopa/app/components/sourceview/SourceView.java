@@ -1,6 +1,5 @@
 package koopa.app.components.sourceview;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -31,6 +30,8 @@ import koopa.app.parsers.ExtendedParserConfiguration;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
+import koopa.tokenizers.cobol.TokenTracker;
+import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokens.Token;
 
@@ -41,7 +42,9 @@ public class SourceView extends JPanel implements ParsingListener {
 
 	private JScrollPane scroll = null;
 
-	private SourceViewIntermediateTokenizer tokenizer = null;
+	// private SourceViewIntermediateTokenizer tokenizer = null;
+
+	private TokenTracker tokenTracker = null;
 
 	private SourceViewSink sink = null;
 
@@ -204,10 +207,10 @@ public class SourceView extends JPanel implements ParsingListener {
 		pane.setText("");
 		pane.getHighlighter().removeAllHighlights();
 
-		this.tokenizer = new SourceViewIntermediateTokenizer();
+		// this.tokenizer = new SourceViewIntermediateTokenizer();
 		this.sink = new SourceViewSink();
 
-		config.addIntermediateTokenizer(this.tokenizer);
+		// config.addIntermediateTokenizer(this.tokenizer);
 		config.addTokenSink(this.sink);
 	}
 
@@ -220,16 +223,31 @@ public class SourceView extends JPanel implements ParsingListener {
 
 			pane.setCaretPosition(0);
 
-			for (List<Token> line : tokenizer.getLines()) {
-				for (Token token : line) {
-					final int start = token.getStart().getPositionInFile() - 1;
-					final int end = token.getEnd().getPositionInFile();
-					final int len = end - start;
+			this.tokenTracker = results.getTokenTracker();
 
-					document.setCharacterAttributes(start, len,
-							getCommentStyle(document), false);
+			for (Token token : this.tokenTracker.getTokens()) {
+				if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
+					continue;
 				}
+
+				final int start = token.getStart().getPositionInFile() - 1;
+				final int end = token.getEnd().getPositionInFile();
+				final int len = end - start;
+
+				document.setCharacterAttributes(start, len,
+						getCommentStyle(document), false);
 			}
+
+			// for (List<Token> line : tokenizer.getLines()) {
+			// for (Token token : line) {
+			// final int start = token.getStart().getPositionInFile() - 1;
+			// final int end = token.getEnd().getPositionInFile();
+			// final int len = end - start;
+			//
+			// document.setCharacterAttributes(start, len,
+			// getCommentStyle(document), false);
+			// }
+			// }
 
 			for (List<Token> line : sink.getLines()) {
 				for (Token token : line) {
@@ -302,6 +320,11 @@ public class SourceView extends JPanel implements ParsingListener {
 	}
 
 	public Token getTokenAt(int position) {
-		return this.sink.getTokenAt(position);
+		if (this.tokenTracker == null) {
+			return null;
+
+		} else {
+			return this.tokenTracker.getTokenAt(position);
+		}
 	}
 }

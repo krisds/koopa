@@ -25,7 +25,7 @@ public class OpenFileAction extends AbstractAction implements Action {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new ThreadGroup("actions"), new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				File file = ApplicationSupport.askUserForFile(true,
 						"last-folder", filter, parent);

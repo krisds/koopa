@@ -12,6 +12,7 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/antlr-2.7.7.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/antlr-3.1.1-runtime.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
 		</jar>
 	</target>
 </project>

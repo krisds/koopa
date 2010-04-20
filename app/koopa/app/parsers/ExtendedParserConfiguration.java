@@ -18,6 +18,8 @@ import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
+import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
+import koopa.tokenizers.cobol.TokenTrackerTokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokenizers.generic.FilteringTokenizer;
@@ -35,16 +37,23 @@ import koopa.util.Tuple;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.apache.log4j.Logger;
 
 public class ExtendedParserConfiguration implements ParserConfiguration {
+
+	private static final Logger LOGGER = Logger.getLogger("parser.extended");
 
 	private TokenTypes tokenTypes = null;
 	private List<IntermediateTokenizer> intermediateTokenizers = new LinkedList<IntermediateTokenizer>();
 	private List<TokenSink> tokenSinks = new LinkedList<TokenSink>();
 	private List<CommonTreeProcessor> treeProcessors = null;
 
+	private boolean keepingTrackOfTokens = false;
+
 	public ParseResults parse(File file) throws IOException {
-		System.out.println("Parsing " + file);
+		LOGGER.info("Parsing " + file);
+
+		ParseResults results = new ParseResults(file);
 
 		final boolean isCopybook = file.getName().toUpperCase()
 				.endsWith(".CPY");
@@ -57,10 +66,20 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 
 		// The tokenizers in this sequence should generate the expected tokens.
 		tokenizer = new ProgramAreaTokenizer(new BufferedReader(reader));
+		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);
 		tokenizer = new ContinuationsTokenizer(tokenizer);
 		tokenizer = new ContinuedTokenizer(tokenizer);
 		tokenizer = new CharacterStringTokenizer(tokenizer);
+
+		if (this.keepingTrackOfTokens) {
+			final TokenTrackerTokenizer tokenTracker = new TokenTrackerTokenizer(
+					tokenizer);
+
+			results.setTokenTracker(tokenTracker.getTokenTracker());
+
+			tokenizer = tokenTracker;
+		}
 
 		// This allows external tools to see all tokens before further
 		// processing. At the moment it is not guaranteed that all tokens will
@@ -86,8 +105,6 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 								.getText().equals(";"));
 			}
 		});
-
-		ParseResults results = new ParseResults(file);
 
 		// This object holds all grammar productions. It is not thread-safe,
 		// meaning that you can only ask it to parse one thing at a time.
@@ -146,21 +163,21 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		}
 
 		if (accepts) {
-			System.out.println("Input is valid.");
+			LOGGER.info("Valid file: " + file);
 			results.setValidInput(true);
 
 		} else {
-			System.out.println("Input is invalid.");
+			LOGGER.info("Invalid file: " + file);
 			results.setValidInput(false);
 		}
 
 		if (grammar.hasWarnings()) {
-			System.out.println("There were warnings from the grammar:");
+			LOGGER.info("There were warnings from the grammar:");
 
 			final List<Tuple<Token, String>> warnings = grammar.getWarnings();
 
 			for (Tuple<Token, String> warning : warnings) {
-				System.out.println("  " + warning.getFirst() + ": "
+				LOGGER.info("  " + warning.getFirst() + ": "
 						+ warning.getSecond());
 
 				results.addWarning(warning.getFirst(), warning.getSecond());
@@ -168,12 +185,12 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		}
 
 		if (verifier.hasWarnings()) {
-			System.out.println("There were warnings from the verifier:");
+			LOGGER.info("There were warnings from the verifier:");
 
 			final List<Tuple<Token, String>> warnings = verifier.getWarnings();
 
 			for (Tuple<Token, String> warning : warnings) {
-				System.out.println("  " + warning.getFirst() + ": "
+				LOGGER.info("  " + warning.getFirst() + ": "
 						+ warning.getSecond());
 
 				results.addWarning(warning.getFirst(), warning.getSecond());
@@ -181,13 +198,12 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		}
 
 		if (verifier.hasErrors()) {
-			System.out.println("There were errors from the verifier:");
+			LOGGER.info("There were errors from the verifier:");
 
 			final List<Tuple<Token, String>> errors = verifier.getErrors();
 
 			for (Tuple<Token, String> error : errors) {
-				System.out.println("  " + error.getFirst() + ": "
-						+ error.getSecond());
+				LOGGER.info("  " + error.getFirst() + ": " + error.getSecond());
 
 				results.addError(error.getFirst(), error.getSecond());
 			}
@@ -202,19 +218,19 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		if (accepts) {
 			Token t = tokenizer.nextToken();
 			if (t != null) {
-				System.out.println("Not all input was consumed.");
+				LOGGER.info("Not all input was consumed.");
 
 				results.setValidInput(false);
 				results.addError(t, "Not all input was consumed.");
 
 				int count = 0;
 				do {
-					System.out.println("-> " + t);
+					LOGGER.info("-> " + t);
 					count++;
 				} while (count < 5 && (t = tokenizer.nextToken()) != null);
 
 				if (t != null) {
-					System.out.println("-> ...");
+					LOGGER.info("-> ...");
 				}
 
 				accepts = false;
@@ -243,11 +259,10 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 						isCopybook);
 
 				if (acceptableTree) {
-					System.out.println("The constructed tree is valid.");
+					LOGGER.info("The constructed tree is valid.");
 
 				} else {
-					System.out
-							.println("The constructed tree, however, is invalid.");
+					LOGGER.info("The constructed tree, however, is invalid.");
 
 					results.setValidInput(false);
 					results.addError(null, "Constructed tree is invalid.");
@@ -259,12 +274,12 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 				// We then allow all tree processors to have a go at the tree.
 				for (CommonTreeProcessor processor : getCommonTreeProcessors()) {
 					if (processor.processes(tree, file)) {
-						System.out.println("Adaptive match ("
+						LOGGER.info("Adaptive match ("
 								+ processor.getClass().getSimpleName()
 								+ ") was successful as well.");
 
 					} else {
-						System.out.println("Adaptive match ("
+						LOGGER.info("Adaptive match ("
 								+ processor.getClass().getSimpleName()
 								+ "), however, was NOT successful.");
 
@@ -278,7 +293,6 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 			}
 		}
 
-		System.out.println();
 		return results;
 	}
 
@@ -344,5 +358,13 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 	public void addIntermediateTokenizer(IntermediateTokenizer tokenizer) {
 		assert (tokenizer != null);
 		this.intermediateTokenizers.add(tokenizer);
+	}
+
+	public void setKeepingTrackOfTokens(boolean keepingTrackOfTokens) {
+		this.keepingTrackOfTokens = keepingTrackOfTokens;
+	}
+
+	public boolean isKeepingTrackOfTokens() {
+		return keepingTrackOfTokens;
 	}
 }

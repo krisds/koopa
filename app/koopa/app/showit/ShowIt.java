@@ -3,6 +3,8 @@ package koopa.app.showit;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.text.DecimalFormat;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -16,8 +18,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.antlr.runtime.tree.CommonTree;
-
 import koopa.app.ApplicationSupport;
 import koopa.app.ConfigurableApplication;
 import koopa.app.actions.ExportASTToXMLAction;
@@ -26,12 +26,16 @@ import koopa.app.actions.OpenFileAction;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
+import koopa.app.parsers.Metrics;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 import koopa.tokens.Token;
 import koopa.util.Getter;
+
+import org.antlr.runtime.tree.CommonTree;
+import org.apache.log4j.PropertyConfigurator;
 
 @SuppressWarnings("serial")
 public class ShowIt extends JFrame implements FileManager,
@@ -44,7 +48,12 @@ public class ShowIt extends JFrame implements FileManager,
 
 	private JMenuItem saveXML = null;
 
+	private static DecimalFormat coverageFormatter = new DecimalFormat("0.0");
+
 	public static void main(String[] args) {
+		final URL resource = ShowIt.class.getResource("/log4j.properties");
+		PropertyConfigurator.configure(resource);
+
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				new ShowIt().setVisible(true);
@@ -60,6 +69,7 @@ public class ShowIt extends JFrame implements FileManager,
 		super("Koopa Show It - " + file);
 
 		this.coordinator = new ParsingCoordinator();
+		this.coordinator.setKeepingTrackOfTokens(true);
 
 		ApplicationSupport.configureFromProperties("showit.properties", this);
 
@@ -216,7 +226,7 @@ public class ShowIt extends JFrame implements FileManager,
 	}
 
 	public void openFile(File file) {
-		setTitle("Koopa Show It - " + file);
+		setTitle("Koopa Show It - " + file + " (parsing)");
 
 		if (saveXML != null) {
 			saveXML.setEnabled(false);
@@ -230,7 +240,13 @@ public class ShowIt extends JFrame implements FileManager,
 				saveXML.setEnabled(true);
 			}
 
+			float coverage = Metrics.getCoverage(results);
+
+			setTitle("Koopa Show It - " + file + " ("
+					+ coverageFormatter.format(coverage) + "%)");
+
 		} catch (IOException e) {
+			setTitle("Koopa Show It - " + file);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

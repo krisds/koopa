@@ -4,6 +4,8 @@ generating COBOL parsers.
 Everything in Koopa is covered by a BSD license (see LICENSE.txt), unless noted
 differently in the actual file or folder.
 
+The files in the testsuite/cobol85 folder are a Cobol85 test suite by the National Computing Centre, UK, found originally at http://www.itl.nist.gov/div897/ctg/cobol_form.htm. The version here differs only in that it splits up the different programs in separate files, where the original puts them all in one big file. The licensing is unclear, but the code is offered publicly at the above site.
+
 = Generation =
 
 Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the
@@ -53,7 +55,7 @@ adding support for it either.
 There may be other warnings and errors. This is quite likely as expected. When
 in doubt, contact the maintainers.
 
-= GG.tokens =
+= KG.tokens =
 
 In koopa.trees.antlr.generator, KG.tokens is a manual copy of the file with
 the same name from koopa.grammars.generator. If the original ever changes this

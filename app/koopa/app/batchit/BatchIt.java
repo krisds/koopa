@@ -23,16 +23,21 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 
 import koopa.app.ApplicationSupport;
 import koopa.app.ConfigurableApplication;
+import koopa.app.actions.ExportBatchResultsToCSVAction;
 import koopa.app.actions.ParsingProvider;
 import koopa.app.actions.PickAndParseAction;
+import koopa.app.components.misc.DecimalFormattingRenderer;
+import koopa.app.components.misc.StatusRenderer;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
 import koopa.app.showit.ShowIt;
 import koopa.tokenizers.generic.IntermediateTokenizer;
+import koopa.util.Getter;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -42,6 +47,8 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		ConfigurableApplication {
 
 	private JMenuItem pick = null;
+
+	private JMenuItem saveCSV = null;
 
 	private JProgressBar progress = null;
 
@@ -63,6 +70,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		super("Koopa Batch It");
 
 		this.coordinator = new ParsingCoordinator();
+		this.coordinator.setKeepingTrackOfTokens(true);
 
 		ApplicationSupport.configureFromProperties("batchit.properties", this);
 
@@ -86,6 +94,30 @@ public class BatchIt extends JFrame implements ParsingProvider,
 
 		this.pick.setAccelerator(KeyStroke.getKeyStroke("meta O"));
 		file.add(this.pick);
+
+		file.addSeparator();
+
+		saveCSV = new JMenuItem(new ExportBatchResultsToCSVAction(
+				new Getter<BatchResults>() {
+					public BatchResults getIt() {
+						return results;
+					}
+				}, new FileFilter() {
+					public boolean accept(File f) {
+						if (!f.isFile())
+							return false;
+						final String name = f.getName().toUpperCase();
+						return name.endsWith(".CSV");
+					}
+
+					public String getDescription() {
+						return "CSV file (*.csv)";
+					}
+				}, this));
+
+		saveCSV.setEnabled(false);
+		saveCSV.setAccelerator(KeyStroke.getKeyStroke("meta E"));
+		file.add(saveCSV);
 
 		bar.add(file);
 
@@ -116,11 +148,23 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		overviewTable
 				.setHighlighters(HighlighterFactory.createSimpleStriping());
 
-		overviewTable.getColumnModel().getColumn(0).setPreferredWidth(70);
-		overviewTable.getColumnModel().getColumn(1).setPreferredWidth(70);
-		overviewTable.getColumnModel().getColumn(2).setPreferredWidth(70);
-		overviewTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-		overviewTable.getColumnModel().getColumn(4).setPreferredWidth(600);
+		overviewTable.getColumnModel().getColumn(BatchResults.STATUS_COLUMN)
+				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.ERRORS_COLUMN)
+				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.WARNINGS_COLUMN)
+				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
+				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.FILE_COLUMN)
+				.setPreferredWidth(150);
+		overviewTable.getColumnModel().getColumn(BatchResults.PATH_COLUMN)
+				.setPreferredWidth(600);
+
+		overviewTable.getColumnModel().getColumn(BatchResults.STATUS_COLUMN)
+				.setCellRenderer(new StatusRenderer());
+		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
+				.setCellRenderer(new DecimalFormattingRenderer("0.0"));
 
 		JScrollPane overviewScroll = new JScrollPane(overviewTable);
 		overviewScroll.setBorder(null);
@@ -228,6 +272,9 @@ public class BatchIt extends JFrame implements ParsingProvider,
 			failed.addError(null, e.getMessage());
 			this.results.add(failed);
 			e.printStackTrace();
+
+		} finally {
+			this.saveCSV.setEnabled(true);
 		}
 	}
 

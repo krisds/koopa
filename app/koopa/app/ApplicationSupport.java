@@ -11,7 +11,11 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.apache.log4j.Logger;
+
 public class ApplicationSupport {
+	private static final Logger LOGGER = Logger.getLogger("config");
+
 	private static final String PROPERTIES_FILE = "koopa.properties";
 
 	private static Properties properties = getProperties();
@@ -77,6 +81,9 @@ public class ApplicationSupport {
 	public static void configureFromProperties(String filename,
 			ConfigurableApplication app) {
 		try {
+			LOGGER.info("Loading configuration options from \"" + filename
+					+ "\".");
+
 			Properties properties = new Properties();
 			properties.load(new FileInputStream(new File(filename)));
 
@@ -86,14 +93,14 @@ public class ApplicationSupport {
 				app.setOption(name, value);
 			}
 
+			LOGGER.info("Configuration loaded.");
+
 		} catch (FileNotFoundException e) {
-			System.out.println("Could not find \"" + filename
+			LOGGER.info("Could not find \"" + filename
 					+ "\". Going with defaults.");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error("IOException while reading \"" + filename + "\".", e);
 		}
 	}
-
 }

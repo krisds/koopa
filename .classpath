@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="app"/>
 	<classpathentry kind="src" path="back-end"/>
 	<classpathentry kind="src" path="processing"/>
+	<classpathentry kind="src" path="doc-gen"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/swingx-1.0.jar"/>
@@ -13,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-3.1.1-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/jaxen-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

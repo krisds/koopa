@@ -6,7 +6,11 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import org.apache.log4j.Logger;
+
 public class Icons {
+	private static final Logger LOGGER = Logger.getLogger("resources");
+
 	private static Map<String, ImageIcon> icons = new HashMap<String, ImageIcon>();
 
 	public static synchronized ImageIcon getIcon(String reference) {
@@ -16,8 +20,7 @@ public class Icons {
 
 		URL resource = Icons.class.getResource(reference);
 		if (resource == null) {
-			System.out.println("Warning: could not find resource for "
-					+ reference);
+			LOGGER.warn("Warning: could not find resource for " + reference);
 			return null;
 		}
 

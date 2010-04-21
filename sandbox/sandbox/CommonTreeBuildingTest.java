@@ -18,6 +18,7 @@ import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
+import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokenizers.generic.FilteringTokenizer;
@@ -95,6 +96,7 @@ public class CommonTreeBuildingTest {
 
 		// The tokenizers in this sequence should generate the expected tokens.
 		tokenizer = new ProgramAreaTokenizer(new BufferedReader(reader));
+		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);
 		tokenizer = new ContinuationsTokenizer(tokenizer);
 		tokenizer = new ContinuedTokenizer(tokenizer);

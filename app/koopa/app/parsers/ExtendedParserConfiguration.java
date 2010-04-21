@@ -50,6 +50,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 
 	private boolean keepingTrackOfTokens = false;
 
+	private boolean buildTrees;
+
 	public ParseResults parse(File file) throws IOException {
 		LOGGER.info("Parsing " + file);
 
@@ -332,7 +334,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 	}
 
 	private boolean buildTrees() {
-		return this.treeProcessors != null && this.treeProcessors.size() > 0;
+		return this.buildTrees
+				|| (this.treeProcessors != null && this.treeProcessors.size() > 0);
 	}
 
 	private List<CommonTreeProcessor> getCommonTreeProcessors() {
@@ -366,5 +369,9 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 
 	public boolean isKeepingTrackOfTokens() {
 		return keepingTrackOfTokens;
+	}
+
+	public void setBuildTrees(boolean buildTrees) {
+		this.buildTrees = buildTrees;
 	}
 }

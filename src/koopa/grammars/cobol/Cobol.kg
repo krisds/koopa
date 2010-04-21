@@ -48,7 +48,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def identificationDivision =
-	( ID |ÊIDENTIFICATION ) DIVISION .
+	( ID | IDENTIFICATION ) DIVISION .
 	PROGRAM-ID .
 	programName
 	[ [IS]

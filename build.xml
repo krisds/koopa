@@ -4,7 +4,7 @@
 		<echo message="Use target regenerate to rebuild all parts. Or pick one of the other targets to rebuild selected parts (recommended only if you know what you're doing)." />
 	</target>
 
-	<target name="regenerate" depends="KGG,GenerateVerifications,KGToANTLR,SynchronizeKGTokens,SynchronizeCobolTokens,GenerateANTLRv3TreeFilters,GenerateUnitTests" />
+	<target name="regenerate" depends="KGG,GenerateVerifications,KGToANTLR,KGToDTD,SynchronizeKGTokens,SynchronizeCobolTokens,GenerateANTLRv3TreeFilters,GenerateUnitTests" />
 
 	<target name="KGG">
 		<java classname="koopa.grammars.generator.KGG" fork="true">
@@ -43,6 +43,22 @@
 			<jvmarg value="-ea" />
 			<arg value="Cobol" />
 			<arg value="koopa.grammars.cobol.antlr" />
+			<arg value="src/koopa/grammars/cobol/" />
+			<arg value="src/koopa/grammars/cobol/antlr/" />
+			<classpath>
+				<pathelement path="build" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement path="${java.class.path}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="KGToDTD">
+		<java classname="koopa.trees.antlr.dtd.KGToDTD" fork="true">
+			<jvmarg value="-ea" />
+			<arg value="Cobol" />
 			<arg value="src/koopa/grammars/cobol/" />
 			<arg value="src/koopa/grammars/cobol/antlr/" />
 			<classpath>

@@ -1,5 +1,7 @@
 = Misc. =
 
+* Redo the examples to make them use either the BasicParserConfiguration or the
+  ExtendedParserConfiguration.
 * Reconsider allowing these intermediate tokenizers. Maybe a listener pattern
   would be better.
 * Regression testing. Would be nice if we could do this as a JUnit test.

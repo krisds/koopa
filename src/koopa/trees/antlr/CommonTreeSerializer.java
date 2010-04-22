@@ -15,7 +15,9 @@ public class CommonTreeSerializer {
 
 		Writer writer = new BufferedWriter(new FileWriter(file));
 
+		writer.append("<koopa>\n");
 		walk(writer, tree, "  ", types);
+		writer.append("</koopa>\n");
 
 		writer.flush();
 		writer.close();
@@ -28,7 +30,7 @@ public class CommonTreeSerializer {
 
 		if (types.isLiteral(type) || types.isToken(type)) {
 			// TODO Should escape stuff where necessary.
-			writer.append(dent + "<![CDATA[" + tree.getText() + "]]>\n");
+			writer.append(dent + "<t><![CDATA[" + tree.getText() + "]]></t>\n");
 			return;
 		}
 

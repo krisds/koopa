@@ -1,0 +1,39 @@
+group TreeGrammar;
+
+treegrammar(rule) ::= <<
+<!ELEMENT koopa (compilationGroup|copybook)>
+$rule; separator="\n"$
+<!ELEMENT cobolWord (t)>
+<!ELEMENT integer (t)>
+<!ELEMENT decimal (t)>
+<!ELEMENT alphanumeric (t)>
+<!ELEMENT pictureString (t*)>
+<!ELEMENT levelNumber (t)>
+<!ELEMENT pseudoLiteral (t)>
+<!ELEMENT water (t*)>
+<!ELEMENT t (#PCDATA)>
+>>
+
+rule(name, body) ::= <<
+<!ELEMENT $name$ $body$>
+>>
+
+rule1(name, body) ::= <<
+<!ELEMENT $name$ ($body$)>
+>>
+
+star(body) ::= <<$body$*>>
+
+plus(body) ::= <<$body$+>>
+
+opt(body) ::= <<$body$?>>
+
+choice(step) ::= <<($step; separator="|"$)>>
+
+otherChoice() ::= <<|$it$>>
+
+sequence(step) ::= <<($step; separator=","$)>>
+
+water() ::= <<water?>>
+
+literal() ::= <<t>>

@@ -14,7 +14,6 @@ import koopa.tokens.Token;
 import koopa.tokenstreams.TokenSink;
 import koopa.util.Tuple;
 
-
 public abstract class VerifyingSink implements TokenSink {
 
 	private Stack<Token> scope = new Stack<Token>();
@@ -30,6 +29,8 @@ public abstract class VerifyingSink implements TokenSink {
 	private Map<String, List<Verifier>> tokenVerifiers = new HashMap<String, List<Verifier>>();
 
 	private TokenSink nextSink = null;
+
+	private boolean checkTokenInTheWater = false;
 
 	public VerifyingSink() {
 		initialize();
@@ -69,15 +70,20 @@ public abstract class VerifyingSink implements TokenSink {
 
 	public void addAll(List<Token> tokens) {
 		for (Token token : tokens) {
-			if (token instanceof LandMarker) {
-				assert (!scope.isEmpty() && scope.peek() instanceof WaterMarker);
-				scope.pop();
-
-			} else if (token instanceof WaterMarker) {
+			if (checkTokenInTheWater) {
 				for (Verifier v : this.waterVerififiers) {
 					v.verify(token);
 				}
 
+				checkTokenInTheWater = false;
+
+			} else if (token instanceof LandMarker) {
+				assert (!scope.isEmpty() && scope.peek() instanceof WaterMarker);
+				checkTokenInTheWater = false;
+				scope.pop();
+
+			} else if (token instanceof WaterMarker) {
+				checkTokenInTheWater = true;
 				scope.push(token);
 
 			} else if (token instanceof DownMarker) {

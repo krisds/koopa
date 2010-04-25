@@ -139,17 +139,13 @@ public abstract class KoopaGrammar {
 						sub.mark(water);
 					}
 
-					Token skipped = sub.nextToken();
-					// System.out.println("Skipping token " + skipped);
-
-					if (water.getToken() == null) {
-						water.setToken(skipped);
-					}
+					final Token skipped = sub.nextToken();
 
 					sub.commit();
 
-					if (skipped == null)
+					if (skipped == null) {
 						return false;
+					}
 				}
 
 				sub.restore();

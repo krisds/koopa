@@ -12,7 +12,7 @@ import org.antlr.runtime.tree.CommonTree;
 
 public class ParseResults {
 
-	private File file = null;
+	private final File file;
 
 	private boolean validInput = false;
 

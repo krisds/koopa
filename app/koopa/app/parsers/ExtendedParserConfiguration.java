@@ -50,7 +50,7 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 
 	private boolean keepingTrackOfTokens = false;
 
-	private boolean buildTrees;
+	private boolean buildTrees = false;
 
 	public ParseResults parse(File file) throws IOException {
 		LOGGER.info("Parsing " + file);

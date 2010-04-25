@@ -1,6 +1,5 @@
 package koopa.tokenizers.util;
 
-
 import java.io.IOException;
 
 import koopa.tokens.Token;
@@ -42,19 +41,12 @@ public abstract class ThreadedTokenizerBase {
 	}
 
 	/**
-	 * Note: This method may <code>Thread.sleep(...)</code> at the end of its
-	 * execution. It does this when the queue has too many elements in it. It
-	 * then waits for its consumers to process those first.
+	 * Note: This method {@link Thread#yield()}s at the end of its execution.
 	 */
 	protected void enqueue(Token token) {
 		queue.enqueue(token);
 
-		while (!quit && queue.size() >= 100) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-			}
-		}
+		Thread.yield();
 	}
 
 	protected abstract void tokenize() throws IOException;

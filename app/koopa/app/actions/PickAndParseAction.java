@@ -9,8 +9,14 @@ import javax.swing.Action;
 
 import koopa.app.ApplicationSupport;
 
+import org.apache.log4j.Logger;
+
 @SuppressWarnings("serial")
 public class PickAndParseAction extends AbstractAction implements Action {
+
+	private static final Logger LOGGER = Logger
+			.getLogger("action.pick_and_parse");
+
 	private ParsingProvider provider = null;
 	private Component parent = null;
 
@@ -22,13 +28,15 @@ public class PickAndParseAction extends AbstractAction implements Action {
 
 	public void actionPerformed(ActionEvent ae) {
 		new Thread(new ThreadGroup("actions"), new Runnable() {
-
 			public void run() {
-				File file = ApplicationSupport.askUserForFile(true,
+				final File file = ApplicationSupport.askUserForFile(true,
 						"last-folder", null, parent);
 
 				if (file != null) {
+					final long start = System.currentTimeMillis();
 					PickAndParseAction.this.provider.walkAndParse(file);
+					final long end = System.currentTimeMillis();
+					LOGGER.debug("Time to parse all: " + (end - start) + "ms.");
 				}
 			}
 		}).start();

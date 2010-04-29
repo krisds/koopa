@@ -70,6 +70,6 @@ CDATA : '[' (~('[' | ']'))* ']' ;
 
 IDENTIFIER : NAME ('.' NAME)* ;
 
-fragment NAME : LETTER (LETTER | NUMBER)*;
+fragment NAME : LETTER ('_' | LETTER | NUMBER)*;
 fragment LETTER : 'A' .. 'Z' | 'a' .. 'z' ;
 fragment NUMBER : '0' .. '9' ;

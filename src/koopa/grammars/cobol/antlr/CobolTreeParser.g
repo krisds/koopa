@@ -818,7 +818,10 @@ verb
 addStatement
   : ^(ADD_STATEMENT
       ( 'ADD'
-        (water)?
+        ( addition_format1
+        | addition_format2
+        | addition_format3
+        )
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
@@ -831,6 +834,65 @@ addStatement
           nestedStatements
         ) )?
         ( 'END-ADD' )?
+      )
+    )
+  ;
+
+// ========================================================
+// addition_format1
+// ........................................................
+
+addition_format1
+  : ^(ADDITION_FORMAT1
+      ( ( 'CORRESPONDING'
+      | 'CORR'
+      )
+        identifier
+        'TO'
+        identifier
+        ( 'ROUNDED' )?
+      )
+    )
+  ;
+
+// ========================================================
+// addition_format2
+// ........................................................
+
+addition_format2
+  : ^(ADDITION_FORMAT2
+      ( ( ( identifier
+      | literal
+      | figurativeConstant
+      ) )+
+        ( ( 'TO'
+          ( identifier
+          | literal
+          | figurativeConstant
+          )
+        ) )?
+        'GIVING'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// addition_format3
+// ........................................................
+
+addition_format3
+  : ^(ADDITION_FORMAT3
+      ( ( ( identifier
+      | literal
+      | figurativeConstant
+      ) )+
+        'TO'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
       )
     )
   ;
@@ -2217,6 +2279,7 @@ token
   | 'FROM'
   | 'FUNCTION'
   | 'GENERATE'
+  | 'GIVING'
   | 'GLOBAL'
   | 'GO'
   | 'GOBACK'
@@ -2278,6 +2341,7 @@ token
   | 'RETURN'
   | 'REWRITE'
   | 'RIGHT'
+  | 'ROUNDED'
   | 'RUN'
   | 'SEARCH'
   | 'SECTION'

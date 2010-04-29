@@ -41,7 +41,10 @@
 <!ELEMENT eventPhrase (t?,t?,(t|(t,t)|t|(t,t?)|t))>
 <!ELEMENT endOfStatementMarker (t)>
 <!ELEMENT verb (t)>
-<!ELEMENT addStatement (t,water?,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT addStatement (t,(addition_format1|addition_format2|addition_format3),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT addition_format1 (t,identifier,t,identifier,t?)>
+<!ELEMENT addition_format2 ((identifier|literal|figurativeConstant)+,(t,(identifier|literal|figurativeConstant))?,t,(identifier,t?)+)>
+<!ELEMENT addition_format3 ((identifier|literal|figurativeConstant)+,t,(identifier,t?)+)>
 <!ELEMENT callStatement (t,(identifier|alphanumeric),(t,identifier*,((t?,t,identifier+)|(t?,t,identifier+))*)?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
 <!ELEMENT onException (t?,t,nestedStatements)>

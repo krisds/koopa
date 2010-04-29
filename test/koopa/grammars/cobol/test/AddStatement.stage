@@ -1,6 +1,41 @@
 package koopa.grammars.cobol.test;
 grammar koopa.grammars.cobol.CobolGrammar;
 
+target addition_format1;
+
++[ CORRESPONDING A TO B ]
++[ CORR A TO B ]
+
++[ CORRESPONDING A TO B ROUNDED ]
++[ CORR A TO B ROUNDED ]
+
+target addition_format2;
+
++[ A TO B GIVING C ]
++[ A TO B GIVING C ROUNDED ]
+
++[ A B TO C GIVING D E ]
++[ A B TO C GIVING D ROUNDED E ROUNDED ]
+
++[ A B GIVING C ]
++[ A B GIVING C ROUNDED ]
+
++[ A B C GIVING D E ]
++[ A B C GIVING D ROUNDED E ROUNDED ]
+
++[ ZERO TO B GIVING C ]
++[ A TO ZERO GIVING C ]
+
+target addition_format3;
+
++[ A TO B ]
++[ A TO B ROUNDED ]
+
++[ A B TO C D ]
++[ A B TO C ROUNDED D ROUNDED ]
+
++[ A ZERO TO C D ]
+
 target addStatement;
 
 +[ ADD A TO B ¥ . ]
@@ -70,3 +105,4 @@ target addStatement;
 
 +[ ADD A TO B GIVING C
    END-ADD ]
+

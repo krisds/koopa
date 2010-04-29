@@ -429,19 +429,26 @@ end
 ## ADD statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def addStatement =
-    ADD
-    ( -->
-      ( [NOT] [ON] SIZE ERROR
-      | END-ADD
-      | .
-      | endOfStatement
-      )
-    )
+    ADD ( addition_format1 | addition_format2 | addition_format3 )
     [[ON] SIZE ERROR nestedStatements]
     [NOT [ON] SIZE ERROR nestedStatements]
     [END-ADD]
+end
+
+def addition_format1 =
+    (CORRESPONDING | CORR) identifier TO identifier [ROUNDED]
+end
+
+def addition_format2 =
+    (identifier | literal | figurativeConstant)+
+    [TO (identifier | literal| figurativeConstant)]
+    GIVING (identifier [ROUNDED])+
+end
+
+def addition_format3 =
+    (identifier | literal| figurativeConstant)+
+    TO (identifier [ROUNDED])+
 end
 
 ## #############################################################################

@@ -1,9 +1,9 @@
 package koopa.trees.antlr.jaxen;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import koopa.tokens.Token;
 import koopa.trees.antlr.CommonKoopaToken;
@@ -29,9 +29,13 @@ public class ANTLRTreeAttributeAxisIterator implements
 					.getToken();
 			final Token koopa = token.getKoopaToken();
 
-			for (Object tag : koopa.getTags()) {
-				this.attributes.add(new ANTLRTreeAttribute(tree, "tag", tag
-						.toString()));
+			final Set<Object> tags = koopa.getTags();
+			if (tags != null) {
+				for (Object tag : tags) {
+					this.attributes.add(new ANTLRTreeAttribute(tree, "tag", tag
+							.toString()));
+
+				}
 			}
 		}
 	}

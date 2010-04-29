@@ -142,6 +142,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("SPACES");
       RESERVED_WORDS.add("ERROR");
       RESERVED_WORDS.add("INVALID");
+      RESERVED_WORDS.add("GIVING");
       RESERVED_WORDS.add("VALUE");
       RESERVED_WORDS.add("REWRITE");
       RESERVED_WORDS.add("END-DISPLAY");
@@ -180,6 +181,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-CALL");
       RESERVED_WORDS.add("TIMES");
       RESERVED_WORDS.add("SENTENCE");
+      RESERVED_WORDS.add("ROUNDED");
       RESERVED_WORDS.add("ASCENDING");
       RESERVED_WORDS.add("DISPLAY");
       RESERVED_WORDS.add("EVALUATE");
@@ -1678,22 +1680,10 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("ADD"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("ON")
-                               ),
-                               token("SIZE"),
-                               token("ERROR")
-                           ),
-                           token("END-ADD"),
-                           token("."),
-                           endOfStatement()
-                       )
+                   choice(
+                       addition_format1(),
+                       addition_format2(),
+                       addition_format3()
                    ),
                    optional(
                        sequence(
@@ -1724,6 +1714,115 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return addStatementParser;
+    }
+
+    // ========================================================
+    // addition_format1
+    // ........................................................
+
+    private Parser addition_format1Parser = null;
+
+    public Parser addition_format1() {
+        if (addition_format1Parser == null) {
+           FutureParser future = scoped("addition_format1");
+           addition_format1Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("CORRESPONDING"),
+                       token("CORR")
+                   ),
+                   identifier(),
+                   token("TO"),
+                   identifier(),
+                   optional(
+                       token("ROUNDED")
+                   )
+               )
+           );
+        }
+
+        return addition_format1Parser;
+    }
+
+    // ========================================================
+    // addition_format2
+    // ........................................................
+
+    private Parser addition_format2Parser = null;
+
+    public Parser addition_format2() {
+        if (addition_format2Parser == null) {
+           FutureParser future = scoped("addition_format2");
+           addition_format2Parser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       choice(
+                           identifier(),
+                           literal(),
+                           figurativeConstant()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("TO"),
+                           choice(
+                               identifier(),
+                               literal(),
+                               figurativeConstant()
+                           )
+                       )
+                   ),
+                   token("GIVING"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return addition_format2Parser;
+    }
+
+    // ========================================================
+    // addition_format3
+    // ........................................................
+
+    private Parser addition_format3Parser = null;
+
+    public Parser addition_format3() {
+        if (addition_format3Parser == null) {
+           FutureParser future = scoped("addition_format3");
+           addition_format3Parser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       choice(
+                           identifier(),
+                           literal(),
+                           figurativeConstant()
+                       )
+                   ),
+                   token("TO"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return addition_format3Parser;
     }
 
     // ========================================================

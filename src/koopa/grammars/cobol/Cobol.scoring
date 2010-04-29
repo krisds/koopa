@@ -11,6 +11,11 @@ verify water
 ## The following rules are for statements which have been fully implemented.
 ## -----------------------------------------------------------------------------
 
+verify ADD
+- !addStatement water : warn "ADD in the water."
+- addStatement statement : warn "ADD not in add statement."
+- statement !execStatement !addStatement : warn "ADD not in add statement."
+
 verify COPY
 - !copyStatement water : warn "COPY in the water."
 - copyStatement statement : warn "COPY not in copy statement."
@@ -91,11 +96,6 @@ verify STOP
 ## The following rules are for statements which have only been partly
 ## implemented.
 ## -----------------------------------------------------------------------------
-
-verify ADD
-- !addStatement water : warn "ADD in the water."
-- addStatement statement : warn "ADD not in add statement."
-- statement !execStatement !addStatement : warn "ADD not in add statement."
 
 verify END-ADD
 - !addStatement water : warn "END-ADD in the water."

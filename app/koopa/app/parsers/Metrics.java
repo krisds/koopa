@@ -47,4 +47,30 @@ public class Metrics {
 
 		return 100f * land / ((float) land + (float) water);
 	}
+
+	public static int getSignificantTokenCount(ParseResults results) {
+		final TokenTracker tokenTracker = results.getTokenTracker();
+		if (tokenTracker == null) {
+			return 0;
+		}
+
+		int count = 0;
+
+		for (Token token : tokenTracker.getTokens()) {
+			// Ignoring everything that's not program text.
+			if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
+				continue;
+			}
+
+			// Ignoring whitespace.
+			if (token.hasTag(SyntacticTag.SEPARATOR)
+					&& token.getText().trim().length() == 0) {
+				continue;
+			}
+
+			count += 1;
+		}
+
+		return count;
+	}
 }

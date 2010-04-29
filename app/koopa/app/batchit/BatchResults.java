@@ -15,12 +15,14 @@ public class BatchResults extends AbstractTableModel {
 	public static final int STATUS_COLUMN = 0;
 	public static final int ERRORS_COLUMN = 1;
 	public static final int WARNINGS_COLUMN = 2;
-	public static final int COVERAGE_COLUMN = 3;
-	public static final int FILE_COLUMN = 4;
-	public static final int PATH_COLUMN = 5;
+	public static final int TOKEN_COUNT_COLUMN = 3;
+	public static final int COVERAGE_COLUMN = 4;
+	public static final int FILE_COLUMN = 5;
+	public static final int PATH_COLUMN = 6;
 
 	private List<File> files = new ArrayList<File>();
 	private List<ParseResults> parseResults = new ArrayList<ParseResults>();
+	private List<Integer> tokenCount = new ArrayList<Integer>();
 	private List<Float> coverage = new ArrayList<Float>();
 
 	public enum Status {
@@ -28,7 +30,7 @@ public class BatchResults extends AbstractTableModel {
 	}
 
 	public int getColumnCount() {
-		return 6;
+		return 7;
 	}
 
 	public String getColumnName(int columnIndex) {
@@ -50,6 +52,9 @@ public class BatchResults extends AbstractTableModel {
 
 		case COVERAGE_COLUMN:
 			return "Coverage";
+
+		case TOKEN_COUNT_COLUMN:
+			return "Tokens";
 
 		default:
 			return "????";
@@ -90,19 +95,24 @@ public class BatchResults extends AbstractTableModel {
 		case COVERAGE_COLUMN:
 			return this.coverage.get(rowIndex);
 
+		case TOKEN_COUNT_COLUMN:
+			return this.tokenCount.get(rowIndex);
+
 		default:
 			return true;
 		}
 	}
 
 	public void add(ParseResults results) {
-		File file = results.getFile();
+		final File file = results.getFile();
 
 		int index = this.files.indexOf(file);
 
 		if (index >= 0) {
 			this.parseResults.set(index, results);
 			this.coverage.set(index, Metrics.getCoverage(results));
+			this.tokenCount.set(index, Metrics
+					.getSignificantTokenCount(results));
 			fireTableRowsUpdated(index, index);
 
 		} else {
@@ -110,6 +120,7 @@ public class BatchResults extends AbstractTableModel {
 			this.files.add(file);
 			this.parseResults.add(results);
 			this.coverage.add(Metrics.getCoverage(results));
+			this.tokenCount.add(Metrics.getSignificantTokenCount(results));
 
 			index = files.size() - 1;
 			fireTableRowsInserted(index, index);

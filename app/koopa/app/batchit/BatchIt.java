@@ -154,6 +154,8 @@ public class BatchIt extends JFrame implements ParsingProvider,
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.WARNINGS_COLUMN)
 				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(
+				BatchResults.TOKEN_COUNT_COLUMN).setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.FILE_COLUMN)

@@ -63,4 +63,8 @@ public class TokenTracker {
 
 		return null;
 	}
+
+	public int getTokenCount() {
+		return this.tokens.size();
+	}
 }

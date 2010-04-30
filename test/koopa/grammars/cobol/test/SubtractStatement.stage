@@ -1,6 +1,41 @@
 package koopa.grammars.cobol.test;
 grammar koopa.grammars.cobol.CobolGrammar;
 
+target subtraction_format1;
+
++[ CORRESPONDING A FROM B ]
++[ CORR A FROM B ]
+
++[ CORRESPONDING A FROM B ROUNDED ]
++[ CORR A FROM B ROUNDED ]
+
+target subtraction_format2;
+
++[ A FROM B GIVING C ]
++[ A FROM B GIVING C ROUNDED ]
+
++[ A B FROM C GIVING D E ]
++[ A B FROM C GIVING D ROUNDED E ROUNDED ]
+
++[ A B GIVING C ]
++[ A B GIVING C ROUNDED ]
+
++[ A B C GIVING D E ]
++[ A B C GIVING D ROUNDED E ROUNDED ]
+
++[ ZERO FROM B GIVING C ]
++[ A FROM ZERO GIVING C ]
+
+target subtraction_format3;
+
++[ A FROM B ]
++[ A FROM B ROUNDED ]
+
++[ A B FROM C D ]
++[ A B FROM C ROUNDED D ROUNDED ]
+
++[ A ZERO FROM C D ]
+
 target subtractStatement;
 
 +[ SUBTRACT A FROM B ¥ . ]

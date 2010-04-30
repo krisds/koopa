@@ -369,7 +369,8 @@ def endOfStatementMarker (Token t) returns t =
 end
 
 def verb =
-    ( CALL
+    ( ADD
+    | CALL
     | CANCEL
     | DELETE
     | ENTRY
@@ -385,16 +386,15 @@ def verb =
     | REWRITE
     | SEARCH
     | STOP
+    | SUBTRACT
 
     # Verbs for statements which have a skeletal implementation:
-    | ADD
     | COMPUTE
     | DIVIDE
     | MULTIPLY
     | READ
     | START
     | STRING
-    | SUBTRACT
     | UNSTRING
     | WRITE
 
@@ -866,19 +866,26 @@ end
 ## SUBTRACT statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def subtractStatement =
-    SUBTRACT
-    ( -->
-      ( [NOT] [ON] SIZE ERROR
-      | END-SUBTRACT
-      | .
-      | endOfStatement
-      )
-    )
+    SUBTRACT ( subtraction_format1 | subtraction_format2 | subtraction_format3 )
     [[ON] SIZE ERROR nestedStatements]
     [NOT [ON] SIZE ERROR nestedStatements]
     [END-SUBTRACT]
+end
+
+def subtraction_format1 =
+    (CORRESPONDING | CORR) identifier FROM identifier [ROUNDED]
+end
+
+def subtraction_format2 =
+    (identifier | literal | figurativeConstant)+
+    [FROM (identifier | literal| figurativeConstant)]
+    GIVING (identifier [ROUNDED])+
+end
+
+def subtraction_format3 =
+    (identifier | literal| figurativeConstant)+
+    FROM (identifier [ROUNDED])+
 end
 
 ## #############################################################################

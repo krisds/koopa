@@ -1613,6 +1613,7 @@ public class CobolGrammar extends KoopaGrammar {
            verbParser = future;
            future.setParser(
                choice(
+                   token("ADD"),
                    token("CALL"),
                    token("CANCEL"),
                    token("DELETE"),
@@ -1629,14 +1630,13 @@ public class CobolGrammar extends KoopaGrammar {
                    token("REWRITE"),
                    token("SEARCH"),
                    token("STOP"),
-                   token("ADD"),
+                   token("SUBTRACT"),
                    token("COMPUTE"),
                    token("DIVIDE"),
                    token("MULTIPLY"),
                    token("READ"),
                    token("START"),
                    token("STRING"),
-                   token("SUBTRACT"),
                    token("UNSTRING"),
                    token("WRITE"),
                    token("ACCEPT"),
@@ -3200,22 +3200,10 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("SUBTRACT"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("ON")
-                               ),
-                               token("SIZE"),
-                               token("ERROR")
-                           ),
-                           token("END-SUBTRACT"),
-                           token("."),
-                           endOfStatement()
-                       )
+                   choice(
+                       subtraction_format1(),
+                       subtraction_format2(),
+                       subtraction_format3()
                    ),
                    optional(
                        sequence(
@@ -3246,6 +3234,115 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return subtractStatementParser;
+    }
+
+    // ========================================================
+    // subtraction_format1
+    // ........................................................
+
+    private Parser subtraction_format1Parser = null;
+
+    public Parser subtraction_format1() {
+        if (subtraction_format1Parser == null) {
+           FutureParser future = scoped("subtraction_format1");
+           subtraction_format1Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("CORRESPONDING"),
+                       token("CORR")
+                   ),
+                   identifier(),
+                   token("FROM"),
+                   identifier(),
+                   optional(
+                       token("ROUNDED")
+                   )
+               )
+           );
+        }
+
+        return subtraction_format1Parser;
+    }
+
+    // ========================================================
+    // subtraction_format2
+    // ........................................................
+
+    private Parser subtraction_format2Parser = null;
+
+    public Parser subtraction_format2() {
+        if (subtraction_format2Parser == null) {
+           FutureParser future = scoped("subtraction_format2");
+           subtraction_format2Parser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       choice(
+                           identifier(),
+                           literal(),
+                           figurativeConstant()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("FROM"),
+                           choice(
+                               identifier(),
+                               literal(),
+                               figurativeConstant()
+                           )
+                       )
+                   ),
+                   token("GIVING"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return subtraction_format2Parser;
+    }
+
+    // ========================================================
+    // subtraction_format3
+    // ........................................................
+
+    private Parser subtraction_format3Parser = null;
+
+    public Parser subtraction_format3() {
+        if (subtraction_format3Parser == null) {
+           FutureParser future = scoped("subtraction_format3");
+           subtraction_format3Parser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       choice(
+                           identifier(),
+                           literal(),
+                           figurativeConstant()
+                       )
+                   ),
+                   token("FROM"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return subtraction_format3Parser;
     }
 
     // ========================================================

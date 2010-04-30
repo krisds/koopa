@@ -79,7 +79,10 @@
 <!ELEMENT startStatement (t,water?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT stopStatement (t,(t|literal))>
 <!ELEMENT stringStatement (t,water?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
-<!ELEMENT subtractStatement (t,water?,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT subtractStatement (t,(subtraction_format1|subtraction_format2|subtraction_format3),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT subtraction_format1 (t,identifier,t,identifier,t?)>
+<!ELEMENT subtraction_format2 ((identifier|literal|figurativeConstant)+,(t,(identifier|literal|figurativeConstant))?,t,(identifier,t?)+)>
+<!ELEMENT subtraction_format3 ((identifier|literal|figurativeConstant)+,t,(identifier,t?)+)>
 <!ELEMENT unstringStatement (t,water?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
 <!ELEMENT writeStatement (t,water?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT copyStatement (t,textName,(t,libraryName)?,(t,((identifier|literal|pseudoLiteral),t,(identifier|literal|pseudoLiteral))+)?,t)>

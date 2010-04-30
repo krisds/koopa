@@ -760,7 +760,8 @@ endOfStatementMarker
 
 verb
   : ^(VERB
-      ( 'CALL'
+      ( 'ADD'
+      | 'CALL'
       | 'CANCEL'
       | 'DELETE'
       | 'ENTRY'
@@ -776,14 +777,13 @@ verb
       | 'REWRITE'
       | 'SEARCH'
       | 'STOP'
-      | 'ADD'
+      | 'SUBTRACT'
       | 'COMPUTE'
       | 'DIVIDE'
       | 'MULTIPLY'
       | 'READ'
       | 'START'
       | 'STRING'
-      | 'SUBTRACT'
       | 'UNSTRING'
       | 'WRITE'
       | 'ACCEPT'
@@ -1583,7 +1583,10 @@ stringStatement
 subtractStatement
   : ^(SUBTRACT_STATEMENT
       ( 'SUBTRACT'
-        (water)?
+        ( subtraction_format1
+        | subtraction_format2
+        | subtraction_format3
+        )
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
@@ -1596,6 +1599,65 @@ subtractStatement
           nestedStatements
         ) )?
         ( 'END-SUBTRACT' )?
+      )
+    )
+  ;
+
+// ========================================================
+// subtraction_format1
+// ........................................................
+
+subtraction_format1
+  : ^(SUBTRACTION_FORMAT1
+      ( ( 'CORRESPONDING'
+      | 'CORR'
+      )
+        identifier
+        'FROM'
+        identifier
+        ( 'ROUNDED' )?
+      )
+    )
+  ;
+
+// ========================================================
+// subtraction_format2
+// ........................................................
+
+subtraction_format2
+  : ^(SUBTRACTION_FORMAT2
+      ( ( ( identifier
+      | literal
+      | figurativeConstant
+      ) )+
+        ( ( 'FROM'
+          ( identifier
+          | literal
+          | figurativeConstant
+          )
+        ) )?
+        'GIVING'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// subtraction_format3
+// ........................................................
+
+subtraction_format3
+  : ^(SUBTRACTION_FORMAT3
+      ( ( ( identifier
+      | literal
+      | figurativeConstant
+      ) )+
+        'FROM'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
       )
     )
   ;

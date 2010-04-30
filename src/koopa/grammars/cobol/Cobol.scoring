@@ -16,6 +16,11 @@ verify ADD
 - addStatement statement : warn "ADD not in add statement."
 - statement !execStatement !addStatement : warn "ADD not in add statement."
 
+verify END-ADD
+- !addStatement water : warn "END-ADD in the water."
+- addStatement statement : warn "END-ADD not in add statement."
+- statement !execStatement !addStatement : warn "END-ADD not in add statement."
+
 verify COPY
 - !copyStatement water : warn "COPY in the water."
 - copyStatement statement : warn "COPY not in copy statement."
@@ -91,16 +96,21 @@ verify STOP
 - stopStatement statement : warn "STOP not in stop statement."
 - statement !execStatement !stopStatement : warn "STOP not in stop statement."
 
+verify SUBTRACT
+- !subtractStatement water : warn "SUBTRACT in the water."
+- subtractStatement statement : warn "SUBTRACT not in subtract statement."
+- statement !execStatement !subtractStatement : warn "SUBTRACT not in subtract statement."
+
+verify END-SUBTRACT
+- !subtractStatement water : warn "END-SUBTRACT in the water."
+- subtractStatement statement : warn "END-SUBTRACT not in subtract statement."
+- statement !execStatement !subtractStatement : warn "END-SUBTRACT not in subtract statement."
+
 
 ## #############################################################################
 ## The following rules are for statements which have only been partly
 ## implemented.
 ## -----------------------------------------------------------------------------
-
-verify END-ADD
-- !addStatement water : warn "END-ADD in the water."
-- addStatement statement : warn "END-ADD not in add statement."
-- statement !execStatement !addStatement : warn "END-ADD not in add statement."
 
 verify COMPUTE
 - !computeStatement water : warn "COMPUTE in the water."
@@ -141,16 +151,6 @@ verify END-STRING
 - !stringStatement water : warn "END-STRING in the water."
 - stringStatement statement : warn "END-STRING not in string statement."
 - statement !execStatement !stringStatement : warn "END-STRING not in string statement."
-
-verify SUBTRACT
-- !subtractStatement water : warn "SUBTRACT in the water."
-- subtractStatement statement : warn "SUBTRACT not in subtract statement."
-- statement !execStatement !subtractStatement : warn "SUBTRACT not in subtract statement."
-
-verify END-SUBTRACT
-- !subtractStatement water : warn "END-SUBTRACT in the water."
-- subtractStatement statement : warn "END-SUBTRACT not in subtract statement."
-- statement !execStatement !subtractStatement : warn "END-SUBTRACT not in subtract statement."
 
 verify UNSTRING
 - !unstringStatement water : warn "UNSTRING in the water."

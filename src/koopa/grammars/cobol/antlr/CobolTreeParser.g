@@ -772,6 +772,7 @@ verb
       | 'GO'
       | 'IF'
       | 'MOVE'
+      | 'MULTIPLY'
       | 'PERFORM'
       | 'RETURN'
       | 'REWRITE'
@@ -780,7 +781,6 @@ verb
       | 'SUBTRACT'
       | 'COMPUTE'
       | 'DIVIDE'
-      | 'MULTIPLY'
       | 'READ'
       | 'START'
       | 'STRING'
@@ -1264,7 +1264,9 @@ moveStatement
 multiplyStatement
   : ^(MULTIPLY_STATEMENT
       ( 'MULTIPLY'
-        (water)?
+        ( multiplication_format1
+        | multiplication_format2
+        )
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
@@ -1277,6 +1279,47 @@ multiplyStatement
           nestedStatements
         ) )?
         ( 'END-MULTIPLY' )?
+      )
+    )
+  ;
+
+// ========================================================
+// multiplication_format1
+// ........................................................
+
+multiplication_format1
+  : ^(MULTIPLICATION_FORMAT1
+      ( ( identifier
+      | literal
+      | figurativeConstant
+      )
+        'BY'
+        ( identifier
+        | literal
+        | figurativeConstant
+        )
+        'GIVING'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// multiplication_format2
+// ........................................................
+
+multiplication_format2
+  : ^(MULTIPLICATION_FORMAT2
+      ( ( identifier
+      | literal
+      | figurativeConstant
+      )
+        'BY'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
       )
     )
   ;

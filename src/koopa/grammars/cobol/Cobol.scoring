@@ -76,6 +76,16 @@ verify MOVE
 - moveStatement statement : warn "MOVE not in move statement."
 - statement !execStatement !moveStatement : warn "MOVE not in move statement."
 
+verify MULTIPLY
+- !multiplyStatement water : warn "MULTIPLY in the water."
+- multiplyStatement statement : warn "MULTIPLY not in multiply statement."
+- statement !execStatement !multiplyStatement : warn "MULTIPLY not in multiply statement."
+
+verify END-MULTIPLY
+- !multiplyStatement water : warn "END-MULTIPLY in the water."
+- multiplyStatement statement : warn "END-MULTIPLY not in multiply statement."
+- statement !execStatement !multiplyStatement : warn "END-MULTIPLY not in multiply statement."
+
 verify PERFORM
 - !execStatement water : warn "PERFORM in the water."
 - performStatement statement : warn "PERFORM not in perform statement."
@@ -131,16 +141,6 @@ verify END-DIVIDE
 - !divideStatement water : warn "END-DIVIDE in the water."
 - divideStatement statement : warn "END-DIVIDE not in divide statement."
 - statement !execStatement !divideStatement : warn "END-DIVIDE not in divide statement."
-
-verify MULTIPLY
-- !multiplyStatement water : warn "MULTIPLY in the water."
-- multiplyStatement statement : warn "MULTIPLY not in multiply statement."
-- statement !execStatement !multiplyStatement : warn "MULTIPLY not in multiply statement."
-
-verify END-MULTIPLY
-- !multiplyStatement water : warn "END-MULTIPLY in the water."
-- multiplyStatement statement : warn "END-MULTIPLY not in multiply statement."
-- statement !execStatement !multiplyStatement : warn "END-MULTIPLY not in multiply statement."
 
 verify STRING
 - !stringStatement water : warn "STRING in the water."

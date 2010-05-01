@@ -1,6 +1,22 @@
 package koopa.grammars.cobol.test;
 grammar koopa.grammars.cobol.CobolGrammar;
 
+target multiplication_format1;
+
++[ A BY B GIVING C ]
++[ A BY B GIVING C D ]
+
++[ A BY B GIVING C ROUNDED ]
++[ A BY B GIVING C ROUNDED D ROUNDED ]
+
+target multiplication_format2;
+
++[ A BY B ]
++[ A BY B C ]
+
++[ A BY B ROUNDED ]
++[ A BY B ROUNDED C ROUNDED ]
+
 target multiplyStatement;
 
 +[ MULTIPLY A BY B ¥ . ]

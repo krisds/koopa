@@ -65,7 +65,9 @@
 <!ELEMENT goToStatement (t,t?,procedureName,(procedureName*,t,t?,identifier)?)>
 <!ELEMENT ifStatement (t,condition,t?,(nestedStatements|(t,t)),(t,(nestedStatements|(t,t)))?,t?)>
 <!ELEMENT moveStatement (t,((t?,identifier)|literal|figurativeConstant),t,identifier+)>
-<!ELEMENT multiplyStatement (t,water?,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT multiplyStatement (t,(multiplication_format1|multiplication_format2),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT multiplication_format1 ((identifier|literal|figurativeConstant),t,(identifier|literal|figurativeConstant),t,(identifier,t?)+)>
+<!ELEMENT multiplication_format2 ((identifier|literal|figurativeConstant),t,(identifier,t?)+)>
 <!ELEMENT performStatement (t,(((times|until|varying)?,nestedStatements,t)|(procedureName,(t,procedureName)?,(times|until|varying)?)))>
 <!ELEMENT times ((identifier|integer),t)>
 <!ELEMENT until ((t?,t,t)?,t,condition)>

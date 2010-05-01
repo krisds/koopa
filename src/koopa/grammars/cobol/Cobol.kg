@@ -381,6 +381,7 @@ def verb =
     | GO
     | IF
     | MOVE
+    | MULTIPLY
     | PERFORM
     | RETURN
     | REWRITE
@@ -391,7 +392,6 @@ def verb =
     # Verbs for statements which have a skeletal implementation:
     | COMPUTE
     | DIVIDE
-    | MULTIPLY
     | READ
     | START
     | STRING
@@ -671,19 +671,24 @@ end
 ## MULTIPLY statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def multiplyStatement =
-    MULTIPLY
-    ( -->
-      ( [NOT] [ON] SIZE ERROR
-      | END-MULTIPLY
-      | .
-      | endOfStatement
-      )
-    )
+    MULTIPLY ( multiplication_format1 | multiplication_format2 )
     [[ON] SIZE ERROR nestedStatements]
     [NOT [ON] SIZE ERROR nestedStatements]
     [END-MULTIPLY]
+end
+
+# The order of these is important!
+
+def multiplication_format1 =
+    (identifier | literal | figurativeConstant)
+    BY (identifier | literal | figurativeConstant)
+    GIVING (identifier [ROUNDED])+
+end
+
+def multiplication_format2 =
+    (identifier | literal | figurativeConstant)
+    BY (identifier [ROUNDED])+
 end
 
 ## #############################################################################

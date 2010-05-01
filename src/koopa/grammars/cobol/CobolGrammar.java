@@ -1625,6 +1625,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("GO"),
                    token("IF"),
                    token("MOVE"),
+                   token("MULTIPLY"),
                    token("PERFORM"),
                    token("RETURN"),
                    token("REWRITE"),
@@ -1633,7 +1634,6 @@ public class CobolGrammar extends KoopaGrammar {
                    token("SUBTRACT"),
                    token("COMPUTE"),
                    token("DIVIDE"),
-                   token("MULTIPLY"),
                    token("READ"),
                    token("START"),
                    token("STRING"),
@@ -2549,22 +2549,9 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("MULTIPLY"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("ON")
-                               ),
-                               token("SIZE"),
-                               token("ERROR")
-                           ),
-                           token("END-MULTIPLY"),
-                           token("."),
-                           endOfStatement()
-                       )
+                   choice(
+                       multiplication_format1(),
+                       multiplication_format2()
                    ),
                    optional(
                        sequence(
@@ -2595,6 +2582,78 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return multiplyStatementParser;
+    }
+
+    // ========================================================
+    // multiplication_format1
+    // ........................................................
+
+    private Parser multiplication_format1Parser = null;
+
+    public Parser multiplication_format1() {
+        if (multiplication_format1Parser == null) {
+           FutureParser future = scoped("multiplication_format1");
+           multiplication_format1Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   token("BY"),
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   token("GIVING"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return multiplication_format1Parser;
+    }
+
+    // ========================================================
+    // multiplication_format2
+    // ........................................................
+
+    private Parser multiplication_format2Parser = null;
+
+    public Parser multiplication_format2() {
+        if (multiplication_format2Parser == null) {
+           FutureParser future = scoped("multiplication_format2");
+           multiplication_format2Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   token("BY"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return multiplication_format2Parser;
     }
 
     // ========================================================

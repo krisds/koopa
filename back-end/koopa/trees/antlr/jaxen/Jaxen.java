@@ -1,5 +1,6 @@
 package koopa.trees.antlr.jaxen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -9,39 +10,43 @@ public class Jaxen {
 
 	private static final boolean DEBUG = false;
 
-	public static Object evaluate(CommonTree tree, String expr) {
+	public static List<?> evaluate(CommonTree tree, String expr) {
 		try {
 			if (DEBUG) {
-				System.out.println("*** JAXEN ***");
-				System.out.println(expr);
+				System.out.println("XPath: " + expr);
 			}
 
 			Object result = new KoopaXPath(expr).evaluate(tree);
 
-			if (DEBUG) {
-				if (result instanceof List<?>) {
-					final List<?> list = (List<?>) result;
+			if (result == null) {
+				return null;
+
+			} else if (result instanceof List<?>) {
+				final List<?> list = (List<?>) result;
+
+				if (DEBUG) {
 					System.out.println("Got " + list.size() + " answer(s).");
 
 					int i = 1;
 					for (Object object : list) {
 						System.out.println("# " + i++ + ": " + object);
 					}
+				}
 
-				} else {
+				return list;
+
+			} else {
+				if (DEBUG) {
 					System.out.println("Got: " + result);
 				}
 
-				System.out.println("*** /JAXEN ***");
-				System.out.println();
+				final List<Object> singleton = new ArrayList<Object>(1);
+				singleton.add(result);
+				return singleton;
 			}
 
-			return result;
-
 		} catch (JaxenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			throw new XPathException(e.getMessage());
 		}
 	}
 }

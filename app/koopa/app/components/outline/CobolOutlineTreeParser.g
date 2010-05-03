@@ -21,16 +21,16 @@ options {
 
 @members {
   private static final Icon PARAGRAPH_ICON = Icons
-      .getIcon("/koopa/app/resources/view_less_text.png");
+      .getIcon("/koopa/app/resources/splashy/view_less_text.png");
 
   private static final Icon SECTION_ICON = Icons
-      .getIcon("/koopa/app/resources/view_more_text.png");
+      .getIcon("/koopa/app/resources/splashy/view_more_text.png");
 
   private static final Icon DECLARATIVES_ICON = Icons
-      .getIcon("/koopa/app/resources/view_thumbnail.png");
+      .getIcon("/koopa/app/resources/splashy/view_thumbnail.png");
 
   private static final Icon PROGRAM_ICON = Icons
-      .getIcon("/koopa/app/resources/document_a4_marked.png");
+      .getIcon("/koopa/app/resources/splashy/document_a4_marked.png");
 
   private Stack<DefaultMutableTreeNode> nodes = new Stack<DefaultMutableTreeNode>();
   

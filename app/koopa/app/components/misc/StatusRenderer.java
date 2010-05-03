@@ -13,14 +13,14 @@ public class StatusRenderer extends DefaultTableCellRenderer implements
 
 	private static final long serialVersionUID = -4744958969024365852L;
 
-	final static ImageIcon OK = Icons
-			.getIcon("/koopa/app/resources/document_a4_okay.png");
+	private final static ImageIcon OK = Icons
+			.getIcon("/koopa/app/resources/splashy/document_a4_okay.png");
 
-	final static ImageIcon ERROR = Icons
-			.getIcon("/koopa/app/resources/document_a4_remove.png");
+	private final static ImageIcon ERROR = Icons
+			.getIcon("/koopa/app/resources/splashy/document_a4_remove.png");
 
-	final static ImageIcon WARNING = Icons
-			.getIcon("/koopa/app/resources/document_a4_warning.png");
+	private final static ImageIcon WARNING = Icons
+			.getIcon("/koopa/app/resources/splashy/document_a4_warning.png");
 
 	public void setValue(Object value) {
 		if (value == null) {

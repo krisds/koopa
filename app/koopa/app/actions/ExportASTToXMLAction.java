@@ -10,11 +10,11 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.antlr.runtime.tree.CommonTree;
-
 import koopa.app.ApplicationSupport;
 import koopa.trees.antlr.CommonTreeSerializer;
 import koopa.util.Getter;
+
+import org.antlr.runtime.tree.CommonTree;
 
 @SuppressWarnings("serial")
 public class ExportASTToXMLAction extends AbstractAction implements Action {
@@ -24,7 +24,7 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 
 	public ExportASTToXMLAction(Getter<CommonTree> astGetter,
 			FileFilter filter, Component parent) {
-		super("Export AST to XML...");
+		super("Export to XML...");
 		this.astGetter = astGetter;
 		this.filter = filter;
 		this.parent = parent;

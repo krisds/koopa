@@ -21,10 +21,10 @@ public class ParseDetails extends AbstractTableModel {
 	private ParseResults parseResults = null;
 
 	final static ImageIcon ERROR = Icons
-			.getIcon("/koopa/app/resources/remove.png");
+			.getIcon("/koopa/app/resources/splashy/remove.png");
 
 	final static ImageIcon WARNING = Icons
-			.getIcon("/koopa/app/resources/warning_triangle.png");
+			.getIcon("/koopa/app/resources/splashy/warning_triangle.png");
 
 	public int getColumnCount() {
 		return 5;

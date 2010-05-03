@@ -1,8 +1,8 @@
 package koopa.app.components.outline;
 
-
 import javax.swing.Icon;
 
+import koopa.tokens.Position;
 import koopa.tokens.Token;
 import koopa.trees.antlr.CommonKoopaToken;
 
@@ -25,6 +25,10 @@ public class Reference {
 	}
 
 	public Token getToken() {
+		return getToken(this.tree);
+	}
+
+	private Token getToken(Tree tree) {
 		if (!(tree instanceof CommonTree)) {
 			return null;
 		}
@@ -36,6 +40,28 @@ public class Reference {
 
 		final CommonKoopaToken koopa = (CommonKoopaToken) token;
 		return koopa.getKoopaToken();
+	}
+
+	public int getPositionInFile() {
+		return getPositionInFile(this.tree);
+	}
+
+	private int getPositionInFile(Tree root) {
+		final Position start = getToken(root).getStart();
+
+		if (start != null) {
+			return start.getPositionInFile();
+		}
+
+		for (int i = 0; i < root.getChildCount(); i++) {
+			int position = getPositionInFile(root.getChild(i));
+
+			if (position >= 0) {
+				return position;
+			}
+		}
+
+		return -1;
 	}
 
 	public String getDescription() {

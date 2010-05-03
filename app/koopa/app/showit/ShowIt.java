@@ -23,6 +23,7 @@ import koopa.app.ConfigurableApplication;
 import koopa.app.actions.ExportASTToXMLAction;
 import koopa.app.actions.FileManager;
 import koopa.app.actions.OpenFileAction;
+import koopa.app.actions.QueryUsingXPathAction;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
@@ -31,7 +32,6 @@ import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
 import koopa.tokenizers.generic.IntermediateTokenizer;
-import koopa.tokens.Token;
 import koopa.util.Getter;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -46,7 +46,7 @@ public class ShowIt extends JFrame implements FileManager,
 	private SourceView pane = null;
 	private CobolOutline outline = null;
 
-	private JMenuItem saveXML = null;
+	private JMenu syntaxTree = null;
 
 	private static DecimalFormat coverageFormatter = new DecimalFormat("0.0");
 
@@ -140,12 +140,14 @@ public class ShowIt extends JFrame implements FileManager,
 	}
 
 	private void setupMenuBar(boolean isDialog) {
-		// Be nice to mac users.
+		// Be nice to mac users (like myself).
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 
-		JMenuBar bar = new JMenuBar();
+		final JMenuBar bar = new JMenuBar();
 
-		JMenu file = new JMenu("File");
+		// File ----------------------------------------------------------------
+
+		final JMenu file = new JMenu("File");
 
 		if (!isDialog) {
 			JMenuItem open = new JMenuItem(new OpenFileAction(this,
@@ -165,16 +167,22 @@ public class ShowIt extends JFrame implements FileManager,
 
 			open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
 			file.add(open);
-
-			file.addSeparator();
 		}
 
-		saveXML = new JMenuItem(new ExportASTToXMLAction(
-				new Getter<CommonTree>() {
-					public CommonTree getIt() {
-						return results.getTree();
-					}
-				}, new FileFilter() {
+		bar.add(file);
+
+		// Syntax tree ---------------------------------------------------------
+
+		this.syntaxTree = new JMenu("Syntax tree");
+
+		Getter<CommonTree> astGetter = new Getter<CommonTree>() {
+			public CommonTree getIt() {
+				return results.getTree();
+			}
+		};
+
+		final JMenuItem saveXML = new JMenuItem(new ExportASTToXMLAction(
+				astGetter, new FileFilter() {
 					public boolean accept(File f) {
 						if (!f.isFile())
 							return false;
@@ -187,11 +195,18 @@ public class ShowIt extends JFrame implements FileManager,
 					}
 				}, this));
 
-		saveXML.setEnabled(false);
 		saveXML.setAccelerator(KeyStroke.getKeyStroke("meta E"));
-		file.add(saveXML);
+		syntaxTree.add(saveXML);
 
-		bar.add(file);
+		syntaxTree.addSeparator();
+
+		final JMenuItem queryUsingXath = new JMenuItem(
+				new QueryUsingXPathAction(astGetter, this));
+
+		queryUsingXath.setAccelerator(KeyStroke.getKeyStroke("meta P"));
+		syntaxTree.add(queryUsingXath);
+
+		bar.add(syntaxTree);
 
 		setJMenuBar(bar);
 	}
@@ -210,8 +225,8 @@ public class ShowIt extends JFrame implements FileManager,
 
 				if (!node.isRoot()) {
 					final Reference ref = (Reference) node.getUserObject();
-					final Token token = ref.getToken();
-					pane.scrollTo(token.getStart().getPositionInFile());
+					pane.scrollTo(ref.getPositionInFile());
+
 				} else {
 					pane.scrollTo(0);
 				}
@@ -228,16 +243,16 @@ public class ShowIt extends JFrame implements FileManager,
 	public void openFile(File file) {
 		setTitle("Koopa Show It - " + file + " (parsing)");
 
-		if (saveXML != null) {
-			saveXML.setEnabled(false);
+		if (syntaxTree != null) {
+			syntaxTree.setEnabled(false);
 		}
 
 		try {
 			results = this.coordinator.parse(file);
 
-			if (saveXML != null && results.getErrorCount() == 0
+			if (syntaxTree != null && results.getErrorCount() == 0
 					&& results.getTree() != null) {
-				saveXML.setEnabled(true);
+				syntaxTree.setEnabled(true);
 			}
 
 			float coverage = Metrics.getCoverage(results);

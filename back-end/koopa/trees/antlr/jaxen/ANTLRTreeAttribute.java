@@ -15,7 +15,7 @@ public class ANTLRTreeAttribute {
 	}
 
 	public String toString() {
-		return "@" + name + "=" + value;
+		return name + " = " + value;
 	}
 
 	public Tree getTree() {

@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -16,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import koopa.app.actions.FileManager;
 import koopa.trees.antlr.jaxen.Jaxen;
 import koopa.trees.antlr.jaxen.XPathException;
 import koopa.util.Getter;
@@ -30,24 +33,28 @@ public class XPathQueryingDialog extends JDialog {
 
 	private static final WeakHashMap<Component, XPathQueryingDialog> DIALOGS = new WeakHashMap<Component, XPathQueryingDialog>();
 
+	private FileManager manager = null;
+
 	private Getter<CommonTree> treeGetter = null;
 
 	public static synchronized XPathQueryingDialog getDialog(Frame owner,
-			Getter<CommonTree> treeGetter) {
+			FileManager manager, Getter<CommonTree> treeGetter) {
 
 		XPathQueryingDialog dialog = DIALOGS.get(owner);
 
 		if (dialog == null) {
-			dialog = new XPathQueryingDialog(owner, treeGetter);
+			dialog = new XPathQueryingDialog(owner, manager, treeGetter);
 			DIALOGS.put(owner, dialog);
 		}
 
 		return dialog;
 	}
 
-	public XPathQueryingDialog(Frame owner, Getter<CommonTree> treeGetter) {
+	public XPathQueryingDialog(Frame owner, FileManager manager,
+			Getter<CommonTree> treeGetter) {
 		super(owner, "Query using XPath", false);
 
+		this.manager = manager;
 		this.treeGetter = treeGetter;
 
 		setupComponents();
@@ -96,7 +103,11 @@ public class XPathQueryingDialog extends JDialog {
 		resultsTable.getColumnModel().getColumn(XPathResults.TYPE_COLUMN)
 				.setPreferredWidth(40);
 		resultsTable.getColumnModel().getColumn(XPathResults.TEXT_COLUMN)
-				.setPreferredWidth(560);
+				.setPreferredWidth(480);
+		resultsTable.getColumnModel().getColumn(XPathResults.LINE_COLUMN)
+				.setPreferredWidth(40);
+		resultsTable.getColumnModel().getColumn(XPathResults.COLUMN_COLUMN)
+				.setPreferredWidth(40);
 
 		resultsTable.getColumnModel().getColumn(XPathResults.TYPE_COLUMN)
 				.setCellRenderer(new XPathResultTypeRenderer());
@@ -105,6 +116,18 @@ public class XPathQueryingDialog extends JDialog {
 		resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		resultsTable.setHighlighters(HighlighterFactory.createSimpleStriping());
+
+		resultsTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					final int row = resultsTable.rowAtPoint(e.getPoint());
+					final int pos = results.getPositionInFile(row);
+					if (pos >= 0) {
+						manager.scrollTo(pos);
+					}
+				}
+			}
+		});
 
 		JScrollPane scrollableResultsTable = new JScrollPane(resultsTable);
 		scrollableResultsTable.setBorder(null);

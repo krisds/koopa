@@ -201,7 +201,7 @@ public class ShowIt extends JFrame implements FileManager,
 		syntaxTree.addSeparator();
 
 		final JMenuItem queryUsingXath = new JMenuItem(
-				new QueryUsingXPathAction(astGetter, this));
+				new QueryUsingXPathAction(astGetter, this, this));
 
 		queryUsingXath.setAccelerator(KeyStroke.getKeyStroke("meta P"));
 		syntaxTree.add(queryUsingXath);
@@ -264,6 +264,12 @@ public class ShowIt extends JFrame implements FileManager,
 			setTitle("Koopa Show It - " + file);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	public void scrollTo(int position) {
+		if (pane != null) {
+			pane.scrollTo(position);
 		}
 	}
 }

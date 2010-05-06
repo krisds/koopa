@@ -36,6 +36,16 @@ verify CANCEL
 - cancelStatement statement : warn "CANCEL not in cancel statement."
 - statement !execStatement !cancelStatement : warn "CANCEL not in cancel statement."
 
+verify DIVIDE
+- !divideStatement water : warn "DIVIDE in the water."
+- divideStatement statement : warn "DIVIDE not in divide statement."
+- statement !execStatement !divideStatement : warn "DIVIDE not in divide statement."
+
+verify END-DIVIDE
+- !divideStatement water : warn "END-DIVIDE in the water."
+- divideStatement statement : warn "END-DIVIDE not in divide statement."
+- statement !execStatement !divideStatement : warn "END-DIVIDE not in divide statement."
+
 verify ENTRY
 - !execStatement water : warn "ENTRY in the water."
 - entryStatement statement : warn "ENTRY not in entry statement."
@@ -131,16 +141,6 @@ verify END-COMPUTE
 - !computeStatement water : warn "END-COMPUTE in the water."
 - computeStatement statement : warn "END-COMPUTE not in compute statement."
 - statement !execStatement !computeStatement : warn "END-COMPUTE not in compute statement."
-
-verify DIVIDE
-- !divideStatement water : warn "DIVIDE in the water."
-- divideStatement statement : warn "DIVIDE not in divide statement."
-- statement !execStatement !divideStatement : warn "DIVIDE not in divide statement."
-
-verify END-DIVIDE
-- !divideStatement water : warn "END-DIVIDE in the water."
-- divideStatement statement : warn "END-DIVIDE not in divide statement."
-- statement !execStatement !divideStatement : warn "END-DIVIDE not in divide statement."
 
 verify STRING
 - !stringStatement water : warn "STRING in the water."

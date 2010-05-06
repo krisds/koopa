@@ -764,6 +764,7 @@ verb
       | 'CALL'
       | 'CANCEL'
       | 'DELETE'
+      | 'DIVIDE'
       | 'ENTRY'
       | 'EVALUATE'
       | 'EXEC'
@@ -780,7 +781,6 @@ verb
       | 'STOP'
       | 'SUBTRACT'
       | 'COMPUTE'
-      | 'DIVIDE'
       | 'READ'
       | 'START'
       | 'STRING'
@@ -1038,7 +1038,10 @@ deleteStatement
 divideStatement
   : ^(DIVIDE_STATEMENT
       ( 'DIVIDE'
-        (water)?
+        ( division_format1
+        | division_format2
+        | division_format3
+        )
         ( ( ( 'ON' )?
           'SIZE'
           'ERROR'
@@ -1051,6 +1054,75 @@ divideStatement
           nestedStatements
         ) )?
         ( 'END-DIVIDE' )?
+      )
+    )
+  ;
+
+// ========================================================
+// division_format1
+// ........................................................
+
+division_format1
+  : ^(DIVISION_FORMAT1
+      ( ( identifier
+      | literal
+      | figurativeConstant
+      )
+        ( 'INTO'
+        | 'BY'
+        )
+        ( identifier
+        | literal
+        | figurativeConstant
+        )
+        'GIVING'
+        identifier
+        ( 'ROUNDED' )?
+        'REMAINDER'
+        identifier
+      )
+    )
+  ;
+
+// ========================================================
+// division_format2
+// ........................................................
+
+division_format2
+  : ^(DIVISION_FORMAT2
+      ( ( identifier
+      | literal
+      | figurativeConstant
+      )
+        ( 'INTO'
+        | 'BY'
+        )
+        ( identifier
+        | literal
+        | figurativeConstant
+        )
+        'GIVING'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// division_format3
+// ........................................................
+
+division_format3
+  : ^(DIVISION_FORMAT3
+      ( ( identifier
+      | literal
+      | figurativeConstant
+      )
+        'INTO'
+        ( ( identifier
+          ( 'ROUNDED' )?
+        ) )+
       )
     )
   ;
@@ -2439,6 +2511,7 @@ token
   | 'REDEFINES'
   | 'REFERENCE'
   | 'RELEASE'
+  | 'REMAINDER'
   | 'RENAMES'
   | 'REPLACE'
   | 'REPLACING'

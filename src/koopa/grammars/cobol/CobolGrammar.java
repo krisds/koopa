@@ -26,197 +26,198 @@ public class CobolGrammar extends KoopaGrammar {
 
     static {
       RESERVED_WORDS.add("INDEX");
-      RESERVED_WORDS.add("TERMINATE");
       RESERVED_WORDS.add("END-PERFORM");
-      RESERVED_WORDS.add("END");
       RESERVED_WORDS.add("SYNCHRONIZED");
+      RESERVED_WORDS.add("END");
       RESERVED_WORDS.add("ENTRY");
       RESERVED_WORDS.add("INTO");
       RESERVED_WORDS.add("IDENTIFICATION");
-      RESERVED_WORDS.add("EOP");
       RESERVED_WORDS.add("PIC");
       RESERVED_WORDS.add("END-STRING");
-      RESERVED_WORDS.add("FALSE");
       RESERVED_WORDS.add("END-START");
-      RESERVED_WORDS.add("DISABLE");
       RESERVED_WORDS.add("END-SEARCH");
+      RESERVED_WORDS.add("DISABLE");
       RESERVED_WORDS.add("END-OF-PAGE");
-      RESERVED_WORDS.add("THEN");
       RESERVED_WORDS.add("GOBACK");
-      RESERVED_WORDS.add("INITIAL");
-      RESERVED_WORDS.add("USAGE");
-      RESERVED_WORDS.add("ENVIRONMENT");
       RESERVED_WORDS.add("CONTENT");
-      RESERVED_WORDS.add("STOP");
       RESERVED_WORDS.add("ZEROS");
+      RESERVED_WORDS.add("STOP");
       RESERVED_WORDS.add("PACKED-DECIMAL");
-      RESERVED_WORDS.add("COMP-5");
       RESERVED_WORDS.add("BINARY");
-      RESERVED_WORDS.add("COMPUTATIONAL-3");
-      RESERVED_WORDS.add("CONTINUE");
       RESERVED_WORDS.add("ON");
-      RESERVED_WORDS.add("TO");
-      RESERVED_WORDS.add("COMPUTATIONAL-2");
-      RESERVED_WORDS.add("COMPUTATIONAL-5");
-      RESERVED_WORDS.add("FUNCTION");
-      RESERVED_WORDS.add("RIGHT");
-      RESERVED_WORDS.add("GLOBAL");
-      RESERVED_WORDS.add("FILE");
+      RESERVED_WORDS.add("CONTINUE");
       RESERVED_WORDS.add("DIVISION");
-      RESERVED_WORDS.add("THROUGH");
-      RESERVED_WORDS.add("END-SUBTRACT");
-      RESERVED_WORDS.add("PICTURE");
       RESERVED_WORDS.add("COMMUNICATION");
       RESERVED_WORDS.add("SUBTRACT");
       RESERVED_WORDS.add("UNTIL");
       RESERVED_WORDS.add("SIGN");
-      RESERVED_WORDS.add("GENERATE");
-      RESERVED_WORDS.add("88");
-      RESERVED_WORDS.add("MULTIPLY");
       RESERVED_WORDS.add("END-RETURN");
-      RESERVED_WORDS.add("DEPENDING");
-      RESERVED_WORDS.add("AT");
-      RESERVED_WORDS.add("GO");
+      RESERVED_WORDS.add("MULTIPLY");
       RESERVED_WORDS.add("END-COMPUTE");
+      RESERVED_WORDS.add("GO");
       RESERVED_WORDS.add("OCCURS");
       RESERVED_WORDS.add("THRU");
-      RESERVED_WORDS.add("SPACE");
       RESERVED_WORDS.add("CANCEL");
       RESERVED_WORDS.add("JUSTIFIED");
-      RESERVED_WORDS.add("COMP-2");
       RESERVED_WORDS.add("END-EVALUATE");
       RESERVED_WORDS.add("WHEN");
       RESERVED_WORDS.add("DESCENDING");
       RESERVED_WORDS.add("STRING");
+      RESERVED_WORDS.add("ARE");
+      RESERVED_WORDS.add("SORT");
+      RESERVED_WORDS.add("ANY");
+      RESERVED_WORDS.add("COMPUTATIONAL");
+      RESERVED_WORDS.add("ALTER");
+      RESERVED_WORDS.add("COMMON");
+      RESERVED_WORDS.add("ELSE");
+      RESERVED_WORDS.add("MOVE");
+      RESERVED_WORDS.add("CORR");
+      RESERVED_WORDS.add("UNSTRING");
+      RESERVED_WORDS.add("SET");
+      RESERVED_WORDS.add("ENABLE");
+      RESERVED_WORDS.add("ADD");
+      RESERVED_WORDS.add("TRUE");
+      RESERVED_WORDS.add("SEARCH");
+      RESERVED_WORDS.add("INDEXED");
+      RESERVED_WORDS.add("SYNC");
+      RESERVED_WORDS.add("FILLER");
+      RESERVED_WORDS.add("EXTERNAL");
+      RESERVED_WORDS.add("REPLACING");
+      RESERVED_WORDS.add("HIGH-VALUES");
+      RESERVED_WORDS.add("LINKAGE");
+      RESERVED_WORDS.add("ALSO");
+      RESERVED_WORDS.add("VALUES");
+      RESERVED_WORDS.add("PROCEDURE");
+      RESERVED_WORDS.add("BLANK");
+      RESERVED_WORDS.add("INVALID");
+      RESERVED_WORDS.add("ERROR");
+      RESERVED_WORDS.add("GIVING");
+      RESERVED_WORDS.add("END-DISPLAY");
+      RESERVED_WORDS.add("END-EXEC");
+      RESERVED_WORDS.add("END-ADD");
+      RESERVED_WORDS.add("PROGRAM");
+      RESERVED_WORDS.add("AFTER");
+      RESERVED_WORDS.add("END-REWRITE");
+      RESERVED_WORDS.add("DIVIDE");
+      RESERVED_WORDS.add("CORRESPONDING");
+      RESERVED_WORDS.add("BY");
+      RESERVED_WORDS.add("RELEASE");
+      RESERVED_WORDS.add("SEPARATE");
+      RESERVED_WORDS.add("USE");
+      RESERVED_WORDS.add("END-DELETE");
+      RESERVED_WORDS.add("CHARACTER");
+      RESERVED_WORDS.add("RECORD");
+      RESERVED_WORDS.add("TRAILING");
+      RESERVED_WORDS.add("EXIT");
+      RESERVED_WORDS.add("COMP-1");
+      RESERVED_WORDS.add("ID");
+      RESERVED_WORDS.add("FROM");
+      RESERVED_WORDS.add("END-CALL");
+      RESERVED_WORDS.add("DELETE");
+      RESERVED_WORDS.add("TIMES");
+      RESERVED_WORDS.add("DISPLAY");
+      RESERVED_WORDS.add("ASCENDING");
+      RESERVED_WORDS.add("INSPECT");
+      RESERVED_WORDS.add("END-MULTIPLY");
+      RESERVED_WORDS.add("WITH");
+      RESERVED_WORDS.add("IN");
+      RESERVED_WORDS.add("END-UNSTRING");
+      RESERVED_WORDS.add("NEXT");
+      RESERVED_WORDS.add("RETURN");
+      RESERVED_WORDS.add("IF");
+      RESERVED_WORDS.add("REFERENCE");
+      RESERVED_WORDS.add("CALL");
+      RESERVED_WORDS.add("REMAINDER");
+      RESERVED_WORDS.add("OVERFLOW");
+      RESERVED_WORDS.add("BEFORE");
+      RESERVED_WORDS.add("PROGRAM-ID");
+      RESERVED_WORDS.add("NOT");
+      RESERVED_WORDS.add("EXCEPTION");
+      RESERVED_WORDS.add("READ");
+      RESERVED_WORDS.add("TERMINATE");
+      RESERVED_WORDS.add("EOP");
+      RESERVED_WORDS.add("FALSE");
+      RESERVED_WORDS.add("THEN");
+      RESERVED_WORDS.add("USAGE");
+      RESERVED_WORDS.add("INITIAL");
+      RESERVED_WORDS.add("ENVIRONMENT");
+      RESERVED_WORDS.add("COMP-5");
+      RESERVED_WORDS.add("COMPUTATIONAL-3");
+      RESERVED_WORDS.add("TO");
+      RESERVED_WORDS.add("COMPUTATIONAL-5");
+      RESERVED_WORDS.add("COMPUTATIONAL-2");
+      RESERVED_WORDS.add("FUNCTION");
+      RESERVED_WORDS.add("FILE");
+      RESERVED_WORDS.add("GLOBAL");
+      RESERVED_WORDS.add("RIGHT");
+      RESERVED_WORDS.add("THROUGH");
+      RESERVED_WORDS.add("PICTURE");
+      RESERVED_WORDS.add("END-SUBTRACT");
+      RESERVED_WORDS.add("GENERATE");
+      RESERVED_WORDS.add("88");
+      RESERVED_WORDS.add("AT");
+      RESERVED_WORDS.add("DEPENDING");
+      RESERVED_WORDS.add("SPACE");
+      RESERVED_WORDS.add("COMP-2");
       RESERVED_WORDS.add("COMPUTATIONAL-1");
       RESERVED_WORDS.add("DECLARATIVES");
       RESERVED_WORDS.add("WRITE");
       RESERVED_WORDS.add("OF");
       RESERVED_WORDS.add("END-DIVIDE");
       RESERVED_WORDS.add("DATA");
-      RESERVED_WORDS.add("ARE");
-      RESERVED_WORDS.add("SORT");
-      RESERVED_WORDS.add("ANY");
-      RESERVED_WORDS.add("COMPUTATIONAL");
-      RESERVED_WORDS.add("ALTER");
-      RESERVED_WORDS.add("ELSE");
       RESERVED_WORDS.add("SECTION");
-      RESERVED_WORDS.add("COMMON");
       RESERVED_WORDS.add("OPEN");
       RESERVED_WORDS.add("KEY");
-      RESERVED_WORDS.add("MOVE");
       RESERVED_WORDS.add("QUOTES");
-      RESERVED_WORDS.add("CORR");
       RESERVED_WORDS.add("COMP-3");
-      RESERVED_WORDS.add("ALL");
-      RESERVED_WORDS.add("ENABLE");
-      RESERVED_WORDS.add("SET");
-      RESERVED_WORDS.add("UNSTRING");
       RESERVED_WORDS.add("POINTER");
-      RESERVED_WORDS.add("TRUE");
-      RESERVED_WORDS.add("ADD");
+      RESERVED_WORDS.add("ALL");
       RESERVED_WORDS.add("VARYING");
       RESERVED_WORDS.add("66");
-      RESERVED_WORDS.add("SEARCH");
       RESERVED_WORDS.add("WORKING-STORAGE");
       RESERVED_WORDS.add("COPY");
-      RESERVED_WORDS.add("INDEXED");
       RESERVED_WORDS.add("ZERO");
-      RESERVED_WORDS.add("SYNC");
       RESERVED_WORDS.add("END-IF");
-      RESERVED_WORDS.add("REPORT");
       RESERVED_WORDS.add("USING");
-      RESERVED_WORDS.add("ACCEPT");
-      RESERVED_WORDS.add("EXTERNAL");
-      RESERVED_WORDS.add("FILLER");
+      RESERVED_WORDS.add("REPORT");
       RESERVED_WORDS.add("LEADING");
-      RESERVED_WORDS.add("HIGH-VALUES");
-      RESERVED_WORDS.add("REPLACING");
+      RESERVED_WORDS.add("ACCEPT");
       RESERVED_WORDS.add("LOW-VALUES");
-      RESERVED_WORDS.add("LINKAGE");
-      RESERVED_WORDS.add("ALSO");
-      RESERVED_WORDS.add("VALUES");
-      RESERVED_WORDS.add("PROCEDURE");
       RESERVED_WORDS.add("INITIALIZE");
-      RESERVED_WORDS.add("BLANK");
       RESERVED_WORDS.add("SPACES");
-      RESERVED_WORDS.add("ERROR");
-      RESERVED_WORDS.add("INVALID");
-      RESERVED_WORDS.add("GIVING");
       RESERVED_WORDS.add("VALUE");
       RESERVED_WORDS.add("REWRITE");
-      RESERVED_WORDS.add("END-DISPLAY");
-      RESERVED_WORDS.add("AFTER");
-      RESERVED_WORDS.add("PROGRAM");
-      RESERVED_WORDS.add("END-ADD");
-      RESERVED_WORDS.add("END-EXEC");
       RESERVED_WORDS.add("EXEC");
-      RESERVED_WORDS.add("END-REWRITE");
-      RESERVED_WORDS.add("CORRESPONDING");
-      RESERVED_WORDS.add("DIVIDE");
-      RESERVED_WORDS.add("BY");
-      RESERVED_WORDS.add("RELEASE");
       RESERVED_WORDS.add("HIGH-VALUE");
-      RESERVED_WORDS.add("RECEIVE");
-      RESERVED_WORDS.add("MERGE");
       RESERVED_WORDS.add("START");
-      RESERVED_WORDS.add("SEPARATE");
-      RESERVED_WORDS.add("USE");
-      RESERVED_WORDS.add("END-DELETE");
-      RESERVED_WORDS.add("CHARACTER");
+      RESERVED_WORDS.add("MERGE");
+      RESERVED_WORDS.add("RECEIVE");
       RESERVED_WORDS.add("RUN");
-      RESERVED_WORDS.add("LOW-VALUE");
-      RESERVED_WORDS.add("RECORD");
-      RESERVED_WORDS.add("JUST");
       RESERVED_WORDS.add("LEFT");
+      RESERVED_WORDS.add("JUST");
+      RESERVED_WORDS.add("LOW-VALUE");
       RESERVED_WORDS.add("PURGE");
-      RESERVED_WORDS.add("EXIT");
-      RESERVED_WORDS.add("TRAILING");
       RESERVED_WORDS.add("INITIATE");
-      RESERVED_WORDS.add("COMP-1");
-      RESERVED_WORDS.add("FROM");
-      RESERVED_WORDS.add("ID");
       RESERVED_WORDS.add("SEND");
-      RESERVED_WORDS.add("DELETE");
-      RESERVED_WORDS.add("END-CALL");
-      RESERVED_WORDS.add("TIMES");
-      RESERVED_WORDS.add("SENTENCE");
       RESERVED_WORDS.add("ROUNDED");
-      RESERVED_WORDS.add("ASCENDING");
-      RESERVED_WORDS.add("DISPLAY");
+      RESERVED_WORDS.add("SENTENCE");
       RESERVED_WORDS.add("EVALUATE");
       RESERVED_WORDS.add("PERFORM");
       RESERVED_WORDS.add("IS");
-      RESERVED_WORDS.add("INSPECT");
       RESERVED_WORDS.add("REPLACE");
       RESERVED_WORDS.add("QUOTE");
       RESERVED_WORDS.add("END-WRITE");
-      RESERVED_WORDS.add("END-MULTIPLY");
       RESERVED_WORDS.add("OTHER");
-      RESERVED_WORDS.add("WITH");
-      RESERVED_WORDS.add("IN");
       RESERVED_WORDS.add("END-ACCEPT");
       RESERVED_WORDS.add("ZEROES");
       RESERVED_WORDS.add("COMPUTE");
       RESERVED_WORDS.add("END-READ");
-      RESERVED_WORDS.add("NEXT");
-      RESERVED_WORDS.add("END-UNSTRING");
-      RESERVED_WORDS.add("RETURN");
-      RESERVED_WORDS.add("IF");
       RESERVED_WORDS.add("RENAMES");
-      RESERVED_WORDS.add("REFERENCE");
-      RESERVED_WORDS.add("CALL");
-      RESERVED_WORDS.add("CLOSE");
       RESERVED_WORDS.add("REDEFINES");
+      RESERVED_WORDS.add("CLOSE");
       RESERVED_WORDS.add("SIZE");
-      RESERVED_WORDS.add("OVERFLOW");
-      RESERVED_WORDS.add("BEFORE");
       RESERVED_WORDS.add("TEST");
-      RESERVED_WORDS.add("PROGRAM-ID");
-      RESERVED_WORDS.add("NOT");
       RESERVED_WORDS.add("COMP");
-      RESERVED_WORDS.add("READ");
-      RESERVED_WORDS.add("EXCEPTION");
     }
 
     // ========================================================
@@ -1617,6 +1618,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("CALL"),
                    token("CANCEL"),
                    token("DELETE"),
+                   token("DIVIDE"),
                    token("ENTRY"),
                    token("EVALUATE"),
                    token("EXEC"),
@@ -1633,7 +1635,6 @@ public class CobolGrammar extends KoopaGrammar {
                    token("STOP"),
                    token("SUBTRACT"),
                    token("COMPUTE"),
-                   token("DIVIDE"),
                    token("READ"),
                    token("START"),
                    token("STRING"),
@@ -2113,22 +2114,10 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("DIVIDE"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("ON")
-                               ),
-                               token("SIZE"),
-                               token("ERROR")
-                           ),
-                           token("END-DIVIDE"),
-                           token("."),
-                           endOfStatement()
-                       )
+                   choice(
+                       division_format1(),
+                       division_format2(),
+                       division_format3()
                    ),
                    optional(
                        sequence(
@@ -2159,6 +2148,121 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return divideStatementParser;
+    }
+
+    // ========================================================
+    // division_format1
+    // ........................................................
+
+    private Parser division_format1Parser = null;
+
+    public Parser division_format1() {
+        if (division_format1Parser == null) {
+           FutureParser future = scoped("division_format1");
+           division_format1Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   choice(
+                       token("INTO"),
+                       token("BY")
+                   ),
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   token("GIVING"),
+                   identifier(),
+                   optional(
+                       token("ROUNDED")
+                   ),
+                   token("REMAINDER"),
+                   identifier()
+               )
+           );
+        }
+
+        return division_format1Parser;
+    }
+
+    // ========================================================
+    // division_format2
+    // ........................................................
+
+    private Parser division_format2Parser = null;
+
+    public Parser division_format2() {
+        if (division_format2Parser == null) {
+           FutureParser future = scoped("division_format2");
+           division_format2Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   choice(
+                       token("INTO"),
+                       token("BY")
+                   ),
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   token("GIVING"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return division_format2Parser;
+    }
+
+    // ========================================================
+    // division_format3
+    // ........................................................
+
+    private Parser division_format3Parser = null;
+
+    public Parser division_format3() {
+        if (division_format3Parser == null) {
+           FutureParser future = scoped("division_format3");
+           division_format3Parser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       identifier(),
+                       literal(),
+                       figurativeConstant()
+                   ),
+                   token("INTO"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return division_format3Parser;
     }
 
     // ========================================================

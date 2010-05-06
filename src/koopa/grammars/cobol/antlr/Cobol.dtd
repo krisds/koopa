@@ -52,7 +52,10 @@
 <!ELEMENT cancelStatement (t,(identifier|alphanumeric)+)>
 <!ELEMENT computeStatement (t,water?,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT deleteStatement (t,fileName,t?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
-<!ELEMENT divideStatement (t,water?,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT divideStatement (t,(division_format1|division_format2|division_format3),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT division_format1 ((identifier|literal|figurativeConstant),t,(identifier|literal|figurativeConstant),t,identifier,t?,t,identifier)>
+<!ELEMENT division_format2 ((identifier|literal|figurativeConstant),t,(identifier|literal|figurativeConstant),t,(identifier,t?)+)>
+<!ELEMENT division_format3 ((identifier|literal|figurativeConstant),t,(identifier,t?)+)>
 <!ELEMENT entryStatement (t,alphanumeric,(t,dataName+)?)>
 <!ELEMENT evaluateStatement (t,subject,(t,subject)*,when+,whenOther?,t?)>
 <!ELEMENT subject (water?)>

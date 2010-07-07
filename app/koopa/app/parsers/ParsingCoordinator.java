@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 
 public class ParsingCoordinator {
@@ -14,6 +15,16 @@ public class ParsingCoordinator {
 
 	private boolean keepingTrackOfTokens = false;
 
+	private SourceFormat format = SourceFormat.FIXED;
+
+	public SourceFormat getFormat() {
+		return format;
+	}
+
+	public void setFormat(SourceFormat format) {
+		this.format = format;
+	}
+
 	public void addParsingListener(ParsingListener listener) {
 		this.parsingListeners.add(listener);
 	}
@@ -21,6 +32,7 @@ public class ParsingCoordinator {
 	public ParseResults parse(File file) throws IOException {
 		ExtendedParserConfiguration config = new ExtendedParserConfiguration();
 
+		config.setFormat(this.format);
 		config.setKeepingTrackOfTokens(keepingTrackOfTokens);
 
 		for (IntermediateTokenizer intermediateTokenizer : this.intermediateTokenizers) {

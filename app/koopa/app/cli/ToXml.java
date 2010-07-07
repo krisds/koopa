@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import koopa.app.parsers.ExtendedParserConfiguration;
 import koopa.app.parsers.ParseResults;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokens.Token;
 import koopa.trees.antlr.CommonTreeSerializer;
 import koopa.util.Tuple;
@@ -21,19 +22,38 @@ public class ToXml {
 	private static final int INPUT_IS_VALID = 0;
 
 	public static void main(String[] args) {
-		if (args == null || args.length != 2) {
+		if (args == null || args.length < 2 || args.length > 3) {
 			System.out
-					.println("Usage: GetASTAsXML <cobol-input-file> <xml-output-file>");
+					.println("Usage: GetASTAsXML [--free-format] <cobol-input-file> <xml-output-file>");
 			System.exit(BAD_USAGE);
 		}
 
-		final File cobolFile = new File(args[0]);
+		SourceFormat format = SourceFormat.FIXED;
+		String inputFilename = args[0];
+		String outputFilename = args[1];
+
+		if (args.length == 3) {
+			String option = args[0];
+			if (option.equals("--free-format")) {
+				format = SourceFormat.FREE;
+
+			} else {
+				System.out.println("Unknown option: " + option);
+				System.exit(BAD_USAGE);
+			}
+
+			inputFilename = args[1];
+			outputFilename = args[2];
+		}
+
+		final File cobolFile = new File(inputFilename);
 		if (!cobolFile.exists()) {
 			System.out.println("Input file does not exist: " + cobolFile);
 			System.exit(FILE_DOES_NOT_EXIST);
 		}
 
 		final ExtendedParserConfiguration parser = new ExtendedParserConfiguration();
+		parser.setFormat(format);
 		parser.setBuildTrees(true);
 
 		ParseResults results = null;
@@ -69,7 +89,7 @@ public class ToXml {
 
 		final CommonTree ast = results.getTree();
 
-		final File xmlFile = new File(args[1]);
+		final File xmlFile = new File(outputFilename);
 		try {
 			CommonTreeSerializer.serialize(ast, xmlFile);
 

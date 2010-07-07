@@ -18,6 +18,7 @@ import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
 import koopa.tokenizers.cobol.TokenTrackerTokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
@@ -52,6 +53,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 
 	private boolean buildTrees = false;
 
+	private SourceFormat format = SourceFormat.FIXED;
+
 	public ParseResults parse(File file) throws IOException {
 		LOGGER.info("Parsing " + file);
 
@@ -67,7 +70,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		Tokenizer tokenizer;
 
 		// The tokenizers in this sequence should generate the expected tokens.
-		tokenizer = new ProgramAreaTokenizer(new BufferedReader(reader));
+		tokenizer = new ProgramAreaTokenizer(new BufferedReader(reader),
+				this.format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);
 		tokenizer = new ContinuationsTokenizer(tokenizer);
@@ -373,5 +377,13 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 
 	public void setBuildTrees(boolean buildTrees) {
 		this.buildTrees = buildTrees;
+	}
+
+	public void setFormat(SourceFormat format) {
+		this.format = format;
+	}
+
+	public SourceFormat getFormat() {
+		return this.format;
 	}
 }

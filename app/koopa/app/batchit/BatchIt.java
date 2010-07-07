@@ -3,6 +3,7 @@ package koopa.app.batchit;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -10,11 +11,14 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
@@ -36,6 +40,7 @@ import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
 import koopa.app.showit.ShowIt;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 import koopa.util.Getter;
 
@@ -120,6 +125,43 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		file.add(saveCSV);
 
 		bar.add(file);
+
+		// Parser settings ----------------------------------------------------
+
+		// TODO Clicking the same radioButtonMenuItem twice deselects it !?
+
+		final JMenu parserSettings = new JMenu("Parser settings");
+
+		final ButtonGroup group = new ButtonGroup();
+
+		final JRadioButtonMenuItem fixedFormat = new JRadioButtonMenuItem();
+
+		AbstractAction selectFixedFormat = new AbstractAction("Fixed format") {
+			public void actionPerformed(ActionEvent e) {
+				coordinator.setFormat(SourceFormat.FIXED);
+			}
+		};
+
+		fixedFormat.setAction(selectFixedFormat);
+
+		fixedFormat.setSelected(true);
+		group.add(fixedFormat);
+		parserSettings.add(fixedFormat);
+
+		final JRadioButtonMenuItem freeFormat = new JRadioButtonMenuItem();
+
+		AbstractAction selectFreeFormat = new AbstractAction("Free format") {
+			public void actionPerformed(ActionEvent e) {
+				coordinator.setFormat(SourceFormat.FREE);
+			}
+		};
+
+		freeFormat.setAction(selectFreeFormat);
+
+		group.add(freeFormat);
+		parserSettings.add(freeFormat);
+
+		bar.add(parserSettings);
 
 		setJMenuBar(bar);
 	}
@@ -218,7 +260,8 @@ public class BatchIt extends JFrame implements ParsingProvider,
 								.convertRowIndexToModel(row);
 						final File file = results.getResults(selected)
 								.getFile();
-						new ShowIt(file, true).setVisible(true);
+						new ShowIt(file, true, coordinator.getFormat())
+								.setVisible(true);
 					}
 				}
 			}

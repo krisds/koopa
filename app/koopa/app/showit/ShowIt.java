@@ -1,15 +1,19 @@
 package koopa.app.showit;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -31,6 +35,7 @@ import koopa.app.parsers.Metrics;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 import koopa.util.Getter;
 
@@ -62,14 +67,16 @@ public class ShowIt extends JFrame implements FileManager,
 	}
 
 	public ShowIt() {
-		this(new File("testsuite/cobol85/CM101M.CBL"), false);
+		this(new File("testsuite/cobol85/CM101M.CBL"), false,
+				SourceFormat.FIXED);
 	}
 
-	public ShowIt(File file, boolean isDialog) {
+	public ShowIt(File file, boolean isDialog, SourceFormat format) {
 		super("Koopa Show It - " + file);
 
 		this.coordinator = new ParsingCoordinator();
 		this.coordinator.setKeepingTrackOfTokens(true);
+		this.coordinator.setFormat(format);
 
 		ApplicationSupport.configureFromProperties("showit.properties", this);
 
@@ -170,6 +177,43 @@ public class ShowIt extends JFrame implements FileManager,
 		}
 
 		bar.add(file);
+
+		// Parser settings ----------------------------------------------------
+
+		// TODO Clicking the same radioButtonMenuItem twice deselects it !?
+
+		final JMenu parserSettings = new JMenu("Parser settings");
+
+		final ButtonGroup group = new ButtonGroup();
+
+		final JRadioButtonMenuItem fixedFormat = new JRadioButtonMenuItem();
+
+		AbstractAction selectFixedFormat = new AbstractAction("Fixed format") {
+			public void actionPerformed(ActionEvent e) {
+				coordinator.setFormat(SourceFormat.FIXED);
+			}
+		};
+
+		fixedFormat.setAction(selectFixedFormat);
+
+		fixedFormat.setSelected(true);
+		group.add(fixedFormat);
+		parserSettings.add(fixedFormat);
+
+		final JRadioButtonMenuItem freeFormat = new JRadioButtonMenuItem();
+
+		AbstractAction selectFreeFormat = new AbstractAction("Free format") {
+			public void actionPerformed(ActionEvent e) {
+				coordinator.setFormat(SourceFormat.FREE);
+			}
+		};
+
+		freeFormat.setAction(selectFreeFormat);
+
+		group.add(freeFormat);
+		parserSettings.add(freeFormat);
+
+		bar.add(parserSettings);
 
 		// Syntax tree ---------------------------------------------------------
 

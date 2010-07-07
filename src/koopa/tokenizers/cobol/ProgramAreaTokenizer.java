@@ -19,12 +19,7 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 	// This defines the maximum lookahead (peek) possible.
 	private static final int MAX_PUSHBACK = 2;
 
-	// TODO Make an enum ?
-	public static final int FIXED = 1;
-	// TODO Test freeflow mode.
-	public static final int FREE = 2;
-
-	private int mode = FIXED;
+	private SourceFormat format = SourceFormat.FIXED;
 
 	private int linenumber = 1;
 	private int positionInFile = 1;
@@ -35,12 +30,27 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 	private StringBuffer buffer = null;
 
 	public ProgramAreaTokenizer(Reader reader) {
+		this(reader, SourceFormat.FIXED);
+	}
+
+	public ProgramAreaTokenizer(Reader reader, SourceFormat format) {
 		super();
 
 		assert (reader != null);
+		assert (format != null);
 
 		this.reader = new PushbackReader(reader, MAX_PUSHBACK);
 		this.buffer = new StringBuffer();
+
+		this.format = format;
+	}
+
+	public SourceFormat getFormat() {
+		return format;
+	}
+
+	public void setFormat(SourceFormat format) {
+		this.format = format;
 	}
 
 	protected void tokenize() throws IOException {
@@ -65,23 +75,48 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 				produce(AreaTag.END_OF_LINE);
 				newline();
 
-			} else if (mode == FIXED && positionInLine == 1) {
+			} else if (format == SourceFormat.FREE && positionInLine == 1) {
+				int c = peek();
+				if (c == '*' || c == '/' || c == '$') {
+					// These are definitely indicators.
+					tokenizeIndicatorArea();
+
+				} else if (c == 'D' || c == 'd') {
+					// This is only an indicator if it gets followed by a space.
+					// Otherwise it's program text.
+					if (peek(2) == ' ') {
+						tokenizeIndicatorArea();
+
+					} else {
+						tokenizeProgramTextArea();
+					}
+
+				} else {
+					// Program text.
+					tokenizeProgramTextArea();
+				}
+
+			} else if (format == SourceFormat.FREE && positionInLine > 1) {
+				// Program text.
+				tokenizeProgramTextArea();
+
+			} else if (format == SourceFormat.FIXED && positionInLine == 1) {
 				// Assumption: there is something in the sequence number area
 				// other than a newline.
 				tokenizeSequenceNumberArea();
 
-			} else if (mode == FIXED && positionInLine == 7) {
+			} else if (format == SourceFormat.FIXED && positionInLine == 7) {
 				// Assumption: there is something in the indicator area other
 				// than a newline.
 				tokenizeIndicatorArea();
 
-			} else if (mode == FIXED && positionInLine > 7
+			} else if (format == SourceFormat.FIXED && positionInLine > 7
 					&& positionInLine < 73) {
 				// Assumption: there is something in the program text area other
 				// than a newline.
 				tokenizeProgramTextArea();
 
-			} else if (mode == FIXED && positionInLine == 73) {
+			} else if (format == SourceFormat.FIXED && positionInLine == 73) {
 				// Assumption: there is something in the identification area
 				// other than a newline.
 				tokenizeIdentificationArea();
@@ -98,7 +133,8 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 
 	private void tokenizeProgramTextArea() throws IOException {
 		// Program text area.
-		while (positionInLine < 73) {
+		while (this.format == SourceFormat.FREE
+				|| (this.format == SourceFormat.FIXED && positionInLine < 73)) {
 			final int c = peek();
 			if (c == -1 || c == '\r' || c == '\n') {
 				break;
@@ -161,6 +197,23 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 		if (c != -1)
 			reader.unread(c);
 		return c;
+	}
+
+	private int peek(int distance) throws IOException {
+		if (distance == 1) {
+			return peek();
+
+		} else {
+			int c = reader.read();
+
+			if (c == -1) {
+				return c;
+			}
+
+			int d = peek(distance - 1);
+			reader.unread(c);
+			return d;
+		}
 	}
 
 	private void consume() throws IOException {

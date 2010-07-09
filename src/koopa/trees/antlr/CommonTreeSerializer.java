@@ -4,16 +4,27 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import org.antlr.runtime.tree.CommonTree;
 
 public class CommonTreeSerializer {
 	public static void serialize(CommonTree tree, File file) throws IOException {
+		Writer writer = new BufferedWriter(new FileWriter(file));
+		serialize(tree, writer);
+	}
+
+	public static String serialize(CommonTree tree) throws IOException {
+		StringWriter writer = new StringWriter();
+		serialize(tree, writer);
+		return writer.toString();
+	}
+
+	public static void serialize(CommonTree tree, Writer writer)
+			throws IOException {
 		TokenTypes types = new ANTLRTokenTypesLoader()
 				.load("/koopa/grammars/cobol/antlr/Cobol.tokens");
-
-		Writer writer = new BufferedWriter(new FileWriter(file));
 
 		writer.append("<koopa>\n");
 		walk(writer, tree, "  ", types);

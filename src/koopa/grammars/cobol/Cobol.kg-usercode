@@ -38,6 +38,15 @@ public Parser cobolWord() {
 	             * 
 	             * Description from: Fujitsu Siemens, document
 	             * U41112-J-Z125-3-76.
+	             *
+	             * -------------------------------------------------------------
+	             * Except where specific rules apply, the hyphen (-) and the
+	             * underline (_) are treated as the same character in a user-
+	             * defined word. The underline (_), however, can begin or end a
+	             * user-defined word, and the hyphen (-) cannot.
+	             *
+	             * Description from: HP COBOL Reference Manual
+	             * http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html
 	             */
 	            final int len = text.length();
 	            if (len < 1 || len > 31)
@@ -68,6 +77,10 @@ public Parser cobolWord() {
 	                }
 	
 	                if (c == '-') {
+	                    continue;
+	                }
+	
+	                if (c == '_') {
 	                    continue;
 	                }
 	

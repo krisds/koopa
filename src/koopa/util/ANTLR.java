@@ -64,4 +64,22 @@ public class ANTLR {
 
 		return null;
 	}
+
+	public static Position getEnd(Tree root) {
+		final Position end = getToken(root).getEnd();
+
+		if (end != null) {
+			return end;
+		}
+
+		for (int i = root.getChildCount() - 1; i >= 0; i--) {
+			Position position = getEnd(root.getChild(i));
+
+			if (position != null) {
+				return position;
+			}
+		}
+
+		return null;
+	}
 }

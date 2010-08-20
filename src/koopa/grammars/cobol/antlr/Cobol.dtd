@@ -45,7 +45,7 @@
 <!ELEMENT addition_format1 (t,identifier,t,identifier,t?)>
 <!ELEMENT addition_format2 ((identifier|literal|figurativeConstant)+,(t,(identifier|literal|figurativeConstant))?,t,(identifier,t?)+)>
 <!ELEMENT addition_format3 ((identifier|literal|figurativeConstant)+,t,(identifier,t?)+)>
-<!ELEMENT callStatement (t,(identifier|alphanumeric),(t,identifier*,((t?,t,identifier+)|(t?,t,identifier+))*)?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
+<!ELEMENT callStatement (t,(identifier|alphanumeric),(t,identifier*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
 <!ELEMENT onException (t?,t,nestedStatements)>
 <!ELEMENT notOnException (t,t?,t,nestedStatements)>
@@ -123,7 +123,7 @@
 <!ELEMENT recordName (cobolWord)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,t))>
 <!ELEMENT literal (numeric|alphanumeric)>
-<!ELEMENT numeric (integer|decimal)>
+<!ELEMENT numeric (integer|decimal|(t+,identifier))>
 <!ELEMENT cobolWord (t)>
 <!ELEMENT integer (t)>
 <!ELEMENT decimal (t)>

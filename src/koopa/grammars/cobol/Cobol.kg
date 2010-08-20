@@ -458,10 +458,12 @@ end
 def callStatement =
     CALL (identifier | alphanumeric)
     [USING (identifier)*
-      ( [BY] REFERENCE (identifier)+
-      | [BY] CONTENT (identifier)+
+      ( [BY] REFERENCE (identifier | OMITTED)+
+      | [BY] CONTENT (literal | identifier)+
+      | [BY] VALUE (literal | identifier)+
       )*
     ]
+
     [ # Call statement format 1.
       onOverflow
     
@@ -472,6 +474,7 @@ def callStatement =
     | # Call statement format 2.
       notOnException
     ]
+
     [END-CALL]
 end
 
@@ -1234,5 +1237,6 @@ end
 def numeric =
     ( integer
     | decimal
+    | LENGTH OF identifier	
     )
 end

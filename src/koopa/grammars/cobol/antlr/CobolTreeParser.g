@@ -911,11 +911,21 @@ callStatement
           ( identifier )*
           ( ( ( ( 'BY' )?
             'REFERENCE'
-            ( identifier )+
+            ( ( identifier
+            | 'OMITTED'
+            ) )+
           )
           | ( ( 'BY' )?
             'CONTENT'
-            ( identifier )+
+            ( ( literal
+            | identifier
+            ) )+
+          )
+          | ( ( 'BY' )?
+            'VALUE'
+            ( ( literal
+            | identifier
+            ) )+
           )
           ) )*
         ) )?
@@ -2348,6 +2358,10 @@ numeric
   : ^(NUMERIC
       ( integer
       | decimal
+      | ( 'LENGTH'
+        'OF'
+        identifier
+      )
       )
     )
   ;
@@ -2480,6 +2494,7 @@ token
   | 'KEY'
   | 'LEADING'
   | 'LEFT'
+  | 'LENGTH'
   | 'LINKAGE'
   | 'LOW-VALUE'
   | 'LOW-VALUES'
@@ -2490,6 +2505,7 @@ token
   | 'NOT'
   | 'OCCURS'
   | 'OF'
+  | 'OMITTED'
   | 'ON'
   | 'OPEN'
   | 'OTHER'

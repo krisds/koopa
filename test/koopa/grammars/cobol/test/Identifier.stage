@@ -30,7 +30,7 @@ target identifier;
 +[ MY-FIELD ( MY-INDEX : ) ]
 
 +[ MY-FIELD ( 1 2 3 ) ( 42 : 11 ) ]
-+[ MY-FIELD ( A B C ) ( POSITION : LENGTH ) ]
++[ MY-FIELD ( A B C ) ( POSITION : MY-LENGTH ) ]
 +[ MY-FIELD ( A + 1 B C - 2 ) ( 42 : ) ]
 
 

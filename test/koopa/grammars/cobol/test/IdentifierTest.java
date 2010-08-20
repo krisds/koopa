@@ -182,7 +182,7 @@ public class IdentifierTest extends TestCase {
       Parser parser = grammar.identifier();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("MY-FIELD", "(", "A", "B", "C", 
-        ")", "(", "POSITION", ":", "LENGTH", ")");
+        ")", "(", "POSITION", ":", "MY-LENGTH", ")");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }

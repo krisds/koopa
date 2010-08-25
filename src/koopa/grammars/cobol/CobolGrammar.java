@@ -36,6 +36,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("EOP");
       RESERVED_WORDS.add("DECLARATIVES");
       RESERVED_WORDS.add("ARE");
+      RESERVED_WORDS.add("SUPPRESS");
       RESERVED_WORDS.add("END-PERFORM");
       RESERVED_WORDS.add("USING");
       RESERVED_WORDS.add("SENTENCE");
@@ -788,20 +789,14 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    plus(
                        sequence(
-                           choice(
-                               literal(),
-                               figurativeConstant()
-                           ),
+                           literal(),
                            optional(
                                sequence(
                                    choice(
                                        token("THROUGH"),
                                        token("THRU")
                                    ),
-                                   choice(
-                                       literal(),
-                                       figurativeConstant()
-                                   )
+                                   literal()
                                )
                            )
                        )
@@ -1160,10 +1155,7 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        token("IS")
                    ),
-                   choice(
-                       figurativeConstant(),
-                       literal()
-                   )
+                   literal()
                )
            );
         }
@@ -1763,8 +1755,7 @@ public class CobolGrammar extends KoopaGrammar {
                    plus(
                        choice(
                            identifier(),
-                           literal(),
-                           figurativeConstant()
+                           literal()
                        )
                    ),
                    optional(
@@ -1772,8 +1763,7 @@ public class CobolGrammar extends KoopaGrammar {
                            token("TO"),
                            choice(
                                identifier(),
-                               literal(),
-                               figurativeConstant()
+                               literal()
                            )
                        )
                    ),
@@ -1808,8 +1798,7 @@ public class CobolGrammar extends KoopaGrammar {
                    plus(
                        choice(
                            identifier(),
-                           literal(),
-                           figurativeConstant()
+                           literal()
                        )
                    ),
                    token("TO"),
@@ -2184,8 +2173,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    choice(
                        token("INTO"),
@@ -2193,8 +2181,7 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("GIVING"),
                    identifier(),
@@ -2224,8 +2211,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    choice(
                        token("INTO"),
@@ -2233,8 +2219,7 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("GIVING"),
                    plus(
@@ -2266,8 +2251,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("INTO"),
                    plus(
@@ -2646,8 +2630,7 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            identifier()
                        ),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("TO"),
                    plus(
@@ -2722,14 +2705,12 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("BY"),
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("GIVING"),
                    plus(
@@ -2761,8 +2742,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    choice(
                        identifier(),
-                       literal(),
-                       figurativeConstant()
+                       literal()
                    ),
                    token("BY"),
                    plus(
@@ -3463,8 +3443,7 @@ public class CobolGrammar extends KoopaGrammar {
                    plus(
                        choice(
                            identifier(),
-                           literal(),
-                           figurativeConstant()
+                           literal()
                        )
                    ),
                    optional(
@@ -3472,8 +3451,7 @@ public class CobolGrammar extends KoopaGrammar {
                            token("FROM"),
                            choice(
                                identifier(),
-                               literal(),
-                               figurativeConstant()
+                               literal()
                            )
                        )
                    ),
@@ -3508,8 +3486,7 @@ public class CobolGrammar extends KoopaGrammar {
                    plus(
                        choice(
                            identifier(),
-                           literal(),
-                           figurativeConstant()
+                           literal()
                        )
                    ),
                    token("FROM"),
@@ -3703,6 +3680,9 @@ public class CobolGrammar extends KoopaGrammar {
                            ),
                            libraryName()
                        )
+                   ),
+                   optional(
+                       token("SUPPRESS")
                    ),
                    optional(
                        sequence(
@@ -4502,6 +4482,28 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // literal
+    // ........................................................
+
+    private Parser literalParser = null;
+
+    public Parser literal() {
+        if (literalParser == null) {
+           FutureParser future = scoped("literal");
+           literalParser = future;
+           future.setParser(
+               choice(
+                   numeric(),
+                   alphanumeric(),
+                   figurativeConstant()
+               )
+           );
+        }
+
+        return literalParser;
+    }
+
+    // ========================================================
     // figurativeConstant
     // ........................................................
 
@@ -4540,27 +4542,6 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return figurativeConstantParser;
-    }
-
-    // ========================================================
-    // literal
-    // ........................................................
-
-    private Parser literalParser = null;
-
-    public Parser literal() {
-        if (literalParser == null) {
-           FutureParser future = scoped("literal");
-           literalParser = future;
-           future.setParser(
-               choice(
-                   numeric(),
-                   alphanumeric()
-               )
-           );
-        }
-
-        return literalParser;
     }
 
     // ========================================================

@@ -156,9 +156,7 @@ def dataDescriptionEntry_format3 =
     ( VALUE [IS]
     | VALUES [ARE]
     )
-    ( ( literal | figurativeConstant )
-      [(THROUGH | THRU) ( literal | figurativeConstant )]
-    )+
+    ( literal [(THROUGH | THRU) literal] )+
     .
 end
 
@@ -223,7 +221,7 @@ def usage =
 end
 
 def value =
-    VALUE [IS] (figurativeConstant | literal)
+    VALUE [IS] literal
 end
 
 ## #############################################################################
@@ -441,13 +439,13 @@ def addition_format1 =
 end
 
 def addition_format2 =
-    (identifier | literal | figurativeConstant)+
-    [TO (identifier | literal| figurativeConstant)]
+    (identifier | literal)+
+    [TO (identifier | literal)]
     GIVING (identifier [ROUNDED])+
 end
 
 def addition_format3 =
-    (identifier | literal| figurativeConstant)+
+    (identifier | literal)+
     TO (identifier [ROUNDED])+
 end
 
@@ -543,20 +541,20 @@ def divideStatement =
 end
 
 def division_format1 =
-    (identifier | literal| figurativeConstant)
-    (INTO | BY) (identifier | literal| figurativeConstant)
+    (identifier | literal)
+    (INTO | BY) (identifier | literal)
     GIVING identifier [ROUNDED]
     REMAINDER identifier
 end
 
 def division_format2 =
-    (identifier | literal| figurativeConstant)
-    (INTO | BY) (identifier | literal| figurativeConstant)
+    (identifier | literal)
+    (INTO | BY) (identifier | literal)
     GIVING (identifier [ROUNDED])+
 end
 
 def division_format3 =
-    (identifier | literal| figurativeConstant)
+    (identifier | literal)
     INTO (identifier [ROUNDED])+
 end
 
@@ -676,7 +674,6 @@ def moveStatement =
     MOVE 
       ( [CORRESPONDING | CORR] identifier
       | literal
-      | figurativeConstant
       )
     TO (identifier)+
 end
@@ -695,13 +692,13 @@ end
 # The order of these is important!
 
 def multiplication_format1 =
-    (identifier | literal | figurativeConstant)
-    BY (identifier | literal | figurativeConstant)
+    (identifier | literal)
+    BY (identifier | literal)
     GIVING (identifier [ROUNDED])+
 end
 
 def multiplication_format2 =
-    (identifier | literal | figurativeConstant)
+    (identifier | literal)
     BY (identifier [ROUNDED])+
 end
 
@@ -897,13 +894,13 @@ def subtraction_format1 =
 end
 
 def subtraction_format2 =
-    (identifier | literal | figurativeConstant)+
-    [FROM (identifier | literal| figurativeConstant)]
+    (identifier | literal)+
+    [FROM (identifier | literal)]
     GIVING (identifier [ROUNDED])+
 end
 
 def subtraction_format3 =
-    (identifier | literal| figurativeConstant)+
+    (identifier | literal)+
     FROM (identifier [ROUNDED])+
 end
 
@@ -957,6 +954,7 @@ end
 
 def copyStatement =
     COPY textName [ (OF | IN) libraryName ]
+    [SUPPRESS]
     [REPLACING
       ( (identifier | literal | pseudoLiteral)
         BY (identifier | literal | pseudoLiteral)
@@ -1209,6 +1207,16 @@ def recordName =
     cobolWord
 end
 
+def literal =
+    ( numeric
+    | alphanumeric
+
+    # According to my documentation a figurative constant can appear anywhere a
+    # literal can, except for a few edge cases. I'll ignore the edge cases here.
+    | figurativeConstant
+    )
+end
+
 # TODO [ALL] symbolic-character
 def figurativeConstant =
     ( ALL literal
@@ -1225,12 +1233,6 @@ def figurativeConstant =
       | QUOTE
       | QUOTES 
       )
-    )
-end
-
-def literal =
-    ( numeric
-    | alphanumeric
     )
 end
 

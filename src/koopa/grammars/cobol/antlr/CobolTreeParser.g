@@ -304,15 +304,11 @@ dataDescriptionEntry_format3
           ( 'ARE' )?
         )
         )
-        ( ( ( literal
-        | figurativeConstant
-        )
+        ( ( literal
           ( ( ( 'THROUGH'
           | 'THRU'
           )
-            ( literal
-            | figurativeConstant
-            )
+            literal
           ) )?
         ) )+
         '.'
@@ -505,9 +501,7 @@ value
   : ^(VALUE
       ( 'VALUE'
         ( 'IS' )?
-        ( figurativeConstant
-        | literal
-        )
+        literal
       )
     )
   ;
@@ -863,12 +857,10 @@ addition_format2
   : ^(ADDITION_FORMAT2
       ( ( ( identifier
       | literal
-      | figurativeConstant
       ) )+
         ( ( 'TO'
           ( identifier
           | literal
-          | figurativeConstant
           )
         ) )?
         'GIVING'
@@ -887,7 +879,6 @@ addition_format3
   : ^(ADDITION_FORMAT3
       ( ( ( identifier
       | literal
-      | figurativeConstant
       ) )+
         'TO'
         ( ( identifier
@@ -1076,14 +1067,12 @@ division_format1
   : ^(DIVISION_FORMAT1
       ( ( identifier
       | literal
-      | figurativeConstant
       )
         ( 'INTO'
         | 'BY'
         )
         ( identifier
         | literal
-        | figurativeConstant
         )
         'GIVING'
         identifier
@@ -1102,14 +1091,12 @@ division_format2
   : ^(DIVISION_FORMAT2
       ( ( identifier
       | literal
-      | figurativeConstant
       )
         ( 'INTO'
         | 'BY'
         )
         ( identifier
         | literal
-        | figurativeConstant
         )
         'GIVING'
         ( ( identifier
@@ -1127,7 +1114,6 @@ division_format3
   : ^(DIVISION_FORMAT3
       ( ( identifier
       | literal
-      | figurativeConstant
       )
         'INTO'
         ( ( identifier
@@ -1331,7 +1317,6 @@ moveStatement
           identifier
         )
         | literal
-        | figurativeConstant
         )
         'TO'
         ( identifier )+
@@ -1373,12 +1358,10 @@ multiplication_format1
   : ^(MULTIPLICATION_FORMAT1
       ( ( identifier
       | literal
-      | figurativeConstant
       )
         'BY'
         ( identifier
         | literal
-        | figurativeConstant
         )
         'GIVING'
         ( ( identifier
@@ -1396,7 +1379,6 @@ multiplication_format2
   : ^(MULTIPLICATION_FORMAT2
       ( ( identifier
       | literal
-      | figurativeConstant
       )
         'BY'
         ( ( identifier
@@ -1753,12 +1735,10 @@ subtraction_format2
   : ^(SUBTRACTION_FORMAT2
       ( ( ( identifier
       | literal
-      | figurativeConstant
       ) )+
         ( ( 'FROM'
           ( identifier
           | literal
-          | figurativeConstant
           )
         ) )?
         'GIVING'
@@ -1777,7 +1757,6 @@ subtraction_format3
   : ^(SUBTRACTION_FORMAT3
       ( ( ( identifier
       | literal
-      | figurativeConstant
       ) )+
         'FROM'
         ( ( identifier
@@ -1857,6 +1836,7 @@ copyStatement
         )
           libraryName
         ) )?
+        ( 'SUPPRESS' )?
         ( ( 'REPLACING'
           ( ( ( identifier
           | literal
@@ -2312,6 +2292,19 @@ recordName
   ;
 
 // ========================================================
+// literal
+// ........................................................
+
+literal
+  : ^(LITERAL
+      ( numeric
+      | alphanumeric
+      | figurativeConstant
+      )
+    )
+  ;
+
+// ========================================================
 // figurativeConstant
 // ........................................................
 
@@ -2334,18 +2327,6 @@ figurativeConstant
         | 'QUOTES'
         )
       )
-      )
-    )
-  ;
-
-// ========================================================
-// literal
-// ........................................................
-
-literal
-  : ^(LITERAL
-      ( numeric
-      | alphanumeric
       )
     )
   ;
@@ -2552,6 +2533,7 @@ token
   | 'STOP'
   | 'STRING'
   | 'SUBTRACT'
+  | 'SUPPRESS'
   | 'SYNC'
   | 'SYNCHRONIZED'
   | 'TERMINATE'

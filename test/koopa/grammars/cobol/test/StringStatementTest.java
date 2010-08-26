@@ -25,13 +25,33 @@ public class StringStatementTest extends TestCase {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
+        "TEXT", "WITH", "POINTER", "MY-POINTER", ".");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testStringStatement_3() {
+      Parser parser = grammar.stringStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
+        "TEXT", "WITH", "POINTER", "MY-POINTER", "END-STRING");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testStringStatement_4() {
+      Parser parser = grammar.stringStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
         "TEXT", "END-STRING");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
-    public void testStringStatement_3() {
+    public void testStringStatement_5() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -41,7 +61,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_4() {
+    public void testStringStatement_6() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -51,7 +71,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_5() {
+    public void testStringStatement_7() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -61,7 +81,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_6() {
+    public void testStringStatement_8() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -71,7 +91,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_7() {
+    public void testStringStatement_9() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -81,7 +101,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_8() {
+    public void testStringStatement_10() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -91,7 +111,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_9() {
+    public void testStringStatement_11() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -101,7 +121,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_10() {
+    public void testStringStatement_12() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -111,7 +131,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_11() {
+    public void testStringStatement_13() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
@@ -122,7 +142,7 @@ public class StringStatementTest extends TestCase {
     }
 
     @Test
-    public void testStringStatement_12() {
+    public void testStringStatement_14() {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 

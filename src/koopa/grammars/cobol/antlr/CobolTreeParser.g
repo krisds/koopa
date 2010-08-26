@@ -1668,7 +1668,23 @@ stopStatement
 stringStatement
   : ^(STRING_STATEMENT
       ( 'STRING'
-        (water)?
+        ( ( ( ( identifier
+        | literal
+        ) )+
+          ( ( 'DELIMITED'
+            ( 'BY' )?
+            ( 'SIZE'
+            | identifier
+            | literal
+            )
+          ) )?
+        ) )+
+        'INTO'
+        identifier
+        ( ( ( 'WITH' )?
+          'POINTER'
+          identifier
+        ) )?
         ( ( ( 'ON' )?
           'OVERFLOW'
           nestedStatements
@@ -2405,6 +2421,7 @@ token
   | 'DATA'
   | 'DECLARATIVES'
   | 'DELETE'
+  | 'DELIMITED'
   | 'DEPENDING'
   | 'DESCENDING'
   | 'DISABLE'

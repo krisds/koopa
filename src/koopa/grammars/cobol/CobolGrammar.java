@@ -99,6 +99,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("FILLER");
       RESERVED_WORDS.add("ADD");
       RESERVED_WORDS.add("BY");
+      RESERVED_WORDS.add("DELIMITED");
       RESERVED_WORDS.add("TO");
       RESERVED_WORDS.add("COMP-1");
       RESERVED_WORDS.add("COMP-3");
@@ -3305,20 +3306,38 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("STRING"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("ON")
-                               ),
-                               token("OVERFLOW")
+                   plus(
+                       sequence(
+                           plus(
+                               choice(
+                                   identifier(),
+                                   literal()
+                               )
                            ),
-                           token("END-STRING"),
-                           token("."),
-                           endOfStatement()
+                           optional(
+                               sequence(
+                                   token("DELIMITED"),
+                                   optional(
+                                       token("BY")
+                                   ),
+                                   choice(
+                                       token("SIZE"),
+                                       identifier(),
+                                       literal()
+                                   )
+                               )
+                           )
+                       )
+                   ),
+                   token("INTO"),
+                   identifier(),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("POINTER"),
+                           identifier()
                        )
                    ),
                    optional(

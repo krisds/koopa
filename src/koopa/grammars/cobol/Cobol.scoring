@@ -116,6 +116,16 @@ verify STOP
 - stopStatement statement : warn "STOP not in stop statement."
 - statement !execStatement !stopStatement : warn "STOP not in stop statement."
 
+verify STRING
+- !stringStatement water : warn "STRING in the water."
+- stringStatement statement : warn "STRING not in string statement."
+- statement !execStatement !stringStatement : warn "STRING not in string statement."
+
+verify END-STRING
+- !stringStatement water : warn "END-STRING in the water."
+- stringStatement statement : warn "END-STRING not in string statement."
+- statement !execStatement !stringStatement : warn "END-STRING not in string statement."
+
 verify SUBTRACT
 - !subtractStatement water : warn "SUBTRACT in the water."
 - subtractStatement statement : warn "SUBTRACT not in subtract statement."
@@ -141,16 +151,6 @@ verify END-COMPUTE
 - !computeStatement water : warn "END-COMPUTE in the water."
 - computeStatement statement : warn "END-COMPUTE not in compute statement."
 - statement !execStatement !computeStatement : warn "END-COMPUTE not in compute statement."
-
-verify STRING
-- !stringStatement water : warn "STRING in the water."
-- stringStatement statement : warn "STRING not in string statement."
-- statement !execStatement !stringStatement : warn "STRING not in string statement."
-
-verify END-STRING
-- !stringStatement water : warn "END-STRING in the water."
-- stringStatement statement : warn "END-STRING not in string statement."
-- statement !execStatement !stringStatement : warn "END-STRING not in string statement."
 
 verify UNSTRING
 - !unstringStatement water : warn "UNSTRING in the water."

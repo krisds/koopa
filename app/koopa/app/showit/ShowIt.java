@@ -164,11 +164,12 @@ public class ShowIt extends JFrame implements FileManager,
 								return false;
 							final String name = f.getName().toUpperCase();
 							return name.endsWith(".CBL")
+									|| name.endsWith(".COB")
 									|| name.endsWith(".CPY");
 						}
 
 						public String getDescription() {
-							return "Cobol file (*.cpy, *.cbl)";
+							return "Cobol file (*.cpy, *.cbl, *.cob)";
 						}
 					}, this));
 

@@ -386,13 +386,13 @@ def verb =
     | REWRITE
     | SEARCH
     | STOP
+    | STRING
     | SUBTRACT
 
     # Verbs for statements which have a skeletal implementation:
     | COMPUTE
     | READ
     | START
-    | STRING
     | UNSTRING
     | WRITE
 
@@ -866,13 +866,8 @@ end
 # TODO So far a skeletal implementation only.
 def stringStatement =
     STRING
-    ( -->
-      ( [NOT] [ON] OVERFLOW
-      | END-STRING
-      | .
-      | endOfStatement
-      )
-    )
+    ( ( identifier | literal )+ [DELIMITED [BY] (SIZE | identifier | literal)] )+
+    INTO identifier [[WITH] POINTER identifier]
     [[ON] OVERFLOW nestedStatements]
     [NOT [ON] OVERFLOW nestedStatements]
     [END-STRING]

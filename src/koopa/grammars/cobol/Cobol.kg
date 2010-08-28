@@ -388,12 +388,12 @@ def verb =
     | STOP
     | STRING
     | SUBTRACT
+    | UNSTRING
 
     # Verbs for statements which have a skeletal implementation:
     | COMPUTE
     | READ
     | START
-    | UNSTRING
     | WRITE
 
     # Verbs for statements which remain to be implemented:
@@ -866,7 +866,7 @@ end
 # TODO So far a skeletal implementation only.
 def stringStatement =
     STRING
-    ( ( identifier | literal )+ [DELIMITED [BY] (SIZE | identifier | literal)] )+
+    ( ( identifier | literal ) [DELIMITED [BY] (SIZE | identifier | literal)] )+
     INTO identifier [[WITH] POINTER identifier]
     [[ON] OVERFLOW nestedStatements]
     [NOT [ON] OVERFLOW nestedStatements]
@@ -905,14 +905,21 @@ end
 
 # TODO So far a skeletal implementation only.
 def unstringStatement =
-    UNSTRING
-    ( -->
-      ( [NOT] [ON] OVERFLOW
-      | END-UNSTRING
-      | .
-      | endOfStatement
-      )
-    )
+    UNSTRING identifier
+    
+    [ DELIMITED [BY] [ALL] (identifier | literal)
+      ( OR [ALL] (identifier | literal) )*
+    ]
+    
+    INTO (
+      identifier
+      [DELIMITER [IN] identifier]
+      [COUNT [IN] identifier]
+    )+
+    
+    [[WITH] POINTER identifier]
+    [TALLYING [IN] identifier]
+    
     [[ON] OVERFLOW nestedStatements]
     [NOT [ON] OVERFLOW nestedStatements]
     [END-UNSTRING]

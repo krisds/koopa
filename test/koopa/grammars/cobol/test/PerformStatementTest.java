@@ -40,7 +40,8 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_4() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("UNTIL", "COUNT", ">", "42", ".");
+      TestTokenizer tokenizer = new TestTokenizer("UNTIL", "MY-COUNT", ">", "42", 
+        ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(4, tokenizer.getNumberOfProcessedTokens());
     }
@@ -50,7 +51,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.until();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WITH", "TEST", "BEFORE", "UNTIL", 
-        "COUNT", ">", "42", ".");
+        "MY-COUNT", ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
@@ -59,7 +60,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_6() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("TEST", "BEFORE", "UNTIL", "COUNT", 
+      TestTokenizer tokenizer = new TestTokenizer("TEST", "BEFORE", "UNTIL", "MY-COUNT", 
         ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(6, tokenizer.getNumberOfProcessedTokens());
@@ -70,7 +71,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.until();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WITH", "TEST", "AFTER", "UNTIL", 
-        "COUNT", ">", "42", ".");
+        "MY-COUNT", ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
@@ -79,7 +80,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_8() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("TEST", "AFTER", "UNTIL", "COUNT", 
+      TestTokenizer tokenizer = new TestTokenizer("TEST", "AFTER", "UNTIL", "MY-COUNT", 
         ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(6, tokenizer.getNumberOfProcessedTokens());
@@ -89,8 +90,8 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_9() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VARYING", "COUNT", "FROM", "LOWER", 
-        "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", ".");
+      TestTokenizer tokenizer = new TestTokenizer("VARYING", "MY-COUNT", "FROM", 
+        "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
@@ -100,7 +101,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.varying();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WITH", "TEST", "BEFORE", "VARYING", 
-        "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", 
+        "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", 
         ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(13, tokenizer.getNumberOfProcessedTokens());
@@ -110,8 +111,8 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_11() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("TEST", "BEFORE", "VARYING", "COUNT", 
-        "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", ".");
+      TestTokenizer tokenizer = new TestTokenizer("TEST", "BEFORE", "VARYING", "MY-COUNT", 
+        "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
@@ -121,7 +122,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.varying();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WITH", "TEST", "AFTER", "VARYING", 
-        "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", 
+        "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", 
         ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(13, tokenizer.getNumberOfProcessedTokens());
@@ -131,8 +132,8 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_13() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("TEST", "AFTER", "VARYING", "COUNT", 
-        "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", ".");
+      TestTokenizer tokenizer = new TestTokenizer("TEST", "AFTER", "VARYING", "MY-COUNT", 
+        "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
@@ -141,9 +142,9 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_14() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VARYING", "COUNT", "FROM", "LOWER", 
-        "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", "AFTER", "OTHER-COUNT", "FROM", 
-        "A-1", "BY", "A-2", "UNTIL", "OTHER-COUNT", ">", "A-3", ".");
+      TestTokenizer tokenizer = new TestTokenizer("VARYING", "MY-COUNT", "FROM", 
+        "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", "AFTER", "OTHER-COUNT", 
+        "FROM", "A-1", "BY", "A-2", "UNTIL", "OTHER-COUNT", ">", "A-3", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(20, tokenizer.getNumberOfProcessedTokens());
     }
@@ -152,10 +153,11 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_15() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VARYING", "COUNT", "FROM", "LOWER", 
-        "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", "AFTER", "OTHER-COUNT", "FROM", 
-        "A-1", "BY", "A-2", "UNTIL", "OTHER-COUNT", ">", "A-3", "AFTER", "OTHER-COUNT", 
-        "FROM", "B-1", "BY", "B-2", "UNTIL", "OTHER-COUNT", ">", "B-3", ".");
+      TestTokenizer tokenizer = new TestTokenizer("VARYING", "MY-COUNT", "FROM", 
+        "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", "AFTER", "OTHER-COUNT", 
+        "FROM", "A-1", "BY", "A-2", "UNTIL", "OTHER-COUNT", ">", "A-3", "AFTER", 
+        "OTHER-COUNT", "FROM", "B-1", "BY", "B-2", "UNTIL", "OTHER-COUNT", ">", 
+        "B-3", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(30, tokenizer.getNumberOfProcessedTokens());
     }
@@ -267,7 +269,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_27() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "UNTIL", "COUNT", 
+      TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "UNTIL", "MY-COUNT", 
         ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(6, tokenizer.getNumberOfProcessedTokens());
@@ -278,7 +280,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THROUGH", 
-        "SUB-B", "UNTIL", "COUNT", ">", "42", ".");
+        "SUB-B", "UNTIL", "MY-COUNT", ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
@@ -288,7 +290,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "UNTIL", "COUNT", ">", "42", ".");
+        "UNTIL", "MY-COUNT", ">", "42", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
@@ -297,8 +299,8 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_30() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("PERFORM", "UNTIL", "COUNT", ">", 
-        "42", "DISPLAY", "1", "DISPLAY", "2", "DISPLAY", "3", "END-PERFORM");
+      TestTokenizer tokenizer = new TestTokenizer("PERFORM", "UNTIL", "MY-COUNT", 
+        ">", "42", "DISPLAY", "1", "DISPLAY", "2", "DISPLAY", "3", "END-PERFORM");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
@@ -308,7 +310,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "VARYING", 
-        "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", "UPPER", 
+        "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", 
         ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(12, tokenizer.getNumberOfProcessedTokens());
@@ -319,8 +321,8 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THROUGH", 
-        "SUB-B", "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", 
-        ">", "UPPER", ".");
+        "SUB-B", "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", 
+        "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(14, tokenizer.getNumberOfProcessedTokens());
     }
@@ -330,8 +332,8 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "WITH", "TEST", "BEFORE", "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", 
-        "UNTIL", "COUNT", ">", "UPPER", ".");
+        "WITH", "TEST", "BEFORE", "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", 
+        "STEP", "UNTIL", "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(17, tokenizer.getNumberOfProcessedTokens());
     }
@@ -341,8 +343,8 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "TEST", "BEFORE", "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", 
-        "COUNT", ">", "UPPER", ".");
+        "TEST", "BEFORE", "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", "STEP", 
+        "UNTIL", "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(16, tokenizer.getNumberOfProcessedTokens());
     }
@@ -352,8 +354,8 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "WITH", "TEST", "AFTER", "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", 
-        "UNTIL", "COUNT", ">", "UPPER", ".");
+        "WITH", "TEST", "AFTER", "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", "STEP", 
+        "UNTIL", "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(17, tokenizer.getNumberOfProcessedTokens());
     }
@@ -363,8 +365,8 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "TEST", "AFTER", "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", 
-        "COUNT", ">", "UPPER", ".");
+        "TEST", "AFTER", "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", 
+        "MY-COUNT", ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(16, tokenizer.getNumberOfProcessedTokens());
     }
@@ -374,8 +376,8 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", 
-        "UPPER", ".");
+        "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", 
+        ">", "UPPER", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(14, tokenizer.getNumberOfProcessedTokens());
     }
@@ -385,10 +387,10 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PERFORM", "SUB-A", "THRU", "SUB-B", 
-        "VARYING", "COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "COUNT", ">", 
-        "UPPER", "AFTER", "OTHER-COUNT", "FROM", "A-1", "BY", "A-2", "UNTIL", "OTHER-COUNT", 
-        ">", "A-3", "AFTER", "OTHER-COUNT", "FROM", "B-1", "BY", "B-2", "UNTIL", 
-        "OTHER-COUNT", ">", "B-3", ".");
+        "VARYING", "MY-COUNT", "FROM", "LOWER", "BY", "STEP", "UNTIL", "MY-COUNT", 
+        ">", "UPPER", "AFTER", "OTHER-COUNT", "FROM", "A-1", "BY", "A-2", "UNTIL", 
+        "OTHER-COUNT", ">", "A-3", "AFTER", "OTHER-COUNT", "FROM", "B-1", "BY", 
+        "B-2", "UNTIL", "OTHER-COUNT", ">", "B-3", ".");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(34, tokenizer.getNumberOfProcessedTokens());
     }

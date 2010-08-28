@@ -48,8 +48,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("EVALUATE");
       RESERVED_WORDS.add("DIVIDE");
       RESERVED_WORDS.add("DISABLE");
-      RESERVED_WORDS.add("PIC");
       RESERVED_WORDS.add("LOW-VALUE");
+      RESERVED_WORDS.add("PIC");
       RESERVED_WORDS.add("END-OF-PAGE");
       RESERVED_WORDS.add("END-UNSTRING");
       RESERVED_WORDS.add("KEY");
@@ -125,6 +125,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("RECEIVE");
       RESERVED_WORDS.add("ENVIRONMENT");
       RESERVED_WORDS.add("STRING");
+      RESERVED_WORDS.add("DELIMITER");
       RESERVED_WORDS.add("SIGN");
       RESERVED_WORDS.add("EXTERNAL");
       RESERVED_WORDS.add("END-REWRITE");
@@ -132,6 +133,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("COMPUTE");
       RESERVED_WORDS.add("VARYING");
       RESERVED_WORDS.add("PACKED-DECIMAL");
+      RESERVED_WORDS.add("COUNT");
       RESERVED_WORDS.add("THRU");
       RESERVED_WORDS.add("RELEASE");
       RESERVED_WORDS.add("CANCEL");
@@ -154,9 +156,10 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("TERMINATE");
       RESERVED_WORDS.add("REMAINDER");
       RESERVED_WORDS.add("UNSTRING");
-      RESERVED_WORDS.add("UNTIL");
       RESERVED_WORDS.add("SPACES");
+      RESERVED_WORDS.add("UNTIL");
       RESERVED_WORDS.add("DISPLAY");
+      RESERVED_WORDS.add("OR");
       RESERVED_WORDS.add("JUSTIFIED");
       RESERVED_WORDS.add("TEST");
       RESERVED_WORDS.add("HIGH-VALUE");
@@ -183,6 +186,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("CONTINUE");
       RESERVED_WORDS.add("IS");
       RESERVED_WORDS.add("COPY");
+      RESERVED_WORDS.add("TALLYING");
       RESERVED_WORDS.add("ALL");
       RESERVED_WORDS.add("NEXT");
       RESERVED_WORDS.add("WITH");
@@ -1628,12 +1632,12 @@ public class CobolGrammar extends KoopaGrammar {
                    token("REWRITE"),
                    token("SEARCH"),
                    token("STOP"),
+                   token("STRING"),
                    token("SUBTRACT"),
+                   token("UNSTRING"),
                    token("COMPUTE"),
                    token("READ"),
                    token("START"),
-                   token("STRING"),
-                   token("UNSTRING"),
                    token("WRITE"),
                    token("ACCEPT"),
                    token("ALTER"),
@@ -3308,11 +3312,9 @@ public class CobolGrammar extends KoopaGrammar {
                    token("STRING"),
                    plus(
                        sequence(
-                           plus(
-                               choice(
-                                   identifier(),
-                                   literal()
-                               )
+                           choice(
+                               identifier(),
+                               literal()
                            ),
                            optional(
                                sequence(
@@ -3537,20 +3539,74 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("UNSTRING"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("ON")
-                               ),
-                               token("OVERFLOW")
+                   identifier(),
+                   optional(
+                       sequence(
+                           token("DELIMITED"),
+                           optional(
+                               token("BY")
                            ),
-                           token("END-UNSTRING"),
-                           token("."),
-                           endOfStatement()
+                           optional(
+                               token("ALL")
+                           ),
+                           choice(
+                               identifier(),
+                               literal()
+                           ),
+                           star(
+                               sequence(
+                                   token("OR"),
+                                   optional(
+                                       token("ALL")
+                                   ),
+                                   choice(
+                                       identifier(),
+                                       literal()
+                                   )
+                               )
+                           )
+                       )
+                   ),
+                   token("INTO"),
+                   plus(
+                       sequence(
+                           identifier(),
+                           optional(
+                               sequence(
+                                   token("DELIMITER"),
+                                   optional(
+                                       token("IN")
+                                   ),
+                                   identifier()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("COUNT"),
+                                   optional(
+                                       token("IN")
+                                   ),
+                                   identifier()
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("POINTER"),
+                           identifier()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("TALLYING"),
+                           optional(
+                               token("IN")
+                           ),
+                           identifier()
                        )
                    ),
                    optional(

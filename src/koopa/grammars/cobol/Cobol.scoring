@@ -136,6 +136,16 @@ verify END-SUBTRACT
 - subtractStatement statement : warn "END-SUBTRACT not in subtract statement."
 - statement !execStatement !subtractStatement : warn "END-SUBTRACT not in subtract statement."
 
+verify UNSTRING
+- !unstringStatement water : warn "UNSTRING in the water."
+- unstringStatement statement : warn "UNSTRING not in unstring statement."
+- statement !execStatement !unstringStatement : warn "UNSTRING not in unstring statement."
+
+verify END-UNSTRING
+- !unstringStatement water : warn "END-UNSTRING in the water."
+- unstringStatement statement : warn "END-UNSTRING not in unstring statement."
+- statement !execStatement !unstringStatement : warn "END-UNSTRING not in unstring statement."
+
 
 ## #############################################################################
 ## The following rules are for statements which have only been partly
@@ -151,16 +161,6 @@ verify END-COMPUTE
 - !computeStatement water : warn "END-COMPUTE in the water."
 - computeStatement statement : warn "END-COMPUTE not in compute statement."
 - statement !execStatement !computeStatement : warn "END-COMPUTE not in compute statement."
-
-verify UNSTRING
-- !unstringStatement water : warn "UNSTRING in the water."
-- unstringStatement statement : warn "UNSTRING not in unstring statement."
-- statement !execStatement !unstringStatement : warn "UNSTRING not in unstring statement."
-
-verify END-UNSTRING
-- !unstringStatement water : warn "END-UNSTRING in the water."
-- unstringStatement statement : warn "END-UNSTRING not in unstring statement."
-- statement !execStatement !unstringStatement : warn "END-UNSTRING not in unstring statement."
 
 verify WRITE
 - !writeStatement water : warn "WRITE in the water."

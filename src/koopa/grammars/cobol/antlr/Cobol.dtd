@@ -83,12 +83,12 @@
 <!ELEMENT notAtEnd (t,t?,t,nestedStatements)>
 <!ELEMENT startStatement (t,water?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT stopStatement (t,(t|literal))>
-<!ELEMENT stringStatement (t,((identifier|literal)+,(t,t?,(t|identifier|literal))?)+,t,identifier,(t?,t,identifier)?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
+<!ELEMENT stringStatement (t,((identifier|literal),(t,t?,(t|identifier|literal))?)+,t,identifier,(t?,t,identifier)?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
 <!ELEMENT subtractStatement (t,(subtraction_format1|subtraction_format2|subtraction_format3),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT subtraction_format1 (t,identifier,t,identifier,t?)>
 <!ELEMENT subtraction_format2 ((identifier|literal)+,(t,(identifier|literal))?,t,(identifier,t?)+)>
 <!ELEMENT subtraction_format3 ((identifier|literal)+,t,(identifier,t?)+)>
-<!ELEMENT unstringStatement (t,water?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
+<!ELEMENT unstringStatement (t,identifier,(t,t?,t?,(identifier|literal),(t,t?,(identifier|literal))*)?,t,(identifier,(t,t?,identifier)?,(t,t?,identifier)?)+,(t?,t,identifier)?,(t,t?,identifier)?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
 <!ELEMENT writeStatement (t,water?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT copyStatement (t,textName,(t,libraryName)?,t?,(t,((identifier|literal|pseudoLiteral),t,(identifier|literal|pseudoLiteral))+)?,t)>
 <!ELEMENT replaceStatement (t,water?,t)>

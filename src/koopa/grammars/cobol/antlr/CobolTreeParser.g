@@ -773,12 +773,12 @@ verb
       | 'REWRITE'
       | 'SEARCH'
       | 'STOP'
+      | 'STRING'
       | 'SUBTRACT'
+      | 'UNSTRING'
       | 'COMPUTE'
       | 'READ'
       | 'START'
-      | 'STRING'
-      | 'UNSTRING'
       | 'WRITE'
       | 'ACCEPT'
       | 'ALTER'
@@ -1668,9 +1668,9 @@ stopStatement
 stringStatement
   : ^(STRING_STATEMENT
       ( 'STRING'
-        ( ( ( ( identifier
+        ( ( ( identifier
         | literal
-        ) )+
+        )
           ( ( 'DELIMITED'
             ( 'BY' )?
             ( 'SIZE'
@@ -1789,7 +1789,39 @@ subtraction_format3
 unstringStatement
   : ^(UNSTRING_STATEMENT
       ( 'UNSTRING'
-        (water)?
+        identifier
+        ( ( 'DELIMITED'
+          ( 'BY' )?
+          ( 'ALL' )?
+          ( identifier
+          | literal
+          )
+          ( ( 'OR'
+            ( 'ALL' )?
+            ( identifier
+            | literal
+            )
+          ) )*
+        ) )?
+        'INTO'
+        ( ( identifier
+          ( ( 'DELIMITER'
+            ( 'IN' )?
+            identifier
+          ) )?
+          ( ( 'COUNT'
+            ( 'IN' )?
+            identifier
+          ) )?
+        ) )+
+        ( ( ( 'WITH' )?
+          'POINTER'
+          identifier
+        ) )?
+        ( ( 'TALLYING'
+          ( 'IN' )?
+          identifier
+        ) )?
         ( ( ( 'ON' )?
           'OVERFLOW'
           nestedStatements
@@ -2418,10 +2450,12 @@ token
   | 'COPY'
   | 'CORR'
   | 'CORRESPONDING'
+  | 'COUNT'
   | 'DATA'
   | 'DECLARATIVES'
   | 'DELETE'
   | 'DELIMITED'
+  | 'DELIMITER'
   | 'DEPENDING'
   | 'DESCENDING'
   | 'DISABLE'
@@ -2506,6 +2540,7 @@ token
   | 'OMITTED'
   | 'ON'
   | 'OPEN'
+  | 'OR'
   | 'OTHER'
   | 'OVERFLOW'
   | 'PACKED-DECIMAL'
@@ -2553,6 +2588,7 @@ token
   | 'SUPPRESS'
   | 'SYNC'
   | 'SYNCHRONIZED'
+  | 'TALLYING'
   | 'TERMINATE'
   | 'TEST'
   | 'THEN'

@@ -832,70 +832,6 @@ public class CobolVerifier extends VerifyingSink {
       }
     });
 
-    register("COMPUTE", new Verifier() {
-      public void verify(Token t) {
-        { final int p0 = 0;
-          final int p1 = lastIndexOf("computeStatement");
-          final int p2 = lastIndexOf("water");
-
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
-            warn(t, "COMPUTE in the water.");
-          }
-        }
-
-        { final int p0 = 0;
-          final int p1 = lastIndexOf("computeStatement");
-          final int p2 = lastIndexOf("statement");
-
-          if (p0 < p1 && p1 < p2) {
-            warn(t, "COMPUTE not in compute statement.");
-          }
-        }
-
-        { final int p0 = 0;
-          final int p1 = lastIndexOf("statement");
-          final int p2 = lastIndexOf("execStatement");
-          final int p3 = lastIndexOf("computeStatement");
-
-          if (p0 < p1 && p2 < p1 && p3 < p1) {
-            warn(t, "COMPUTE not in compute statement.");
-          }
-        }
-      }
-    });
-
-    register("END-COMPUTE", new Verifier() {
-      public void verify(Token t) {
-        { final int p0 = 0;
-          final int p1 = lastIndexOf("computeStatement");
-          final int p2 = lastIndexOf("water");
-
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
-            warn(t, "END-COMPUTE in the water.");
-          }
-        }
-
-        { final int p0 = 0;
-          final int p1 = lastIndexOf("computeStatement");
-          final int p2 = lastIndexOf("statement");
-
-          if (p0 < p1 && p1 < p2) {
-            warn(t, "END-COMPUTE not in compute statement.");
-          }
-        }
-
-        { final int p0 = 0;
-          final int p1 = lastIndexOf("statement");
-          final int p2 = lastIndexOf("execStatement");
-          final int p3 = lastIndexOf("computeStatement");
-
-          if (p0 < p1 && p2 < p1 && p3 < p1) {
-            warn(t, "END-COMPUTE not in compute statement.");
-          }
-        }
-      }
-    });
-
     register("UNSTRING", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
@@ -955,6 +891,70 @@ public class CobolVerifier extends VerifyingSink {
 
           if (p0 < p1 && p2 < p1 && p3 < p1) {
             warn(t, "END-UNSTRING not in unstring statement.");
+          }
+        }
+      }
+    });
+
+    register("COMPUTE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("computeStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "COMPUTE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("computeStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "COMPUTE not in compute statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("computeStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "COMPUTE not in compute statement.");
+          }
+        }
+      }
+    });
+
+    register("END-COMPUTE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("computeStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "END-COMPUTE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("computeStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "END-COMPUTE not in compute statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("computeStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "END-COMPUTE not in compute statement.");
           }
         }
       }

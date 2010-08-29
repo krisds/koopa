@@ -101,6 +101,16 @@ verify PERFORM
 - performStatement statement : warn "PERFORM not in perform statement."
 - statement !execStatement !performStatement : warn "PERFORM not in perform statement."
 
+verify READ
+- !readStatement water : warn "READ in the water."
+- readStatement statement : warn "READ not in read statement."
+- statement !execStatement !readStatement : warn "READ not in read statement."
+
+verify END-READ
+- !readStatement water : warn "END-READ in the water."
+- readStatement statement : warn "END-READ not in read statement."
+- statement !execStatement !readStatement : warn "END-READ not in read statement."
+
 verify RETURN
 - !execStatement water : warn "RETURN in the water."
 - returnStatement statement : warn "RETURN not in return statement."
@@ -171,16 +181,6 @@ verify END-WRITE
 - !writeStatement water : warn "END-WRITE in the water."
 - writeStatement statement : warn "END-WRITE not in write statement."
 - statement !execStatement !writeStatement : warn "END-WRITE not in write statement."
-
-verify READ
-- !readStatement water : warn "READ in the water."
-- readStatement statement : warn "READ not in read statement."
-- statement !execStatement !readStatement : warn "READ not in read statement."
-
-verify END-READ
-- !readStatement water : warn "END-READ in the water."
-- readStatement statement : warn "END-READ not in read statement."
-- statement !execStatement !readStatement : warn "END-READ not in read statement."
 
 verify START
 - !startStatement water : warn "START in the water."

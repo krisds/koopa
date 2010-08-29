@@ -92,8 +92,9 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("AT");
       RESERVED_WORDS.add("66");
       RESERVED_WORDS.add("THEN");
-      RESERVED_WORDS.add("LEFT");
       RESERVED_WORDS.add("REPLACE");
+      RESERVED_WORDS.add("LEFT");
+      RESERVED_WORDS.add("PREVIOUS");
       RESERVED_WORDS.add("END-EVALUATE");
       RESERVED_WORDS.add("COMMUNICATION");
       RESERVED_WORDS.add("FILLER");
@@ -148,6 +149,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("RECORD");
       RESERVED_WORDS.add("INITIALIZE");
       RESERVED_WORDS.add("SECTION");
+      RESERVED_WORDS.add("NO");
       RESERVED_WORDS.add("RENAMES");
       RESERVED_WORDS.add("ON");
       RESERVED_WORDS.add("DELETE");
@@ -176,6 +178,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("SPACE");
       RESERVED_WORDS.add("LENGTH");
       RESERVED_WORDS.add("USAGE");
+      RESERVED_WORDS.add("LOCK");
       RESERVED_WORDS.add("IF");
       RESERVED_WORDS.add("END-SEARCH");
       RESERVED_WORDS.add("INDEX");
@@ -1628,6 +1631,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("MOVE"),
                    token("MULTIPLY"),
                    token("PERFORM"),
+                   token("READ"),
                    token("RETURN"),
                    token("REWRITE"),
                    token("SEARCH"),
@@ -1636,7 +1640,6 @@ public class CobolGrammar extends KoopaGrammar {
                    token("SUBTRACT"),
                    token("UNSTRING"),
                    token("COMPUTE"),
-                   token("READ"),
                    token("START"),
                    token("WRITE"),
                    token("ACCEPT"),
@@ -2950,29 +2953,38 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("READ"),
-                   skipto(
+                   fileName(),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("NO"),
+                           token("LOCK")
+                       )
+                   ),
+                   optional(
                        choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("AT")
-                               ),
-                               token("END")
+                           token("NEXT"),
+                           token("PREVIOUS")
+                       )
+                   ),
+                   optional(
+                       token("RECORD")
+                   ),
+                   optional(
+                       sequence(
+                           token("INTO"),
+                           identifier()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("KEY"),
+                           optional(
+                               token("IS")
                            ),
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               token("INVALID"),
-                               optional(
-                                   token("KEY")
-                               )
-                           ),
-                           token("END-READ"),
-                           token("."),
-                           endOfStatement()
+                           dataName()
                        )
                    ),
                    optional(

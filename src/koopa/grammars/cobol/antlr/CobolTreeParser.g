@@ -769,6 +769,7 @@ verb
       | 'MOVE'
       | 'MULTIPLY'
       | 'PERFORM'
+      | 'READ'
       | 'RETURN'
       | 'REWRITE'
       | 'SEARCH'
@@ -777,7 +778,6 @@ verb
       | 'SUBTRACT'
       | 'UNSTRING'
       | 'COMPUTE'
-      | 'READ'
       | 'START'
       | 'WRITE'
       | 'ACCEPT'
@@ -1498,7 +1498,22 @@ varying
 readStatement
   : ^(READ_STATEMENT
       ( 'READ'
-        (water)?
+        fileName
+        ( ( ( 'WITH' )?
+          'NO'
+          'LOCK'
+        ) )?
+        ( ( 'NEXT'
+        | 'PREVIOUS'
+        ) )?
+        ( 'RECORD' )?
+        ( ( 'INTO'
+          identifier
+        ) )?
+        ( ( 'KEY'
+          ( 'IS' )?
+          dataName
+        ) )?
         ( ( ( 'AT' )?
           'END'
           nestedStatements
@@ -2528,12 +2543,14 @@ token
   | 'LEFT'
   | 'LENGTH'
   | 'LINKAGE'
+  | 'LOCK'
   | 'LOW-VALUE'
   | 'LOW-VALUES'
   | 'MERGE'
   | 'MOVE'
   | 'MULTIPLY'
   | 'NEXT'
+  | 'NO'
   | 'NOT'
   | 'OCCURS'
   | 'OF'
@@ -2548,6 +2565,7 @@ token
   | 'PIC'
   | 'PICTURE'
   | 'POINTER'
+  | 'PREVIOUS'
   | 'PROCEDURE'
   | 'PROGRAM'
   | 'PROGRAM-ID'

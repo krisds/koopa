@@ -8,6 +8,38 @@ target readStatement;
 +[ READ MY-FILE
    END-READ ]
 
++[ READ MY-FILE
+     WITH NO LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     NO LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     NEXT RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     PREVIOUS RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     INTO MY-VALUE
+   END-READ ]
+
++[ READ MY-FILE
+     KEY IS MY-KEY
+   END-READ ]
+
++[ READ MY-FILE
+     KEY MY-KEY
+   END-READ ]
+
 +[ READ MY-FILE 
    AT END
       DISPLAY ¥ "Nothing more to see here." ]

@@ -382,6 +382,7 @@ def verb =
     | MOVE
     | MULTIPLY
     | PERFORM
+    | READ
     | RETURN
     | REWRITE
     | SEARCH
@@ -392,7 +393,6 @@ def verb =
 
     # Verbs for statements which have a skeletal implementation:
     | COMPUTE
-    | READ
     | START
     | WRITE
 
@@ -756,17 +756,10 @@ end
 ## READ statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def readStatement =
-    READ
-    ( -->
-      ( [NOT] [AT] END
-      | [NOT] INVALID [KEY]
-      | END-READ
-      | .
-      | endOfStatement
-      )
-    )
+    READ fileName [[WITH] NO LOCK] [NEXT | PREVIOUS] [RECORD] [INTO identifier]
+    
+    [KEY [IS] dataName]
     
     [[AT] END nestedStatements]
     [NOT [AT] END nestedStatements]
@@ -863,7 +856,6 @@ end
 ## STRING statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def stringStatement =
     STRING
     ( ( identifier | literal ) [DELIMITED [BY] (SIZE | identifier | literal)] )+
@@ -903,7 +895,6 @@ end
 ## UNSTRING statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def unstringStatement =
     UNSTRING identifier
     

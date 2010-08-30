@@ -390,11 +390,11 @@ def verb =
     | STRING
     | SUBTRACT
     | UNSTRING
+    | WRITE
 
     # Verbs for statements which have a skeletal implementation:
     | COMPUTE
     | START
-    | WRITE
 
     # Verbs for statements which remain to be implemented:
     | ACCEPT
@@ -920,17 +920,15 @@ end
 ## WRITE statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def writeStatement =
-    WRITE
-    ( -->
-      ( [NOT] [AT] (END-OF-PAGE | EOP)
-      | [NOT] INVALID [KEY]
-      | END-WRITE
-      | .
-      | endOfStatement
+    WRITE recordName [FROM identifier]
+    
+    [ (AFTER | BEFORE) [ADVANCING]
+      ( (identifier | integer | ZERO) [LINE | LINES]
+      | mnemonicName
+      | PAGE
       )
-    )
+    ]
     
     [[AT] (END-OF-PAGE | EOP) nestedStatements]
     [NOT [AT] (END-OF-PAGE | EOP) nestedStatements]
@@ -1197,6 +1195,10 @@ def libraryName =
 end
 
 def recordName =
+    identifier
+end
+
+def mnemonicName =
     cobolWord
 end
 

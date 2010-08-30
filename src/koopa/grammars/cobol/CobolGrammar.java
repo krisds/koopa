@@ -34,9 +34,9 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("SUBTRACT");
       RESERVED_WORDS.add("CHARACTER");
       RESERVED_WORDS.add("EOP");
+      RESERVED_WORDS.add("SUPPRESS");
       RESERVED_WORDS.add("DECLARATIVES");
       RESERVED_WORDS.add("ARE");
-      RESERVED_WORDS.add("SUPPRESS");
       RESERVED_WORDS.add("END-PERFORM");
       RESERVED_WORDS.add("USING");
       RESERVED_WORDS.add("SENTENCE");
@@ -86,6 +86,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("COMPUTATIONAL-3");
       RESERVED_WORDS.add("COMPUTATIONAL-5");
       RESERVED_WORDS.add("OCCURS");
+      RESERVED_WORDS.add("LINES");
       RESERVED_WORDS.add("END-DISPLAY");
       RESERVED_WORDS.add("ASCENDING");
       RESERVED_WORDS.add("ZERO");
@@ -114,6 +115,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-READ");
       RESERVED_WORDS.add("REPLACING");
       RESERVED_WORDS.add("ACCEPT");
+      RESERVED_WORDS.add("LINE");
       RESERVED_WORDS.add("HIGH-VALUES");
       RESERVED_WORDS.add("ZEROES");
       RESERVED_WORDS.add("OMITTED");
@@ -192,6 +194,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("TALLYING");
       RESERVED_WORDS.add("ALL");
       RESERVED_WORDS.add("NEXT");
+      RESERVED_WORDS.add("ADVANCING");
       RESERVED_WORDS.add("WITH");
       RESERVED_WORDS.add("OTHER");
       RESERVED_WORDS.add("END-DELETE");
@@ -220,6 +223,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("RUN");
       RESERVED_WORDS.add("INITIATE");
       RESERVED_WORDS.add("ANY");
+      RESERVED_WORDS.add("PAGE");
       RESERVED_WORDS.add("COMPUTATIONAL");
       RESERVED_WORDS.add("THROUGH");
       RESERVED_WORDS.add("JUST");
@@ -1639,9 +1643,9 @@ public class CobolGrammar extends KoopaGrammar {
                    token("STRING"),
                    token("SUBTRACT"),
                    token("UNSTRING"),
+                   token("WRITE"),
                    token("COMPUTE"),
                    token("START"),
-                   token("WRITE"),
                    token("ACCEPT"),
                    token("ALTER"),
                    token("CLOSE"),
@@ -3663,32 +3667,39 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("WRITE"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               optional(
-                                   token("AT")
-                               ),
-                               choice(
-                                   token("END-OF-PAGE"),
-                                   token("EOP")
-                               )
+                   recordName(),
+                   optional(
+                       sequence(
+                           token("FROM"),
+                           identifier()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           choice(
+                               token("AFTER"),
+                               token("BEFORE")
                            ),
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               token("INVALID"),
-                               optional(
-                                   token("KEY")
-                               )
+                           optional(
+                               token("ADVANCING")
                            ),
-                           token("END-WRITE"),
-                           token("."),
-                           endOfStatement()
+                           choice(
+                               sequence(
+                                   choice(
+                                       identifier(),
+                                       integer(),
+                                       token("ZERO")
+                                   ),
+                                   optional(
+                                       choice(
+                                           token("LINE"),
+                                           token("LINES")
+                                       )
+                                   )
+                               ),
+                               mnemonicName(),
+                               token("PAGE")
+                           )
                        )
                    ),
                    optional(
@@ -4561,11 +4572,29 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("recordName");
            recordNameParser = future;
            future.setParser(
-               cobolWord()
+               identifier()
            );
         }
 
         return recordNameParser;
+    }
+
+    // ========================================================
+    // mnemonicName
+    // ........................................................
+
+    private Parser mnemonicNameParser = null;
+
+    public Parser mnemonicName() {
+        if (mnemonicNameParser == null) {
+           FutureParser future = scoped("mnemonicName");
+           mnemonicNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return mnemonicNameParser;
     }
 
     // ========================================================

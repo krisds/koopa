@@ -32,6 +32,266 @@ public class WriteStatementTest extends TestCase {
     public void testWriteStatement_3() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "FROM", 
+        "MY-SOMETHING", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_4() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "ADVANCING", "1", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_5() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "1", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_6() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "ADVANCING", "1", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_7() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "1", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_8() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "1", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_9() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "1", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_10() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "1", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_11() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "1", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_12() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "ADVANCING", "N", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_13() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "N", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_14() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "ADVANCING", "N", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_15() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "N", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_16() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "N", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_17() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "N", "LINE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_18() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "N", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_19() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "N", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_20() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "ADVANCING", "MY-MNEMONIC", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_21() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "MY-MNEMONIC", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_22() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "MY-MNEMONIC", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_23() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "MY-MNEMONIC", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_24() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "ADVANCING", "PAGE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_25() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AFTER", 
+        "PAGE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_26() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "PAGE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_27() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "PAGE", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_28() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "BEFORE", 
+        "ADVANCING", "ZERO", "END-WRITE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWriteStatement_29() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AT", "END-OF-PAGE", 
         "DISPLAY", "\"End of page.\"");
       assertTrue(parser.accepts(tokenizer));
@@ -39,7 +299,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_4() {
+    public void testWriteStatement_30() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AT", "EOP", 
@@ -49,7 +309,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_5() {
+    public void testWriteStatement_31() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "END-OF-PAGE", 
@@ -59,7 +319,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_6() {
+    public void testWriteStatement_32() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "EOP", "DISPLAY", 
@@ -69,7 +329,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_7() {
+    public void testWriteStatement_33() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "AT", 
@@ -79,7 +339,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_8() {
+    public void testWriteStatement_34() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "AT", 
@@ -89,7 +349,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_9() {
+    public void testWriteStatement_35() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "END-OF-PAGE", 
@@ -99,7 +359,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_10() {
+    public void testWriteStatement_36() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "EOP", 
@@ -109,7 +369,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_11() {
+    public void testWriteStatement_37() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "INVALID", 
@@ -119,7 +379,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_12() {
+    public void testWriteStatement_38() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "INVALID", 
@@ -129,7 +389,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_13() {
+    public void testWriteStatement_39() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "INVALID", 
@@ -139,7 +399,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_14() {
+    public void testWriteStatement_40() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "INVALID", 
@@ -149,7 +409,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_15() {
+    public void testWriteStatement_41() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AT", "END-OF-PAGE", 
@@ -159,7 +419,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_16() {
+    public void testWriteStatement_42() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AT", "EOP", 
@@ -169,7 +429,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_17() {
+    public void testWriteStatement_43() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "END-OF-PAGE", 
@@ -179,7 +439,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_18() {
+    public void testWriteStatement_44() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "EOP", "DISPLAY", 
@@ -189,7 +449,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_19() {
+    public void testWriteStatement_45() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "AT", 
@@ -199,7 +459,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_20() {
+    public void testWriteStatement_46() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "AT", 
@@ -209,7 +469,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_21() {
+    public void testWriteStatement_47() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "END-OF-PAGE", 
@@ -219,7 +479,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_22() {
+    public void testWriteStatement_48() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "EOP", 
@@ -229,7 +489,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_23() {
+    public void testWriteStatement_49() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "INVALID", 
@@ -239,7 +499,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_24() {
+    public void testWriteStatement_50() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "INVALID", 
@@ -249,7 +509,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_25() {
+    public void testWriteStatement_51() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "INVALID", 
@@ -259,7 +519,7 @@ public class WriteStatementTest extends TestCase {
     }
 
     @Test
-    public void testWriteStatement_26() {
+    public void testWriteStatement_52() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "INVALID", 

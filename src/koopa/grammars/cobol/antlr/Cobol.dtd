@@ -89,7 +89,7 @@
 <!ELEMENT subtraction_format2 ((identifier|literal)+,(t,(identifier|literal))?,t,(identifier,t?)+)>
 <!ELEMENT subtraction_format3 ((identifier|literal)+,t,(identifier,t?)+)>
 <!ELEMENT unstringStatement (t,identifier,(t,t?,t?,(identifier|literal),(t,t?,(identifier|literal))*)?,t,(identifier,(t,t?,identifier)?,(t,t?,identifier)?)+,(t?,t,identifier)?,(t,t?,identifier)?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,t?)>
-<!ELEMENT writeStatement (t,water?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
+<!ELEMENT writeStatement (t,recordName,(t,identifier)?,(t,t?,(((identifier|integer|t),t?)|mnemonicName|t))?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT copyStatement (t,textName,(t,libraryName)?,t?,(t,((identifier|literal|pseudoLiteral),t,(identifier|literal|pseudoLiteral))+)?,t)>
 <!ELEMENT replaceStatement (t,water?,t)>
 <!ELEMENT divisionStart (t+,usingPhrase?,t)>
@@ -120,7 +120,8 @@
 <!ELEMENT functionName (cobolWord)>
 <!ELEMENT textName (cobolWord)>
 <!ELEMENT libraryName (cobolWord)>
-<!ELEMENT recordName (cobolWord)>
+<!ELEMENT recordName (identifier)>
+<!ELEMENT mnemonicName (cobolWord)>
 <!ELEMENT literal (numeric|alphanumeric|figurativeConstant)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,t))>
 <!ELEMENT numeric (integer|decimal|(t+,identifier))>

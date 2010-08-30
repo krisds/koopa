@@ -777,9 +777,9 @@ verb
       | 'STRING'
       | 'SUBTRACT'
       | 'UNSTRING'
+      | 'WRITE'
       | 'COMPUTE'
       | 'START'
-      | 'WRITE'
       | 'ACCEPT'
       | 'ALTER'
       | 'CLOSE'
@@ -1858,7 +1858,26 @@ unstringStatement
 writeStatement
   : ^(WRITE_STATEMENT
       ( 'WRITE'
-        (water)?
+        recordName
+        ( ( 'FROM'
+          identifier
+        ) )?
+        ( ( ( 'AFTER'
+        | 'BEFORE'
+        )
+          ( 'ADVANCING' )?
+          ( ( ( identifier
+          | integer
+          | 'ZERO'
+          )
+            ( ( 'LINE'
+            | 'LINES'
+            ) )?
+          )
+          | mnemonicName
+          | 'PAGE'
+          )
+        ) )?
         ( ( ( 'AT' )?
           ( 'END-OF-PAGE'
           | 'EOP'
@@ -2350,6 +2369,16 @@ libraryName
 
 recordName
   : ^(RECORD_NAME
+      identifier
+    )
+  ;
+
+// ========================================================
+// mnemonicName
+// ........................................................
+
+mnemonicName
+  : ^(MNEMONIC_NAME
       cobolWord
     )
   ;
@@ -2431,6 +2460,7 @@ token
   | ':'
   | 'ACCEPT'
   | 'ADD'
+  | 'ADVANCING'
   | 'AFTER'
   | 'ALL'
   | 'ALSO'
@@ -2542,6 +2572,8 @@ token
   | 'LEADING'
   | 'LEFT'
   | 'LENGTH'
+  | 'LINE'
+  | 'LINES'
   | 'LINKAGE'
   | 'LOCK'
   | 'LOW-VALUE'
@@ -2561,6 +2593,7 @@ token
   | 'OTHER'
   | 'OVERFLOW'
   | 'PACKED-DECIMAL'
+  | 'PAGE'
   | 'PERFORM'
   | 'PIC'
   | 'PICTURE'

@@ -35,7 +35,7 @@
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>
 <!ELEMENT sentence ((statement,(statement|continuationOfStatement)*,t?)|copyStatement|replaceStatement)>
-<!ELEMENT statement (addStatement|callStatement|cancelStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|performStatement|readStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|(verb,water?))>
+<!ELEMENT statement (addStatement|callStatement|cancelStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|(verb,water?))>
 <!ELEMENT continuationOfStatement ((eventPhrase,statement)|endOfStatementMarker)>
 <!ELEMENT nestedStatements (statement+)>
 <!ELEMENT eventPhrase (t?,t?,(t|(t,t)|t|(t,t?)|t))>
@@ -71,6 +71,7 @@
 <!ELEMENT multiplyStatement (t,(multiplication_format1|multiplication_format2),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT multiplication_format1 ((identifier|literal),t,(identifier|literal),t,(identifier,t?)+)>
 <!ELEMENT multiplication_format2 ((identifier|literal),t,(identifier,t?)+)>
+<!ELEMENT openStatement (t,((t,(fileName,(t|(t?,t,t))?)+)|(t,(fileName,(t?,t,t)?)+)|(t,fileName+)|(t,fileName+))+)>
 <!ELEMENT performStatement (t,(((times|until|varying)?,nestedStatements,t)|(procedureName,(t,procedureName)?,(times|until|varying)?)))>
 <!ELEMENT times ((identifier|integer),t)>
 <!ELEMENT until ((t?,t,t)?,t,condition)>

@@ -96,6 +96,11 @@ verify END-MULTIPLY
 - multiplyStatement statement : warn "END-MULTIPLY not in multiply statement."
 - statement !execStatement !multiplyStatement : warn "END-MULTIPLY not in multiply statement."
 
+verify OPEN
+- !openStatement water : warn "OPEN in the water."
+- openStatement statement : warn "OPEN not in open statement."
+- statement !execStatement !openStatement : warn "OPEN not in open statement."
+
 verify PERFORM
 - !execStatement water : warn "PERFORM in the water."
 - performStatement statement : warn "PERFORM not in perform statement."

@@ -298,6 +298,7 @@ def statement =
     | ifStatement
     | moveStatement
     | multiplyStatement
+    | openStatement
     | performStatement
     | readStatement
     | returnStatement
@@ -381,6 +382,7 @@ def verb =
     | IF
     | MOVE
     | MULTIPLY
+    | OPEN
     | PERFORM
     | READ
     | RETURN
@@ -405,7 +407,6 @@ def verb =
     | INITIALIZE
     | INSPECT
     | MERGE
-    | OPEN
     | RELEASE
     | SET
     | SORT
@@ -700,6 +701,19 @@ end
 def multiplication_format2 =
     (identifier | literal)
     BY (identifier [ROUNDED])+
+end
+
+## #############################################################################
+## MULTIPLY statement.
+## -----------------------------------------------------------------------------
+
+def openStatement =
+    OPEN
+    ( INPUT (fileName [REVERSED | [WITH] NO REWIND])+
+    | OUTPUT (fileName [[WITH] NO REWIND])+
+    | I-O (fileName)+
+    | EXTEND (fileName)+
+    )+
 end
 
 ## #############################################################################

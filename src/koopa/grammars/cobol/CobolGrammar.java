@@ -40,6 +40,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-PERFORM");
       RESERVED_WORDS.add("USING");
       RESERVED_WORDS.add("SENTENCE");
+      RESERVED_WORDS.add("REWIND");
       RESERVED_WORDS.add("RETURN");
       RESERVED_WORDS.add("DIVISION");
       RESERVED_WORDS.add("ROUNDED");
@@ -83,15 +84,18 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ALTER");
       RESERVED_WORDS.add("REPORT");
       RESERVED_WORDS.add("END-RETURN");
+      RESERVED_WORDS.add("I-O");
       RESERVED_WORDS.add("COMPUTATIONAL-3");
       RESERVED_WORDS.add("COMPUTATIONAL-5");
       RESERVED_WORDS.add("OCCURS");
       RESERVED_WORDS.add("LINES");
+      RESERVED_WORDS.add("INPUT");
       RESERVED_WORDS.add("END-DISPLAY");
       RESERVED_WORDS.add("ASCENDING");
       RESERVED_WORDS.add("ZERO");
       RESERVED_WORDS.add("AT");
       RESERVED_WORDS.add("66");
+      RESERVED_WORDS.add("EXTEND");
       RESERVED_WORDS.add("THEN");
       RESERVED_WORDS.add("REPLACE");
       RESERVED_WORDS.add("LEFT");
@@ -170,6 +174,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("USE");
       RESERVED_WORDS.add("FROM");
       RESERVED_WORDS.add("FALSE");
+      RESERVED_WORDS.add("OUTPUT");
+      RESERVED_WORDS.add("REVERSED");
       RESERVED_WORDS.add("END-IF");
       RESERVED_WORDS.add("88");
       RESERVED_WORDS.add("CORR");
@@ -221,9 +227,9 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("PICTURE");
       RESERVED_WORDS.add("OPEN");
       RESERVED_WORDS.add("RUN");
+      RESERVED_WORDS.add("PAGE");
       RESERVED_WORDS.add("INITIATE");
       RESERVED_WORDS.add("ANY");
-      RESERVED_WORDS.add("PAGE");
       RESERVED_WORDS.add("COMPUTATIONAL");
       RESERVED_WORDS.add("THROUGH");
       RESERVED_WORDS.add("JUST");
@@ -1428,6 +1434,7 @@ public class CobolGrammar extends KoopaGrammar {
                    ifStatement(),
                    moveStatement(),
                    multiplyStatement(),
+                   openStatement(),
                    performStatement(),
                    readStatement(),
                    returnStatement(),
@@ -1634,6 +1641,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("IF"),
                    token("MOVE"),
                    token("MULTIPLY"),
+                   token("OPEN"),
                    token("PERFORM"),
                    token("READ"),
                    token("RETURN"),
@@ -1654,7 +1662,6 @@ public class CobolGrammar extends KoopaGrammar {
                    token("INITIALIZE"),
                    token("INSPECT"),
                    token("MERGE"),
-                   token("OPEN"),
                    token("RELEASE"),
                    token("SET"),
                    token("SORT"),
@@ -2770,6 +2777,79 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return multiplication_format2Parser;
+    }
+
+    // ========================================================
+    // openStatement
+    // ........................................................
+
+    private Parser openStatementParser = null;
+
+    public Parser openStatement() {
+        if (openStatementParser == null) {
+           FutureParser future = scoped("openStatement");
+           openStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("OPEN"),
+                   plus(
+                       choice(
+                           sequence(
+                               token("INPUT"),
+                               plus(
+                                   sequence(
+                                       fileName(),
+                                       optional(
+                                           choice(
+                                               token("REVERSED"),
+                                               sequence(
+                                                   optional(
+                                                       token("WITH")
+                                                   ),
+                                                   token("NO"),
+                                                   token("REWIND")
+                                               )
+                                           )
+                                       )
+                                   )
+                               )
+                           ),
+                           sequence(
+                               token("OUTPUT"),
+                               plus(
+                                   sequence(
+                                       fileName(),
+                                       optional(
+                                           sequence(
+                                               optional(
+                                                   token("WITH")
+                                               ),
+                                               token("NO"),
+                                               token("REWIND")
+                                           )
+                                       )
+                                   )
+                               )
+                           ),
+                           sequence(
+                               token("I-O"),
+                               plus(
+                                   fileName()
+                               )
+                           ),
+                           sequence(
+                               token("EXTEND"),
+                               plus(
+                                   fileName()
+                               )
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return openStatementParser;
     }
 
     // ========================================================

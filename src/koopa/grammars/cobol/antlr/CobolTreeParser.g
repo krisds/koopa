@@ -649,6 +649,7 @@ statement
       | ifStatement
       | moveStatement
       | multiplyStatement
+      | openStatement
       | performStatement
       | readStatement
       | returnStatement
@@ -768,6 +769,7 @@ verb
       | 'IF'
       | 'MOVE'
       | 'MULTIPLY'
+      | 'OPEN'
       | 'PERFORM'
       | 'READ'
       | 'RETURN'
@@ -788,7 +790,6 @@ verb
       | 'INITIALIZE'
       | 'INSPECT'
       | 'MERGE'
-      | 'OPEN'
       | 'RELEASE'
       | 'SET'
       | 'SORT'
@@ -1383,6 +1384,42 @@ multiplication_format2
         'BY'
         ( ( identifier
           ( 'ROUNDED' )?
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// openStatement
+// ........................................................
+
+openStatement
+  : ^(OPEN_STATEMENT
+      ( 'OPEN'
+        ( ( ( 'INPUT'
+          ( ( fileName
+            ( ( 'REVERSED'
+            | ( ( 'WITH' )?
+              'NO'
+              'REWIND'
+            )
+            ) )?
+          ) )+
+        )
+        | ( 'OUTPUT'
+          ( ( fileName
+            ( ( ( 'WITH' )?
+              'NO'
+              'REWIND'
+            ) )?
+          ) )+
+        )
+        | ( 'I-O'
+          ( fileName )+
+        )
+        | ( 'EXTEND'
+          ( fileName )+
+        )
         ) )+
       )
     )
@@ -2540,6 +2577,7 @@ token
   | 'EXCEPTION'
   | 'EXEC'
   | 'EXIT'
+  | 'EXTEND'
   | 'EXTERNAL'
   | 'FALSE'
   | 'FILE'
@@ -2553,6 +2591,7 @@ token
   | 'GOBACK'
   | 'HIGH-VALUE'
   | 'HIGH-VALUES'
+  | 'I-O'
   | 'ID'
   | 'IDENTIFICATION'
   | 'IF'
@@ -2562,6 +2601,7 @@ token
   | 'INITIAL'
   | 'INITIALIZE'
   | 'INITIATE'
+  | 'INPUT'
   | 'INSPECT'
   | 'INTO'
   | 'INVALID'
@@ -2591,6 +2631,7 @@ token
   | 'OPEN'
   | 'OR'
   | 'OTHER'
+  | 'OUTPUT'
   | 'OVERFLOW'
   | 'PACKED-DECIMAL'
   | 'PAGE'
@@ -2617,6 +2658,8 @@ token
   | 'REPLACING'
   | 'REPORT'
   | 'RETURN'
+  | 'REVERSED'
+  | 'REWIND'
   | 'REWRITE'
   | 'RIGHT'
   | 'ROUNDED'

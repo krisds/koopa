@@ -286,6 +286,7 @@ def statement =
     ( addStatement
     | callStatement
     | cancelStatement
+    | closeStatement
     | computeStatement
     | deleteStatement
     | divideStatement
@@ -371,6 +372,7 @@ def verb =
     ( ADD
     | CALL
     | CANCEL
+    | CLOSE
     | DELETE
     | DIVIDE
     | ENTRY
@@ -401,7 +403,6 @@ def verb =
     # Verbs for statements which remain to be implemented:
     | ACCEPT
     | ALTER
-    | CLOSE
     | CONTINUE
     | DISPLAY
     | INITIALIZE
@@ -495,6 +496,19 @@ end
 
 def cancelStatement =
     CANCEL (identifier | alphanumeric)+
+end
+
+## #############################################################################
+## CLOSE statement.
+## -----------------------------------------------------------------------------
+
+def closeStatement =
+    CLOSE (fileName
+      [ [WITH] (NO REWIND | LOCK)
+      | (REEL | UNIT) [[FOR] REMOVAL]
+      | [FOR] REMOVAL
+      ]
+    )+
 end
 
 ## #############################################################################

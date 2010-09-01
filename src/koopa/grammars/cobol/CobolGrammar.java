@@ -39,8 +39,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ARE");
       RESERVED_WORDS.add("END-PERFORM");
       RESERVED_WORDS.add("USING");
-      RESERVED_WORDS.add("SENTENCE");
       RESERVED_WORDS.add("REWIND");
+      RESERVED_WORDS.add("SENTENCE");
       RESERVED_WORDS.add("RETURN");
       RESERVED_WORDS.add("DIVISION");
       RESERVED_WORDS.add("ROUNDED");
@@ -130,9 +130,9 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("PROGRAM");
       RESERVED_WORDS.add("DESCENDING");
       RESERVED_WORDS.add("RECEIVE");
+      RESERVED_WORDS.add("DELIMITER");
       RESERVED_WORDS.add("ENVIRONMENT");
       RESERVED_WORDS.add("STRING");
-      RESERVED_WORDS.add("DELIMITER");
       RESERVED_WORDS.add("SIGN");
       RESERVED_WORDS.add("EXTERNAL");
       RESERVED_WORDS.add("END-REWRITE");
@@ -146,6 +146,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("CANCEL");
       RESERVED_WORDS.add("QUOTE");
       RESERVED_WORDS.add("OVERFLOW");
+      RESERVED_WORDS.add("REMOVAL");
       RESERVED_WORDS.add("END-COMPUTE");
       RESERVED_WORDS.add("GENERATE");
       RESERVED_WORDS.add("LINKAGE");
@@ -162,6 +163,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ERROR");
       RESERVED_WORDS.add("OF");
       RESERVED_WORDS.add("TERMINATE");
+      RESERVED_WORDS.add("UNIT");
       RESERVED_WORDS.add("REMAINDER");
       RESERVED_WORDS.add("UNSTRING");
       RESERVED_WORDS.add("SPACES");
@@ -182,6 +184,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-START");
       RESERVED_WORDS.add("END-DIVIDE");
       RESERVED_WORDS.add("END-ACCEPT");
+      RESERVED_WORDS.add("FOR");
       RESERVED_WORDS.add("ID");
       RESERVED_WORDS.add("SPACE");
       RESERVED_WORDS.add("LENGTH");
@@ -218,6 +221,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("GIVING");
       RESERVED_WORDS.add("AFTER");
       RESERVED_WORDS.add("IDENTIFICATION");
+      RESERVED_WORDS.add("REEL");
       RESERVED_WORDS.add("TRUE");
       RESERVED_WORDS.add("END-ADD");
       RESERVED_WORDS.add("PROCEDURE");
@@ -1422,6 +1426,7 @@ public class CobolGrammar extends KoopaGrammar {
                    addStatement(),
                    callStatement(),
                    cancelStatement(),
+                   closeStatement(),
                    computeStatement(),
                    deleteStatement(),
                    divideStatement(),
@@ -1630,6 +1635,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("ADD"),
                    token("CALL"),
                    token("CANCEL"),
+                   token("CLOSE"),
                    token("DELETE"),
                    token("DIVIDE"),
                    token("ENTRY"),
@@ -1656,7 +1662,6 @@ public class CobolGrammar extends KoopaGrammar {
                    token("START"),
                    token("ACCEPT"),
                    token("ALTER"),
-                   token("CLOSE"),
                    token("CONTINUE"),
                    token("DISPLAY"),
                    token("INITIALIZE"),
@@ -2020,6 +2025,67 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return cancelStatementParser;
+    }
+
+    // ========================================================
+    // closeStatement
+    // ........................................................
+
+    private Parser closeStatementParser = null;
+
+    public Parser closeStatement() {
+        if (closeStatementParser == null) {
+           FutureParser future = scoped("closeStatement");
+           closeStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("CLOSE"),
+                   plus(
+                       sequence(
+                           fileName(),
+                           optional(
+                               choice(
+                                   sequence(
+                                       optional(
+                                           token("WITH")
+                                       ),
+                                       choice(
+                                           sequence(
+                                               token("NO"),
+                                               token("REWIND")
+                                           ),
+                                           token("LOCK")
+                                       )
+                                   ),
+                                   sequence(
+                                       choice(
+                                           token("REEL"),
+                                           token("UNIT")
+                                       ),
+                                       optional(
+                                           sequence(
+                                               optional(
+                                                   token("FOR")
+                                               ),
+                                               token("REMOVAL")
+                                           )
+                                       )
+                                   ),
+                                   sequence(
+                                       optional(
+                                           token("FOR")
+                                       ),
+                                       token("REMOVAL")
+                                   )
+                               )
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return closeStatementParser;
     }
 
     // ========================================================

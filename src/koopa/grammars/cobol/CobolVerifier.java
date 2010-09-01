@@ -192,6 +192,38 @@ public class CobolVerifier extends VerifyingSink {
       }
     });
 
+    register("CLOSE", new Verifier() {
+      public void verify(Token t) {
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("water");
+
+          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+            warn(t, "CLOSE in the water.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("closeStatement");
+          final int p2 = lastIndexOf("statement");
+
+          if (p0 < p1 && p1 < p2) {
+            warn(t, "CLOSE not in close statement.");
+          }
+        }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("statement");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("closeStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1) {
+            warn(t, "CLOSE not in close statement.");
+          }
+        }
+      }
+    });
+
     register("DIVIDE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;

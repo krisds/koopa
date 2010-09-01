@@ -637,6 +637,7 @@ statement
       ( addStatement
       | callStatement
       | cancelStatement
+      | closeStatement
       | computeStatement
       | deleteStatement
       | divideStatement
@@ -758,6 +759,7 @@ verb
       ( 'ADD'
       | 'CALL'
       | 'CANCEL'
+      | 'CLOSE'
       | 'DELETE'
       | 'DIVIDE'
       | 'ENTRY'
@@ -784,7 +786,6 @@ verb
       | 'START'
       | 'ACCEPT'
       | 'ALTER'
-      | 'CLOSE'
       | 'CONTINUE'
       | 'DISPLAY'
       | 'INITIALIZE'
@@ -981,6 +982,37 @@ cancelStatement
       ( 'CANCEL'
         ( ( identifier
         | alphanumeric
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// closeStatement
+// ........................................................
+
+closeStatement
+  : ^(CLOSE_STATEMENT
+      ( 'CLOSE'
+        ( ( fileName
+          ( ( ( ( 'WITH' )?
+            ( ( 'NO'
+              'REWIND'
+            )
+            | 'LOCK'
+            )
+          )
+          | ( ( 'REEL'
+          | 'UNIT'
+          )
+            ( ( ( 'FOR' )?
+              'REMOVAL'
+            ) )?
+          )
+          | ( ( 'FOR' )?
+            'REMOVAL'
+          )
+          ) )?
         ) )+
       )
     )
@@ -2582,6 +2614,7 @@ token
   | 'FALSE'
   | 'FILE'
   | 'FILLER'
+  | 'FOR'
   | 'FROM'
   | 'FUNCTION'
   | 'GENERATE'
@@ -2650,9 +2683,11 @@ token
   | 'RECEIVE'
   | 'RECORD'
   | 'REDEFINES'
+  | 'REEL'
   | 'REFERENCE'
   | 'RELEASE'
   | 'REMAINDER'
+  | 'REMOVAL'
   | 'RENAMES'
   | 'REPLACE'
   | 'REPLACING'
@@ -2692,6 +2727,7 @@ token
   | 'TO'
   | 'TRAILING'
   | 'TRUE'
+  | 'UNIT'
   | 'UNSTRING'
   | 'UNTIL'
   | 'USAGE'

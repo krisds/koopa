@@ -1,0 +1,35 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target closeStatement;
+
++[ CLOSE MY-FILE ]
+
++[ CLOSE MY-FILE MY-OTHER-FILE ]
+
++[ CLOSE MY-FILE MY-OTHER-FILE MY-THIRD-FILE ]
+
++[ CLOSE MY-FILE WITH NO REWIND ]
+
++[ CLOSE MY-FILE NO REWIND ]
+
++[ CLOSE MY-FILE WITH LOCK ]
+
++[ CLOSE MY-FILE LOCK ]
+
++[ CLOSE MY-FILE REEL ]
+
++[ CLOSE MY-FILE REEL FOR REMOVAL ]
+
++[ CLOSE MY-FILE REEL REMOVAL ]
+
++[ CLOSE MY-FILE UNIT ]
+
++[ CLOSE MY-FILE UNIT FOR REMOVAL ]
+
++[ CLOSE MY-FILE UNIT REMOVAL ]
+
++[ CLOSE MY-FILE FOR REMOVAL ]
+
++[ CLOSE MY-FILE REMOVAL ]
+

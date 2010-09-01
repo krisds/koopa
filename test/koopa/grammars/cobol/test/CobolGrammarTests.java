@@ -17,6 +17,7 @@ public class CobolGrammarTests {
 		suite.addTestSuite(AddStatementTest.class);
 		suite.addTestSuite(CallStatementTest.class);
 		suite.addTestSuite(CancelStatementTest.class);
+		suite.addTestSuite(CloseStatementTest.class);
 		suite.addTestSuite(ComputeStatementTest.class);
 		suite.addTestSuite(CopyStatementTest.class);
 		suite.addTestSuite(DataDivisionTest.class);

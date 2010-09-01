@@ -36,6 +36,11 @@ verify CANCEL
 - cancelStatement statement : warn "CANCEL not in cancel statement."
 - statement !execStatement !cancelStatement : warn "CANCEL not in cancel statement."
 
+verify CLOSE
+- !execStatement water : warn "CLOSE in the water."
+- closeStatement statement : warn "CLOSE not in close statement."
+- statement !execStatement !closeStatement : warn "CLOSE not in close statement."
+
 verify DIVIDE
 - !divideStatement water : warn "DIVIDE in the water."
 - divideStatement statement : warn "DIVIDE not in divide statement."

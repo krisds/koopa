@@ -34,8 +34,9 @@ public class CobolGrammarTests {
 		suite.addTestSuite(MultiplyStatementTest.class);
 		suite.addTestSuite(OpenStatementTest.class);
 		suite.addTestSuite(PerformStatementTest.class);
-		suite.addTestSuite(ReadStatementTest.class);
 		suite.addTestSuite(ProcedureDivisionTest.class);
+		suite.addTestSuite(ReadStatementTest.class);
+		suite.addTestSuite(ReleaseStatementTest.class);
 		suite.addTestSuite(ReturnStatementTest.class);
 		suite.addTestSuite(RewriteStatementTest.class);
 		suite.addTestSuite(SearchStatementTest.class);

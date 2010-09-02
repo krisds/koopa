@@ -121,6 +121,11 @@ verify END-READ
 - readStatement statement : warn "END-READ not in read statement."
 - statement !execStatement !readStatement : warn "END-READ not in read statement."
 
+verify RELEASE
+- !releaseStatement water : warn "RELEASE in the water."
+- releaseStatement statement : warn "RELEASE not in release statement."
+- statement !execStatement !releaseStatement : warn "RELEASE not in release statement."
+
 verify RETURN
 - !execStatement water : warn "RETURN in the water."
 - returnStatement statement : warn "RETURN not in return statement."

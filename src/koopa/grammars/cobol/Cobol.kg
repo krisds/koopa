@@ -302,6 +302,7 @@ def statement =
     | openStatement
     | performStatement
     | readStatement
+    | releaseStatement
     | returnStatement
     | rewriteStatement
     | searchStatement
@@ -387,6 +388,7 @@ def verb =
     | OPEN
     | PERFORM
     | READ
+    | RELEASE
     | RETURN
     | REWRITE
     | SEARCH
@@ -408,7 +410,6 @@ def verb =
     | INITIALIZE
     | INSPECT
     | MERGE
-    | RELEASE
     | SET
     | SORT
     | USE
@@ -796,6 +797,14 @@ def readStatement =
     [NOT INVALID [KEY] nestedStatements]
     
     [END-READ]
+end
+
+## #############################################################################
+## RELEASE statement.
+## -----------------------------------------------------------------------------
+
+def releaseStatement =
+    RELEASE recordName [FROM identifier]
 end
 
 ## #############################################################################

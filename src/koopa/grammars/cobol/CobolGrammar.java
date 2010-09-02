@@ -1442,6 +1442,7 @@ public class CobolGrammar extends KoopaGrammar {
                    openStatement(),
                    performStatement(),
                    readStatement(),
+                   releaseStatement(),
                    returnStatement(),
                    rewriteStatement(),
                    searchStatement(),
@@ -1650,6 +1651,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("OPEN"),
                    token("PERFORM"),
                    token("READ"),
+                   token("RELEASE"),
                    token("RETURN"),
                    token("REWRITE"),
                    token("SEARCH"),
@@ -1667,7 +1669,6 @@ public class CobolGrammar extends KoopaGrammar {
                    token("INITIALIZE"),
                    token("INSPECT"),
                    token("MERGE"),
-                   token("RELEASE"),
                    token("SET"),
                    token("SORT"),
                    token("USE"),
@@ -3183,6 +3184,33 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return readStatementParser;
+    }
+
+    // ========================================================
+    // releaseStatement
+    // ........................................................
+
+    private Parser releaseStatementParser = null;
+
+    public Parser releaseStatement() {
+        if (releaseStatementParser == null) {
+           FutureParser future = scoped("releaseStatement");
+           releaseStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("RELEASE"),
+                   recordName(),
+                   optional(
+                       sequence(
+                           token("FROM"),
+                           identifier()
+                       )
+                   )
+               )
+           );
+        }
+
+        return releaseStatementParser;
     }
 
     // ========================================================

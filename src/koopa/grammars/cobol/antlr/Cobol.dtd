@@ -35,7 +35,7 @@
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>
 <!ELEMENT sentence ((statement,(statement|continuationOfStatement)*,t?)|copyStatement|replaceStatement)>
-<!ELEMENT statement (addStatement|callStatement|cancelStatement|closeStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|(verb,water?))>
+<!ELEMENT statement (addStatement|callStatement|cancelStatement|closeStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|releaseStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|(verb,water?))>
 <!ELEMENT continuationOfStatement ((eventPhrase,statement)|endOfStatementMarker)>
 <!ELEMENT nestedStatements (statement+)>
 <!ELEMENT eventPhrase (t?,t?,(t|(t,t)|t|(t,t?)|t))>
@@ -78,6 +78,7 @@
 <!ELEMENT until ((t?,t,t)?,t,condition)>
 <!ELEMENT varying ((t?,t,t)?,t,identifier,t,(literal|identifier),t,(literal|identifier),t,condition,(t,identifier,t,(literal|identifier),t,(literal|identifier),t,condition)*)>
 <!ELEMENT readStatement (t,fileName,(t?,t,t)?,t?,t?,(t,identifier)?,(t,t?,dataName)?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
+<!ELEMENT releaseStatement (t,recordName,(t,identifier)?)>
 <!ELEMENT returnStatement (t,fileName,t?,(t,identifier)?,atEnd,notAtEnd?,t?)>
 <!ELEMENT rewriteStatement (t,recordName,(t,identifier)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT searchStatement (t,((t,identifier)|(identifier,(t,(identifier|indexName))?)),atEnd?,(t,condition,(nestedStatements|(t,t)))+,t?)>

@@ -653,6 +653,7 @@ statement
       | openStatement
       | performStatement
       | readStatement
+      | releaseStatement
       | returnStatement
       | rewriteStatement
       | searchStatement
@@ -774,6 +775,7 @@ verb
       | 'OPEN'
       | 'PERFORM'
       | 'READ'
+      | 'RELEASE'
       | 'RETURN'
       | 'REWRITE'
       | 'SEARCH'
@@ -791,7 +793,6 @@ verb
       | 'INITIALIZE'
       | 'INSPECT'
       | 'MERGE'
-      | 'RELEASE'
       | 'SET'
       | 'SORT'
       | 'USE'
@@ -1602,6 +1603,21 @@ readStatement
           nestedStatements
         ) )?
         ( 'END-READ' )?
+      )
+    )
+  ;
+
+// ========================================================
+// releaseStatement
+// ........................................................
+
+releaseStatement
+  : ^(RELEASE_STATEMENT
+      ( 'RELEASE'
+        recordName
+        ( ( 'FROM'
+          identifier
+        ) )?
       )
     )
   ;

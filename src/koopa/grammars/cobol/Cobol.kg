@@ -86,6 +86,7 @@ end
 
 def fileSection =
 	FILE SECTION .
+	( fileDescriptionEntry (dataDescriptionEntry)+ )*
     [--> (dataSectionStart | divisionStart)]
 end
 
@@ -117,6 +118,50 @@ end
 def reportSection =
 	REPORT SECTION .
     [--> (dataSectionStart | divisionStart)]
+end
+
+def fileDescriptionEntry =
+    ( fdFileDescriptionEntry
+    | sdFileDescriptionEntry
+    )
+end
+
+def fdFileDescriptionEntry =
+    FD fileName
+   !( blockContains
+    | codeSet
+    | dataRecords
+    | external
+    | global
+    | labelRecords
+    )
+    (--> .)  # TODO Handle skipped.
+    .
+end
+
+def sdFileDescriptionEntry =
+    SD fileName
+   !( dataRecords
+    | labelRecords
+    )
+    (--> .)  # TODO Handle skipped.
+    .
+end
+
+def blockContains =
+    BLOCK [CONTAINS] integer [TO integer] [CHARACTERS | RECORDS]
+end
+
+def codeSet =
+    CODE-SET [IS] alphabetName
+end
+
+def dataRecords =
+    [DATA] (RECORD | RECORDS) [IS | ARE] (dataName)+
+end
+
+def labelRecords =
+    LABEL (RECORD | RECORDS) [IS | ARE] (OMITTED | STANDARD | (dataName)+)
 end
 
 def dataDescriptionEntry =
@@ -1236,6 +1281,10 @@ def recordName =
 end
 
 def mnemonicName =
+    cobolWord
+end
+
+def alphabetName =
     cobolWord
 end
 

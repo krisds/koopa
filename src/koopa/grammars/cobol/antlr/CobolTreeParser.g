@@ -153,6 +153,9 @@ fileSection
       ( 'FILE'
         'SECTION'
         '.'
+        ( ( fileDescriptionEntry
+          ( dataDescriptionEntry )+
+        ) )*
         (water)?
       )
     )
@@ -222,6 +225,127 @@ reportSection
         'SECTION'
         '.'
         (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// fileDescriptionEntry
+// ........................................................
+
+fileDescriptionEntry
+  : ^(FILE_DESCRIPTION_ENTRY
+      ( fdFileDescriptionEntry
+      | sdFileDescriptionEntry
+      )
+    )
+  ;
+
+// ========================================================
+// fdFileDescriptionEntry
+// ........................................................
+
+fdFileDescriptionEntry
+  : ^(FD_FILE_DESCRIPTION_ENTRY
+      ( 'FD'
+        fileName
+        ( ( blockContains
+        | codeSet
+        | dataRecords
+        | external
+        | global
+        | labelRecords
+        ) )*
+        (water)?
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// sdFileDescriptionEntry
+// ........................................................
+
+sdFileDescriptionEntry
+  : ^(SD_FILE_DESCRIPTION_ENTRY
+      ( 'SD'
+        fileName
+        ( ( dataRecords
+        | labelRecords
+        ) )*
+        (water)?
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// blockContains
+// ........................................................
+
+blockContains
+  : ^(BLOCK_CONTAINS
+      ( 'BLOCK'
+        ( 'CONTAINS' )?
+        integer
+        ( ( 'TO'
+          integer
+        ) )?
+        ( ( 'CHARACTERS'
+        | 'RECORDS'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// codeSet
+// ........................................................
+
+codeSet
+  : ^(CODE_SET
+      ( 'CODE-SET'
+        ( 'IS' )?
+        alphabetName
+      )
+    )
+  ;
+
+// ========================================================
+// dataRecords
+// ........................................................
+
+dataRecords
+  : ^(DATA_RECORDS
+      ( ( 'DATA' )?
+        ( 'RECORD'
+        | 'RECORDS'
+        )
+        ( ( 'IS'
+        | 'ARE'
+        ) )?
+        ( dataName )+
+      )
+    )
+  ;
+
+// ========================================================
+// labelRecords
+// ........................................................
+
+labelRecords
+  : ^(LABEL_RECORDS
+      ( 'LABEL'
+        ( 'RECORD'
+        | 'RECORDS'
+        )
+        ( ( 'IS'
+        | 'ARE'
+        ) )?
+        ( 'OMITTED'
+        | 'STANDARD'
+        | ( dataName )+
+        )
       )
     )
   ;
@@ -2469,6 +2593,16 @@ mnemonicName
   ;
 
 // ========================================================
+// alphabetName
+// ........................................................
+
+alphabetName
+  : ^(ALPHABET_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
 // literal
 // ........................................................
 
@@ -2557,11 +2691,14 @@ token
   | 'BEFORE'
   | 'BINARY'
   | 'BLANK'
+  | 'BLOCK'
   | 'BY'
   | 'CALL'
   | 'CANCEL'
   | 'CHARACTER'
+  | 'CHARACTERS'
   | 'CLOSE'
+  | 'CODE-SET'
   | 'COMMON'
   | 'COMMUNICATION'
   | 'COMP'
@@ -2575,6 +2712,7 @@ token
   | 'COMPUTATIONAL-3'
   | 'COMPUTATIONAL-5'
   | 'COMPUTE'
+  | 'CONTAINS'
   | 'CONTENT'
   | 'CONTINUE'
   | 'COPY'
@@ -2628,6 +2766,7 @@ token
   | 'EXTEND'
   | 'EXTERNAL'
   | 'FALSE'
+  | 'FD'
   | 'FILE'
   | 'FILLER'
   | 'FOR'
@@ -2658,6 +2797,7 @@ token
   | 'JUST'
   | 'JUSTIFIED'
   | 'KEY'
+  | 'LABEL'
   | 'LEADING'
   | 'LEFT'
   | 'LENGTH'
@@ -2698,6 +2838,7 @@ token
   | 'READ'
   | 'RECEIVE'
   | 'RECORD'
+  | 'RECORDS'
   | 'REDEFINES'
   | 'REEL'
   | 'REFERENCE'
@@ -2715,6 +2856,7 @@ token
   | 'RIGHT'
   | 'ROUNDED'
   | 'RUN'
+  | 'SD'
   | 'SEARCH'
   | 'SECTION'
   | 'SEND'
@@ -2726,6 +2868,7 @@ token
   | 'SORT'
   | 'SPACE'
   | 'SPACES'
+  | 'STANDARD'
   | 'START'
   | 'STOP'
   | 'STRING'

@@ -26,9 +26,12 @@ public class CobolGrammar extends KoopaGrammar {
 
     static {
       RESERVED_WORDS.add("FUNCTION");
+      RESERVED_WORDS.add("CODE-SET");
       RESERVED_WORDS.add("END-WRITE");
       RESERVED_WORDS.add("POINTER");
+      RESERVED_WORDS.add("CONTAINS");
       RESERVED_WORDS.add("ENABLE");
+      RESERVED_WORDS.add("RECORDS");
       RESERVED_WORDS.add("QUOTES");
       RESERVED_WORDS.add("NOT");
       RESERVED_WORDS.add("SUBTRACT");
@@ -36,6 +39,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("EOP");
       RESERVED_WORDS.add("SUPPRESS");
       RESERVED_WORDS.add("DECLARATIVES");
+      RESERVED_WORDS.add("FD");
       RESERVED_WORDS.add("ARE");
       RESERVED_WORDS.add("END-PERFORM");
       RESERVED_WORDS.add("USING");
@@ -77,8 +81,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("CALL");
       RESERVED_WORDS.add("GO");
       RESERVED_WORDS.add("END");
-      RESERVED_WORDS.add("END-MULTIPLY");
       RESERVED_WORDS.add("SIZE");
+      RESERVED_WORDS.add("END-MULTIPLY");
       RESERVED_WORDS.add("COMPUTATIONAL-2");
       RESERVED_WORDS.add("COMPUTATIONAL-1");
       RESERVED_WORDS.add("ALTER");
@@ -102,6 +106,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("PREVIOUS");
       RESERVED_WORDS.add("END-EVALUATE");
       RESERVED_WORDS.add("COMMUNICATION");
+      RESERVED_WORDS.add("STANDARD");
       RESERVED_WORDS.add("FILLER");
       RESERVED_WORDS.add("ADD");
       RESERVED_WORDS.add("BY");
@@ -121,11 +126,13 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ACCEPT");
       RESERVED_WORDS.add("LINE");
       RESERVED_WORDS.add("HIGH-VALUES");
-      RESERVED_WORDS.add("ZEROES");
+      RESERVED_WORDS.add("SD");
       RESERVED_WORDS.add("OMITTED");
+      RESERVED_WORDS.add("ZEROES");
       RESERVED_WORDS.add("CLOSE");
       RESERVED_WORDS.add("WHEN");
       RESERVED_WORDS.add("MOVE");
+      RESERVED_WORDS.add("BLOCK");
       RESERVED_WORDS.add("START");
       RESERVED_WORDS.add("PROGRAM");
       RESERVED_WORDS.add("DESCENDING");
@@ -157,8 +164,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("INITIALIZE");
       RESERVED_WORDS.add("SECTION");
       RESERVED_WORDS.add("NO");
-      RESERVED_WORDS.add("RENAMES");
       RESERVED_WORDS.add("ON");
+      RESERVED_WORDS.add("RENAMES");
       RESERVED_WORDS.add("DELETE");
       RESERVED_WORDS.add("ERROR");
       RESERVED_WORDS.add("OF");
@@ -170,16 +177,16 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("UNTIL");
       RESERVED_WORDS.add("DISPLAY");
       RESERVED_WORDS.add("OR");
-      RESERVED_WORDS.add("JUSTIFIED");
       RESERVED_WORDS.add("TEST");
+      RESERVED_WORDS.add("JUSTIFIED");
       RESERVED_WORDS.add("HIGH-VALUE");
       RESERVED_WORDS.add("USE");
       RESERVED_WORDS.add("FROM");
       RESERVED_WORDS.add("FALSE");
       RESERVED_WORDS.add("OUTPUT");
       RESERVED_WORDS.add("REVERSED");
-      RESERVED_WORDS.add("END-IF");
       RESERVED_WORDS.add("88");
+      RESERVED_WORDS.add("END-IF");
       RESERVED_WORDS.add("CORR");
       RESERVED_WORDS.add("END-START");
       RESERVED_WORDS.add("END-DIVIDE");
@@ -193,6 +200,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("IF");
       RESERVED_WORDS.add("END-SEARCH");
       RESERVED_WORDS.add("INDEX");
+      RESERVED_WORDS.add("CHARACTERS");
       RESERVED_WORDS.add("SYNCHRONIZED");
       RESERVED_WORDS.add("IN");
       RESERVED_WORDS.add("END-STRING");
@@ -206,40 +214,41 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ADVANCING");
       RESERVED_WORDS.add("WITH");
       RESERVED_WORDS.add("OTHER");
-      RESERVED_WORDS.add("END-DELETE");
       RESERVED_WORDS.add("SYNC");
+      RESERVED_WORDS.add("END-DELETE");
       RESERVED_WORDS.add("GOBACK");
       RESERVED_WORDS.add("END-EXEC");
-      RESERVED_WORDS.add("VALUES");
       RESERVED_WORDS.add("PROGRAM-ID");
+      RESERVED_WORDS.add("VALUES");
       RESERVED_WORDS.add("REFERENCE");
+      RESERVED_WORDS.add("BEFORE");
       RESERVED_WORDS.add("END-SUBTRACT");
       RESERVED_WORDS.add("PURGE");
-      RESERVED_WORDS.add("BEFORE");
       RESERVED_WORDS.add("ENTRY");
       RESERVED_WORDS.add("COMP");
-      RESERVED_WORDS.add("GIVING");
       RESERVED_WORDS.add("AFTER");
+      RESERVED_WORDS.add("GIVING");
       RESERVED_WORDS.add("IDENTIFICATION");
       RESERVED_WORDS.add("REEL");
       RESERVED_WORDS.add("TRUE");
-      RESERVED_WORDS.add("END-ADD");
       RESERVED_WORDS.add("PROCEDURE");
+      RESERVED_WORDS.add("END-ADD");
       RESERVED_WORDS.add("WRITE");
       RESERVED_WORDS.add("CORRESPONDING");
-      RESERVED_WORDS.add("INDEXED");
       RESERVED_WORDS.add("PICTURE");
+      RESERVED_WORDS.add("INDEXED");
       RESERVED_WORDS.add("OPEN");
       RESERVED_WORDS.add("RUN");
       RESERVED_WORDS.add("PAGE");
       RESERVED_WORDS.add("INITIATE");
       RESERVED_WORDS.add("ANY");
+      RESERVED_WORDS.add("LABEL");
       RESERVED_WORDS.add("COMPUTATIONAL");
       RESERVED_WORDS.add("THROUGH");
       RESERVED_WORDS.add("JUST");
       RESERVED_WORDS.add("BINARY");
-      RESERVED_WORDS.add("GLOBAL");
       RESERVED_WORDS.add("TIMES");
+      RESERVED_WORDS.add("GLOBAL");
       RESERVED_WORDS.add("DATA");
       RESERVED_WORDS.add("PERFORM");
       RESERVED_WORDS.add("WORKING-STORAGE");
@@ -530,6 +539,14 @@ public class CobolGrammar extends KoopaGrammar {
                    token("FILE"),
                    token("SECTION"),
                    token("."),
+                   star(
+                       sequence(
+                           fileDescriptionEntry(),
+                           plus(
+                               dataDescriptionEntry()
+                           )
+                       )
+                   ),
                    optional(
                        skipto(
                            choice(
@@ -673,6 +690,221 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return reportSectionParser;
+    }
+
+    // ========================================================
+    // fileDescriptionEntry
+    // ........................................................
+
+    private Parser fileDescriptionEntryParser = null;
+
+    public Parser fileDescriptionEntry() {
+        if (fileDescriptionEntryParser == null) {
+           FutureParser future = scoped("fileDescriptionEntry");
+           fileDescriptionEntryParser = future;
+           future.setParser(
+               choice(
+                   fdFileDescriptionEntry(),
+                   sdFileDescriptionEntry()
+               )
+           );
+        }
+
+        return fileDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // fdFileDescriptionEntry
+    // ........................................................
+
+    private Parser fdFileDescriptionEntryParser = null;
+
+    public Parser fdFileDescriptionEntry() {
+        if (fdFileDescriptionEntryParser == null) {
+           FutureParser future = scoped("fdFileDescriptionEntry");
+           fdFileDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   token("FD"),
+                   fileName(),
+                   permuted(
+                       blockContains(),
+                       codeSet(),
+                       dataRecords(),
+                       external(),
+                       global(),
+                       labelRecords()
+                   ),
+                   skipto(
+                       token(".")
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return fdFileDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // sdFileDescriptionEntry
+    // ........................................................
+
+    private Parser sdFileDescriptionEntryParser = null;
+
+    public Parser sdFileDescriptionEntry() {
+        if (sdFileDescriptionEntryParser == null) {
+           FutureParser future = scoped("sdFileDescriptionEntry");
+           sdFileDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   token("SD"),
+                   fileName(),
+                   permuted(
+                       dataRecords(),
+                       labelRecords()
+                   ),
+                   skipto(
+                       token(".")
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return sdFileDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // blockContains
+    // ........................................................
+
+    private Parser blockContainsParser = null;
+
+    public Parser blockContains() {
+        if (blockContainsParser == null) {
+           FutureParser future = scoped("blockContains");
+           blockContainsParser = future;
+           future.setParser(
+               sequence(
+                   token("BLOCK"),
+                   optional(
+                       token("CONTAINS")
+                   ),
+                   integer(),
+                   optional(
+                       sequence(
+                           token("TO"),
+                           integer()
+                       )
+                   ),
+                   optional(
+                       choice(
+                           token("CHARACTERS"),
+                           token("RECORDS")
+                       )
+                   )
+               )
+           );
+        }
+
+        return blockContainsParser;
+    }
+
+    // ========================================================
+    // codeSet
+    // ........................................................
+
+    private Parser codeSetParser = null;
+
+    public Parser codeSet() {
+        if (codeSetParser == null) {
+           FutureParser future = scoped("codeSet");
+           codeSetParser = future;
+           future.setParser(
+               sequence(
+                   token("CODE-SET"),
+                   optional(
+                       token("IS")
+                   ),
+                   alphabetName()
+               )
+           );
+        }
+
+        return codeSetParser;
+    }
+
+    // ========================================================
+    // dataRecords
+    // ........................................................
+
+    private Parser dataRecordsParser = null;
+
+    public Parser dataRecords() {
+        if (dataRecordsParser == null) {
+           FutureParser future = scoped("dataRecords");
+           dataRecordsParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("DATA")
+                   ),
+                   choice(
+                       token("RECORD"),
+                       token("RECORDS")
+                   ),
+                   optional(
+                       choice(
+                           token("IS"),
+                           token("ARE")
+                       )
+                   ),
+                   plus(
+                       dataName()
+                   )
+               )
+           );
+        }
+
+        return dataRecordsParser;
+    }
+
+    // ========================================================
+    // labelRecords
+    // ........................................................
+
+    private Parser labelRecordsParser = null;
+
+    public Parser labelRecords() {
+        if (labelRecordsParser == null) {
+           FutureParser future = scoped("labelRecords");
+           labelRecordsParser = future;
+           future.setParser(
+               sequence(
+                   token("LABEL"),
+                   choice(
+                       token("RECORD"),
+                       token("RECORDS")
+                   ),
+                   optional(
+                       choice(
+                           token("IS"),
+                           token("ARE")
+                       )
+                   ),
+                   choice(
+                       token("OMITTED"),
+                       token("STANDARD"),
+                       plus(
+                           dataName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return labelRecordsParser;
     }
 
     // ========================================================
@@ -4769,6 +5001,24 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return mnemonicNameParser;
+    }
+
+    // ========================================================
+    // alphabetName
+    // ........................................................
+
+    private Parser alphabetNameParser = null;
+
+    public Parser alphabetName() {
+        if (alphabetNameParser == null) {
+           FutureParser future = scoped("alphabetName");
+           alphabetNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return alphabetNameParser;
     }
 
     // ========================================================

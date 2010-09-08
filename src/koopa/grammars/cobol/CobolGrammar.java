@@ -50,6 +50,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ROUNDED");
       RESERVED_WORDS.add("COMMON");
       RESERVED_WORDS.add("SEND");
+      RESERVED_WORDS.add("FOOTING");
       RESERVED_WORDS.add("EVALUATE");
       RESERVED_WORDS.add("DIVIDE");
       RESERVED_WORDS.add("DISABLE");
@@ -92,8 +93,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("COMPUTATIONAL-3");
       RESERVED_WORDS.add("COMPUTATIONAL-5");
       RESERVED_WORDS.add("OCCURS");
-      RESERVED_WORDS.add("LINES");
       RESERVED_WORDS.add("INPUT");
+      RESERVED_WORDS.add("LINES");
       RESERVED_WORDS.add("END-DISPLAY");
       RESERVED_WORDS.add("ASCENDING");
       RESERVED_WORDS.add("ZERO");
@@ -127,8 +128,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("LINE");
       RESERVED_WORDS.add("HIGH-VALUES");
       RESERVED_WORDS.add("SD");
-      RESERVED_WORDS.add("OMITTED");
       RESERVED_WORDS.add("ZEROES");
+      RESERVED_WORDS.add("OMITTED");
       RESERVED_WORDS.add("CLOSE");
       RESERVED_WORDS.add("WHEN");
       RESERVED_WORDS.add("MOVE");
@@ -167,6 +168,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ON");
       RESERVED_WORDS.add("RENAMES");
       RESERVED_WORDS.add("DELETE");
+      RESERVED_WORDS.add("LINAGE");
       RESERVED_WORDS.add("ERROR");
       RESERVED_WORDS.add("OF");
       RESERVED_WORDS.add("TERMINATE");
@@ -179,6 +181,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("OR");
       RESERVED_WORDS.add("TEST");
       RESERVED_WORDS.add("JUSTIFIED");
+      RESERVED_WORDS.add("BOTTOM");
       RESERVED_WORDS.add("HIGH-VALUE");
       RESERVED_WORDS.add("USE");
       RESERVED_WORDS.add("FROM");
@@ -244,11 +247,12 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("ANY");
       RESERVED_WORDS.add("LABEL");
       RESERVED_WORDS.add("COMPUTATIONAL");
-      RESERVED_WORDS.add("THROUGH");
       RESERVED_WORDS.add("JUST");
+      RESERVED_WORDS.add("THROUGH");
       RESERVED_WORDS.add("BINARY");
       RESERVED_WORDS.add("TIMES");
       RESERVED_WORDS.add("GLOBAL");
+      RESERVED_WORDS.add("TOP");
       RESERVED_WORDS.add("DATA");
       RESERVED_WORDS.add("PERFORM");
       RESERVED_WORDS.add("WORKING-STORAGE");
@@ -733,7 +737,8 @@ public class CobolGrammar extends KoopaGrammar {
                        dataRecords(),
                        external(),
                        global(),
-                       labelRecords()
+                       labelRecords(),
+                       linage()
                    ),
                    skipto(
                        token(".")
@@ -905,6 +910,81 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return labelRecordsParser;
+    }
+
+    // ========================================================
+    // linage
+    // ........................................................
+
+    private Parser linageParser = null;
+
+    public Parser linage() {
+        if (linageParser == null) {
+           FutureParser future = scoped("linage");
+           linageParser = future;
+           future.setParser(
+               sequence(
+                   token("LINAGE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       dataName(),
+                       integer()
+                   ),
+                   optional(
+                       token("LINES")
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("FOOTING"),
+                           optional(
+                               token("AT")
+                           ),
+                           choice(
+                               dataName(),
+                               integer()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("LINES")
+                           ),
+                           optional(
+                               token("AT")
+                           ),
+                           token("TOP"),
+                           choice(
+                               dataName(),
+                               integer()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("LINES")
+                           ),
+                           optional(
+                               token("AT")
+                           ),
+                           token("BOTTOM"),
+                           choice(
+                               dataName(),
+                               integer()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return linageParser;
     }
 
     // ========================================================

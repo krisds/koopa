@@ -588,7 +588,320 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testFdFileDescriptionEntry_63() {
+    public void testLinage_63() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_64() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "MY-LINE-COUNT", 
+        "LINES");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_65() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_66() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "MY-LINE-COUNT");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_67() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "10", "LINES");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_68() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "MY-LINE-COUNT", "LINES");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_69() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "10");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_70() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "MY-LINE-COUNT");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_71() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "WITH", "FOOTING", "AT", "20");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_72() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "WITH", "FOOTING", "AT", "MY-FOOTING");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_73() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "WITH", "FOOTING", "20");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_74() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "WITH", "FOOTING", "MY-FOOTING");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_75() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "FOOTING", "AT", "20");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_76() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "FOOTING", "AT", "MY-FOOTING");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_77() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "FOOTING", "20");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_78() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "FOOTING", "MY-FOOTING");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_79() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "AT", "TOP", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_80() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "AT", "TOP", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_81() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "AT", "TOP", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_82() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "AT", "TOP", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_83() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "TOP", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_84() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "TOP", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_85() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "TOP", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_86() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "TOP", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_87() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "AT", "BOTTOM", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_88() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "AT", "BOTTOM", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_89() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "AT", "BOTTOM", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_90() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "AT", "BOTTOM", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_91() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "BOTTOM", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_92() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "LINES", "BOTTOM", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_93() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "BOTTOM", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testLinage_94() {
+      Parser parser = grammar.linage();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("LINAGE", "IS", "10", "LINES", 
+        "BOTTOM", "MY-TOP");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testFdFileDescriptionEntry_95() {
       Parser parser = grammar.fdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("FD", "MY-FILE-NAME", ".");
@@ -597,7 +910,7 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testSdFileDescriptionEntry_64() {
+    public void testSdFileDescriptionEntry_96() {
       Parser parser = grammar.sdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SD", "MY-FILE-NAME", ".");

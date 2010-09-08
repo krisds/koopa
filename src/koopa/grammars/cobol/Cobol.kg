@@ -134,6 +134,7 @@ def fdFileDescriptionEntry =
     | external
     | global
     | labelRecords
+    | linage
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -162,6 +163,13 @@ end
 
 def labelRecords =
     LABEL (RECORD | RECORDS) [IS | ARE] (OMITTED | STANDARD | (dataName)+)
+end
+
+def linage =
+    LINAGE [IS] (dataName | integer) [LINES]
+    [[WITH] FOOTING [AT] (dataName | integer)]
+    [[LINES] [AT] TOP (dataName | integer)]
+    [[LINES] [AT] BOTTOM (dataName | integer)]
 end
 
 def dataDescriptionEntry =

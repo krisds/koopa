@@ -255,6 +255,7 @@ fdFileDescriptionEntry
         | external
         | global
         | labelRecords
+        | linage
         ) )*
         (water)?
         '.'
@@ -346,6 +347,43 @@ labelRecords
         | 'STANDARD'
         | ( dataName )+
         )
+      )
+    )
+  ;
+
+// ========================================================
+// linage
+// ........................................................
+
+linage
+  : ^(LINAGE
+      ( 'LINAGE'
+        ( 'IS' )?
+        ( dataName
+        | integer
+        )
+        ( 'LINES' )?
+        ( ( ( 'WITH' )?
+          'FOOTING'
+          ( 'AT' )?
+          ( dataName
+          | integer
+          )
+        ) )?
+        ( ( ( 'LINES' )?
+          ( 'AT' )?
+          'TOP'
+          ( dataName
+          | integer
+          )
+        ) )?
+        ( ( ( 'LINES' )?
+          ( 'AT' )?
+          'BOTTOM'
+          ( dataName
+          | integer
+          )
+        ) )?
       )
     )
   ;
@@ -2692,6 +2730,7 @@ token
   | 'BINARY'
   | 'BLANK'
   | 'BLOCK'
+  | 'BOTTOM'
   | 'BY'
   | 'CALL'
   | 'CANCEL'
@@ -2769,6 +2808,7 @@ token
   | 'FD'
   | 'FILE'
   | 'FILLER'
+  | 'FOOTING'
   | 'FOR'
   | 'FROM'
   | 'FUNCTION'
@@ -2801,6 +2841,7 @@ token
   | 'LEADING'
   | 'LEFT'
   | 'LENGTH'
+  | 'LINAGE'
   | 'LINE'
   | 'LINES'
   | 'LINKAGE'
@@ -2884,6 +2925,7 @@ token
   | 'THRU'
   | 'TIMES'
   | 'TO'
+  | 'TOP'
   | 'TRAILING'
   | 'TRUE'
   | 'UNIT'

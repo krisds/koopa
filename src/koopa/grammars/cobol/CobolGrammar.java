@@ -38,13 +38,13 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("CHARACTER");
       RESERVED_WORDS.add("EOP");
       RESERVED_WORDS.add("SUPPRESS");
-      RESERVED_WORDS.add("DECLARATIVES");
       RESERVED_WORDS.add("FD");
       RESERVED_WORDS.add("ARE");
+      RESERVED_WORDS.add("DECLARATIVES");
       RESERVED_WORDS.add("END-PERFORM");
       RESERVED_WORDS.add("USING");
-      RESERVED_WORDS.add("REWIND");
       RESERVED_WORDS.add("SENTENCE");
+      RESERVED_WORDS.add("REWIND");
       RESERVED_WORDS.add("RETURN");
       RESERVED_WORDS.add("DIVISION");
       RESERVED_WORDS.add("ROUNDED");
@@ -60,8 +60,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-UNSTRING");
       RESERVED_WORDS.add("KEY");
       RESERVED_WORDS.add("INITIAL");
-      RESERVED_WORDS.add("BLANK");
       RESERVED_WORDS.add("ELSE");
+      RESERVED_WORDS.add("BLANK");
       RESERVED_WORDS.add("TRAILING");
       RESERVED_WORDS.add("SEPARATE");
       RESERVED_WORDS.add("ZEROS");
@@ -221,8 +221,8 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-DELETE");
       RESERVED_WORDS.add("GOBACK");
       RESERVED_WORDS.add("END-EXEC");
-      RESERVED_WORDS.add("PROGRAM-ID");
       RESERVED_WORDS.add("VALUES");
+      RESERVED_WORDS.add("PROGRAM-ID");
       RESERVED_WORDS.add("REFERENCE");
       RESERVED_WORDS.add("BEFORE");
       RESERVED_WORDS.add("END-SUBTRACT");
@@ -738,7 +738,8 @@ public class CobolGrammar extends KoopaGrammar {
                        external(),
                        global(),
                        labelRecords(),
-                       linage()
+                       linage(),
+                       record()
                    ),
                    skipto(
                        token(".")
@@ -767,7 +768,8 @@ public class CobolGrammar extends KoopaGrammar {
                    fileName(),
                    permuted(
                        dataRecords(),
-                       labelRecords()
+                       labelRecords(),
+                       record()
                    ),
                    skipto(
                        token(".")
@@ -936,47 +938,176 @@ public class CobolGrammar extends KoopaGrammar {
                        token("LINES")
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("WITH")
-                           ),
-                           token("FOOTING"),
-                           optional(
-                               token("AT")
-                           ),
-                           choice(
-                               dataName(),
-                               integer()
-                           )
-                       )
+                       footing()
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("LINES")
-                           ),
-                           optional(
-                               token("AT")
-                           ),
-                           token("TOP"),
-                           choice(
-                               dataName(),
-                               integer()
-                           )
-                       )
+                       linesAtTop()
                    ),
                    optional(
+                       linesAtBottom()
+                   )
+               )
+           );
+        }
+
+        return linageParser;
+    }
+
+    // ========================================================
+    // footing
+    // ........................................................
+
+    private Parser footingParser = null;
+
+    public Parser footing() {
+        if (footingParser == null) {
+           FutureParser future = scoped("footing");
+           footingParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("FOOTING"),
+                   optional(
+                       token("AT")
+                   ),
+                   choice(
+                       dataName(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return footingParser;
+    }
+
+    // ========================================================
+    // linesAtTop
+    // ........................................................
+
+    private Parser linesAtTopParser = null;
+
+    public Parser linesAtTop() {
+        if (linesAtTopParser == null) {
+           FutureParser future = scoped("linesAtTop");
+           linesAtTopParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("LINES")
+                   ),
+                   optional(
+                       token("AT")
+                   ),
+                   token("TOP"),
+                   choice(
+                       dataName(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return linesAtTopParser;
+    }
+
+    // ========================================================
+    // linesAtBottom
+    // ........................................................
+
+    private Parser linesAtBottomParser = null;
+
+    public Parser linesAtBottom() {
+        if (linesAtBottomParser == null) {
+           FutureParser future = scoped("linesAtBottom");
+           linesAtBottomParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("LINES")
+                   ),
+                   optional(
+                       token("AT")
+                   ),
+                   token("BOTTOM"),
+                   choice(
+                       dataName(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return linesAtBottomParser;
+    }
+
+    // ========================================================
+    // record
+    // ........................................................
+
+    private Parser recordParser = null;
+
+    public Parser record() {
+        if (recordParser == null) {
+           FutureParser future = scoped("record");
+           recordParser = future;
+           future.setParser(
+               sequence(
+                   token("RECORD"),
+                   choice(
                        sequence(
                            optional(
-                               token("LINES")
+                               token("CONTAINS")
+                           ),
+                           integer(),
+                           optional(
+                               sequence(
+                                   token("TO"),
+                                   integer()
+                               )
                            ),
                            optional(
-                               token("AT")
+                               token("CHARACTERS")
+                           )
+                       ),
+                       sequence(
+                           optional(
+                               token("IS")
                            ),
-                           token("BOTTOM"),
-                           choice(
-                               dataName(),
-                               integer()
+                           token("VARYING"),
+                           optional(
+                               token("IN")
+                           ),
+                           optional(
+                               token("SIZE")
+                           ),
+                           optional(
+                               sequence(
+                                   optional(
+                                       token("FROM")
+                                   ),
+                                   integer(),
+                                   optional(
+                                       sequence(
+                                           token("TO"),
+                                           integer()
+                                       )
+                                   ),
+                                   optional(
+                                       token("CHARACTERS")
+                                   )
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("DEPENDING"),
+                                   optional(
+                                       token("ON")
+                                   ),
+                                   fileName()
+                               )
                            )
                        )
                    )
@@ -984,7 +1115,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return linageParser;
+        return recordParser;
     }
 
     // ========================================================

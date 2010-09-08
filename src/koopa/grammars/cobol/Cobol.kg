@@ -135,6 +135,7 @@ def fdFileDescriptionEntry =
     | global
     | labelRecords
     | linage
+    | record
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -144,6 +145,7 @@ def sdFileDescriptionEntry =
     SD fileName
    !( dataRecords
     | labelRecords
+    | record
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -167,9 +169,30 @@ end
 
 def linage =
     LINAGE [IS] (dataName | integer) [LINES]
-    [[WITH] FOOTING [AT] (dataName | integer)]
-    [[LINES] [AT] TOP (dataName | integer)]
-    [[LINES] [AT] BOTTOM (dataName | integer)]
+    [footing]
+    [linesAtTop]
+    [linesAtBottom]
+end
+
+def footing =
+    [WITH] FOOTING [AT] (dataName | integer)
+end
+
+def linesAtTop =
+    [LINES] [AT] TOP (dataName | integer)
+end
+
+def linesAtBottom =
+    [LINES] [AT] BOTTOM (dataName | integer)
+end
+
+def record =
+    RECORD
+    ( [CONTAINS] integer [TO integer] [CHARACTERS]
+    | [IS] VARYING [IN] [SIZE]
+      [[FROM] integer [TO integer] [CHARACTERS]]
+      [DEPENDING [ON] fileName]
+    )
 end
 
 def dataDescriptionEntry =

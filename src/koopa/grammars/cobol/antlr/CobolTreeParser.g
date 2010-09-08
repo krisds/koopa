@@ -256,6 +256,7 @@ fdFileDescriptionEntry
         | global
         | labelRecords
         | linage
+        | record
         ) )*
         (water)?
         '.'
@@ -273,6 +274,7 @@ sdFileDescriptionEntry
         fileName
         ( ( dataRecords
         | labelRecords
+        | record
         ) )*
         (water)?
         '.'
@@ -363,27 +365,92 @@ linage
         | integer
         )
         ( 'LINES' )?
-        ( ( ( 'WITH' )?
-          'FOOTING'
-          ( 'AT' )?
-          ( dataName
-          | integer
-          )
-        ) )?
-        ( ( ( 'LINES' )?
-          ( 'AT' )?
-          'TOP'
-          ( dataName
-          | integer
-          )
-        ) )?
-        ( ( ( 'LINES' )?
-          ( 'AT' )?
-          'BOTTOM'
-          ( dataName
-          | integer
-          )
-        ) )?
+        ( footing )?
+        ( linesAtTop )?
+        ( linesAtBottom )?
+      )
+    )
+  ;
+
+// ========================================================
+// footing
+// ........................................................
+
+footing
+  : ^(FOOTING
+      ( ( 'WITH' )?
+        'FOOTING'
+        ( 'AT' )?
+        ( dataName
+        | integer
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// linesAtTop
+// ........................................................
+
+linesAtTop
+  : ^(LINES_AT_TOP
+      ( ( 'LINES' )?
+        ( 'AT' )?
+        'TOP'
+        ( dataName
+        | integer
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// linesAtBottom
+// ........................................................
+
+linesAtBottom
+  : ^(LINES_AT_BOTTOM
+      ( ( 'LINES' )?
+        ( 'AT' )?
+        'BOTTOM'
+        ( dataName
+        | integer
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// record
+// ........................................................
+
+record
+  : ^(RECORD
+      ( 'RECORD'
+        ( ( ( 'CONTAINS' )?
+          integer
+          ( ( 'TO'
+            integer
+          ) )?
+          ( 'CHARACTERS' )?
+        )
+        | ( ( 'IS' )?
+          'VARYING'
+          ( 'IN' )?
+          ( 'SIZE' )?
+          ( ( ( 'FROM' )?
+            integer
+            ( ( 'TO'
+              integer
+            ) )?
+            ( 'CHARACTERS' )?
+          ) )?
+          ( ( 'DEPENDING'
+            ( 'ON' )?
+            fileName
+          ) )?
+        )
+        )
       )
     )
   ;

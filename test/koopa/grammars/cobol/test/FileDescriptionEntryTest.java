@@ -901,7 +901,261 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testFdFileDescriptionEntry_95() {
+    public void testRecord_95() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "CONTAINS", "2", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_96() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "2", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_97() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "CONTAINS", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_98() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "2");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_99() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "CONTAINS", "2", "TO", 
+        "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_100() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "2", "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_101() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "CONTAINS", "2", "TO", 
+        "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_102() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "2", "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_103() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "IN", 
+        "SIZE", "FROM", "2", "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_104() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "IN", 
+        "SIZE", "FROM", "2", "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_105() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "IN", "SIZE", 
+        "FROM", "2", "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_106() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "IN", "SIZE", 
+        "FROM", "2", "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_107() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "FROM", 
+        "2", "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_108() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "FROM", 
+        "2", "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_109() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "FROM", "2", 
+        "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_110() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "FROM", "2", 
+        "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_111() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "IN", 
+        "SIZE", "2", "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_112() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "IN", 
+        "SIZE", "2", "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_113() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "IN", "SIZE", 
+        "2", "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_114() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "IN", "SIZE", 
+        "2", "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_115() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "2", 
+        "TO", "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_116() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "2", 
+        "TO", "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_117() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "2", "TO", 
+        "6", "CHARACTERS");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_118() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "VARYING", "2", "TO", 
+        "6");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_119() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "IN", 
+        "SIZE", "FROM", "2", "TO", "6", "CHARACTERS", "DEPENDING", "ON", "MY-FILE-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecord_120() {
+      Parser parser = grammar.record();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORD", "IS", "VARYING", "IN", 
+        "SIZE", "FROM", "2", "TO", "6", "CHARACTERS", "DEPENDING", "MY-FILE-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testFdFileDescriptionEntry_121() {
       Parser parser = grammar.fdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("FD", "MY-FILE-NAME", ".");
@@ -910,7 +1164,7 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testSdFileDescriptionEntry_96() {
+    public void testSdFileDescriptionEntry_122() {
       Parser parser = grammar.sdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SD", "MY-FILE-NAME", ".");

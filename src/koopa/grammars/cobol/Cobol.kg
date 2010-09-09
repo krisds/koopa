@@ -197,11 +197,8 @@ def record =
     )
 end
 
-# I'm using "cobolWord" rather than "( F | V | U | S )" because that would
-# otherwise register them as reserved words. I don't want that here.
-# TODO Find a better way to indicate context-sensitive keywords.
 def recordingMode =
-    RECORDING [MODE] [IS] cobolWord
+    RECORDING [MODE] [IS] ( F | V | U | S )
 end
 
 def dataDescriptionEntry =

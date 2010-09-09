@@ -466,7 +466,11 @@ recordingMode
       ( 'RECORDING'
         ( 'MODE' )?
         ( 'IS' )?
-        cobolWord
+        ( 'F'
+        | 'V'
+        | 'U'
+        | 'S'
+        )
       )
     )
   ;
@@ -2887,6 +2891,7 @@ token
   | 'EXIT'
   | 'EXTEND'
   | 'EXTERNAL'
+  | 'F'
   | 'FALSE'
   | 'FD'
   | 'FILE'
@@ -2982,6 +2987,7 @@ token
   | 'RIGHT'
   | 'ROUNDED'
   | 'RUN'
+  | 'S'
   | 'SD'
   | 'SEARCH'
   | 'SECTION'
@@ -3013,12 +3019,14 @@ token
   | 'TOP'
   | 'TRAILING'
   | 'TRUE'
+  | 'U'
   | 'UNIT'
   | 'UNSTRING'
   | 'UNTIL'
   | 'USAGE'
   | 'USE'
   | 'USING'
+  | 'V'
   | 'VALUE'
   | 'VALUES'
   | 'VARYING'

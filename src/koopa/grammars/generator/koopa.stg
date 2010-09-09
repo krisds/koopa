@@ -18,18 +18,7 @@ $endif$
 public class $name$Grammar extends KoopaGrammar {
     public $name$Grammar() {
     }
-
-    // ========================================================
-    // Reserved keywords. This set is generated from the
-    // grammar.
-    // --------------------------------------------------------
-
-    public static final Set<String> RESERVED_WORDS = new HashSet<String>();
-
-    static {
-      $reserved:staticRegistration(); separator="\n"$
-    }
-
+    
     // ========================================================
     // Compiled grammar rules. These were generated from the
     // grammar.
@@ -45,8 +34,6 @@ public class $name$Grammar extends KoopaGrammar {
     $support_code$$endif$
 }
 >>
-
-staticRegistration() ::= <<RESERVED_WORDS.add("$it$");>>
 
 rule(name, body) ::= <<
 // ========================================================

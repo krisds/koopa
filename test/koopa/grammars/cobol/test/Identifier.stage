@@ -30,7 +30,7 @@ target identifier;
 +[ MY-FIELD ( MY-INDEX : ) ]
 
 +[ MY-FIELD ( 1 2 3 ) ( 42 : 11 ) ]
-+[ MY-FIELD ( A B C ) ( POSITION : MY-LENGTH ) ]
++[ MY-FIELD ( A B C ) ( MY-POSITION : MY-LENGTH ) ]
 +[ MY-FIELD ( A + 1 B C - 2 ) ( 42 : ) ]
 
 
@@ -46,7 +46,7 @@ target identifier;
 +[ FUNCTION CAT ( 3 " bottles of beer" ) ]
 +[ FUNCTION CAT ( 3 " bottles of beer" ) ( 1 : 7 ) ]
 
-+[ FUNCTION SUM ( 1 FUNCTION INC ( 1 ) ) ]
++[ FUNCTION FOO ( 1 FUNCTION INC ( 1 ) ) ]
 
 +[ FUNCTION CHAR ( IND ( 5 ) ) ]
 +[ FUNCTION CHAR ( IND ( C ) ) ]

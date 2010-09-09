@@ -20,11 +20,6 @@ options {
 }
 
 @members {
-  private Set<String> reservedWords = new HashSet<String>();
-  
-  private void addReservedWord(String word) {
-    reservedWords.add(word.toUpperCase());
-  }
 }
 
 koopa [String name, String pack, String pack, String imports, String supportCode]
@@ -37,7 +32,6 @@ koopa [String name, String pack, String pack, String imports, String supportCode
       date = {new Date()},
       package = {pack},
       imports = {imports},
-      reserved = {reservedWords},
       rule = {$r},
       support_code = {supportCode}
     )
@@ -146,19 +140,13 @@ body [ List<String> bindings, List<String> unbindings ]
   
   | n=NUMBER
 
-   { addReservedWord(((CommonTree) n).getText()); }
-  
     -> token(
       text = {n}
     )
   
   | i=IDENTIFIER
   
-    { boolean isLowerCase = Character.isLowerCase(((CommonTree) i).getText().charAt(0));
-      if (!isLowerCase) {
-        addReservedWord(((CommonTree) i).getText());
-      }
-    }
+    { boolean isLowerCase = Character.isLowerCase(((CommonTree) i).getText().charAt(0)); }
   
     -> {isLowerCase}? call(
       name = {i}
@@ -183,14 +171,12 @@ body [ List<String> bindings, List<String> unbindings ]
             name={i}
           );
         } else {
-          addReservedWord(text);
           body = %token(
             text={i}
           );
         }
       
       } else if (n != null) {
-        addReservedWord(((CommonTree) n).getText());
         body = %token(
           text={n}
         );

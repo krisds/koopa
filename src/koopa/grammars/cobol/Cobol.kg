@@ -137,6 +137,7 @@ def fdFileDescriptionEntry =
     | linage
     | record
     | recordingMode
+    | valueOf
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -199,6 +200,12 @@ end
 
 def recordingMode =
     RECORDING [MODE] [IS] ( F | V | U | S )
+end
+
+def valueOf =
+    VALUE OF (
+      (IDENTIFICATION | ID) [IS] (dataName | literal)
+    )+
 end
 
 def dataDescriptionEntry =

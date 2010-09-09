@@ -1299,7 +1299,83 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testFdFileDescriptionEntry_137() {
+    public void testValueOf_137() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "IDENTIFICATION", 
+        "IS", "MY-DATA-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_138() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "IDENTIFICATION", 
+        "MY-DATA-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_139() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "ID", "IS", "MY-DATA-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_140() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "ID", "MY-DATA-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_141() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "IDENTIFICATION", 
+        "IS", "\"MY LITERAL\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_142() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "IDENTIFICATION", 
+        "\"MY LITERAL\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_143() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "ID", "IS", "\"MY LITERAL\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValueOf_144() {
+      Parser parser = grammar.valueOf();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "OF", "ID", "\"MY LITERAL\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testFdFileDescriptionEntry_145() {
       Parser parser = grammar.fdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("FD", "MY-FILE-NAME", ".");
@@ -1308,7 +1384,7 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testSdFileDescriptionEntry_138() {
+    public void testSdFileDescriptionEntry_146() {
       Parser parser = grammar.sdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SD", "MY-FILE-NAME", ".");

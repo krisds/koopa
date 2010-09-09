@@ -499,7 +499,8 @@ public class CobolGrammar extends KoopaGrammar {
                        labelRecords(),
                        linage(),
                        record(),
-                       recordingMode()
+                       recordingMode(),
+                       valueOf()
                    ),
                    skipto(
                        token(".")
@@ -909,6 +910,42 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return recordingModeParser;
+    }
+
+    // ========================================================
+    // valueOf
+    // ........................................................
+
+    private Parser valueOfParser = null;
+
+    public Parser valueOf() {
+        if (valueOfParser == null) {
+           FutureParser future = scoped("valueOf");
+           valueOfParser = future;
+           future.setParser(
+               sequence(
+                   token("VALUE"),
+                   token("OF"),
+                   plus(
+                       sequence(
+                           choice(
+                               token("IDENTIFICATION"),
+                               token("ID")
+                           ),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               dataName(),
+                               literal()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return valueOfParser;
     }
 
     // ========================================================

@@ -258,6 +258,7 @@ fdFileDescriptionEntry
         | linage
         | record
         | recordingMode
+        | valueOf
         ) )*
         (water)?
         '.'
@@ -471,6 +472,26 @@ recordingMode
         | 'U'
         | 'S'
         )
+      )
+    )
+  ;
+
+// ========================================================
+// valueOf
+// ........................................................
+
+valueOf
+  : ^(VALUE_OF
+      ( 'VALUE'
+        'OF'
+        ( ( ( 'IDENTIFICATION'
+        | 'ID'
+        )
+          ( 'IS' )?
+          ( dataName
+          | literal
+          )
+        ) )+
       )
     )
   ;

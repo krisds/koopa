@@ -13,7 +13,7 @@
 <!ELEMENT communicationSection (t+,water?)>
 <!ELEMENT reportSection (t+,water?)>
 <!ELEMENT fileDescriptionEntry (fdFileDescriptionEntry|sdFileDescriptionEntry)>
-<!ELEMENT fdFileDescriptionEntry (t,fileName,(blockContains|codeSet|dataRecords|external|global|labelRecords|linage|record|recordingMode)*,water?,t)>
+<!ELEMENT fdFileDescriptionEntry (t,fileName,(blockContains|codeSet|dataRecords|external|global|labelRecords|linage|record|recordingMode|valueOf)*,water?,t)>
 <!ELEMENT sdFileDescriptionEntry (t,fileName,(dataRecords|labelRecords|record|recordingMode)*,water?,t)>
 <!ELEMENT blockContains (t,t?,integer,(t,integer)?,t?)>
 <!ELEMENT codeSet (t,t?,alphabetName)>
@@ -25,6 +25,7 @@
 <!ELEMENT linesAtBottom (t?,t?,t,(dataName|integer))>
 <!ELEMENT record (t,((t?,integer,(t,integer)?,t?)|(t?,t,t?,t?,(t?,integer,(t,integer)?,t?)?,(t,t?,fileName)?)))>
 <!ELEMENT recordingMode (t,t?,t?,t)>
+<!ELEMENT valueOf (t+,(t,t?,(dataName|literal))+)>
 <!ELEMENT dataDescriptionEntry (dataDescriptionEntry_format1|dataDescriptionEntry_format2|dataDescriptionEntry_format3)>
 <!ELEMENT dataDescriptionEntry_format1 (levelNumber,(t|dataName)?,redefines?,(blankWhenZero|external|global|justified|occurs|picture|sign|sync|usage|value)*,water?,t)>
 <!ELEMENT dataDescriptionEntry_format2 (t,dataName,t,dataName,qualifier*,(t,dataName,qualifier*)?,t)>

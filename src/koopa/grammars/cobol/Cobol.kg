@@ -136,6 +136,7 @@ def fdFileDescriptionEntry =
     | labelRecords
     | linage
     | record
+    | recordingMode
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -146,6 +147,7 @@ def sdFileDescriptionEntry =
    !( dataRecords
     | labelRecords
     | record
+    | recordingMode
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -193,6 +195,13 @@ def record =
       [[FROM] integer [TO integer] [CHARACTERS]]
       [DEPENDING [ON] fileName]
     )
+end
+
+# I'm using "cobolWord" rather than "( F | V | U | S )" because that would
+# otherwise register them as reserved words. I don't want that here.
+# TODO Find a better way to indicate context-sensitive keywords.
+def recordingMode =
+    RECORDING [MODE] [IS] cobolWord
 end
 
 def dataDescriptionEntry =

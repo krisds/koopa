@@ -1155,7 +1155,151 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testFdFileDescriptionEntry_121() {
+    public void testRecordingMode_121() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "IS", "F");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_122() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "IS", "V");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_123() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "IS", "U");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_124() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "IS", "S");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_125() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "F");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_126() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "V");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_127() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "U");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_128() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "MODE", "S");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_129() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "IS", "F");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_130() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "IS", "V");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_131() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "IS", "U");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_132() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "IS", "S");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_133() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "F");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_134() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "V");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_135() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "U");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testRecordingMode_136() {
+      Parser parser = grammar.recordingMode();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("RECORDING", "S");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testFdFileDescriptionEntry_137() {
       Parser parser = grammar.fdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("FD", "MY-FILE-NAME", ".");
@@ -1164,7 +1308,7 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testSdFileDescriptionEntry_122() {
+    public void testSdFileDescriptionEntry_138() {
       Parser parser = grammar.sdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SD", "MY-FILE-NAME", ".");

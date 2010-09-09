@@ -257,6 +257,7 @@ fdFileDescriptionEntry
         | labelRecords
         | linage
         | record
+        | recordingMode
         ) )*
         (water)?
         '.'
@@ -275,6 +276,7 @@ sdFileDescriptionEntry
         ( ( dataRecords
         | labelRecords
         | record
+        | recordingMode
         ) )*
         (water)?
         '.'
@@ -451,6 +453,20 @@ record
           ) )?
         )
         )
+      )
+    )
+  ;
+
+// ========================================================
+// recordingMode
+// ........................................................
+
+recordingMode
+  : ^(RECORDING_MODE
+      ( 'RECORDING'
+        ( 'MODE' )?
+        ( 'IS' )?
+        cobolWord
       )
     )
   ;
@@ -2916,6 +2932,7 @@ token
   | 'LOW-VALUE'
   | 'LOW-VALUES'
   | 'MERGE'
+  | 'MODE'
   | 'MOVE'
   | 'MULTIPLY'
   | 'NEXT'
@@ -2946,6 +2963,7 @@ token
   | 'READ'
   | 'RECEIVE'
   | 'RECORD'
+  | 'RECORDING'
   | 'RECORDS'
   | 'REDEFINES'
   | 'REEL'

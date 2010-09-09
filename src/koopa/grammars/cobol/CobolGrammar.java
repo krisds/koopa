@@ -91,6 +91,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("END-RETURN");
       RESERVED_WORDS.add("I-O");
       RESERVED_WORDS.add("COMPUTATIONAL-3");
+      RESERVED_WORDS.add("RECORDING");
       RESERVED_WORDS.add("COMPUTATIONAL-5");
       RESERVED_WORDS.add("OCCURS");
       RESERVED_WORDS.add("INPUT");
@@ -109,6 +110,7 @@ public class CobolGrammar extends KoopaGrammar {
       RESERVED_WORDS.add("COMMUNICATION");
       RESERVED_WORDS.add("STANDARD");
       RESERVED_WORDS.add("FILLER");
+      RESERVED_WORDS.add("MODE");
       RESERVED_WORDS.add("ADD");
       RESERVED_WORDS.add("BY");
       RESERVED_WORDS.add("DELIMITED");
@@ -739,7 +741,8 @@ public class CobolGrammar extends KoopaGrammar {
                        global(),
                        labelRecords(),
                        linage(),
-                       record()
+                       record(),
+                       recordingMode()
                    ),
                    skipto(
                        token(".")
@@ -769,7 +772,8 @@ public class CobolGrammar extends KoopaGrammar {
                    permuted(
                        dataRecords(),
                        labelRecords(),
-                       record()
+                       record(),
+                       recordingMode()
                    ),
                    skipto(
                        token(".")
@@ -1116,6 +1120,33 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return recordParser;
+    }
+
+    // ========================================================
+    // recordingMode
+    // ........................................................
+
+    private Parser recordingModeParser = null;
+
+    public Parser recordingMode() {
+        if (recordingModeParser == null) {
+           FutureParser future = scoped("recordingMode");
+           recordingModeParser = future;
+           future.setParser(
+               sequence(
+                   token("RECORDING"),
+                   optional(
+                       token("MODE")
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   cobolWord()
+               )
+           );
+        }
+
+        return recordingModeParser;
     }
 
     // ========================================================

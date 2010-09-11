@@ -154,7 +154,7 @@ fileSection
         'SECTION'
         '.'
         ( ( fileDescriptionEntry
-          ( dataDescriptionEntry )+
+          ( dataDescriptionEntry )*
         ) )*
         (water)?
       )
@@ -486,6 +486,7 @@ valueOf
         'OF'
         ( ( ( 'IDENTIFICATION'
         | 'ID'
+        | cobolWord
         )
           ( 'IS' )?
           ( dataName

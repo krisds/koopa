@@ -305,7 +305,7 @@ public class CobolGrammar extends KoopaGrammar {
                    star(
                        sequence(
                            fileDescriptionEntry(),
-                           plus(
+                           star(
                                dataDescriptionEntry()
                            )
                        )
@@ -930,7 +930,8 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            choice(
                                token("IDENTIFICATION"),
-                               token("ID")
+                               token("ID"),
+                               cobolWord()
                            ),
                            optional(
                                token("IS")
@@ -5216,7 +5217,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("BY");
         RESERVED_WORDS.add("CALL");
         RESERVED_WORDS.add("CANCEL");
-        RESERVED_WORDS.add("CASE");
+        // RESERVED_WORDS.add("CASE");
         RESERVED_WORDS.add("CBL-CTR");
         RESERVED_WORDS.add("CF");
         RESERVED_WORDS.add("CH");
@@ -5251,7 +5252,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("COMPUTE");
         RESERVED_WORDS.add("CONDITION");
         RESERVED_WORDS.add("CONFIGURATION");
-        RESERVED_WORDS.add("CONNECT");
+        // RESERVED_WORDS.add("CONNECT");
         RESERVED_WORDS.add("CONSTANT");
         RESERVED_WORDS.add("CONTAINS");
         RESERVED_WORDS.add("CONTENT");
@@ -5266,11 +5267,11 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("CREATING");
         RESERVED_WORDS.add("CRT");
         RESERVED_WORDS.add("CURRENCY");
-        RESERVED_WORDS.add("CURRENT");
+        // RESERVED_WORDS.add("CURRENT");
         RESERVED_WORDS.add("CURSOR");
         RESERVED_WORDS.add("DATA");
         RESERVED_WORDS.add("DATA-POINTER");
-        RESERVED_WORDS.add("DATABASE-EXCEPTION");
+        // RESERVED_WORDS.add("DATABASE-EXCEPTION");
         RESERVED_WORDS.add("DATABASE-KEY");
         RESERVED_WORDS.add("DATABASE-KEY-LONG");
         RESERVED_WORDS.add("DATE");
@@ -5278,7 +5279,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("DATE-WRITTEN");
         RESERVED_WORDS.add("DAY");
         RESERVED_WORDS.add("DAY-OF-WEEK");
-        RESERVED_WORDS.add("DB");
+        // RESERVED_WORDS.add("DB");
         RESERVED_WORDS.add("DE");
         RESERVED_WORDS.add("DEBUG-CONTENTS");
         RESERVED_WORDS.add("DEBUG-ITEM");
@@ -5299,18 +5300,18 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("DETAIL");
         RESERVED_WORDS.add("DISABLE");
         RESERVED_WORDS.add("DISC");
-        RESERVED_WORDS.add("DISCONNECT");
+        // RESERVED_WORDS.add("DISCONNECT");
         RESERVED_WORDS.add("DISPLAY");
         RESERVED_WORDS.add("DIVIDE");
         RESERVED_WORDS.add("DIVISION");
         RESERVED_WORDS.add("DOWN");
-        RESERVED_WORDS.add("DUPLICATE");
+        // RESERVED_WORDS.add("DUPLICATE");
         RESERVED_WORDS.add("DUPLICATES");
         RESERVED_WORDS.add("DYNAMIC");
         RESERVED_WORDS.add("EBCDIC");
         RESERVED_WORDS.add("EC");
         RESERVED_WORDS.add("ELSE");
-        RESERVED_WORDS.add("EMPTY");
+        // RESERVED_WORDS.add("EMPTY");
         RESERVED_WORDS.add("ENABLE");
         RESERVED_WORDS.add("END");
         RESERVED_WORDS.add("END-ACCEPT");
@@ -5352,7 +5353,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("EVERY");
         RESERVED_WORDS.add("EXCEPTION");
         RESERVED_WORDS.add("EXCEPTION-OBJECT");
-        RESERVED_WORDS.add("EXCLUSIVE");
+        // RESERVED_WORDS.add("EXCLUSIVE");
         RESERVED_WORDS.add("EXIT");
         RESERVED_WORDS.add("EXTEND");
         RESERVED_WORDS.add("EXTENDED");
@@ -5360,13 +5361,13 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("FACTORY");
         RESERVED_WORDS.add("FALSE");
         RESERVED_WORDS.add("FD");
-        RESERVED_WORDS.add("FETCH");
+        // RESERVED_WORDS.add("FETCH");
         RESERVED_WORDS.add("FILE");
         RESERVED_WORDS.add("FILE-CONTROL");
         RESERVED_WORDS.add("FILLER");
         RESERVED_WORDS.add("FINAL");
-        RESERVED_WORDS.add("FIND");
-        RESERVED_WORDS.add("FINISH");
+        // RESERVED_WORDS.add("FIND");
+        // RESERVED_WORDS.add("FINISH");
         RESERVED_WORDS.add("FIRST");
         RESERVED_WORDS.add("FLOAT-EXTENDED");
         RESERVED_WORDS.add("FLOAT-LONG");
@@ -5397,7 +5398,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("IF");
         RESERVED_WORDS.add("IGNORING");
         RESERVED_WORDS.add("IN");
-        RESERVED_WORDS.add("INCLUDING");
+        // RESERVED_WORDS.add("INCLUDING");
         RESERVED_WORDS.add("INDEX");
         RESERVED_WORDS.add("INDEXED");
         RESERVED_WORDS.add("INDICATE");
@@ -5417,7 +5418,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("IS");
         RESERVED_WORDS.add("JUST");
         RESERVED_WORDS.add("JUSTIFIED");
-        RESERVED_WORDS.add("KEEP");
+        // RESERVED_WORDS.add("KEEP");
         RESERVED_WORDS.add("KEY");
         RESERVED_WORDS.add("LABEL");
         RESERVED_WORDS.add("LAST");
@@ -5426,7 +5427,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("LENGTH");
         RESERVED_WORDS.add("LESS");
         RESERVED_WORDS.add("LIMIT");
-        RESERVED_WORDS.add("LIMITED");
+        // RESERVED_WORDS.add("LIMITED");
         RESERVED_WORDS.add("LIMITS");
         RESERVED_WORDS.add("LINAGE");
         RESERVED_WORDS.add("LINE");
@@ -5438,11 +5439,11 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("LOCK");
         RESERVED_WORDS.add("LOW-VALUE");
         RESERVED_WORDS.add("LOW-VALUES");
-        RESERVED_WORDS.add("MASK");
-        RESERVED_WORDS.add("MATCHING");
-        RESERVED_WORDS.add("MEMBER");
-        RESERVED_WORDS.add("MEMBERS");
-        RESERVED_WORDS.add("MEMBERSHIP");
+        // RESERVED_WORDS.add("MASK");
+        // RESERVED_WORDS.add("MATCHING");
+        // RESERVED_WORDS.add("MEMBER");
+        // RESERVED_WORDS.add("MEMBERS");
+        // RESERVED_WORDS.add("MEMBERSHIP");
         RESERVED_WORDS.add("MEMORY");
         RESERVED_WORDS.add("MERGE");
         RESERVED_WORDS.add("MESSAGE");
@@ -5450,7 +5451,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("METHOD-ID");
         RESERVED_WORDS.add("MINUS");
         RESERVED_WORDS.add("MODE");
-        RESERVED_WORDS.add("MODIFY");
+        // RESERVED_WORDS.add("MODIFY");
         RESERVED_WORDS.add("MODULES");
         RESERVED_WORDS.add("MORE-LABELS");
         RESERVED_WORDS.add("MOVE");
@@ -5470,7 +5471,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("NUMERIC-EDITED");
         RESERVED_WORDS.add("OBJECT");
         RESERVED_WORDS.add("OBJECT-COMPUTER");
-        RESERVED_WORDS.add("OCCURENCE");
+        // RESERVED_WORDS.add("OCCURENCE");
         RESERVED_WORDS.add("OCCURS");
         RESERVED_WORDS.add("OF");
         RESERVED_WORDS.add("OFF");
@@ -5486,13 +5487,13 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("OUTPUT");
         RESERVED_WORDS.add("OVERFLOW");
         RESERVED_WORDS.add("OVERRIDE");
-        RESERVED_WORDS.add("OWNER");
+        // RESERVED_WORDS.add("OWNER");
         RESERVED_WORDS.add("PACKED-DECIMAL");
         RESERVED_WORDS.add("PADDING");
         RESERVED_WORDS.add("PAGE");
         RESERVED_WORDS.add("PAGE-COUNTER");
         RESERVED_WORDS.add("PERFORM");
-        RESERVED_WORDS.add("PERMANENT");
+        // RESERVED_WORDS.add("PERMANENT");
         RESERVED_WORDS.add("PF");
         RESERVED_WORDS.add("PH");
         RESERVED_WORDS.add("PIC");
@@ -5504,14 +5505,14 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("PRESENT");
         RESERVED_WORDS.add("PRINT-SWITCH");
         RESERVED_WORDS.add("PRINTING");
-        RESERVED_WORDS.add("PRIOR");
+        // RESERVED_WORDS.add("PRIOR");
         RESERVED_WORDS.add("PROCEDURE");
         RESERVED_WORDS.add("PROCEED");
         RESERVED_WORDS.add("PROGRAM");
         RESERVED_WORDS.add("PROGRAM-ID");
         RESERVED_WORDS.add("PROGRAM-POINTER");
         RESERVED_WORDS.add("PROPERTY");
-        RESERVED_WORDS.add("PROTECTED");
+        // RESERVED_WORDS.add("PROTECTED");
         RESERVED_WORDS.add("PROTOTYPE");
         RESERVED_WORDS.add("PURGE");
         RESERVED_WORDS.add("QUOTE");
@@ -5521,9 +5522,9 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("RANDOM");
         RESERVED_WORDS.add("RD");
         RESERVED_WORDS.add("READ");
-        RESERVED_WORDS.add("READY");
-        RESERVED_WORDS.add("REALM");
-        RESERVED_WORDS.add("REALM-NAME");
+        // RESERVED_WORDS.add("READY");
+        // RESERVED_WORDS.add("REALM");
+        // RESERVED_WORDS.add("REALM-NAME");
         RESERVED_WORDS.add("RECEIVE");
         RESERVED_WORDS.add("RECORD");
         RESERVED_WORDS.add("RECORDING");
@@ -5546,10 +5547,10 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("RERUN");
         RESERVED_WORDS.add("RESERVE");
         RESERVED_WORDS.add("RESET");
-        RESERVED_WORDS.add("RESULT");
+        // RESERVED_WORDS.add("RESULT");
         RESERVED_WORDS.add("RESUME");
-        RESERVED_WORDS.add("RETAINING");
-        RESERVED_WORDS.add("RETRIEVAL");
+        // RESERVED_WORDS.add("RETAINING");
+        // RESERVED_WORDS.add("RETRIEVAL");
         RESERVED_WORDS.add("RETRY");
         RESERVED_WORDS.add("RETURN");
         RESERVED_WORDS.add("RETURNING");
@@ -5570,7 +5571,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("SECURITY");
         RESERVED_WORDS.add("SEGMENT-LIMIT");
         RESERVED_WORDS.add("SELECT");
-        RESERVED_WORDS.add("SELECTIVE");
+        // RESERVED_WORDS.add("SELECTIVE");
         RESERVED_WORDS.add("SELF");
         RESERVED_WORDS.add("SEND");
         RESERVED_WORDS.add("SENTENCE");
@@ -5578,8 +5579,8 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("SEQUENCE");
         RESERVED_WORDS.add("SEQUENTIAL");
         RESERVED_WORDS.add("SET");
-        RESERVED_WORDS.add("SET-SELECTION");
-        RESERVED_WORDS.add("SETS");
+        // RESERVED_WORDS.add("SET-SELECTION");
+        // RESERVED_WORDS.add("SETS");
         RESERVED_WORDS.add("SHARING");
         RESERVED_WORDS.add("SIGN");
         RESERVED_WORDS.add("SIZE");
@@ -5587,7 +5588,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("SORT-MERGE");
         RESERVED_WORDS.add("SORT-TAPE");
         RESERVED_WORDS.add("SORT-TAPES");
-        RESERVED_WORDS.add("SORTED");
+        // RESERVED_WORDS.add("SORTED");
         RESERVED_WORDS.add("SOURCE");
         RESERVED_WORDS.add("SOURCE-COMPUTER");
         RESERVED_WORDS.add("SOURCES");
@@ -5600,9 +5601,9 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("START");
         RESERVED_WORDS.add("STATUS");
         RESERVED_WORDS.add("STOP");
-        RESERVED_WORDS.add("STORE");
+        // RESERVED_WORDS.add("STORE");
         RESERVED_WORDS.add("STRING");
-        RESERVED_WORDS.add("SUB-SCHEMA");
+        // RESERVED_WORDS.add("SUB-SCHEMA");
         RESERVED_WORDS.add("SUBTRACT");
         RESERVED_WORDS.add("SUM");
         RESERVED_WORDS.add("SUPER");
@@ -5611,14 +5612,14 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("SYMBOLIC");
         RESERVED_WORDS.add("SYNC");
         RESERVED_WORDS.add("SYNCHRONIZED");
-        RESERVED_WORDS.add("SYSTEM");
+        // RESERVED_WORDS.add("SYSTEM");
         RESERVED_WORDS.add("SYSTEM-DEFAULT");
         RESERVED_WORDS.add("TABLE");
         RESERVED_WORDS.add("TALLY");
         RESERVED_WORDS.add("TALLYING");
         RESERVED_WORDS.add("TAPE");
         RESERVED_WORDS.add("TAPES");
-        RESERVED_WORDS.add("TENANT");
+        // RESERVED_WORDS.add("TENANT");
         RESERVED_WORDS.add("TERMINAL");
         RESERVED_WORDS.add("TERMINATE");
         RESERVED_WORDS.add("TEST");
@@ -5642,10 +5643,10 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("UNSTRING");
         RESERVED_WORDS.add("UNTIL");
         RESERVED_WORDS.add("UP");
-        RESERVED_WORDS.add("UPDATE");
+        // RESERVED_WORDS.add("UPDATE");
         RESERVED_WORDS.add("UPON");
         RESERVED_WORDS.add("USAGE");
-        RESERVED_WORDS.add("USAGE-MODE");
+        // RESERVED_WORDS.add("USAGE-MODE");
         RESERVED_WORDS.add("USE");
         RESERVED_WORDS.add("USER-DEFAULT");
         RESERVED_WORDS.add("USING");
@@ -5656,10 +5657,10 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("VALUE");
         RESERVED_WORDS.add("VALUES");
         RESERVED_WORDS.add("VARYING");
-        RESERVED_WORDS.add("VIA");
+        // RESERVED_WORDS.add("VIA");
         RESERVED_WORDS.add("WHEN");
         RESERVED_WORDS.add("WITH");
-        RESERVED_WORDS.add("WITHIN");
+        // RESERVED_WORDS.add("WITHIN");
         RESERVED_WORDS.add("WORDS");
         RESERVED_WORDS.add("WORKING-STORAGE");
         RESERVED_WORDS.add("WRITE");

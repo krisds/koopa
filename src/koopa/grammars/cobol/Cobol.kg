@@ -86,7 +86,7 @@ end
 
 def fileSection =
 	FILE SECTION .
-	( fileDescriptionEntry (dataDescriptionEntry)+ )*
+	( fileDescriptionEntry (dataDescriptionEntry)* )*
     [--> (dataSectionStart | divisionStart)]
 end
 
@@ -204,7 +204,7 @@ end
 
 def valueOf =
     VALUE OF (
-      (IDENTIFICATION | ID) [IS] (dataName | literal)
+      (IDENTIFICATION | ID | cobolWord) [IS] (dataName | literal)
     )+
 end
 

@@ -29,6 +29,17 @@ public class CobolVerifier extends VerifyingSink {
             warn(t, "Water in the linkage section.");
           }
         }
+
+        { final int p0 = 0;
+          final int p1 = lastIndexOf("fileSection");
+          final int p2 = lastIndexOf("copyStatement");
+          final int p3 = lastIndexOf("replaceStatement");
+          final int p4 = lastIndexOf("execStatement");
+
+          if (p0 < p1 && p2 < p1 && p3 < p1 && p4 < p1) {
+            warn(t, "Water in the file section.");
+          }
+        }
       }
     });
 

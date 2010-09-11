@@ -7,7 +7,7 @@
 <!ELEMENT identificationDivision (t,t+,programName,(t?,((t,t?)|(t,t?)),t?)?,t?,water?)>
 <!ELEMENT environmentDivision (t+,water?)>
 <!ELEMENT dataDivision (t+,fileSection?,workingStorageSection?,linkageSection?,communicationSection?,reportSection?)>
-<!ELEMENT fileSection (t+,(fileDescriptionEntry,dataDescriptionEntry+)*,water?)>
+<!ELEMENT fileSection (t+,(fileDescriptionEntry,dataDescriptionEntry*)*,water?)>
 <!ELEMENT workingStorageSection (t+,(dataDescriptionEntry|copyStatement|replaceStatement|(execStatement,t?))*)>
 <!ELEMENT linkageSection (t+,(dataDescriptionEntry|copyStatement|replaceStatement|(execStatement,t?))*)>
 <!ELEMENT communicationSection (t+,water?)>
@@ -25,7 +25,7 @@
 <!ELEMENT linesAtBottom (t?,t?,t,(dataName|integer))>
 <!ELEMENT record (t,((t?,integer,(t,integer)?,t?)|(t?,t,t?,t?,(t?,integer,(t,integer)?,t?)?,(t,t?,fileName)?)))>
 <!ELEMENT recordingMode (t,t?,t?,t)>
-<!ELEMENT valueOf (t+,(t,t?,(dataName|literal))+)>
+<!ELEMENT valueOf (t+,((t|cobolWord),t?,(dataName|literal))+)>
 <!ELEMENT dataDescriptionEntry (dataDescriptionEntry_format1|dataDescriptionEntry_format2|dataDescriptionEntry_format3)>
 <!ELEMENT dataDescriptionEntry_format1 (levelNumber,(t|dataName)?,redefines?,(blankWhenZero|external|global|justified|occurs|picture|sign|sync|usage|value)*,water?,t)>
 <!ELEMENT dataDescriptionEntry_format2 (t,dataName,t,dataName,qualifier*,(t,dataName,qualifier*)?,t)>

@@ -259,6 +259,7 @@ fdFileDescriptionEntry
         | record
         | recordingMode
         | valueOf
+        | report
         ) )*
         (water)?
         '.'
@@ -493,6 +494,23 @@ valueOf
           | literal
           )
         ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// report
+// ........................................................
+
+report
+  : ^(REPORT
+      ( ( 'REPORT'
+      | 'REPORTS'
+      )
+        ( ( 'IS'
+        | 'ARE'
+        ) )?
+        ( reportName )+
       )
     )
   ;
@@ -2750,6 +2768,16 @@ alphabetName
   ;
 
 // ========================================================
+// reportName
+// ........................................................
+
+reportName
+  : ^(REPORT_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
 // literal
 // ........................................................
 
@@ -3002,6 +3030,7 @@ token
   | 'REPLACE'
   | 'REPLACING'
   | 'REPORT'
+  | 'REPORTS'
   | 'RETURN'
   | 'REVERSED'
   | 'REWIND'

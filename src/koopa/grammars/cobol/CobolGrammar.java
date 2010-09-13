@@ -500,7 +500,8 @@ public class CobolGrammar extends KoopaGrammar {
                        linage(),
                        record(),
                        recordingMode(),
-                       valueOf()
+                       valueOf(),
+                       report()
                    ),
                    skipto(
                        token(".")
@@ -947,6 +948,38 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return valueOfParser;
+    }
+
+    // ========================================================
+    // report
+    // ........................................................
+
+    private Parser reportParser = null;
+
+    public Parser report() {
+        if (reportParser == null) {
+           FutureParser future = scoped("report");
+           reportParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("REPORT"),
+                       token("REPORTS")
+                   ),
+                   optional(
+                       choice(
+                           token("IS"),
+                           token("ARE")
+                       )
+                   ),
+                   plus(
+                       reportName()
+                   )
+               )
+           );
+        }
+
+        return reportParser;
     }
 
     // ========================================================
@@ -5061,6 +5094,24 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return alphabetNameParser;
+    }
+
+    // ========================================================
+    // reportName
+    // ........................................................
+
+    private Parser reportNameParser = null;
+
+    public Parser reportName() {
+        if (reportNameParser == null) {
+           FutureParser future = scoped("reportName");
+           reportNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return reportNameParser;
     }
 
     // ========================================================

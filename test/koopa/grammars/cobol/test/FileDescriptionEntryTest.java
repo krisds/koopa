@@ -1375,7 +1375,44 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testFdFileDescriptionEntry_145() {
+    public void testReport_145() {
+      Parser parser = grammar.report();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("REPORT", "IS", "MY-REPORT-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testReport_146() {
+      Parser parser = grammar.report();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("REPORTS", "ARE", "MY-REPORT-NAME", 
+        "MY-OTHER-REPORT-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testReport_147() {
+      Parser parser = grammar.report();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("REPORT", "MY-REPORT-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testReport_148() {
+      Parser parser = grammar.report();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("REPORTS", "MY-REPORT-NAME", "MY-OTHER-REPORT-NAME");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testFdFileDescriptionEntry_149() {
       Parser parser = grammar.fdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("FD", "MY-FILE-NAME", ".");
@@ -1384,18 +1421,7 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testFdFileDescriptionEntry_146() {
-      Parser parser = grammar.fdFileDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("FD", "RW-FS1", "LABEL", "RECORDS", 
-        "ARE", "STANDARD", "VALUE", "OF", "XXXXX074", "IS", "XXXXX075", "REPORT", 
-        "IS", "RW-FS1-REPORT-1", ".");
-      assertTrue(parser.accepts(tokenizer));
-      assertEquals(15, tokenizer.getNumberOfProcessedTokens());
-    }
-
-    @Test
-    public void testSdFileDescriptionEntry_147() {
+    public void testSdFileDescriptionEntry_150() {
       Parser parser = grammar.sdFileDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SD", "MY-FILE-NAME", ".");

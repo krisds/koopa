@@ -138,6 +138,7 @@ def fdFileDescriptionEntry =
     | record
     | recordingMode
     | valueOf
+    | report
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -206,6 +207,11 @@ def valueOf =
     VALUE OF (
       (IDENTIFICATION | ID | cobolWord) [IS] (dataName | literal)
     )+
+end
+
+# Based on http://www.helsinki.fi/atk/unix/dec_manuals/cobv27ua/cobrm_014.htm
+def report =
+    ( REPORT | REPORTS ) [IS | ARE] (reportName)+
 end
 
 def dataDescriptionEntry =
@@ -1329,6 +1335,10 @@ def mnemonicName =
 end
 
 def alphabetName =
+    cobolWord
+end
+
+def reportName =
     cobolWord
 end
 

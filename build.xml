@@ -71,6 +71,7 @@
 		<echo>Generating secondary classes...</echo>
 		<generate-verifications name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
 		<kg2antlr name="Cobol" pack="koopa.grammars.cobol.antlr" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
+		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
 		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
 
 		<echo>Compiling Cobol parser...</echo>

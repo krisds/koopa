@@ -5405,6 +5405,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("EXCEPTION");
         RESERVED_WORDS.add("EXCEPTION-OBJECT");
         // RESERVED_WORDS.add("EXCLUSIVE");
+        RESERVED_WORDS.add("EXEC");
         RESERVED_WORDS.add("EXIT");
         RESERVED_WORDS.add("EXTEND");
         RESERVED_WORDS.add("EXTENDED");

@@ -6,6 +6,7 @@
   would be better.
 * Regression testing. Would be nice if we could do this as a JUnit test.
 * Use Log4J (or similar) rather than DEBUG flags and sysouts.
+* Write an ANT target for running the unit tests.
 
 
 = Cobol.tokens =

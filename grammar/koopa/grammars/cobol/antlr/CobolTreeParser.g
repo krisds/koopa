@@ -94,7 +94,7 @@ identificationDivision
         'DIVISION'
         '.'
         'PROGRAM-ID'
-        '.'
+        ( '.' )?
         programName
         ( ( ( 'IS' )?
           ( ( 'INITIAL'

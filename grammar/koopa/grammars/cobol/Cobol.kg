@@ -49,7 +49,7 @@ end
 
 def identificationDivision =
 	( ID | IDENTIFICATION ) DIVISION .
-	PROGRAM-ID .
+	PROGRAM-ID [.]
 	programName
 	[ [IS]
 	  ( INITIAL [COMMON]

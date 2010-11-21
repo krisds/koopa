@@ -182,7 +182,9 @@ public class CobolGrammar extends KoopaGrammar {
                    token("DIVISION"),
                    token("."),
                    token("PROGRAM-ID"),
-                   token("."),
+                   optional(
+                       token(".")
+                   ),
                    programName(),
                    optional(
                        sequence(

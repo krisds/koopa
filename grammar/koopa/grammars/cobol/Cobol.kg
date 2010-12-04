@@ -738,7 +738,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def exitStatement =
-    EXIT [PROGRAM]
+    EXIT [PROGRAM | PARAGRAPH]
 end
 
 ## #############################################################################
@@ -1319,7 +1319,9 @@ def functionName =
 end
 
 def textName =
-    cobolWord
+    ( cobolWord
+    | alphanumeric
+    )
 end
 
 def libraryName =

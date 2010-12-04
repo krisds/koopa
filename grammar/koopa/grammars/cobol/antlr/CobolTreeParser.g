@@ -1568,7 +1568,9 @@ execStatement
 exitStatement
   : ^(EXIT_STATEMENT
       ( 'EXIT'
-        ( 'PROGRAM' )?
+        ( ( 'PROGRAM'
+        | 'PARAGRAPH'
+        ) )?
       )
     )
   ;
@@ -2723,7 +2725,9 @@ functionName
 
 textName
   : ^(TEXT_NAME
-      cobolWord
+      ( cobolWord
+      | alphanumeric
+      )
     )
   ;
 
@@ -3004,6 +3008,7 @@ token
   | 'OVERFLOW'
   | 'PACKED-DECIMAL'
   | 'PAGE'
+  | 'PARAGRAPH'
   | 'PERFORM'
   | 'PIC'
   | 'PICTURE'

@@ -282,3 +282,10 @@ target dataDescriptionEntry;
 
 +[ 88 TEST-21
       VALUE IS ZERO . ]
+
+      
+target workingStorageSection;
+
++[ WORKING-STORAGE Section .
+   COPY "WORKSTOR.WS" .
+]

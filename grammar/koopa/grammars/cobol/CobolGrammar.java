@@ -2893,7 +2893,10 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("EXIT"),
                    optional(
-                       token("PROGRAM")
+                       choice(
+                           token("PROGRAM"),
+                           token("PARAGRAPH")
+                       )
                    )
                )
            );
@@ -5019,7 +5022,10 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("textName");
            textNameParser = future;
            future.setParser(
-               cobolWord()
+               choice(
+                   cobolWord(),
+                   alphanumeric()
+               )
            );
         }
 

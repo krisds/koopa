@@ -27,4 +27,13 @@ public class ExitStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(2, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testExitStatement_3() {
+      Parser parser = grammar.exitStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("EXIT", "PARAGRAPH");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
 }

@@ -106,4 +106,13 @@ public class CopyStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testCopyStatement_11() {
+      Parser parser = grammar.copyStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("COPY", "\"WORKSTOR.WS\"", ".");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
 }

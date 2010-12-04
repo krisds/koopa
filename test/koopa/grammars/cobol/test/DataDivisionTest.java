@@ -1268,4 +1268,14 @@ public class DataDivisionTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testWorkingStorageSection_137() {
+      Parser parser = grammar.workingStorageSection();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("WORKING-STORAGE", "Section", 
+        ".", "COPY", "\"WORKSTOR.WS\"", ".");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
 }

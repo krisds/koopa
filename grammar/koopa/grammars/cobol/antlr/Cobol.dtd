@@ -136,7 +136,7 @@
 <!ELEMENT indexName (cobolWord)>
 <!ELEMENT fileName (cobolWord)>
 <!ELEMENT functionName (cobolWord)>
-<!ELEMENT textName (cobolWord)>
+<!ELEMENT textName (cobolWord|alphanumeric)>
 <!ELEMENT libraryName (cobolWord)>
 <!ELEMENT recordName (identifier)>
 <!ELEMENT mnemonicName (cobolWord)>

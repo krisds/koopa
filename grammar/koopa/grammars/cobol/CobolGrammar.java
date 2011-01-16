@@ -5340,13 +5340,13 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("DAY-OF-WEEK");
         // RESERVED_WORDS.add("DB");
         RESERVED_WORDS.add("DE");
-        RESERVED_WORDS.add("DEBUG-CONTENTS");
-        RESERVED_WORDS.add("DEBUG-ITEM");
-        RESERVED_WORDS.add("DEBUG-LINE");
-        RESERVED_WORDS.add("DEBUG-NAME");
-        RESERVED_WORDS.add("DEBUG-SUB-1");
-        RESERVED_WORDS.add("DEBUG-SUB-2");
-        RESERVED_WORDS.add("DEBUG-SUB-3");
+        // RESERVED_WORDS.add("DEBUG-CONTENTS");
+        // RESERVED_WORDS.add("DEBUG-ITEM");
+        // RESERVED_WORDS.add("DEBUG-LINE");
+        // RESERVED_WORDS.add("DEBUG-NAME");
+        // RESERVED_WORDS.add("DEBUG-SUB-1");
+        // RESERVED_WORDS.add("DEBUG-SUB-2");
+        // RESERVED_WORDS.add("DEBUG-SUB-3");
         RESERVED_WORDS.add("DEBUGGING");
         RESERVED_WORDS.add("DECIMAL-POINT");
         RESERVED_WORDS.add("DECLARATIVES");
@@ -5491,7 +5491,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("LIMITS");
         RESERVED_WORDS.add("LINAGE");
         RESERVED_WORDS.add("LINE");
-        RESERVED_WORDS.add("LINE-COUNTER");
+        // RESERVED_WORDS.add("LINE-COUNTER");
         RESERVED_WORDS.add("LINES");
         RESERVED_WORDS.add("LINKAGE");
         RESERVED_WORDS.add("LOCAL-STORAGE");
@@ -5551,7 +5551,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("PACKED-DECIMAL");
         RESERVED_WORDS.add("PADDING");
         RESERVED_WORDS.add("PAGE");
-        RESERVED_WORDS.add("PAGE-COUNTER");
+        // RESERVED_WORDS.add("PAGE-COUNTER");
         RESERVED_WORDS.add("PERFORM");
         // RESERVED_WORDS.add("PERMANENT");
         RESERVED_WORDS.add("PF");

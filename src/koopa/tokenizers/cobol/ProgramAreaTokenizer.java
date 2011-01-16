@@ -1,47 +1,32 @@
 package koopa.tokenizers.cobol;
 
 import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.Reader;
 
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.util.ThreadedTokenizerBase;
 import koopa.tokens.BasicToken;
 import koopa.tokens.Position;
+import koopa.tokens.Token;
 
 public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 		Tokenizer {
-	// We use a PushBackReader so that we may peek at the next character without
-	// fully consuming it. This makes our own logic that much simpler.
-	private PushbackReader reader = null;
 
-	// This defines the maximum lookahead (peek) possible.
-	private static final int MAX_PUSHBACK = 2;
+	private final SourceFormat format;
 
-	private SourceFormat format = SourceFormat.FIXED;
+	private final Tokenizer tokenizer;
 
-	private int linenumber = 1;
-	private int positionInFile = 1;
-	private int positionInLine = 1;
-
-	private Position start = null;
-	private Position end = null;
-	private StringBuffer buffer = null;
-
-	public ProgramAreaTokenizer(Reader reader) {
-		this(reader, SourceFormat.FIXED);
+	public ProgramAreaTokenizer(Tokenizer tokenizer) {
+		this(tokenizer, SourceFormat.FIXED);
 	}
 
-	public ProgramAreaTokenizer(Reader reader, SourceFormat format) {
+	public ProgramAreaTokenizer(Tokenizer tokenizer, SourceFormat format) {
 		super();
 
-		assert (reader != null);
+		assert (tokenizer != null);
 		assert (format != null);
 
-		this.reader = new PushbackReader(reader, MAX_PUSHBACK);
-		this.buffer = new StringBuffer();
-
+		this.tokenizer = tokenizer;
 		this.format = format;
 	}
 
@@ -49,81 +34,81 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 		return format;
 	}
 
-	public void setFormat(SourceFormat format) {
-		this.format = format;
-	}
-
 	protected void tokenize() throws IOException {
 		while (!hasQuit()) {
-			if (peek() == -1) {
-				// End of file => stop lexing.
-				break;
+			final Token token = this.tokenizer.nextToken();
 
-			} else if (peek() == '\n') {
-				// Newlines take precedence over everything else. If a token
-				// holds a newline, it may not hold anything else.
-				consume();
-				produce(AreaTag.END_OF_LINE);
-				newline();
+			if (token == null) {
+				return;
+			}
 
-			} else if (peek() == '\r') {
-				// Newlines take precedence over everything else. If a token
-				// holds a newline, it may not hold anything else.
-				consume();
-				if (peek() == '\n')
-					consume();
-				produce(AreaTag.END_OF_LINE);
-				newline();
+			if (token.hasTag(AreaTag.END_OF_LINE)) {
+				enqueue(token);
+				continue;
+			}
 
-			} else if (format == SourceFormat.FREE && positionInLine == 1) {
-				int c = peek();
+			final String text = token.getText();
+
+			final int length = text.length();
+			if (length == 0) {
+				// No text. Shouldn't really happen; but better safe than sorry.
+				continue;
+			}
+
+			if (this.format == SourceFormat.FREE) {
+				int c = text.charAt(0);
+
 				if (c == '*' || c == '/' || c == '$') {
 					// These are definitely indicators.
-					tokenizeIndicatorArea();
+					tokenizeArea(token, 0, 1, AreaTag.INDICATOR_AREA);
 
 				} else if (c == 'D' || c == 'd') {
 					// This is only an indicator if it gets followed by a space.
 					// Otherwise it's program text.
-					if (peek(2) == ' ') {
-						tokenizeIndicatorArea();
+					if (text.charAt(1) == ' ') {
+						tokenizeArea(token, 0, 1, AreaTag.INDICATOR_AREA);
 
 					} else {
-						tokenizeProgramTextArea();
+						// Program text.
+						token.addTag(AreaTag.PROGRAM_TEXT_AREA);
+						enqueue(token);
 					}
 
 				} else {
 					// Program text.
-					tokenizeProgramTextArea();
+					token.addTag(AreaTag.PROGRAM_TEXT_AREA);
+					enqueue(token);
 				}
 
-			} else if (format == SourceFormat.FREE && positionInLine > 1) {
-				// Program text.
-				tokenizeProgramTextArea();
+			} else if (this.format == SourceFormat.FIXED) {
+				// 1-6 (in Java: 0-5) = sequence number
+				// 7 (in Java: 6) = indicator
+				// 8-72 (in Java: 7-71) = program text
+				// 73-... (in Java: 72-...) = identification
 
-			} else if (format == SourceFormat.FIXED && positionInLine == 1) {
-				// Assumption: there is something in the sequence number area
-				// other than a newline.
-				tokenizeSequenceNumberArea();
+				final int endOfSequenceNumber = Math.min(6, length);
+				tokenizeArea(token, 0, endOfSequenceNumber,
+						AreaTag.SEQUENCE_NUMBER_AREA);
 
-			} else if (format == SourceFormat.FIXED && positionInLine == 7) {
-				// Assumption: there is something in the indicator area other
-				// than a newline.
-				tokenizeIndicatorArea();
+				if (length > 7) {
+					final int endOfIndicator = Math.min(7, length);
+					tokenizeArea(token, 6, endOfIndicator,
+							AreaTag.INDICATOR_AREA);
+				}
 
-			} else if (format == SourceFormat.FIXED && positionInLine > 7
-					&& positionInLine < 73) {
-				// Assumption: there is something in the program text area other
-				// than a newline.
-				tokenizeProgramTextArea();
+				if (length > 8) {
+					final int endOfProgramText = Math.min(72, length);
+					tokenizeArea(token, 7, endOfProgramText,
+							AreaTag.PROGRAM_TEXT_AREA);
+				}
 
-			} else if (format == SourceFormat.FIXED && positionInLine == 73) {
-				// Assumption: there is something in the identification area
-				// other than a newline.
-				tokenizeIdentificationArea();
+				if (length > 72) {
+					tokenizeArea(token, 72, length, AreaTag.IDENTIFICATION_AREA);
+				}
 
 			} else {
-				// Unexpected char.
-				System.err.println("Unexpected char at " + markStart());
+				// Unexpected format.
+				System.err.println("Unexpected format: " + this.format);
 				// TODO Should throw an exception instead. Exiting hard is not
 				// nice.
 				System.exit(1);
@@ -131,128 +116,14 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 		}
 	}
 
-	private void tokenizeProgramTextArea() throws IOException {
-		// Program text area.
-		while (this.format == SourceFormat.FREE
-				|| (this.format == SourceFormat.FIXED && positionInLine < 73)) {
-			final int c = peek();
-			if (c == -1 || c == '\r' || c == '\n') {
-				break;
+	private void tokenizeArea(Token token, int begin, int end, Object tag) {
+		final String text = token.getText().substring(begin, end);
 
-			} else {
-				consume();
-			}
-		}
-
-		produce(AreaTag.PROGRAM_TEXT_AREA);
-	}
-
-	private void tokenizeIdentificationArea() throws IOException {
-		// Identification area.
-		while (true) {
-			int c = peek();
-			if (c == -1) {
-				break;
-
-			} else if (c != '\r' && c != '\n') {
-				consume();
-
-			} else {
-				break;
-			}
-		}
-
-		produce(AreaTag.IDENTIFICATION_AREA);
-	}
-
-	private void tokenizeIndicatorArea() throws IOException {
-		// Indicator area.
-		int c = peek();
-		if (c != -1) {
-			consume();
-			produce(AreaTag.INDICATOR_AREA);
-		}
-	}
-
-	private void tokenizeSequenceNumberArea() throws IOException {
-		// Sequence number area.
-		while (positionInLine < 7) {
-			int c = peek();
-			if (c == -1) {
-				break;
-
-			} else if (c != '\r' && c != '\n') {
-				consume();
-
-			} else {
-				break;
-			}
-		}
-
-		produce(AreaTag.SEQUENCE_NUMBER_AREA);
-	}
-
-	private int peek() throws IOException {
-		int c = reader.read();
-		if (c != -1)
-			reader.unread(c);
-		return c;
-	}
-
-	private int peek(int distance) throws IOException {
-		if (distance == 1) {
-			return peek();
-
-		} else {
-			int c = reader.read();
-
-			if (c == -1) {
-				return c;
-			}
-
-			int d = peek(distance - 1);
-			reader.unread(c);
-			return d;
-		}
-	}
-
-	private void consume() throws IOException {
-		int c = reader.read();
-
-		if (c == -1)
-			return;
-
-		if (buffer.length() == 0)
-			start = markStart();
-
-		buffer.append((char) c);
-		positionInFile += 1;
-		positionInLine += 1;
-	}
-
-	private void produce(AreaTag type) {
-		end = markEnd();
-		if (buffer.length() > 0) {
-			BasicToken token = new BasicToken(buffer.toString(), start, end);
-			token.addTag(type);
-			// System.out.println(token);
-			buffer = new StringBuffer();
-
-			enqueue(token);
-		}
-	}
-
-	private void newline() {
-		linenumber += 1;
-		positionInLine = 1;
-	}
-
-	private Position markStart() {
-		return new Position(positionInFile, linenumber, positionInLine);
-	}
-
-	private Position markEnd() {
-		return new Position(positionInFile - 1, linenumber, positionInLine - 1);
+		final Position start = token.getStart();
+		final BasicToken newToken = new BasicToken(text, start.offsetBy(begin),
+				start.offsetBy(end - 1));
+		newToken.addTag(tag);
+		enqueue(newToken);
 	}
 
 	public void quit() {

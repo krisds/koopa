@@ -112,6 +112,22 @@
 			<fileset dir="test/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
+	
+	<target name="run-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<classpath>
+	            <pathelement location="build/"/>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+	        </classpath>
+			
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.tokenstreams.test.TokenStreamTests"/>
+			<test name="koopa.grammars.cobol.test.CobolGrammarTests"/>
+		</junit>
+	</target>
 
 
 	<!-- BACK END -->

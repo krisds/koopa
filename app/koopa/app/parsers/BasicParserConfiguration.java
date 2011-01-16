@@ -13,6 +13,7 @@ import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CharacterStringTokenizer;
 import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
+import koopa.tokenizers.cobol.LineSplittingTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
 import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
@@ -25,6 +26,7 @@ import koopa.util.Tuple;
 
 import org.apache.log4j.Logger;
 
+// TODO Kill this class.
 public class BasicParserConfiguration implements ParserConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger("parser.basic");
@@ -42,7 +44,8 @@ public class BasicParserConfiguration implements ParserConfiguration {
 		Tokenizer tokenizer;
 
 		// The tokenizers in this sequence should generate the expected tokens.
-		tokenizer = new ProgramAreaTokenizer(new BufferedReader(reader));
+		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
+		tokenizer = new ProgramAreaTokenizer(tokenizer);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);
 		tokenizer = new ContinuationsTokenizer(tokenizer);

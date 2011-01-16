@@ -16,6 +16,7 @@ import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CharacterStringTokenizer;
 import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
+import koopa.tokenizers.cobol.LineSplittingTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
 import koopa.tokenizers.cobol.SourceFormat;
@@ -70,8 +71,8 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		Tokenizer tokenizer;
 
 		// The tokenizers in this sequence should generate the expected tokens.
-		tokenizer = new ProgramAreaTokenizer(new BufferedReader(reader),
-				this.format);
+		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
+		tokenizer = new ProgramAreaTokenizer(tokenizer, this.format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);
 		tokenizer = new ContinuationsTokenizer(tokenizer);
@@ -105,10 +106,13 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		// with only the "structural" tokens which are of interest to a parser.
 		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
 			public boolean accepts(Token token) {
-				return !token.hasTag(SyntacticTag.SEPARATOR)
-						|| (!token.getText().trim().equals("")
-								&& !token.getText().equals(",") && !token
-								.getText().equals(";"));
+				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
+					return true;
+				}
+
+				final String text = token.getText();
+				return !text.trim().equals("") && !text.equals(",")
+						&& !text.equals(";");
 			}
 		});
 

@@ -158,4 +158,33 @@ public class MoveStatementTest extends TestCase {
         "PAYROLL-CHECK");
       assertFalse(parser.accepts(tokenizer));
     }
+
+    @Test
+    public void testMoveStatement_17() {
+      Parser parser = grammar.moveStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("MOVE", "DEBUG-LINE", "TO", "DBLINE-HOLD");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testMoveStatement_18() {
+      Parser parser = grammar.moveStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("MOVE", "LINE-COUNTER", "TO", 
+        "COMPUTED-18V0");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testMoveStatement_19() {
+      Parser parser = grammar.moveStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("MOVE", "PAGE-COUNTER", "TO", 
+        "COMPUTED-18V0");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+    }
 }

@@ -11,6 +11,7 @@ import koopa.grammars.cobol.CobolVerifier;
 import koopa.parsers.Parser;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CharacterStringTokenizer;
+import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
 import koopa.tokenizers.cobol.LineSplittingTokenizer;
@@ -45,6 +46,7 @@ public class BasicParserConfiguration implements ParserConfiguration {
 
 		// The tokenizers in this sequence should generate the expected tokens.
 		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
+		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
 		tokenizer = new ProgramAreaTokenizer(tokenizer);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);

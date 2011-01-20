@@ -11,18 +11,22 @@ public class TokenBase {
 	}
 
 	public void addTag(Object tag) {
-		tags.add(tag);
+		this.tags.add(tag);
 	}
 
 	public void removeTag(Object tag) {
-		tags.remove(tag);
+		this.tags.remove(tag);
 	}
 
 	public boolean hasTag(Object tag) {
-		return tags.contains(tag);
+		return this.tags.contains(tag);
 	}
 
 	public Set<Object> getTags() {
-		return tags;
+		return this.tags;
+	}
+
+	public int tagCount() {
+		return this.tags.size();
 	}
 }

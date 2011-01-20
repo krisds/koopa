@@ -7,29 +7,31 @@ public interface Token {
 	/**
 	 * May return null for "virtual" tokens.
 	 */
-	public abstract String getText();
+	String getText();
 
 	/**
 	 * May return null for "virtual" tokens.
 	 */
-	public abstract Position getStart();
+	Position getStart();
 
 	/**
 	 * May return null for "virtual" tokens.
 	 */
-	public abstract Position getEnd();
+	Position getEnd();
 
-	public abstract void addTag(Object tag);
+	void addTag(Object tag);
 
-	public abstract boolean hasTag(Object tag);
+	boolean hasTag(Object tag);
 
-	public abstract int getLength();
+	int getLength();
 
-	public abstract void removeTag(Object tag);
+	void removeTag(Object tag);
 
-	public abstract Set<Object> getTags();
+	Set<Object> getTags();
 
-	public abstract void setStart(Position start);
+	void setStart(Position start);
 
-	public abstract void setEnd(Position end);
+	void setEnd(Position end);
+
+	int tagCount();
 }

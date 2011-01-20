@@ -8,6 +8,7 @@ import java.util.List;
 
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CharacterStringTokenizer;
+import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationsTokenizer;
 import koopa.tokenizers.cobol.ContinuedTokenizer;
 import koopa.tokenizers.cobol.LineSplittingTokenizer;
@@ -88,6 +89,7 @@ public class TokenizerTest {
 
 		// The tokenizers in this sequence should generate the expected tokens.
 		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
+		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
 		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);

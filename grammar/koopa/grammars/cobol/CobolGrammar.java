@@ -5177,7 +5177,8 @@ public class CobolGrammar extends KoopaGrammar {
                            token("QUOTE"),
                            token("QUOTES")
                        )
-                   )
+                   ),
+                   token("NULL")
                )
            );
         }

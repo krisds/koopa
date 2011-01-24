@@ -1009,7 +1009,7 @@ public class DataDivisionTest extends TestCase {
     public void testValue_109() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "42");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "ZERO");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(2, tokenizer.getNumberOfProcessedTokens());
     }
@@ -1018,7 +1018,7 @@ public class DataDivisionTest extends TestCase {
     public void testValue_110() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "42.10");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "42");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(3, tokenizer.getNumberOfProcessedTokens());
     }
@@ -1027,13 +1027,67 @@ public class DataDivisionTest extends TestCase {
     public void testValue_111() {
       Parser parser = grammar.value();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "42");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValue_112() {
+      Parser parser = grammar.value();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "42.10");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValue_113() {
+      Parser parser = grammar.value();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "42.10");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValue_114() {
+      Parser parser = grammar.value();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "\"UNDEFINED\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValue_115() {
+      Parser parser = grammar.value();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("VALUE", "\"UNDEFINED\"");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(2, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
-    public void testDataDescriptionEntry_112() {
+    public void testValue_116() {
+      Parser parser = grammar.value();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "NULL");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testValue_117() {
+      Parser parser = grammar.value();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("VALUE", "NULL");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_118() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("01", "FILLER", ".");
@@ -1042,7 +1096,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_113() {
+    public void testDataDescriptionEntry_119() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("01", "TEST-2", ".");
@@ -1051,7 +1105,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_114() {
+    public void testDataDescriptionEntry_120() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("01", ".");
@@ -1060,7 +1114,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_115() {
+    public void testDataDescriptionEntry_121() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("1", "TEST-3", ".");
@@ -1069,7 +1123,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_116() {
+    public void testDataDescriptionEntry_122() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("11", "TEST-4", ".");
@@ -1078,7 +1132,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_117() {
+    public void testDataDescriptionEntry_123() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("49", "TEST-5", ".");
@@ -1087,7 +1141,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_118() {
+    public void testDataDescriptionEntry_124() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("77", "TEST-6", ".");
@@ -1096,7 +1150,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_119() {
+    public void testDataDescriptionEntry_125() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("0", "TEST-7", ".");
@@ -1104,7 +1158,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_120() {
+    public void testDataDescriptionEntry_126() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("50", "TEST-8", ".");
@@ -1112,7 +1166,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_121() {
+    public void testDataDescriptionEntry_127() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("AA", "TEST-9", ".");
@@ -1120,7 +1174,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_122() {
+    public void testDataDescriptionEntry_128() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("66", "TEST-10", "RENAMES", "TEST-1", 
@@ -1130,7 +1184,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_123() {
+    public void testDataDescriptionEntry_129() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("66", "TEST-11", "RENAMES", "TEST-2", 
@@ -1140,7 +1194,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_124() {
+    public void testDataDescriptionEntry_130() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("66", "TEST-12", "RENAMES", "TEST-4", 
@@ -1150,7 +1204,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_125() {
+    public void testDataDescriptionEntry_131() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("66", "TEST-10B", "RENAMES", "TEST-1", 
@@ -1160,7 +1214,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_126() {
+    public void testDataDescriptionEntry_132() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("66", "TEST-11B", "RENAMES", "TEST-2", 
@@ -1170,7 +1224,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_127() {
+    public void testDataDescriptionEntry_133() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("66", "TEST-12B", "RENAMES", "TEST-4", 
@@ -1180,7 +1234,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_128() {
+    public void testDataDescriptionEntry_134() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-13", "VALUE", "IS", 
@@ -1190,7 +1244,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_129() {
+    public void testDataDescriptionEntry_135() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-14", "VALUE", "\"BBB\"", 
@@ -1200,7 +1254,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_130() {
+    public void testDataDescriptionEntry_136() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-15", "VALUES", "ARE", 
@@ -1210,7 +1264,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_131() {
+    public void testDataDescriptionEntry_137() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-16", "VALUES", "\"DDD\"", 
@@ -1220,7 +1274,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_132() {
+    public void testDataDescriptionEntry_138() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-17", "VALUES", "ARE", 
@@ -1230,7 +1284,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_133() {
+    public void testDataDescriptionEntry_139() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-18", "VALUES", "ARE", 
@@ -1240,7 +1294,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_134() {
+    public void testDataDescriptionEntry_140() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-19", "VALUES", "ARE", 
@@ -1250,7 +1304,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_135() {
+    public void testDataDescriptionEntry_141() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-20", "VALUES", "ARE", 
@@ -1260,7 +1314,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_136() {
+    public void testDataDescriptionEntry_142() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("88", "TEST-21", "VALUE", "IS", 
@@ -1270,7 +1324,17 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testWorkingStorageSection_137() {
+    public void testDataDescriptionEntry_143() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("05", "BUFFER", "POINTER", "VALUE", 
+        "NULL", ".");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testWorkingStorageSection_144() {
       Parser parser = grammar.workingStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WORKING-STORAGE", "Section", 

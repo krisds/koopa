@@ -1370,6 +1370,7 @@ def figurativeConstant =
       | QUOTE
       | QUOTES 
       )
+    | NULL
     )
 end
 

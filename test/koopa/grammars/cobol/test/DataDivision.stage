@@ -204,11 +204,23 @@ target value;
 
 +[ VALUE IS ZERO ]
 
++[ VALUE ZERO ]
+
++[ VALUE IS 42 ]
+
 +[ VALUE 42 ]
 
 +[ VALUE IS 42.10 ]
 
++[ VALUE 42.10 ]
+
++[ VALUE IS "UNDEFINED" ]
+
 +[ VALUE "UNDEFINED" ]
+
++[ VALUE IS NULL ]
+
++[ VALUE NULL ]
 
 
 target dataDescriptionEntry;
@@ -283,6 +295,9 @@ target dataDescriptionEntry;
 +[ 88 TEST-21
       VALUE IS ZERO . ]
 
++[ 05 BUFFER
+      POINTER
+      VALUE NULL . ]
       
 target workingStorageSection;
 

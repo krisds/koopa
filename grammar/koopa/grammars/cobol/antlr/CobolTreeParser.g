@@ -2817,6 +2817,7 @@ figurativeConstant
         | 'QUOTES'
         )
       )
+      | 'NULL'
       )
     )
   ;
@@ -2997,6 +2998,7 @@ token
   | 'NEXT'
   | 'NO'
   | 'NOT'
+  | 'NULL'
   | 'OCCURS'
   | 'OF'
   | 'OMITTED'

@@ -1,6 +1,7 @@
 cobolWord
 integer
 decimal
+hexadecimal
 alphanumeric
 pictureString
 levelNumber

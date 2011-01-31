@@ -10,6 +10,10 @@ decimal
   : ^(DECIMAL token)
   ;
 
+hexadecimal
+  : ^(HEXADECIMAL token)
+  ;
+
 alphanumeric
   : ^(ALPHANUMERIC token)
   ;

@@ -144,7 +144,7 @@
 <!ELEMENT reportName (cobolWord)>
 <!ELEMENT literal (numeric|alphanumeric|figurativeConstant)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,t)|t)>
-<!ELEMENT numeric (integer|decimal|(t+,identifier))>
+<!ELEMENT numeric (integer|decimal|hexadecimal|(t+,identifier))>
 <!ELEMENT cobolWord (t)>
 <!ELEMENT integer (t)>
 <!ELEMENT decimal (t)>

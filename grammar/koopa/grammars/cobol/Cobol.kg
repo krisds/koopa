@@ -1377,6 +1377,7 @@ end
 def numeric =
     ( integer
     | decimal
+    | hexadecimal
     | LENGTH OF identifier	
     )
 end

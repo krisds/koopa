@@ -2830,6 +2830,7 @@ numeric
   : ^(NUMERIC
       ( integer
       | decimal
+      | hexadecimal
       | ( 'LENGTH'
         'OF'
         identifier
@@ -3109,6 +3110,10 @@ integer
 
 decimal
   : ^(DECIMAL token)
+  ;
+
+hexadecimal
+  : ^(HEXADECIMAL token)
   ;
 
 alphanumeric

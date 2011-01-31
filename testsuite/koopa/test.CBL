@@ -41,7 +41,7 @@ KOOPAH 01 FIELD-02  PICTURE IS AA9999     VALUE IS "AB1234".            :17
 KOOPAH 01 FIELD-03  VALUE   "AB1C2D"      PIC   IS A(2)X(4).            :22
 KOOPAH 01 FIELD-04  PICTURE 9999          VALUE IS ALL ZEROES.          :17
 KOOPAH 01 FIELD-05  VALUE   IS ZERO       PIC   S99.                    :15
-KOOPAH 01 FIELD-06  PICTURE IS S99V9.                                   :11
+KOOPAH 01 FIELD-06  PICTURE IS S99V9      VALUE IS X'0F'.               :17
 KOOPAH 01 FIELD-07  PIC     IS PPP999.                                  :11
 KOOPAH 01 FIELD-08  PICTURE S999PPP.                                    :9
 KOOPAH 01 FIELD-09  PIC     BAAAB.                                      :9

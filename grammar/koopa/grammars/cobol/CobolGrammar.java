@@ -5200,6 +5200,7 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    integer(),
                    decimal(),
+                   hexadecimal(),
                    sequence(
                        token("LENGTH"),
                        token("OF"),
@@ -5884,6 +5885,38 @@ public class CobolGrammar extends KoopaGrammar {
     		});
     	}
     	return decimalParser;
+    }
+
+    // ============================================================================
+    // hexadecimal
+    // ............................................................................
+
+    private Parser hexadecimalParser = null;
+
+    public Parser hexadecimal() {
+    	if (hexadecimalParser == null) {
+    	    FutureParser future = scoped("hexadecimal");
+    	    hexadecimalParser = future;
+    	    future.setParser(new Parser() {
+    			protected boolean accepts(TokenStream stream) {
+    				final Token token = stream.nextToken();
+    	
+    				if (token != null
+    						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+    					if (token.hasTag(SyntacticTag.HEXADECIMAL_LITERAL)) {
+    	
+    						returnToken(token);
+    						return true;
+    	
+    					} else
+    						return false;
+    	
+    				} else
+    					return false;
+    			}
+    		});
+    	}
+    	return hexadecimalParser;
     }
 
     // ============================================================================

@@ -1,7 +1,7 @@
 package koopa.tokenizers.cobol;
 
-
 import java.io.IOException;
+import java.util.LinkedList;
 
 import koopa.tokenizers.PushbackTokenizer;
 import koopa.tokenizers.Tokenizer;
@@ -22,8 +22,8 @@ public class CharacterStringTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	protected void tokenize() throws IOException {
-		while (!hasQuit()) {
-			final Token token = tokenizer.nextToken();
+		tokenisation: while (!hasQuit()) {
+			final Token token = this.tokenizer.nextToken();
 
 			if (token == null) {
 				break;
@@ -31,7 +31,7 @@ public class CharacterStringTokenizer extends ThreadedTokenizerBase implements
 			} else if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
 					|| token.hasTag(AreaTag.COMMENT)) {
 				enqueue(token);
-				continue;
+				continue tokenisation;
 			}
 
 			final String text = token.getText();
@@ -40,39 +40,112 @@ public class CharacterStringTokenizer extends ThreadedTokenizerBase implements
 					&& (text.equals("\"") || text.equals("'"))) {
 
 				tokenizeStringLiteral(token);
-
-			} else if (token.hasTag(SyntacticTag.SEPARATOR)
-					&& (text.equals("=="))) {
-
-				tokenizePseudoLiteral(token);
-
-			} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-					&& holdsInteger(text)) {
-
-				if (isSigned(text)) {
-					token.addTag(SyntacticTag.INTEGER_LITERAL);
-					token.addTag(SyntacticTag.SIGNED);
-				} else {
-					token.addTag(SyntacticTag.INTEGER_LITERAL);
-					token.addTag(SyntacticTag.UNSIGNED);
-				}
-				enqueue(token);
-
-			} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-					&& holdsDecimal(text)) {
-
-				if (isSigned(text)) {
-					token.addTag(SyntacticTag.DECIMAL_LITERAL);
-					token.addTag(SyntacticTag.SIGNED);
-				} else {
-					token.addTag(SyntacticTag.DECIMAL_LITERAL);
-					token.addTag(SyntacticTag.UNSIGNED);
-				}
-				enqueue(token);
-
-			} else {
-				enqueue(token);
+				continue tokenisation;
 			}
+
+			if (token.hasTag(SyntacticTag.SEPARATOR) && (text.equals("=="))) {
+				tokenizePseudoLiteral(token);
+				continue tokenisation;
+			}
+
+			if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
+					&& text.equalsIgnoreCase("x")) {
+
+				// Single 'X'. This may be the start of a hexadecimal literal.
+
+				final Token openQuote = this.tokenizer.nextToken();
+				final String openQuoteText = openQuote.getText();
+
+				if (openQuote.hasTag(SyntacticTag.SEPARATOR)
+						&& (openQuoteText.equals("\"") || openQuoteText
+								.equals("'"))) {
+
+					// Single 'X' followed by an opening quote.
+
+					final LinkedList<Token> value = new LinkedList<Token>();
+
+					hexadecimal: while (true) {
+						final Token next = this.tokenizer.nextToken();
+						final String nextText = openQuote.getText();
+
+						if (next.hasTag(SyntacticTag.SEPARATOR)
+								&& (nextText.equals("\"") || nextText
+										.equals("'"))) {
+
+							// We found the closing quote which completes the
+							// hexadecimal literal.
+
+							final CompositeToken hexadecimal = new CompositeToken();
+							hexadecimal.addToken(token);
+							hexadecimal.addToken(openQuote);
+							for (Token v : value) {
+								hexadecimal.addToken(v);
+							}
+							hexadecimal.addToken(next);
+							hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
+							hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
+							hexadecimal
+									.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
+
+							enqueue(hexadecimal);
+							continue tokenisation;
+
+						} else if (next.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
+							// Assuming this to be part of the hexadecimal
+							// value.
+							// TODO Should also check if value matches
+							// [a-zA-Z0-9].
+							value.push(next);
+
+						} else {
+							// Not part of a hexadecimal value. We undo the
+							// lookahead and continue with other options.
+							this.tokenizer.pushback(next);
+
+							Token last = null;
+							while ((last = value.pop()) != null) {
+								this.tokenizer.pushback(last);
+							}
+
+							this.tokenizer.pushback(openQuote);
+
+							break hexadecimal;
+						}
+					}
+
+				} else {
+					// Not a hexadecimal-alphanumeric. Push back lookahead.
+					this.tokenizer.pushback(openQuote);
+				}
+			}
+
+			if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA) && holdsInteger(text)) {
+				if (isSigned(text)) {
+					token.addTag(SyntacticTag.INTEGER_LITERAL);
+					token.addTag(SyntacticTag.SIGNED);
+				} else {
+					token.addTag(SyntacticTag.INTEGER_LITERAL);
+					token.addTag(SyntacticTag.UNSIGNED);
+				}
+
+				enqueue(token);
+				continue tokenisation;
+			}
+
+			if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA) && holdsDecimal(text)) {
+				if (isSigned(text)) {
+					token.addTag(SyntacticTag.DECIMAL_LITERAL);
+					token.addTag(SyntacticTag.SIGNED);
+				} else {
+					token.addTag(SyntacticTag.DECIMAL_LITERAL);
+					token.addTag(SyntacticTag.UNSIGNED);
+				}
+
+				enqueue(token);
+				continue tokenisation;
+			}
+
+			enqueue(token);
 		}
 	}
 

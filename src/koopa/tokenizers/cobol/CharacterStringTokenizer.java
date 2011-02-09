@@ -43,6 +43,11 @@ public class CharacterStringTokenizer extends ThreadedTokenizerBase implements
 				continue tokenisation;
 			}
 
+			if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA) && text.equals("*>")) {
+				tokenizeInlineComment(token);
+				continue tokenisation;
+			}
+
 			if (token.hasTag(SyntacticTag.SEPARATOR) && (text.equals("=="))) {
 				tokenizePseudoLiteral(token);
 				continue tokenisation;
@@ -269,6 +274,24 @@ public class CharacterStringTokenizer extends ThreadedTokenizerBase implements
 		pseudoliteral.addTag(SyntacticTag.PSEUDO_LITERAL);
 
 		enqueue(pseudoliteral);
+	}
+
+	private void tokenizeInlineComment(final Token token) {
+		final CompositeToken inlineComment = new CompositeToken();
+		inlineComment.addToken(token);
+
+		Token next = this.tokenizer.nextToken();
+		while (next != null && next.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
+			inlineComment.addToken(next);
+			next = this.tokenizer.nextToken();
+		}
+
+		if (next != null) {
+			this.tokenizer.pushback(next);
+		}
+
+		inlineComment.addTag(AreaTag.COMMENT);
+		enqueue(inlineComment);
 	}
 
 	public void quit() {

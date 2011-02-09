@@ -168,3 +168,6 @@ KOOPAH COPY SUSIES-HOMEWORK                                             :4
 KOOPAH      REPLACING ==Susie Derkins.== BY ==Calvin, the misunderstood
 KOOPAH      genius.==                                                   :9
 KOOPAH
+KOOPAH* Checks that the comment indicator is not recognised inside
+KOOPAH* literals.
+KOOPAH DISPLAY '*> DO A BARREL ROLL <*'.                                :5

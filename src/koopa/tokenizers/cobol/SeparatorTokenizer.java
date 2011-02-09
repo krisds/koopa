@@ -209,29 +209,6 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 				position += 2;
 
-			} else if (c == '*' && position + 1 < length
-					&& text.charAt(position + 1) == '>') {
-
-				// The following code checks to see if there is a character
-				// string waiting to be assembled. If so, we assemble it before
-				// processing the separator. This code needs to appear in every
-				// branch dealing with a new separator. If you update one, you
-				// should update all others.
-				if (characterstringStart >= 0) {
-					Token characterstring = subToken(token,
-							characterstringStart, position);
-					characterstring.addTag(AreaTag.PROGRAM_TEXT_AREA);
-					characterstring.addTag(SyntacticTag.CHARACTER_STRING);
-					enqueue(characterstring);
-					characterstringStart = -1;
-				}
-
-				Token separator = subToken(token, position, length);
-				separator.addTag(AreaTag.COMMENT);
-				enqueue(separator);
-
-				position = length;
-
 			} else {
 				// Non-separator.
 				if (characterstringStart < 0) {

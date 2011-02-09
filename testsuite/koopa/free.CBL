@@ -131,3 +131,6 @@
  COPY SUSIES-HOMEWORK
      REPLACING ==Susie Derkins.== BY ==Calvin, the misunderstood
      genius.==
+
+* Checks that the comment indicator is not recognised inside literals.
+ DISPLAY '*> DO A BARREL ROLL <*'.

@@ -750,10 +750,11 @@ public class CobolVerifier extends VerifyingSink {
     register("RELEASE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("releaseStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("releaseStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "RELEASE in the water.");
           }
         }
@@ -1326,10 +1327,11 @@ public class CobolVerifier extends VerifyingSink {
     register("REWRITE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("rewriteStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("rewriteStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "REWRITE in the water.");
           }
         }

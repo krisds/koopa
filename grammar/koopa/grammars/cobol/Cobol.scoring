@@ -123,7 +123,7 @@ verify END-READ
 - statement !execStatement !readStatement : warn "END-READ not in read statement."
 
 verify RELEASE
-- !releaseStatement water : warn "RELEASE in the water."
+- !execStatement !releaseStatement water : warn "RELEASE in the water."
 - releaseStatement statement : warn "RELEASE not in release statement."
 - statement !execStatement !releaseStatement : warn "RELEASE not in release statement."
 
@@ -219,7 +219,7 @@ verify END-DELETE
 - statement !execStatement !deleteStatement : warn "END-DELETE not in delete statement."
 
 verify REWRITE
-- !rewriteStatement water : warn "REWRITE in the water."
+- !execStatement !rewriteStatement water : warn "REWRITE in the water."
 - rewriteStatement statement : warn "REWRITE not in rewrite statement."
 - statement !execStatement !rewriteStatement : warn "REWRITE not in rewrite statement."
 

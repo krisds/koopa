@@ -146,7 +146,8 @@ end
 
 def sdFileDescriptionEntry =
     SD fileName
-   !( dataRecords
+   !( blockContains    # Supported by IBM Enterprise Cobol for z/OS.
+    | dataRecords
     | labelRecords
     | record
     | recordingMode

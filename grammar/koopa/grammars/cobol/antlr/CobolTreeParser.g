@@ -275,7 +275,8 @@ sdFileDescriptionEntry
   : ^(SD_FILE_DESCRIPTION_ENTRY
       ( 'SD'
         fileName
-        ( ( dataRecords
+        ( ( blockContains
+        | dataRecords
         | labelRecords
         | record
         | recordingMode

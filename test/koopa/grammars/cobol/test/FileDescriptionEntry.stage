@@ -244,3 +244,6 @@ target sdFileDescriptionEntry;
 
 +[ SD MY-FILE-NAME . ]
 
++[ SD MY-FILE-NAME
+      RECORDING MODE IS F
+      BLOCK CONTAINS 0 RECORDS . ]

@@ -531,6 +531,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("SD"),
                    fileName(),
                    permuted(
+                       blockContains(),
                        dataRecords(),
                        labelRecords(),
                        record(),

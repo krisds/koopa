@@ -1428,4 +1428,14 @@ public class FileDescriptionEntryTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(3, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testSdFileDescriptionEntry_151() {
+      Parser parser = grammar.sdFileDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("SD", "MY-FILE-NAME", "RECORDING", 
+        "MODE", "IS", "F", "BLOCK", "CONTAINS", "0", "RECORDS", ".");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+    }
 }

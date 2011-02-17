@@ -6,7 +6,6 @@ import koopa.tokens.Token;
 import koopa.tokenstreams.Marker;
 import koopa.trees.antlr.CommonKoopaToken;
 
-
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.jaxen.DefaultNavigator;
@@ -34,7 +33,8 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getChildAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getChildAxisIterator(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getChildAxisIterator(" + foo + ")");
 		}
 		return new ANTLRTreeChildAxisIterator((Tree) foo);
 	}
@@ -42,7 +42,8 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getDescendantOrSelfAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getDescendantOrSelfAxisIterator(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getDescendantOrSelfAxisIterator(" + foo + ")");
 		}
 
 		return new ANTLRTreeDescendantOrSelfAxisIterator((Tree) foo);
@@ -50,20 +51,27 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public Iterator<?> getAncestorAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getAncestorAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getAncestorAxisIterator(" + foo + ")");
+		}
 		return super.getAncestorAxisIterator(foo);
 	}
 
 	public Iterator<?> getAncestorOrSelfAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getAncestorOrSelfAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getAncestorOrSelfAxisIterator(" + foo + ")");
+		}
 		return super.getAncestorOrSelfAxisIterator(foo);
 	}
 
 	public Iterator<?> getAttributeAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getAttributeAxisIterator(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getAttributeAxisIterator(" + foo + ")");
 		}
 
 		return new ANTLRTreeAttributeAxisIterator((Tree) foo);
@@ -71,18 +79,25 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public Iterator<?> getDescendantAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getDescendantAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getDescendantAxisIterator(" + foo + ")");
+		}
 		return super.getDescendantAxisIterator(foo);
 	}
 
 	public Object getDocument(String url) throws FunctionCallException {
-		System.out.println(this.getClass().getName() + ".getDocument(" + url + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName() + ".getDocument("
+					+ url + ")");
+		}
 		return super.getDocument(url);
 	}
 
 	public Object getDocumentNode(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getDocumentNode(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".getDocumentNode("
+					+ foo + ")");
 		}
 
 		Tree tree = (Tree) foo;
@@ -94,20 +109,27 @@ public class KoopaNavigator extends DefaultNavigator {
 	}
 
 	public Object getElementById(Object foo, String elementId) {
-		System.out.println(this.getClass().getName() + ".getElementById(" + foo + ", " + elementId + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName() + ".getElementById("
+					+ foo + ", " + elementId + ")");
+		}
 		return super.getElementById(foo, elementId);
 	}
 
 	public Iterator<?> getFollowingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getFollowingAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getFollowingAxisIterator(" + foo + ")");
+		}
 		return super.getFollowingAxisIterator(foo);
 	}
 
 	public Iterator<?> getFollowingSiblingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getFollowingSiblingAxisIterator(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getFollowingSiblingAxisIterator(" + foo + ")");
 		}
 
 		return new ANTLRTreeFollowingSibilingAxisIterator((Tree) foo);
@@ -115,24 +137,34 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public Iterator<?> getNamespaceAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getNamespaceAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getNamespaceAxisIterator(" + foo + ")");
+		}
 		return super.getNamespaceAxisIterator(foo);
 	}
 
 	public short getNodeType(Object node) {
-		System.out.println(this.getClass().getName() + ".getNodeType(" + node + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName() + ".getNodeType("
+					+ node + ")");
+		}
 		return super.getNodeType(node);
 	}
 
 	public Iterator<?> getParentAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getParentAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getParentAxisIterator(" + foo + ")");
+		}
 		return super.getParentAxisIterator(foo);
 	}
 
 	public Object getParentNode(Object foo) throws UnsupportedAxisException {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getParentNode(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".getParentNode("
+					+ foo + ")");
 		}
 
 		if (foo instanceof Tree) {
@@ -150,41 +182,60 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public Iterator<?> getPrecedingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getPrecedingAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getPrecedingAxisIterator(" + foo + ")");
+		}
 		return super.getPrecedingAxisIterator(foo);
 	}
 
 	public Iterator<?> getPrecedingSiblingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getPrecedingSiblingAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getPrecedingSiblingAxisIterator(" + foo + ")");
+		}
 		return super.getPrecedingSiblingAxisIterator(foo);
 	}
 
 	public String getProcessingInstructionData(Object obj) {
-		System.out.println(this.getClass().getName() + ".getProcessingInstructionData(" + obj + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getProcessingInstructionData(" + obj + ")");
+		}
 		return super.getProcessingInstructionData(obj);
 	}
 
 	public String getProcessingInstructionTarget(Object obj) {
-		System.out.println(this.getClass().getName() + ".getProcessingInstructionTarget(" + obj + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getProcessingInstructionTarget(" + obj + ")");
+		}
 		return super.getProcessingInstructionTarget(obj);
 	}
 
 	public Iterator<?> getSelfAxisIterator(Object foo)
 			throws UnsupportedAxisException {
-		System.out.println(this.getClass().getName() + ".getSelfAxisIterator(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getSelfAxisIterator(" + foo + ")");
+		}
 		return super.getSelfAxisIterator(foo);
 	}
 
 	public String translateNamespacePrefixToUri(String prefix, Object element) {
-		System.out.println(this.getClass().getName() + ".translateNamespacePrefixToUri(" + prefix + ", "
-				+ element + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".translateNamespacePrefixToUri(" + prefix + ", "
+					+ element + ")");
+		}
 		return super.translateNamespacePrefixToUri(prefix, element);
 	}
 
 	public String getAttributeName(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getAttributeName(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".getAttributeName("
+					+ foo + ")");
 		}
 
 		final ANTLRTreeAttribute attribute = (ANTLRTreeAttribute) foo;
@@ -193,21 +244,26 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public String getAttributeNamespaceUri(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getAttributeNamespaceUri(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getAttributeNamespaceUri(" + foo + ")");
 		}
 
 		return "";
 	}
 
 	public String getAttributeQName(Object foo) {
-		System.out.println(this.getClass().getName() + ".getAttributeQName(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getAttributeQName(" + foo + ")");
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getAttributeStringValue(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getAttributeStringValue(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getAttributeStringValue(" + foo + ")");
 		}
 
 		final ANTLRTreeAttribute attribute = (ANTLRTreeAttribute) foo;
@@ -215,14 +271,18 @@ public class KoopaNavigator extends DefaultNavigator {
 	}
 
 	public String getCommentStringValue(Object foo) {
-		System.out.println(this.getClass().getName() + ".getCommentStringValue(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getCommentStringValue(" + foo + ")");
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getElementName(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getElementName(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".getElementName("
+					+ foo + ")");
 		}
 
 		final Tree tree = (Tree) foo;
@@ -232,38 +292,52 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public String getElementNamespaceUri(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getElementNamespaceUri(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getElementNamespaceUri(" + foo + ")");
 		}
 		return "";
 	}
 
 	public String getElementQName(Object foo) {
-		System.out.println(this.getClass().getName() + ".getElementQName(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName() + ".getElementQName("
+					+ foo + ")");
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getElementStringValue(Object foo) {
-		System.out.println(this.getClass().getName() + ".getElementStringValue(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getElementStringValue(" + foo + ")");
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getNamespacePrefix(Object foo) {
-		System.out.println(this.getClass().getName() + ".getNamespacePrefix(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getNamespacePrefix(" + foo + ")");
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getNamespaceStringValue(Object foo) {
-		System.out.println(this.getClass().getName() + ".getNamespaceStringValue(" + foo + ")");
+		if (DEBUG) {
+			System.out.println(this.getClass().getName()
+					+ ".getNamespaceStringValue(" + foo + ")");
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getTextStringValue(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".getTextStringValue(" + foo + ")");
+			System.out.println(this.getClass().getName()
+					+ ".getTextStringValue(" + foo + ")");
 		}
 
 		final CommonTree tree = (CommonTree) foo;
@@ -275,7 +349,8 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public boolean isAttribute(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".isAttribute(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".isAttribute("
+					+ foo + ")");
 		}
 
 		return foo instanceof ANTLRTreeAttribute;
@@ -287,7 +362,8 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public boolean isDocument(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".isDocument(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".isDocument(" + foo
+					+ ")");
 		}
 
 		return false;
@@ -295,7 +371,8 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public boolean isElement(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".isElement(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".isElement(" + foo
+					+ ")");
 		}
 
 		if (foo instanceof Tree) {
@@ -320,7 +397,8 @@ public class KoopaNavigator extends DefaultNavigator {
 
 	public boolean isText(Object foo) {
 		if (DEBUG) {
-			System.out.println(this.getClass().getName() + ".isText(" + foo + ")");
+			System.out.println(this.getClass().getName() + ".isText(" + foo
+					+ ")");
 		}
 
 		if (foo instanceof Tree) {

@@ -9,7 +9,6 @@ import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokens.CompositeToken;
 import koopa.tokens.Token;
 
-
 public class TokenStateVerifiyingTokenizer implements Tokenizer {
 	private Tokenizer tokenizer = null;
 
@@ -89,23 +88,11 @@ public class TokenStateVerifiyingTokenizer implements Tokenizer {
 
 	private void checkAreaTags(Token token) {
 		int count = 0;
-		if (token.hasTag(AreaTag.COMMENT)) {
-			count += 1;
-		}
-		if (token.hasTag(AreaTag.END_OF_LINE)) {
-			count += 1;
-		}
-		if (token.hasTag(AreaTag.IDENTIFICATION_AREA)) {
-			count += 1;
-		}
-		if (token.hasTag(AreaTag.INDICATOR_AREA)) {
-			count += 1;
-		}
-		if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
-			count += 1;
-		}
-		if (token.hasTag(AreaTag.SEQUENCE_NUMBER_AREA)) {
-			count += 1;
+
+		for (Object tag : token.getTags()) {
+			if (tag instanceof AreaTag) {
+				count += 1;
+			}
 		}
 
 		if (count == 0) {

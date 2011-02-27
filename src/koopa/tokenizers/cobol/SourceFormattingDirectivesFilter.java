@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.PseudoTag;
 import koopa.tokens.Token;
 
 import org.apache.log4j.Logger;
@@ -43,11 +42,14 @@ public class SourceFormattingDirectivesFilter implements Tokenizer {
 		}
 
 		if (PATTERN.matcher(text).matches()) {
-			LOGGER.debug("Marking " + token + " as a comment.");
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Marking " + token
+						+ " as a source formatting directive.");
+			}
 
 			token.removeTag(AreaTag.PROGRAM_TEXT_AREA);
-			token.addTag(AreaTag.COMMENT);
-			token.addTag(PseudoTag.SOURCE_FORMATTING_DIRECTIVE);
+			// token.addTag(AreaTag.COMMENT);
+			token.addTag(AreaTag.SOURCE_FORMATTING_DIRECTIVE);
 		}
 
 		return token;

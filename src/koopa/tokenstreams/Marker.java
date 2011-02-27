@@ -44,8 +44,20 @@ public abstract class Marker implements Token {
 
 	public void setStart(Position start) {
 	}
-	
+
 	public int tagCount() {
 		return 0;
+	}
+
+	public Token subtoken(int beginIndex) {
+		return null;
+	}
+
+	public Token subtoken(int beginIndex, int endIndex) {
+		return null;
+	}
+
+	public Token[] split(int cutIndex) {
+		return null;
 	}
 }

@@ -122,9 +122,12 @@
 * Quoted quotes...
  DISPLAY "I want to be introduced as ""Calvin, boy of destiny."" But you have to say it right, pause a little after ""boy,"" and say ""Destiny"" a bit slower and deeper for emphasis. Say it, ""Boy... Of Dessstiny,"" Like that!".
 
- MOVE 'thoroughly useless information         ' TO CALVINS-COMMAND.
+ MOVE 'thoroughly useless information' TO CALVINS-COMMAND.
 
  MOVE 'Our class voted Calvin the ''Most likely to be seen on the news some day''.' TO SUSIE-QUOTE.
+
+ DISPLAY 'ONE' 'TWO'
+         'THREE'.
 
 * Pseudo literals.
  REPLACE ==Calvin== BY ==Spaceman Spiff==.

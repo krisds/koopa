@@ -1,5 +1,8 @@
 package koopa.tokens;
 
+/**
+ * Instances of this class should be immutable!
+ */
 public final class Position {
 
 	private final int linenumber;

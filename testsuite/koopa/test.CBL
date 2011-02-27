@@ -151,16 +151,19 @@ KOOPAH-        "ut you have to say it right, pause a little after ""boy,
 KOOPAH-        """ and say ""Destiny"" a bit slower and deeper for empha
 KOOPAH-        "sis. Say it, ""Boy... Of Dessstiny,"" Like that!".      :5
 KOOPAH
-KOOPAH MOVE                                                             :2
-KOOPAH         'thoroughly useless information
-KOOPAH-        '
-KOOPAH-        '         ' TO CALVINS-COMMAND.                          :8
+KOOPAH MOVE    'thoroughly
+KOOPAH-        ' useless 
+KOOPAH-        'information' TO CALVINS-COMMAND.                        :9
 KOOPAH
 KOOPAH* The quoted quote may also be continued in mid-quoting. Which    :0
 KOOPAH* means adding yet another quote...                               :0
-KOOPAH MOVE 'Our class voted Calvin the '
-KOOPAH-     ''Most likely to be seen on the news some day''
-KOOPAH-     '.' TO SUSIE-QUOTE.                                         :9
+KOOPAH MOVE                                'Our class voted Calvin the '
+KOOPAH-                   ''Most likely to be seen on the news some day'
+KOOPAH-     ''.' TO SUSIE-QUOTE.                                        :9
+KOOPAH
+KOOPAH* The following contains three literals; not two.                 :0
+KOOPAH DISPLAY 'ONE'                                               'TWO'
+KOOPAH-        'THREE'.                                                 :9
 KOOPAH
 KOOPAH* Pseudo literals.                                                :0
 KOOPAH REPLACE ==Calvin== BY ==Spaceman Spiff==.                        :9

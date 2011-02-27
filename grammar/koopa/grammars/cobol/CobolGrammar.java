@@ -9,6 +9,7 @@ import koopa.parsers.Parser;
 import koopa.parsers.FutureParser;
 
 import koopa.tokenizers.cobol.tags.SyntacticTag;
+import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokens.CompositeToken;
 import koopa.tokens.Token;
 import koopa.tokenstreams.TokenStream;
@@ -5976,7 +5977,7 @@ public class CobolGrammar extends KoopaGrammar {
     						break;
     					}
     	
-    					if (lastPosition >= 0
+    					if (lastPosition >= 0 && !token.hasTag(ContinuationsTag.CONTINUING)
     							&& token.getStart().getPositionInFile() != lastPosition + 1) {
     						// Token is separated from rest of picture. Hence it is
     						// not part of the picture.

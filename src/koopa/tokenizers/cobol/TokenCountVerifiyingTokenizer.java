@@ -5,6 +5,7 @@ import java.util.List;
 
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
+import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokens.Token;
 
 import org.apache.log4j.Logger;
@@ -29,7 +30,10 @@ public class TokenCountVerifiyingTokenizer implements Tokenizer {
 		Token token = tokenizer.nextToken();
 
 		if (token != null) {
-			if (token.hasTag(AreaTag.END_OF_LINE)) {
+			if (token.hasTag(ContinuationsTag.SKIPPED)) {
+				// Do nothing.
+
+			} else if (token.hasTag(AreaTag.END_OF_LINE)) {
 				count = 0;
 
 			} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {

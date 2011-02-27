@@ -15,8 +15,8 @@ import koopa.parsers.Parser;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CharacterStringTokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
-import koopa.tokenizers.cobol.ContinuationsTokenizer;
-import koopa.tokenizers.cobol.ContinuedTokenizer;
+import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
+import koopa.tokenizers.cobol.LineContinuationTokenizer;
 import koopa.tokenizers.cobol.LineSplittingTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
@@ -42,9 +42,9 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.apache.log4j.Logger;
 
-public class ExtendedParserConfiguration implements ParserConfiguration {
+public class CobolParser implements ParserConfiguration {
 
-	private static final Logger LOGGER = Logger.getLogger("parser.extended");
+	private static final Logger LOGGER = Logger.getLogger("parser");
 
 	private TokenTypes tokenTypes = null;
 	private List<IntermediateTokenizer> intermediateTokenizers = new LinkedList<IntermediateTokenizer>();
@@ -74,11 +74,15 @@ public class ExtendedParserConfiguration implements ParserConfiguration {
 		// The tokenizers in this sequence should generate the expected tokens.
 		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
 		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
-		tokenizer = new ProgramAreaTokenizer(tokenizer, this.format);
+		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
+
+		if (this.format == SourceFormat.FIXED) {
+			tokenizer = new LineContinuationTokenizer(tokenizer);
+			tokenizer = new ContinuationWeldingTokenizer(tokenizer);
+		}
+
 		tokenizer = new SeparatorTokenizer(tokenizer);
-		tokenizer = new ContinuationsTokenizer(tokenizer);
-		tokenizer = new ContinuedTokenizer(tokenizer);
 		tokenizer = new CharacterStringTokenizer(tokenizer);
 
 		if (this.keepingTrackOfTokens) {

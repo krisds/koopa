@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import koopa.app.parsers.ExtendedParserConfiguration;
+import koopa.app.parsers.CobolParser;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
@@ -58,7 +58,7 @@ public class CobolOutline extends JPanel implements ParsingListener {
 		return (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 	}
 
-	public void beforeParsing(File file, ExtendedParserConfiguration config) {
+	public void beforeParsing(File file, CobolParser config) {
 		this.root.removeAllChildren();
 		this.root.setUserObject(file);
 

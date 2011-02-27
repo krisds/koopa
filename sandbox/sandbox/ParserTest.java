@@ -1,34 +1,21 @@
 package sandbox;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.grammars.cobol.CobolGrammar;
-import koopa.grammars.cobol.CobolVerifier;
-import koopa.parsers.Parser;
-import koopa.tokenizers.Tokenizer;
-import koopa.tokenizers.cobol.CharacterStringTokenizer;
-import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
-import koopa.tokenizers.cobol.ContinuationsTokenizer;
-import koopa.tokenizers.cobol.ContinuedTokenizer;
-import koopa.tokenizers.cobol.LineSplittingTokenizer;
-import koopa.tokenizers.cobol.ProgramAreaTokenizer;
-import koopa.tokenizers.cobol.SeparatorTokenizer;
-import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.SyntacticTag;
-import koopa.tokenizers.generic.FilteringTokenizer;
-import koopa.tokens.Token;
-import koopa.tokens.TokenFilter;
-import koopa.util.Tuple;
+import koopa.app.parsers.CobolParser;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 public class ParserTest {
 
 	public static void main(String[] args) throws IOException {
+		Logger.getLogger("parser").setLevel(Level.TRACE);
+
 		File folder = new File("testsuite/cobol85");
 		// File folder = new File("testsuite/koopa");
 
@@ -39,11 +26,13 @@ public class ParserTest {
 			}
 		});
 
+		final CobolParser parser = new CobolParser();
+
 		int count = 0;
 		List<File> erroneous = new LinkedList<File>();
 		for (File file : sources) {
 			System.out.println("Processing " + file);
-			if (parse(file)) {
+			if (parser.parse(file).isValidInput()) {
 				count += 1;
 
 			} else {
@@ -63,121 +52,5 @@ public class ParserTest {
 				System.out.println("  " + file);
 			}
 		}
-	}
-
-	public static boolean parse(File file) throws IOException {
-		FileReader reader = new FileReader(file);
-		// FileReader reader = new FileReader("test.txt");
-
-		// We will be building up our tokenizer in several stages. Each stage
-		// takes the preceding tokenizer, and extends its abilities.
-		Tokenizer tokenizer;
-
-		// The tokenizers in this sequence should generate the expected tokens.
-		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
-		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
-		tokenizer = new ProgramAreaTokenizer(tokenizer);
-		tokenizer = new SeparatorTokenizer(tokenizer);
-		tokenizer = new ContinuationsTokenizer(tokenizer);
-		tokenizer = new ContinuedTokenizer(tokenizer);
-		tokenizer = new CharacterStringTokenizer(tokenizer);
-
-		// Here we filter out all tokens which are not part of the program text
-		// area (comments are not considered part of this area). This leaves us
-		// with the pure code, which should be perfect for processing by a
-		// parser.
-		tokenizer = new FilteringTokenizer(tokenizer, AreaTag.PROGRAM_TEXT_AREA);
-
-		// Here we filter out all pure whitespace separators. This leaves us
-		// with only the "structural" tokens which are of interest to a parser.
-		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
-			public boolean accepts(Token token) {
-				return !token.hasTag(SyntacticTag.SEPARATOR)
-						|| (!token.getText().trim().equals("")
-								&& !token.getText().equals(",") && !token
-								.getText().equals(";"));
-			}
-		});
-
-		// This object holds all grammar productions. It is not thread-safe,
-		// meaning that you can only ask it to parse one thing at a time.
-		CobolGrammar grammar = new CobolGrammar();
-
-		// This object does some extra verification on the output of the
-		// grammar.
-		CobolVerifier verifier = new CobolVerifier();
-
-		// Depending on the type of file we ask the grammar for the right
-		// parser.
-		Parser parser = null;
-		if (file.getName().toUpperCase().endsWith(".CBL")) {
-			parser = grammar.compilationGroup();
-		} else {
-			parser = grammar.copybook();
-		}
-
-		// We then ask the parser to parse the input.
-		boolean accepts = parser.accepts(tokenizer, verifier);
-
-		if (accepts) {
-			System.out.println("Input is valid.");
-
-		} else {
-			System.out.println("Input is invalid.");
-		}
-
-		if (grammar.hasWarnings()) {
-			System.out.println("There were warnings from the grammar:");
-			final List<Tuple<Token, String>> warnings = grammar.getWarnings();
-			for (Tuple<Token, String> warning : warnings) {
-				System.out.println("  " + warning.getFirst() + ": "
-						+ warning.getSecond());
-			}
-		}
-
-		if (verifier.hasWarnings()) {
-			System.out.println("There were warnings from the verifier:");
-			final List<Tuple<Token, String>> warnings = verifier.getWarnings();
-			for (Tuple<Token, String> warning : warnings) {
-				System.out.println("  " + warning.getFirst() + ": "
-						+ warning.getSecond());
-			}
-		}
-
-		if (verifier.hasErrors()) {
-			System.out.println("There were errors from the verifier:");
-			final List<Tuple<Token, String>> errors = verifier.getErrors();
-			for (Tuple<Token, String> error : errors) {
-				System.out.println("  " + error.getFirst() + ": "
-						+ error.getSecond());
-			}
-
-			accepts = false;
-		}
-
-		Token t = tokenizer.nextToken();
-		if (t != null) {
-			System.out.println("Not all input was consumed.");
-
-			int count = 0;
-			do {
-				System.out.println("-> " + t);
-				count++;
-			} while (count < 5 && (t = tokenizer.nextToken()) != null);
-
-			if (t != null) {
-				System.out.println("-> ...");
-			}
-
-			accepts = false;
-		}
-
-		// Some of our tokenizers may be threaded. We need to make sure that any
-		// threads they hold get stopped. This is what we do here. The message
-		// will get passed along the chain of tokenizers, giving each a chance
-		// to stop running.
-		tokenizer.quit();
-
-		return accepts;
 	}
 }

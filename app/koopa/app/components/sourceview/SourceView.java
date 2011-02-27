@@ -26,7 +26,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.Highlighter.HighlightPainter;
 
-import koopa.app.parsers.ExtendedParserConfiguration;
+import koopa.app.parsers.CobolParser;
 import koopa.app.parsers.ParseResults;
 import koopa.app.parsers.ParsingCoordinator;
 import koopa.app.parsers.ParsingListener;
@@ -203,7 +203,7 @@ public class SourceView extends JPanel implements ParsingListener {
 		}
 	}
 
-	public void beforeParsing(File file, ExtendedParserConfiguration config) {
+	public void beforeParsing(File file, CobolParser config) {
 		pane.setText("");
 		pane.getHighlighter().removeAllHighlights();
 

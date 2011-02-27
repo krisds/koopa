@@ -1,5 +1,6 @@
 package koopa.tokens;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,10 @@ public class TokenBase {
 
 	public Set<Object> getTags() {
 		return this.tags;
+	}
+
+	public void addTags(Collection<Object> tags) {
+		this.tags.addAll(tags);
 	}
 
 	public int tagCount() {

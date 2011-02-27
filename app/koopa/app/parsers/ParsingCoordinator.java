@@ -30,7 +30,7 @@ public class ParsingCoordinator {
 	}
 
 	public ParseResults parse(File file) throws IOException {
-		ExtendedParserConfiguration config = new ExtendedParserConfiguration();
+		CobolParser config = new CobolParser();
 
 		config.setFormat(this.format);
 		config.setKeepingTrackOfTokens(keepingTrackOfTokens);
@@ -48,7 +48,7 @@ public class ParsingCoordinator {
 		return results;
 	}
 
-	private void fireBeforeParsing(File file, ExtendedParserConfiguration config) {
+	private void fireBeforeParsing(File file, CobolParser config) {
 		for (ParsingListener listener : this.parsingListeners) {
 			listener.beforeParsing(file, config);
 		}

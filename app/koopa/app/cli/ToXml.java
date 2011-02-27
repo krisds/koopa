@@ -3,7 +3,7 @@ package koopa.app.cli;
 import java.io.File;
 import java.io.IOException;
 
-import koopa.app.parsers.ExtendedParserConfiguration;
+import koopa.app.parsers.CobolParser;
 import koopa.app.parsers.ParseResults;
 import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokens.Token;
@@ -52,7 +52,7 @@ public class ToXml {
 			System.exit(FILE_DOES_NOT_EXIST);
 		}
 
-		final ExtendedParserConfiguration parser = new ExtendedParserConfiguration();
+		final CobolParser parser = new CobolParser();
 		parser.setFormat(format);
 		parser.setBuildTrees(true);
 

@@ -302,7 +302,8 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		}
 
 		String name = file.getName().toUpperCase();
-		if (name.endsWith(".CBL") || name.endsWith(".COB") || name.endsWith(".CPY")) {
+		if (name.endsWith(".CBL") || name.endsWith(".COB")
+				|| name.endsWith(".CPY")) {
 			targets.add(file);
 		}
 	}

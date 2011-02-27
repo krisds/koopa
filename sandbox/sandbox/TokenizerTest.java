@@ -9,8 +9,8 @@ import java.util.List;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CharacterStringTokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
-import koopa.tokenizers.cobol.ContinuationsTokenizer;
-import koopa.tokenizers.cobol.ContinuedTokenizer;
+import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
+import koopa.tokenizers.cobol.LineContinuationTokenizer;
 import koopa.tokenizers.cobol.LineSplittingTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
@@ -19,7 +19,7 @@ import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
 import koopa.tokenizers.cobol.TokenCountVerifiyingTokenizer;
 import koopa.tokenizers.cobol.TokenStateVerifiyingTokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.PseudoTag;
+import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokenizers.generic.FilteringTokenizer;
 import koopa.tokens.Token;
@@ -47,7 +47,7 @@ public class TokenizerTest {
 			}
 
 			for (Object tag : fixedToken.getTags()) {
-				if (tag == PseudoTag.CONTINUED) {
+				if (tag instanceof ContinuationsTag) {
 					continue;
 				}
 
@@ -88,13 +88,18 @@ public class TokenizerTest {
 		Tokenizer tokenizer;
 
 		// The tokenizers in this sequence should generate the expected tokens.
+
 		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
 		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
 		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
+
+		if (format == SourceFormat.FIXED) {
+			tokenizer = new LineContinuationTokenizer(tokenizer);
+			tokenizer = new ContinuationWeldingTokenizer(tokenizer);
+		}
+
 		tokenizer = new SeparatorTokenizer(tokenizer);
-		tokenizer = new ContinuationsTokenizer(tokenizer);
-		tokenizer = new ContinuedTokenizer(tokenizer);
 		tokenizer = new CharacterStringTokenizer(tokenizer);
 
 		// This tokenizer partly tests that assumption by comparing the number
@@ -105,6 +110,8 @@ public class TokenizerTest {
 		TokenCountVerifiyingTokenizer countVerifier = null;
 		tokenizer = countVerifier = new TokenCountVerifiyingTokenizer(tokenizer);
 
+		// This tokenizer tests the tagging of tokens, making sure that they are
+		// in a consistent state.
 		TokenStateVerifiyingTokenizer stateVerifier = null;
 		tokenizer = stateVerifier = new TokenStateVerifiyingTokenizer(tokenizer);
 
@@ -123,11 +130,10 @@ public class TokenizerTest {
 			}
 		});
 
-		// Finally, we pass the remaining tokens through a tokenizer which
-		// prints them out to the terminal.
+		// The following is handy in debugging:
 		// tokenizer = new PrintingTokenizer(tokenizer, System.out);
 
-		// Sofar, no tokenization will have occured. The file will only start
+		// So far, no tokenization will have occurred. The file will only start
 		// getting tokenized when we start asking for tokens. We do this in the
 		// following loop, which also counts the number of tokens which are
 		// returned at the end.
@@ -135,6 +141,7 @@ public class TokenizerTest {
 		Token nextToken = null;
 		while ((nextToken = tokenizer.nextToken()) != null) {
 			tokens.add(nextToken);
+			// System.out.println(nextToken);
 		}
 
 		// Some of our tokenizers may be threaded. We need to make sure that any
@@ -144,8 +151,6 @@ public class TokenizerTest {
 		tokenizer.quit();
 
 		// Finally, some reporting on the results of the tokenizing.
-		// System.out.println();
-		// System.out.println("== Koopa Tokenizer report ======================");
 		System.out.println("Processed " + tokens.size()
 				+ " top level token(s).");
 

@@ -53,6 +53,8 @@ public class BatchIt extends JFrame implements ParsingProvider,
 
 	private JMenuItem pick = null;
 
+	private JMenuItem clearResults = null;
+
 	private JMenuItem saveCSV = null;
 
 	private JProgressBar progress = null;
@@ -101,6 +103,10 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		file.add(this.pick);
 
 		file.addSeparator();
+
+		this.clearResults = new JMenuItem(new ClearResultsAction(this));
+		this.clearResults.setEnabled(false);
+		file.add(this.clearResults);
 
 		saveCSV = new JMenuItem(new ExportBatchResultsToCSVAction(
 				new Getter<BatchResults>() {
@@ -286,6 +292,10 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		}
 
 		this.pick.setEnabled(true);
+
+		final boolean hasResults = this.results.getRowCount() > 0;
+		this.clearResults.setEnabled(hasResults);
+		this.saveCSV.setEnabled(hasResults);
 	}
 
 	private void walk(File file, List<File> targets) {
@@ -318,9 +328,6 @@ public class BatchIt extends JFrame implements ParsingProvider,
 			failed.addError(null, e.getMessage());
 			this.results.add(failed);
 			e.printStackTrace();
-
-		} finally {
-			this.saveCSV.setEnabled(true);
 		}
 	}
 
@@ -376,5 +383,11 @@ public class BatchIt extends JFrame implements ParsingProvider,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void clearResults() {
+		this.results.clear();
+		this.clearResults.setEnabled(false);
+		this.saveCSV.setEnabled(false);
 	}
 }

@@ -136,4 +136,13 @@ public class BatchResults extends AbstractTableModel {
 	public ParseResults getResults(int i) {
 		return this.parseResults.get(i);
 	}
+
+	public void clear() {
+		this.files.clear();
+		this.parseResults.clear();
+		this.tokenCount.clear();
+		this.coverage.clear();
+
+		fireTableDataChanged();
+	}
 }

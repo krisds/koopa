@@ -694,7 +694,9 @@ occurs
         )
           ( 'KEY' )?
           ( 'IS' )?
-          ( dataName )+
+          ( ( dataName
+            ( qualifier )*
+          ) )+
         ) )*
         ( ( 'INDEXED'
           ( 'BY' )?

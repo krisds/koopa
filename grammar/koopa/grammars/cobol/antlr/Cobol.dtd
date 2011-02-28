@@ -36,7 +36,7 @@
 <!ELEMENT external (t?,t)>
 <!ELEMENT global (t?,t)>
 <!ELEMENT justified (t,t?)>
-<!ELEMENT occurs (t,integer,(t,integer)?,t?,(t,t?,dataName,qualifier*)?,(t,t?,t?,dataName+)*,(t,t?,indexName+)?)>
+<!ELEMENT occurs (t,integer,(t,integer)?,t?,(t,t?,dataName,qualifier*)?,(t,t?,t?,(dataName,qualifier*)+)*,(t,t?,indexName+)?)>
 <!ELEMENT picture (t,t?,pictureString)>
 <!ELEMENT sign ((t,t?)?,t,(t,t?)?)>
 <!ELEMENT sync (t,t?)>

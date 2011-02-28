@@ -99,6 +99,19 @@ target occurs;
    INDEXED BY MY-INDEX MY-OTHER-INDEX ]
 
 
+# Requested by MasterProgrammer, and corroborated by the IBM Enterprise Cobol reference:
+# The data-name in the key clause can be qualified.
++[ OCCURS 42 TIMES 
+   ASCENDING KEY IS MY-KEY OF MY-TABLE ]
++[ OCCURS 42 TIMES 
+   ASCENDING KEY IS MY-KEY IN MY-TABLE ]
++[ OCCURS 42 TIMES 
+   DESCENDING KEY IS MY-KEY OF MY-TABLE ]
++[ OCCURS 42 TIMES 
+   DESCENDING KEY IS MY-KEY IN MY-TABLE ]
+
+
+
 target sign;
 
 +[ LEADING ]

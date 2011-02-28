@@ -280,7 +280,7 @@ def occurs =
     # TODO The "TO numeric" part should only occur when "DEPENDING ON" occurs.
     OCCURS integer [TO integer] [TIMES]
     [ DEPENDING [ON] dataName (qualifier)* ]
-    ((ASCENDING | DESCENDING) [KEY] [IS] (dataName)+)* 
+    ((ASCENDING | DESCENDING) [KEY] [IS] (dataName (qualifier)*)+)* 
     [INDEXED [BY] (indexName)+]
 end
 

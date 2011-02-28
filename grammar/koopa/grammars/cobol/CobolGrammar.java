@@ -1311,7 +1311,12 @@ public class CobolGrammar extends KoopaGrammar {
                                token("IS")
                            ),
                            plus(
-                               dataName()
+                               sequence(
+                                   dataName(),
+                                   star(
+                                       qualifier()
+                                   )
+                               )
                            )
                        )
                    ),

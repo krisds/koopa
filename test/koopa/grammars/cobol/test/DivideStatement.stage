@@ -124,3 +124,7 @@ target divideStatement;
 
 +[ DIVIDE A INTO B GIVING C
    END-DIVIDE ]
+
+# TALLY is a special register which can be used in arithmetic statements.
++[ DIVIDE A INTO B GIVING TALLY
+   END-DIVIDE ]

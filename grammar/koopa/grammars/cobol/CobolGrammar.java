@@ -5684,7 +5684,7 @@ public class CobolGrammar extends KoopaGrammar {
         // RESERVED_WORDS.add("SYSTEM");
         RESERVED_WORDS.add("SYSTEM-DEFAULT");
         RESERVED_WORDS.add("TABLE");
-        RESERVED_WORDS.add("TALLY");
+        // RESERVED_WORDS.add("TALLY");
         RESERVED_WORDS.add("TALLYING");
         RESERVED_WORDS.add("TAPE");
         RESERVED_WORDS.add("TAPES");

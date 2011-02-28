@@ -482,4 +482,14 @@ public class DivideStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testDivideStatement_49() {
+      Parser parser = grammar.divideStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "GIVING", 
+        "TALLY", "END-DIVIDE");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+    }
 }

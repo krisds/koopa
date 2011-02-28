@@ -42,7 +42,8 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 				return;
 			}
 
-			if (token.hasTag(AreaTag.END_OF_LINE)) {
+			if (token.hasTag(AreaTag.END_OF_LINE)
+					|| token.hasTag(AreaTag.COMMENT)) {
 				enqueue(token);
 				continue;
 			}

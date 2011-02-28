@@ -9,6 +9,9 @@
 *                                                                *
 ******************************************************************
 
+* Title compiler directive.
+ TITLE "Koopa Tokenizer Test".
+
  IDENTIFICATION DIVISION.
 
  PROGRAM-ID.

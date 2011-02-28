@@ -14,7 +14,10 @@ KOOPAH* tokens (in the program text) of all lines (original and        *:0
 KOOPAH* continued).                                                    *:0
 KOOPAH*                                                                *:0
 KOOPAH******************************************************************:0
-KOOPAH
+
+      * Title compiler directive.
+       TITLE "Koopa Tokenizer Test".
+
 KOOPAH IDENTIFICATION DIVISION.                                         :5
 KOOPAH
 KOOPAH PROGRAM-ID.                                                      :3

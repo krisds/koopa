@@ -15,6 +15,9 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 	private static final Pattern CBL_PROCESS_STATEMENT = Pattern
 			.compile("(^|\\s)(CBL|PROCESS)\\s.*");
 
+	private static final Pattern TITLE_STATEMENT = Pattern
+			.compile("(^|\\s)TITLE\\s.*");
+
 	private final Tokenizer tokenizer;
 
 	private final LinkedList<Token> queuedTokens = new LinkedList<Token>();
@@ -38,6 +41,10 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 			return token;
 		}
 
+		if (isTitleStatement(token)) {
+			return this.queuedTokens.removeFirst();
+		}
+
 		if (isCblProcessStatement(token)) {
 			return this.queuedTokens.removeFirst();
 		}
@@ -45,7 +52,26 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		return token;
 	}
 
-	private boolean isCblProcessStatement(Token token) {
+	private boolean isTitleStatement(final Token token) {
+		// Enterprise COBOL for z/OS V4.2 Language Reference, p571:
+		// 'The TITLE statement specifies a title to be printed at the top of
+		// each page of the source listing produced during compilation.'
+		final String text = token.getText();
+
+		// TODO Make this match more exact ? Right now it can accept bad inputs,
+		// but that may be fine...
+		final Matcher matcher = TITLE_STATEMENT.matcher(text.toUpperCase());
+
+		if (!matcher.find()) {
+			return false;
+		}
+
+		token.addTag(AreaTag.COMMENT);
+		this.queuedTokens.addFirst(token);
+		return true;
+	}
+
+	private boolean isCblProcessStatement(final Token token) {
 		// Enterprise COBOL for z/OS V4.2 Language Reference, p554:
 		// "With the CBL (PROCESS) statement, you can specify compiler options
 		// to be used in the compilation of the program."

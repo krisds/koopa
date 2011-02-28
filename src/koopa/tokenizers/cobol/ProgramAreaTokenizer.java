@@ -58,12 +58,7 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 			if (this.format == SourceFormat.FREE) {
 				int c = text.charAt(0);
 
-				if (indicatesComment(c)) {
-					// These are definitely indicators.
-					enqueue(tokenizeArea(token, 0, 1, AreaTag.INDICATOR_AREA));
-					enqueue(tokenizeArea(token, 1, length, AreaTag.COMMENT));
-
-				} else if (c == 'D' || c == 'd') {
+				if (c == 'D' || c == 'd') {
 					// This is only an indicator if it gets followed by a space.
 					// Otherwise it's program text.
 					if (text.charAt(1) == ' ') {
@@ -76,6 +71,14 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 						token.addTag(AreaTag.PROGRAM_TEXT_AREA);
 						enqueue(token);
 					}
+
+				} else if (indicatesComment(c)) {
+					// These are definitely indicators.
+					//
+					// Note: Keep this after the debug line check, as the
+					// indicatesComment method accepts 'd' and 'D' as well.
+					enqueue(tokenizeArea(token, 0, 1, AreaTag.INDICATOR_AREA));
+					enqueue(tokenizeArea(token, 1, length, AreaTag.COMMENT));
 
 				} else {
 					// Program text.
@@ -129,7 +132,7 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	private boolean indicatesComment(int c) {
-		return c == '*' || c == '/' || c == '$';
+		return c == '*' || c == '/' || c == '$' || c == 'D' || c == 'd';
 	}
 
 	private Token tokenizeArea(Token token, int begin, int end, Object tag) {

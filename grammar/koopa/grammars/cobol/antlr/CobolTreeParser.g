@@ -1763,7 +1763,7 @@ performStatement
         | until
         | varying
         ) )?
-          nestedStatements
+          ( nestedStatements )?
           'END-PERFORM'
         )
         | ( procedureName

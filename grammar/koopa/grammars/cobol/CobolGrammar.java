@@ -3260,7 +3260,9 @@ public class CobolGrammar extends KoopaGrammar {
                                    varying()
                                )
                            ),
-                           nestedStatements(),
+                           optional(
+                               nestedStatements()
+                           ),
                            token("END-PERFORM")
                        ),
                        sequence(

@@ -644,7 +644,6 @@ end
 ## DIVIDE statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def divideStatement =
     DIVIDE ( division_format1 | division_format2 | division_format3 )
     [[ON] SIZE ERROR nestedStatements]
@@ -839,7 +838,7 @@ def performStatement =
     PERFORM 
     ( # "in-line"
       [ times | until | varying ]
-      nestedStatements
+      [ nestedStatements ]
       END-PERFORM
 
     | # "out-of-line"

@@ -88,7 +88,7 @@
 <!ELEMENT multiplication_format1 ((identifier|literal),t,(identifier|literal),t,(identifier,t?)+)>
 <!ELEMENT multiplication_format2 ((identifier|literal),t,(identifier,t?)+)>
 <!ELEMENT openStatement (t,((t,(fileName,(t|(t?,t,t))?)+)|(t,(fileName,(t?,t,t)?)+)|(t,fileName+)|(t,fileName+))+)>
-<!ELEMENT performStatement (t,(((times|until|varying)?,nestedStatements,t)|(procedureName,(t,procedureName)?,(times|until|varying)?)))>
+<!ELEMENT performStatement (t,(((times|until|varying)?,nestedStatements?,t)|(procedureName,(t,procedureName)?,(times|until|varying)?)))>
 <!ELEMENT times ((identifier|integer),t)>
 <!ELEMENT until ((t?,t,t)?,t,condition)>
 <!ELEMENT varying ((t?,t,t)?,t,identifier,t,(literal|identifier),t,(literal|identifier),t,condition,(t,identifier,t,(literal|identifier),t,(literal|identifier),t,condition)*)>

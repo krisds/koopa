@@ -394,4 +394,15 @@ public class PerformStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(34, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testPerformStatement_39() {
+      Parser parser = grammar.performStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("PERFORM", "VARYING", "MY-COUNT", 
+        "FROM", "1", "BY", "1", "UNTIL", "MY-VALUE", "(", "MY-INDEX", ")", "NOT", 
+        "<", "THE-RETURN-CODE", "END-PERFORM");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(16, tokenizer.getNumberOfProcessedTokens());
+    }
 }

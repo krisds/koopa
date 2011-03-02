@@ -173,4 +173,24 @@ public class IfStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertEquals(16, tokenizer.getNumberOfProcessedTokens());
     }
+
+    @Test
+    public void testIfStatement_17() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "DISPLAY", 
+        "GOOD", "ELSE", "NEXT", "SENTENCE", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_18() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "NEXT", "SENTENCE", 
+        "ELSE", "DISPLAY", "BAD", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
 }

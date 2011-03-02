@@ -97,3 +97,16 @@ target ifStatement;
      DISPLAY BAD
      DISPLAY WORSE
      DISPLAY ¥ WORST ]
+
++[ IF 1 < 2
+     DISPLAY GOOD
+   ELSE
+     NEXT SENTENCE
+   END-IF ]
+
++[ IF 1 < 2
+     NEXT SENTENCE
+   ELSE
+     DISPLAY BAD
+   END-IF ]
+   

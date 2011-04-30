@@ -28,6 +28,7 @@ import koopa.app.actions.ExportASTToXMLAction;
 import koopa.app.actions.FileManager;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
+import koopa.app.actions.ReloadFileAction;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
@@ -46,6 +47,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class ShowIt extends JFrame implements FileManager,
 		ConfigurableApplication {
 
+	private File cobolFile = null;
 	private ParseResults results = null;
 	private ParsingCoordinator coordinator = null;
 	private SourceView pane = null;
@@ -157,7 +159,7 @@ public class ShowIt extends JFrame implements FileManager,
 		final JMenu file = new JMenu("File");
 
 		if (!isDialog) {
-			JMenuItem open = new JMenuItem(new OpenFileAction(this,
+			final JMenuItem open = new JMenuItem(new OpenFileAction(this,
 					new FileFilter() {
 						public boolean accept(File f) {
 							if (!f.isFile())
@@ -175,6 +177,10 @@ public class ShowIt extends JFrame implements FileManager,
 
 			open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
 			file.add(open);
+
+			final JMenuItem reload = new JMenuItem(new ReloadFileAction(this));
+			reload.setAccelerator(KeyStroke.getKeyStroke("meta R"));
+			file.add(reload);
 		}
 
 		bar.add(file);
@@ -286,14 +292,19 @@ public class ShowIt extends JFrame implements FileManager,
 	}
 
 	public void openFile(File file) {
-		setTitle("Koopa Show It - " + file + " (parsing)");
+		if (file == null) {
+			return;
+		}
+
+		this.cobolFile = file;
+		setTitle("Koopa Show It - " + this.cobolFile + " (parsing)");
 
 		if (syntaxTree != null) {
 			syntaxTree.setEnabled(false);
 		}
 
 		try {
-			results = this.coordinator.parse(file);
+			results = this.coordinator.parse(this.cobolFile);
 
 			if (syntaxTree != null && results.getErrorCount() == 0
 					&& results.getTree() != null) {
@@ -302,14 +313,18 @@ public class ShowIt extends JFrame implements FileManager,
 
 			float coverage = Metrics.getCoverage(results);
 
-			setTitle("Koopa Show It - " + file + " ("
+			setTitle("Koopa Show It - " + this.cobolFile + " ("
 					+ coverageFormatter.format(coverage) + "%)");
 
 		} catch (IOException e) {
-			setTitle("Koopa Show It - " + file);
+			setTitle("Koopa Show It - " + this.cobolFile);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void reloadFile() {
+		openFile(this.cobolFile);
 	}
 
 	public void scrollTo(int position) {

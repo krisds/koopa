@@ -11,6 +11,10 @@ import koopa.tokens.Token;
 
 public class CompilerDirectivesTokenizer implements Tokenizer {
 
+	// For the '$ SET SOURCEFORMAT'. A Micro Focus compiler directive.
+	private static final Pattern MF_SET_DIRECTIVE = Pattern
+			.compile("^\\s*\\$\\s*SET\\s+SOURCEFORMAT(\\s|\"|\\().*");
+
 	// For the CBL/PROCESS compiler directive.
 	private static final Pattern CBL_PROCESS_STATEMENT = Pattern
 			.compile("(^|\\s)(CBL|PROCESS)\\s.*");
@@ -41,6 +45,10 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 			return token;
 		}
 
+		if (isMicroFocusCompilerDirective(token)) {
+			return this.queuedTokens.removeFirst();
+		}
+
 		if (isTitleStatement(token)) {
 			return this.queuedTokens.removeFirst();
 		}
@@ -50,6 +58,25 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		return token;
+	}
+
+	private boolean isMicroFocusCompilerDirective(final Token token) {
+		// TODO Find some real documentation on this statement.
+		// TODO When the directive sets the sourceformat, use that to switch the
+		// Koopa tokenizer source format ?
+		final String text = token.getText();
+
+		// TODO Make this match more exact ? Right now it can accept bad inputs,
+		// but that may be fine...
+		final Matcher matcher = MF_SET_DIRECTIVE.matcher(text.toUpperCase());
+
+		if (!matcher.find()) {
+			return false;
+		}
+
+		token.addTag(AreaTag.COMMENT);
+		this.queuedTokens.addFirst(token);
+		return true;
 	}
 
 	private boolean isTitleStatement(final Token token) {

@@ -90,8 +90,8 @@ public class CompositeToken extends TokenBase implements Token {
 	}
 
 	public Token subtoken(int beginIndex) {
-		// TODO Implement;
-		throw new RuntimeException("TO BE IMPLEMENTED for " + this.toString());
+		// TODO Can do a more optimised version if we want to.
+		return subtoken(beginIndex, getLength());
 	}
 
 	public Token subtoken(int beginIndex, int endIndex) {

@@ -1,3 +1,4 @@
+import koopa.tokenizers.cobol.tags.TokenizerTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokens.CompositeToken;

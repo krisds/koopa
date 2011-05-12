@@ -8,6 +8,7 @@ import koopa.parsers.KoopaGrammar;
 import koopa.parsers.Parser;
 import koopa.parsers.FutureParser;
 
+import koopa.tokenizers.cobol.tags.TokenizerTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokens.CompositeToken;
@@ -5973,10 +5974,9 @@ public class CobolGrammar extends KoopaGrammar {
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
     	
-    				boolean inParen = false;
-    				int count = 0;
+    				int numberOfTokens = 0;
     				CompositeToken picture = new CompositeToken();
-    				int lastPosition = -1;
+
     				while (true) {
     					final Token token = stream.nextToken();
     	
@@ -5984,62 +5984,27 @@ public class CobolGrammar extends KoopaGrammar {
     						break;
     					}
     	
-    					if (lastPosition >= 0 && !token.hasTag(ContinuationsTag.CONTINUING)
-    							&& token.getStart().getPositionInFile() != lastPosition + 1) {
-    						// Token is separated from rest of picture. Hence it is
-    						// not part of the picture.
+    					if (numberOfTokens > 0 && !token.hasTag(TokenizerTag.CHAINED)) {
     						stream.pushback(token);
     						break;
-    	
-    					} else {
-    						lastPosition = token.getEnd().getPositionInFile();
     					}
-    	
-    					if (!inParen && token.hasTag(SyntacticTag.SEPARATOR)
-    							&& token.getText().equals("(")) {
-    						picture.addToken(token);
-    						inParen = true;
-    						count = 0;
-    						continue;
-    					}
-    	
-    					if (inParen && token.hasTag(SyntacticTag.SEPARATOR)
-    							&& token.getText().equals(")")) {
-    						picture.addToken(token);
-    						inParen = false;
-    						count = 0;
-    						continue;
-    					}
-    	
-    					if (inParen && count == 0
-    							&& token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
-    						picture.addToken(token);
-    						count = 1;
-    						continue;
-    					}
-    	
-    					if (!inParen
-    							&& count == 0
-    							&& token
-    									.hasTag(SyntacticTag.CHARACTER_STRING)) {
-    						// TODO Should check if text is valid in a picture.
-    						picture.addToken(token);
-    						count = 1;
-    						continue;
-    					}
-    	
-    					// Token not part of picture.
-    					stream.pushback(token);
-    					break;
+    					
+    					picture.addToken(token);
+    					numberOfTokens += 1;
     				}
-    	
-    				if (!inParen && picture.size() > 0) {
-    					returnToken(picture.size() == 1 ? picture.getToken(0)
-    							: picture);
-    					return true;
-    	
-    				} else
+    				
+    				if (numberOfTokens == 0) {
     					return false;
+    				}
+    				
+    				final Token lastToken = picture.getToken(numberOfTokens - 1);
+    				if (lastToken.hasTag(SyntacticTag.SEPARATOR) && lastToken.getText().equals(".")) {
+    					picture.removeToken(numberOfTokens - 1);
+    					stream.pushback(lastToken);
+    				}
+    				
+    				returnToken(picture);
+    				return true;
     			}
     		});
     	}

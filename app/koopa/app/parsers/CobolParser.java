@@ -13,18 +13,19 @@ import koopa.grammars.cobol.CobolVerifier;
 import koopa.grammars.cobol.antlr.CobolTreeParser;
 import koopa.parsers.Parser;
 import koopa.tokenizers.Tokenizer;
-import koopa.tokenizers.cobol.CharacterStringTokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
 import koopa.tokenizers.cobol.LineContinuationTokenizer;
 import koopa.tokenizers.cobol.LineSplittingTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
+import koopa.tokenizers.cobol.PseudoLiteralTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
 import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
 import koopa.tokenizers.cobol.TokenTrackerTokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
+import koopa.tokenizers.cobol.tags.TokenizerTag;
 import koopa.tokenizers.generic.FilteringTokenizer;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 import koopa.tokens.Token;
@@ -83,7 +84,7 @@ public class CobolParser implements ParserConfiguration {
 		}
 
 		tokenizer = new SeparatorTokenizer(tokenizer);
-		tokenizer = new CharacterStringTokenizer(tokenizer);
+		tokenizer = new PseudoLiteralTokenizer(tokenizer);
 
 		if (this.keepingTrackOfTokens) {
 			final TokenTrackerTokenizer tokenTracker = new TokenTrackerTokenizer(
@@ -110,15 +111,35 @@ public class CobolParser implements ParserConfiguration {
 
 		// Here we filter out all pure whitespace separators. This leaves us
 		// with only the "structural" tokens which are of interest to a parser.
+		// 
+		// When we do this we need to tag tokens which were not separated by
+		// whitespace. This is needed to correctly build picture strings while
+		// parsing. It would be nicer if we could recognize picture strings
+		// in the tokenizer stages, but I don't see how we can do that without
+		// some form of parsing...
 		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
+			boolean lastWasWhitespace = true;
+
 			public boolean accepts(Token token) {
 				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
+					if (!lastWasWhitespace) {
+						token.addTag(TokenizerTag.CHAINED);
+					}
+					lastWasWhitespace = false;
 					return true;
 				}
 
-				final String text = token.getText();
-				return !text.trim().equals("") && !text.equals(",")
-						&& !text.equals(";");
+				final String text = token.getText().trim();
+				if (text.equals("")) {
+					lastWasWhitespace = true;
+					return false;
+				}
+
+				if (!lastWasWhitespace) {
+					token.addTag(TokenizerTag.CHAINED);
+				}
+				lastWasWhitespace = false;
+				return !text.equals(",") && !text.equals(";");
 			}
 		});
 

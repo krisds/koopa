@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import koopa.tokenizers.Tokenizer;
-import koopa.tokenizers.cobol.CharacterStringTokenizer;
+import koopa.tokenizers.cobol.PseudoLiteralTokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
 import koopa.tokenizers.cobol.LineContinuationTokenizer;
@@ -100,7 +100,7 @@ public class TokenizerTest {
 		}
 
 		tokenizer = new SeparatorTokenizer(tokenizer);
-		tokenizer = new CharacterStringTokenizer(tokenizer);
+		tokenizer = new PseudoLiteralTokenizer(tokenizer);
 
 		// This tokenizer partly tests that assumption by comparing the number
 		// of tokens in the program text area on each line with the expected

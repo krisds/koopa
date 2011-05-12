@@ -97,8 +97,8 @@
  DISPLAY "I'm off to check my tiger trap!".
 
 * Testing numeric literals.
- DISPLAY 1, 23, 456, 7890.  *> These are integer values.
- DISPLAY 1.23, 345.6789.    *> These are decimal values.
+ DISPLAY 1, 23, 456, 7890.      *> These are integer values.
+ DISPLAY 1.23, 345.6789, .8.    *> These are decimal values.
 * TODO: Test signed numeric literals.
 
 * First paragraph; not in section.
@@ -140,3 +140,7 @@
 
 * Checks that the comment indicator is not recognised inside literals.
  DISPLAY '*> DO A BARREL ROLL <*'.
+
+* Checks that non-separator non-cobol-word characters get split up correctly.
+ IF NUMBER=ELEVENTEEN
+   DISPLAY "You have to use imaginary numbers.".

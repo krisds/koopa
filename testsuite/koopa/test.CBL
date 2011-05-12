@@ -51,30 +51,30 @@ KOOPAH 01 FIELD-09  PIC     BAAAB.                                      :9
 KOOPAH 01 FIELD-10  PICTURE IS 999,999.                                 :11
 KOOPAH 01 FIELD-11  PIC     IS 99B99B99.                                :11
 KOOPAH 01 FIELD-12  PICTURE 99B99B00.                                   :9
-KOOPAH 01 FIELD-13  PIC     99/99/99.                                   :9
+KOOPAH 01 FIELD-13  PIC     99/99/99.                                   :13
 KOOPAH 01 FIELD-14  PICTURE IS XXBXXX.                                  :11
 KOOPAH 01 FIELD-15  PIC     IS 000X(5).                                 :14
-KOOPAH 01 FIELD-16  PICTURE XX/XX.                                      :9
+KOOPAH 01 FIELD-16  PICTURE XX/XX.                                      :11
 KOOPAH 01 FIELD-17  PIC     999.999.                                    :9
 KOOPAH 01 FIELD-18  PICTURE IS +999.99.                                 :11
 KOOPAH 01 FIELD-19  PIC     IS -999.99.                                 :11
-KOOPAH 01 FIELD-20  PICTURE $999.99.                                    :9
-KOOPAH 01 FIELD-21  PIC     $$$$.99.                                    :9
-KOOPAH 01 FIELD-22  PICTURE IS $,$$$.99.                                :11
-KOOPAH 01 FIELD-23  PIC     IS +,+++.99.                                :11
-KOOPAH 01 FIELD-24  PICTURE +,+++.++.                                   :9
-KOOPAH 01 FIELD-25  PIC     $,$$$.99.                                   :9
-KOOPAH 01 FIELD-26  PICTURE IS -,---.99.                                :11
-KOOPAH 01 FIELD-27  PIC     IS $$.$$$.99.                               :11
-KOOPAH 01 FIELD-28  PICTURE +,+++,999.99.                               :9
-KOOPAH 01 FIELD-29  PIC     +,+++,+++.++.                               :9
-KOOPAH 01 FIELD-30  PICTURE IS ZZZZ.ZZ.                                 :11
-KOOPAH 01 FIELD-31  PIC     IS ****.**.                                 :11
-KOOPAH 01 FIELD-32  PICTURE ZZZZ.99.                                    :9
-KOOPAH 01 FIELD-33  PIC     ****.99.                                    :9
-KOOPAH 01 FIELD-34  PICTURE IS ZZZZ.ZZ.                                 :11
-KOOPAH 01 FIELD-35  PIC     IS $**,***.**B.                             :11
-KOOPAH 01 FIELD-36  PICTURE $BB****,**.99BB.                            :9
+KOOPAH 01 FIELD-20  PICTURE $999.99.                                    :10
+KOOPAH 01 FIELD-21  PIC     $$$$.99.                                    :13
+KOOPAH 01 FIELD-22  PICTURE IS $,$$$.99.                                :16
+KOOPAH 01 FIELD-23  PIC     IS +,+++.99.                                :15
+KOOPAH 01 FIELD-24  PICTURE +,+++.++.                                   :16
+KOOPAH 01 FIELD-25  PIC     $,$$$.99.                                   :14
+KOOPAH 01 FIELD-26  PICTURE IS -,---.99.                                :15
+KOOPAH 01 FIELD-27  PIC     IS $$.$$$.99.                               :17
+KOOPAH 01 FIELD-28  PICTURE +,+++,999.99.                               :15
+KOOPAH 01 FIELD-29  PIC     +,+++,+++.++.                               :20
+KOOPAH 01 FIELD-30  PICTURE IS ZZZZ.ZZ.                                 :13
+KOOPAH 01 FIELD-31  PIC     IS ****.**.                                 :17
+KOOPAH 01 FIELD-32  PICTURE ZZZZ.99.                                    :10
+KOOPAH 01 FIELD-33  PIC     ****.99.                                    :13
+KOOPAH 01 FIELD-34  PICTURE IS ZZZZ.ZZ.                                 :13
+KOOPAH 01 FIELD-35  PIC     IS $**,***.**B.                             :21
+KOOPAH 01 FIELD-36  PICTURE $BB****,**.99BB.                            :19
 KOOPAH
 KOOPAH* Testing continuation of picture clauses.                        :0
 KOOPAH 01 FIELD-37A PIC S9(
@@ -107,8 +107,8 @@ KOOPAH DISPLAY 'So long, Pop!'.                                         :5
 KOOPAH DISPLAY "I'm off to check my tiger trap!".                       :5
 KOOPAH
 KOOPAH* Testing numeric literals.                                       :0
-KOOPAH DISPLAY 1, 23, 456, 7890.  *> These are integer values.          :14
-KOOPAH DISPLAY 1.23, 345.6789.    *> These are decimal values.          :8
+KOOPAH DISPLAY 1, 23, 456, 7890.      *> These are integer values.      :14
+KOOPAH DISPLAY 1.23, 345.6789, .8.    *> These are decimal values.      :11
 KOOPAH* TODO: Test signed numeric literals.                             :0
 KOOPAH
 KOOPAH* First paragraph; not in section.                                :0
@@ -177,3 +177,8 @@ KOOPAH
 KOOPAH* Checks that the comment indicator is not recognised inside
 KOOPAH* literals.
 KOOPAH DISPLAY '*> DO A BARREL ROLL <*'.                                :5
+KOOPAH
+KOOPAH* Checks that non-separator non-cobol-word characters get split up:0
+KOOPAH* correctly.                                                      :0
+KOOPAH IF NUMBER=ELEVENTEEN                                             :6
+KOOPAH   DISPLAY "You have to use imaginary numbers.".                  :6

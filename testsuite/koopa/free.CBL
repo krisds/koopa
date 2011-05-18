@@ -77,6 +77,8 @@
  66 FIELD-39 RENAMES FIELD-01 THROUGH FIELD-02.
  66 FIELD-40 RENAMES FIELD-03 THRU FIELD-04.
 
+ 01 BUGGY-00 PICTURE S9(03)V9(06).
+
  88 COND-00 VALUE IS 0.
  88 COND-01 VALUE 1.
  88 COND-02 VALUES ARE 2.
@@ -144,3 +146,8 @@
 * Checks that non-separator non-cobol-word characters get split up correctly.
  IF NUMBER=ELEVENTEEN
    DISPLAY "You have to use imaginary numbers.".
+
+* Checks tokenisation of <= and >= .
+ IF CALVIN >= HOBBES
+    OR CALVIN <= SUSIE
+   DISPLAY "...".

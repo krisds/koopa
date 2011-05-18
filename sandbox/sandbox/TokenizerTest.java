@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import koopa.tokenizers.Tokenizer;
-import koopa.tokenizers.cobol.PseudoLiteralTokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
 import koopa.tokenizers.cobol.LineContinuationTokenizer;
 import koopa.tokenizers.cobol.LineSplittingTokenizer;
 import koopa.tokenizers.cobol.ProgramAreaTokenizer;
+import koopa.tokenizers.cobol.PseudoLiteralTokenizer;
 import koopa.tokenizers.cobol.SeparatorTokenizer;
 import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
@@ -34,7 +34,12 @@ public class TokenizerTest {
 				SourceFormat.FREE);
 
 		boolean mismatched = false;
-		for (int i = 0; !mismatched && i < fixedTokens.size(); i++) {
+		final int numberOfFixedTokens = fixedTokens.size();
+		final int numberOfFreeTokens = freeTokens.size();
+		final int numberOfTokens = Math.min(numberOfFixedTokens,
+				numberOfFreeTokens);
+
+		for (int i = 0; !mismatched && i < numberOfTokens; i++) {
 			final Token fixedToken = fixedTokens.get(i);
 			final Token freeToken = freeTokens.get(i);
 
@@ -67,7 +72,7 @@ public class TokenizerTest {
 			}
 		}
 
-		if (mismatched || fixedTokens.size() != freeTokens.size()) {
+		if (mismatched || numberOfFixedTokens != numberOfFreeTokens) {
 			System.out.println("Inputs differ in the tokens they produce.");
 			System.out.println("That's bad!");
 

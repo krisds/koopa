@@ -51,11 +51,12 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		while (position < length) {
 			final char c = text.charAt(position);
 
-			if (c == ' ') {
-				position = whitespace(token, text, position, length);
+			// NOTE. The following cases are repeated in the 'other' method. If
+			// you update these cases then also update that method!
 
-			} else if ((c == ',' || c == ';' || c == '.')
-					&& (position + 1 == length || text.charAt(position + 1) == ' ')) {
+			if (isSeparatorFollowedBySpace(text, length, position, c)) {
+				// SEPARATOR.
+
 				// Based on following definition:
 				// "Commas and semicolons can only be used as separators when
 				// they are immediately followed by a space."
@@ -80,37 +81,78 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 					position = whitespace(token, text, position, length);
 				}
 
-			} else if (c == '(' || c == ')' || c == ':') {
+			} else if (isSeparator(c)) {
+				// SEPARATOR.
 				position = separator(token, c, position);
 
-			} else if (c == '"' || c == '\'') {
-				position = stringLiteral(token, text, position, length, c);
+			} else if (isWhitespace(c)) {
+				// SEPARATOR.
+				position = whitespace(token, text, position, length);
 
 			} else if (startOfInlineComment(text, position, length, c)) {
+				// COMMENT.
 				position = inlineComment(token, position, length);
 
-			} else if (c == '=' && position + 1 < length
-					&& text.charAt(position + 1) == '=') {
+			} else if (startsStringLiteral(c)) {
+				// STRING LITERAL.
+				position = stringLiteral(token, text, position, length, c);
+
+			} else if (isPseudoLiteralMarker(text, length, position, c)) {
+				// PSEUDO LITERAL (marker)
 				position = pseudoLiteral(token, position);
 
 			} else if (startOfHexadecimal(text, length, position, c)) {
+				// HEXADECIMAL LITERAL.
 				position = hexadecimal(token, text, position, length, text
 						.charAt(position + 1));
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
+				// SIGNED NUMERIC LITERAL.
 				position = signedNumber(token, text, position, length);
 
-			} else if (c == '.' && position + 1 < length
-					&& isDigit(text.charAt(position + 1))) {
+			} else if (startsDotDecimal(text, length, position, c)) {
+				// UNSIGNED DECIMAL LITERAL.
 				position = dotDecimal(token, text, position, length);
 
 			} else if (isLetterOrDigit(c)) {
+				// UNSIGNED NUMERIC LITERAL or COBOL WORD.
 				position = cobolWordOrNumber(token, text, position, length);
 
 			} else {
-				position = other(token, c, position);
+				// OTHER.
+				position = other(token, text, position, length);
 			}
 		}
+	}
+
+	private boolean startsDotDecimal(final String text, final int length,
+			int position, final char c) {
+		return c == '.' && position + 1 < length
+				&& isDigit(text.charAt(position + 1));
+	}
+
+	private boolean isPseudoLiteralMarker(final String text, final int length,
+			int position, final char c) {
+		return c == '=' && position + 1 < length
+				&& text.charAt(position + 1) == '=';
+	}
+
+	private boolean startsStringLiteral(final char c) {
+		return c == '"' || c == '\'';
+	}
+
+	private boolean isWhitespace(final char c) {
+		return c == ' ';
+	}
+
+	private boolean isSeparator(final char c) {
+		return c == '(' || c == ')' || c == ':';
+	}
+
+	private boolean isSeparatorFollowedBySpace(final String text,
+			final int length, int position, final char c) {
+		return (c == ',' || c == ';' || c == '.')
+				&& (position + 1 == length || text.charAt(position + 1) == ' ');
 	}
 
 	private boolean startOfHexadecimal(final String text, final int length,
@@ -489,15 +531,71 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		return '0' <= c && c <= '9';
 	}
 
-	private int other(final Token token, final char c, final int start) {
-		final Token separator = token.subtoken(start, start + 1);
+	private int other(final Token token, final String text, final int start,
+			final int length) {
+
+		int position = start;
+		while (position < length) {
+			final char c = text.charAt(position);
+
+			// NOTE. The following is a repetition of the cases in the tokenize
+			// method. If you update the cases there you should also update them
+			// here.
+
+			if (isSeparatorFollowedBySpace(text, length, position, c)) {
+				// SEPARATOR.
+				break;
+
+			} else if (isSeparator(c)) {
+				// SEPARATOR.
+				break;
+
+			} else if (isWhitespace(c)) {
+				// SEPARATOR.
+				break;
+
+			} else if (startOfInlineComment(text, position, length, c)) {
+				// COMMENT.
+				break;
+
+			} else if (startsStringLiteral(c)) {
+				// STRING LITERAL.
+				break;
+
+			} else if (isPseudoLiteralMarker(text, length, position, c)) {
+				// PSEUDO LITERAL (marker)
+				break;
+
+			} else if (startOfHexadecimal(text, length, position, c)) {
+				// HEXADECIMAL LITERAL.
+				break;
+
+			} else if (startOfSignedNumber(text, position, length, c)) {
+				// SIGNED NUMERIC LITERAL.
+				break;
+
+			} else if (startsDotDecimal(text, length, position, c)) {
+				// UNSIGNED DECIMAL LITERAL.
+				break;
+
+			} else if (isLetterOrDigit(c)) {
+				// UNSIGNED NUMERIC LITERAL or COBOL WORD.
+				break;
+
+			} else {
+				// OTHER.
+				position += 1;
+			}
+		}
+
+		final Token separator = token.subtoken(start, position);
 		separator.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		separator.addTag(SyntacticTag.CHARACTER_STRING);
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Other: " + separator);
 		}
 		enqueue(separator);
-		return start + 1;
+		return position;
 	}
 
 	public void quit() {

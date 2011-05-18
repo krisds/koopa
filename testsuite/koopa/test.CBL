@@ -59,22 +59,22 @@ KOOPAH 01 FIELD-17  PIC     999.999.                                    :9
 KOOPAH 01 FIELD-18  PICTURE IS +999.99.                                 :11
 KOOPAH 01 FIELD-19  PIC     IS -999.99.                                 :11
 KOOPAH 01 FIELD-20  PICTURE $999.99.                                    :10
-KOOPAH 01 FIELD-21  PIC     $$$$.99.                                    :13
-KOOPAH 01 FIELD-22  PICTURE IS $,$$$.99.                                :16
-KOOPAH 01 FIELD-23  PIC     IS +,+++.99.                                :15
-KOOPAH 01 FIELD-24  PICTURE +,+++.++.                                   :16
-KOOPAH 01 FIELD-25  PIC     $,$$$.99.                                   :14
-KOOPAH 01 FIELD-26  PICTURE IS -,---.99.                                :15
-KOOPAH 01 FIELD-27  PIC     IS $$.$$$.99.                               :17
-KOOPAH 01 FIELD-28  PICTURE +,+++,999.99.                               :15
-KOOPAH 01 FIELD-29  PIC     +,+++,+++.++.                               :20
+KOOPAH 01 FIELD-21  PIC     $$$$.99.                                    :10
+KOOPAH 01 FIELD-22  PICTURE IS $,$$$.99.                                :12
+KOOPAH 01 FIELD-23  PIC     IS +,+++.99.                                :12
+KOOPAH 01 FIELD-24  PICTURE +,+++.++.                                   :9
+KOOPAH 01 FIELD-25  PIC     $,$$$.99.                                   :10
+KOOPAH 01 FIELD-26  PICTURE IS -,---.99.                                :12
+KOOPAH 01 FIELD-27  PIC     IS $$.$$$.99.                               :12
+KOOPAH 01 FIELD-28  PICTURE +,+++,999.99.                               :10
+KOOPAH 01 FIELD-29  PIC     +,+++,+++.++.                               :9
 KOOPAH 01 FIELD-30  PICTURE IS ZZZZ.ZZ.                                 :13
-KOOPAH 01 FIELD-31  PIC     IS ****.**.                                 :17
+KOOPAH 01 FIELD-31  PIC     IS ****.**.                                 :11
 KOOPAH 01 FIELD-32  PICTURE ZZZZ.99.                                    :10
-KOOPAH 01 FIELD-33  PIC     ****.99.                                    :13
+KOOPAH 01 FIELD-33  PIC     ****.99.                                    :10
 KOOPAH 01 FIELD-34  PICTURE IS ZZZZ.ZZ.                                 :13
-KOOPAH 01 FIELD-35  PIC     IS $**,***.**B.                             :21
-KOOPAH 01 FIELD-36  PICTURE $BB****,**.99BB.                            :19
+KOOPAH 01 FIELD-35  PIC     IS $**,***.**B.                             :12
+KOOPAH 01 FIELD-36  PICTURE $BB****,**.99BB.                            :13
 KOOPAH
 KOOPAH* Testing continuation of picture clauses.                        :0
 KOOPAH 01 FIELD-37A PIC S9(
@@ -85,6 +85,8 @@ KOOPAH
 KOOPAH 66 FIELD-38 RENAMES FIELD-00.                                    :9
 KOOPAH 66 FIELD-39 RENAMES FIELD-01 THROUGH FIELD-02.                   :13
 KOOPAH 66 FIELD-40 RENAMES FIELD-03 THRU FIELD-04.                      :13
+KOOPAH
+KOOPAH 01 BUGGY-00 PICTURE S9(03)V9(06).                                :16
 KOOPAH
 KOOPAH 88 COND-00 VALUE IS 0.                                           :11
 KOOPAH 88 COND-01 VALUE 1.                                              :9
@@ -182,3 +184,8 @@ KOOPAH* Checks that non-separator non-cobol-word characters get split up:0
 KOOPAH* correctly.                                                      :0
 KOOPAH IF NUMBER=ELEVENTEEN                                             :6
 KOOPAH   DISPLAY "You have to use imaginary numbers.".                  :6
+KOOPAH
+KOOPAH* Checks tokenisation of <= and >= .                              :0
+KOOPAH IF CALVIN >= HOBBES                                              :8
+KOOPAH    OR CALVIN <= SUSIE                                            :9
+KOOPAH   DISPLAY "...".                                                 :6

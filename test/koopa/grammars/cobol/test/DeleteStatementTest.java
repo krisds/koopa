@@ -55,7 +55,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "INVALID", 
         "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "RECORD", 
         "INVALID", "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "INVALID", 
         "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "RECORD", 
         "INVALID", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "NOT", "INVALID", 
         "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "RECORD", 
         "NOT", "INVALID", "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "NOT", "INVALID", 
         "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class DeleteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DELETE", "MY-FILE", "RECORD", 
         "NOT", "INVALID", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

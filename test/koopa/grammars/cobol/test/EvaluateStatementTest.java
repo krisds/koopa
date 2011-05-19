@@ -271,7 +271,7 @@ public class EvaluateStatementTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WHEN", "OTHER", "DISPLAY", "\"Other.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -281,7 +281,7 @@ public class EvaluateStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WHEN", "OTHER", "DISPLAY", "\"Other.\"", 
         "DISPLAY", "\"More.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -290,7 +290,7 @@ public class EvaluateStatementTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("WHEN", "ANY", "DISPLAY", "\"Good.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -300,7 +300,7 @@ public class EvaluateStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WHEN", "TRUE", "ALSO", "ANY", 
         "DISPLAY", "\"Good.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -310,7 +310,7 @@ public class EvaluateStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WHEN", "TRUE", "ALSO", "ANY", 
         "ALSO", "42", "DISPLAY", "\"Good.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -320,7 +320,7 @@ public class EvaluateStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WHEN", "ANY", "WHEN", "TRUE", 
         "ALSO", "ANY", "WHEN", "TRUE", "ALSO", "ANY", "ALSO", "42", "DISPLAY", "\"Good.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(14, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -340,7 +340,7 @@ public class EvaluateStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("EVALUATE", "FOO", "WHEN", "42", 
         "DISPLAY", "\"Meaning of life, the universe and everything.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -361,6 +361,26 @@ public class EvaluateStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("EVALUATE", "TRUE", "WHEN", "PROCESSING", 
         "<", "100", "DISPLAY", "\"Keep going.\"", "WHEN", "OTHER", "DISPLAY", "\"Done.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testEvaluateStatement_39() {
+      Parser parser = grammar.evaluateStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("EVALUATE", "FUNCTION", "LENGTH", 
+        "(", "\"ABCDEFGHIJKLMNOPQRST\"", ")", "WHEN", "20", "DISPLAY", "\"OK\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testEvaluateStatement_40() {
+      Parser parser = grammar.evaluateStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("EVALUATE", "WRK-XN-00001-1", 
+        "NUMERIC", "WHEN", "TRUE", "DISPLAY", "\"OK\"");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 }

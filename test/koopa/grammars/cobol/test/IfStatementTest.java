@@ -37,7 +37,7 @@ public class IfStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "THEN", "DISPLAY", 
         "GOOD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class IfStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "DISPLAY", 
         "GOOD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class IfStatementTest extends TestCase {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "THEN", "DISPLAY", 
-        "GOOD", "DISPLAY", "BETTER", "DISPLAY", "BEST", "END-IF");
+        "'GOOD'", "DISPLAY", "BETTER", "DISPLAY", "BEST", "END-IF");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
@@ -77,7 +77,7 @@ public class IfStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "THEN", "DISPLAY", 
         "GOOD", "DISPLAY", "BETTER", "DISPLAY", "BEST");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -87,7 +87,7 @@ public class IfStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "DISPLAY", 
         "GOOD", "DISPLAY", "BETTER", "DISPLAY", "BEST");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class IfStatementTest extends TestCase {
         "GOOD", "DISPLAY", "BETTER", "DISPLAY", "BEST", "ELSE", "DISPLAY", "BAD", 
         "DISPLAY", "WORSE", "DISPLAY", "WORST");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(17, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(18, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class IfStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "THEN", "DISPLAY", 
         "GOOD", "ELSE", "DISPLAY", "BAD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class IfStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "DISPLAY", 
         "GOOD", "ELSE", "DISPLAY", "BAD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -160,7 +160,7 @@ public class IfStatementTest extends TestCase {
         "GOOD", "DISPLAY", "BETTER", "DISPLAY", "BEST", "ELSE", "DISPLAY", "BAD", 
         "DISPLAY", "WORSE", "DISPLAY", "WORST");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(17, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(18, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -171,7 +171,7 @@ public class IfStatementTest extends TestCase {
         "GOOD", "DISPLAY", "BETTER", "DISPLAY", "BEST", "ELSE", "DISPLAY", "BAD", 
         "DISPLAY", "WORSE", "DISPLAY", "WORST");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(16, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(17, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -192,5 +192,67 @@ public class IfStatementTest extends TestCase {
         "ELSE", "DISPLAY", "BAD", "END-IF");
       assertTrue(parser.accepts(tokenizer));
       assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_19() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "AND", "2", 
+        ">", "1", "DISPLAY", "GOOD", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_20() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "1", "<", "2", "AND", "2", 
+        ">", "1", "AND", "V-ARIABLE", "=", "0", "DISPLAY", "GOOD", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(15, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_21() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "V-ARIABLE", "=", "2", "OR", 
+        "=", "3", "DISPLAY", "PERFECT", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_22() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "(", "V-ARIABLE", "=", "2", 
+        "OR", "=", "3", ")", "THEN", "DISPLAY", "PERFECT", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_23() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "(", "V-ARIABLE", "=", "2", 
+        "OR", "=", "3", ")", "AND", "V-ARIABLE", "NOT", "=", "3", "DISPLAY", "PERFECT", 
+        "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(17, tokenizer.getNumberOfProcessedTokens());
+    }
+
+    @Test
+    public void testIfStatement_24() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer("IF", "V-ARIABLE", "NOT", "=", 
+        "3", "AND", "(", "V-ARIABLE", "=", "2", "OR", "=", "3", ")", "DISPLAY", 
+        "PERFECT", "END-IF");
+      assertTrue(parser.accepts(tokenizer));
+      assertEquals(17, tokenizer.getNumberOfProcessedTokens());
     }
 }

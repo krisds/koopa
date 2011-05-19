@@ -76,4 +76,6 @@ body
   | ^(PERMUTED 
       body+
     )
+  
+  | ^(NOT body)
   ;

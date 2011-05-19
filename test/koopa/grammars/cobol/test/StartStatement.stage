@@ -10,19 +10,19 @@ target startStatement;
 
 +[ START MY-FILE 
    INVALID KEY
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ START MY-FILE 
    INVALID
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ START MY-FILE 
    NOT INVALID KEY
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ START MY-FILE 
    NOT INVALID
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ START MY-FILE 
    INVALID KEY

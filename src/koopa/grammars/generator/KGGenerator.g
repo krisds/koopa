@@ -238,4 +238,10 @@ body [ List<String> bindings, List<String> unbindings ]
     -> permuted(
       choice = {choices}
     )
+
+  | ^(NOT b=body[bindings, unbindings])
+  
+    -> not(
+      body = {b}
+    )
   ;

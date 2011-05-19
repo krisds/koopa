@@ -35,7 +35,7 @@ public class StartStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("START", "MY-FILE", "INVALID", 
         "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class StartStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("START", "MY-FILE", "INVALID", 
         "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class StartStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("START", "MY-FILE", "NOT", "INVALID", 
         "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class StartStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("START", "MY-FILE", "NOT", "INVALID", 
         "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

@@ -113,51 +113,51 @@ target writeStatement;
 
 +[ WRITE MY-RECORD 
    AT END-OF-PAGE
-      DISPLAY ¥ "End of page." ]
+      DISPLAY "End of page." ]
 
 +[ WRITE MY-RECORD 
    AT EOP
-      DISPLAY ¥ "End of page." ]
+      DISPLAY "End of page." ]
 
 +[ WRITE MY-RECORD 
    END-OF-PAGE
-      DISPLAY ¥ "End of page." ]
+      DISPLAY "End of page." ]
 
 +[ WRITE MY-RECORD 
    EOP
-      DISPLAY ¥ "End of page." ]
+      DISPLAY "End of page." ]
 
 +[ WRITE MY-RECORD 
    NOT AT END-OF-PAGE
-      DISPLAY ¥ "Elsewhere on page." ]
+      DISPLAY "Elsewhere on page." ]
 
 +[ WRITE MY-RECORD 
    NOT AT EOP
-      DISPLAY ¥ "Elsewhere on page." ]
+      DISPLAY "Elsewhere on page." ]
 
 +[ WRITE MY-RECORD 
    NOT END-OF-PAGE
-      DISPLAY ¥ "Elsewhere on page." ]
+      DISPLAY "Elsewhere on page." ]
 
 +[ WRITE MY-RECORD 
    NOT EOP
-      DISPLAY ¥ "Elsewhere on page." ]
+      DISPLAY "Elsewhere on page." ]
 
 +[ WRITE MY-RECORD 
    INVALID KEY
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ WRITE MY-RECORD 
    INVALID
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ WRITE MY-RECORD 
    NOT INVALID KEY
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ WRITE MY-RECORD 
    NOT INVALID
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ WRITE MY-RECORD 
    AT END-OF-PAGE

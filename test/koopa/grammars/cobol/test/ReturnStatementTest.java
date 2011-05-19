@@ -33,7 +33,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "AT", "END", 
         "DISPLAY", "\"At end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "RECORD", 
         "AT", "END", "DISPLAY", "\"At end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "INTO", "MY-FIELD", 
         "AT", "END", "DISPLAY", "\"At end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "RECORD", 
         "INTO", "MY-FIELD", "AT", "END", "DISPLAY", "\"At end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -113,7 +113,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "AT", "END", 
         "DISPLAY", "\"At end.\"", "NOT", "AT", "END", "DISPLAY", "\"Not at end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "RECORD", 
         "AT", "END", "DISPLAY", "\"At end.\"", "NOT", "AT", "END", "DISPLAY", "\"Not at end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ReturnStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("RETURN", "MY-FILE", "INTO", "MY-FIELD", 
         "AT", "END", "DISPLAY", "\"At end.\"", "NOT", "AT", "END", "DISPLAY", "\"Not at end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -177,7 +177,7 @@ public class ReturnStatementTest extends TestCase {
         "INTO", "MY-FIELD", "AT", "END", "DISPLAY", "\"At end.\"", "NOT", "AT", 
         "END", "DISPLAY", "\"Not at end.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(14, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

@@ -160,6 +160,24 @@ public abstract class KoopaGrammar {
 		};
 	}
 
+	protected Parser not(final Parser parser) {
+		return new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				LOGGER.trace("[not>");
+
+				TokenStream sub = new SubordinateTokenStream(stream);
+
+				final boolean accepted = parser.accepts(sub);
+
+				sub.restore();
+
+				LOGGER.trace("<not]");
+
+				return !accepted;
+			}
+		};
+	}
+
 	protected Parser star(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {

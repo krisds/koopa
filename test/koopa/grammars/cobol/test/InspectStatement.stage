@@ -1,0 +1,44 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target tallyingPhrase;
+
++[ TALLYING WRK-DU-999-1 FOR ALL "A" ]
++[ TALLYING WRK-DU-999-2 FOR LEADING "A" ]
++[ TALLYING WRK-DU-999-3 FOR CHARACTERS BEFORE "." ]
++[ TALLYING WRK-DU-999-4 FOR CHARACTERS AFTER "AL" ]
+
++[ TALLYING WRK-DU-999-1 FOR ALL "A"
+            WRK-DU-999-2 FOR ALL "B" ]
+
++[ TALLYING WRK-DU-999-1 FOR LEADING "A"
+            WRK-DU-999-2 FOR LEADING "B" ]
+
++[ TALLYING WRK-DU-999-1 FOR LEADING "S" AFTER WS-Y
+                                     "S" AFTER "U"
+                                     "T" AFTER WS-Y
+                                     "T" AFTER "U" ]
+
+
+target inspectStatement;
+
++[ INSPECT WRK-XN-83-1 
+     TALLYING
+         WRK-DU-999-1 FOR ALL "A"
+         WRK-DU-999-2 FOR LEADING "AH"
+         WRK-DU-999-3 FOR CHARACTERS BEFORE "."
+         WRK-DU-999-4 FOR CHARACTERS AFTER "AL"
+     REPLACING
+         FIRST "L " BY "ZZ" AFTER INITIAL "AL"
+         FIRST "BAD" BY "ZZZ" AFTER "L "
+         LEADING "BAD" BY "ZZZ" BEFORE INITIAL "Q"
+         FIRST "BAD" BY "ZZZ" BEFORE INITIAL "Z"
+         FIRST "BAD" BY "ZZZ" AFTER "ALL "
+         ALL "." BY "Z" AFTER "AL" ]
+
++[ INSPECT TEST-32-DATA 
+     TALLYING 
+         WRK-DU-999-1 FOR LEADING "S" AFTER WS-Y
+                                  "S" AFTER "U"
+                                  "T" AFTER WS-Y
+                                  "T" AFTER "U" ]

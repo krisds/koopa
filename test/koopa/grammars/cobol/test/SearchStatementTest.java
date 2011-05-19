@@ -16,7 +16,7 @@ public class SearchStatementTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("AT", "END", "DISPLAY", "\"FOO\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class SearchStatementTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("END", "DISPLAY", "\"FOO\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -35,7 +35,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("NOT", "AT", "END", "DISPLAY", 
         "\"FOO\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -44,7 +44,7 @@ public class SearchStatementTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("NOT", "END", "DISPLAY", "\"FOO\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "EMPLOYEES", "WHEN", 
         "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "EMPLOYEES", "VARYING", 
         "EMPLOYEE-NUMBER", "WHEN", "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "EMPLOYEES", "AT", "END", 
         "DISPLAY", "\"No-one found.\"", "WHEN", "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class SearchStatementTest extends TestCase {
         "EMPLOYEE-NUMBER", "AT", "END", "DISPLAY", "\"No-one found.\"", "WHEN", 
         "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -157,7 +157,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "EMPLOYEES", "END", 
         "DISPLAY", "\"No-one found.\"", "WHEN", "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class SearchStatementTest extends TestCase {
         "EMPLOYEE-NUMBER", "END", "DISPLAY", "\"No-one found.\"", "WHEN", "TRUE", 
         "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -200,7 +200,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "EMPLOYEES", "WHEN", 
         "TRUE", "DISPLAY", "\"Found one.\"", "DISPLAY", "\"Really!\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -220,7 +220,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "EMPLOYEES", "WHEN", 
         "TRUE", "DISPLAY", "\"Found one.\"", "WHEN", "FALSE", "DISPLAY", "\"Found one... not!\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -242,7 +242,7 @@ public class SearchStatementTest extends TestCase {
         "TRUE", "DISPLAY", "\"Found one.\"", "DISPLAY", "\"Really!\"", "WHEN", "FALSE", 
         "DISPLAY", "\"Found one... not!\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -263,7 +263,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "ALL", "EMPLOYEES", 
         "WHEN", "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -284,7 +284,7 @@ public class SearchStatementTest extends TestCase {
         "AT", "END", "DISPLAY", "\"No-one found.\"", "WHEN", "TRUE", "DISPLAY", 
         "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -305,7 +305,7 @@ public class SearchStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("SEARCH", "ALL", "EMPLOYEES", 
         "END", "DISPLAY", "\"No-one found.\"", "WHEN", "TRUE", "DISPLAY", "\"Found one.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

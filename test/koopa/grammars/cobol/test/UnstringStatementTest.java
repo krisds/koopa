@@ -315,7 +315,7 @@ public class UnstringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("UNSTRING", "TEXT", "INTO", "PART1", 
         "PART2", "PART3", "ON", "OVERFLOW", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -335,7 +335,7 @@ public class UnstringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("UNSTRING", "TEXT", "INTO", "PART1", 
         "PART2", "PART3", "NOT", "ON", "OVERFLOW", "DISPLAY", "\"AOK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -355,7 +355,7 @@ public class UnstringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("UNSTRING", "TEXT", "INTO", "PART1", 
         "PART2", "PART3", "OVERFLOW", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -375,7 +375,7 @@ public class UnstringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("UNSTRING", "TEXT", "INTO", "PART1", 
         "PART2", "PART3", "NOT", "OVERFLOW", "DISPLAY", "\"AOK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -396,7 +396,7 @@ public class UnstringStatementTest extends TestCase {
         "PART2", "PART3", "OVERFLOW", "DISPLAY", "\"Oops.\"", "NOT", "OVERFLOW", 
         "DISPLAY", "\"AOK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

@@ -35,12 +35,27 @@ public class TestTokenizer implements PushbackTokenizer {
 
 			} else if (part.matches("^\\d+$")) {
 				token.addTag(SyntacticTag.INTEGER_LITERAL);
+				token.addTag(SyntacticTag.UNSIGNED);
 
 			} else if (part.matches("^\\d+\\.\\d+$")) {
 				token.addTag(SyntacticTag.DECIMAL_LITERAL);
+				token.addTag(SyntacticTag.UNSIGNED);
 
 			} else if (part.matches("^\\d+\\,\\d+$")) {
 				token.addTag(SyntacticTag.DECIMAL_LITERAL);
+				token.addTag(SyntacticTag.UNSIGNED);
+
+			} else if (part.matches("^(\\+|-)\\d+$")) {
+				token.addTag(SyntacticTag.INTEGER_LITERAL);
+				token.addTag(SyntacticTag.SIGNED);
+
+			} else if (part.matches("^(\\+|-)\\d+\\.\\d+$")) {
+				token.addTag(SyntacticTag.DECIMAL_LITERAL);
+				token.addTag(SyntacticTag.SIGNED);
+
+			} else if (part.matches("^(\\+|-)\\d+\\,\\d+$")) {
+				token.addTag(SyntacticTag.DECIMAL_LITERAL);
+				token.addTag(SyntacticTag.SIGNED);
 			}
 
 			this.tokens.add(token);

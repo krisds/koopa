@@ -24,13 +24,16 @@ public class CobolGrammarTests {
 		suite.addTestSuite(DeleteStatementTest.class);
 		suite.addTestSuite(DivideStatementTest.class);
 		suite.addTestSuite(EntryStatementTest.class);
+		suite.addTestSuite(EnvironmentDivisionTest.class);
 		suite.addTestSuite(EvaluateStatementTest.class);
 		suite.addTestSuite(ExecStatementTest.class);
 		suite.addTestSuite(ExitStatementTest.class);
 		suite.addTestSuite(FileDescriptionEntryTest.class);
+		suite.addTestSuite(FunctionTest.class);
 		suite.addTestSuite(GoToStatementTest.class);
 		suite.addTestSuite(IdentificationDivisionTest.class);
 		suite.addTestSuite(IfStatementTest.class);
+		suite.addTestSuite(InspectStatementTest.class);
 		suite.addTestSuite(MoveStatementTest.class);
 		suite.addTestSuite(MultiplyStatementTest.class);
 		suite.addTestSuite(OpenStatementTest.class);

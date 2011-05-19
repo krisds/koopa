@@ -55,7 +55,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "INVALID", 
         "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
         "MY-IDENTIFIER", "INVALID", "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "INVALID", 
         "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -85,7 +85,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
         "MY-IDENTIFIER", "INVALID", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "NOT", 
         "INVALID", "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
         "MY-IDENTIFIER", "NOT", "INVALID", "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "NOT", 
         "INVALID", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class RewriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
         "MY-IDENTIFIER", "NOT", "INVALID", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

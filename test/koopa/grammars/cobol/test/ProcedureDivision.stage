@@ -3,7 +3,7 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target statement;
 
-+[ DISPLAY ¥ FIELD ]
++[ DISPLAY FIELD ]
 
 -[ TRANSMOGRIFY ]
 

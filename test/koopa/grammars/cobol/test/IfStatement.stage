@@ -12,13 +12,13 @@ target ifStatement;
    END-IF ]
 
 +[ IF 1 < 2 THEN
-     DISPLAY ¥ GOOD ]
+     DISPLAY GOOD ]
 
 +[ IF 1 < 2
-     DISPLAY ¥ GOOD ]
+     DISPLAY GOOD ]
 
 +[ IF 1 < 2 THEN
-     DISPLAY GOOD
+     DISPLAY 'GOOD'
      DISPLAY BETTER
      DISPLAY BEST
    END-IF ]
@@ -32,12 +32,12 @@ target ifStatement;
 +[ IF 1 < 2 THEN
      DISPLAY GOOD
      DISPLAY BETTER
-     DISPLAY ¥ BEST ]
+     DISPLAY BEST ]
 
 +[ IF 1 < 2 
      DISPLAY GOOD
      DISPLAY BETTER
-     DISPLAY ¥ BEST ]
+     DISPLAY BEST ]
 
 +[ IF 1 < 2 THEN
      DISPLAY GOOD
@@ -68,17 +68,17 @@ target ifStatement;
    ELSE
      DISPLAY BAD
      DISPLAY WORSE
-     DISPLAY ¥ WORST ]
+     DISPLAY WORST ]
 
 +[ IF 1 < 2 THEN
      DISPLAY GOOD
    ELSE
-     DISPLAY ¥ BAD ]
+     DISPLAY BAD ]
 
 +[ IF 1 < 2
      DISPLAY GOOD
    ELSE
-     DISPLAY ¥ BAD ]
+     DISPLAY BAD ]
 
 +[ IF 1 < 2 THEN
      DISPLAY GOOD
@@ -87,7 +87,7 @@ target ifStatement;
    ELSE
      DISPLAY BAD
      DISPLAY WORSE
-     DISPLAY ¥ WORST ]
+     DISPLAY WORST ]
 
 +[ IF 1 < 2
      DISPLAY GOOD
@@ -96,7 +96,7 @@ target ifStatement;
    ELSE
      DISPLAY BAD
      DISPLAY WORSE
-     DISPLAY ¥ WORST ]
+     DISPLAY WORST ]
 
 +[ IF 1 < 2
      DISPLAY GOOD
@@ -109,4 +109,28 @@ target ifStatement;
    ELSE
      DISPLAY BAD
    END-IF ]
+   
+ +[ IF 1 < 2 AND 2 > 1
+ 		DISPLAY GOOD
+ 	END-IF ]
+ 	
+ +[ IF 1 < 2 AND 2 > 1 AND V-ARIABLE = 0
+ 		DISPLAY GOOD
+ 	END-IF ]
+
++[ IF V-ARIABLE = 2 OR = 3
+ 	DISPLAY PERFECT
+ 	END-IF ]
+ 	
+ +[ IF ( V-ARIABLE = 2 OR = 3 ) THEN
+ 	DISPLAY PERFECT
+ 	END-IF ]
+ 	
+ +[ IF ( V-ARIABLE = 2 OR = 3 ) AND V-ARIABLE NOT = 3
+ 	DISPLAY PERFECT
+ 	END-IF ]
+ 	
+ +[ IF V-ARIABLE NOT = 3 AND ( V-ARIABLE = 2 OR = 3 )
+ 	DISPLAY PERFECT
+ 	END-IF ]
    

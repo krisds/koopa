@@ -464,7 +464,11 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				continue;
 			}
 
-			if (c == '-') {
+			if (c == '-' || c == '_') {
+				// Enterprise COBOL for z/OS, Version 4 Release 2, allows
+				// underscores as part of user defined words. See
+				// http://publibfp.boulder.ibm.com/epubs/pdf/c2386120.pdf .
+				// (With thanks to Peter Tang for finding this.)
 				position += 1;
 				continue;
 			}

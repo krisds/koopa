@@ -249,6 +249,14 @@ body returns [ int len, boolean optional ]
   
     -> water()
     
+  | ^(NOT body)
+
+    { $body.len = 0;
+      $body.optional = true;
+    }
+  
+    -> {%{""}}
+
   | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
     ^(PERMUTED 
       (x=inner_body

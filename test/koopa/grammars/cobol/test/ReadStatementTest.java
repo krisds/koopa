@@ -114,7 +114,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "AT", "END", 
         "DISPLAY", "\"Nothing more to see here.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "END", "DISPLAY", 
         "\"Nothing more to see here.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "NOT", "AT", 
         "END", "DISPLAY", "\"Look at that...\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -144,7 +144,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "NOT", "END", 
         "DISPLAY", "\"Look at that...\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -154,7 +154,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "INVALID", 
         "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "INVALID", 
         "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "NOT", "INVALID", 
         "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -184,7 +184,7 @@ public class ReadStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("READ", "MY-FILE", "NOT", "INVALID", 
         "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

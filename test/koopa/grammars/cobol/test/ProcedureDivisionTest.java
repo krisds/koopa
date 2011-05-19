@@ -16,7 +16,7 @@ public class ProcedureDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("DISPLAY", "FIELD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

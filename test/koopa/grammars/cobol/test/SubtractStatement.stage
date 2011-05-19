@@ -44,47 +44,47 @@ target subtractStatement;
 
 +[ SUBTRACT A FROM B
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ SUBTRACT A FROM B GIVING C
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ SUBTRACT A FROM B
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ SUBTRACT A FROM B GIVING C
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ SUBTRACT A FROM B
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ SUBTRACT A FROM B GIVING C
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ SUBTRACT A FROM B
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ SUBTRACT A FROM B GIVING C
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ SUBTRACT A FROM B
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ SUBTRACT A FROM B GIVING C
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ SUBTRACT A FROM B
      ON SIZE ERROR

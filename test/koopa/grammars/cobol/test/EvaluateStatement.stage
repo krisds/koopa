@@ -43,28 +43,28 @@ target whenOther;
 -[ WHEN OTHER ]
 
 +[ WHEN OTHER
-        DISPLAY ¥ "Other." ]
+        DISPLAY "Other." ]
 
 +[ WHEN OTHER
         DISPLAY "Other."
-        DISPLAY ¥ "More." ]
+        DISPLAY "More." ]
 
 
 target when;
 
 +[ WHEN ANY
-        DISPLAY ¥ "Good." ]
+        DISPLAY "Good." ]
 
 +[ WHEN TRUE ALSO ANY
-        DISPLAY ¥ "Good." ]
+        DISPLAY "Good." ]
 
 +[ WHEN TRUE ALSO ANY ALSO 42
-        DISPLAY ¥ "Good." ]
+        DISPLAY "Good." ]
 
 +[ WHEN ANY
    WHEN TRUE ALSO ANY
    WHEN TRUE ALSO ANY ALSO 42
-        DISPLAY ¥ "Good." ]
+        DISPLAY "Good." ]
 
 
 target evaluateStatement;
@@ -76,7 +76,7 @@ target evaluateStatement;
 
 +[ EVALUATE FOO
    WHEN 42
-        DISPLAY ¥ "Meaning of life, the universe and everything." ]
+        DISPLAY "Meaning of life, the universe and everything." ]
 
 +[ EVALUATE FOO
    WHEN 42
@@ -89,5 +89,12 @@ target evaluateStatement;
    WHEN PROCESSING < 100
         DISPLAY "Keep going."
    WHEN OTHER
-        DISPLAY ¥ "Done." ]
+        DISPLAY "Done." ]
 
++[ EVALUATE FUNCTION LENGTH ( "ABCDEFGHIJKLMNOPQRST" )
+   WHEN 20
+        DISPLAY "OK" ]
+
++[ EVALUATE WRK-XN-00001-1 NUMERIC
+   WHEN TRUE
+        DISPLAY "OK" ]

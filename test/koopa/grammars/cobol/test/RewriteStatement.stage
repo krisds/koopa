@@ -15,35 +15,35 @@ target rewriteStatement;
 
 +[ REWRITE MY-RECORD 
    INVALID KEY
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ REWRITE MY-RECORD FROM MY-IDENTIFIER
    INVALID KEY
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ REWRITE MY-RECORD 
    INVALID
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ REWRITE MY-RECORD FROM MY-IDENTIFIER
    INVALID
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ REWRITE MY-RECORD 
    NOT INVALID KEY
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ REWRITE MY-RECORD FROM MY-IDENTIFIER
    NOT INVALID KEY
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ REWRITE MY-RECORD 
    NOT INVALID
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ REWRITE MY-RECORD FROM MY-IDENTIFIER
    NOT INVALID
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ REWRITE MY-RECORD 
    INVALID KEY

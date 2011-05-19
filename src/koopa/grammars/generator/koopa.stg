@@ -103,3 +103,7 @@ permuted(choice) ::= <<permuted(
 )>>
 
 assign(name, value) ::= <<assign("$name$", $value$)>>
+
+not(body) ::= <<not(
+    $body$
+)>>

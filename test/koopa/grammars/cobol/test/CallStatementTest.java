@@ -429,7 +429,7 @@ public class CallStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("CALL", "MY-SERVICE", "ON", "OVERFLOW", 
         "DISPLAY", "\"SERVICE OVERFLOW\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -439,7 +439,7 @@ public class CallStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("CALL", "MY-SERVICE", "OVERFLOW", 
         "DISPLAY", "\"SERVICE OVERFLOW\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -449,7 +449,7 @@ public class CallStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("CALL", "MY-SERVICE", "ON", "EXCEPTION", 
         "DISPLAY", "\"SERVICE EXCEPTION\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -459,7 +459,7 @@ public class CallStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("CALL", "MY-SERVICE", "EXCEPTION", 
         "DISPLAY", "\"SERVICE EXCEPTION\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -469,7 +469,7 @@ public class CallStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("CALL", "MY-SERVICE", "NOT", "ON", 
         "EXCEPTION", "DISPLAY", "\"NO SERVICE EXCEPTION\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -479,7 +479,7 @@ public class CallStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("CALL", "MY-SERVICE", "NOT", "EXCEPTION", 
         "DISPLAY", "\"NO SERVICE EXCEPTION\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

@@ -1,0 +1,16 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target environmentDivision;
+
++[ ENVIRONMENT DIVISION . ]
+
++[ ENVIRONMENT DIVISION .
+   CONFIGURATION SECTION .
+   SPECIAL-NAMES .
+   DECIMAL-POINT IS COMMA . ]
+
++[ ENVIRONMENT DIVISION .
+   CONFIGURATION SECTION .
+   SPECIAL-NAMES . 
+   DECIMAL-POINT COMMA . ]

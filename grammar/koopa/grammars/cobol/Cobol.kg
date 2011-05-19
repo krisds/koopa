@@ -67,7 +67,127 @@ end
 
 def environmentDivision =
 	ENVIRONMENT DIVISION .
+	[configurationSection]
+	[ioSection]
 	[--> divisionStart]
+end
+
+## Configuration Section
+def configurationSection =
+	CONFIGURATION SECTION .
+	!(sourceComputerParagraph
+	| objectComputerParagraph
+	| specialNamesParagraph)
+	[--> (environmentSectionStart | divisionStart)]
+end
+
+def sourceComputerParagraph =
+	SOURCE-COMPUTER .
+	[computerName
+	[withDebuggingMode]
+	.]
+	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
+end
+
+def withDebuggingMode =
+	[WITH] DEBUGGING MODE
+end
+
+def objectComputerParagraph =
+	OBJECT-COMPUTER .
+	[computerName
+	[--> .]
+	.]
+	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
+end
+
+def genericStringDef =
+	(alphanumeric)*
+	[WITH DEBUGGING]
+	[.]
+end
+
+def specialNamesParagraph =
+	SPECIAL-NAMES .
+	[decimalIsComma]
+	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
+end
+
+def decimalIsComma = 
+	DECIMAL-POINT [IS] COMMA [.]
+end
+
+def confParagraphStart =
+	(SOURCE-COMPUTER | OBJECT-COMPUTER 
+	| SPECIAL-NAMES) .
+end
+
+## input-Output Section
+def ioSection =
+	INPUT-OUTPUT SECTION .
+	fileControlParagraph
+	[ioControlParagraph]
+	[--> divisionStart]
+end
+
+# TODO only skeletal implementation of this paragraph until now...
+def fileControlParagraph =
+	FILE-CONTROL .
+	(selectStatement)*
+end
+
+def selectStatement = 
+	selectClause
+	assignClause
+	!(organizationIsSequentialClause 
+	| fileStatusClause)
+	[--> .]
+	.
+end
+
+def selectClause =
+	SELECT
+	[OPTIONAL]
+	fileName
+end
+
+def assignClause =
+	ASSIGN
+	(assignUsingClause
+	| assignToClause)
+end
+
+def assignUsingClause =
+	USING
+	dataName
+end
+
+def assignToClause =
+	[TO]
+	assignmentName
+end
+
+def organizationIsSequentialClause =
+	[ORGANIZATION [IS]]
+	SEQUENTIAL
+end
+
+def fileStatusClause =
+	[FILE] STATUS [IS]
+	dataName
+	[dataName]
+end
+
+def ioControlParagraph =
+	I-O-CONTROL .
+	[--> divisionStart]
+end
+
+# Start of section in environment division.
+def environmentSectionStart =
+    ( CONFIGURATION
+    | INPUT-OUTPUT
+    ) SECTION .
 end
 
 ## #############################################################################
@@ -78,6 +198,7 @@ def dataDivision =
 	DATA DIVISION .
 	[fileSection]
 	[workingStorageSection]
+	[localStorageSection]
 	[linkageSection]
 	[communicationSection]
 	[reportSection]
@@ -86,14 +207,25 @@ end
 
 def fileSection =
 	FILE SECTION .
-	( fileDescriptionEntry (dataDescriptionEntry)* )*
+	( fileDescriptionEntry (recordDescriptionEntry)* )*
     [--> (dataSectionStart | divisionStart)]
+end
+
+def recordDescriptionEntry =
+	(dataDescriptionEntry | copyStatement)
+end
+
+def localStorageSection =
+	LOCAL-STORAGE SECTION .
+	( recordDescriptionEntry
+    | replaceStatement
+    | execStatement [.]
+    )*
 end
 
 def workingStorageSection =
 	WORKING-STORAGE SECTION .
-    ( dataDescriptionEntry
-    | copyStatement
+    ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
     )*
@@ -102,8 +234,7 @@ end
 
 def linkageSection =
 	LINKAGE SECTION .
-    ( dataDescriptionEntry
-    | copyStatement
+    ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
     )*
@@ -223,7 +354,7 @@ def dataDescriptionEntry =
 end
 
 def dataDescriptionEntry_format1 =
-    levelNumber [FILLER | dataName]
+    levelNumber [dataName]
     [redefines]
    !( blankWhenZero
     | external
@@ -331,7 +462,7 @@ end
 # and paragraphs.
 
 def procedureDivision =
-	PROCEDURE DIVISION [usingPhrase] .
+	PROCEDURE DIVISION [usingPhrase] [returningPhrase] .
 	[declaratives]
     (sentence)*
     (paragraph)*
@@ -340,7 +471,21 @@ def procedureDivision =
 end
 
 def usingPhrase =
-    USING (dataName)+
+    USING 
+    (dataReference | dataValue)*
+end
+
+def dataReference = 
+	[[BY] REFERENCE] dataName
+end
+
+def dataValue =
+	[BY] VALUE dataName
+end
+
+def returningPhrase =
+	RETURNING
+	dataName
 end
 
 def declaratives =
@@ -408,6 +553,10 @@ def statement =
     | subtractStatement
     | unstringStatement
     | writeStatement
+    | setStatement
+    | initializeStatement
+    | displayStatement
+    | inspectStatement
     
     | verb
       [--> ( . | endOfStatement )]
@@ -446,7 +595,6 @@ def endOfStatementMarker (Token t) returns t =
     | t=END-CALL
     | t=END-COMPUTE
     | t=END-DELETE
-    | t=END-DISPLAY
     | t=END-DIVIDE
     | t=END-EVALUATE
     | t=END-EXEC
@@ -493,20 +641,20 @@ def verb =
     | SUBTRACT
     | UNSTRING
     | WRITE
-
-    # Verbs for statements which have a skeletal implementation:
+    | SET
+    | INITIALIZE
+    | DISPLAY
     | COMPUTE
+    | INSPECT
+    
+    # Verbs for statements which have a skeletal implementation:
     | START
 
     # Verbs for statements which remain to be implemented:
     | ACCEPT
     | ALTER
     | CONTINUE
-    | DISPLAY
-    | INITIALIZE
-    | INSPECT
     | MERGE
-    | SET
     | SORT
     | USE
     
@@ -612,16 +760,11 @@ end
 ## COMPUTE statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def computeStatement =
     COMPUTE
-    ( -->
-      ( [NOT] [ON] SIZE ERROR
-      | END-COMPUTE
-      | .
-      | endOfStatement
-      )
-    )
+    (identifier [ROUNDED])+
+    ('=' | EQUAL)
+    arithmeticExpression
     [[ON] SIZE ERROR nestedStatements]
     [NOT [ON] SIZE ERROR nestedStatements]
     [END-COMPUTE]
@@ -638,6 +781,26 @@ def deleteStatement =
     [NOT INVALID [KEY] nestedStatements]
     
     [END-DELETE]
+end
+
+## #############################################################################
+## DISPLAY statement.
+## -----------------------------------------------------------------------------
+
+def displayStatement =
+	DISPLAY
+	(identifier | literal)+
+	[uponClause]
+	[withNoAdvancing]
+end
+
+def uponClause =
+	UPON
+	(mnemonicName | environmentName)
+end
+
+def withNoAdvancing =
+	[WITH] NO ADVANCING
 end
 
 ## #############################################################################
@@ -689,8 +852,9 @@ def evaluateStatement =
 end
 
 def subject =
-    (--> (WHEN | ALSO))
+	(--> (WHEN | ALSO))
 end
+
 
 def when =
     ( WHEN object
@@ -704,24 +868,36 @@ def whenOther =
       nestedStatements
 end
 
+# Note: the order of the alternatives here is very important!
 def object =
     ( ANY
+
+    | rangeExpression
+
     | condition
-    | TRUE
-    | FALSE
+    
     | [NOT] (
         identifier
       | literal
       | arithmeticExpression
       )
-      [ ( THROUGH | THRU )
-        ( identifier
-        | literal
-        | arithmeticExpression
-        )
-      ]
+    | '(' object ')'
     )
 end
+
+def rangeExpression =
+  [NOT] 
+  ( identifier
+  | literal
+  | arithmeticExpression
+  )
+  ( THROUGH | THRU )
+  ( identifier
+  | literal
+  | arithmeticExpression
+  )
+end
+
 
 ## #############################################################################
 ## EXEC statement.
@@ -778,6 +954,105 @@ def ifStatement =
 end
 
 ## #############################################################################
+## INITIALIZE statement.
+## -----------------------------------------------------------------------------
+
+def initializeStatement =
+	INITIALIZE
+	(identifier)+
+	[replacingInitClause]
+	[--> (. | endOfStatement)]
+end
+
+def replacingInitClause =
+	REPLACING
+	replacementTarget
+	[DATA] BY
+	(identifier | literal)
+end
+
+def replacementTarget =
+	(ALPHABETIC 
+	|ALPHANUMERIC
+	|ALPHANUMERIC-EDITED
+	|NATIONAL
+	|NATIONAL-EDITED
+	|NUMERIC
+	|NUMERIC-EDITED
+	|DBCS
+	|EGCS)
+end
+
+## #############################################################################
+## INSPECT statement.
+## -----------------------------------------------------------------------------
+
+def inspectStatement =
+	INSPECT identifier
+
+	( convertingPhrase
+
+    | tallyingPhrase
+      [replacingPhrase]
+      
+	| replacingPhrase
+    )
+end
+
+def convertingPhrase =
+	CONVERTING
+	(identifier | literal)
+	TO
+	(identifier | literal)
+	(locationPhrase)*
+end
+
+def tallyingPhrase =
+	TALLYING
+	( identifier FOR
+	  ( tallyingCharactersPhrase
+	  | tallyingAllLeadingPhrase
+	  )*
+	)*
+end
+
+def tallyingCharactersPhrase =
+	CHARACTERS
+	(locationPhrase)*
+end
+
+def tallyingAllLeadingPhrase =
+	(ALL | LEADING)
+	( (identifier -FOR | literal)
+	  (locationPhrase)*
+	)*
+end
+
+def replacingPhrase =
+	REPLACING
+	( replacingCharactersPhrase 
+	| replacingAllLeadingFirstPhrase
+	)*
+end
+
+def replacingCharactersPhrase =
+	CHARACTERS BY
+	(identifier | literal)
+	(locationPhrase)*
+end
+
+def replacingAllLeadingFirstPhrase =
+	(ALL | LEADING | FIRST)
+	( (identifier | literal) BY (identifier | literal) (locationPhrase)* )*
+end
+
+def locationPhrase =
+	(BEFORE | AFTER)
+	[INITIAL]
+	(identifier | literal)
+end
+
+## #############################################################################
 ## MOVE statement.
 ## -----------------------------------------------------------------------------
 
@@ -814,7 +1089,7 @@ def multiplication_format2 =
 end
 
 ## #############################################################################
-## MULTIPLY statement.
+## OPEN statement.
 ## -----------------------------------------------------------------------------
 
 def openStatement =
@@ -852,9 +1127,13 @@ def times =
 end
 
 def until =
-    [[WITH] TEST (BEFORE | AFTER)]
+    [testPosition]
     UNTIL condition
 end
+
+def testPosition =
+	[WITH] TEST (BEFORE | AFTER)
+end 
 
 # The documentation also explicitly mentions indices. Matching these, however,
 # requires tracking their definition in the data section. This is something we
@@ -954,6 +1233,38 @@ end
 def notAtEnd =
     NOT [AT] END nestedStatements
 end
+
+## #############################################################################
+## SET statement.
+## -----------------------------------------------------------------------------
+
+def setStatement =
+    SET
+    (setFormat1
+    | setFormat2
+    | setFormat3
+    )
+    [--> (. | endOfStatement)]
+end
+
+def setFormat1 =
+	(indexName | addressOfIdentifier | identifier)+
+	TO
+	(indexName | addressOfIdentifier | identifier | integer)
+end
+
+def setFormat2 =
+	(mnemonicName)+
+	TO
+	(ON | OFF)
+end
+
+def setFormat3 =
+	(identifier)+
+	TO
+	TRUE
+end
+
 
 ## #############################################################################
 ## START statement.
@@ -1078,12 +1389,21 @@ end
 def copyStatement =
     COPY textName [ (OF | IN) libraryName ]
     [SUPPRESS]
-    [REPLACING
-      ( (identifier | literal | pseudoLiteral)
-        BY (identifier | literal | pseudoLiteral)
-      )+
-    ]
+    [copyReplacingPhrase]
     .
+end
+
+def copyReplacingPhrase =
+	REPLACING
+	(copyReplacementInstruction)+
+end
+
+def copyReplacementInstruction =
+	copyOperandName BY copyOperandName
+end
+
+def copyOperandName =
+	(identifier | literal | cobolWord | pseudoLiteral)
 end
 
 def replaceStatement =
@@ -1096,12 +1416,11 @@ end
 
 # Division start
 def divisionStart =
-    ( IDENTIFICATION
-    | ENVIRONMENT
-    | DATA
-    | PROCEDURE
-    ) DIVISION
-    [usingPhrase]
+    ( IDENTIFICATION DIVISION
+    | ENVIRONMENT DIVISION
+    | DATA DIVISION
+    | PROCEDURE DIVISION [usingPhrase] [returningPhrase]
+    )
     .
 end
 
@@ -1177,9 +1496,13 @@ def identifier_format2 =
     dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
 end
 
+def addressOfIdentifier =
+	ADDRESS OF identifier
+end
+
 def argument =
-    ( identifier
-    | arithmeticExpression
+    ( arithmeticExpression
+    | identifier
     | literal
     )
 end
@@ -1275,7 +1598,7 @@ end
 
 # Data name.
 def dataName =
-	cobolWord
+	(cobolWord | FILLER | CURSOR)
 end
 
 # Section name.
@@ -1306,12 +1629,31 @@ def segmentNumber =
     integer
 end
 
+def operandName =
+	(arithmeticExpression
+	|identifier
+	|literal
+	|indexName)
+end
+
+def conditionName =
+	identifier
+end 
+
 def indexName =
     cobolWord
 end
 
+def className =
+	cobolWord
+end
+
 def fileName =
     cobolWord
+end
+
+def computerName =
+	cobolWord
 end
 
 def functionName =
@@ -1336,11 +1678,45 @@ def mnemonicName =
     cobolWord
 end
 
+def environmentName =
+	(SYSIN
+	|SYSIPT
+	|SYSOUT
+	|SYSLIST
+	|SYSLST
+	|SYSPUNCH
+	|SYSPCH
+	|CONSOLE
+	|C01
+	|C02
+	|C03
+	|C04
+	|C05
+	|C06
+	|C07
+	|C08
+	|C09
+	|C10
+	|C11
+	|C12
+	|CSP
+	|S01
+	|S02
+	|S03
+	|S04
+	|S05
+	|AFP-5A)
+end
+
 def alphabetName =
     cobolWord
 end
 
 def reportName =
+    cobolWord
+end
+
+def assignmentName =
     cobolWord
 end
 
@@ -1351,7 +1727,14 @@ def literal =
     # According to my documentation a figurative constant can appear anywhere a
     # literal can, except for a few edge cases. I'll ignore the edge cases here.
     | figurativeConstant
+    
+    # TODO Correct ?
+    | booleanLiteral
     )
+end
+
+def booleanLiteral =
+	(TRUE | FALSE)
 end
 
 # TODO [ALL] symbolic-character
@@ -1368,7 +1751,7 @@ def figurativeConstant =
       | LOW-VALUE 
       | LOW-VALUES 
       | QUOTE
-      | QUOTES 
+      | QUOTES
       )
     | NULL
     )

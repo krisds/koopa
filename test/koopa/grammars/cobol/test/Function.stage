@@ -1,0 +1,16 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target identifier_format1;
+
++[ FUNCTION ACOS ( IND ( 5 ) / 9 ) ]
+
++[ FUNCTION ANNUITY ( B / 2  8 ) ]
+
++[ FUNCTION LENGTH ( "A" ) ]
+
++[ FUNCTION MAX ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
+
++[ FUNCTION RANDOM ]
+
++[ FUNCTION SUM ( 5 -2 -14 0 ) ]

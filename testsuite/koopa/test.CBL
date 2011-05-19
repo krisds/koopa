@@ -189,3 +189,6 @@ KOOPAH* Checks tokenisation of <= and >= .                              :0
 KOOPAH IF CALVIN >= HOBBES                                              :8
 KOOPAH    OR CALVIN <= SUSIE                                            :9
 KOOPAH   DISPLAY "...".                                                 :6
+KOOPAH
+KOOPAH* Testing underscores in user-defined words.                      :0
+KOOPAH ADD THIS_ONE TO THAT_ONE GIVING THE_TOTAL.                       :13

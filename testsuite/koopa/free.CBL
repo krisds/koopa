@@ -151,3 +151,6 @@
  IF CALVIN >= HOBBES
     OR CALVIN <= SUSIE
    DISPLAY "...".
+
+* Testing underscores in user-defined words.
+ADD THIS_ONE TO THAT_ONE GIVING THE_TOTAL.

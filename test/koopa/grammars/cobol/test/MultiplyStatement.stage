@@ -25,47 +25,47 @@ target multiplyStatement;
 
 +[ MULTIPLY A BY B
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ MULTIPLY A BY B GIVING C
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ MULTIPLY A BY B
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ MULTIPLY A BY B GIVING C
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ MULTIPLY A BY B
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ MULTIPLY A BY B GIVING C
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ MULTIPLY A BY B
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ MULTIPLY A BY B GIVING C
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ MULTIPLY A BY B
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ MULTIPLY A BY B GIVING C
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ MULTIPLY A BY B
      ON SIZE ERROR

@@ -347,7 +347,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "ON", 
         "SIZE", "ERROR", "DISPLAY", "\"OOPS\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -357,7 +357,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "GIVING", 
         "C", "ON", "SIZE", "ERROR", "DISPLAY", "\"OOPS\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -367,7 +367,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "SIZE", 
         "ERROR", "DISPLAY", "\"OOPS\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -377,7 +377,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "GIVING", 
         "C", "SIZE", "ERROR", "DISPLAY", "\"OOPS\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -387,7 +387,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "NOT", 
         "ON", "SIZE", "ERROR", "DISPLAY", "\"AOK\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -397,7 +397,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "GIVING", 
         "C", "NOT", "ON", "SIZE", "ERROR", "DISPLAY", "\"AOK\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -407,7 +407,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "NOT", 
         "SIZE", "ERROR", "DISPLAY", "\"AOK\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -417,7 +417,7 @@ public class DivideStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("DIVIDE", "A", "INTO", "B", "GIVING", 
         "C", "NOT", "SIZE", "ERROR", "DISPLAY", "\"AOK\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -428,7 +428,7 @@ public class DivideStatementTest extends TestCase {
         "SIZE", "ERROR", "DISPLAY", "\"OOPS\"", "NOT", "ON", "SIZE", "ERROR", "DISPLAY", 
         "\"AOK\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(14, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(15, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -439,7 +439,7 @@ public class DivideStatementTest extends TestCase {
         "C", "ON", "SIZE", "ERROR", "DISPLAY", "\"OOPS\"", "NOT", "ON", "SIZE", 
         "ERROR", "DISPLAY", "\"AOK\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(16, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(17, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

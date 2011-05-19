@@ -1,7 +1,6 @@
 = Misc. =
 
-* Redo the examples to make them use either the BasicParserConfiguration or the
-  ExtendedParserConfiguration.
+* Allow ',' in stages. (Filter them out for processing.)
 * Reconsider allowing these intermediate tokenizers. Maybe a listener pattern
   would be better.
 * Regression testing. Would be nice if we could do this as a JUnit test.

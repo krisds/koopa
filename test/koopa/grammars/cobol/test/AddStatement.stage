@@ -44,47 +44,47 @@ target addStatement;
 
 +[ ADD A TO B
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ ADD A TO B GIVING C
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ ADD A TO B
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ ADD A TO B GIVING C
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ ADD A TO B
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ ADD A TO B GIVING C
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ ADD A TO B
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ ADD A TO B GIVING C
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ ADD A TO B
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ ADD A TO B GIVING C
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ ADD A TO B
      ON SIZE ERROR

@@ -57,7 +57,7 @@ public class StringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
         "TEXT", "ON", "OVERFLOW", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class StringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
         "TEXT", "NOT", "ON", "OVERFLOW", "DISPLAY", "\"AOK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class StringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
         "TEXT", "OVERFLOW", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -117,7 +117,7 @@ public class StringStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("STRING", "A", "B", "C", "INTO", 
         "TEXT", "NOT", "OVERFLOW", "DISPLAY", "\"AOK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class StringStatementTest extends TestCase {
         "TEXT", "OVERFLOW", "DISPLAY", "\"Oops.\"", "NOT", "OVERFLOW", "DISPLAY", 
         "\"AOK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

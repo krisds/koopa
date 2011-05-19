@@ -295,7 +295,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AT", "END-OF-PAGE", 
         "DISPLAY", "\"End of page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -305,7 +305,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "AT", "EOP", 
         "DISPLAY", "\"End of page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -315,7 +315,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "END-OF-PAGE", 
         "DISPLAY", "\"End of page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -325,7 +325,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "EOP", "DISPLAY", 
         "\"End of page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -335,7 +335,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "AT", 
         "END-OF-PAGE", "DISPLAY", "\"Elsewhere on page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -345,7 +345,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "AT", 
         "EOP", "DISPLAY", "\"Elsewhere on page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -355,7 +355,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "END-OF-PAGE", 
         "DISPLAY", "\"Elsewhere on page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -365,7 +365,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "EOP", 
         "DISPLAY", "\"Elsewhere on page.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -375,7 +375,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "INVALID", 
         "KEY", "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -385,7 +385,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "INVALID", 
         "DISPLAY", "\"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -395,7 +395,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "INVALID", 
         "KEY", "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test
@@ -405,7 +405,7 @@ public class WriteStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer("WRITE", "MY-RECORD", "NOT", "INVALID", 
         "DISPLAY", "\"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
     }
 
     @Test

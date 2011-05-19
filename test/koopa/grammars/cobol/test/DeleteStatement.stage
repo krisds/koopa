@@ -15,35 +15,35 @@ target deleteStatement;
 
 +[ DELETE MY-FILE 
    INVALID KEY
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ DELETE MY-FILE RECORD
    INVALID KEY
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ DELETE MY-FILE 
    INVALID
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ DELETE MY-FILE RECORD
    INVALID
-      DISPLAY ¥ "Oops." ]
+      DISPLAY "Oops." ]
 
 +[ DELETE MY-FILE 
    NOT INVALID KEY
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ DELETE MY-FILE RECORD
    NOT INVALID KEY
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ DELETE MY-FILE 
    NOT INVALID
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ DELETE MY-FILE RECORD
    NOT INVALID
-      DISPLAY ¥ "A-OK." ]
+      DISPLAY "A-OK." ]
 
 +[ DELETE MY-FILE 
    INVALID KEY

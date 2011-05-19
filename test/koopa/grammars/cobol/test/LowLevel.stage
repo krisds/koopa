@@ -38,6 +38,13 @@ target alphanumeric;
 +[ "ABC" ]
 -[ DEF ]
 
+target literal;
+
++[ "this is a literal" ]
++[ " 0 " ]
++[ " 1 " ]
++[ " 00 " ]
+
 
 
 target figurativeConstant;

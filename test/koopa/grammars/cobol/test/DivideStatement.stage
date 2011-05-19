@@ -63,47 +63,47 @@ target divideStatement;
 
 +[ DIVIDE A INTO B
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ DIVIDE A INTO B GIVING C
      ON SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ DIVIDE A INTO B
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ DIVIDE A INTO B GIVING C
      SIZE ERROR
-        DISPLAY ¥ "OOPS" ]
+        DISPLAY "OOPS" ]
 
 +[ DIVIDE A INTO B
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ DIVIDE A INTO B GIVING C
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ DIVIDE A INTO B
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ DIVIDE A INTO B GIVING C
      NOT SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ DIVIDE A INTO B
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ DIVIDE A INTO B GIVING C
      ON SIZE ERROR
         DISPLAY "OOPS"
      NOT ON SIZE ERROR
-        DISPLAY ¥ "AOK" ]
+        DISPLAY "AOK" ]
 
 +[ DIVIDE A INTO B
      ON SIZE ERROR

@@ -2,10 +2,11 @@ package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
-import koopa.tokenizers.test.TestTokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
 
+/** This code was generated from RewriteStatement.stage. */
 public class RewriteStatementTest extends TestCase {
 
   private static koopa.grammars.cobol.CobolGrammar grammar = new koopa.grammars.cobol.CobolGrammar();
@@ -14,197 +15,179 @@ public class RewriteStatementTest extends TestCase {
     public void testRewriteStatement_1() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", ".");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD  KOOPAH_TO_HERE  .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_2() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", ".");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER  KOOPAH_TO_HERE  .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_3() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD\n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_4() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_5() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "INVALID", 
-        "KEY", "DISPLAY", "\"Oops.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   INVALID KEY\n      DISPLAY \"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_6() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "INVALID", "KEY", "DISPLAY", "\"Oops.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   INVALID KEY\n      DISPLAY \"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_7() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "INVALID", 
-        "DISPLAY", "\"Oops.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   INVALID\n      DISPLAY \"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_8() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "INVALID", "DISPLAY", "\"Oops.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   INVALID\n      DISPLAY \"Oops.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_9() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "NOT", 
-        "INVALID", "KEY", "DISPLAY", "\"A-OK.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   NOT INVALID KEY\n      DISPLAY \"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_10() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "NOT", "INVALID", "KEY", "DISPLAY", "\"A-OK.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   NOT INVALID KEY\n      DISPLAY \"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_11() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "NOT", 
-        "INVALID", "DISPLAY", "\"A-OK.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   NOT INVALID\n      DISPLAY \"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_12() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "NOT", "INVALID", "DISPLAY", "\"A-OK.\"");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   NOT INVALID\n      DISPLAY \"A-OK.\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_13() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "INVALID", 
-        "KEY", "DISPLAY", "\"Oops.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   INVALID KEY\n      DISPLAY \"Oops.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_14() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "INVALID", "KEY", "DISPLAY", "\"Oops.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   INVALID KEY\n      DISPLAY \"Oops.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_15() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "INVALID", 
-        "DISPLAY", "\"Oops.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   INVALID\n      DISPLAY \"Oops.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_16() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "INVALID", "DISPLAY", "\"Oops.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   INVALID\n      DISPLAY \"Oops.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_17() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "NOT", 
-        "INVALID", "KEY", "DISPLAY", "\"A-OK.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   NOT INVALID KEY\n      DISPLAY \"A-OK.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_18() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "NOT", "INVALID", "KEY", "DISPLAY", "\"A-OK.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   NOT INVALID KEY\n      DISPLAY \"A-OK.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(10, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_19() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "NOT", 
-        "INVALID", "DISPLAY", "\"A-OK.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD \n   NOT INVALID\n      DISPLAY \"A-OK.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRewriteStatement_20() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REWRITE", "MY-RECORD", "FROM", 
-        "MY-IDENTIFIER", "NOT", "INVALID", "DISPLAY", "\"A-OK.\"", "END-REWRITE");
+      TestTokenizer tokenizer = new TestTokenizer("REWRITE MY-RECORD FROM MY-IDENTIFIER\n   NOT INVALID\n      DISPLAY \"A-OK.\" \n   END-REWRITE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 }

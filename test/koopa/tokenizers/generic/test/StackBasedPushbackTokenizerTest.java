@@ -2,8 +2,8 @@ package koopa.tokenizers.generic.test;
 
 import junit.framework.TestCase;
 import koopa.tokenizers.Tokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 import koopa.tokenizers.generic.BasicPushbackTokenizer;
-import koopa.tokenizers.test.TestTokenizer;
 import koopa.tokens.Token;
 
 import org.junit.Test;
@@ -12,7 +12,7 @@ public class StackBasedPushbackTokenizerTest extends TestCase {
 
 	@Test
 	public void testTokenizer_1() {
-		TestTokenizer test = new TestTokenizer();
+		TestTokenizer test = new TestTokenizer("");
 		BasicPushbackTokenizer stack = new BasicPushbackTokenizer(test);
 
 		assertNoNextToken(stack);
@@ -37,11 +37,11 @@ public class StackBasedPushbackTokenizerTest extends TestCase {
 
 	@Test
 	public void testTokenizer_3() {
-		TestTokenizer test = new TestTokenizer("ZERO", "TWO", "THREE", "FOUR",
-				"FIVE", "SIX", "SEVEN", "EIGHT", "NINE");
+		TestTokenizer test = new TestTokenizer("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE");
 		BasicPushbackTokenizer stack = new BasicPushbackTokenizer(test);
 
 		assertNextToken(stack, "ZERO");
+		assertNextToken(stack, "ONE");
 		assertNextToken(stack, "TWO");
 		assertNextToken(stack, "THREE");
 		assertNextToken(stack, "FOUR");

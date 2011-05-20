@@ -5,6 +5,8 @@ target cobolWord;
 
 +[ COBOL-WORD ]
 +[ cobol-word ]
++[ COBOL_WORD ]
++[ cobol_word ]
 +[ aC0b0lW0rd ]
 +[ ABCDEFGHIJKLMNOPQRSTUVWXYZ78901 ]
 -[ ABCDEFGHIJKLMNOPQRSTUVWXYZ789012 ]

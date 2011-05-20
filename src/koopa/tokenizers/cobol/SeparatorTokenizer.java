@@ -142,7 +142,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	private boolean isWhitespace(final char c) {
-		return c == ' ';
+		return c == ' ' || c == '\t';
 	}
 
 	private boolean isSeparator(final char c) {
@@ -212,7 +212,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			final int start, final int length) {
 
 		int position = start + 1;
-		while (position < length && text.charAt(position) == ' ') {
+		while (position < length && isWhitespace(text.charAt(position))) {
 			position += 1;
 		}
 

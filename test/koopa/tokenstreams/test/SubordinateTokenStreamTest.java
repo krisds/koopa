@@ -1,7 +1,7 @@
 package koopa.tokenstreams.test;
 
 import junit.framework.TestCase;
-import koopa.tokenizers.test.TestTokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 import koopa.tokens.Token;
 import koopa.tokenstreams.TokenStream;
 import koopa.tokenstreams.generic.MainTokenStream;
@@ -13,8 +13,7 @@ public class SubordinateTokenStreamTest extends TestCase {
 
 	@Test
 	public void test_1() {
-		TestTokenizer test = new TestTokenizer("ZERO", "ONE", "TWO", "THREE",
-				"FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE");
+		TestTokenizer test = new TestTokenizer("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE");
 
 		MainTokenStream main = new MainTokenStream(test);
 		SubordinateTokenStream stream = new SubordinateTokenStream(main);
@@ -34,8 +33,7 @@ public class SubordinateTokenStreamTest extends TestCase {
 
 	@Test
 	public void test_2() {
-		TestTokenizer test = new TestTokenizer("ZERO", "ONE", "TWO", "THREE",
-				"FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE");
+		TestTokenizer test = new TestTokenizer("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE");
 
 		MainTokenStream main = new MainTokenStream(test);
 		SubordinateTokenStream stream = new SubordinateTokenStream(main);
@@ -85,8 +83,7 @@ public class SubordinateTokenStreamTest extends TestCase {
 
 	@Test
 	public void test_3() {
-		TestTokenizer test = new TestTokenizer("ZERO", "ONE", "TWO", "THREE",
-				"FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE");
+		TestTokenizer test = new TestTokenizer("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE");
 
 		MainTokenStream main = new MainTokenStream(test);
 		SubordinateTokenStream stream = new SubordinateTokenStream(main);
@@ -118,8 +115,7 @@ public class SubordinateTokenStreamTest extends TestCase {
 
 	@Test
 	public void test_4() {
-		TestTokenizer test = new TestTokenizer("ZERO", "ONE", "TWO", "THREE",
-				"FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE");
+		TestTokenizer test = new TestTokenizer("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE");
 
 		MainTokenStream main = new MainTokenStream(test);
 		SubordinateTokenStream stream = new SubordinateTokenStream(main);

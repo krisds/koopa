@@ -5,10 +5,11 @@ package $package$;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
-import koopa.tokenizers.test.TestTokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
 
+/** This code was generated from $name$.stage. */
 public class $name$Test extends TestCase {
 
   private static $grammah$ grammar = new $grammah$();
@@ -17,14 +18,14 @@ public class $name$Test extends TestCase {
 }
 >>
 
-accept(name, number, target, token, processedCount) ::= <<
+accept(name, number, target, token) ::= <<
   @Test
   public void test$name$_$number$() {
     Parser parser = grammar.$target$();
     assertNotNull(parser);
-    TestTokenizer tokenizer = new TestTokenizer($token; separator=", ", wrap="\n      "$);
+    TestTokenizer tokenizer = new TestTokenizer("$token$");
     assertTrue(parser.accepts(tokenizer));
-    assertEquals($processedCount$, tokenizer.getNumberOfProcessedTokens());
+    assertTrue(tokenizer.isWhereExpected());
   }
 >>
 
@@ -33,7 +34,7 @@ reject(name, number, target, token) ::= <<
   public void test$name$_$number$() {
     Parser parser = grammar.$target$();
     assertNotNull(parser);
-    TestTokenizer tokenizer = new TestTokenizer($token; separator=", ", wrap="\n      "$);
+    TestTokenizer tokenizer = new TestTokenizer("$token$");
     assertFalse(parser.accepts(tokenizer));
   }
 >>

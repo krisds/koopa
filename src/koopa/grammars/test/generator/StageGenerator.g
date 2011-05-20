@@ -13,64 +13,12 @@ options {
   import java.util.Date;
   import java.util.List;
   import java.util.LinkedList;
+  
+  import koopa.tokenizers.cobol.TestTokenizer;
 }
 
 @members {
   private int count = 0;
-  private int mark = -1;
-  
-  private List<String> tokenize(String data) {
-    List<String> tokens = new LinkedList<String>();
-    
-    int position = 0;
-    mark = -1;
-    while (position < data.length()) {
-      char c = data.charAt(position);
-
-      if (c == '\u2022') {
-        mark = tokens.size();
-      
-      } else if (c == '\"') {
-        int start = position;
-        do {
-          position++;
-        } while (position < data.length() && data.charAt(position) != '\"');
-        
-        tokens.add("\"\\\"" + data.substring(start + 1, position) + "\\\"\"");
-        // start = position + 1;
-      
-      } else if (c == '=' && position + 1 < data.length() && data.charAt(position + 1) == '=') {
-        int start = position;
-        position += 2;
-        while (position + 1 < data.length()
-               && (data.charAt(position) != '=' || data.charAt(position + 1) != '=')) {
-          position += 1;
-        }
-
-        position += 2;
-        tokens.add("\"" + data.substring(start, position) + "\"");
-        // start = position + 1;
-      
-      } else if (!Character.isWhitespace(c)) {
-        int start = position;
-        
-        do {
-          position++;
-        } while (position < data.length() && !Character.isWhitespace(data.charAt(position)));
-
-        tokens.add("\"" + data.substring(start, position) + "\"");
-        // start = position + 1;
-      } 
-    
-      position++;
-    }
-
-    if (mark == -1) {
-      mark = tokens.size();
-    }
-    
-    return tokens;
-  }
 }
 
 
@@ -126,22 +74,23 @@ test [String target]
     }
     
     { String data = ((CommonTree) $CDATA).getText();
-      data = data.substring(1, data.length() - 1);
-      List<String> tokens = tokenize(data);
+      data = data.substring(1, data.length() - 1).trim();
+      data = data.replaceAll("\u2022", " " + TestTokenizer.MARKER_TEXT + " ");
+      data = data.replaceAll("\n", "\\\\n");
+      data = data.replaceAll("\"", "\\\\\"");
     }
     
     -> {accept}? accept(
       name = {name},
       number = {++count},
       target = {target},
-      token = {tokens},
-      processedCount = {mark}
+      token = {data}
     )
     
     -> reject(
       name = {name},
       number = {++count},
       target = {target},
-      token = {tokens}
+      token = {data}
     )
   ;

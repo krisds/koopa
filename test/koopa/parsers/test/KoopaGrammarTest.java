@@ -1,8 +1,10 @@
 package koopa.parsers.test;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import koopa.parsers.Parser;
-import koopa.tokenizers.test.TestTokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
 
@@ -32,7 +34,7 @@ public class KoopaGrammarTest {
 				.permuted(grammar.token("A"), grammar.token("B"), grammar
 						.token("C")), grammar.token(".")));
 		assertNotNull(parser);
-		TestTokenizer tokenizer = new TestTokenizer("A", "B", "C", ".");
+		TestTokenizer tokenizer = new TestTokenizer("A B C.");
 		assertTrue(parser.accepts(tokenizer));
 	}
 
@@ -42,7 +44,7 @@ public class KoopaGrammarTest {
 				.permuted(grammar.token("A"), grammar.token("B"), grammar
 						.token("C")), grammar.token(".")));
 		assertNotNull(parser);
-		TestTokenizer tokenizer = new TestTokenizer("C", "B", "A", ".");
+		TestTokenizer tokenizer = new TestTokenizer("C B A.");
 		assertTrue(parser.accepts(tokenizer));
 	}
 
@@ -52,7 +54,7 @@ public class KoopaGrammarTest {
 				.permuted(grammar.token("A"), grammar.token("B"), grammar
 						.token("C")), grammar.token(".")));
 		assertNotNull(parser);
-		TestTokenizer tokenizer = new TestTokenizer("B", "C", ".");
+		TestTokenizer tokenizer = new TestTokenizer("B C.");
 		assertTrue(parser.accepts(tokenizer));
 	}
 
@@ -62,7 +64,7 @@ public class KoopaGrammarTest {
 				.permuted(grammar.token("A"), grammar.token("B"), grammar
 						.token("C")), grammar.token(".")));
 		assertNotNull(parser);
-		TestTokenizer tokenizer = new TestTokenizer("A", "B", "A", ".");
+		TestTokenizer tokenizer = new TestTokenizer("A B A.");
 		assertFalse(parser.accepts(tokenizer));
 	}
 

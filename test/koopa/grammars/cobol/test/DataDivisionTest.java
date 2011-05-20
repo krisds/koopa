@@ -2,10 +2,11 @@ package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
-import koopa.tokenizers.test.TestTokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
 
+/** This code was generated from DataDivision.stage. */
 public class DataDivisionTest extends TestCase {
 
   private static koopa.grammars.cobol.CobolGrammar grammar = new koopa.grammars.cobol.CobolGrammar();
@@ -14,72 +15,72 @@ public class DataDivisionTest extends TestCase {
     public void testRedefines_1() {
       Parser parser = grammar.redefines();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("REDEFINES", "TEST-1");
+      TestTokenizer tokenizer = new TestTokenizer("REDEFINES TEST-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testBlankWhenZero_2() {
       Parser parser = grammar.blankWhenZero();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("BLANK", "WHEN", "ZERO");
+      TestTokenizer tokenizer = new TestTokenizer("BLANK WHEN ZERO");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testBlankWhenZero_3() {
       Parser parser = grammar.blankWhenZero();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("BLANK", "WHEN", "ZEROS");
+      TestTokenizer tokenizer = new TestTokenizer("BLANK WHEN ZEROS");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testBlankWhenZero_4() {
       Parser parser = grammar.blankWhenZero();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("BLANK", "WHEN", "ZEROES");
+      TestTokenizer tokenizer = new TestTokenizer("BLANK WHEN ZEROES");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testBlankWhenZero_5() {
       Parser parser = grammar.blankWhenZero();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("BLANK", "ZERO");
+      TestTokenizer tokenizer = new TestTokenizer("BLANK ZERO");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testBlankWhenZero_6() {
       Parser parser = grammar.blankWhenZero();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("BLANK", "ZEROS");
+      TestTokenizer tokenizer = new TestTokenizer("BLANK ZEROS");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testBlankWhenZero_7() {
       Parser parser = grammar.blankWhenZero();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("BLANK", "ZEROES");
+      TestTokenizer tokenizer = new TestTokenizer("BLANK ZEROES");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testExternal_8() {
       Parser parser = grammar.external();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("IS", "EXTERNAL");
+      TestTokenizer tokenizer = new TestTokenizer("IS EXTERNAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -88,16 +89,16 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("EXTERNAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testGlobal_10() {
       Parser parser = grammar.global();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("IS", "GLOBAL");
+      TestTokenizer tokenizer = new TestTokenizer("IS GLOBAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -106,50 +107,50 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("GLOBAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testJustified_12() {
       Parser parser = grammar.justified();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("JUSTIFIED", "RIGHT");
+      TestTokenizer tokenizer = new TestTokenizer("JUSTIFIED RIGHT");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testJustified_13() {
       Parser parser = grammar.justified();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("JUST", "RIGHT");
+      TestTokenizer tokenizer = new TestTokenizer("JUST RIGHT");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_14() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_15() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_16() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42.0", "TIMES");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42.0 TIMES");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -157,7 +158,7 @@ public class DataDivisionTest extends TestCase {
     public void testOccurs_17() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42.0");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42.0");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -165,158 +166,142 @@ public class DataDivisionTest extends TestCase {
     public void testOccurs_18() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "KEY", "IS", "MY-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING KEY IS MY-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_19() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "KEY", "IS", "MY-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING KEY IS MY-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_20() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "MY-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING MY-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_21() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "MY-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING MY-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_22() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "MY-KEY", "MY-OTHER-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING MY-KEY MY-OTHER-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_23() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "MY-KEY", "MY-OTHER-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING MY-KEY MY-OTHER-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_24() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "KEY", "IS", "MY-KEY", "MY-OTHER-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING KEY IS MY-KEY MY-OTHER-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_25() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "KEY", "IS", "MY-KEY", "MY-OTHER-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING KEY IS MY-KEY MY-OTHER-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_26() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "KEY", "IS", "MY-ASC-KEY", "MY-OTHER-ASC-KEY", "DESCENDING", "KEY", "IS", 
-        "MY-DESC-KEY", "MY-OTHER-DESC-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING KEY IS MY-ASC-KEY MY-OTHER-ASC-KEY \n   DESCENDING KEY IS MY-DESC-KEY MY-OTHER-DESC-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_27() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "KEY", "IS", "MY-DESC-KEY", "MY-OTHER-DESC-KEY", "ASCENDING", "KEY", "IS", 
-        "MY-ASC-KEY", "MY-OTHER-ASC-KEY");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING KEY IS MY-DESC-KEY MY-OTHER-DESC-KEY\n   ASCENDING KEY IS MY-ASC-KEY MY-OTHER-ASC-KEY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(13, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_28() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "INDEXED", 
-        "BY", "MY-INDEX");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES\n   INDEXED BY MY-INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_29() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "INDEXED", 
-        "BY", "MY-INDEX", "MY-OTHER-INDEX");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES\n   INDEXED BY MY-INDEX MY-OTHER-INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_30() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "KEY", "IS", "MY-DESC-KEY", "MY-OTHER-DESC-KEY", "ASCENDING", "MY-ASC-KEY", 
-        "MY-OTHER-ASC-KEY", "INDEXED", "BY", "MY-INDEX", "MY-OTHER-INDEX");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING KEY IS MY-DESC-KEY MY-OTHER-DESC-KEY\n   ASCENDING MY-ASC-KEY MY-OTHER-ASC-KEY\n   INDEXED BY MY-INDEX MY-OTHER-INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(15, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_31() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7", "TO", "42", "TIMES");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7 TO 42 TIMES");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_32() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7", "TO", "42.0", "TIMES");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7  KOOPAH_TO_HERE  TO 42.0 TIMES");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_33() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7.0", "TO", "42", "TIMES");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7.0 TO 42 TIMES");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -324,8 +309,7 @@ public class DataDivisionTest extends TestCase {
     public void testOccurs_34() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7.0", "TO", "42.0", 
-        "TIMES");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7.0 TO 42.0 TIMES");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -333,82 +317,72 @@ public class DataDivisionTest extends TestCase {
     public void testOccurs_35() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7", "TO", "42", "TIMES", 
-        "DEPENDING", "ON", "MY-FIELD");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7 TO 42 TIMES DEPENDING ON MY-FIELD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_36() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7", "TO", "42", "TIMES", 
-        "DEPENDING", "ON", "MY-FIELD", "OF", "MY-RECORD", "IN", "MY-OTHER-RECORD");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7 TO 42 TIMES DEPENDING ON MY-FIELD OF MY-RECORD IN MY-OTHER-RECORD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_37() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DEPENDING", 
-        "ON", "MY-FIELD");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES DEPENDING ON MY-FIELD");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_38() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "7", "TO", "42", "TIMES", 
-        "DEPENDING", "ON", "MY-FIELD", "DESCENDING", "KEY", "IS", "MY-DESC-KEY", 
-        "MY-OTHER-DESC-KEY", "ASCENDING", "MY-ASC-KEY", "MY-OTHER-ASC-KEY", "INDEXED", 
-        "BY", "MY-INDEX", "MY-OTHER-INDEX");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 7 TO 42 TIMES DEPENDING ON MY-FIELD\n   DESCENDING KEY IS MY-DESC-KEY MY-OTHER-DESC-KEY\n   ASCENDING MY-ASC-KEY MY-OTHER-ASC-KEY\n   INDEXED BY MY-INDEX MY-OTHER-INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(20, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_39() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "KEY", "IS", "MY-KEY", "OF", "MY-TABLE");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING KEY IS MY-KEY OF MY-TABLE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_40() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "ASCENDING", 
-        "KEY", "IS", "MY-KEY", "IN", "MY-TABLE");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   ASCENDING KEY IS MY-KEY IN MY-TABLE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_41() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "KEY", "IS", "MY-KEY", "OF", "MY-TABLE");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING KEY IS MY-KEY OF MY-TABLE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testOccurs_42() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("OCCURS", "42", "TIMES", "DESCENDING", 
-        "KEY", "IS", "MY-KEY", "IN", "MY-TABLE");
+      TestTokenizer tokenizer = new TestTokenizer("OCCURS 42 TIMES \n   DESCENDING KEY IS MY-KEY IN MY-TABLE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(9, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -417,7 +391,7 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("LEADING");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -426,155 +400,151 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("TRAILING");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_45() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("LEADING", "SEPARATE");
+      TestTokenizer tokenizer = new TestTokenizer("LEADING SEPARATE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_46() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("TRAILING", "SEPARATE");
+      TestTokenizer tokenizer = new TestTokenizer("TRAILING SEPARATE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_47() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("LEADING", "SEPARATE", "CHARACTER");
+      TestTokenizer tokenizer = new TestTokenizer("LEADING SEPARATE CHARACTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_48() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("TRAILING", "SEPARATE", "CHARACTER");
+      TestTokenizer tokenizer = new TestTokenizer("TRAILING SEPARATE CHARACTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_49() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "LEADING");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN LEADING");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_50() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "TRAILING");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN TRAILING");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_51() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "IS", "LEADING");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN IS LEADING");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_52() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "IS", "TRAILING");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN IS TRAILING");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_53() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "LEADING", "SEPARATE");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN LEADING SEPARATE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_54() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "TRAILING", "SEPARATE");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN TRAILING SEPARATE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_55() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "IS", "LEADING", "SEPARATE");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN IS LEADING SEPARATE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_56() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "IS", "TRAILING", "SEPARATE");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN IS TRAILING SEPARATE");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_57() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "LEADING", "SEPARATE", 
-        "CHARACTER");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN LEADING SEPARATE CHARACTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_58() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "TRAILING", "SEPARATE", 
-        "CHARACTER");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN TRAILING SEPARATE CHARACTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(4, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_59() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "IS", "LEADING", "SEPARATE", 
-        "CHARACTER");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN IS LEADING SEPARATE CHARACTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSign_60() {
       Parser parser = grammar.sign();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SIGN", "IS", "TRAILING", "SEPARATE", 
-        "CHARACTER");
+      TestTokenizer tokenizer = new TestTokenizer("SIGN IS TRAILING SEPARATE CHARACTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -583,7 +553,7 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SYNCHRONIZED");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -592,43 +562,43 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("SYNC");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSync_63() {
       Parser parser = grammar.sync();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SYNCHRONIZED", "LEFT");
+      TestTokenizer tokenizer = new TestTokenizer("SYNCHRONIZED LEFT");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSync_64() {
       Parser parser = grammar.sync();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SYNC", "LEFT");
+      TestTokenizer tokenizer = new TestTokenizer("SYNC LEFT");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSync_65() {
       Parser parser = grammar.sync();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SYNCHRONIZED", "RIGHT");
+      TestTokenizer tokenizer = new TestTokenizer("SYNCHRONIZED RIGHT");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSync_66() {
       Parser parser = grammar.sync();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("SYNC", "RIGHT");
+      TestTokenizer tokenizer = new TestTokenizer("SYNC RIGHT");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -637,25 +607,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("BINARY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_68() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "BINARY");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE BINARY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_69() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "BINARY");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS BINARY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -664,25 +634,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMPUTATIONAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_71() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMPUTATIONAL");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMPUTATIONAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_72() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMPUTATIONAL");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMPUTATIONAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -691,25 +661,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMP");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_74() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMP");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMP");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_75() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMP");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMP");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -718,25 +688,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("DISPLAY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_77() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "DISPLAY");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE DISPLAY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_78() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "DISPLAY");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS DISPLAY");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -745,25 +715,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_80() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "INDEX");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_81() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "INDEX");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS INDEX");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -772,25 +742,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("PACKED-DECIMAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_83() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "PACKED-DECIMAL");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE PACKED-DECIMAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_84() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "PACKED-DECIMAL");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS PACKED-DECIMAL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -799,25 +769,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMPUTATIONAL-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_86() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMPUTATIONAL-1");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMPUTATIONAL-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_87() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMPUTATIONAL-1");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMPUTATIONAL-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -826,25 +796,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMP-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_89() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMP-1");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMP-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_90() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMP-1");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMP-1");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -853,25 +823,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMPUTATIONAL-2");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_92() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMPUTATIONAL-2");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMPUTATIONAL-2");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_93() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMPUTATIONAL-2");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMPUTATIONAL-2");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -880,25 +850,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMP-2");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_95() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMP-2");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMP-2");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_96() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMP-2");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMP-2");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -907,25 +877,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMPUTATIONAL-3");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_98() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMPUTATIONAL-3");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMPUTATIONAL-3");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_99() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMPUTATIONAL-3");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMPUTATIONAL-3");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -934,25 +904,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMP-3");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_101() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMP-3");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMP-3");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_102() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMP-3");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMP-3");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -961,25 +931,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMPUTATIONAL-5");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_104() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMPUTATIONAL-5");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMPUTATIONAL-5");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_105() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMPUTATIONAL-5");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMPUTATIONAL-5");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -988,25 +958,25 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("COMP-5");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_107() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "COMP-5");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE COMP-5");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_108() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "COMP-5");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS COMP-5");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
@@ -1015,185 +985,185 @@ public class DataDivisionTest extends TestCase {
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer("POINTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(1, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_110() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "POINTER");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE POINTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUsage_111() {
       Parser parser = grammar.usage();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("USAGE", "IS", "POINTER");
+      TestTokenizer tokenizer = new TestTokenizer("USAGE IS POINTER");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_112() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "ZERO");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE IS ZERO");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_113() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "ZERO");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE ZERO");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_114() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "42");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE IS 42");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_115() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "42");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE 42");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_116() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "42.10");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE IS 42.10");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_117() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "42.10");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE 42.10");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_118() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "\"UNDEFINED\"");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE IS \"UNDEFINED\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_119() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "\"UNDEFINED\"");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE \"UNDEFINED\"");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_120() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "IS", "NULL");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE IS NULL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testValue_121() {
       Parser parser = grammar.value();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("VALUE", "NULL");
+      TestTokenizer tokenizer = new TestTokenizer("VALUE NULL");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_122() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("01", "FILLER", ".");
+      TestTokenizer tokenizer = new TestTokenizer("01 FILLER .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_123() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("01", "TEST-2", ".");
+      TestTokenizer tokenizer = new TestTokenizer("01 TEST-2 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_124() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("01", ".");
+      TestTokenizer tokenizer = new TestTokenizer("01 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(2, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_125() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("1", "TEST-3", ".");
+      TestTokenizer tokenizer = new TestTokenizer("1 TEST-3 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_126() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("11", "TEST-4", ".");
+      TestTokenizer tokenizer = new TestTokenizer("11 TEST-4 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_127() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("49", "TEST-5", ".");
+      TestTokenizer tokenizer = new TestTokenizer("49 TEST-5 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_128() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("77", "TEST-6", ".");
+      TestTokenizer tokenizer = new TestTokenizer("77 TEST-6 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_129() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("0", "TEST-7", ".");
+      TestTokenizer tokenizer = new TestTokenizer("0 TEST-7 .");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -1201,7 +1171,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_130() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("50", "TEST-8", ".");
+      TestTokenizer tokenizer = new TestTokenizer("50 TEST-8 .");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -1209,7 +1179,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_131() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("AA", "TEST-9", ".");
+      TestTokenizer tokenizer = new TestTokenizer("AA TEST-9 .");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -1217,169 +1187,152 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_132() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("66", "TEST-10", "RENAMES", "TEST-1", 
-        ".");
+      TestTokenizer tokenizer = new TestTokenizer("66 TEST-10\n      RENAMES TEST-1 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_133() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("66", "TEST-11", "RENAMES", "TEST-2", 
-        "THROUGH", "TEST-3", ".");
+      TestTokenizer tokenizer = new TestTokenizer("66 TEST-11\n      RENAMES TEST-2 THROUGH TEST-3 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_134() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("66", "TEST-12", "RENAMES", "TEST-4", 
-        "THRU", "TEST-5", ".");
+      TestTokenizer tokenizer = new TestTokenizer("66 TEST-12\n      RENAMES TEST-4 THRU TEST-5 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_135() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("66", "TEST-10B", "RENAMES", "TEST-1", 
-        "OF", "TESTSUITE", ".");
+      TestTokenizer tokenizer = new TestTokenizer("66 TEST-10B\n      RENAMES TEST-1 OF TESTSUITE .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(7, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_136() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("66", "TEST-11B", "RENAMES", "TEST-2", 
-        "OF", "TESTSUITE", "THROUGH", "TEST-3", "OF", "TESTSUITE", ".");
+      TestTokenizer tokenizer = new TestTokenizer("66 TEST-11B\n      RENAMES TEST-2 OF TESTSUITE THROUGH TEST-3 OF TESTSUITE .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_137() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("66", "TEST-12B", "RENAMES", "TEST-4", 
-        "OF", "TESTSUITE", "THRU", "TEST-5", "OF", "TESTSUITE", ".");
+      TestTokenizer tokenizer = new TestTokenizer("66 TEST-12B\n      RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_138() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-13", "VALUE", "IS", 
-        "\"AAA\"", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-13\n      VALUE IS \"AAA\" .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_139() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-14", "VALUE", "\"BBB\"", 
-        ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-14\n      VALUE \"BBB\" .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_140() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-15", "VALUES", "ARE", 
-        "\"CCC\"", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-15\n      VALUES ARE \"CCC\" .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_141() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-16", "VALUES", "\"DDD\"", 
-        ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-16\n      VALUES \"DDD\" .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(5, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_142() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-17", "VALUES", "ARE", 
-        "0", "THROUGH", "10", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-17\n      VALUES ARE 0 THROUGH 10 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(8, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_143() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-18", "VALUES", "ARE", 
-        "0", "THROUGH", "10", "20", "THROUGH", "30", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-18\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_144() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-19", "VALUES", "ARE", 
-        "0", "THROUGH", "10", "20", "THROUGH", "30", "66", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-19\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30\n                 66 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_145() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-20", "VALUES", "ARE", 
-        "0", "THROUGH", "10", "15", "20", "THROUGH", "30", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-20\n      VALUES ARE 0 THROUGH 10\n                 15\n                 20 THROUGH 30 .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_146() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("88", "TEST-21", "VALUE", "IS", 
-        "ZERO", ".");
+      TestTokenizer tokenizer = new TestTokenizer("88 TEST-21\n      VALUE IS ZERO .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_147() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("05", "BUFFER", "POINTER", "VALUE", 
-        "NULL", ".");
+      TestTokenizer tokenizer = new TestTokenizer("05 BUFFER\n      POINTER\n      VALUE NULL .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testWorkingStorageSection_148() {
       Parser parser = grammar.workingStorageSection();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("WORKING-STORAGE", "Section", 
-        ".", "COPY", "\"WORKSTOR.WS\"", ".");
+      TestTokenizer tokenizer = new TestTokenizer("WORKING-STORAGE Section .\n   COPY \"WORKSTOR.WS\" .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(6, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 }

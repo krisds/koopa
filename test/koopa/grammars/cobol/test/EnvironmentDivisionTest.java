@@ -2,10 +2,11 @@ package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
-import koopa.tokenizers.test.TestTokenizer;
+import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
 
+/** This code was generated from EnvironmentDivision.stage. */
 public class EnvironmentDivisionTest extends TestCase {
 
   private static koopa.grammars.cobol.CobolGrammar grammar = new koopa.grammars.cobol.CobolGrammar();
@@ -14,30 +15,26 @@ public class EnvironmentDivisionTest extends TestCase {
     public void testEnvironmentDivision_1() {
       Parser parser = grammar.environmentDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT", "DIVISION", ".");
+      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT DIVISION .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(3, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnvironmentDivision_2() {
       Parser parser = grammar.environmentDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT", "DIVISION", ".", 
-        "CONFIGURATION", "SECTION", ".", "SPECIAL-NAMES", ".", "DECIMAL-POINT", 
-        "IS", "COMMA", ".");
+      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT DIVISION .\n   CONFIGURATION SECTION .\n   SPECIAL-NAMES .\n   DECIMAL-POINT IS COMMA .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(12, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnvironmentDivision_3() {
       Parser parser = grammar.environmentDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT", "DIVISION", ".", 
-        "CONFIGURATION", "SECTION", ".", "SPECIAL-NAMES", ".", "DECIMAL-POINT", 
-        "COMMA", ".");
+      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT DIVISION .\n   CONFIGURATION SECTION .\n   SPECIAL-NAMES . \n   DECIMAL-POINT COMMA .");
       assertTrue(parser.accepts(tokenizer));
-      assertEquals(11, tokenizer.getNumberOfProcessedTokens());
+      assertTrue(tokenizer.isWhereExpected());
     }
 }

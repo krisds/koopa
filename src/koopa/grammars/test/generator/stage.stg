@@ -5,6 +5,7 @@ package $package$;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
@@ -18,23 +19,23 @@ public class $name$Test extends TestCase {
 }
 >>
 
-accept(name, number, target, token) ::= <<
+accept(name, number, target, token, format) ::= <<
   @Test
   public void test$name$_$number$() {
     Parser parser = grammar.$target$();
     assertNotNull(parser);
-    TestTokenizer tokenizer = new TestTokenizer("$token$");
+    TestTokenizer tokenizer = new TestTokenizer($if(format)$SourceFormat.FREE$else$SourceFormat.FIXED$endif$, "$token$");
     assertTrue(parser.accepts(tokenizer));
     assertTrue(tokenizer.isWhereExpected());
   }
 >>
 
-reject(name, number, target, token) ::= <<
+reject(name, number, target, token, format) ::= <<
   @Test
   public void test$name$_$number$() {
     Parser parser = grammar.$target$();
     assertNotNull(parser);
-    TestTokenizer tokenizer = new TestTokenizer("$token$");
+    TestTokenizer tokenizer = new TestTokenizer($if(format)$SourceFormat.FREE$else$SourceFormat.FIXED$endif$, "$token$");
     assertFalse(parser.accepts(tokenizer));
   }
 >>

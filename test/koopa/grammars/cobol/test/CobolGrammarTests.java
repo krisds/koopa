@@ -8,6 +8,8 @@ public class CobolGrammarTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Cobol Grammar test suite.");
 
+		suite.addTestSuite(SourceFormatTest.class);
+
 		suite.addTestSuite(LowLevelTest.class);
 		suite.addTestSuite(IdentifierTest.class);
 		suite.addTestSuite(CatchAllStatementsTest.class);

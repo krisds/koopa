@@ -50,9 +50,9 @@ testsForGrammarRule
   ;
 
 testcase
-  : (t=ACCEPT | t=REJECT) CDATA
+  : (t=ACCEPT | t=REJECT) (d=FREE_DATA | d=FIXED_DATA)
 
-    -> ^(TEST $t CDATA)
+    -> ^(TEST $t $d)
   ;
 
 COMMENT : '#' (~('\n' | '\r'))* { $channel = HIDDEN; } ;
@@ -66,7 +66,8 @@ SEMI : ';' ;
 ACCEPT : '+' ;
 REJECT : '-' ;
 
-CDATA : '[' (~('[' | ']'))* ']' ;
+FREE_DATA : '[' (~('[' | ']'))* ']' ;
+FIXED_DATA : '{' (~('{' | '}'))* '}' ;
 
 IDENTIFIER : NAME ('.' NAME)* ;
 

@@ -2,6 +2,7 @@ package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class EnvironmentDivisionTest extends TestCase {
     public void testEnvironmentDivision_1() {
       Parser parser = grammar.environmentDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT DIVISION .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENVIRONMENT DIVISION .");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -24,7 +25,7 @@ public class EnvironmentDivisionTest extends TestCase {
     public void testEnvironmentDivision_2() {
       Parser parser = grammar.environmentDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT DIVISION .\n   CONFIGURATION SECTION .\n   SPECIAL-NAMES .\n   DECIMAL-POINT IS COMMA .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENVIRONMENT DIVISION .\n   CONFIGURATION SECTION .\n   SPECIAL-NAMES .\n   DECIMAL-POINT IS COMMA .");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -33,7 +34,7 @@ public class EnvironmentDivisionTest extends TestCase {
     public void testEnvironmentDivision_3() {
       Parser parser = grammar.environmentDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("ENVIRONMENT DIVISION .\n   CONFIGURATION SECTION .\n   SPECIAL-NAMES . \n   DECIMAL-POINT COMMA .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENVIRONMENT DIVISION .\n   CONFIGURATION SECTION .\n   SPECIAL-NAMES . \n   DECIMAL-POINT COMMA .");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

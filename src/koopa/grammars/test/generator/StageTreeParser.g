@@ -28,5 +28,5 @@ testsForGrammarRule
   ;
   
 test
-  : ^(TEST (ACCEPT | REJECT) CDATA)
+  : ^(TEST (ACCEPT | REJECT) (FREE_DATA | FIXED_DATA))
   ;

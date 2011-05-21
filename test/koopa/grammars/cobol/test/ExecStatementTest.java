@@ -2,6 +2,7 @@ package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_1() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -23,7 +24,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_2() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC END-EXEC");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC END-EXEC");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -31,7 +32,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_3() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC SQL");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC SQL");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -39,7 +40,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_4() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC SQL END-EXEC");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC SQL END-EXEC");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -48,7 +49,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_5() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC SQL INCLUDE payroll END-EXEC");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC SQL INCLUDE payroll END-EXEC");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -57,7 +58,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_6() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC CICS END-EXEC");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC CICS END-EXEC");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -66,7 +67,7 @@ public class ExecStatementTest extends TestCase {
     public void testExecStatement_7() {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("EXEC CICS FEE FOO FUM END-EXEC");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXEC CICS FEE FOO FUM END-EXEC");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

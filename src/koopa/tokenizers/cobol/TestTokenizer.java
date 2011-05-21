@@ -14,7 +14,7 @@ import koopa.tokens.TokenFilter;
 
 public class TestTokenizer implements PushbackTokenizer {
 
-	public static final String MARKER_TEXT = "KOOPAH_TO_HERE";
+	public static final String MARKER_TEXT = "\u2022";
 
 	private PushbackTokenizer tokenizer;
 	private boolean quit = false;
@@ -22,10 +22,14 @@ public class TestTokenizer implements PushbackTokenizer {
 	private Token lastToken = null;
 
 	public TestTokenizer(String data) {
+		this(SourceFormat.FREE, data);
+	}
+
+	public TestTokenizer(SourceFormat format, String data) {
 		// The tokenizers in this sequence should generate the expected tokens.
 		Tokenizer tokenizer = new LineSplittingTokenizer(new StringReader(data));
 		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
-		tokenizer = new ProgramAreaTokenizer(tokenizer, SourceFormat.FREE);
+		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);
 		tokenizer = new PseudoLiteralTokenizer(tokenizer);

@@ -13,8 +13,6 @@ options {
   import java.util.Date;
   import java.util.List;
   import java.util.LinkedList;
-  
-  import koopa.tokenizers.cobol.TestTokenizer;
 }
 
 @members {
@@ -62,20 +60,30 @@ testsForGrammarRule returns [List<StringTemplate> tests = new LinkedList<StringT
   
 test [String target]
   : ^(TEST
-      { boolean accept = true; }
+      { boolean accept = true;
+        boolean free = true;
+        String data = ""; }
+      
       ( ACCEPT
       | REJECT { accept = false; }
       )
-      CDATA
+      
+      ( FREE_DATA
+        { data = ((CommonTree) $FREE_DATA).getText(); }
+      
+      | FIXED_DATA
+        { data = ((CommonTree) $FIXED_DATA).getText();
+          free = false;
+        }
+      )
     )
     
     { String name = target.substring(1);
       name = Character.toUpperCase(target.charAt(0)) + name;
     }
     
-    { String data = ((CommonTree) $CDATA).getText();
-      data = data.substring(1, data.length() - 1).trim();
-      data = data.replaceAll("\u2022", " " + TestTokenizer.MARKER_TEXT + " ");
+    { data = data.substring(1, data.length() - 1).trim();
+      data = data.replaceAll("\u2022", "\\\\u2022");
       data = data.replaceAll("\n", "\\\\n");
       data = data.replaceAll("\"", "\\\\\"");
     }
@@ -84,13 +92,15 @@ test [String target]
       name = {name},
       number = {++count},
       target = {target},
-      token = {data}
+      token = {data},
+      format = {free}
     )
     
     -> reject(
       name = {name},
       number = {++count},
       target = {target},
-      token = {data}
+      token = {data},
+      format = {free}
     )
   ;

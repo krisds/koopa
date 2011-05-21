@@ -321,6 +321,33 @@ level-number data-name
 \end{lstlisting}
 In Koopa, \lstinline|!| is the permutation operator. It is followed by a list of alternative grammar rules. Any input where these grammar rules match, gets accepted, but only if no rule matches more than once (zero matches are also allowed). In this way our specification for data items remains concise and to the point, without the need for native code to make it work.
 
+%  ----------------------------------------------------------------------------
+
+\subsection{A ``not'' guard}
+
+Cobol grammars are notoriously ambiguous. Here's a telling example coming from the INSPECT statement: the TALLYING phrase\footnote{\scriptsize Simplified here for illustration purposes.}.
+\begin{lstlisting}[numbers=none]
+TALLYING ( identifier-1 FOR
+  ( (ALL | LEADING) (identifier-2 | literal)*
+  )*
+)*
+\end{lstlisting}
+So, having seen (for instance) a \lstinline|TALLYING A FOR ALL B|, how would a following \lstinline|C| be matched ? Well, Koopa's repetition is greedy so it would match up this \lstinline|C| with \lstinline|identifier-2|. But that's not always correct: 
+\begin{lstlisting}[numbers=none]
+TALLYING A FOR ALL B
+         C FOR ALL D
+\end{lstlisting}
+In this case \lstinline|C| should have been matched to \lstinline|identifier-1|.
+
+We can solve the ambiguity in the TALLYING phrase if we say that \lstinline|identifier-2| can't be followed by a \lstinline|FOR|. When an identifier is followed by a \lstinline|FOR| we know that we should match it to \lstinline|identifier-1| instead. Koopa can solve this problem through a ``not'' guard:
+\begin{lstlisting}[numbers=none]
+TALLYING ( identifier-1 FOR
+  ( (ALL | LEADING) (identifier-2 -FOR | literal)*
+  )*
+)*
+\end{lstlisting}
+The dash preceding the \lstinline|FOR| in the above grammar rule is the ``not'' guard. It specifies that whatever token directly follows this guard should not appear at that point in the token stream. If it does then the match fails for that alternative. If it doesn't then we can continue matching. Note that the ``not'' guard does not consume the token it's testing! That token is still available for matching by the remainder of the grammar rule.
+
 % =============================================================================
 
 \section{Tokenising Cobol}
@@ -328,7 +355,7 @@ In Koopa, \lstinline|!| is the permutation operator. It is followed by a list of
 
 In order to keep grammar rule interactions to a minimum Koopa tries not to distinguish different types of tokens until the very last moment\footnote{\scriptsize Notable exception are literals (strings and numbers), which are never context dependent.}, and then only does so based on the grammar rule. Consider again the definitions in figure~\ref{fig:koopa-grammar}. The tokenizer in Koopa will not distinguish the \lstinline|CALL| verb from generic identifiers. Only when the grammar needs to know ``Is the next token a \lstinline|CALL| keyword ?'' will the tokenizer check if it is. The advantage here is that keywords are always local to grammar rules, and will therefore never interfere with other rules.
 
-To make this work Koopa provides a specialised tokenizer. Cobol programs consist of three\footnote{\scriptsize Technically there are also picture character strings, but these can be handled in a later stage of the parsing process.} basic types of tokens: Cobol words, literals, and separators. Cobol words make up the identifiers and keywords of the language. Literals are strings, integers and decimals, as you would expect. Separators are special: they consist of sequences of whitespace and some special characters (commas, colons, parens, etc.). The easiest way of tokenising Cobol code is to split up the text based on separators. Anything that's not a separator then is either a Cobol word or a literal. Distinguishing literals from Cobol words is, of course, quite straightforward. The tokenizer will therefore return a stream made up of these three basic types of tokens. It is only in a later phase (by request of the parser) that the differentiation of keywords versus identifiers is made. An added advantage of this approach is that the tokenizer does not have to co-evolve with the grammar, which again reduces the amount of effort for developing and extending the Cobol grammar.
+To make this work Koopa provides a specialised tokenizer which returns a stream made up of basic tokens with some metadata in the form of tags. It is only in a later phase (by request of the parser) that the differentiation of keywords versus identifiers is made. An added advantage of this approach is that the tokenizer does not have to co-evolve with the grammar, which again reduces the amount of effort for developing and extending the Cobol grammar.
 
 % =============================================================================
 
@@ -350,7 +377,7 @@ target goto;
 \label{fig:koopa-goto-test}
 \end{figure}
 
-Consider again the \lstinline|goto| rule from figure~\ref{fig:koopa-goto-rule}. Given this definition we can now set up a set of tests, as is shown in figure~\ref{fig:koopa-goto-test}. Line~1 of figure~\ref{fig:koopa-goto-test} declares which grammar rule will be tested. Lines~3, 4 and~5 each define a single test. Everything between square brackets is used as tokens to be parsed. The leading \lstinline|+| (or \lstinline|-|) flags whether the parser should accept this input (or not).
+Consider again the \lstinline|goto| rule from figure~\ref{fig:koopa-goto-rule}. Given this definition we can now set up a set of tests, as is shown in figure~\ref{fig:koopa-goto-test}. Line~1 of figure~\ref{fig:koopa-goto-test} declares which grammar rule will be tested. Lines~3, 4 and~5 each define a single test. Everything between square brackets is used as tokens to be parsed, in free format\footnote{\scriptsize Fixed format samples are also allowed. The syntax for these uses curly braces instead of square ones.} Cobol. The leading \lstinline|+| (or \lstinline|-|) flags whether the parser should accept this input (or not).
 
 \begin{figure}
 \centering

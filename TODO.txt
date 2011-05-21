@@ -1,6 +1,5 @@
 = Misc. =
 
-* Allow ',' in stages. (Filter them out for processing.)
 * Reconsider allowing these intermediate tokenizers. Maybe a listener pattern
   would be better.
 * Regression testing. Would be nice if we could do this as a JUnit test.
@@ -42,25 +41,3 @@ with parsing this.
 
 http://www.sdml.info/projects/srcml/
 
-
-= Permutation =
-
-Syntax for: "The clauses may be written in any order."
-This needs something like a permutation symbol.
-
-Suggestions:
-
-	level dataName [redefines] !( usage | picture | value ) .
-	level dataName [redefines] %( usage | picture | value ) .
-	level dataName [redefines] @( usage | picture | value ) .
-	level dataName [redefines] ~( usage | picture | value ) .
-
-	level dataName [redefines] %%( usage | picture | value ) .
-
-
-== Mark up the tokens ==
-
-Possible syntax in grammar for water:
-
-  Ç IDENTIFICATION DIVISION . È
-  Ü IDENTIFICATION DIVISION . Ý

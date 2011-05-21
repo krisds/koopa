@@ -2,6 +2,7 @@ package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
 import koopa.parsers.Parser;
+import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_1() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("CANCEL MY-SUB-PROGRAM");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "CANCEL MY-SUB-PROGRAM");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -24,7 +25,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_2() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("CANCEL \"MY-SUB-PROGRAM\"");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "CANCEL \"MY-SUB-PROGRAM\"");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -33,7 +34,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_3() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("CANCEL 42");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "CANCEL 42");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -41,7 +42,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_4() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("CANCEL 42.0");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "CANCEL 42.0");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -49,7 +50,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_5() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer("CANCEL MY-SUB-PROGRAM \"MY-SUB-PROGRAM\" \"MY-OTHER-SUBPROGRAM\" MY-OTHER-SUBPROGRAM");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "CANCEL MY-SUB-PROGRAM \"MY-SUB-PROGRAM\" \"MY-OTHER-SUBPROGRAM\" MY-OTHER-SUBPROGRAM");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

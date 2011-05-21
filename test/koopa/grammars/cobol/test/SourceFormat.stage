@@ -1,0 +1,27 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+# This stage is not really about testing the STRING statement. It is about
+# testing support of free vs. fixed format unit tests.
+
+target stringStatement;
+
+# Free format example which should be ok.
++[ STRING A, B, C INTO TEXT
+   END-STRING ]
+
+# Free format example which should fail.
+-[
+KOOPAH STRING A, B, C INTO TEXT
+KOOPAH END-STRING
+]
+
+# Fixed format example which should fail.
+-{ STRING A, B, C INTO TEXT
+   END-STRING }
+
+# Fixed format example which should be ok.
++{
+KOOPAH STRING A, B, C INTO TEXT
+KOOPAH END-STRING
+}

@@ -904,9 +904,180 @@ end
 ## -----------------------------------------------------------------------------
 
 def execStatement =
-   EXEC cobolWord
-   [--> END-EXEC]
+   ( execSQLStatement
+   | execCICSStatement
+     
+   # This is a catch-all, which includes SQL and CICS statements which somehow
+   # didn't match.
+   | EXEC cobolWord
+        [--> END-EXEC]
+     END-EXEC
+   )
+end
+
+# EXEC SQL support. ------------------------------------------------------------
+
+def execSQLStatement =
+   EXEC SQL 
+     sqlStatement 
+     [--> END-EXEC]
    END-EXEC
+end
+
+def sqlStatement =
+   ( sqlInclude
+   | sqlSelect
+   | sqlInsert
+   | sqlUpdate
+   | sqlDelete
+   )
+end
+
+def sqlInclude =
+   INCLUDE textName
+end
+
+def sqlSelect =
+   ( SELECT | DECLARE [--> SELECT] SELECT)
+   [--> FROM] FROM [identifier '.'] tableName    
+end
+
+def sqlInsert =
+   INSERT INTO [identifier '.'] tableName
+end
+
+def sqlUpdate =
+   UPDATE [identifier '.'] tableName
+end
+
+def sqlDelete = 
+   DELETE FROM [identifier '.'] tableName
+end
+
+def tableName =
+    cobolWord
+end
+
+# EXEC CICS support. -----------------------------------------------------------
+
+def execCICSStatement =
+   EXEC CICS
+        cicsStatement
+        [--> END-EXEC]
+     END-EXEC
+end
+
+def cicsStatement =
+   ( cicsReadQ
+   | cicsWriteQ
+   | cicsDeleteQ 
+   | cicsReadFile
+   | cicsWriteFile 
+   | cicsLink
+   | cicsXctl
+   | cicsLoad
+   | cicsStart
+   )
+end
+
+def cicsReadQ =
+   READQ 
+   ( TS (QUEUE | QNAME) '(' queueName ')' 
+     !( (SYSID|SYS) '(' cicsSysid ')'
+      | (SET|INTO) cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | (ITEM cicsWaterInBrackets | NEXT)
+      | NUMITEMS cicsWaterInBrackets
+      )
+   | TD QUEUE '(' (literal | identifier) ')' 
+   )
+end
+
+def cicsWriteQ =
+   WRITEQ 
+   ( TS (QUEUE | QNAME) '(' queueName ')'
+     !( (SYSID|SYS) '(' cicsSysid ')'
+      | FROM cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | (NUMITEMS cicsWaterInBrackets | ITEM cicsWaterInBrackets [REWRITE])
+      | NOSUSPEND
+      | (MAIN|AUXILIARY)
+      )
+   | TD QUEUE '(' queueName ')'
+   )
+end
+
+def cicsDeleteQ =
+   DELETEQ (TS|TD) (QUEUE | QNAME) '(' queueName ')'
+   [(SYSID|SYS) '(' cicsSysid ')']
+end
+
+def cicsReadFile =
+   ( READ (FILE | DATASET) '(' fileName ')'
+     !( (SYSID|SYS) '(' cicsSysid ')'
+      | (SET|INTO) cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets [GENERIC]]
+      | (GTEQ|EQUAL)
+      | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
+      | NOSUSPEND
+      )
+   | READNEXT (FILE|DATASET) '(' fileName ')'
+     !( (SYSID|SYS) '(' cicsSysid ')'
+      | (SET|INTO) cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets] 
+      | (RBA|XRBA|RRN)
+      | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
+      | NOSUSPEND
+      )
+   )
+end
+
+def cicsWriteFile =
+   WRITE (FILE | DATASET) '(' fileName ')'
+   !( (SYSID|SYS) '(' cicsSysid ')'
+    | FROM cicsWaterInBrackets   [LENGTH cicsWaterInBrackets]
+    | RIDFLD cicsWaterInBrackets [KEYLENGTH cicsWaterInBrackets] 
+    | (RBA|XRBA|RRN)
+    | MASSINSERT
+    | NOSUSPEND
+    )
+end
+
+def cicsLink =
+   LINK PROGRAM '(' programName ')'
+   !( (SYSID|SYS) '(' cicsSysid ')'
+    | COMMAREA cicsWaterInBrackets [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
+    | SYNCONRETURN
+    | TRANSID cicsWaterInBrackets
+    | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
+    | CHANNEL cicsWaterInBrackets
+    )
+end
+
+def cicsXctl =
+   XCTL PROGRAM '(' programName ')'
+   !( COMMAREA cicsWaterInBrackets [LENGTH cicsWaterInBrackets] 
+    | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
+    | CHANNEL cicsWaterInBrackets
+    )
+end
+
+def cicsLoad =
+   LOAD PROGRAM '(' programName ')'
+end
+
+def cicsStart =
+   START (TRANSID|TR) '(' (literal | identifier) ')'
+end
+
+def cicsSysid =
+   (literal | identifier)
+end
+
+def queueName =
+   (literal | identifier)
+end
+
+def cicsWaterInBrackets =
+   '(' [--> ')'] ')'
 end
 
 ## #############################################################################
@@ -1649,7 +1820,9 @@ def className =
 end
 
 def fileName =
-    cobolWord
+    ( cobolWord
+    | alphanumeric
+    )
 end
 
 def computerName =

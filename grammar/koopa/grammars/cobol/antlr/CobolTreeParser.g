@@ -1974,10 +1974,585 @@ rangeExpression
 
 execStatement
   : ^(EXEC_STATEMENT
-      ( 'EXEC'
+      ( execSQLStatement
+      | execCICSStatement
+      | ( 'EXEC'
         cobolWord
         (water)?
         'END-EXEC'
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// execSQLStatement
+// ........................................................
+
+execSQLStatement
+  : ^(EXEC_S_Q_L_STATEMENT
+      ( 'EXEC'
+        'SQL'
+        sqlStatement
+        (water)?
+        'END-EXEC'
+      )
+    )
+  ;
+
+// ========================================================
+// sqlStatement
+// ........................................................
+
+sqlStatement
+  : ^(SQL_STATEMENT
+      ( sqlInclude
+      | sqlSelect
+      | sqlInsert
+      | sqlUpdate
+      | sqlDelete
+      )
+    )
+  ;
+
+// ========================================================
+// sqlInclude
+// ........................................................
+
+sqlInclude
+  : ^(SQL_INCLUDE
+      ( 'INCLUDE'
+        textName
+      )
+    )
+  ;
+
+// ========================================================
+// sqlSelect
+// ........................................................
+
+sqlSelect
+  : ^(SQL_SELECT
+      ( ( 'SELECT'
+      | ( 'DECLARE'
+        (water)?
+        'SELECT'
+      )
+      )
+        (water)?
+        'FROM'
+        ( ( identifier
+          '.'
+        ) )?
+        tableName
+      )
+    )
+  ;
+
+// ========================================================
+// sqlInsert
+// ........................................................
+
+sqlInsert
+  : ^(SQL_INSERT
+      ( 'INSERT'
+        'INTO'
+        ( ( identifier
+          '.'
+        ) )?
+        tableName
+      )
+    )
+  ;
+
+// ========================================================
+// sqlUpdate
+// ........................................................
+
+sqlUpdate
+  : ^(SQL_UPDATE
+      ( 'UPDATE'
+        ( ( identifier
+          '.'
+        ) )?
+        tableName
+      )
+    )
+  ;
+
+// ========================================================
+// sqlDelete
+// ........................................................
+
+sqlDelete
+  : ^(SQL_DELETE
+      ( 'DELETE'
+        'FROM'
+        ( ( identifier
+          '.'
+        ) )?
+        tableName
+      )
+    )
+  ;
+
+// ========================================================
+// tableName
+// ........................................................
+
+tableName
+  : ^(TABLE_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// execCICSStatement
+// ........................................................
+
+execCICSStatement
+  : ^(EXEC_C_I_C_S_STATEMENT
+      ( 'EXEC'
+        'CICS'
+        cicsStatement
+        (water)?
+        'END-EXEC'
+      )
+    )
+  ;
+
+// ========================================================
+// cicsStatement
+// ........................................................
+
+cicsStatement
+  : ^(CICS_STATEMENT
+      ( cicsReadQ
+      | cicsWriteQ
+      | cicsDeleteQ
+      | cicsReadFile
+      | cicsWriteFile
+      | cicsLink
+      | cicsXctl
+      | cicsLoad
+      | cicsStart
+      )
+    )
+  ;
+
+// ========================================================
+// cicsReadQ
+// ........................................................
+
+cicsReadQ
+  : ^(CICS_READ_Q
+      ( 'READQ'
+        ( ( 'TS'
+          ( 'QUEUE'
+          | 'QNAME'
+          )
+          '('
+          queueName
+          ')'
+          ( ( ( ( 'SYSID'
+          | 'SYS'
+          )
+            '('
+            cicsSysid
+            ')'
+          )
+          | ( ( 'SET'
+          | 'INTO'
+          )
+            cicsWaterInBrackets
+            ( ( 'LENGTH'
+              cicsWaterInBrackets
+            ) )?
+          )
+          | ( ( 'ITEM'
+            cicsWaterInBrackets
+          )
+          | 'NEXT'
+          )
+          | ( 'NUMITEMS'
+            cicsWaterInBrackets
+          )
+          ) )*
+        )
+        | ( 'TD'
+          'QUEUE'
+          '('
+          ( literal
+          | identifier
+          )
+          ')'
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// cicsWriteQ
+// ........................................................
+
+cicsWriteQ
+  : ^(CICS_WRITE_Q
+      ( 'WRITEQ'
+        ( ( 'TS'
+          ( 'QUEUE'
+          | 'QNAME'
+          )
+          '('
+          queueName
+          ')'
+          ( ( ( ( 'SYSID'
+          | 'SYS'
+          )
+            '('
+            cicsSysid
+            ')'
+          )
+          | ( 'FROM'
+            cicsWaterInBrackets
+            ( ( 'LENGTH'
+              cicsWaterInBrackets
+            ) )?
+          )
+          | ( ( 'NUMITEMS'
+            cicsWaterInBrackets
+          )
+          | ( 'ITEM'
+            cicsWaterInBrackets
+            ( 'REWRITE' )?
+          )
+          )
+          | 'NOSUSPEND'
+          | ( 'MAIN'
+          | 'AUXILIARY'
+          )
+          ) )*
+        )
+        | ( 'TD'
+          'QUEUE'
+          '('
+          queueName
+          ')'
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// cicsDeleteQ
+// ........................................................
+
+cicsDeleteQ
+  : ^(CICS_DELETE_Q
+      ( 'DELETEQ'
+        ( 'TS'
+        | 'TD'
+        )
+        ( 'QUEUE'
+        | 'QNAME'
+        )
+        '('
+        queueName
+        ')'
+        ( ( ( 'SYSID'
+        | 'SYS'
+        )
+          '('
+          cicsSysid
+          ')'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// cicsReadFile
+// ........................................................
+
+cicsReadFile
+  : ^(CICS_READ_FILE
+      ( ( 'READ'
+        ( 'FILE'
+        | 'DATASET'
+        )
+        '('
+        fileName
+        ')'
+        ( ( ( ( 'SYSID'
+        | 'SYS'
+        )
+          '('
+          cicsSysid
+          ')'
+        )
+        | ( ( 'SET'
+        | 'INTO'
+        )
+          cicsWaterInBrackets
+          ( ( 'LENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'RIDFLD'
+          cicsWaterInBrackets
+          ( ( 'KEYLENGTH'
+            cicsWaterInBrackets
+            ( 'GENERIC' )?
+          ) )?
+        )
+        | ( 'GTEQ'
+        | 'EQUAL'
+        )
+        | ( 'UNCOMMITTED'
+        | 'CONSISTENT'
+        | 'REPEATABLE'
+        | ( 'UPDATE'
+          'TOKEN'
+          cicsWaterInBrackets
+        )
+        )
+        | 'NOSUSPEND'
+        ) )*
+      )
+      | ( 'READNEXT'
+        ( 'FILE'
+        | 'DATASET'
+        )
+        '('
+        fileName
+        ')'
+        ( ( ( ( 'SYSID'
+        | 'SYS'
+        )
+          '('
+          cicsSysid
+          ')'
+        )
+        | ( ( 'SET'
+        | 'INTO'
+        )
+          cicsWaterInBrackets
+          ( ( 'LENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'RIDFLD'
+          cicsWaterInBrackets
+          ( ( 'KEYLENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'RBA'
+        | 'XRBA'
+        | 'RRN'
+        )
+        | ( 'UNCOMMITTED'
+        | 'CONSISTENT'
+        | 'REPEATABLE'
+        | ( 'UPDATE'
+          'TOKEN'
+          cicsWaterInBrackets
+        )
+        )
+        | 'NOSUSPEND'
+        ) )*
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// cicsWriteFile
+// ........................................................
+
+cicsWriteFile
+  : ^(CICS_WRITE_FILE
+      ( 'WRITE'
+        ( 'FILE'
+        | 'DATASET'
+        )
+        '('
+        fileName
+        ')'
+        ( ( ( ( 'SYSID'
+        | 'SYS'
+        )
+          '('
+          cicsSysid
+          ')'
+        )
+        | ( 'FROM'
+          cicsWaterInBrackets
+          ( ( 'LENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'RIDFLD'
+          cicsWaterInBrackets
+          ( ( 'KEYLENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'RBA'
+        | 'XRBA'
+        | 'RRN'
+        )
+        | 'MASSINSERT'
+        | 'NOSUSPEND'
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// cicsLink
+// ........................................................
+
+cicsLink
+  : ^(CICS_LINK
+      ( 'LINK'
+        'PROGRAM'
+        '('
+        programName
+        ')'
+        ( ( ( ( 'SYSID'
+        | 'SYS'
+        )
+          '('
+          cicsSysid
+          ')'
+        )
+        | ( 'COMMAREA'
+          cicsWaterInBrackets
+          ( ( 'LENGTH'
+            cicsWaterInBrackets
+          ) )?
+          ( ( 'DATALENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | 'SYNCONRETURN'
+        | ( 'TRANSID'
+          cicsWaterInBrackets
+        )
+        | ( 'INPUTMSG'
+          cicsWaterInBrackets
+          ( ( 'INPUTMSGLEN'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'CHANNEL'
+          cicsWaterInBrackets
+        )
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// cicsXctl
+// ........................................................
+
+cicsXctl
+  : ^(CICS_XCTL
+      ( 'XCTL'
+        'PROGRAM'
+        '('
+        programName
+        ')'
+        ( ( ( 'COMMAREA'
+          cicsWaterInBrackets
+          ( ( 'LENGTH'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'INPUTMSG'
+          cicsWaterInBrackets
+          ( ( 'INPUTMSGLEN'
+            cicsWaterInBrackets
+          ) )?
+        )
+        | ( 'CHANNEL'
+          cicsWaterInBrackets
+        )
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// cicsLoad
+// ........................................................
+
+cicsLoad
+  : ^(CICS_LOAD
+      ( 'LOAD'
+        'PROGRAM'
+        '('
+        programName
+        ')'
+      )
+    )
+  ;
+
+// ========================================================
+// cicsStart
+// ........................................................
+
+cicsStart
+  : ^(CICS_START
+      ( 'START'
+        ( 'TRANSID'
+        | 'TR'
+        )
+        '('
+        ( literal
+        | identifier
+        )
+        ')'
+      )
+    )
+  ;
+
+// ========================================================
+// cicsSysid
+// ........................................................
+
+cicsSysid
+  : ^(CICS_SYSID
+      ( literal
+      | identifier
+      )
+    )
+  ;
+
+// ========================================================
+// queueName
+// ........................................................
+
+queueName
+  : ^(QUEUE_NAME
+      ( literal
+      | identifier
+      )
+    )
+  ;
+
+// ========================================================
+// cicsWaterInBrackets
+// ........................................................
+
+cicsWaterInBrackets
+  : ^(CICS_WATER_IN_BRACKETS
+      ( '('
+        (water)?
+        ')'
       )
     )
   ;
@@ -3490,7 +4065,9 @@ className
 
 fileName
   : ^(FILE_NAME
-      cobolWord
+      ( cobolWord
+      | alphanumeric
+      )
     )
   ;
 
@@ -3731,6 +4308,7 @@ token
   | 'ASCENDING'
   | 'ASSIGN'
   | 'AT'
+  | 'AUXILIARY'
   | 'BEFORE'
   | 'BINARY'
   | 'BLANK'
@@ -3751,11 +4329,14 @@ token
   | 'C12'
   | 'CALL'
   | 'CANCEL'
+  | 'CHANNEL'
   | 'CHARACTER'
   | 'CHARACTERS'
+  | 'CICS'
   | 'CLOSE'
   | 'CODE-SET'
   | 'COMMA'
+  | 'COMMAREA'
   | 'COMMON'
   | 'COMMUNICATION'
   | 'COMP'
@@ -3770,6 +4351,7 @@ token
   | 'COMPUTATIONAL-5'
   | 'COMPUTE'
   | 'CONFIGURATION'
+  | 'CONSISTENT'
   | 'CONSOLE'
   | 'CONTAINS'
   | 'CONTENT'
@@ -3782,11 +4364,15 @@ token
   | 'CSP'
   | 'CURSOR'
   | 'DATA'
+  | 'DATALENGTH'
+  | 'DATASET'
   | 'DBCS'
   | 'DEBUGGING'
   | 'DECIMAL-POINT'
   | 'DECLARATIVES'
+  | 'DECLARE'
   | 'DELETE'
+  | 'DELETEQ'
   | 'DELIMITED'
   | 'DELIMITER'
   | 'DEPENDING'
@@ -3844,10 +4430,12 @@ token
   | 'FROM'
   | 'FUNCTION'
   | 'GENERATE'
+  | 'GENERIC'
   | 'GIVING'
   | 'GLOBAL'
   | 'GO'
   | 'GOBACK'
+  | 'GTEQ'
   | 'HIGH-VALUE'
   | 'HIGH-VALUES'
   | 'I-O'
@@ -3856,6 +4444,7 @@ token
   | 'IDENTIFICATION'
   | 'IF'
   | 'IN'
+  | 'INCLUDE'
   | 'INDEX'
   | 'INDEXED'
   | 'INITIAL'
@@ -3863,13 +4452,18 @@ token
   | 'INITIATE'
   | 'INPUT'
   | 'INPUT-OUTPUT'
+  | 'INPUTMSG'
+  | 'INPUTMSGLEN'
+  | 'INSERT'
   | 'INSPECT'
   | 'INTO'
   | 'INVALID'
   | 'IS'
+  | 'ITEM'
   | 'JUST'
   | 'JUSTIFIED'
   | 'KEY'
+  | 'KEYLENGTH'
   | 'LABEL'
   | 'LEADING'
   | 'LEFT'
@@ -3877,11 +4471,15 @@ token
   | 'LINAGE'
   | 'LINE'
   | 'LINES'
+  | 'LINK'
   | 'LINKAGE'
+  | 'LOAD'
   | 'LOCAL-STORAGE'
   | 'LOCK'
   | 'LOW-VALUE'
   | 'LOW-VALUES'
+  | 'MAIN'
+  | 'MASSINSERT'
   | 'MERGE'
   | 'MODE'
   | 'MOVE'
@@ -3890,10 +4488,12 @@ token
   | 'NATIONAL-EDITED'
   | 'NEXT'
   | 'NO'
+  | 'NOSUSPEND'
   | 'NOT'
   | 'NULL'
   | 'NUMERIC'
   | 'NUMERIC-EDITED'
+  | 'NUMITEMS'
   | 'OBJECT-COMPUTER'
   | 'OCCURS'
   | 'OF'
@@ -3919,9 +4519,14 @@ token
   | 'PROGRAM'
   | 'PROGRAM-ID'
   | 'PURGE'
+  | 'QNAME'
+  | 'QUEUE'
   | 'QUOTE'
   | 'QUOTES'
+  | 'RBA'
   | 'READ'
+  | 'READNEXT'
+  | 'READQ'
   | 'RECEIVE'
   | 'RECORD'
   | 'RECORDING'
@@ -3933,6 +4538,7 @@ token
   | 'REMAINDER'
   | 'REMOVAL'
   | 'RENAMES'
+  | 'REPEATABLE'
   | 'REPLACE'
   | 'REPLACING'
   | 'REPORT'
@@ -3942,8 +4548,10 @@ token
   | 'REVERSED'
   | 'REWIND'
   | 'REWRITE'
+  | 'RIDFLD'
   | 'RIGHT'
   | 'ROUNDED'
+  | 'RRN'
   | 'RUN'
   | 'S'
   | 'S01'
@@ -3967,6 +4575,7 @@ token
   | 'SPACE'
   | 'SPACES'
   | 'SPECIAL-NAMES'
+  | 'SQL'
   | 'STANDARD'
   | 'START'
   | 'STATUS'
@@ -3976,6 +4585,9 @@ token
   | 'SUPPRESS'
   | 'SYNC'
   | 'SYNCHRONIZED'
+  | 'SYNCONRETURN'
+  | 'SYS'
+  | 'SYSID'
   | 'SYSIN'
   | 'SYSIPT'
   | 'SYSLIST'
@@ -3984,6 +4596,7 @@ token
   | 'SYSPCH'
   | 'SYSPUNCH'
   | 'TALLYING'
+  | 'TD'
   | 'TERMINATE'
   | 'TEST'
   | 'THEN'
@@ -3991,13 +4604,19 @@ token
   | 'THRU'
   | 'TIMES'
   | 'TO'
+  | 'TOKEN'
   | 'TOP'
+  | 'TR'
   | 'TRAILING'
+  | 'TRANSID'
   | 'TRUE'
+  | 'TS'
   | 'U'
+  | 'UNCOMMITTED'
   | 'UNIT'
   | 'UNSTRING'
   | 'UNTIL'
+  | 'UPDATE'
   | 'UPON'
   | 'USAGE'
   | 'USE'
@@ -4010,6 +4629,9 @@ token
   | 'WITH'
   | 'WORKING-STORAGE'
   | 'WRITE'
+  | 'WRITEQ'
+  | 'XCTL'
+  | 'XRBA'
   | 'ZERO'
   | 'ZEROES'
   | 'ZEROS'

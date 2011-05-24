@@ -3657,9 +3657,41 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("execStatement");
            execStatementParser = future;
            future.setParser(
+               choice(
+                   execSQLStatement(),
+                   execCICSStatement(),
+                   sequence(
+                       token("EXEC"),
+                       cobolWord(),
+                       optional(
+                           skipto(
+                               token("END-EXEC")
+                           )
+                       ),
+                       token("END-EXEC")
+                   )
+               )
+           );
+        }
+
+        return execStatementParser;
+    }
+
+    // ========================================================
+    // execSQLStatement
+    // ........................................................
+
+    private Parser execSQLStatementParser = null;
+
+    public Parser execSQLStatement() {
+        if (execSQLStatementParser == null) {
+           FutureParser future = scoped("execSQLStatement");
+           execSQLStatementParser = future;
+           future.setParser(
                sequence(
                    token("EXEC"),
-                   cobolWord(),
+                   token("SQL"),
+                   sqlStatement(),
                    optional(
                        skipto(
                            token("END-EXEC")
@@ -3670,7 +3702,898 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return execStatementParser;
+        return execSQLStatementParser;
+    }
+
+    // ========================================================
+    // sqlStatement
+    // ........................................................
+
+    private Parser sqlStatementParser = null;
+
+    public Parser sqlStatement() {
+        if (sqlStatementParser == null) {
+           FutureParser future = scoped("sqlStatement");
+           sqlStatementParser = future;
+           future.setParser(
+               choice(
+                   sqlInclude(),
+                   sqlSelect(),
+                   sqlInsert(),
+                   sqlUpdate(),
+                   sqlDelete()
+               )
+           );
+        }
+
+        return sqlStatementParser;
+    }
+
+    // ========================================================
+    // sqlInclude
+    // ........................................................
+
+    private Parser sqlIncludeParser = null;
+
+    public Parser sqlInclude() {
+        if (sqlIncludeParser == null) {
+           FutureParser future = scoped("sqlInclude");
+           sqlIncludeParser = future;
+           future.setParser(
+               sequence(
+                   token("INCLUDE"),
+                   textName()
+               )
+           );
+        }
+
+        return sqlIncludeParser;
+    }
+
+    // ========================================================
+    // sqlSelect
+    // ........................................................
+
+    private Parser sqlSelectParser = null;
+
+    public Parser sqlSelect() {
+        if (sqlSelectParser == null) {
+           FutureParser future = scoped("sqlSelect");
+           sqlSelectParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("SELECT"),
+                       sequence(
+                           token("DECLARE"),
+                           optional(
+                               skipto(
+                                   token("SELECT")
+                               )
+                           ),
+                           token("SELECT")
+                       )
+                   ),
+                   optional(
+                       skipto(
+                           token("FROM")
+                       )
+                   ),
+                   token("FROM"),
+                   optional(
+                       sequence(
+                           identifier(),
+                           token(".")
+                       )
+                   ),
+                   tableName()
+               )
+           );
+        }
+
+        return sqlSelectParser;
+    }
+
+    // ========================================================
+    // sqlInsert
+    // ........................................................
+
+    private Parser sqlInsertParser = null;
+
+    public Parser sqlInsert() {
+        if (sqlInsertParser == null) {
+           FutureParser future = scoped("sqlInsert");
+           sqlInsertParser = future;
+           future.setParser(
+               sequence(
+                   token("INSERT"),
+                   token("INTO"),
+                   optional(
+                       sequence(
+                           identifier(),
+                           token(".")
+                       )
+                   ),
+                   tableName()
+               )
+           );
+        }
+
+        return sqlInsertParser;
+    }
+
+    // ========================================================
+    // sqlUpdate
+    // ........................................................
+
+    private Parser sqlUpdateParser = null;
+
+    public Parser sqlUpdate() {
+        if (sqlUpdateParser == null) {
+           FutureParser future = scoped("sqlUpdate");
+           sqlUpdateParser = future;
+           future.setParser(
+               sequence(
+                   token("UPDATE"),
+                   optional(
+                       sequence(
+                           identifier(),
+                           token(".")
+                       )
+                   ),
+                   tableName()
+               )
+           );
+        }
+
+        return sqlUpdateParser;
+    }
+
+    // ========================================================
+    // sqlDelete
+    // ........................................................
+
+    private Parser sqlDeleteParser = null;
+
+    public Parser sqlDelete() {
+        if (sqlDeleteParser == null) {
+           FutureParser future = scoped("sqlDelete");
+           sqlDeleteParser = future;
+           future.setParser(
+               sequence(
+                   token("DELETE"),
+                   token("FROM"),
+                   optional(
+                       sequence(
+                           identifier(),
+                           token(".")
+                       )
+                   ),
+                   tableName()
+               )
+           );
+        }
+
+        return sqlDeleteParser;
+    }
+
+    // ========================================================
+    // tableName
+    // ........................................................
+
+    private Parser tableNameParser = null;
+
+    public Parser tableName() {
+        if (tableNameParser == null) {
+           FutureParser future = scoped("tableName");
+           tableNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return tableNameParser;
+    }
+
+    // ========================================================
+    // execCICSStatement
+    // ........................................................
+
+    private Parser execCICSStatementParser = null;
+
+    public Parser execCICSStatement() {
+        if (execCICSStatementParser == null) {
+           FutureParser future = scoped("execCICSStatement");
+           execCICSStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("EXEC"),
+                   token("CICS"),
+                   cicsStatement(),
+                   optional(
+                       skipto(
+                           token("END-EXEC")
+                       )
+                   ),
+                   token("END-EXEC")
+               )
+           );
+        }
+
+        return execCICSStatementParser;
+    }
+
+    // ========================================================
+    // cicsStatement
+    // ........................................................
+
+    private Parser cicsStatementParser = null;
+
+    public Parser cicsStatement() {
+        if (cicsStatementParser == null) {
+           FutureParser future = scoped("cicsStatement");
+           cicsStatementParser = future;
+           future.setParser(
+               choice(
+                   cicsReadQ(),
+                   cicsWriteQ(),
+                   cicsDeleteQ(),
+                   cicsReadFile(),
+                   cicsWriteFile(),
+                   cicsLink(),
+                   cicsXctl(),
+                   cicsLoad(),
+                   cicsStart()
+               )
+           );
+        }
+
+        return cicsStatementParser;
+    }
+
+    // ========================================================
+    // cicsReadQ
+    // ........................................................
+
+    private Parser cicsReadQParser = null;
+
+    public Parser cicsReadQ() {
+        if (cicsReadQParser == null) {
+           FutureParser future = scoped("cicsReadQ");
+           cicsReadQParser = future;
+           future.setParser(
+               sequence(
+                   token("READQ"),
+                   choice(
+                       sequence(
+                           token("TS"),
+                           choice(
+                               token("QUEUE"),
+                               token("QNAME")
+                           ),
+                           token("("),
+                           queueName(),
+                           token(")"),
+                           permuted(
+                               sequence(
+                                   choice(
+                                       token("SYSID"),
+                                       token("SYS")
+                                   ),
+                                   token("("),
+                                   cicsSysid(),
+                                   token(")")
+                               ),
+                               sequence(
+                                   choice(
+                                       token("SET"),
+                                       token("INTO")
+                                   ),
+                                   cicsWaterInBrackets(),
+                                   optional(
+                                       sequence(
+                                           token("LENGTH"),
+                                           cicsWaterInBrackets()
+                                       )
+                                   )
+                               ),
+                               choice(
+                                   sequence(
+                                       token("ITEM"),
+                                       cicsWaterInBrackets()
+                                   ),
+                                   token("NEXT")
+                               ),
+                               sequence(
+                                   token("NUMITEMS"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("TD"),
+                           token("QUEUE"),
+                           token("("),
+                           choice(
+                               literal(),
+                               identifier()
+                           ),
+                           token(")")
+                       )
+                   )
+               )
+           );
+        }
+
+        return cicsReadQParser;
+    }
+
+    // ========================================================
+    // cicsWriteQ
+    // ........................................................
+
+    private Parser cicsWriteQParser = null;
+
+    public Parser cicsWriteQ() {
+        if (cicsWriteQParser == null) {
+           FutureParser future = scoped("cicsWriteQ");
+           cicsWriteQParser = future;
+           future.setParser(
+               sequence(
+                   token("WRITEQ"),
+                   choice(
+                       sequence(
+                           token("TS"),
+                           choice(
+                               token("QUEUE"),
+                               token("QNAME")
+                           ),
+                           token("("),
+                           queueName(),
+                           token(")"),
+                           permuted(
+                               sequence(
+                                   choice(
+                                       token("SYSID"),
+                                       token("SYS")
+                                   ),
+                                   token("("),
+                                   cicsSysid(),
+                                   token(")")
+                               ),
+                               sequence(
+                                   token("FROM"),
+                                   cicsWaterInBrackets(),
+                                   optional(
+                                       sequence(
+                                           token("LENGTH"),
+                                           cicsWaterInBrackets()
+                                       )
+                                   )
+                               ),
+                               choice(
+                                   sequence(
+                                       token("NUMITEMS"),
+                                       cicsWaterInBrackets()
+                                   ),
+                                   sequence(
+                                       token("ITEM"),
+                                       cicsWaterInBrackets(),
+                                       optional(
+                                           token("REWRITE")
+                                       )
+                                   )
+                               ),
+                               token("NOSUSPEND"),
+                               choice(
+                                   token("MAIN"),
+                                   token("AUXILIARY")
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("TD"),
+                           token("QUEUE"),
+                           token("("),
+                           queueName(),
+                           token(")")
+                       )
+                   )
+               )
+           );
+        }
+
+        return cicsWriteQParser;
+    }
+
+    // ========================================================
+    // cicsDeleteQ
+    // ........................................................
+
+    private Parser cicsDeleteQParser = null;
+
+    public Parser cicsDeleteQ() {
+        if (cicsDeleteQParser == null) {
+           FutureParser future = scoped("cicsDeleteQ");
+           cicsDeleteQParser = future;
+           future.setParser(
+               sequence(
+                   token("DELETEQ"),
+                   choice(
+                       token("TS"),
+                       token("TD")
+                   ),
+                   choice(
+                       token("QUEUE"),
+                       token("QNAME")
+                   ),
+                   token("("),
+                   queueName(),
+                   token(")"),
+                   optional(
+                       sequence(
+                           choice(
+                               token("SYSID"),
+                               token("SYS")
+                           ),
+                           token("("),
+                           cicsSysid(),
+                           token(")")
+                       )
+                   )
+               )
+           );
+        }
+
+        return cicsDeleteQParser;
+    }
+
+    // ========================================================
+    // cicsReadFile
+    // ........................................................
+
+    private Parser cicsReadFileParser = null;
+
+    public Parser cicsReadFile() {
+        if (cicsReadFileParser == null) {
+           FutureParser future = scoped("cicsReadFile");
+           cicsReadFileParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("READ"),
+                       choice(
+                           token("FILE"),
+                           token("DATASET")
+                       ),
+                       token("("),
+                       fileName(),
+                       token(")"),
+                       permuted(
+                           sequence(
+                               choice(
+                                   token("SYSID"),
+                                   token("SYS")
+                               ),
+                               token("("),
+                               cicsSysid(),
+                               token(")")
+                           ),
+                           sequence(
+                               choice(
+                                   token("SET"),
+                                   token("INTO")
+                               ),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("LENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
+                               )
+                           ),
+                           sequence(
+                               token("RIDFLD"),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("KEYLENGTH"),
+                                       cicsWaterInBrackets(),
+                                       optional(
+                                           token("GENERIC")
+                                       )
+                                   )
+                               )
+                           ),
+                           choice(
+                               token("GTEQ"),
+                               token("EQUAL")
+                           ),
+                           choice(
+                               token("UNCOMMITTED"),
+                               token("CONSISTENT"),
+                               token("REPEATABLE"),
+                               sequence(
+                                   token("UPDATE"),
+                                   token("TOKEN"),
+                                   cicsWaterInBrackets()
+                               )
+                           ),
+                           token("NOSUSPEND")
+                       )
+                   ),
+                   sequence(
+                       token("READNEXT"),
+                       choice(
+                           token("FILE"),
+                           token("DATASET")
+                       ),
+                       token("("),
+                       fileName(),
+                       token(")"),
+                       permuted(
+                           sequence(
+                               choice(
+                                   token("SYSID"),
+                                   token("SYS")
+                               ),
+                               token("("),
+                               cicsSysid(),
+                               token(")")
+                           ),
+                           sequence(
+                               choice(
+                                   token("SET"),
+                                   token("INTO")
+                               ),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("LENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
+                               )
+                           ),
+                           sequence(
+                               token("RIDFLD"),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("KEYLENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
+                               )
+                           ),
+                           choice(
+                               token("RBA"),
+                               token("XRBA"),
+                               token("RRN")
+                           ),
+                           choice(
+                               token("UNCOMMITTED"),
+                               token("CONSISTENT"),
+                               token("REPEATABLE"),
+                               sequence(
+                                   token("UPDATE"),
+                                   token("TOKEN"),
+                                   cicsWaterInBrackets()
+                               )
+                           ),
+                           token("NOSUSPEND")
+                       )
+                   )
+               )
+           );
+        }
+
+        return cicsReadFileParser;
+    }
+
+    // ========================================================
+    // cicsWriteFile
+    // ........................................................
+
+    private Parser cicsWriteFileParser = null;
+
+    public Parser cicsWriteFile() {
+        if (cicsWriteFileParser == null) {
+           FutureParser future = scoped("cicsWriteFile");
+           cicsWriteFileParser = future;
+           future.setParser(
+               sequence(
+                   token("WRITE"),
+                   choice(
+                       token("FILE"),
+                       token("DATASET")
+                   ),
+                   token("("),
+                   fileName(),
+                   token(")"),
+                   permuted(
+                       sequence(
+                           choice(
+                               token("SYSID"),
+                               token("SYS")
+                           ),
+                           token("("),
+                           cicsSysid(),
+                           token(")")
+                       ),
+                       sequence(
+                           token("FROM"),
+                           cicsWaterInBrackets(),
+                           optional(
+                               sequence(
+                                   token("LENGTH"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("RIDFLD"),
+                           cicsWaterInBrackets(),
+                           optional(
+                               sequence(
+                                   token("KEYLENGTH"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       choice(
+                           token("RBA"),
+                           token("XRBA"),
+                           token("RRN")
+                       ),
+                       token("MASSINSERT"),
+                       token("NOSUSPEND")
+                   )
+               )
+           );
+        }
+
+        return cicsWriteFileParser;
+    }
+
+    // ========================================================
+    // cicsLink
+    // ........................................................
+
+    private Parser cicsLinkParser = null;
+
+    public Parser cicsLink() {
+        if (cicsLinkParser == null) {
+           FutureParser future = scoped("cicsLink");
+           cicsLinkParser = future;
+           future.setParser(
+               sequence(
+                   token("LINK"),
+                   token("PROGRAM"),
+                   token("("),
+                   programName(),
+                   token(")"),
+                   permuted(
+                       sequence(
+                           choice(
+                               token("SYSID"),
+                               token("SYS")
+                           ),
+                           token("("),
+                           cicsSysid(),
+                           token(")")
+                       ),
+                       sequence(
+                           token("COMMAREA"),
+                           cicsWaterInBrackets(),
+                           optional(
+                               sequence(
+                                   token("LENGTH"),
+                                   cicsWaterInBrackets()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("DATALENGTH"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       token("SYNCONRETURN"),
+                       sequence(
+                           token("TRANSID"),
+                           cicsWaterInBrackets()
+                       ),
+                       sequence(
+                           token("INPUTMSG"),
+                           cicsWaterInBrackets(),
+                           optional(
+                               sequence(
+                                   token("INPUTMSGLEN"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("CHANNEL"),
+                           cicsWaterInBrackets()
+                       )
+                   )
+               )
+           );
+        }
+
+        return cicsLinkParser;
+    }
+
+    // ========================================================
+    // cicsXctl
+    // ........................................................
+
+    private Parser cicsXctlParser = null;
+
+    public Parser cicsXctl() {
+        if (cicsXctlParser == null) {
+           FutureParser future = scoped("cicsXctl");
+           cicsXctlParser = future;
+           future.setParser(
+               sequence(
+                   token("XCTL"),
+                   token("PROGRAM"),
+                   token("("),
+                   programName(),
+                   token(")"),
+                   permuted(
+                       sequence(
+                           token("COMMAREA"),
+                           cicsWaterInBrackets(),
+                           optional(
+                               sequence(
+                                   token("LENGTH"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("INPUTMSG"),
+                           cicsWaterInBrackets(),
+                           optional(
+                               sequence(
+                                   token("INPUTMSGLEN"),
+                                   cicsWaterInBrackets()
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("CHANNEL"),
+                           cicsWaterInBrackets()
+                       )
+                   )
+               )
+           );
+        }
+
+        return cicsXctlParser;
+    }
+
+    // ========================================================
+    // cicsLoad
+    // ........................................................
+
+    private Parser cicsLoadParser = null;
+
+    public Parser cicsLoad() {
+        if (cicsLoadParser == null) {
+           FutureParser future = scoped("cicsLoad");
+           cicsLoadParser = future;
+           future.setParser(
+               sequence(
+                   token("LOAD"),
+                   token("PROGRAM"),
+                   token("("),
+                   programName(),
+                   token(")")
+               )
+           );
+        }
+
+        return cicsLoadParser;
+    }
+
+    // ========================================================
+    // cicsStart
+    // ........................................................
+
+    private Parser cicsStartParser = null;
+
+    public Parser cicsStart() {
+        if (cicsStartParser == null) {
+           FutureParser future = scoped("cicsStart");
+           cicsStartParser = future;
+           future.setParser(
+               sequence(
+                   token("START"),
+                   choice(
+                       token("TRANSID"),
+                       token("TR")
+                   ),
+                   token("("),
+                   choice(
+                       literal(),
+                       identifier()
+                   ),
+                   token(")")
+               )
+           );
+        }
+
+        return cicsStartParser;
+    }
+
+    // ========================================================
+    // cicsSysid
+    // ........................................................
+
+    private Parser cicsSysidParser = null;
+
+    public Parser cicsSysid() {
+        if (cicsSysidParser == null) {
+           FutureParser future = scoped("cicsSysid");
+           cicsSysidParser = future;
+           future.setParser(
+               choice(
+                   literal(),
+                   identifier()
+               )
+           );
+        }
+
+        return cicsSysidParser;
+    }
+
+    // ========================================================
+    // queueName
+    // ........................................................
+
+    private Parser queueNameParser = null;
+
+    public Parser queueName() {
+        if (queueNameParser == null) {
+           FutureParser future = scoped("queueName");
+           queueNameParser = future;
+           future.setParser(
+               choice(
+                   literal(),
+                   identifier()
+               )
+           );
+        }
+
+        return queueNameParser;
+    }
+
+    // ========================================================
+    // cicsWaterInBrackets
+    // ........................................................
+
+    private Parser cicsWaterInBracketsParser = null;
+
+    public Parser cicsWaterInBrackets() {
+        if (cicsWaterInBracketsParser == null) {
+           FutureParser future = scoped("cicsWaterInBrackets");
+           cicsWaterInBracketsParser = future;
+           future.setParser(
+               sequence(
+                   token("("),
+                   optional(
+                       skipto(
+                           token(")")
+                       )
+                   ),
+                   token(")")
+               )
+           );
+        }
+
+        return cicsWaterInBracketsParser;
     }
 
     // ========================================================
@@ -6439,7 +7362,10 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("fileName");
            fileNameParser = future;
            future.setParser(
-               cobolWord()
+               choice(
+                   cobolWord(),
+                   alphanumeric()
+               )
            );
         }
 

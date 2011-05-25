@@ -48,21 +48,32 @@ public class TestTokenizer implements PushbackTokenizer {
 		// parsing. It would be nicer if we could recognize picture strings
 		// in the tokenizer stages, but I don't see how we can do that without
 		// some form of parsing...
+		// TODO Duplication of code in CobolParser. Should clean this up...
 		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
 			boolean lastWasWhitespace = true;
+			int lastLinenumber = -1;
 
 			public boolean accepts(Token token) {
+				final int currentLinenumber = token.getStart().getLinenumber();
+				
+				// A change of line is seen as whitespace.
+				if (lastLinenumber != currentLinenumber) {
+					lastWasWhitespace = true;
+				}
+				
 				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
 					if (!lastWasWhitespace) {
 						token.addTag(TokenizerTag.CHAINED);
 					}
 					lastWasWhitespace = false;
+					lastLinenumber = currentLinenumber;
 					return true;
 				}
 
 				final String text = token.getText().trim();
 				if (text.equals("")) {
 					lastWasWhitespace = true;
+					lastLinenumber = currentLinenumber;
 					return false;
 				}
 
@@ -70,6 +81,7 @@ public class TestTokenizer implements PushbackTokenizer {
 					token.addTag(TokenizerTag.CHAINED);
 				}
 				lastWasWhitespace = false;
+				lastLinenumber = currentLinenumber;
 				return !text.equals(",") && !text.equals(";");
 			}
 		});

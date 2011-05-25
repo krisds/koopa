@@ -51,7 +51,7 @@
 <!ELEMENT dataDescriptionEntry (dataDescriptionEntry_format1|dataDescriptionEntry_format2|dataDescriptionEntry_format3)>
 <!ELEMENT dataDescriptionEntry_format1 (levelNumber,dataName?,redefines?,(blankWhenZero|external|global|justified|occurs|picture|sign|sync|usage|value)*,water?,t)>
 <!ELEMENT dataDescriptionEntry_format2 (t,dataName,t,dataName,qualifier*,(t,dataName,qualifier*)?,t)>
-<!ELEMENT dataDescriptionEntry_format3 (t,cobolWord,((t,t?)|(t,t?)),(literal,(t,literal)?)+,t)>
+<!ELEMENT dataDescriptionEntry_format3 (t,cobolWord,((t,t?)|(t,t?)),(literal,(t,literal)?,t?)+,t)>
 <!ELEMENT redefines (t,cobolWord)>
 <!ELEMENT blankWhenZero (t,t?,t)>
 <!ELEMENT external (t?,t)>
@@ -84,10 +84,12 @@
 <!ELEMENT addition_format1 (t,identifier,t,identifier,t?)>
 <!ELEMENT addition_format2 ((identifier|literal)+,(t,(identifier|literal))?,t,(identifier,t?)+)>
 <!ELEMENT addition_format3 ((identifier|literal)+,t,(identifier,t?)+)>
-<!ELEMENT callStatement (t,(identifier|alphanumeric),(t,identifier*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
+<!ELEMENT callStatement (t,programID,callUsing?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
+<!ELEMENT callUsing (t,identifier*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
 <!ELEMENT onException (t?,t,nestedStatements)>
 <!ELEMENT notOnException (t,t?,t,nestedStatements)>
+<!ELEMENT programID (identifier|alphanumeric)>
 <!ELEMENT cancelStatement (t,(identifier|alphanumeric)+)>
 <!ELEMENT closeStatement (t,(fileName,((t?,((t,t)|t))|(t,(t?,t)?)|(t?,t))?)+)>
 <!ELEMENT computeStatement (t,(identifier,t?)+,t,arithmeticExpression,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
@@ -122,9 +124,9 @@
 <!ELEMENT cicsDeleteQ (t+,queueName,t,(t+,cicsSysid,t)?)>
 <!ELEMENT cicsReadFile ((t+,fileName,t,((t+,cicsSysid,t)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets,t?)?)|(t)|(t|(t+,cicsWaterInBrackets))|t)*)|(t+,fileName,t,((t+,cicsSysid,t)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t)|(t|(t+,cicsWaterInBrackets))|t)*))>
 <!ELEMENT cicsWriteFile (t+,fileName,t,((t+,cicsSysid,t)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t)|t)*)>
-<!ELEMENT cicsLink (t+,programName,t,((t+,cicsSysid,t)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?,(t,cicsWaterInBrackets)?)|t|(t,cicsWaterInBrackets)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets))*)>
-<!ELEMENT cicsXctl (t+,programName,t,((t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets))*)>
-<!ELEMENT cicsLoad (t+,programName,t)>
+<!ELEMENT cicsLink (t+,programID,t,((t+,cicsSysid,t)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?,(t,cicsWaterInBrackets)?)|t|(t,cicsWaterInBrackets)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets))*)>
+<!ELEMENT cicsXctl (t+,programID,t,((t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets,(t,cicsWaterInBrackets)?)|(t,cicsWaterInBrackets))*)>
+<!ELEMENT cicsLoad (t+,programID,t)>
 <!ELEMENT cicsStart (t+,(literal|identifier),t)>
 <!ELEMENT cicsSysid (literal|identifier)>
 <!ELEMENT queueName (literal|identifier)>
@@ -184,8 +186,8 @@
 <!ELEMENT dataSectionStart (t+,t)>
 <!ELEMENT endOfStatement (verb|t|(t?,t?,(t|(t,t)|(t,t?)|t)))>
 <!ELEMENT identifier (identifier_format1|identifier_format2)>
-<!ELEMENT identifier_format1 (t,functionName,(t,argument+,t)?,referenceModifier?)>
-<!ELEMENT identifier_format2 (dataName,qualifier*,(t,subscript+,t)?,referenceModifier?)>
+<!ELEMENT identifier_format1 (t,functionName,(t,(argument,t?)+,t)?,referenceModifier?)>
+<!ELEMENT identifier_format2 (dataName,qualifier*,(t,(subscript,t?)+,t)?,referenceModifier?)>
 <!ELEMENT addressOfIdentifier (t+,identifier)>
 <!ELEMENT argument (arithmeticExpression|identifier|literal)>
 <!ELEMENT qualifier (t,dataName)>

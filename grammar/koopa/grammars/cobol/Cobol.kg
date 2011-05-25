@@ -383,7 +383,7 @@ def dataDescriptionEntry_format3 =
     ( VALUE [IS]
     | VALUES [ARE]
     )
-    ( literal [(THROUGH | THRU) literal] )+
+    ( literal [(THROUGH | THRU) literal] [','] )+
     .
 end
 
@@ -701,13 +701,8 @@ end
 ## -----------------------------------------------------------------------------
 
 def callStatement =
-    CALL (identifier | alphanumeric)
-    [USING (identifier)*
-      ( [BY] REFERENCE (identifier | OMITTED)+
-      | [BY] CONTENT (literal | identifier)+
-      | [BY] VALUE (literal | identifier)+
-      )*
-    ]
+    CALL programID
+    [ callUsing ]
 
     [ # Call statement format 1.
       onOverflow
@@ -723,6 +718,14 @@ def callStatement =
     [END-CALL]
 end
 
+def callUsing =
+    USING (identifier)*
+          ( [BY] REFERENCE (identifier | OMITTED)+
+          | [BY] CONTENT (literal | identifier)+
+          | [BY] VALUE (literal | identifier)+
+          )*
+end
+
 def onOverflow =
     [ON] OVERFLOW nestedStatements
 end
@@ -733,6 +736,10 @@ end
 
 def notOnException =
     NOT [ON] EXCEPTION nestedStatements
+end
+
+def programID =
+    (identifier | alphanumeric)
 end
 
 ## #############################################################################
@@ -1042,7 +1049,7 @@ def cicsWriteFile =
 end
 
 def cicsLink =
-   LINK PROGRAM '(' programName ')'
+   LINK PROGRAM '(' programID ')'
    !( (SYSID|SYS) '(' cicsSysid ')'
     | COMMAREA cicsWaterInBrackets [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
     | SYNCONRETURN
@@ -1053,7 +1060,7 @@ def cicsLink =
 end
 
 def cicsXctl =
-   XCTL PROGRAM '(' programName ')'
+   XCTL PROGRAM '(' programID ')'
    !( COMMAREA cicsWaterInBrackets [LENGTH cicsWaterInBrackets] 
     | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
     | CHANNEL cicsWaterInBrackets
@@ -1061,7 +1068,7 @@ def cicsXctl =
 end
 
 def cicsLoad =
-   LOAD PROGRAM '(' programName ')'
+   LOAD PROGRAM '(' programID ')'
 end
 
 def cicsStart =
@@ -1660,11 +1667,11 @@ def identifier =
 end
 
 def identifier_format1 =
-    FUNCTION functionName ['(' (argument)+ ')'] [referenceModifier]
+    FUNCTION functionName ['(' (argument [','])+ ')'] [referenceModifier]
 end
 
 def identifier_format2 =
-    dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
+    dataName (qualifier)* ['(' (subscript [','])+ ')'] [referenceModifier]
 end
 
 def addressOfIdentifier =

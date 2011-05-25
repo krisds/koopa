@@ -68,11 +68,11 @@ public class BasicToken extends TokenBase implements Token {
 	}
 
 	public Token[] split(int cutIndex) {
-		if (cutIndex == 0) {
+		if (cutIndex <= 0) {
 			return new Token[] { null, this };
 		}
 
-		if (cutIndex == text.length()) {
+		if (cutIndex >= text.length()) {
 			return new Token[] { this, null };
 		}
 

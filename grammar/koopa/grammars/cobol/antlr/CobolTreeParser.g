@@ -907,6 +907,7 @@ dataDescriptionEntry_format3
           )
             literal
           ) )?
+          ( ',' )?
         ) )+
         '.'
       )
@@ -1542,31 +1543,8 @@ addition_format3
 callStatement
   : ^(CALL_STATEMENT
       ( 'CALL'
-        ( identifier
-        | alphanumeric
-        )
-        ( ( 'USING'
-          ( identifier )*
-          ( ( ( ( 'BY' )?
-            'REFERENCE'
-            ( ( identifier
-            | 'OMITTED'
-            ) )+
-          )
-          | ( ( 'BY' )?
-            'CONTENT'
-            ( ( literal
-            | identifier
-            ) )+
-          )
-          | ( ( 'BY' )?
-            'VALUE'
-            ( ( literal
-            | identifier
-            ) )+
-          )
-          ) )*
-        ) )?
+        programID
+        ( callUsing )?
         ( ( onOverflow
         | ( onException
           ( notOnException )?
@@ -1574,6 +1552,37 @@ callStatement
         | notOnException
         ) )?
         ( 'END-CALL' )?
+      )
+    )
+  ;
+
+// ========================================================
+// callUsing
+// ........................................................
+
+callUsing
+  : ^(CALL_USING
+      ( 'USING'
+        ( identifier )*
+        ( ( ( ( 'BY' )?
+          'REFERENCE'
+          ( ( identifier
+          | 'OMITTED'
+          ) )+
+        )
+        | ( ( 'BY' )?
+          'CONTENT'
+          ( ( literal
+          | identifier
+          ) )+
+        )
+        | ( ( 'BY' )?
+          'VALUE'
+          ( ( literal
+          | identifier
+          ) )+
+        )
+        ) )*
       )
     )
   ;
@@ -1614,6 +1623,18 @@ notOnException
         ( 'ON' )?
         'EXCEPTION'
         nestedStatements
+      )
+    )
+  ;
+
+// ========================================================
+// programID
+// ........................................................
+
+programID
+  : ^(PROGRAM_I_D
+      ( identifier
+      | alphanumeric
       )
     )
   ;
@@ -2419,7 +2440,7 @@ cicsLink
       ( 'LINK'
         'PROGRAM'
         '('
-        programName
+        programID
         ')'
         ( ( ( ( 'SYSID'
         | 'SYS'
@@ -2464,7 +2485,7 @@ cicsXctl
       ( 'XCTL'
         'PROGRAM'
         '('
-        programName
+        programID
         ')'
         ( ( ( 'COMMAREA'
           cicsWaterInBrackets
@@ -2495,7 +2516,7 @@ cicsLoad
       ( 'LOAD'
         'PROGRAM'
         '('
-        programName
+        programID
         ')'
       )
     )
@@ -3743,7 +3764,9 @@ identifier_format1
       ( 'FUNCTION'
         functionName
         ( ( '('
-          ( argument )+
+          ( ( argument
+            ( ',' )?
+          ) )+
           ')'
         ) )?
         ( referenceModifier )?
@@ -3760,7 +3783,9 @@ identifier_format2
       ( dataName
         ( qualifier )*
         ( ( '('
-          ( subscript )+
+          ( ( subscript
+            ( ',' )?
+          ) )+
           ')'
         ) )?
         ( referenceModifier )?
@@ -4284,6 +4309,7 @@ token
   | '*'
   | '**'
   | '+'
+  | ','
   | '-'
   | '.'
   | '/'

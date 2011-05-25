@@ -16,7 +16,7 @@ public class StopStatementTest extends TestCase {
     public void testStopStatement_1() {
       Parser parser = grammar.stopStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "STOP RUN");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " STOP RUN ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class StopStatementTest extends TestCase {
     public void testStopStatement_2() {
       Parser parser = grammar.stopStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "STOP \"FOO\"");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " STOP \"FOO\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +34,7 @@ public class StopStatementTest extends TestCase {
     public void testStopStatement_3() {
       Parser parser = grammar.stopStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "STOP 42");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " STOP 42 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

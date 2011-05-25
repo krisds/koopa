@@ -82,7 +82,7 @@ test [String target]
       name = Character.toUpperCase(target.charAt(0)) + name;
     }
     
-    { data = data.substring(1, data.length() - 1).trim();
+    { data = data.substring(1, data.length() - 1);
       data = data.replaceAll("\u2022", "\\\\u2022");
       data = data.replaceAll("\n", "\\\\n");
       data = data.replaceAll("\"", "\\\\\"");

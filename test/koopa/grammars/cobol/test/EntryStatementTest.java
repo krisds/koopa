@@ -16,7 +16,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_1() {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENTRY");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY ");
       assertFalse(parser.accepts(tokenizer));
     }
 
@@ -24,7 +24,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_2() {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENTRY \"MAIN-ENTRANCE\"");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY \"MAIN-ENTRANCE\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -33,7 +33,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_3() {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -42,7 +42,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_4() {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A FIELD-B");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A FIELD-B ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -51,7 +51,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_5() {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENTRY \"MAIN-ENTRANCE\"\n         \u2022 FIELD-A");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY \"MAIN-ENTRANCE\"\n         \u2022 FIELD-A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -60,7 +60,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_6() {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         \u2022 USING FIELD-B");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         \u2022 USING FIELD-B ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

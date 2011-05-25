@@ -16,7 +16,7 @@ public class ExitStatementTest extends TestCase {
     public void testExitStatement_1() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXIT");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class ExitStatementTest extends TestCase {
     public void testExitStatement_2() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXIT PROGRAM");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PROGRAM ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +34,7 @@ public class ExitStatementTest extends TestCase {
     public void testExitStatement_3() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "EXIT PARAGRAPH");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PARAGRAPH ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

@@ -1733,6 +1733,9 @@ public class CobolGrammar extends KoopaGrammar {
                                    ),
                                    literal()
                                )
+                           ),
+                           optional(
+                               token(",")
                            )
                        )
                    ),
@@ -2855,57 +2858,9 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("CALL"),
-                   choice(
-                       identifier(),
-                       alphanumeric()
-                   ),
+                   programID(),
                    optional(
-                       sequence(
-                           token("USING"),
-                           star(
-                               identifier()
-                           ),
-                           star(
-                               choice(
-                                   sequence(
-                                       optional(
-                                           token("BY")
-                                       ),
-                                       token("REFERENCE"),
-                                       plus(
-                                           choice(
-                                               identifier(),
-                                               token("OMITTED")
-                                           )
-                                       )
-                                   ),
-                                   sequence(
-                                       optional(
-                                           token("BY")
-                                       ),
-                                       token("CONTENT"),
-                                       plus(
-                                           choice(
-                                               literal(),
-                                               identifier()
-                                           )
-                                       )
-                                   ),
-                                   sequence(
-                                       optional(
-                                           token("BY")
-                                       ),
-                                       token("VALUE"),
-                                       plus(
-                                           choice(
-                                               literal(),
-                                               identifier()
-                                           )
-                                       )
-                                   )
-                               )
-                           )
-                       )
+                       callUsing()
                    ),
                    optional(
                        choice(
@@ -2927,6 +2882,69 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return callStatementParser;
+    }
+
+    // ========================================================
+    // callUsing
+    // ........................................................
+
+    private Parser callUsingParser = null;
+
+    public Parser callUsing() {
+        if (callUsingParser == null) {
+           FutureParser future = scoped("callUsing");
+           callUsingParser = future;
+           future.setParser(
+               sequence(
+                   token("USING"),
+                   star(
+                       identifier()
+                   ),
+                   star(
+                       choice(
+                           sequence(
+                               optional(
+                                   token("BY")
+                               ),
+                               token("REFERENCE"),
+                               plus(
+                                   choice(
+                                       identifier(),
+                                       token("OMITTED")
+                                   )
+                               )
+                           ),
+                           sequence(
+                               optional(
+                                   token("BY")
+                               ),
+                               token("CONTENT"),
+                               plus(
+                                   choice(
+                                       literal(),
+                                       identifier()
+                                   )
+                               )
+                           ),
+                           sequence(
+                               optional(
+                                   token("BY")
+                               ),
+                               token("VALUE"),
+                               plus(
+                                   choice(
+                                       literal(),
+                                       identifier()
+                                   )
+                               )
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return callUsingParser;
     }
 
     // ========================================================
@@ -3000,6 +3018,27 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return notOnExceptionParser;
+    }
+
+    // ========================================================
+    // programID
+    // ........................................................
+
+    private Parser programIDParser = null;
+
+    public Parser programID() {
+        if (programIDParser == null) {
+           FutureParser future = scoped("programID");
+           programIDParser = future;
+           future.setParser(
+               choice(
+                   identifier(),
+                   alphanumeric()
+               )
+           );
+        }
+
+        return programIDParser;
     }
 
     // ========================================================
@@ -4369,7 +4408,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("LINK"),
                    token("PROGRAM"),
                    token("("),
-                   programName(),
+                   programID(),
                    token(")"),
                    permuted(
                        sequence(
@@ -4439,7 +4478,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("XCTL"),
                    token("PROGRAM"),
                    token("("),
-                   programName(),
+                   programID(),
                    token(")"),
                    permuted(
                        sequence(
@@ -4489,7 +4528,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("LOAD"),
                    token("PROGRAM"),
                    token("("),
-                   programName(),
+                   programID(),
                    token(")")
                )
            );
@@ -6779,7 +6818,12 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            token("("),
                            plus(
-                               argument()
+                               sequence(
+                                   argument(),
+                                   optional(
+                                       token(",")
+                                   )
+                               )
                            ),
                            token(")")
                        )
@@ -6814,7 +6858,12 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            token("("),
                            plus(
-                               subscript()
+                               sequence(
+                                   subscript(),
+                                   optional(
+                                       token(",")
+                                   )
+                               )
                            ),
                            token(")")
                        )

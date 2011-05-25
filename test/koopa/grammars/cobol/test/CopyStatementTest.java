@@ -16,7 +16,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_1() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_2() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO IN FUM .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO IN FUM . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +34,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_3() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO REPLACING ==FEE== BY ==FUM== .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO REPLACING ==FEE== BY ==FUM== . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -43,7 +43,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_4() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO REPLACING FEE BY FUM .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO REPLACING FEE BY FUM . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -52,7 +52,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_5() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO REPLACING \"FEE\" BY \"FUM\" .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO REPLACING \"FEE\" BY \"FUM\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -61,7 +61,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_6() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO SUPPRESS .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO SUPPRESS . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -70,7 +70,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_7() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO IN FUM SUPPRESS .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO IN FUM SUPPRESS . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -79,7 +79,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_8() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO SUPPRESS REPLACING ==FEE== BY ==FUM== .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO SUPPRESS REPLACING ==FEE== BY ==FUM== . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -88,7 +88,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_9() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO SUPPRESS REPLACING FEE BY FUM .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO SUPPRESS REPLACING FEE BY FUM . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -97,7 +97,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_10() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY FOO SUPPRESS REPLACING \"FEE\" BY \"FUM\" .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY FOO SUPPRESS REPLACING \"FEE\" BY \"FUM\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -106,7 +106,7 @@ public class CopyStatementTest extends TestCase {
     public void testCopyStatement_11() {
       Parser parser = grammar.copyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "COPY \"WORKSTOR.WS\" .");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY \"WORKSTOR.WS\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

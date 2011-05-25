@@ -240,6 +240,11 @@ target fdFileDescriptionEntry;
 
 +[ FD MY-FILE-NAME . ]
 
++[ FD FGRERROR
+      BLOCK CONTAINS 0 RECORDS
+      RECORDING MODE IS F
+      LABEL RECORDS ARE STANDARD. ]
+
 target sdFileDescriptionEntry;
 
 +[ SD MY-FILE-NAME . ]

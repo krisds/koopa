@@ -16,7 +16,7 @@ public class ReleaseStatementTest extends TestCase {
     public void testReleaseStatement_1() {
       Parser parser = grammar.releaseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "RELEASE MY-SORT-RECORD");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " RELEASE MY-SORT-RECORD ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class ReleaseStatementTest extends TestCase {
     public void testReleaseStatement_2() {
       Parser parser = grammar.releaseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "RELEASE MY-SORT-RECORD FROM MY-FILE");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " RELEASE MY-SORT-RECORD FROM MY-FILE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

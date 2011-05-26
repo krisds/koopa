@@ -55,6 +55,13 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 				continue;
 			}
 
+			if (token.hasTag(AreaTag.COMMENT)) {
+				// Possible intervening comment line. Buffer all up to next line.
+				buffer(token);
+				bufferUpToNextLine();
+				continue;
+			}
+
 			if (token.hasTag(AreaTag.END_OF_LINE)) {
 				// We can only continue the previous line. So if we start
 				// processing a new line the current line becomes the line to be
@@ -67,9 +74,25 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		}
 	}
 
+	private void bufferUpToNextLine() {
+		while (true) {
+			final Token token = tokenizer.nextToken();
+
+			if (token == null) {
+				return;
+			}
+
+			buffer(token);
+
+			if (token.hasTag(AreaTag.END_OF_LINE)) {
+				return;
+			}
+		}
+	}
+
 	private void handleContinuation(final Token continuationIndicator) {
 		// The line which is being continued:
-		final Token continuedLine = rewindToContentOfLine(continuationIndicator);
+		final Token continuedLine = rewindToContinuedLine(continuationIndicator);
 
 		if (continuedLine == null) {
 			// TODO ERROR.
@@ -362,11 +385,11 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		buffer(continuing(correctedContinuingLine));
 	}
 
-	private Token rewindToContentOfLine(final Token continuationIndicator) {
+	private Token rewindToContinuedLine(final Token continuationIndicator) {
 		// The line number of the continuing line:
-		final int lineNumber = continuationIndicator.getStart().getLinenumber() - 1;
+		final int lineNumber = this.buffer.getFirst().getStart().getLinenumber();
 
-		// We skip by the continuation indicator.
+		// We skip past the continuation indicator.
 		this.skippedByContinuation.addFirst(continuationIndicator);
 
 		Token last = this.buffer.removeLast();
@@ -380,7 +403,6 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 			// Keep track of skipped tokens in the order in which they appear in
 			// the text.
 			this.skippedByContinuation.addFirst(last);
-
 			last = this.buffer.removeLast();
 		}
 

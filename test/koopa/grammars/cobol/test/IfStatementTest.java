@@ -178,7 +178,7 @@ public class IfStatementTest extends TestCase {
     public void testIfStatement_19() {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF 1 < 2 AND 2 > 1\n 		DISPLAY GOOD\n 	END-IF ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF 1 < 2 AND 2 > 1\n       DISPLAY GOOD\n   END-IF ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -187,7 +187,7 @@ public class IfStatementTest extends TestCase {
     public void testIfStatement_20() {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF 1 < 2 AND 2 > 1 AND V-ARIABLE = 0\n 		DISPLAY GOOD\n 	END-IF ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF 1 < 2 AND 2 > 1 AND V-ARIABLE = 0\n       DISPLAY GOOD\n   END-IF ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -196,7 +196,7 @@ public class IfStatementTest extends TestCase {
     public void testIfStatement_21() {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF V-ARIABLE = 2 OR = 3\n 	DISPLAY PERFECT\n 	END-IF ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF V-ARIABLE = 2 OR = 3\n       DISPLAY PERFECT\n   END-IF ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -205,7 +205,7 @@ public class IfStatementTest extends TestCase {
     public void testIfStatement_22() {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF ( V-ARIABLE = 2 OR = 3 ) THEN\n 	DISPLAY PERFECT\n 	END-IF ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF ( V-ARIABLE = 2 OR = 3 ) THEN\n       DISPLAY PERFECT\n   END-IF ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -214,7 +214,7 @@ public class IfStatementTest extends TestCase {
     public void testIfStatement_23() {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF ( V-ARIABLE = 2 OR = 3 ) AND V-ARIABLE NOT = 3\n 	DISPLAY PERFECT\n 	END-IF ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF ( V-ARIABLE = 2 OR = 3 ) AND V-ARIABLE NOT = 3\n       DISPLAY PERFECT\n   END-IF ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -223,7 +223,34 @@ public class IfStatementTest extends TestCase {
     public void testIfStatement_24() {
       Parser parser = grammar.ifStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF V-ARIABLE NOT = 3 AND ( V-ARIABLE = 2 OR = 3 )\n 	DISPLAY PERFECT\n 	END-IF ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF V-ARIABLE NOT = 3 AND ( V-ARIABLE = 2 OR = 3 )\n       DISPLAY PERFECT\n   END-IF ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIfStatement_25() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF B GREATER THAN C OR EQUAL TO A OR 42 OR C - 1 THEN\n       DISPLAY PERFECT\n   END-IF ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIfStatement_26() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF ZERO - A IS NEGATIVE THEN\n       DISPLAY PERFECT\n   END-IF ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIfStatement_27() {
+      Parser parser = grammar.ifStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IF SMALLEST-VALU GREATER THAN SMALL-VALU\n      AND IS NOT LESS THAN EVEN-SMALLER OR SMALLER-VALU\n       DISPLAY FAIL\n   END-IF ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

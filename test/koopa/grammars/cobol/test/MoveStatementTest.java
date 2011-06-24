@@ -107,7 +107,7 @@ public class MoveStatementTest extends TestCase {
       Parser parser = grammar.moveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MOVE CORRESPONDING \"TEXT\" TO PAYROLL-CHECK ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -115,7 +115,7 @@ public class MoveStatementTest extends TestCase {
       Parser parser = grammar.moveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MOVE CORRESPONDING 42 TO PAYROLL-CHECK ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class MoveStatementTest extends TestCase {
       Parser parser = grammar.moveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MOVE CORRESPONDING 42.42 TO PAYROLL-CHECK ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class MoveStatementTest extends TestCase {
       Parser parser = grammar.moveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MOVE CORR \"TEXT\" TO PAYROLL-CHECK ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class MoveStatementTest extends TestCase {
       Parser parser = grammar.moveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MOVE CORR 42 TO PAYROLL-CHECK ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -147,7 +147,7 @@ public class MoveStatementTest extends TestCase {
       Parser parser = grammar.moveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MOVE CORR 42.42 TO PAYROLL-CHECK ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

@@ -260,7 +260,7 @@ public class EvaluateStatementTest extends TestCase {
       Parser parser = grammar.whenOther();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WHEN OTHER ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

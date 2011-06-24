@@ -71,7 +71,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.cobolWord();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ABCDEFGHIJKLMNOPQRSTUVWXYZ789012 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.integer();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.integer();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"ABC\" ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -104,7 +104,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.integer();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DEF ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -129,7 +129,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"ABC\" ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DEF ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.alphanumeric();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.alphanumeric();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -170,7 +170,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.alphanumeric();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DEF ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -421,7 +421,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"A\" ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -438,7 +438,7 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -455,6 +455,6 @@ public class LowLevelTest extends TestCase {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42.10 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 }

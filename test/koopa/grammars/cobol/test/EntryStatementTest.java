@@ -17,7 +17,7 @@ public class EntryStatementTest extends TestCase {
       Parser parser = grammar.entryStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENTRY ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

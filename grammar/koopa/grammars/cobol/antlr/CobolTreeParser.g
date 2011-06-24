@@ -2610,11 +2610,12 @@ goToStatement
   : ^(GO_TO_STATEMENT
       ( 'GO'
         ( 'TO' )?
-        procedureName
-        ( ( ( procedureName )*
-          'DEPENDING'
-          ( 'ON' )?
-          identifier
+        ( ( procedureName
+          ( ( ( procedureName )*
+            'DEPENDING'
+            ( 'ON' )?
+            identifier
+          ) )?
         ) )?
       )
     )
@@ -3627,10 +3628,11 @@ copyReplacementInstruction
 
 copyOperandName
   : ^(COPY_OPERAND_NAME
-      ( identifier
+      ( pseudoLiteral
+      | verb
       | literal
+      | identifier
       | cobolWord
-      | pseudoLiteral
       )
     )
   ;
@@ -3943,7 +3945,8 @@ power
 
 basis
   : ^(BASIS
-      ( identifier
+      ( 'ZERO'
+      | identifier
       | numeric
       | ( '('
         arithmeticExpression
@@ -4041,11 +4044,11 @@ segmentNumber
   ;
 
 // ========================================================
-// operandName
+// operand
 // ........................................................
 
-operandName
-  : ^(OPERAND_NAME
+operand
+  : ^(OPERAND
       ( arithmeticExpression
       | identifier
       | literal

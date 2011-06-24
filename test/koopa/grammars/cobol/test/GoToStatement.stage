@@ -3,6 +3,9 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target goToStatement;
 
++[ GO ]
++[ GO TO ]
+
 +[ GO TO OTHER-PLACE ]
 +[ GO OTHER-PLACE ]
 

@@ -10,7 +10,6 @@ import java.util.List;
 
 import koopa.grammars.cobol.CobolGrammar;
 import koopa.grammars.cobol.CobolVerifier;
-import koopa.grammars.cobol.antlr.CobolTreeParser;
 import koopa.parsers.Parser;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
@@ -38,9 +37,7 @@ import koopa.trees.antlr.CommonTreeProcessor;
 import koopa.trees.antlr.TokenTypes;
 import koopa.util.Tuple;
 
-import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.apache.log4j.Logger;
 
 public class CobolParser implements ParserConfiguration {
@@ -123,12 +120,12 @@ public class CobolParser implements ParserConfiguration {
 
 			public boolean accepts(Token token) {
 				final int currentLinenumber = token.getStart().getLinenumber();
-				
+
 				// A change of line is seen as whitespace.
 				if (lastLinenumber != currentLinenumber) {
 					lastWasWhitespace = true;
 				}
-				
+
 				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
 					if (!lastWasWhitespace) {
 						token.addTag(TokenizerTag.CHAINED);
@@ -300,22 +297,28 @@ public class CobolParser implements ParserConfiguration {
 		// processing of those trees.
 		if (builder != null) {
 			for (CommonTree tree : builder.getTrees()) {
-				// This validates the tree against the full Cobol grammar. In
-				// short, this makes sure that the tree conforms to the input
-				// grammar.
-				boolean acceptableTree = acceptedByCobolTreeParser(tree,
-						isCopybook);
-
-				if (acceptableTree) {
-					LOGGER.info("The constructed tree is valid.");
-
-				} else {
-					LOGGER.info("The constructed tree, however, is invalid.");
-
-					results.setValidInput(false);
-					results.addError(null, "Constructed tree is invalid.");
-					return results;
-				}
+				// ------------------------------------------------------------
+				// This used to validate the tree against the full Cobol
+				// grammar. In short, this made sure that the tree conforms to
+				// the input grammar.
+				// We don't do this anymore because I was getting compilation
+				// problems with the class which got generated for the full
+				// CobolTreeParser.
+				//
+				// boolean acceptableTree = acceptedByCobolTreeParser(tree,
+				// isCopybook);
+				//
+				// if (acceptableTree) {
+				// LOGGER.info("The constructed tree is valid.");
+				//
+				// } else {
+				// LOGGER.info("The constructed tree, however, is invalid.");
+				//
+				// results.setValidInput(false);
+				// results.addError(null, "Constructed tree is invalid.");
+				// return results;
+				// }
+				// ------------------------------------------------------------
 
 				results.setTree(tree);
 
@@ -359,25 +362,30 @@ public class CobolParser implements ParserConfiguration {
 		return this.tokenTypes;
 	}
 
-	private static boolean acceptedByCobolTreeParser(CommonTree tree,
-			boolean isCopybook) {
-		CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
-		CobolTreeParser parser = new CobolTreeParser(nodes);
-
-		try {
-			if (isCopybook) {
-				parser.copybook();
-			} else {
-				parser.compilationGroup();
-			}
-
-			return parser.getNumberOfSyntaxErrors() == 0;
-
-		} catch (RecognitionException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+	// ------------------------------------------------------------------------
+	// Removed for now due to technical problems. See comment in the
+	// 'parse(File)' method.
+	//
+	// private static boolean acceptedByCobolTreeParser(CommonTree tree,
+	// boolean isCopybook) {
+	// CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
+	// CobolTreeParser parser = new CobolTreeParser(nodes);
+	//
+	// try {
+	// if (isCopybook) {
+	// parser.copybook();
+	// } else {
+	// parser.compilationGroup();
+	// }
+	//
+	// return parser.getNumberOfSyntaxErrors() == 0;
+	//
+	// } catch (RecognitionException e) {
+	// e.printStackTrace();
+	// return false;
+	// }
+	// }
+	// ------------------------------------------------------------------------
 
 	private boolean buildTrees() {
 		return this.buildTrees

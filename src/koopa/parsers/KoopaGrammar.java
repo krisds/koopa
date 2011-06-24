@@ -42,10 +42,36 @@ public abstract class KoopaGrammar {
 		return this.warnings;
 	}
 
+	private int depth = 0;
+
+	private String indent() {
+		String s = "";
+		for (int i = 0; i < depth; i++) {
+			s += "  ";
+		}
+		return s;
+	}
+
+	private void push(final String message) {
+		LOGGER.trace(indent() + message);
+		depth += 1;
+	}
+
+	private void trace(final String message) {
+		LOGGER.trace(indent() + message);
+	}
+
+	private void pop(final String message) {
+		depth -= 1;
+		LOGGER.trace(indent() + message);
+	}
+
 	protected FutureParser scoped(final String name) {
 		return new FutureParser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("Enter " + name);
+				if (LOGGER.isTraceEnabled()) {
+					push(name + " ?");
+				}
 
 				Assign assign = null;
 
@@ -66,8 +92,9 @@ public abstract class KoopaGrammar {
 
 				scope.pop();
 
-				LOGGER.trace((accepts ? "Exit " : "Fail ") + name);
-
+				if (LOGGER.isTraceEnabled()) {
+					pop(name + (accepts ? ": yes" : ": no"));
+				}
 				return accepts;
 			}
 		};
@@ -126,7 +153,9 @@ public abstract class KoopaGrammar {
 	protected Parser skipto(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[skip>");
+				if (LOGGER.isTraceEnabled()) {
+					push("[skip>");
+				}
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
@@ -153,7 +182,9 @@ public abstract class KoopaGrammar {
 					sub.mark(KoopaMarkers.land());
 				}
 
-				LOGGER.trace("<skip]");
+				if (LOGGER.isTraceEnabled()) {
+					pop("<skip]");
+				}
 
 				return true;
 			}
@@ -163,7 +194,9 @@ public abstract class KoopaGrammar {
 	protected Parser not(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[not>");
+				if (LOGGER.isTraceEnabled()) {
+					push("[not>");
+				}
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
@@ -171,7 +204,9 @@ public abstract class KoopaGrammar {
 
 				sub.restore();
 
-				LOGGER.trace("<not]");
+				if (LOGGER.isTraceEnabled()) {
+					pop("<not]");
+				}
 
 				return !accepted;
 			}
@@ -181,7 +216,9 @@ public abstract class KoopaGrammar {
 	protected Parser star(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[star>");
+				if (LOGGER.isTraceEnabled()) {
+					push("[star>");
+				}
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
@@ -191,7 +228,9 @@ public abstract class KoopaGrammar {
 
 				sub.restore();
 
-				LOGGER.trace("<star]");
+				if (LOGGER.isTraceEnabled()) {
+					pop("<star]");
+				}
 
 				return true;
 			}
@@ -201,14 +240,18 @@ public abstract class KoopaGrammar {
 	protected Parser plus(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[plus>");
+				if (LOGGER.isTraceEnabled()) {
+					push("[plus>");
+				}
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
 				if (!parser.accepts(sub)) {
 					sub.restore();
 
-					LOGGER.trace("<plus]");
+					if (LOGGER.isTraceEnabled()) {
+						pop("<plus]");
+					}
 
 					return false;
 				}
@@ -219,7 +262,9 @@ public abstract class KoopaGrammar {
 
 				sub.restore();
 
-				LOGGER.trace("<plus]");
+				if (LOGGER.isTraceEnabled()) {
+					pop("<plus]");
+				}
 
 				return true;
 			}
@@ -229,15 +274,23 @@ public abstract class KoopaGrammar {
 	protected Parser sequence(final Parser... parsers) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[sequence>");
+				// if (LOGGER.isTraceEnabled()) {
+				// push("[sequence>");
+				// }
 
 				for (Parser parser : parsers) {
 					if (!parser.accepts(stream)) {
+						// if (LOGGER.isTraceEnabled()) {
+						// pop("<sequence]");
+						// }
+
 						return false;
 					}
 				}
 
-				LOGGER.trace("<sequence]");
+				// if (LOGGER.isTraceEnabled()) {
+				// pop("<sequence]");
+				// }
 
 				return true;
 			}
@@ -247,20 +300,30 @@ public abstract class KoopaGrammar {
 	protected Parser choice(final Parser... parsers) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[choice>");
+				// if (LOGGER.isTraceEnabled()) {
+				// push("[choice>");
+				// }
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
-				for (Parser parser : parsers) {
-					if (parser.accepts(sub)) {
-						LOGGER.trace("<choice]");
+				for (int i = 0; i < parsers.length; i++) {
+					final Parser parser = parsers[i];
 
+					if (parser.accepts(sub)) {
 						return true;
+
+					} else {
+						if (LOGGER.isTraceEnabled() && i + 1 < parsers.length) {
+							trace("or");
+						}
+
+						sub.restore();
 					}
-					sub.restore();
 				}
 
-				LOGGER.trace("<choice]");
+				// if (LOGGER.isTraceEnabled()) {
+				// pop("<choice]");
+				// }
 
 				return false;
 			}
@@ -275,7 +338,9 @@ public abstract class KoopaGrammar {
 
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[permuted>");
+				if (LOGGER.isTraceEnabled()) {
+					push("[permuted>");
+				}
 
 				List<Parser> remaining = new ArrayList<Parser>(choices);
 				TokenStream sub = new SubordinateTokenStream(stream);
@@ -293,7 +358,9 @@ public abstract class KoopaGrammar {
 					}
 				}
 
-				LOGGER.trace("<permuted]");
+				if (LOGGER.isTraceEnabled()) {
+					pop("<permuted]");
+				}
 
 				return true;
 			}
@@ -303,14 +370,18 @@ public abstract class KoopaGrammar {
 	protected Parser optional(final Parser parser) {
 		return new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				LOGGER.trace("[optional>");
+				if (LOGGER.isTraceEnabled()) {
+					push("[optional>");
+				}
 
 				TokenStream sub = new SubordinateTokenStream(stream);
 
 				if (parser.accepts(sub)) {
 					sub.commit();
 
-					LOGGER.trace("<optional]");
+					if (LOGGER.isTraceEnabled()) {
+						pop("<optional]");
+					}
 
 					return true;
 
@@ -318,7 +389,9 @@ public abstract class KoopaGrammar {
 					sub.restore();
 				}
 
-				LOGGER.trace("<optional]");
+				if (LOGGER.isTraceEnabled()) {
+					pop("<optional]");
+				}
 
 				return true;
 			}
@@ -330,9 +403,11 @@ public abstract class KoopaGrammar {
 			protected boolean accepts(TokenStream stream) {
 				final Token token = stream.nextToken();
 
-				LOGGER.trace(token + " =~ " + text + " ?");
-
 				if (token != null && token.getText().equalsIgnoreCase(text)) {
+
+					if (LOGGER.isTraceEnabled()) {
+						trace(token + " =~ " + text + " : yes");
+					}
 
 					Assign assign = (Assign) scope().get("=");
 					if (assign != null) {
@@ -341,8 +416,13 @@ public abstract class KoopaGrammar {
 
 					return true;
 
-				} else
+				} else {
+					if (LOGGER.isTraceEnabled()) {
+						trace(token + " =~ " + text + " : no");
+					}
+
 					return false;
+				}
 			}
 		};
 	}

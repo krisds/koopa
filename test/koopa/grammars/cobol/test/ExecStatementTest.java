@@ -17,7 +17,7 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC END-EXEC ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -33,7 +33,7 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC SQL ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execSQLStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC SQL END-EXEC ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execCICSStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC CICS END-EXEC ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execCICSStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC CICS READ QUEUE TS QUEUE END-EXEC ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -200,6 +200,6 @@ public class ExecStatementTest extends TestCase {
       Parser parser = grammar.execCICSStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXEC CICS READ DATA (WHATEVER) RID(W-KEY-WHATEVER) END-EXEC ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 }

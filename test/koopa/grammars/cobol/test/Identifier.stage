@@ -16,7 +16,7 @@ target identifier;
 +[ MY-FIELD IN MY-RECORD-1 OF MY-RECORD-2 ]
 
 +[ MY-FIELD ( 42 ) ]
-+[ MY-FIELD ¥ ( 42.0 ) ]
+-[ MY-FIELD ( 42.0 ) ]
 
 +[ MY-FIELD ( MY-INDEX ) ]
 

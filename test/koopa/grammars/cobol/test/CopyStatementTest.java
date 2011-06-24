@@ -110,4 +110,13 @@ public class CopyStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testCopyStatement_12() {
+      Parser parser = grammar.copyStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COPY KP004\n   REPLACING ==PUT THIS SOMEWHERE ELSE== BY MOVE\n             ==GET RID OF== BY DELETE.\n");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

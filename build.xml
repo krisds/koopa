@@ -74,6 +74,9 @@
 		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
 		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
 
+		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
+		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java"></delete>
+		
 		<echo>Compiling Cobol parser...</echo>
 		<javac srcdir="grammar/" destdir="build/" debug="on" source="1.5">
 			<classpath>

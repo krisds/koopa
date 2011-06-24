@@ -24,10 +24,12 @@ Koopa can also take these grammar files and translate them into an equivalent
 ANTLR tree grammar. These tree grammars may then be used (modified or not) in
 the backend. The generator is class koopa.trees.antlr.generator.KGToANTLR.
 
-All generation phases may be triggered manually. Alternatively you can also use
-the ANT build script found in the root folder. Choose the "regenerate" target.
-After any regeneration you need to refresh your Eclipse project. This will also
-trigger the ANTLR builders which will process any newly generated grammars.
+All of this is taken care of by the ANT build script. If you make modifications
+to the standard Cobol.kg or one of the tests all you need to do is rerun ANT
+and everything should be taken care of.
+
+If you're using an IDE such as Eclipse you may need to refresh your workspace
+after building with ANT.
 
 = Unit tests =
 
@@ -62,13 +64,7 @@ in doubt, contact the maintainers.
 
 = KG.tokens =
 
-In koopa.trees.antlr.generator, KG.tokens is a manual copy of the file with
-the same name from koopa.grammars.generator. If the original ever changes this
-means that the KGToANTLR generator is broken. In that case you need to update
-its tokens file. The ANT build script has a target to do this for you
-(SynchronizeKGTokens). 
-
-Do note that if a tokens file has changed, the grammar may not automatically
-get recompiled! If it doesn't you will likely start seeing very strange errors.
-The only solution for now is to manually trigger a recompilation of the
-affected grammars.
+In koopa.trees.antlr.generator, KG.tokens is a copy of the file with the same
+name from koopa.grammars.generator. If the original ever changes this means
+that the KGToANTLR generator is broken. In that case you need to update its
+tokens file. Again, the ANT build script takes care of this for you.

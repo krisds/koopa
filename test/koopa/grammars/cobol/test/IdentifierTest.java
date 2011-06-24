@@ -26,7 +26,7 @@ public class IdentifierTest extends TestCase {
       Parser parser = grammar.identifier();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class IdentifierTest extends TestCase {
       Parser parser = grammar.identifier();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42.42 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class IdentifierTest extends TestCase {
       Parser parser = grammar.identifier();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"TEXT\" ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -94,9 +94,8 @@ public class IdentifierTest extends TestCase {
     public void testIdentifier_10() {
       Parser parser = grammar.identifier();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MY-FIELD \u2022 ( 42.0 ) ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MY-FIELD ( 42.0 ) ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

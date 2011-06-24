@@ -38,9 +38,9 @@ target addition_format3;
 
 target addStatement;
 
-+[ ADD A TO B ¥ . ]
++[ ADD A TO B ]
 
-+[ ADD A TO B GIVING C ¥ . ]
++[ ADD A TO B GIVING C ]
 
 +[ ADD A TO B
      ON SIZE ERROR

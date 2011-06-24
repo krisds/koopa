@@ -1,17 +1,19 @@
 = Misc. =
 
+* A "longest match" operator ? E.g.: $( identifier | arithmeticExpression ),
+  which would classify inputs like "A" as an identifier, but inputs like
+  "A + 1" as an arithmetic expression... Length is measured in number of tokens,
+  though "furthest position in file" would be equivalent.
+* Add caching strategy to testing of tokens. To help prevent duplicate work.
+  I.e. if something wasn't an identifier the first time around it won't be 
+  any later time either.
+* Fix degenerate results from grammar rules. E.g. a complexCondition can
+  degenerate into a simpleCondition. But the AST will still have both...
 * Reconsider allowing these intermediate tokenizers. Maybe a listener pattern
   would be better.
 * Regression testing. Would be nice if we could do this as a JUnit test.
-* Use Log4J (or similar) rather than DEBUG flags and sysouts.
 * Write an ANT target for running the unit tests.
-
-
-= Cobol.tokens =
-
-An update of a Cobol.tokens file does not trigger a rebuild of grammars (tree 
-parsers). This may/will cause problems in matching. Current solution is to
-manually trigger a rebuild of the relevant files, but this is not nice...
+* Remove the structure-shy ANTLR tree parsers and standardize on XML and XPath ?
 
 
 = Customizing the generated ANTLR tree parser =

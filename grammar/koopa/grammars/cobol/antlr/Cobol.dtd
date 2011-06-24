@@ -133,7 +133,7 @@
 <!ELEMENT cicsWaterInBrackets (t,water?,t)>
 <!ELEMENT exitStatement (t,t?)>
 <!ELEMENT gobackStatement (t)>
-<!ELEMENT goToStatement (t,t?,procedureName,(procedureName*,t,t?,identifier)?)>
+<!ELEMENT goToStatement (t,t?,(procedureName,(procedureName*,t,t?,identifier)?)?)>
 <!ELEMENT ifStatement (t,condition,t?,(nestedStatements|(t,t)),(t,(nestedStatements|(t,t)))?,t?)>
 <!ELEMENT initializeStatement (t,identifier+,replacingInitClause?,water?)>
 <!ELEMENT replacingInitClause (t,replacementTarget,t?,t,(identifier|literal))>
@@ -180,7 +180,7 @@
 <!ELEMENT copyStatement (t,textName,(t,libraryName)?,t?,copyReplacingPhrase?,t)>
 <!ELEMENT copyReplacingPhrase (t,copyReplacementInstruction+)>
 <!ELEMENT copyReplacementInstruction (copyOperandName,t,copyOperandName)>
-<!ELEMENT copyOperandName (identifier|literal|cobolWord|pseudoLiteral)>
+<!ELEMENT copyOperandName (pseudoLiteral|verb|literal|identifier|cobolWord)>
 <!ELEMENT replaceStatement (t,water?,t)>
 <!ELEMENT divisionStart (((t,t)|(t,t)|(t,t)|(t+,usingPhrase?,returningPhrase?)),t)>
 <!ELEMENT dataSectionStart (t+,t)>
@@ -198,7 +198,7 @@
 <!ELEMENT arithmeticExpression (timesDiv,(t,timesDiv)*)>
 <!ELEMENT timesDiv (power,(t,power)*)>
 <!ELEMENT power (t?,basis,(t,basis)*)>
-<!ELEMENT basis (identifier|numeric|(t,arithmeticExpression,t))>
+<!ELEMENT basis (t|identifier|numeric|(t,arithmeticExpression,t))>
 <!ELEMENT condition (water?)>
 <!ELEMENT programName (cobolWord|alphanumeric)>
 <!ELEMENT dataName (cobolWord|t)>
@@ -206,7 +206,7 @@
 <!ELEMENT paragraphName (cobolWord|integer)>
 <!ELEMENT procedureName ((cobolWord|integer),(t,cobolWord)?)>
 <!ELEMENT segmentNumber (integer)>
-<!ELEMENT operandName (arithmeticExpression|identifier|literal|indexName)>
+<!ELEMENT operand (arithmeticExpression|identifier|literal|indexName)>
 <!ELEMENT conditionName (identifier)>
 <!ELEMENT indexName (cobolWord)>
 <!ELEMENT className (cobolWord)>

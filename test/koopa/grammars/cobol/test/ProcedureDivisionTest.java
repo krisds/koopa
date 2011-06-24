@@ -26,7 +26,7 @@ public class ProcedureDivisionTest extends TestCase {
       Parser parser = grammar.statement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TRANSMOGRIFY ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

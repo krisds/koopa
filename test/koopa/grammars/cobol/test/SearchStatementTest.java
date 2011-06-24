@@ -287,6 +287,6 @@ public class SearchStatementTest extends TestCase {
       Parser parser = grammar.searchStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SEARCH ALL EMPLOYEES VARYING EMPLOYEE-NUMBER\n   WHEN TRUE\n        DISPLAY \"Found one.\" ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 }

@@ -10,6 +10,5 @@ package currently in use is ANTLR v3.1.1. (http://www.antlr.org/)
 
 = Building =
 
-Run the regenerate target from build.xml, and refresh your eclipse environment
-afterwards (you can configure Eclipse to do the latter automatically every
-time).
+Simply run ANT in the root folder, and sit back. If you're using an IDE you may
+need to refresh your workspace afterwards (or let your IDE do this for you).

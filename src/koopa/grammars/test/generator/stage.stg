@@ -36,6 +36,6 @@ reject(name, number, target, token, format) ::= <<
     Parser parser = grammar.$target$();
     assertNotNull(parser);
     TestTokenizer tokenizer = new TestTokenizer($if(format)$SourceFormat.FREE$else$SourceFormat.FIXED$endif$, "$token$");
-    assertFalse(parser.accepts(tokenizer));
+    assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
   }
 >>

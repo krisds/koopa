@@ -35,7 +35,7 @@ public class CancelStatementTest extends TestCase {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL 42 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class CancelStatementTest extends TestCase {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL 42.0 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

@@ -83,9 +83,7 @@ end
 
 def sourceComputerParagraph =
 	SOURCE-COMPUTER .
-	[computerName
-	[withDebuggingMode]
-	.]
+	[computerName [withDebuggingMode] .]
 	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
 end
 
@@ -95,9 +93,7 @@ end
 
 def objectComputerParagraph =
 	OBJECT-COMPUTER .
-	[computerName
-	[--> .]
-	.]
+	[computerName [--> .] .]
 	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
 end
 
@@ -1108,10 +1104,12 @@ end
 ## -----------------------------------------------------------------------------
 
 def goToStatement =
-    GO [TO] procedureName
+    GO [TO]
+    [ procedureName
         [ (procedureName)*
           DEPENDING [ON] identifier
         ]
+    ]
 end
 
 ## #############################################################################
@@ -1581,7 +1579,7 @@ def copyReplacementInstruction =
 end
 
 def copyOperandName =
-	(identifier | literal | cobolWord | pseudoLiteral)
+	(pseudoLiteral | verb | literal | identifier | cobolWord)
 end
 
 def replaceStatement =
@@ -1730,8 +1728,10 @@ def power =
     [('+' | '-')] basis ('**' basis)*
 end
 
+# TODO Check sources for use of ZERO in this case.
 def basis =
-    ( identifier
+    ( ZERO
+    | identifier
     | numeric
     | '(' arithmeticExpression ')'
     )
@@ -1807,11 +1807,14 @@ def segmentNumber =
     integer
 end
 
-def operandName =
-	(arithmeticExpression
-	|identifier
-	|literal
-	|indexName)
+# TODO Arithmetic expression will (likely) capture all other cases as well. Can
+# we disambiguate this further ? 
+def operand =
+	( arithmeticExpression
+	| identifier
+	| literal
+	| indexName
+	)
 end
 
 def conditionName =

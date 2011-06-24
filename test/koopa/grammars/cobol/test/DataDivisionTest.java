@@ -152,7 +152,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OCCURS 42.0 TIMES ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -160,7 +160,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OCCURS 42.0 ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -303,7 +303,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OCCURS 7.0 TO 42 TIMES ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -311,7 +311,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OCCURS 7.0 TO 42.0 TIMES ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -1165,7 +1165,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0 TEST-7 . ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -1173,7 +1173,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 50 TEST-8 . ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -1181,7 +1181,7 @@ public class DataDivisionTest extends TestCase {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " AA TEST-9 . ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -1329,7 +1329,25 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testWorkingStorageSection_148() {
+    public void testDataDescriptionEntry_148() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "\n004400 77  WS-TEST-12-DATA                                              NC2054.2\n004500                        PIC S9(                                   NC2054.2\n004600-                              6)V9(6).                           NC2054.2\n");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_149() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "\n003800     03 GUBBINS PIC X(1                                           NC4014.2\n003900-                      00).                                       NC4014.2\n");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testWorkingStorageSection_150() {
       Parser parser = grammar.workingStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WORKING-STORAGE Section .\n   COPY \"WORKSTOR.WS\" .\n");

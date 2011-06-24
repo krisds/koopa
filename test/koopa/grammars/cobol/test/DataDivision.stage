@@ -311,7 +311,18 @@ target dataDescriptionEntry;
 +[ 05 BUFFER
       POINTER
       VALUE NULL . ]
-      
+
++{
+004400 77  WS-TEST-12-DATA                                              NC2054.2
+004500                        PIC S9(                                   NC2054.2
+004600-                              6)V9(6).                           NC2054.2
+}
+
++{
+003800     03 GUBBINS PIC X(1                                           NC4014.2
+003900-                      00).                                       NC4014.2
+}
+
 target workingStorageSection;
 
 +[ WORKING-STORAGE Section .

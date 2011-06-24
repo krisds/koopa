@@ -4695,17 +4695,21 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        token("TO")
                    ),
-                   procedureName(),
                    optional(
                        sequence(
-                           star(
-                               procedureName()
-                           ),
-                           token("DEPENDING"),
+                           procedureName(),
                            optional(
-                               token("ON")
-                           ),
-                           identifier()
+                               sequence(
+                                   star(
+                                       procedureName()
+                                   ),
+                                   token("DEPENDING"),
+                                   optional(
+                                       token("ON")
+                                   ),
+                                   identifier()
+                               )
+                           )
                        )
                    )
                )
@@ -6601,10 +6605,11 @@ public class CobolGrammar extends KoopaGrammar {
            copyOperandNameParser = future;
            future.setParser(
                choice(
-                   identifier(),
+                   pseudoLiteral(),
+                   verb(),
                    literal(),
-                   cobolWord(),
-                   pseudoLiteral()
+                   identifier(),
+                   cobolWord()
                )
            );
         }
@@ -7142,6 +7147,7 @@ public class CobolGrammar extends KoopaGrammar {
            basisParser = future;
            future.setParser(
                choice(
+                   token("ZERO"),
                    identifier(),
                    numeric(),
                    sequence(
@@ -7324,15 +7330,15 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // operandName
+    // operand
     // ........................................................
 
-    private Parser operandNameParser = null;
+    private Parser operandParser = null;
 
-    public Parser operandName() {
-        if (operandNameParser == null) {
-           FutureParser future = scoped("operandName");
-           operandNameParser = future;
+    public Parser operand() {
+        if (operandParser == null) {
+           FutureParser future = scoped("operand");
+           operandParser = future;
            future.setParser(
                choice(
                    arithmeticExpression(),
@@ -7343,7 +7349,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return operandNameParser;
+        return operandParser;
     }
 
     // ========================================================

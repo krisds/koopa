@@ -44,7 +44,7 @@ public class ArithmeticExpressionTest extends TestCase {
       Parser parser = grammar.arithmeticExpression();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"42\" ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -394,6 +394,15 @@ public class ArithmeticExpressionTest extends TestCase {
       Parser parser = grammar.arithmeticExpression();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ( 42 + ELEVENTY ) * ( 7 / FORTY-TWO ) ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testArithmeticExpression_44() {
+      Parser parser = grammar.arithmeticExpression();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ZERO - A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

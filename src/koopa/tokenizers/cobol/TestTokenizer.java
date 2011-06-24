@@ -12,14 +12,19 @@ import koopa.tokenizers.generic.FilteringTokenizer;
 import koopa.tokens.Token;
 import koopa.tokens.TokenFilter;
 
+import org.apache.log4j.Logger;
+
 public class TestTokenizer implements PushbackTokenizer {
+
+	private static final Logger LOGGER = Logger.getLogger("tokenising.test");
 
 	public static final String MARKER_TEXT = "\u2022";
 
 	private PushbackTokenizer tokenizer;
 	private boolean quit = false;
+
 	private Token markerToken = null;
-	private Token lastToken = null;
+	private Token tokenFollowingMarker = null;
 
 	public TestTokenizer(String data) {
 		this(SourceFormat.FREE, data);
@@ -55,12 +60,12 @@ public class TestTokenizer implements PushbackTokenizer {
 
 			public boolean accepts(Token token) {
 				final int currentLinenumber = token.getStart().getLinenumber();
-				
+
 				// A change of line is seen as whitespace.
 				if (lastLinenumber != currentLinenumber) {
 					lastWasWhitespace = true;
 				}
-				
+
 				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
 					if (!lastWasWhitespace) {
 						token.addTag(TokenizerTag.CHAINED);
@@ -92,24 +97,45 @@ public class TestTokenizer implements PushbackTokenizer {
 	public Token nextToken() {
 		Token nextToken = this.tokenizer.nextToken();
 		if (nextToken != null && nextToken.getText().equals(MARKER_TEXT)) {
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("> " + nextToken);
+			}
+
 			this.markerToken = nextToken;
 			nextToken = this.tokenizer.nextToken();
+			this.tokenFollowingMarker = nextToken;
+		}
+
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("> " + nextToken);
 		}
 
 		return nextToken;
 	}
 
 	public void quit() {
-		this.lastToken = this.tokenizer.nextToken();
 		this.quit = true;
 		this.tokenizer.quit();
 	}
 
 	public void pushback(Token token) {
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("< " + token);
+		}
+
 		this.tokenizer.pushback(token);
-		if (this.markerToken != null) {
+
+		if (this.tokenFollowingMarker != null
+				&& this.tokenFollowingMarker == token) {
+
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("< " + this.markerToken);
+			}
+
 			this.tokenizer.pushback(this.markerToken);
+
 			this.markerToken = null;
+			this.tokenFollowingMarker = null;
 		}
 	}
 
@@ -118,7 +144,11 @@ public class TestTokenizer implements PushbackTokenizer {
 	}
 
 	public boolean isWhereExpected() {
-		return (this.lastToken == null && this.markerToken == null)
-				|| this.lastToken.getText().equals(MARKER_TEXT);
+		if (this.markerToken != null) {
+			return true;
+		}
+
+		final Token nextToken = this.tokenizer.nextToken();
+		return nextToken == null || nextToken.getText().equals(MARKER_TEXT);
 	}
 }

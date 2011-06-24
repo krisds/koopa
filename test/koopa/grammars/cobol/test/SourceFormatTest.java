@@ -26,7 +26,7 @@ public class SourceFormatTest extends TestCase {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, "\nKOOPAH STRING A, B, C INTO TEXT\nKOOPAH END-STRING\n");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class SourceFormatTest extends TestCase {
       Parser parser = grammar.stringStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, " STRING A, B, C INTO TEXT\n   END-STRING ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

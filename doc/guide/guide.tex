@@ -391,7 +391,7 @@ target addStatement;
 \label{fig:koopa-test-with-marker}
 \end{figure}
 
-Unit testing is not limited to grammar rules or which you have a complete definition. You can test rules which rely on skipping skipping tokens to do their work. The problem is that this skipping is not greedy, but the unit tests do expect you to consume all tokens. If there are tokens left, this is considered an error. You can overcome this by giving only a partial input, but it is nicer to go for the option of marking the end of what gets consumed by your parser. Figure~\ref{fig:koopa-test-with-marker} shows an example. The ``at'' sign~\footnote{\scriptsize In reality we don't use an ``at'' sign but a unicode character. Check the sources for a real example.} marks the exit point. So in this case there should always be one token left after each test.
+Unit testing is not limited to grammar rules or which you have a complete definition. You can test rules which rely on skipping tokens to do their work. The problem is that this skipping is not greedy, but the unit tests do expect you to consume all tokens. If there are tokens left, this is considered an error. You can overcome this by giving only a partial input, but it is nicer to go for the option of marking the end of what gets consumed by your parser. Figure~\ref{fig:koopa-test-with-marker} shows an example. The ``at'' sign~\footnote{\scriptsize In reality we don't use an ``at'' sign but a unicode character. Check the sources for a real example.} marks the exit point. So in this case there should always be one token left after each test.
 
 These unit tests, together with the grammar, should quickly tell a developer whether or not he or she is breaking any existing feature of the grammar and, more importantly, where exactly he or she is breaking it. Being able to pinpoint any problems as fast as possible is another key factor in keeping development overhead in check.
 
@@ -415,7 +415,7 @@ And, finally, repeat as needed. Given enough iterations the grammar under develo
 \section{Koopa back-end}
 \label{backend}
 
-The back-end provided by Koopa is left open. The default output is a tokenstream tagged with the names of grammar rules. This is easily transformed into an abstract syntax tree. In fact, Koopa already provides support for building an ANTLR\footnote{\scriptsize\url{http://www.antlr.org/}} syntax tree, which may then be further processed using ANTLR tree parsers. For convenience Koopa also knows how to generate a basic ANTLR tree grammar from the Cobol island grammar.
+The back-end provided by Koopa is left open. The default output is a tokenstream tagged with the names of grammar rules. This is easily transformed into an abstract syntax tree. In fact, Koopa already provides support for building an XML DOM tree or an ANTLR\footnote{\scriptsize\url{http://www.antlr.org/}} syntax tree. The first can be queries with XPath expressions, the latter may be processed using ANTLR tree parsers. For convenience Koopa also knows how to generate a DTD for the generated XML, as well as a basic ANTLR tree grammar from the Cobol island grammar.
 
 Here again we encounter a possible maintenance problem: ANTLR tree parsers have to be complete and exact. So if we want to process the abstract syntax tree we're again faced with setting up a complete parser. And while Koopa knows how to generate such a tree grammar from the Koopa grammar, it does not know how to update an existing one. So updating the Koopa grammar will likely break the tree grammar.
 
@@ -441,15 +441,16 @@ Koopa provides a solution for this problem by again going back to island grammar
 \section{Discussion/Conclusion}
 \label{conclusion}
 
-I realise that there are a lot of claims in these pages and I feel that I should back them up with some real data. As I have only got my own experiences to fall back on this conclusion will, of necessity, be a personal one.
+I realise that there are a lot of claims in these pages and I feel that I should back them up with some real data.
+% As I have only got my own experiences to fall back on this conclusion will, of necessity, be a personal one.
 
-The generated parsers are able to process real-life industrial Cobol code, warts and all, even if you do not have a complete system. I know this because I have had the chance to test it agains several real-life examples, totalling several million lines of code. So I'm not worried there.
+The generated parsers are able to process real-life industrial Cobol code, warts and all, even if you do not have a complete system. I know this because I have had the chance to test it against several real-life examples, totalling several million lines of code. I have also had reports from several users, one of which who ran Koopa on a set of 20.000 Cobol programs and another 20.000 copybooks. So I'm not worried there.
 
-I know that the island grammar approach helps a lot in the piecemeal definition of Cobol grammars. I know this because I have tried it both ways. I'm able to contrast it agains a non-island grammar approach, using the grammarware toolkits from the Vrije Universiteit Amsterdam, YACC and basic ANTLR. The grammars I made in these environments have proved much harder to maintain. Still, I'm not even close to a full Cobol grammar in Koopa, and I don't know how it will cope with such a thing. But I'm hopeful.
+I know that the island grammar approach helps a lot in the piecemeal definition of Cobol grammars. I know this because I have tried it both ways. I'm able to contrast it agains a non-island grammar approach, using the grammarware toolkits from the Vrije Universiteit Amsterdam, YACC and basic ANTLR. The grammars I made in these environments have proved much harder to maintain. I have also had a few users who successfully added to the Cobol grammar on their own, and even contributed some changes to the project. So I'm confident that the grammar can grow. Still, we're far from a full Cobol grammar in Koopa, and I don't know how it will cope with such a thing. But I'm optimistic.
 
 The grammar unit testing is also a very welcome tool. It allows you to make changes to the grammar, and to verify (to some extent) that you haven't broken previous work. And if you do happen to break it you can quickly spot where it went wrong. My experiences with previous toolchains were never this nice. I would always have to run the complete parser on a complete Cobol file, and if something went wrong spend a long time trying to figure out why it went wrong. True, the quality of testing in Koopa stands and falls with the quality of the unit tests written by the developer, but it is much easier to set up unit tests which cover all eventualities in Koopa than it is by writing a full Cobol file.
 
-The biggest question mark is the back-end. I have only had to do simple processing so far, and for that the solution using the ANTLR island tree grammars works just fine. The real proof here will be in how others use it, and that is now entirely up to you.
+The biggest question mark is the back-end. I have only had to do simple processing so far, and for that the solution using the ANTLR island tree grammars worked just fine. The XML DOM tree is also something which is being used by others. Other than that all suggestions are welcome.
 
 
 % =============================================================================

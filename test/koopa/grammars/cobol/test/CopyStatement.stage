@@ -24,3 +24,9 @@ target copyStatement;
 +[ COPY FOO SUPPRESS REPLACING "FEE" BY "FUM" . ]
 
 +[ COPY "WORKSTOR.WS" . ]
+
+# The following tests whether verbs are allowed as operands (they are).
++[ COPY KP004
+   REPLACING ==PUT THIS SOMEWHERE ELSE== BY MOVE
+             ==GET RID OF== BY DELETE.
+]

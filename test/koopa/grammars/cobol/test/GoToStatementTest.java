@@ -16,7 +16,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_1() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_2() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +34,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_3() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO 42 ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -43,7 +43,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_4() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO 42 ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -52,7 +52,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_5() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO 42 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -61,7 +61,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_6() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO 42 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -70,7 +70,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_7() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -79,7 +79,7 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_8() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -88,13 +88,31 @@ public class GoToStatementTest extends TestCase {
     public void testGoToStatement_9() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING SOME-VALUE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testGoToStatement_10() {
+      Parser parser = grammar.goToStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING ON SOME-VALUE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testGoToStatement_11() {
+      Parser parser = grammar.goToStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO TO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING SOME-VALUE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testGoToStatement_12() {
       Parser parser = grammar.goToStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " GO OTHER-PLACE\n         YET-ANOTHER-PLACE\n         STILL-SOME-OTHER-PLACE\n     DEPENDING SOME-VALUE ");

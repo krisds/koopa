@@ -187,7 +187,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_20() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -196,7 +196,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_21() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

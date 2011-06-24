@@ -26,7 +26,7 @@ public class PerformStatementTest extends TestCase {
       Parser parser = grammar.times();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42.0 TIMES ");
-      assertFalse(parser.accepts(tokenizer));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

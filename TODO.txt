@@ -7,6 +7,7 @@
 * Add caching strategy to testing of tokens. To help prevent duplicate work.
   I.e. if something wasn't an identifier the first time around it won't be 
   any later time either.
+* Get rid of the syntax for capturing tokens and native code in the grammars ?
 * Fix degenerate results from grammar rules. E.g. a complexCondition can
   degenerate into a simpleCondition. But the AST will still have both...
 * Reconsider allowing these intermediate tokenizers. Maybe a listener pattern

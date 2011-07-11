@@ -2071,6 +2071,8 @@ public class CobolGrammar extends KoopaGrammar {
                        token("COMP-2"),
                        token("COMPUTATIONAL-3"),
                        token("COMP-3"),
+                       token("COMPUTATIONAL-4"),
+                       token("COMP-4"),
                        token("COMPUTATIONAL-5"),
                        token("COMP-5"),
                        token("POINTER")
@@ -3991,6 +3993,27 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // dataArea
+    // ........................................................
+
+    private Parser dataAreaParser = null;
+
+    public Parser dataArea() {
+        if (dataAreaParser == null) {
+           FutureParser future = scoped("dataArea");
+           dataAreaParser = future;
+           future.setParser(
+               choice(
+                   literal(),
+                   identifier()
+               )
+           );
+        }
+
+        return dataAreaParser;
+    }
+
+    // ========================================================
     // cicsReadQ
     // ........................................................
 
@@ -4028,7 +4051,9 @@ public class CobolGrammar extends KoopaGrammar {
                                        token("SET"),
                                        token("INTO")
                                    ),
-                                   cicsWaterInBrackets(),
+                                   token("("),
+                                   dataArea(),
+                                   token(")"),
                                    optional(
                                        sequence(
                                            token("LENGTH"),
@@ -4102,7 +4127,9 @@ public class CobolGrammar extends KoopaGrammar {
                                ),
                                sequence(
                                    token("FROM"),
-                                   cicsWaterInBrackets(),
+                                   token("("),
+                                   dataArea(),
+                                   token(")"),
                                    optional(
                                        sequence(
                                            token("LENGTH"),
@@ -4223,7 +4250,9 @@ public class CobolGrammar extends KoopaGrammar {
                                    token("SET"),
                                    token("INTO")
                                ),
-                               cicsWaterInBrackets(),
+                               token("("),
+                               dataArea(),
+                               token(")"),
                                optional(
                                    sequence(
                                        token("LENGTH"),
@@ -4285,7 +4314,9 @@ public class CobolGrammar extends KoopaGrammar {
                                    token("SET"),
                                    token("INTO")
                                ),
-                               cicsWaterInBrackets(),
+                               token("("),
+                               dataArea(),
+                               token(")"),
                                optional(
                                    sequence(
                                        token("LENGTH"),
@@ -4360,7 +4391,9 @@ public class CobolGrammar extends KoopaGrammar {
                        ),
                        sequence(
                            token("FROM"),
-                           cicsWaterInBrackets(),
+                           token("("),
+                           dataArea(),
+                           token(")"),
                            optional(
                                sequence(
                                    token("LENGTH"),
@@ -4422,7 +4455,9 @@ public class CobolGrammar extends KoopaGrammar {
                        ),
                        sequence(
                            token("COMMAREA"),
-                           cicsWaterInBrackets(),
+                           token("("),
+                           commareaName(),
+                           token(")"),
                            optional(
                                sequence(
                                    token("LENGTH"),
@@ -4483,7 +4518,9 @@ public class CobolGrammar extends KoopaGrammar {
                    permuted(
                        sequence(
                            token("COMMAREA"),
-                           cicsWaterInBrackets(),
+                           token("("),
+                           commareaName(),
+                           token(")"),
                            optional(
                                sequence(
                                    token("LENGTH"),
@@ -4555,10 +4592,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("TR")
                    ),
                    token("("),
-                   choice(
-                       literal(),
-                       identifier()
-                   ),
+                   transactionName(),
                    token(")")
                )
            );
@@ -4607,6 +4641,48 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return queueNameParser;
+    }
+
+    // ========================================================
+    // transactionName
+    // ........................................................
+
+    private Parser transactionNameParser = null;
+
+    public Parser transactionName() {
+        if (transactionNameParser == null) {
+           FutureParser future = scoped("transactionName");
+           transactionNameParser = future;
+           future.setParser(
+               choice(
+                   literal(),
+                   identifier()
+               )
+           );
+        }
+
+        return transactionNameParser;
+    }
+
+    // ========================================================
+    // commareaName
+    // ........................................................
+
+    private Parser commareaNameParser = null;
+
+    public Parser commareaName() {
+        if (commareaNameParser == null) {
+           FutureParser future = scoped("commareaName");
+           commareaNameParser = future;
+           future.setParser(
+               choice(
+                   literal(),
+                   identifier()
+               )
+           );
+        }
+
+        return commareaNameParser;
     }
 
     // ========================================================
@@ -5151,6 +5227,13 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("MOVE"),
                    choice(
+                       sequence(
+                           token("LENGTH"),
+                           optional(
+                               token("OF")
+                           ),
+                           identifier()
+                       ),
                        sequence(
                            optional(
                                choice(
@@ -7716,7 +7799,8 @@ public class CobolGrammar extends KoopaGrammar {
                            token("QUOTES")
                        )
                    ),
-                   token("NULL")
+                   token("NULL"),
+                   token("NULLS")
                )
            );
         }

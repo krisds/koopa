@@ -437,6 +437,8 @@ def usage =
     | COMP-2 
     | COMPUTATIONAL-3 
     | COMP-3 
+    | COMPUTATIONAL-4 
+    | COMP-4 
     | COMPUTATIONAL-5 
     | COMP-5
     | POINTER
@@ -983,11 +985,15 @@ def cicsStatement =
    )
 end
 
+def dataArea =
+   (literal | identifier)
+end
+
 def cicsReadQ =
    READQ 
    ( TS (QUEUE | QNAME) '(' queueName ')' 
      !( (SYSID|SYS) '(' cicsSysid ')'
-      | (SET|INTO) cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | (ITEM cicsWaterInBrackets | NEXT)
       | NUMITEMS cicsWaterInBrackets
       )
@@ -999,7 +1005,7 @@ def cicsWriteQ =
    WRITEQ 
    ( TS (QUEUE | QNAME) '(' queueName ')'
      !( (SYSID|SYS) '(' cicsSysid ')'
-      | FROM cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | (NUMITEMS cicsWaterInBrackets | ITEM cicsWaterInBrackets [REWRITE])
       | NOSUSPEND
       | (MAIN|AUXILIARY)
@@ -1016,7 +1022,7 @@ end
 def cicsReadFile =
    ( READ (FILE | DATASET) '(' fileName ')'
      !( (SYSID|SYS) '(' cicsSysid ')'
-      | (SET|INTO) cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets [GENERIC]]
       | (GTEQ|EQUAL)
       | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
@@ -1024,7 +1030,7 @@ def cicsReadFile =
       )
    | READNEXT (FILE|DATASET) '(' fileName ')'
      !( (SYSID|SYS) '(' cicsSysid ')'
-      | (SET|INTO) cicsWaterInBrackets [LENGTH cicsWaterInBrackets]
+      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets] 
       | (RBA|XRBA|RRN)
       | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
@@ -1036,7 +1042,7 @@ end
 def cicsWriteFile =
    WRITE (FILE | DATASET) '(' fileName ')'
    !( (SYSID|SYS) '(' cicsSysid ')'
-    | FROM cicsWaterInBrackets   [LENGTH cicsWaterInBrackets]
+    | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
     | RIDFLD cicsWaterInBrackets [KEYLENGTH cicsWaterInBrackets] 
     | (RBA|XRBA|RRN)
     | MASSINSERT
@@ -1047,7 +1053,7 @@ end
 def cicsLink =
    LINK PROGRAM '(' programID ')'
    !( (SYSID|SYS) '(' cicsSysid ')'
-    | COMMAREA cicsWaterInBrackets [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
+    | COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
     | SYNCONRETURN
     | TRANSID cicsWaterInBrackets
     | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
@@ -1057,7 +1063,7 @@ end
 
 def cicsXctl =
    XCTL PROGRAM '(' programID ')'
-   !( COMMAREA cicsWaterInBrackets [LENGTH cicsWaterInBrackets] 
+   !( COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] 
     | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
     | CHANNEL cicsWaterInBrackets
     )
@@ -1068,7 +1074,7 @@ def cicsLoad =
 end
 
 def cicsStart =
-   START (TRANSID|TR) '(' (literal | identifier) ')'
+   START (TRANSID|TR) '(' transactionName ')'
 end
 
 def cicsSysid =
@@ -1076,6 +1082,14 @@ def cicsSysid =
 end
 
 def queueName =
+   (literal | identifier)
+end
+
+def transactionName =
+   (literal | identifier)
+end
+
+def commareaName =
    (literal | identifier)
 end
 
@@ -1234,7 +1248,8 @@ end
 
 def moveStatement =
     MOVE 
-      ( [CORRESPONDING | CORR] identifier
+      ( LENGTH [ OF ] identifier
+      | [CORRESPONDING | CORR] identifier
       | literal
       )
     TO (identifier)+
@@ -1937,6 +1952,7 @@ def figurativeConstant =
       | QUOTES
       )
     | NULL
+    | NULLS
     )
 end
 

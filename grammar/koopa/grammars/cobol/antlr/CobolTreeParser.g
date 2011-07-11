@@ -1085,6 +1085,8 @@ usage
         | 'COMP-2'
         | 'COMPUTATIONAL-3'
         | 'COMP-3'
+        | 'COMPUTATIONAL-4'
+        | 'COMP-4'
         | 'COMPUTATIONAL-5'
         | 'COMP-5'
         | 'POINTER'
@@ -2162,6 +2164,18 @@ cicsStatement
   ;
 
 // ========================================================
+// dataArea
+// ........................................................
+
+dataArea
+  : ^(DATA_AREA
+      ( literal
+      | identifier
+      )
+    )
+  ;
+
+// ========================================================
 // cicsReadQ
 // ........................................................
 
@@ -2185,7 +2199,9 @@ cicsReadQ
           | ( ( 'SET'
           | 'INTO'
           )
-            cicsWaterInBrackets
+            '('
+            dataArea
+            ')'
             ( ( 'LENGTH'
               cicsWaterInBrackets
             ) )?
@@ -2235,7 +2251,9 @@ cicsWriteQ
             ')'
           )
           | ( 'FROM'
-            cicsWaterInBrackets
+            '('
+            dataArea
+            ')'
             ( ( 'LENGTH'
               cicsWaterInBrackets
             ) )?
@@ -2315,7 +2333,9 @@ cicsReadFile
         | ( ( 'SET'
         | 'INTO'
         )
-          cicsWaterInBrackets
+          '('
+          dataArea
+          ')'
           ( ( 'LENGTH'
             cicsWaterInBrackets
           ) )?
@@ -2358,7 +2378,9 @@ cicsReadFile
         | ( ( 'SET'
         | 'INTO'
         )
-          cicsWaterInBrackets
+          '('
+          dataArea
+          ')'
           ( ( 'LENGTH'
             cicsWaterInBrackets
           ) )?
@@ -2409,7 +2431,9 @@ cicsWriteFile
           ')'
         )
         | ( 'FROM'
-          cicsWaterInBrackets
+          '('
+          dataArea
+          ')'
           ( ( 'LENGTH'
             cicsWaterInBrackets
           ) )?
@@ -2450,7 +2474,9 @@ cicsLink
           ')'
         )
         | ( 'COMMAREA'
-          cicsWaterInBrackets
+          '('
+          commareaName
+          ')'
           ( ( 'LENGTH'
             cicsWaterInBrackets
           ) )?
@@ -2488,7 +2514,9 @@ cicsXctl
         programID
         ')'
         ( ( ( 'COMMAREA'
-          cicsWaterInBrackets
+          '('
+          commareaName
+          ')'
           ( ( 'LENGTH'
             cicsWaterInBrackets
           ) )?
@@ -2533,9 +2561,7 @@ cicsStart
         | 'TR'
         )
         '('
-        ( literal
-        | identifier
-        )
+        transactionName
         ')'
       )
     )
@@ -2559,6 +2585,30 @@ cicsSysid
 
 queueName
   : ^(QUEUE_NAME
+      ( literal
+      | identifier
+      )
+    )
+  ;
+
+// ========================================================
+// transactionName
+// ........................................................
+
+transactionName
+  : ^(TRANSACTION_NAME
+      ( literal
+      | identifier
+      )
+    )
+  ;
+
+// ========================================================
+// commareaName
+// ........................................................
+
+commareaName
+  : ^(COMMAREA_NAME
       ( literal
       | identifier
       )
@@ -2858,7 +2908,11 @@ locationPhrase
 moveStatement
   : ^(MOVE_STATEMENT
       ( 'MOVE'
-        ( ( ( ( 'CORRESPONDING'
+        ( ( 'LENGTH'
+          ( 'OF' )?
+          identifier
+        )
+        | ( ( ( 'CORRESPONDING'
         | 'CORR'
         ) )?
           identifier
@@ -4278,6 +4332,7 @@ figurativeConstant
         )
       )
       | 'NULL'
+      | 'NULLS'
       )
     )
   ;
@@ -4372,11 +4427,13 @@ token
   | 'COMP-1'
   | 'COMP-2'
   | 'COMP-3'
+  | 'COMP-4'
   | 'COMP-5'
   | 'COMPUTATIONAL'
   | 'COMPUTATIONAL-1'
   | 'COMPUTATIONAL-2'
   | 'COMPUTATIONAL-3'
+  | 'COMPUTATIONAL-4'
   | 'COMPUTATIONAL-5'
   | 'COMPUTE'
   | 'CONFIGURATION'
@@ -4520,6 +4577,7 @@ token
   | 'NOSUSPEND'
   | 'NOT'
   | 'NULL'
+  | 'NULLS'
   | 'NUMERIC'
   | 'NUMERIC-EDITED'
   | 'NUMITEMS'

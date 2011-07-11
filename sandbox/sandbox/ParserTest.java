@@ -28,6 +28,8 @@ public class ParserTest {
 
 		final CobolParser parser = new CobolParser();
 
+		final long start = System.currentTimeMillis();
+
 		int count = 0;
 		List<File> erroneous = new LinkedList<File>();
 		for (File file : sources) {
@@ -42,12 +44,14 @@ public class ParserTest {
 			System.out.println();
 		}
 
+		final long end = System.currentTimeMillis();
+
 		System.out.println("Found " + sources.length + " sources.");
-		System.out.println(count + " of these parsed successfully.");
+		System.out.println("Parsing took " + (end - start) + "ms.");
+		System.out.println(count + " source files parsed successfully.");
 
 		if (!erroneous.isEmpty()) {
-			System.out
-					.println("Following files were found not to parse correctly:");
+			System.out.println("Following files failed to parse:");
 			for (File file : erroneous) {
 				System.out.println("  " + file);
 			}

@@ -1,5 +1,19 @@
 = Misc. =
 
+* Idea for parsing embedded languages:
+
+{code}
+# This skips to the "endOfConditionMarker", as usual.
+--> endOfConditionMarker
+
+# This first skips to the "endOfConditionMarker", and will then match what was skipped with a "condition". If "condition" can't be matched then the skipping will fail too.
+-- condition --> endOfConditionMarker
+
+# Same concept as above, but with "sql" being a separate parser which has a "statement" grammar rule.
+EXEC SQL (-- sql:statement --> END-EXEC) END-EXEC 
+{code}
+
+
 * A "longest match" operator ? E.g.: $( identifier | arithmeticExpression ),
   which would classify inputs like "A" as an identifier, but inputs like
   "A + 1" as an arithmetic expression... Length is measured in number of tokens,

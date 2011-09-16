@@ -113,6 +113,11 @@ KOOPAH DISPLAY 1, 23, 456, 7890.      *> These are integer values.      :14
 KOOPAH DISPLAY 1.23, 345.6789, .8.    *> These are decimal values.      :11
 KOOPAH* TODO: Test signed numeric literals.                             :0
 KOOPAH
+KOOPAH* Testing comma-separated identifiers.
+KOOPAH MOVE 10 TO WS-A,WS-B.                                            :11
+KOOPAH DISPLAY A,B.                                                     :7
+KOOPAH MOVE 10 TO (X,2).                                                :13
+KOOPAH
 KOOPAH* First paragraph; not in section.                                :0
 KOOPAH YUKON-HO.                                                        :3
 KOOPAH

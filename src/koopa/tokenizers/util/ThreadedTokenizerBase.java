@@ -13,7 +13,11 @@ public abstract class ThreadedTokenizerBase {
 	private AssertionError error = null;
 
 	public ThreadedTokenizerBase() {
-		this.queue = new SynchronizedTokenQueue();
+		this("");
+	}
+	
+	public ThreadedTokenizerBase(String name) {
+		this.queue = new SynchronizedTokenQueue(name);
 	}
 
 	private void startTokenizing() {

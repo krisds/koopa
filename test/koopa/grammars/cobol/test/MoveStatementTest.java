@@ -194,4 +194,13 @@ public class MoveStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testMoveStatement_22() {
+      Parser parser = grammar.moveStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "       MOVE 10 TO WS-A,WS-B ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

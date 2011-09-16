@@ -94,7 +94,7 @@
 <!ELEMENT closeStatement (t,(fileName,((t?,((t,t)|t))|(t,(t?,t)?)|(t?,t))?)+)>
 <!ELEMENT computeStatement (t,(identifier,t?)+,t,arithmeticExpression,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT deleteStatement (t,fileName,t?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
-<!ELEMENT displayStatement (t,(identifier|literal)+,uponClause?,withNoAdvancing?)>
+<!ELEMENT displayStatement (t,(t?,(identifier|literal))+,uponClause?,withNoAdvancing?)>
 <!ELEMENT uponClause (t,(mnemonicName|environmentName))>
 <!ELEMENT withNoAdvancing (t?,t,t)>
 <!ELEMENT divideStatement (t,(division_format1|division_format2|division_format3),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
@@ -150,7 +150,7 @@
 <!ELEMENT replacingCharactersPhrase (t+,(identifier|literal),locationPhrase*)>
 <!ELEMENT replacingAllLeadingFirstPhrase (t,((identifier|literal),t,(identifier|literal),locationPhrase*)*)>
 <!ELEMENT locationPhrase (t,t?,(identifier|literal))>
-<!ELEMENT moveStatement (t,((t,t?,identifier)|(t?,identifier)|literal),t,identifier+)>
+<!ELEMENT moveStatement (t,((t,t?,identifier)|(t?,identifier)|literal),t,(t?,identifier)+)>
 <!ELEMENT multiplyStatement (t,(multiplication_format1|multiplication_format2),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT multiplication_format1 ((identifier|literal),t,(identifier|literal),t,(identifier,t?)+)>
 <!ELEMENT multiplication_format2 ((identifier|literal),t,(identifier,t?)+)>

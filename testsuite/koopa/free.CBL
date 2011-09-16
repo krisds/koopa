@@ -103,6 +103,11 @@
  DISPLAY 1.23, 345.6789, .8.    *> These are decimal values.
 * TODO: Test signed numeric literals.
 
+* Testing comma-separated identifiers.
+MOVE 10 TO WS-A,WS-B.
+DISPLAY A,B.
+MOVE 10 TO (X,2).
+
 * First paragraph; not in section.
  YUKON-HO.
 

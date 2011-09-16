@@ -2,22 +2,21 @@ package koopa.tokenizers.cobol;
 
 import java.io.IOException;
 
-import koopa.tokenizers.PushbackTokenizer;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
-import koopa.tokenizers.generic.BasicPushbackTokenizer;
 import koopa.tokenizers.util.ThreadedTokenizerBase;
 import koopa.tokens.CompositeToken;
 import koopa.tokens.Token;
 
 public class PseudoLiteralTokenizer extends ThreadedTokenizerBase implements
 		Tokenizer {
-	private PushbackTokenizer tokenizer = null;
+	private Tokenizer tokenizer = null;
 
 	public PseudoLiteralTokenizer(Tokenizer tokenizer) {
+		super("PseudoLiteralTokenizer");
 		assert (tokenizer != null);
-		this.tokenizer = new BasicPushbackTokenizer(tokenizer);
+		this.tokenizer = tokenizer;
 	}
 
 	protected void tokenize() throws IOException {
@@ -31,10 +30,10 @@ public class PseudoLiteralTokenizer extends ThreadedTokenizerBase implements
 			if (!token.hasTag(SyntacticTag.SEPARATOR)
 					|| !token.getText().equals("==")) {
 				enqueue(token);
-				continue;
-			}
 
-			tokenizePseudoLiteral(token);
+			} else {
+				tokenizePseudoLiteral(token);
+			}
 		}
 	}
 

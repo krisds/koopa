@@ -3247,9 +3247,14 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("DISPLAY"),
                    plus(
-                       choice(
-                           identifier(),
-                           literal()
+                       sequence(
+                           optional(
+                               token(",")
+                           ),
+                           choice(
+                               identifier(),
+                               literal()
+                           )
                        )
                    ),
                    optional(
@@ -5247,7 +5252,12 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    token("TO"),
                    plus(
-                       identifier()
+                       sequence(
+                           optional(
+                               token(",")
+                           ),
+                           identifier()
+                       )
                    )
                )
            );

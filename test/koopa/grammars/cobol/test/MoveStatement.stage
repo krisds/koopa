@@ -30,3 +30,6 @@ target moveStatement;
 
 +[ MOVE "0" TO PAYROLL-CHECK ]
 +[ MOVE "0" TO CURSOR OF TPGM4N ]
+
+# Test of comma-separated identifiers.
++{       MOVE 10 TO WS-A,WS-B }

@@ -794,7 +794,7 @@ end
 
 def displayStatement =
 	DISPLAY
-	(identifier | literal)+
+	([','] (identifier | literal))+
 	[uponClause]
 	[withNoAdvancing]
 end
@@ -1252,7 +1252,7 @@ def moveStatement =
       | [CORRESPONDING | CORR] identifier
       | literal
       )
-    TO (identifier)+
+    TO ([','] identifier)+
 end
 
 ## #############################################################################

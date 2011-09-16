@@ -1746,8 +1746,10 @@ deleteStatement
 displayStatement
   : ^(DISPLAY_STATEMENT
       ( 'DISPLAY'
-        ( ( identifier
-        | literal
+        ( ( ( ',' )?
+          ( identifier
+          | literal
+          )
         ) )+
         ( uponClause )?
         ( withNoAdvancing )?
@@ -2920,7 +2922,9 @@ moveStatement
         | literal
         )
         'TO'
-        ( identifier )+
+        ( ( ( ',' )?
+          identifier
+        ) )+
       )
     )
   ;

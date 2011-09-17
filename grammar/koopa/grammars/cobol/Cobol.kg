@@ -379,7 +379,7 @@ def dataDescriptionEntry_format3 =
     ( VALUE [IS]
     | VALUES [ARE]
     )
-    ( literal [(THROUGH | THRU) literal] [','] )+
+    ( literal [(THROUGH | THRU) literal] )+
     .
 end
 
@@ -794,7 +794,7 @@ end
 
 def displayStatement =
 	DISPLAY
-	([','] (identifier | literal))+
+	(identifier | literal)+
 	[uponClause]
 	[withNoAdvancing]
 end
@@ -1252,7 +1252,7 @@ def moveStatement =
       | [CORRESPONDING | CORR] identifier
       | literal
       )
-    TO ([','] identifier)+
+    TO (identifier)+
 end
 
 ## #############################################################################
@@ -1680,11 +1680,11 @@ def identifier =
 end
 
 def identifier_format1 =
-    FUNCTION functionName ['(' (argument [','])+ ')'] [referenceModifier]
+    FUNCTION functionName ['(' (argument)+ ')'] [referenceModifier]
 end
 
 def identifier_format2 =
-    dataName (qualifier)* ['(' (subscript [','])+ ')'] [referenceModifier]
+    dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
 end
 
 def addressOfIdentifier =

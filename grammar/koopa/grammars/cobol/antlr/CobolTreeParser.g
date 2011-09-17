@@ -907,7 +907,6 @@ dataDescriptionEntry_format3
           )
             literal
           ) )?
-          ( ',' )?
         ) )+
         '.'
       )
@@ -1746,10 +1745,8 @@ deleteStatement
 displayStatement
   : ^(DISPLAY_STATEMENT
       ( 'DISPLAY'
-        ( ( ( ',' )?
-          ( identifier
-          | literal
-          )
+        ( ( identifier
+        | literal
         ) )+
         ( uponClause )?
         ( withNoAdvancing )?
@@ -2922,9 +2919,7 @@ moveStatement
         | literal
         )
         'TO'
-        ( ( ( ',' )?
-          identifier
-        ) )+
+        ( identifier )+
       )
     )
   ;
@@ -3824,9 +3819,7 @@ identifier_format1
       ( 'FUNCTION'
         functionName
         ( ( '('
-          ( ( argument
-            ( ',' )?
-          ) )+
+          ( argument )+
           ')'
         ) )?
         ( referenceModifier )?
@@ -3843,9 +3836,7 @@ identifier_format2
       ( dataName
         ( qualifier )*
         ( ( '('
-          ( ( subscript
-            ( ',' )?
-          ) )+
+          ( subscript )+
           ')'
         ) )?
         ( referenceModifier )?
@@ -4371,7 +4362,6 @@ token
   | '*'
   | '**'
   | '+'
-  | ','
   | '-'
   | '.'
   | '/'

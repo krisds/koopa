@@ -1733,9 +1733,6 @@ public class CobolGrammar extends KoopaGrammar {
                                    ),
                                    literal()
                                )
-                           ),
-                           optional(
-                               token(",")
                            )
                        )
                    ),
@@ -3247,14 +3244,9 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("DISPLAY"),
                    plus(
-                       sequence(
-                           optional(
-                               token(",")
-                           ),
-                           choice(
-                               identifier(),
-                               literal()
-                           )
+                       choice(
+                           identifier(),
+                           literal()
                        )
                    ),
                    optional(
@@ -5252,12 +5244,7 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    token("TO"),
                    plus(
-                       sequence(
-                           optional(
-                               token(",")
-                           ),
-                           identifier()
-                       )
+                       identifier()
                    )
                )
            );
@@ -6916,12 +6903,7 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            token("("),
                            plus(
-                               sequence(
-                                   argument(),
-                                   optional(
-                                       token(",")
-                                   )
-                               )
+                               argument()
                            ),
                            token(")")
                        )
@@ -6956,12 +6938,7 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            token("("),
                            plus(
-                               sequence(
-                                   subscript(),
-                                   optional(
-                                       token(",")
-                                   )
-                               )
+                               subscript()
                            ),
                            token(")")
                        )
@@ -8375,7 +8352,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    cobolWordParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    	            final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     	            if (token != null
     	                    && token.hasTag(SyntacticTag.CHARACTER_STRING)
@@ -8467,7 +8449,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    integerParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    				final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     				if (token != null
     						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -8499,7 +8486,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    decimalParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    				final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     				if (token != null
     						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -8531,7 +8523,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    hexadecimalParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    				final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     				if (token != null
     						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -8563,7 +8560,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    alphanumericParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    				final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     				if (token != null
     						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -8645,7 +8647,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    levelNumberParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    	            final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     	            if (token != null
     	                    && token.hasTag(SyntacticTag.CHARACTER_STRING)
@@ -8705,7 +8712,12 @@ public class CobolGrammar extends KoopaGrammar {
     	    pseudoLiteralParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
-    				final Token token = stream.nextToken();
+    	            Token token = null;
+    	            
+    	            // Skipping past commas and semi-colons which leaked through to the parser.
+    	            do  {
+    	                token = stream.nextToken();
+    	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
     	
     				if (token != null
     						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {

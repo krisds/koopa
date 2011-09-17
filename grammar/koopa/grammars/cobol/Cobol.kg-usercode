@@ -524,7 +524,12 @@ public Parser cobolWord() {
 	    cobolWordParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-	            final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 	            if (token != null
 	                    && token.hasTag(SyntacticTag.CHARACTER_STRING)
@@ -616,7 +621,12 @@ public Parser integer() {
 	    integerParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 				if (token != null
 						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -648,7 +658,12 @@ public Parser decimal() {
 	    decimalParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 				if (token != null
 						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -680,7 +695,12 @@ public Parser hexadecimal() {
 	    hexadecimalParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 				if (token != null
 						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -712,7 +732,12 @@ public Parser alphanumeric() {
 	    alphanumericParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 				if (token != null
 						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
@@ -794,7 +819,12 @@ public Parser levelNumber() {
 	    levelNumberParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-	            final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 	            if (token != null
 	                    && token.hasTag(SyntacticTag.CHARACTER_STRING)
@@ -854,7 +884,12 @@ public Parser pseudoLiteral() {
 	    pseudoLiteralParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
-				final Token token = stream.nextToken();
+	            Token token = null;
+	            
+	            // Skipping past commas and semi-colons which leaked through to the parser.
+	            do  {
+	                token = stream.nextToken();
+	            } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
 	
 				if (token != null
 						&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {

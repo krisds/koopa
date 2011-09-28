@@ -384,14 +384,14 @@ Consider again the \lstinline|goto| rule from figure~\ref{fig:koopa-goto-rule}. 
 \begin{lstlisting}
 target addStatement;
 
-+[ ADD A TO B @ . ]
-+[ ADD A TO B GIVING C @ . ]
++[ ADD A TO B # . ]
++[ ADD A TO B GIVING C # . ]
 \end{lstlisting}
 \caption{Unit test for a partially defined Cobol construct.}
 \label{fig:koopa-test-with-marker}
 \end{figure}
 
-Unit testing is not limited to grammar rules for which you have a complete definition. You can test rules which rely on skipping tokens to do their work. The problem is that this skipping is not greedy, but the unit tests do expect you to consume all tokens. If there are tokens left, this is considered an error. You can overcome this by giving only a partial input, but it is nicer to go for the option of marking the end of what gets consumed by your parser. Figure~\ref{fig:koopa-test-with-marker} shows an example. The ``at'' sign marks the exit point. So in this case there should always be one token left after each test.
+Unit testing is not limited to grammar rules for which you have a complete definition. You can test rules which rely on skipping tokens to do their work. The problem is that this skipping is not greedy, but the unit tests do expect you to consume all tokens. If there are tokens left, this is considered an error. You can overcome this by giving only a partial input, but it is nicer to go for the option of marking the end of what gets consumed by your parser. Figure~\ref{fig:koopa-test-with-marker} shows an example. The ``sharp'' sign marks the exit point. So in this case there should always be one token left after each test.
 
 These unit tests, together with the grammar, should quickly tell a developer whether or not he or she is breaking any existing feature of the grammar and, more importantly, where exactly he or she is breaking it. Being able to pinpoint any problems as fast as possible is another key factor in keeping development overhead in check.
 

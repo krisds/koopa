@@ -293,7 +293,7 @@ public class DataDivisionTest extends TestCase {
     public void testOccurs_32() {
       Parser parser = grammar.occurs();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OCCURS 7 \u2022 TO 42.0 TIMES ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OCCURS 7 # TO 42.0 TIMES ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

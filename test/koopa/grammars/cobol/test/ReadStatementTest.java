@@ -16,7 +16,7 @@ public class ReadStatementTest extends TestCase {
     public void testReadStatement_1() {
       Parser parser = grammar.readStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

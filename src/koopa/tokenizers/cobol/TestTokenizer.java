@@ -18,7 +18,7 @@ public class TestTokenizer implements PushbackTokenizer {
 
 	private static final Logger LOGGER = Logger.getLogger("tokenising.test");
 
-	public static final String MARKER_TEXT = "\u2022";
+	public static final String MARKER_TEXT = "#";
 
 	private PushbackTokenizer tokenizer;
 	private boolean quit = false;

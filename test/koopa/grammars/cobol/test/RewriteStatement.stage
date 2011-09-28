@@ -3,9 +3,9 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target rewriteStatement;
 
-+[ REWRITE MY-RECORD ¥ . ]
++[ REWRITE MY-RECORD # . ]
 
-+[ REWRITE MY-RECORD FROM MY-IDENTIFIER ¥ . ]
++[ REWRITE MY-RECORD FROM MY-IDENTIFIER # . ]
 
 +[ REWRITE MY-RECORD
    END-REWRITE ]

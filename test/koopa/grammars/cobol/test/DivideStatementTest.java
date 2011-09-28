@@ -304,7 +304,7 @@ public class DivideStatementTest extends TestCase {
     public void testDivideStatement_33() {
       Parser parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DIVIDE A INTO B \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DIVIDE A INTO B # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -313,7 +313,7 @@ public class DivideStatementTest extends TestCase {
     public void testDivideStatement_34() {
       Parser parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DIVIDE A INTO B GIVING C \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DIVIDE A INTO B GIVING C # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

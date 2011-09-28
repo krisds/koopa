@@ -38,9 +38,9 @@ target subtraction_format3;
 
 target subtractStatement;
 
-+[ SUBTRACT A FROM B ¥ . ]
++[ SUBTRACT A FROM B # . ]
 
-+[ SUBTRACT A FROM B GIVING C ¥ . ]
++[ SUBTRACT A FROM B GIVING C # . ]
 
 +[ SUBTRACT A FROM B
      ON SIZE ERROR

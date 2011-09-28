@@ -3,7 +3,7 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target writeStatement;
 
-+[ WRITE MY-RECORD ¥ . ]
++[ WRITE MY-RECORD # . ]
 
 +[ WRITE MY-RECORD
    END-WRITE ]

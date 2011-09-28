@@ -16,7 +16,7 @@ public class ComputeStatementTest extends TestCase {
     public void testComputeStatement_1() {
       Parser parser = grammar.computeStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE A = B + C \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE A = B + C # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

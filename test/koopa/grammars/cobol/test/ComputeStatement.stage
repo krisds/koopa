@@ -3,7 +3,7 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target computeStatement;
 
-+[ COMPUTE A = B + C ¥ . ]
++[ COMPUTE A = B + C # . ]
 
 +[ COMPUTE A = B + C
      ON SIZE ERROR

@@ -16,7 +16,7 @@ public class RewriteStatementTest extends TestCase {
     public void testRewriteStatement_1() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REWRITE MY-RECORD \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REWRITE MY-RECORD # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class RewriteStatementTest extends TestCase {
     public void testRewriteStatement_2() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REWRITE MY-RECORD FROM MY-IDENTIFIER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REWRITE MY-RECORD FROM MY-IDENTIFIER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

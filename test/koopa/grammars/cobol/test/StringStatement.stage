@@ -3,9 +3,9 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target stringStatement;
 
-+[ STRING A B C INTO TEXT ¥ . ]
++[ STRING A B C INTO TEXT # . ]
 
-+[ STRING A B C INTO TEXT WITH POINTER MY-POINTER ¥ . ]
++[ STRING A B C INTO TEXT WITH POINTER MY-POINTER # . ]
 
 +[ STRING A B C INTO TEXT WITH POINTER MY-POINTER
    END-STRING ]

@@ -3,7 +3,7 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target startStatement;
 
-+[ START MY-FILE ¥ . ]
++[ START MY-FILE # . ]
 
 +[ START MY-FILE
    END-START ]

@@ -16,7 +16,7 @@ public class StartStatementTest extends TestCase {
     public void testStartStatement_1() {
       Parser parser = grammar.startStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " START MY-FILE \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " START MY-FILE # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

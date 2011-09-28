@@ -187,7 +187,7 @@ public class SubtractStatementTest extends TestCase {
     public void testSubtractStatement_20() {
       Parser parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SUBTRACT A FROM B \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SUBTRACT A FROM B # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -196,7 +196,7 @@ public class SubtractStatementTest extends TestCase {
     public void testSubtractStatement_21() {
       Parser parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SUBTRACT A FROM B GIVING C \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SUBTRACT A FROM B GIVING C # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

@@ -42,7 +42,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_4() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -51,7 +51,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_5() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST BEFORE UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST BEFORE UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -60,7 +60,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_6() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST BEFORE UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST BEFORE UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -69,7 +69,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_7() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST AFTER UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST AFTER UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -78,7 +78,7 @@ public class PerformStatementTest extends TestCase {
     public void testUntil_8() {
       Parser parser = grammar.until();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST AFTER UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST AFTER UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -87,7 +87,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_9() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -96,7 +96,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_10() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST BEFORE\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST BEFORE\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -105,7 +105,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_11() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST BEFORE\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST BEFORE\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -114,7 +114,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_12() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST AFTER\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WITH TEST AFTER\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -123,7 +123,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_13() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST AFTER\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TEST AFTER\n   VARYING MY-COUNT\n   FROM LOWER\n   BY STEP\n   UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -132,7 +132,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_14() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER\n   AFTER OTHER-COUNT FROM A-1 BY A-2 UNTIL OTHER-COUNT > A-3 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER\n   AFTER OTHER-COUNT FROM A-1 BY A-2 UNTIL OTHER-COUNT > A-3 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -141,7 +141,7 @@ public class PerformStatementTest extends TestCase {
     public void testVarying_15() {
       Parser parser = grammar.varying();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER\n   AFTER OTHER-COUNT FROM A-1 BY A-2 UNTIL OTHER-COUNT > A-3\n   AFTER OTHER-COUNT FROM B-1 BY B-2 UNTIL OTHER-COUNT > B-3 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER\n   AFTER OTHER-COUNT FROM A-1 BY A-2 UNTIL OTHER-COUNT > A-3\n   AFTER OTHER-COUNT FROM B-1 BY B-2 UNTIL OTHER-COUNT > B-3 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -249,7 +249,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_27() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -258,7 +258,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_28() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THROUGH SUB-B UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THROUGH SUB-B UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -267,7 +267,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_29() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B UNTIL MY-COUNT > 42 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B UNTIL MY-COUNT > 42 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -285,7 +285,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_31() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -294,7 +294,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_32() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THROUGH SUB-B\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THROUGH SUB-B\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -303,7 +303,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_33() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     WITH TEST BEFORE\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     WITH TEST BEFORE\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -312,7 +312,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_34() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     TEST BEFORE\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     TEST BEFORE\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -321,7 +321,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_35() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     WITH TEST AFTER\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     WITH TEST AFTER\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -330,7 +330,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_36() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     TEST AFTER\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     TEST AFTER\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -339,7 +339,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_37() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -348,7 +348,7 @@ public class PerformStatementTest extends TestCase {
     public void testPerformStatement_38() {
       Parser parser = grammar.performStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER\n     AFTER OTHER-COUNT FROM A-1 BY A-2 UNTIL OTHER-COUNT > A-3\n     AFTER OTHER-COUNT FROM B-1 BY B-2 UNTIL OTHER-COUNT > B-3 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM SUB-A THRU SUB-B\n     VARYING MY-COUNT FROM LOWER BY STEP UNTIL MY-COUNT > UPPER\n     AFTER OTHER-COUNT FROM A-1 BY A-2 UNTIL OTHER-COUNT > A-3\n     AFTER OTHER-COUNT FROM B-1 BY B-2 UNTIL OTHER-COUNT > B-3 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

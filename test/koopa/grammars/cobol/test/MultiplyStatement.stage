@@ -19,9 +19,9 @@ target multiplication_format2;
 
 target multiplyStatement;
 
-+[ MULTIPLY A BY B ¥ . ]
++[ MULTIPLY A BY B # . ]
 
-+[ MULTIPLY A BY B GIVING C ¥ . ]
++[ MULTIPLY A BY B GIVING C # . ]
 
 +[ MULTIPLY A BY B
      ON SIZE ERROR

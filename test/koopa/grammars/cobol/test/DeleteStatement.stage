@@ -3,9 +3,9 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target deleteStatement;
 
-+[ DELETE MY-FILE ¥ . ]
++[ DELETE MY-FILE # . ]
 
-+[ DELETE MY-FILE RECORD ¥ . ]
++[ DELETE MY-FILE RECORD # . ]
 
 +[ DELETE MY-FILE
    END-DELETE ]

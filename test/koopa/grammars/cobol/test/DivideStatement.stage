@@ -57,9 +57,9 @@ target division_format3;
 
 target divideStatement;
 
-+[ DIVIDE A INTO B ¥ . ]
++[ DIVIDE A INTO B # . ]
 
-+[ DIVIDE A INTO B GIVING C ¥ . ]
++[ DIVIDE A INTO B GIVING C # . ]
 
 +[ DIVIDE A INTO B
      ON SIZE ERROR

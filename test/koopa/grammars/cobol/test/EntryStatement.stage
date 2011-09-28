@@ -15,8 +15,8 @@ target entryStatement;
 
 
 +[ ENTRY "MAIN-ENTRANCE"
-         ¥ FIELD-A ]
+         # FIELD-A ]
 
 +[ ENTRY "MAIN-ENTRANCE"
          USING FIELD-A
-         ¥ USING FIELD-B ]
+         # USING FIELD-B ]

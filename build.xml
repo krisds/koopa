@@ -128,6 +128,8 @@
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.tokenstreams.test.TokenStreamTests"/>
+			<test name="koopa.tokenizers.test.TokenizerTests"/>
+			<test name="koopa.parsers.test.KoopaGrammarTest"/>
 			<test name="koopa.grammars.cobol.test.CobolGrammarTests"/>
 		</junit>
 	</target>

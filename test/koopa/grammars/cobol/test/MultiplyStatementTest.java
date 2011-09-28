@@ -88,7 +88,7 @@ public class MultiplyStatementTest extends TestCase {
     public void testMultiplyStatement_9() {
       Parser parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MULTIPLY A BY B \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MULTIPLY A BY B # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -97,7 +97,7 @@ public class MultiplyStatementTest extends TestCase {
     public void testMultiplyStatement_10() {
       Parser parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MULTIPLY A BY B GIVING C \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MULTIPLY A BY B GIVING C # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

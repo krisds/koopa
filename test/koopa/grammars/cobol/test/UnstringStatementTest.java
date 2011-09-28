@@ -16,7 +16,7 @@ public class UnstringStatementTest extends TestCase {
     public void testUnstringStatement_1() {
       Parser parser = grammar.unstringStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " UNSTRING TEXT INTO PART1 PART2 PART3 \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " UNSTRING TEXT INTO PART1 PART2 PART3 # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

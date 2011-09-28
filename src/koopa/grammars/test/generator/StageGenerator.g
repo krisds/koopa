@@ -83,7 +83,7 @@ test [String target]
     }
     
     { data = data.substring(1, data.length() - 1);
-      data = data.replaceAll("\u2022", "\\\\u2022");
+      // data = data.replaceAll("\u2022", "\\\\u2022");
       data = data.replaceAll("\n", "\\\\n");
       data = data.replaceAll("\"", "\\\\\"");
     }

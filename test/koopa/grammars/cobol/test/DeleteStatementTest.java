@@ -16,7 +16,7 @@ public class DeleteStatementTest extends TestCase {
     public void testDeleteStatement_1() {
       Parser parser = grammar.deleteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DELETE MY-FILE \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DELETE MY-FILE # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class DeleteStatementTest extends TestCase {
     public void testDeleteStatement_2() {
       Parser parser = grammar.deleteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DELETE MY-FILE RECORD \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DELETE MY-FILE RECORD # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

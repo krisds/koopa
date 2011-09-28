@@ -16,7 +16,7 @@ public class WriteStatementTest extends TestCase {
     public void testWriteStatement_1() {
       Parser parser = grammar.writeStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WRITE MY-RECORD \u2022 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WRITE MY-RECORD # . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

@@ -7255,6 +7255,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("AFTER"),
                        token("WHEN"),
                        token("ALSO"),
+                       token("ELSE"),
                        token(".")
                    )
                )

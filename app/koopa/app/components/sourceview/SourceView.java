@@ -26,10 +26,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.Highlighter.HighlightPainter;
 
-import koopa.app.parsers.CobolParser;
-import koopa.app.parsers.ParseResults;
-import koopa.app.parsers.ParsingCoordinator;
-import koopa.app.parsers.ParsingListener;
+import koopa.parsers.ParseResults;
+import koopa.parsers.cobol.CobolParser;
+import koopa.parsers.cobol.ParsingCoordinator;
+import koopa.parsers.cobol.ParsingListener;
 import koopa.tokenizers.cobol.TokenTracker;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;

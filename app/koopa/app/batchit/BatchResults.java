@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import koopa.app.parsers.Metrics;
-import koopa.app.parsers.ParseResults;
+import koopa.parsers.Metrics;
+import koopa.parsers.ParseResults;
 
 @SuppressWarnings("serial")
 public class BatchResults extends AbstractTableModel {

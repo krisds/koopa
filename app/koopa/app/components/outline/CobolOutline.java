@@ -12,10 +12,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import koopa.app.parsers.CobolParser;
-import koopa.app.parsers.ParseResults;
-import koopa.app.parsers.ParsingCoordinator;
-import koopa.app.parsers.ParsingListener;
+import koopa.parsers.ParseResults;
+import koopa.parsers.cobol.CobolParser;
+import koopa.parsers.cobol.ParsingCoordinator;
+import koopa.parsers.cobol.ParsingListener;
 
 @SuppressWarnings("serial")
 public class CobolOutline extends JPanel implements ParsingListener {

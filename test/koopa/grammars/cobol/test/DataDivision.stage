@@ -323,6 +323,8 @@ target dataDescriptionEntry;
 003900-                      00).                                       NC4014.2
 }
 
++[ 77 OPTIONS PIC S9(9) BINARY . ]
+
 target workingStorageSection;
 
 +[ WORKING-STORAGE Section .

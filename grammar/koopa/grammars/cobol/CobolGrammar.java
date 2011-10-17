@@ -8151,7 +8151,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("ON");
         RESERVED_WORDS.add("OPEN");
         RESERVED_WORDS.add("OPTIONAL");
-        RESERVED_WORDS.add("OPTIONS");
+        // RESERVED_WORDS.add("OPTIONS");
         RESERVED_WORDS.add("OR");
         RESERVED_WORDS.add("ORDER");
         RESERVED_WORDS.add("ORGANIZATION");

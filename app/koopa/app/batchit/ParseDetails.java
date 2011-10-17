@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 import koopa.app.Icons;
-import koopa.app.parsers.ParseResults;
+import koopa.parsers.ParseResults;
 import koopa.tokens.Token;
 import koopa.util.Tuple;
 

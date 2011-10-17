@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import koopa.app.Icons;
-import koopa.app.parsers.ParseResults;
+import koopa.parsers.ParseResults;
 
 @SuppressWarnings("serial")
 public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {

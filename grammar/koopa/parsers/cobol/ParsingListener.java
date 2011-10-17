@@ -1,6 +1,8 @@
-package koopa.app.parsers;
+package koopa.parsers.cobol;
 
 import java.io.File;
+
+import koopa.parsers.ParseResults;
 
 public interface ParsingListener {
 

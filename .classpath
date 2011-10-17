@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/antlr-3.1.1-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/jaxen-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/opencsv-2.3.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

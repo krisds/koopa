@@ -2,9 +2,9 @@ package sandbox.jaxen;
 
 import java.io.File;
 
-import koopa.app.parsers.CobolParser;
-import koopa.app.parsers.ParseResults;
-import koopa.app.parsers.ParsingListener;
+import koopa.parsers.ParseResults;
+import koopa.parsers.cobol.CobolParser;
+import koopa.parsers.cobol.ParsingListener;
 
 
 public class MyJaxenParsingListener implements ParsingListener {

@@ -56,6 +56,8 @@ public class CobolGrammarTests {
 		suite.addTestSuite(UnstringStatementTest.class);
 		suite.addTestSuite(WriteStatementTest.class);
 
+		suite.addTestSuite(KeywordsTest.class);
+
 		return suite;
 	}
 }

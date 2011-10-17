@@ -15,13 +15,11 @@ import javax.swing.filechooser.FileFilter;
 import koopa.app.ApplicationSupport;
 import koopa.app.batchit.BatchResults;
 import koopa.util.Getter;
+import au.com.bytecode.opencsv.CSVWriter;
 
 @SuppressWarnings("serial")
 public class ExportBatchResultsToCSVAction extends AbstractAction implements
 		Action {
-
-	private static final String CSV_SEPARATOR = ";";
-	private static final char CSV_QUOTATION = '"';
 
 	private Getter<BatchResults> batchResultsGetter = null;
 	private FileFilter filter = null;
@@ -66,40 +64,31 @@ public class ExportBatchResultsToCSVAction extends AbstractAction implements
 	private void exportBatchResultsToCSV(BatchResults batchResults, File file)
 			throws IOException {
 
-		FileWriter fw = new FileWriter(file);
-		BufferedWriter bw = new BufferedWriter(fw);
+		final FileWriter fw = new FileWriter(file);
+		final BufferedWriter bw = new BufferedWriter(fw);
+		final CSVWriter writer = new CSVWriter(bw);
 
 		try {
-			for (int column = 0; column < batchResults.getColumnCount(); column++) {
-				if (column != 0) {
-					bw.append(CSV_SEPARATOR);
-				}
+			final int columnCount = batchResults.getColumnCount();
+			final String[] entries = new String[columnCount];
 
-				bw.append(CSV_QUOTATION);
-				bw.append(batchResults.getColumnName(column));
-				bw.append(CSV_QUOTATION);
+			// Header row.
+			for (int column = 0; column < columnCount; column++) {
+				entries[column] = batchResults.getColumnName(column);
 			}
+			writer.writeNext(entries);
 
-			bw.append('\n');
-
+			// Results.
 			for (int row = 0; row < batchResults.getRowCount(); row++) {
-				for (int column = 0; column < batchResults.getColumnCount(); column++) {
+				for (int column = 0; column < columnCount; column++) {
 					Object obj = batchResults.getValueAt(row, column);
-
-					if (column != 0) {
-						bw.append(CSV_SEPARATOR);
-					}
-
-					bw.append(CSV_QUOTATION);
-					bw.append(obj.toString());
-					bw.append(CSV_QUOTATION);
+					entries[column] = obj == null ? "" : obj.toString();
 				}
-
-				bw.append('\n');
+				writer.writeNext(entries);
 			}
 
 		} finally {
-			bw.close();
+			writer.close();
 		}
 	}
 }

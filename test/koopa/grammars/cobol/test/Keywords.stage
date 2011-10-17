@@ -1,0 +1,14 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target callStatement;
+
+# Issue reported on SF: OPTIONS can be used as a field name.
++[ CALL MQ-OPEN-PGM USING
+     HCONN
+     OBJECT-DESCRIPTOR
+     OPTIONS
+     REPLY-HANDLE
+     OPEN-CODE2
+     REASON
+   END-CALL ]

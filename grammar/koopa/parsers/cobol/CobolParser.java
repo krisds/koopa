@@ -1,4 +1,4 @@
-package koopa.app.parsers;
+package koopa.parsers.cobol;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,9 @@ import java.util.List;
 
 import koopa.grammars.cobol.CobolGrammar;
 import koopa.grammars.cobol.CobolVerifier;
+import koopa.parsers.ParseResults;
 import koopa.parsers.Parser;
+import koopa.parsers.ParserConfiguration;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;

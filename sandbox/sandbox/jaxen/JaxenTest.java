@@ -3,8 +3,8 @@ package sandbox.jaxen;
 import java.io.File;
 import java.io.IOException;
 
-import koopa.app.parsers.ParseResults;
-import koopa.app.parsers.ParsingCoordinator;
+import koopa.parsers.ParseResults;
+import koopa.parsers.cobol.ParsingCoordinator;
 
 
 public class JaxenTest {

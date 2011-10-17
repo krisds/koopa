@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.app.parsers.CobolParser;
+import koopa.parsers.cobol.CobolParser;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

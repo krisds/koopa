@@ -1,4 +1,4 @@
-package koopa.app.parsers;
+package koopa.parsers;
 
 import koopa.tokenizers.cobol.TokenTracker;
 import koopa.tokenizers.cobol.tags.AreaTag;

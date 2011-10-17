@@ -1,4 +1,4 @@
-package koopa.app.parsers;
+package koopa.parsers;
 
 import java.io.File;
 import java.util.LinkedList;

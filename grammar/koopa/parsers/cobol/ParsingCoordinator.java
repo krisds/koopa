@@ -1,10 +1,11 @@
-package koopa.app.parsers;
+package koopa.parsers.cobol;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.parsers.ParseResults;
 import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 

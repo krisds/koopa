@@ -1199,10 +1199,11 @@ public class CobolVerifier extends VerifyingSink {
     register("START", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("startStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("startStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "START in the water.");
           }
         }

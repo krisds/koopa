@@ -189,41 +189,41 @@ verify END-WRITE
 ## -----------------------------------------------------------------------------
 
 verify COMPUTE
-- !computeStatement water : warn "COMPUTE in the water."
+- !execStatement !computeStatement water : warn "COMPUTE in the water."
 - computeStatement statement : warn "COMPUTE not in compute statement."
 - statement !execStatement !computeStatement : warn "COMPUTE not in compute statement."
 
 verify END-COMPUTE
-- !computeStatement water : warn "END-COMPUTE in the water."
+- !execStatement !computeStatement water : warn "END-COMPUTE in the water."
 - computeStatement statement : warn "END-COMPUTE not in compute statement."
 - statement !execStatement !computeStatement : warn "END-COMPUTE not in compute statement."
 
 verify START
-- !startStatement water : warn "START in the water."
+- !execStatement !startStatement water : warn "START in the water."
 - startStatement statement : warn "START not in start statement."
 - statement !execStatement !startStatement : warn "START not in start statement."
 
 verify END-START
-- !startStatement water : warn "END-START in the water."
+- !execStatement !startStatement water : warn "END-START in the water."
 - startStatement statement : warn "END-START not in start statement."
 - statement !execStatement !startStatement : warn "END-START not in start statement."
 
 verify DELETE
-- !deleteStatement water : warn "DELETE in the water."
+- !execStatement !deleteStatement water : warn "DELETE in the water."
 - deleteStatement statement : warn "DELETE not in delete statement."
 - statement !execStatement !deleteStatement : warn "DELETE not in delete statement."
 
 verify END-DELETE
-- !deleteStatement water : warn "END-DELETE in the water."
+- !execStatement !deleteStatement water : warn "END-DELETE in the water."
 - deleteStatement statement : warn "END-DELETE not in delete statement."
 - statement !execStatement !deleteStatement : warn "END-DELETE not in delete statement."
 
 verify REWRITE
-- !execStatement !rewriteStatement water : warn "REWRITE in the water."
+- !execStatement !execStatement !rewriteStatement water : warn "REWRITE in the water."
 - rewriteStatement statement : warn "REWRITE not in rewrite statement."
 - statement !execStatement !rewriteStatement : warn "REWRITE not in rewrite statement."
 
 verify END-REWRITE
-- !rewriteStatement water : warn "END-REWRITE in the water."
+- !execStatement !rewriteStatement water : warn "END-REWRITE in the water."
 - rewriteStatement statement : warn "END-REWRITE not in rewrite statement."
 - statement !execStatement !rewriteStatement : warn "END-REWRITE not in rewrite statement."

@@ -42,6 +42,13 @@ reside in koopa.grammars.cobol.test. The unit tests are generated from the
 koopa.grammars.test.generator.GenerateUnitTests class (also triggered by the
 build script).
 
+All unit tests can be triggered from ANT. Simply invoke "ant run-tests" on the
+command line.
+
+There is also support for regression testing based on the cobol85 testsuite.
+The class which takes care of this is koopa.grammars.test.RegressionTest. Again,
+you can also run this test through an ANT call: "ant run-regression-test".
+
 = Other tests =
 
 Aside from the unit tests there are a few other test applications inside the

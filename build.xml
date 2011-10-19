@@ -75,8 +75,9 @@
 		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
 
 		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
-		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java"></delete>
-		
+		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
+		</delete>
+
 		<echo>Compiling Cobol parser...</echo>
 		<javac srcdir="grammar/" destdir="build/" debug="on" source="1.5">
 			<classpath>
@@ -115,23 +116,27 @@
 			<fileset dir="test/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
-	
+
 	<target name="run-tests">
 		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
 			<classpath>
-	            <pathelement location="build/"/>
+				<pathelement location="build/" />
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
-	        </classpath>
-			
+			</classpath>
+
 			<formatter type="brief" usefile="no" />
 
-			<test name="koopa.tokenstreams.test.TokenStreamTests"/>
-			<test name="koopa.tokenizers.test.TokenizerTests"/>
-			<test name="koopa.parsers.test.KoopaGrammarTest"/>
-			<test name="koopa.grammars.cobol.test.CobolGrammarTests"/>
+			<test name="koopa.tokenstreams.test.TokenStreamTests" />
+			<test name="koopa.tokenizers.test.TokenizerTests" />
+			<test name="koopa.parsers.test.KoopaGrammarTest" />
+			<test name="koopa.grammars.cobol.test.CobolGrammarTests" />
 		</junit>
+	</target>
+	
+	<target name="run-regression-test">
+		<regression-test folder="testsuite/cobol85/" results="testsuite/cobol85-results.csv" targets="testsuite/cobol85.csv" />
 	</target>
 
 
@@ -393,4 +398,25 @@
 			</java>
 		</sequential>
 	</macrodef>
+
+	<macrodef name="regression-test">
+		<attribute name="targets" />
+		<attribute name="results" />
+		<attribute name="folder" />
+		<sequential>
+			<java classname="koopa.grammars.test.RegressionTest" fork="true">
+				<classpath>
+					<pathelement path="build/" />
+					<fileset dir="lib">
+						<include name="*.jar" />
+					</fileset>
+					<pathelement path="${java.class.path}" />
+				</classpath>
+				<arg value="@{targets}" />
+				<arg value="@{results}" />
+				<arg value="@{folder}" />
+			</java>
+		</sequential>
+	</macrodef>
+
 </project>

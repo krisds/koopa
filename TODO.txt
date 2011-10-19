@@ -1,7 +1,29 @@
 = Misc. =
 
-* Idea for parsing embedded languages:
+* Should really consider whether it still is meaningful to keep this scoring
+  system alive... It was a useful way to help identify cases which a grammar
+  rule missed out on. But the grammar has grown so much by now that
+  maintaining these rules may no longer be worth the effort.
 
+* Idea for managing keywords in a better way:
+{code}
+# Nothing is a keyword by default.
+
+# Following defines FOO to be a keyword anywhere in or below the foo or fee
+# grammar rule.
+FOO: in foo or in fee
+
+# Following defines FUM to be a keyword anywhere, except in or below the fum
+# grammar rule.
+FUM: everywhere and not in fum
+{code}
+It works kind of like the scoring system, except that it inspects the runtime
+stack of active grammar rules. Needs some more work on the checks we want to
+express and the syntax to express them in.
+
+* Abstract some of the classes which are now in koopa.parsers.cobol.
+
+* Idea for parsing embedded languages:
 {code}
 # This skips to the "endOfConditionMarker", as usual.
 --> endOfConditionMarker
@@ -18,16 +40,19 @@ EXEC SQL (-- sql:statement --> END-EXEC) END-EXEC
   which would classify inputs like "A" as an identifier, but inputs like
   "A + 1" as an arithmetic expression... Length is measured in number of tokens,
   though "furthest position in file" would be equivalent.
+
 * Add caching strategy to testing of tokens. To help prevent duplicate work.
   I.e. if something wasn't an identifier the first time around it won't be 
   any later time either.
+
 * Get rid of the syntax for capturing tokens and native code in the grammars ?
+
 * Fix degenerate results from grammar rules. E.g. a complexCondition can
   degenerate into a simpleCondition. But the AST will still have both...
+
 * Reconsider allowing these intermediate tokenizers. Maybe a listener pattern
   would be better.
-* Regression testing. Would be nice if we could do this as a JUnit test.
-* Write an ANT target for running the unit tests.
+
 * Remove the structure-shy ANTLR tree parsers and standardize on XML and XPath ?
 
 

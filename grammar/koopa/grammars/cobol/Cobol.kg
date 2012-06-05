@@ -16,6 +16,9 @@ end
 
 def copybookHoldingData =
     ( dataDescriptionEntry
+    | specialNameStatement
+    | fileDescriptionEntry (recordDescriptionEntry)*
+    | selectStatement [.]
     | copyStatement
     | replaceStatement
     | execStatement [.]
@@ -105,12 +108,97 @@ end
 
 def specialNamesParagraph =
 	SPECIAL-NAMES .
-	[decimalIsComma]
+	(copyStatement
+	|specialNameStatement)*
+	[.]
 	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
 end
 
+def specialNameStatement =
+	(decimalIsComma
+	|currencySignIs
+	|consoleIsCRT
+	|cursorIs
+	|crtStatusIs
+	|numericSignIs
+	|classIs
+	|symbolicChars
+	|alphabetIs
+	|mnemonicClause
+	)
+end
+
 def decimalIsComma = 
-	DECIMAL-POINT [IS] COMMA [.]
+	DECIMAL-POINT [IS] COMMA
+end
+
+def currencySignIs = 
+	CURRENCY [SIGN] [IS] literal
+end
+
+def consoleIsCRT = 
+	CONSOLE [IS] CRT
+end
+
+def cursorIs = 
+	CURSOR [IS] dataName
+end
+
+def crtStatusIs = 
+	CRT STATUS [IS] dataName
+end
+
+def numericSignIs = 
+	NUMERIC SIGN [IS] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
+end
+
+def classIs = 
+	CLASS identifier [IS] (literalRange | literal)+
+end
+
+def literalRange =
+	literal (THROUGH | THRU) literal
+end
+
+def symbolicChars = 
+	SYMBOLIC [CHARACTER | CHARACTERS] ( (literal)+ [IS | ARE] (integer)+ )+ [IN identifier]
+end
+
+def alphabetIs = 
+	[ALPHABET] identifier [IS] alphabetType
+end
+
+def alphabetType =
+	(standard1AlphabetType
+	|standard2AlphabetType
+	|nativeAlphabetType
+	|explicitAlphabetType
+	|codeNameAlphabetType
+	)
+end
+
+def standard1AlphabetType =
+	STANDARD-1
+end
+
+def standard2AlphabetType =
+	STANDARD-2
+end
+
+def nativeAlphabetType =
+	NATIVE
+end
+
+def explicitAlphabetType =
+	(literalRange | literal)
+	( ALSO (literalRange | literal)	)*
+end
+
+def codeNameAlphabetType =
+	cobolWord
+end
+def mnemonicClause = 
+	DECIMAL-POINT [IS] COMMA
 end
 
 def confParagraphStart =
@@ -129,7 +217,9 @@ end
 # TODO only skeletal implementation of this paragraph until now...
 def fileControlParagraph =
 	FILE-CONTROL .
-	(selectStatement)*
+	( selectStatement
+	| copyStatement
+	)*
 end
 
 def selectStatement = 
@@ -203,7 +293,8 @@ end
 
 def fileSection =
 	FILE SECTION .
-	( fileDescriptionEntry (recordDescriptionEntry)* )*
+	( copyStatement
+	| fileDescriptionEntry (recordDescriptionEntry)* )*
     [--> (dataSectionStart | divisionStart)]
 end
 
@@ -498,9 +589,10 @@ def declarativeSection =
     (paragraph)*
 end
 
-def useStatement =
-    USE (--> .) .
-end
+# Unsing the new implementation!! (Adrian Noguero)
+#def useStatement =
+#    USE (--> .) .
+#end
 
 def section =
     sectionName SECTION [segmentNumber] .
@@ -513,10 +605,12 @@ def paragraph =
     (sentence)*
 end
 
+#Modified by Adrian Noguero
 def sentence =
-    ( statement (statement | continuationOfStatement)* [.]
+    ( statement (statement | continuationOfStatement)* .
     | copyStatement
     | replaceStatement
+    | useStatement
     | .
     )
 end
@@ -557,8 +651,27 @@ def statement =
     | inspectStatement
     
     | verb
-      [--> ( . | endOfStatement )]
+      [--> ( . | endOfStatement | verb | subStatementMarker)]
     )
+end
+
+def subStatementMarker =
+	( ELSE 
+	| WHEN
+	| NOT INVALID
+	| INVALID
+	| NOT [ON] SIZE
+	| [ON] SIZE
+	| NOT [ON] OVERFLOW
+	| [ON] OVERFLOW
+	| NOT [ON] EXCEPTION
+	| [ON] EXCEPTION
+	| NOT [AT] END
+	| [AT] END
+	| NOT [AT] END-OF-PAGE
+	| NOT [AT] EOP
+	| [AT] END-OF-PAGE
+	| [AT] EOP )
 end
 
 def continuationOfStatement (Token t) =
@@ -645,8 +758,12 @@ def verb =
     | COMPUTE
     | INSPECT
     
-    # Verbs for statements which have a skeletal implementation:
+    # Verbs for statements implemented by Adrian
     | START
+    | USE
+    
+    # Verbs for statements which have a skeletal implementation:
+    
 
     # Verbs for statements which remain to be implemented:
     | ACCEPT
@@ -654,7 +771,6 @@ def verb =
     | CONTINUE
     | MERGE
     | SORT
-    | USE
     
     # Following are verbs found in testsuite, not in documentation.
     | ENABLE
@@ -793,20 +909,130 @@ end
 ## -----------------------------------------------------------------------------
 
 def displayStatement =
-	DISPLAY
+	DISPLAY 
+	( displayUponFormat  
+	| displayTerminalFormat
+	| displayScreenFormat
+	| --> (. | endOfStatement)
+	)
+end
+
+def displayUponFormat =
 	(identifier | literal)+
-	[uponClause]
+	uponClause
 	[withNoAdvancing]
 end
 
 def uponClause =
 	UPON
-	(mnemonicName | environmentName)
+	(environmentName | mnemonicName)
 end
 
 def withNoAdvancing =
 	[WITH] NO ADVANCING
 end
+
+def displayTerminalFormat =
+	(
+	 (identifier | literal) [ UNIT (identifier | literal)]
+	 [displayTerminalMods]
+	)+
+end
+
+def displayTerminalMods =
+	( dtBellMod
+	| dtBlinkMod
+	| dtControlMod
+	| dtConvertMod
+	| dtEraseMod
+	| dtLightingMod
+	| dtPositioningMod
+	| dtModeBlockMod
+	| dtReverseMod
+	| dtSizeMod
+	)+
+end
+
+def dtBellMod =
+	[WITH] (BEEP | BELL)
+end
+
+def dtBlinkMod =
+	[WITH] BLINK
+end
+
+def dtControlMod =
+	[WITH] CONTROL (identifier | literal)
+end
+
+def dtConvertMod =
+	[WITH] CONVERT
+end
+
+def dtEraseMod =
+	[WITH] ERASE (EOL | EOS)
+end
+
+def dtLightingMod =
+	[WITH] (HIGH | HIGHLIGHT | LOW | LOWLIGHT)
+end
+
+def dtPositioningMod =
+	[WITH] (dtAtPositioning | dtLineColPositioning)
+end
+
+def dtModeBlockMod =
+	[WITH] MODE [IS] BLOCK
+end
+
+def dtReverseMod =
+	[WITH] (REVERSED | REVERSE-VIDEO | REVERSE)
+end
+
+def dtSizeMod =
+	[WITH] SIZE (identifier | literal)
+end
+
+def dtAtPositioning =
+	AT (identifier | literal)
+end
+
+def dtLineColPositioning =
+	[AT]
+	( dtLinePos
+	| dtColPos
+	)+
+end
+
+def dtLinePos =
+	LINE (identifier | literal)
+end
+
+def dtColPos =
+	(COL | COLUMN | POSITION) (identifier | literal)
+end
+
+def displayScreenFormat =
+	(
+	 (identifier | literal) 
+	  ( screenLineColClause
+	  | screenAtClause
+	  )
+	)+
+end
+
+def screenAtClause =
+	AT (identifier | integer)
+end
+
+def screenLineColClause =
+	[AT] ( LINE [NUMBER] (identifier | integer) 
+		 | (COLUMN | COL) [NUMBER] (identifier | integer) 
+		 )+
+end
+
+
+
 
 ## #############################################################################
 ## DIVIDE statement.
@@ -846,7 +1072,7 @@ def entryStatement =
 end
 
 ## #############################################################################
-## EVALUATE statement.
+## EVALUATE statement. Updated Adrian Noguero
 ## -----------------------------------------------------------------------------
 
 def evaluateStatement =
@@ -857,7 +1083,7 @@ def evaluateStatement =
 end
 
 def subject =
-	(--> (WHEN | ALSO))
+	(condition | identifier | arithmeticExpression | literal)
 end
 
 
@@ -879,6 +1105,8 @@ def object =
 
     | rangeExpression
 
+	| TRUE
+	| FALSE
     | condition
     
     | [NOT] (
@@ -1351,7 +1579,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def readStatement =
-    READ fileName [[WITH] NO LOCK] [NEXT | PREVIOUS] [RECORD] [INTO identifier]
+    READ fileName [[WITH] [NO] LOCK] [NEXT | PREVIOUS] [RECORD] [INTO identifier]
     
     [KEY [IS] dataName]
     
@@ -1463,19 +1691,51 @@ end
 
 # TODO So far a skeletal implementation only.
 def startStatement =
-    START
-    ( -->
-      ( [NOT] INVALID [KEY]
-      | END-START
-      | .
-      | endOfStatement
-      )
-    )
+    START fileName
+    
+    [keyModifier]
+    [sizeModifier]
+    [whileKeyModifier]
     
     [INVALID [KEY] nestedStatements]
     [NOT INVALID [KEY] nestedStatements]
     
     [END-START]
+end
+
+def keyModifier =
+	KEY [IS] (generalRelationOp | FIRST | LAST) identifier (IN identifier)*
+end
+
+def sizeModifier =
+	[WITH] SIZE (identifier | integer)
+end
+
+def whileKeyModifier =
+	WHILE [KEY [IS]] [negationOp] LIKE (likeMods)* (identifier | literal)
+end
+
+def likeMods =
+	(trimmedRight
+	|trimmedLeft
+	|caseSensitive
+	|caseInsensitive)
+end
+
+def trimmedRight =
+	TRIMMED RIGHT
+end
+
+def trimmedLeft =
+	TRIMMED LEFT
+end
+
+def caseSensitive =
+	CASE-SENSITIVE
+end
+
+def caseInsensitive =
+	CASE-INSENSITIVE
 end
 
 ## #############################################################################
@@ -1548,6 +1808,54 @@ def unstringStatement =
     [[ON] OVERFLOW nestedStatements]
     [NOT [ON] OVERFLOW nestedStatements]
     [END-UNSTRING]
+end
+
+## #############################################################################
+## USE statement (by Adrian Noguero).
+## -----------------------------------------------------------------------------
+
+def useStatement =
+	USE 
+	(errorDeclarative
+	|debugOnAllDeclarative
+	|debugDeclarative
+	|labelDeclarative)
+	.
+end
+
+def errorDeclarative =	
+	[GLOBAL] AFTER [STANDARD]
+	(ERROR | EXCEPTION)
+	PROCEDURE [ON]
+	(INPUT
+	|OUTPUT
+	|I-O
+	|EXTEND
+	|fileName)*
+end
+
+def debugDeclarative =
+	[FOR] DEBUGGING [ON]
+	(procedureName
+	|fileName
+	|[ALL [REFERENCES OF]] identifier)*
+end
+
+def debugOnAllDeclarative =
+	[FOR] DEBUGGING [ON]
+	ALL PROCEDURES
+end
+
+def labelDeclarative =
+	[GLOBAL] AFTER [STANDARD]
+	[(BEGINNING | ENDING)]
+	[(FILE | REEL | UNIT)]
+	LABEL PROCEDURE [ON]
+	(INPUT
+	|OUTPUT
+	|I-O
+	|EXTEND
+	|fileName)*
 end
 
 ## #############################################################################
@@ -1728,23 +2036,27 @@ def referenceModifier =
 end
 
 ## #############################################################################
-## Arithmetic expressions.
+## Arithmetic expressions. Rewritten Adrian Noguero
 ## -----------------------------------------------------------------------------
 
 def arithmeticExpression =
-    timesDiv (('+' | '-') timesDiv)*
+    summand (signDef summand)*
 end
 
-def timesDiv =
-    power (('*' | '/') power)*
+def signDef =
+	('+' | '-')
 end
 
-def power =
-    [('+' | '-')] basis ('**' basis)*
+def summand =
+    factor (('*' | '/') factor)*
+end
+
+def factor =
+    [signDef] atomicExpression ('**' atomicExpression)*
 end
 
 # TODO Check sources for use of ZERO in this case.
-def basis =
+def atomicExpression =
     ( ZERO
     | identifier
     | numeric
@@ -1758,17 +2070,120 @@ end
 
 # TODO Conditions
 def condition =
---> ( THEN             # IF statement
-    | verb             # IF statement
-    | NEXT SENTENCE    # IF statement
-    | END-PERFORM      # PERFORM statement
-    | AFTER            # PERFORM statement
-    | WHEN             # EVALUATE statement
-    | ALSO             # EVALUATE statement
-    | ELSE             # Issue 3411927.
-    | .
-    )
+	( primaryCondition 
+	| [negationOp] '(' condition ')')
+	( conditionalRelationOP ( primaryCondition 
+	                        | [negationOp] '(' condition ')' ) 
+	)*
 end
+
+def primaryCondition =
+	[negationOp] primaryCondDef
+end
+
+def primaryCondDef =
+	(booleanLiteral
+	|classPrimaryCondition (conditionalRelationOP [negationOp] classSecondaryCondition )* 
+	|signPrimaryCondition
+	|generalPrimaryCondition ( conditionalRelationOP [negationOp] generalSecondaryCondition -(generalRelationOp | IS | [NOT] classType | signType) )*
+	# Imposible to detect the difference between classNames & 88 level booleans
+	# this must be handled by the backend
+	|monoElemPrimaryCondition ([IS] [negationOp] (monoElemPrimaryCondition) )* )
+end
+
+def generalPrimaryCondition = 
+	operand generalRelationOp operand
+end
+
+def signPrimaryCondition =
+	(arithmeticExpression | identifier)
+	[IS] [negationOp]
+	signType
+end
+
+def signType =
+	(POSITIVE | NEGATIVE | ZERO)
+end
+
+def monoElemPrimaryCondition =
+	[IS] (conditionName | className)
+end
+
+def classPrimaryCondition =
+	identifier [IS] [negationOp] 
+	classType
+end
+
+def classType =
+	(NUMERIC
+	|ALPHABETIC
+	|ALPHABETIC-LOWER
+	|ALPHABETIC-UPPER
+	|DBCS
+	|KANJI)
+end
+
+def generalSecondaryCondition =
+	[generalRelationOp] operand
+end
+
+def classSecondaryCondition =
+	[IS] [negationOp] 
+	classType
+end
+
+def conditionalRelationOP =
+	(AND | OR)
+end
+
+def generalRelationOp =
+	[IS]
+	(greaterOrEqualOp
+	|lessOrEqualOp
+	|greaterThanOp
+	|notGreaterThanOp
+	|lessThanOp
+	|notLessThanOp
+	|equalToOp
+	|notEqualToOp)
+end
+
+def negationOp =
+	NOT
+end
+
+def greaterThanOp =
+	(GREATER [THAN] | '>')
+end
+
+def notGreaterThanOp =
+	NOT (GREATER [THAN] | '>')
+end
+
+def lessThanOp =
+	(LESS [THAN] | '<')
+end
+
+def notLessThanOp =
+	NOT (LESS [THAN] | '<')
+end
+
+def equalToOp =
+	(EQUAL [TO] | '=')
+end
+
+def notEqualToOp =
+	NOT (EQUAL [TO] | '=')
+end
+
+def greaterOrEqualOp =
+	(GREATER [THAN] OR EQUAL [TO] | '>=')
+end
+
+def lessOrEqualOp =
+	(LESS [THAN] OR EQUAL [TO] | '<=')
+end 
+
 
 ## #############################################################################
 ## Low level stuff.
@@ -1874,7 +2289,7 @@ def recordName =
 end
 
 def mnemonicName =
-    cobolWord
+    (cobolWord | identifier)
 end
 
 def environmentName =
@@ -1915,8 +2330,9 @@ def reportName =
     cobolWord
 end
 
+#Added literal for path based assignments (Adrian Noguero)
 def assignmentName =
-    cobolWord
+    (cobolWord | literal)
 end
 
 def literal =

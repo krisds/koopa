@@ -1135,10 +1135,11 @@ public class CobolVerifier extends VerifyingSink {
     register("COMPUTE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("computeStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("computeStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "COMPUTE in the water.");
           }
         }
@@ -1167,10 +1168,11 @@ public class CobolVerifier extends VerifyingSink {
     register("END-COMPUTE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("computeStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("computeStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "END-COMPUTE in the water.");
           }
         }
@@ -1232,10 +1234,11 @@ public class CobolVerifier extends VerifyingSink {
     register("END-START", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("startStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("startStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "END-START in the water.");
           }
         }
@@ -1264,10 +1267,11 @@ public class CobolVerifier extends VerifyingSink {
     register("DELETE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("deleteStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("deleteStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "DELETE in the water.");
           }
         }
@@ -1296,10 +1300,11 @@ public class CobolVerifier extends VerifyingSink {
     register("END-DELETE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("deleteStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("deleteStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "END-DELETE in the water.");
           }
         }
@@ -1329,10 +1334,11 @@ public class CobolVerifier extends VerifyingSink {
       public void verify(Token t) {
         { final int p0 = 0;
           final int p1 = lastIndexOf("execStatement");
-          final int p2 = lastIndexOf("rewriteStatement");
-          final int p3 = lastIndexOf("water");
+          final int p2 = lastIndexOf("execStatement");
+          final int p3 = lastIndexOf("rewriteStatement");
+          final int p4 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
+          if ((p1 < p0 || p1 > p4) && (p2 < p0 || p2 > p4) && (p3 < p0 || p3 > p4) && p0 < p4) {
             warn(t, "REWRITE in the water.");
           }
         }
@@ -1361,10 +1367,11 @@ public class CobolVerifier extends VerifyingSink {
     register("END-REWRITE", new Verifier() {
       public void verify(Token t) {
         { final int p0 = 0;
-          final int p1 = lastIndexOf("rewriteStatement");
-          final int p2 = lastIndexOf("water");
+          final int p1 = lastIndexOf("execStatement");
+          final int p2 = lastIndexOf("rewriteStatement");
+          final int p3 = lastIndexOf("water");
 
-          if ((p1 < p0 || p1 > p2) && p0 < p2) {
+          if ((p1 < p0 || p1 > p3) && (p2 < p0 || p2 > p3) && p0 < p3) {
             warn(t, "END-REWRITE in the water.");
           }
         }

@@ -79,6 +79,19 @@ public class CobolGrammar extends KoopaGrammar {
                plus(
                    choice(
                        dataDescriptionEntry(),
+                       specialNameStatement(),
+                       sequence(
+                           fileDescriptionEntry(),
+                           star(
+                               recordDescriptionEntry()
+                           )
+                       ),
+                       sequence(
+                           selectStatement(),
+                           optional(
+                               token(".")
+                           )
+                       ),
                        copyStatement(),
                        replaceStatement(),
                        sequence(
@@ -444,8 +457,14 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("SPECIAL-NAMES"),
                    token("."),
+                   star(
+                       choice(
+                           copyStatement(),
+                           specialNameStatement()
+                       )
+                   ),
                    optional(
-                       decimalIsComma()
+                       token(".")
                    ),
                    optional(
                        skipto(
@@ -464,6 +483,35 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // specialNameStatement
+    // ........................................................
+
+    private Parser specialNameStatementParser = null;
+
+    public Parser specialNameStatement() {
+        if (specialNameStatementParser == null) {
+           FutureParser future = scoped("specialNameStatement");
+           specialNameStatementParser = future;
+           future.setParser(
+               choice(
+                   decimalIsComma(),
+                   currencySignIs(),
+                   consoleIsCRT(),
+                   cursorIs(),
+                   crtStatusIs(),
+                   numericSignIs(),
+                   classIs(),
+                   symbolicChars(),
+                   alphabetIs(),
+                   mnemonicClause()
+               )
+           );
+        }
+
+        return specialNameStatementParser;
+    }
+
+    // ========================================================
     // decimalIsComma
     // ........................................................
 
@@ -479,15 +527,430 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        token("IS")
                    ),
-                   token("COMMA"),
-                   optional(
-                       token(".")
-                   )
+                   token("COMMA")
                )
            );
         }
 
         return decimalIsCommaParser;
+    }
+
+    // ========================================================
+    // currencySignIs
+    // ........................................................
+
+    private Parser currencySignIsParser = null;
+
+    public Parser currencySignIs() {
+        if (currencySignIsParser == null) {
+           FutureParser future = scoped("currencySignIs");
+           currencySignIsParser = future;
+           future.setParser(
+               sequence(
+                   token("CURRENCY"),
+                   optional(
+                       token("SIGN")
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   literal()
+               )
+           );
+        }
+
+        return currencySignIsParser;
+    }
+
+    // ========================================================
+    // consoleIsCRT
+    // ........................................................
+
+    private Parser consoleIsCRTParser = null;
+
+    public Parser consoleIsCRT() {
+        if (consoleIsCRTParser == null) {
+           FutureParser future = scoped("consoleIsCRT");
+           consoleIsCRTParser = future;
+           future.setParser(
+               sequence(
+                   token("CONSOLE"),
+                   optional(
+                       token("IS")
+                   ),
+                   token("CRT")
+               )
+           );
+        }
+
+        return consoleIsCRTParser;
+    }
+
+    // ========================================================
+    // cursorIs
+    // ........................................................
+
+    private Parser cursorIsParser = null;
+
+    public Parser cursorIs() {
+        if (cursorIsParser == null) {
+           FutureParser future = scoped("cursorIs");
+           cursorIsParser = future;
+           future.setParser(
+               sequence(
+                   token("CURSOR"),
+                   optional(
+                       token("IS")
+                   ),
+                   dataName()
+               )
+           );
+        }
+
+        return cursorIsParser;
+    }
+
+    // ========================================================
+    // crtStatusIs
+    // ........................................................
+
+    private Parser crtStatusIsParser = null;
+
+    public Parser crtStatusIs() {
+        if (crtStatusIsParser == null) {
+           FutureParser future = scoped("crtStatusIs");
+           crtStatusIsParser = future;
+           future.setParser(
+               sequence(
+                   token("CRT"),
+                   token("STATUS"),
+                   optional(
+                       token("IS")
+                   ),
+                   dataName()
+               )
+           );
+        }
+
+        return crtStatusIsParser;
+    }
+
+    // ========================================================
+    // numericSignIs
+    // ........................................................
+
+    private Parser numericSignIsParser = null;
+
+    public Parser numericSignIs() {
+        if (numericSignIsParser == null) {
+           FutureParser future = scoped("numericSignIs");
+           numericSignIsParser = future;
+           future.setParser(
+               sequence(
+                   token("NUMERIC"),
+                   token("SIGN"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("LEADING"),
+                       token("TRAILING")
+                   ),
+                   optional(
+                       sequence(
+                           token("SEPARATE"),
+                           optional(
+                               token("CHARACTER")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return numericSignIsParser;
+    }
+
+    // ========================================================
+    // classIs
+    // ........................................................
+
+    private Parser classIsParser = null;
+
+    public Parser classIs() {
+        if (classIsParser == null) {
+           FutureParser future = scoped("classIs");
+           classIsParser = future;
+           future.setParser(
+               sequence(
+                   token("CLASS"),
+                   identifier(),
+                   optional(
+                       token("IS")
+                   ),
+                   plus(
+                       choice(
+                           literalRange(),
+                           literal()
+                       )
+                   )
+               )
+           );
+        }
+
+        return classIsParser;
+    }
+
+    // ========================================================
+    // literalRange
+    // ........................................................
+
+    private Parser literalRangeParser = null;
+
+    public Parser literalRange() {
+        if (literalRangeParser == null) {
+           FutureParser future = scoped("literalRange");
+           literalRangeParser = future;
+           future.setParser(
+               sequence(
+                   literal(),
+                   choice(
+                       token("THROUGH"),
+                       token("THRU")
+                   ),
+                   literal()
+               )
+           );
+        }
+
+        return literalRangeParser;
+    }
+
+    // ========================================================
+    // symbolicChars
+    // ........................................................
+
+    private Parser symbolicCharsParser = null;
+
+    public Parser symbolicChars() {
+        if (symbolicCharsParser == null) {
+           FutureParser future = scoped("symbolicChars");
+           symbolicCharsParser = future;
+           future.setParser(
+               sequence(
+                   token("SYMBOLIC"),
+                   optional(
+                       choice(
+                           token("CHARACTER"),
+                           token("CHARACTERS")
+                       )
+                   ),
+                   plus(
+                       sequence(
+                           plus(
+                               literal()
+                           ),
+                           optional(
+                               choice(
+                                   token("IS"),
+                                   token("ARE")
+                               )
+                           ),
+                           plus(
+                               integer()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("IN"),
+                           identifier()
+                       )
+                   )
+               )
+           );
+        }
+
+        return symbolicCharsParser;
+    }
+
+    // ========================================================
+    // alphabetIs
+    // ........................................................
+
+    private Parser alphabetIsParser = null;
+
+    public Parser alphabetIs() {
+        if (alphabetIsParser == null) {
+           FutureParser future = scoped("alphabetIs");
+           alphabetIsParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("ALPHABET")
+                   ),
+                   identifier(),
+                   optional(
+                       token("IS")
+                   ),
+                   alphabetType()
+               )
+           );
+        }
+
+        return alphabetIsParser;
+    }
+
+    // ========================================================
+    // alphabetType
+    // ........................................................
+
+    private Parser alphabetTypeParser = null;
+
+    public Parser alphabetType() {
+        if (alphabetTypeParser == null) {
+           FutureParser future = scoped("alphabetType");
+           alphabetTypeParser = future;
+           future.setParser(
+               choice(
+                   standard1AlphabetType(),
+                   standard2AlphabetType(),
+                   nativeAlphabetType(),
+                   explicitAlphabetType(),
+                   codeNameAlphabetType()
+               )
+           );
+        }
+
+        return alphabetTypeParser;
+    }
+
+    // ========================================================
+    // standard1AlphabetType
+    // ........................................................
+
+    private Parser standard1AlphabetTypeParser = null;
+
+    public Parser standard1AlphabetType() {
+        if (standard1AlphabetTypeParser == null) {
+           FutureParser future = scoped("standard1AlphabetType");
+           standard1AlphabetTypeParser = future;
+           future.setParser(
+               token("STANDARD-1")
+           );
+        }
+
+        return standard1AlphabetTypeParser;
+    }
+
+    // ========================================================
+    // standard2AlphabetType
+    // ........................................................
+
+    private Parser standard2AlphabetTypeParser = null;
+
+    public Parser standard2AlphabetType() {
+        if (standard2AlphabetTypeParser == null) {
+           FutureParser future = scoped("standard2AlphabetType");
+           standard2AlphabetTypeParser = future;
+           future.setParser(
+               token("STANDARD-2")
+           );
+        }
+
+        return standard2AlphabetTypeParser;
+    }
+
+    // ========================================================
+    // nativeAlphabetType
+    // ........................................................
+
+    private Parser nativeAlphabetTypeParser = null;
+
+    public Parser nativeAlphabetType() {
+        if (nativeAlphabetTypeParser == null) {
+           FutureParser future = scoped("nativeAlphabetType");
+           nativeAlphabetTypeParser = future;
+           future.setParser(
+               token("NATIVE")
+           );
+        }
+
+        return nativeAlphabetTypeParser;
+    }
+
+    // ========================================================
+    // explicitAlphabetType
+    // ........................................................
+
+    private Parser explicitAlphabetTypeParser = null;
+
+    public Parser explicitAlphabetType() {
+        if (explicitAlphabetTypeParser == null) {
+           FutureParser future = scoped("explicitAlphabetType");
+           explicitAlphabetTypeParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       literalRange(),
+                       literal()
+                   ),
+                   star(
+                       sequence(
+                           token("ALSO"),
+                           choice(
+                               literalRange(),
+                               literal()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return explicitAlphabetTypeParser;
+    }
+
+    // ========================================================
+    // codeNameAlphabetType
+    // ........................................................
+
+    private Parser codeNameAlphabetTypeParser = null;
+
+    public Parser codeNameAlphabetType() {
+        if (codeNameAlphabetTypeParser == null) {
+           FutureParser future = scoped("codeNameAlphabetType");
+           codeNameAlphabetTypeParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return codeNameAlphabetTypeParser;
+    }
+
+    // ========================================================
+    // mnemonicClause
+    // ........................................................
+
+    private Parser mnemonicClauseParser = null;
+
+    public Parser mnemonicClause() {
+        if (mnemonicClauseParser == null) {
+           FutureParser future = scoped("mnemonicClause");
+           mnemonicClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("DECIMAL-POINT"),
+                   optional(
+                       token("IS")
+                   ),
+                   token("COMMA")
+               )
+           );
+        }
+
+        return mnemonicClauseParser;
     }
 
     // ========================================================
@@ -561,7 +1024,10 @@ public class CobolGrammar extends KoopaGrammar {
                    token("FILE-CONTROL"),
                    token("."),
                    star(
-                       selectStatement()
+                       choice(
+                           selectStatement(),
+                           copyStatement()
+                       )
                    )
                )
            );
@@ -858,10 +1324,13 @@ public class CobolGrammar extends KoopaGrammar {
                    token("SECTION"),
                    token("."),
                    star(
-                       sequence(
-                           fileDescriptionEntry(),
-                           star(
-                               recordDescriptionEntry()
+                       choice(
+                           copyStatement(),
+                           sequence(
+                               fileDescriptionEntry(),
+                               star(
+                                   recordDescriptionEntry()
+                               )
                            )
                        )
                    ),
@@ -2298,30 +2767,6 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // useStatement
-    // ........................................................
-
-    private Parser useStatementParser = null;
-
-    public Parser useStatement() {
-        if (useStatementParser == null) {
-           FutureParser future = scoped("useStatement");
-           useStatementParser = future;
-           future.setParser(
-               sequence(
-                   token("USE"),
-                   skipto(
-                       token(".")
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return useStatementParser;
-    }
-
-    // ========================================================
     // section
     // ........................................................
 
@@ -2396,12 +2841,11 @@ public class CobolGrammar extends KoopaGrammar {
                                continuationOfStatement()
                            )
                        ),
-                       optional(
-                           token(".")
-                       )
+                       token(".")
                    ),
                    copyStatement(),
                    replaceStatement(),
+                   useStatement(),
                    token(".")
                )
            );
@@ -2461,7 +2905,9 @@ public class CobolGrammar extends KoopaGrammar {
                            skipto(
                                choice(
                                    token("."),
-                                   endOfStatement()
+                                   endOfStatement(),
+                                   verb(),
+                                   subStatementMarker()
                                )
                            )
                        )
@@ -2471,6 +2917,110 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return statementParser;
+    }
+
+    // ========================================================
+    // subStatementMarker
+    // ........................................................
+
+    private Parser subStatementMarkerParser = null;
+
+    public Parser subStatementMarker() {
+        if (subStatementMarkerParser == null) {
+           FutureParser future = scoped("subStatementMarker");
+           subStatementMarkerParser = future;
+           future.setParser(
+               choice(
+                   token("ELSE"),
+                   token("WHEN"),
+                   sequence(
+                       token("NOT"),
+                       token("INVALID")
+                   ),
+                   token("INVALID"),
+                   sequence(
+                       token("NOT"),
+                       optional(
+                           token("ON")
+                       ),
+                       token("SIZE")
+                   ),
+                   sequence(
+                       optional(
+                           token("ON")
+                       ),
+                       token("SIZE")
+                   ),
+                   sequence(
+                       token("NOT"),
+                       optional(
+                           token("ON")
+                       ),
+                       token("OVERFLOW")
+                   ),
+                   sequence(
+                       optional(
+                           token("ON")
+                       ),
+                       token("OVERFLOW")
+                   ),
+                   sequence(
+                       token("NOT"),
+                       optional(
+                           token("ON")
+                       ),
+                       token("EXCEPTION")
+                   ),
+                   sequence(
+                       optional(
+                           token("ON")
+                       ),
+                       token("EXCEPTION")
+                   ),
+                   sequence(
+                       token("NOT"),
+                       optional(
+                           token("AT")
+                       ),
+                       token("END")
+                   ),
+                   sequence(
+                       optional(
+                           token("AT")
+                       ),
+                       token("END")
+                   ),
+                   sequence(
+                       token("NOT"),
+                       optional(
+                           token("AT")
+                       ),
+                       token("END-OF-PAGE")
+                   ),
+                   sequence(
+                       token("NOT"),
+                       optional(
+                           token("AT")
+                       ),
+                       token("EOP")
+                   ),
+                   sequence(
+                       optional(
+                           token("AT")
+                       ),
+                       token("END-OF-PAGE")
+                   ),
+                   sequence(
+                       optional(
+                           token("AT")
+                       ),
+                       token("EOP")
+                   )
+               )
+           );
+        }
+
+        return subStatementMarkerParser;
     }
 
     // ========================================================
@@ -2668,12 +3218,12 @@ public class CobolGrammar extends KoopaGrammar {
                    token("COMPUTE"),
                    token("INSPECT"),
                    token("START"),
+                   token("USE"),
                    token("ACCEPT"),
                    token("ALTER"),
                    token("CONTINUE"),
                    token("MERGE"),
                    token("SORT"),
-                   token("USE"),
                    token("ENABLE"),
                    token("DISABLE"),
                    token("SEND"),
@@ -3243,15 +3793,43 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("DISPLAY"),
+                   choice(
+                       displayUponFormat(),
+                       displayTerminalFormat(),
+                       displayScreenFormat(),
+                       skipto(
+                           choice(
+                               token("."),
+                               endOfStatement()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return displayStatementParser;
+    }
+
+    // ========================================================
+    // displayUponFormat
+    // ........................................................
+
+    private Parser displayUponFormatParser = null;
+
+    public Parser displayUponFormat() {
+        if (displayUponFormatParser == null) {
+           FutureParser future = scoped("displayUponFormat");
+           displayUponFormatParser = future;
+           future.setParser(
+               sequence(
                    plus(
                        choice(
                            identifier(),
                            literal()
                        )
                    ),
-                   optional(
-                       uponClause()
-                   ),
+                   uponClause(),
                    optional(
                        withNoAdvancing()
                    )
@@ -3259,7 +3837,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return displayStatementParser;
+        return displayUponFormatParser;
     }
 
     // ========================================================
@@ -3276,8 +3854,8 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("UPON"),
                    choice(
-                       mnemonicName(),
-                       environmentName()
+                       environmentName(),
+                       mnemonicName()
                    )
                )
            );
@@ -3308,6 +3886,541 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return withNoAdvancingParser;
+    }
+
+    // ========================================================
+    // displayTerminalFormat
+    // ........................................................
+
+    private Parser displayTerminalFormatParser = null;
+
+    public Parser displayTerminalFormat() {
+        if (displayTerminalFormatParser == null) {
+           FutureParser future = scoped("displayTerminalFormat");
+           displayTerminalFormatParser = future;
+           future.setParser(
+               plus(
+                   sequence(
+                       choice(
+                           identifier(),
+                           literal()
+                       ),
+                       optional(
+                           sequence(
+                               token("UNIT"),
+                               choice(
+                                   identifier(),
+                                   literal()
+                               )
+                           )
+                       ),
+                       optional(
+                           displayTerminalMods()
+                       )
+                   )
+               )
+           );
+        }
+
+        return displayTerminalFormatParser;
+    }
+
+    // ========================================================
+    // displayTerminalMods
+    // ........................................................
+
+    private Parser displayTerminalModsParser = null;
+
+    public Parser displayTerminalMods() {
+        if (displayTerminalModsParser == null) {
+           FutureParser future = scoped("displayTerminalMods");
+           displayTerminalModsParser = future;
+           future.setParser(
+               plus(
+                   choice(
+                       dtBellMod(),
+                       dtBlinkMod(),
+                       dtControlMod(),
+                       dtConvertMod(),
+                       dtEraseMod(),
+                       dtLightingMod(),
+                       dtPositioningMod(),
+                       dtModeBlockMod(),
+                       dtReverseMod(),
+                       dtSizeMod()
+                   )
+               )
+           );
+        }
+
+        return displayTerminalModsParser;
+    }
+
+    // ========================================================
+    // dtBellMod
+    // ........................................................
+
+    private Parser dtBellModParser = null;
+
+    public Parser dtBellMod() {
+        if (dtBellModParser == null) {
+           FutureParser future = scoped("dtBellMod");
+           dtBellModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   choice(
+                       token("BEEP"),
+                       token("BELL")
+                   )
+               )
+           );
+        }
+
+        return dtBellModParser;
+    }
+
+    // ========================================================
+    // dtBlinkMod
+    // ........................................................
+
+    private Parser dtBlinkModParser = null;
+
+    public Parser dtBlinkMod() {
+        if (dtBlinkModParser == null) {
+           FutureParser future = scoped("dtBlinkMod");
+           dtBlinkModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("BLINK")
+               )
+           );
+        }
+
+        return dtBlinkModParser;
+    }
+
+    // ========================================================
+    // dtControlMod
+    // ........................................................
+
+    private Parser dtControlModParser = null;
+
+    public Parser dtControlMod() {
+        if (dtControlModParser == null) {
+           FutureParser future = scoped("dtControlMod");
+           dtControlModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("CONTROL"),
+                   choice(
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return dtControlModParser;
+    }
+
+    // ========================================================
+    // dtConvertMod
+    // ........................................................
+
+    private Parser dtConvertModParser = null;
+
+    public Parser dtConvertMod() {
+        if (dtConvertModParser == null) {
+           FutureParser future = scoped("dtConvertMod");
+           dtConvertModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("CONVERT")
+               )
+           );
+        }
+
+        return dtConvertModParser;
+    }
+
+    // ========================================================
+    // dtEraseMod
+    // ........................................................
+
+    private Parser dtEraseModParser = null;
+
+    public Parser dtEraseMod() {
+        if (dtEraseModParser == null) {
+           FutureParser future = scoped("dtEraseMod");
+           dtEraseModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("ERASE"),
+                   choice(
+                       token("EOL"),
+                       token("EOS")
+                   )
+               )
+           );
+        }
+
+        return dtEraseModParser;
+    }
+
+    // ========================================================
+    // dtLightingMod
+    // ........................................................
+
+    private Parser dtLightingModParser = null;
+
+    public Parser dtLightingMod() {
+        if (dtLightingModParser == null) {
+           FutureParser future = scoped("dtLightingMod");
+           dtLightingModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   choice(
+                       token("HIGH"),
+                       token("HIGHLIGHT"),
+                       token("LOW"),
+                       token("LOWLIGHT")
+                   )
+               )
+           );
+        }
+
+        return dtLightingModParser;
+    }
+
+    // ========================================================
+    // dtPositioningMod
+    // ........................................................
+
+    private Parser dtPositioningModParser = null;
+
+    public Parser dtPositioningMod() {
+        if (dtPositioningModParser == null) {
+           FutureParser future = scoped("dtPositioningMod");
+           dtPositioningModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   choice(
+                       dtAtPositioning(),
+                       dtLineColPositioning()
+                   )
+               )
+           );
+        }
+
+        return dtPositioningModParser;
+    }
+
+    // ========================================================
+    // dtModeBlockMod
+    // ........................................................
+
+    private Parser dtModeBlockModParser = null;
+
+    public Parser dtModeBlockMod() {
+        if (dtModeBlockModParser == null) {
+           FutureParser future = scoped("dtModeBlockMod");
+           dtModeBlockModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("MODE"),
+                   optional(
+                       token("IS")
+                   ),
+                   token("BLOCK")
+               )
+           );
+        }
+
+        return dtModeBlockModParser;
+    }
+
+    // ========================================================
+    // dtReverseMod
+    // ........................................................
+
+    private Parser dtReverseModParser = null;
+
+    public Parser dtReverseMod() {
+        if (dtReverseModParser == null) {
+           FutureParser future = scoped("dtReverseMod");
+           dtReverseModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   choice(
+                       token("REVERSED"),
+                       token("REVERSE-VIDEO"),
+                       token("REVERSE")
+                   )
+               )
+           );
+        }
+
+        return dtReverseModParser;
+    }
+
+    // ========================================================
+    // dtSizeMod
+    // ........................................................
+
+    private Parser dtSizeModParser = null;
+
+    public Parser dtSizeMod() {
+        if (dtSizeModParser == null) {
+           FutureParser future = scoped("dtSizeMod");
+           dtSizeModParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("SIZE"),
+                   choice(
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return dtSizeModParser;
+    }
+
+    // ========================================================
+    // dtAtPositioning
+    // ........................................................
+
+    private Parser dtAtPositioningParser = null;
+
+    public Parser dtAtPositioning() {
+        if (dtAtPositioningParser == null) {
+           FutureParser future = scoped("dtAtPositioning");
+           dtAtPositioningParser = future;
+           future.setParser(
+               sequence(
+                   token("AT"),
+                   choice(
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return dtAtPositioningParser;
+    }
+
+    // ========================================================
+    // dtLineColPositioning
+    // ........................................................
+
+    private Parser dtLineColPositioningParser = null;
+
+    public Parser dtLineColPositioning() {
+        if (dtLineColPositioningParser == null) {
+           FutureParser future = scoped("dtLineColPositioning");
+           dtLineColPositioningParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("AT")
+                   ),
+                   plus(
+                       choice(
+                           dtLinePos(),
+                           dtColPos()
+                       )
+                   )
+               )
+           );
+        }
+
+        return dtLineColPositioningParser;
+    }
+
+    // ========================================================
+    // dtLinePos
+    // ........................................................
+
+    private Parser dtLinePosParser = null;
+
+    public Parser dtLinePos() {
+        if (dtLinePosParser == null) {
+           FutureParser future = scoped("dtLinePos");
+           dtLinePosParser = future;
+           future.setParser(
+               sequence(
+                   token("LINE"),
+                   choice(
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return dtLinePosParser;
+    }
+
+    // ========================================================
+    // dtColPos
+    // ........................................................
+
+    private Parser dtColPosParser = null;
+
+    public Parser dtColPos() {
+        if (dtColPosParser == null) {
+           FutureParser future = scoped("dtColPos");
+           dtColPosParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("COL"),
+                       token("COLUMN"),
+                       token("POSITION")
+                   ),
+                   choice(
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return dtColPosParser;
+    }
+
+    // ========================================================
+    // displayScreenFormat
+    // ........................................................
+
+    private Parser displayScreenFormatParser = null;
+
+    public Parser displayScreenFormat() {
+        if (displayScreenFormatParser == null) {
+           FutureParser future = scoped("displayScreenFormat");
+           displayScreenFormatParser = future;
+           future.setParser(
+               plus(
+                   sequence(
+                       choice(
+                           identifier(),
+                           literal()
+                       ),
+                       choice(
+                           screenLineColClause(),
+                           screenAtClause()
+                       )
+                   )
+               )
+           );
+        }
+
+        return displayScreenFormatParser;
+    }
+
+    // ========================================================
+    // screenAtClause
+    // ........................................................
+
+    private Parser screenAtClauseParser = null;
+
+    public Parser screenAtClause() {
+        if (screenAtClauseParser == null) {
+           FutureParser future = scoped("screenAtClause");
+           screenAtClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("AT"),
+                   choice(
+                       identifier(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return screenAtClauseParser;
+    }
+
+    // ========================================================
+    // screenLineColClause
+    // ........................................................
+
+    private Parser screenLineColClauseParser = null;
+
+    public Parser screenLineColClause() {
+        if (screenLineColClauseParser == null) {
+           FutureParser future = scoped("screenLineColClause");
+           screenLineColClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("AT")
+                   ),
+                   plus(
+                       choice(
+                           sequence(
+                               token("LINE"),
+                               optional(
+                                   token("NUMBER")
+                               ),
+                               choice(
+                                   identifier(),
+                                   integer()
+                               )
+                           ),
+                           sequence(
+                               choice(
+                                   token("COLUMN"),
+                                   token("COL")
+                               ),
+                               optional(
+                                   token("NUMBER")
+                               ),
+                               choice(
+                                   identifier(),
+                                   integer()
+                               )
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return screenLineColClauseParser;
     }
 
     // ========================================================
@@ -3545,11 +4658,11 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("subject");
            subjectParser = future;
            future.setParser(
-               skipto(
-                   choice(
-                       token("WHEN"),
-                       token("ALSO")
-                   )
+               choice(
+                   condition(),
+                   identifier(),
+                   arithmeticExpression(),
+                   literal()
                )
            );
         }
@@ -3625,6 +4738,8 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    token("ANY"),
                    rangeExpression(),
+                   token("TRUE"),
+                   token("FALSE"),
                    condition(),
                    sequence(
                        optional(
@@ -5654,7 +6769,9 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("WITH")
                            ),
-                           token("NO"),
+                           optional(
+                               token("NO")
+                           ),
                            token("LOCK")
                        )
                    ),
@@ -6079,21 +7196,15 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("START"),
-                   skipto(
-                       choice(
-                           sequence(
-                               optional(
-                                   token("NOT")
-                               ),
-                               token("INVALID"),
-                               optional(
-                                   token("KEY")
-                               )
-                           ),
-                           token("END-START"),
-                           token("."),
-                           endOfStatement()
-                       )
+                   fileName(),
+                   optional(
+                       keyModifier()
+                   ),
+                   optional(
+                       sizeModifier()
+                   ),
+                   optional(
+                       whileKeyModifier()
                    ),
                    optional(
                        sequence(
@@ -6122,6 +7233,208 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return startStatementParser;
+    }
+
+    // ========================================================
+    // keyModifier
+    // ........................................................
+
+    private Parser keyModifierParser = null;
+
+    public Parser keyModifier() {
+        if (keyModifierParser == null) {
+           FutureParser future = scoped("keyModifier");
+           keyModifierParser = future;
+           future.setParser(
+               sequence(
+                   token("KEY"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       generalRelationOp(),
+                       token("FIRST"),
+                       token("LAST")
+                   ),
+                   identifier(),
+                   star(
+                       sequence(
+                           token("IN"),
+                           identifier()
+                       )
+                   )
+               )
+           );
+        }
+
+        return keyModifierParser;
+    }
+
+    // ========================================================
+    // sizeModifier
+    // ........................................................
+
+    private Parser sizeModifierParser = null;
+
+    public Parser sizeModifier() {
+        if (sizeModifierParser == null) {
+           FutureParser future = scoped("sizeModifier");
+           sizeModifierParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("SIZE"),
+                   choice(
+                       identifier(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return sizeModifierParser;
+    }
+
+    // ========================================================
+    // whileKeyModifier
+    // ........................................................
+
+    private Parser whileKeyModifierParser = null;
+
+    public Parser whileKeyModifier() {
+        if (whileKeyModifierParser == null) {
+           FutureParser future = scoped("whileKeyModifier");
+           whileKeyModifierParser = future;
+           future.setParser(
+               sequence(
+                   token("WHILE"),
+                   optional(
+                       sequence(
+                           token("KEY"),
+                           optional(
+                               token("IS")
+                           )
+                       )
+                   ),
+                   optional(
+                       negationOp()
+                   ),
+                   token("LIKE"),
+                   star(
+                       likeMods()
+                   ),
+                   choice(
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return whileKeyModifierParser;
+    }
+
+    // ========================================================
+    // likeMods
+    // ........................................................
+
+    private Parser likeModsParser = null;
+
+    public Parser likeMods() {
+        if (likeModsParser == null) {
+           FutureParser future = scoped("likeMods");
+           likeModsParser = future;
+           future.setParser(
+               choice(
+                   trimmedRight(),
+                   trimmedLeft(),
+                   caseSensitive(),
+                   caseInsensitive()
+               )
+           );
+        }
+
+        return likeModsParser;
+    }
+
+    // ========================================================
+    // trimmedRight
+    // ........................................................
+
+    private Parser trimmedRightParser = null;
+
+    public Parser trimmedRight() {
+        if (trimmedRightParser == null) {
+           FutureParser future = scoped("trimmedRight");
+           trimmedRightParser = future;
+           future.setParser(
+               sequence(
+                   token("TRIMMED"),
+                   token("RIGHT")
+               )
+           );
+        }
+
+        return trimmedRightParser;
+    }
+
+    // ========================================================
+    // trimmedLeft
+    // ........................................................
+
+    private Parser trimmedLeftParser = null;
+
+    public Parser trimmedLeft() {
+        if (trimmedLeftParser == null) {
+           FutureParser future = scoped("trimmedLeft");
+           trimmedLeftParser = future;
+           future.setParser(
+               sequence(
+                   token("TRIMMED"),
+                   token("LEFT")
+               )
+           );
+        }
+
+        return trimmedLeftParser;
+    }
+
+    // ========================================================
+    // caseSensitive
+    // ........................................................
+
+    private Parser caseSensitiveParser = null;
+
+    public Parser caseSensitive() {
+        if (caseSensitiveParser == null) {
+           FutureParser future = scoped("caseSensitive");
+           caseSensitiveParser = future;
+           future.setParser(
+               token("CASE-SENSITIVE")
+           );
+        }
+
+        return caseSensitiveParser;
+    }
+
+    // ========================================================
+    // caseInsensitive
+    // ........................................................
+
+    private Parser caseInsensitiveParser = null;
+
+    public Parser caseInsensitive() {
+        if (caseInsensitiveParser == null) {
+           FutureParser future = scoped("caseInsensitive");
+           caseInsensitiveParser = future;
+           future.setParser(
+               token("CASE-INSENSITIVE")
+           );
+        }
+
+        return caseInsensitiveParser;
     }
 
     // ========================================================
@@ -6487,6 +7800,203 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return unstringStatementParser;
+    }
+
+    // ========================================================
+    // useStatement
+    // ........................................................
+
+    private Parser useStatementParser = null;
+
+    public Parser useStatement() {
+        if (useStatementParser == null) {
+           FutureParser future = scoped("useStatement");
+           useStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("USE"),
+                   choice(
+                       errorDeclarative(),
+                       debugOnAllDeclarative(),
+                       debugDeclarative(),
+                       labelDeclarative()
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return useStatementParser;
+    }
+
+    // ========================================================
+    // errorDeclarative
+    // ........................................................
+
+    private Parser errorDeclarativeParser = null;
+
+    public Parser errorDeclarative() {
+        if (errorDeclarativeParser == null) {
+           FutureParser future = scoped("errorDeclarative");
+           errorDeclarativeParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("GLOBAL")
+                   ),
+                   token("AFTER"),
+                   optional(
+                       token("STANDARD")
+                   ),
+                   choice(
+                       token("ERROR"),
+                       token("EXCEPTION")
+                   ),
+                   token("PROCEDURE"),
+                   optional(
+                       token("ON")
+                   ),
+                   star(
+                       choice(
+                           token("INPUT"),
+                           token("OUTPUT"),
+                           token("I-O"),
+                           token("EXTEND"),
+                           fileName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return errorDeclarativeParser;
+    }
+
+    // ========================================================
+    // debugDeclarative
+    // ........................................................
+
+    private Parser debugDeclarativeParser = null;
+
+    public Parser debugDeclarative() {
+        if (debugDeclarativeParser == null) {
+           FutureParser future = scoped("debugDeclarative");
+           debugDeclarativeParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("FOR")
+                   ),
+                   token("DEBUGGING"),
+                   optional(
+                       token("ON")
+                   ),
+                   star(
+                       choice(
+                           procedureName(),
+                           fileName(),
+                           sequence(
+                               optional(
+                                   sequence(
+                                       token("ALL"),
+                                       optional(
+                                           sequence(
+                                               token("REFERENCES"),
+                                               token("OF")
+                                           )
+                                       )
+                                   )
+                               ),
+                               identifier()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return debugDeclarativeParser;
+    }
+
+    // ========================================================
+    // debugOnAllDeclarative
+    // ........................................................
+
+    private Parser debugOnAllDeclarativeParser = null;
+
+    public Parser debugOnAllDeclarative() {
+        if (debugOnAllDeclarativeParser == null) {
+           FutureParser future = scoped("debugOnAllDeclarative");
+           debugOnAllDeclarativeParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("FOR")
+                   ),
+                   token("DEBUGGING"),
+                   optional(
+                       token("ON")
+                   ),
+                   token("ALL"),
+                   token("PROCEDURES")
+               )
+           );
+        }
+
+        return debugOnAllDeclarativeParser;
+    }
+
+    // ========================================================
+    // labelDeclarative
+    // ........................................................
+
+    private Parser labelDeclarativeParser = null;
+
+    public Parser labelDeclarative() {
+        if (labelDeclarativeParser == null) {
+           FutureParser future = scoped("labelDeclarative");
+           labelDeclarativeParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("GLOBAL")
+                   ),
+                   token("AFTER"),
+                   optional(
+                       token("STANDARD")
+                   ),
+                   optional(
+                       choice(
+                           token("BEGINNING"),
+                           token("ENDING")
+                       )
+                   ),
+                   optional(
+                       choice(
+                           token("FILE"),
+                           token("REEL"),
+                           token("UNIT")
+                       )
+                   ),
+                   token("LABEL"),
+                   token("PROCEDURE"),
+                   optional(
+                       token("ON")
+                   ),
+                   star(
+                       choice(
+                           token("INPUT"),
+                           token("OUTPUT"),
+                           token("I-O"),
+                           token("EXTEND"),
+                           fileName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return labelDeclarativeParser;
     }
 
     // ========================================================
@@ -7127,14 +8637,11 @@ public class CobolGrammar extends KoopaGrammar {
            arithmeticExpressionParser = future;
            future.setParser(
                sequence(
-                   timesDiv(),
+                   summand(),
                    star(
                        sequence(
-                           choice(
-                               token("+"),
-                               token("-")
-                           ),
-                           timesDiv()
+                           signDef(),
+                           summand()
                        )
                    )
                )
@@ -7145,76 +8652,94 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // timesDiv
+    // signDef
     // ........................................................
 
-    private Parser timesDivParser = null;
+    private Parser signDefParser = null;
 
-    public Parser timesDiv() {
-        if (timesDivParser == null) {
-           FutureParser future = scoped("timesDiv");
-           timesDivParser = future;
+    public Parser signDef() {
+        if (signDefParser == null) {
+           FutureParser future = scoped("signDef");
+           signDefParser = future;
+           future.setParser(
+               choice(
+                   token("+"),
+                   token("-")
+               )
+           );
+        }
+
+        return signDefParser;
+    }
+
+    // ========================================================
+    // summand
+    // ........................................................
+
+    private Parser summandParser = null;
+
+    public Parser summand() {
+        if (summandParser == null) {
+           FutureParser future = scoped("summand");
+           summandParser = future;
            future.setParser(
                sequence(
-                   power(),
+                   factor(),
                    star(
                        sequence(
                            choice(
                                token("*"),
                                token("/")
                            ),
-                           power()
+                           factor()
                        )
                    )
                )
            );
         }
 
-        return timesDivParser;
+        return summandParser;
     }
 
     // ========================================================
-    // power
+    // factor
     // ........................................................
 
-    private Parser powerParser = null;
+    private Parser factorParser = null;
 
-    public Parser power() {
-        if (powerParser == null) {
-           FutureParser future = scoped("power");
-           powerParser = future;
+    public Parser factor() {
+        if (factorParser == null) {
+           FutureParser future = scoped("factor");
+           factorParser = future;
            future.setParser(
                sequence(
                    optional(
-                       choice(
-                           token("+"),
-                           token("-")
-                       )
+                       signDef()
                    ),
-                   basis(),
+                   atomicExpression(),
                    star(
                        sequence(
                            token("**"),
-                           basis()
+                           atomicExpression()
                        )
                    )
                )
            );
         }
 
-        return powerParser;
+        return factorParser;
     }
 
     // ========================================================
-    // basis
+    // atomicExpression
     // ........................................................
 
-    private Parser basisParser = null;
+    private Parser atomicExpressionParser = null;
 
-    public Parser basis() {
-        if (basisParser == null) {
-           FutureParser future = scoped("basis");
-           basisParser = future;
+    public Parser atomicExpression() {
+        if (atomicExpressionParser == null) {
+           FutureParser future = scoped("atomicExpression");
+           atomicExpressionParser = future;
            future.setParser(
                choice(
                    token("ZERO"),
@@ -7229,7 +8754,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return basisParser;
+        return atomicExpressionParser;
     }
 
     // ========================================================
@@ -7243,26 +8768,633 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("condition");
            conditionParser = future;
            future.setParser(
-               skipto(
+               sequence(
                    choice(
-                       token("THEN"),
-                       verb(),
+                       primaryCondition(),
                        sequence(
-                           token("NEXT"),
-                           token("SENTENCE")
-                       ),
-                       token("END-PERFORM"),
-                       token("AFTER"),
-                       token("WHEN"),
-                       token("ALSO"),
-                       token("ELSE"),
-                       token(".")
+                           optional(
+                               negationOp()
+                           ),
+                           token("("),
+                           condition(),
+                           token(")")
+                       )
+                   ),
+                   star(
+                       sequence(
+                           conditionalRelationOP(),
+                           choice(
+                               primaryCondition(),
+                               sequence(
+                                   optional(
+                                       negationOp()
+                                   ),
+                                   token("("),
+                                   condition(),
+                                   token(")")
+                               )
+                           )
+                       )
                    )
                )
            );
         }
 
         return conditionParser;
+    }
+
+    // ========================================================
+    // primaryCondition
+    // ........................................................
+
+    private Parser primaryConditionParser = null;
+
+    public Parser primaryCondition() {
+        if (primaryConditionParser == null) {
+           FutureParser future = scoped("primaryCondition");
+           primaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       negationOp()
+                   ),
+                   primaryCondDef()
+               )
+           );
+        }
+
+        return primaryConditionParser;
+    }
+
+    // ========================================================
+    // primaryCondDef
+    // ........................................................
+
+    private Parser primaryCondDefParser = null;
+
+    public Parser primaryCondDef() {
+        if (primaryCondDefParser == null) {
+           FutureParser future = scoped("primaryCondDef");
+           primaryCondDefParser = future;
+           future.setParser(
+               choice(
+                   booleanLiteral(),
+                   sequence(
+                       classPrimaryCondition(),
+                       star(
+                           sequence(
+                               conditionalRelationOP(),
+                               optional(
+                                   negationOp()
+                               ),
+                               classSecondaryCondition()
+                           )
+                       )
+                   ),
+                   signPrimaryCondition(),
+                   sequence(
+                       generalPrimaryCondition(),
+                       star(
+                           sequence(
+                               conditionalRelationOP(),
+                               optional(
+                                   negationOp()
+                               ),
+                               generalSecondaryCondition(),
+                               not(
+                                   choice(
+                                       generalRelationOp(),
+                                       token("IS"),
+                                       sequence(
+                                           optional(
+                                               token("NOT")
+                                           ),
+                                           classType()
+                                       ),
+                                       signType()
+                                   )
+                               )
+                           )
+                       )
+                   ),
+                   sequence(
+                       monoElemPrimaryCondition(),
+                       star(
+                           sequence(
+                               optional(
+                                   token("IS")
+                               ),
+                               optional(
+                                   negationOp()
+                               ),
+                               monoElemPrimaryCondition()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return primaryCondDefParser;
+    }
+
+    // ========================================================
+    // generalPrimaryCondition
+    // ........................................................
+
+    private Parser generalPrimaryConditionParser = null;
+
+    public Parser generalPrimaryCondition() {
+        if (generalPrimaryConditionParser == null) {
+           FutureParser future = scoped("generalPrimaryCondition");
+           generalPrimaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   operand(),
+                   generalRelationOp(),
+                   operand()
+               )
+           );
+        }
+
+        return generalPrimaryConditionParser;
+    }
+
+    // ========================================================
+    // signPrimaryCondition
+    // ........................................................
+
+    private Parser signPrimaryConditionParser = null;
+
+    public Parser signPrimaryCondition() {
+        if (signPrimaryConditionParser == null) {
+           FutureParser future = scoped("signPrimaryCondition");
+           signPrimaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       arithmeticExpression(),
+                       identifier()
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   optional(
+                       negationOp()
+                   ),
+                   signType()
+               )
+           );
+        }
+
+        return signPrimaryConditionParser;
+    }
+
+    // ========================================================
+    // signType
+    // ........................................................
+
+    private Parser signTypeParser = null;
+
+    public Parser signType() {
+        if (signTypeParser == null) {
+           FutureParser future = scoped("signType");
+           signTypeParser = future;
+           future.setParser(
+               choice(
+                   token("POSITIVE"),
+                   token("NEGATIVE"),
+                   token("ZERO")
+               )
+           );
+        }
+
+        return signTypeParser;
+    }
+
+    // ========================================================
+    // monoElemPrimaryCondition
+    // ........................................................
+
+    private Parser monoElemPrimaryConditionParser = null;
+
+    public Parser monoElemPrimaryCondition() {
+        if (monoElemPrimaryConditionParser == null) {
+           FutureParser future = scoped("monoElemPrimaryCondition");
+           monoElemPrimaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       conditionName(),
+                       className()
+                   )
+               )
+           );
+        }
+
+        return monoElemPrimaryConditionParser;
+    }
+
+    // ========================================================
+    // classPrimaryCondition
+    // ........................................................
+
+    private Parser classPrimaryConditionParser = null;
+
+    public Parser classPrimaryCondition() {
+        if (classPrimaryConditionParser == null) {
+           FutureParser future = scoped("classPrimaryCondition");
+           classPrimaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   identifier(),
+                   optional(
+                       token("IS")
+                   ),
+                   optional(
+                       negationOp()
+                   ),
+                   classType()
+               )
+           );
+        }
+
+        return classPrimaryConditionParser;
+    }
+
+    // ========================================================
+    // classType
+    // ........................................................
+
+    private Parser classTypeParser = null;
+
+    public Parser classType() {
+        if (classTypeParser == null) {
+           FutureParser future = scoped("classType");
+           classTypeParser = future;
+           future.setParser(
+               choice(
+                   token("NUMERIC"),
+                   token("ALPHABETIC"),
+                   token("ALPHABETIC-LOWER"),
+                   token("ALPHABETIC-UPPER"),
+                   token("DBCS"),
+                   token("KANJI")
+               )
+           );
+        }
+
+        return classTypeParser;
+    }
+
+    // ========================================================
+    // generalSecondaryCondition
+    // ........................................................
+
+    private Parser generalSecondaryConditionParser = null;
+
+    public Parser generalSecondaryCondition() {
+        if (generalSecondaryConditionParser == null) {
+           FutureParser future = scoped("generalSecondaryCondition");
+           generalSecondaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       generalRelationOp()
+                   ),
+                   operand()
+               )
+           );
+        }
+
+        return generalSecondaryConditionParser;
+    }
+
+    // ========================================================
+    // classSecondaryCondition
+    // ........................................................
+
+    private Parser classSecondaryConditionParser = null;
+
+    public Parser classSecondaryCondition() {
+        if (classSecondaryConditionParser == null) {
+           FutureParser future = scoped("classSecondaryCondition");
+           classSecondaryConditionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("IS")
+                   ),
+                   optional(
+                       negationOp()
+                   ),
+                   classType()
+               )
+           );
+        }
+
+        return classSecondaryConditionParser;
+    }
+
+    // ========================================================
+    // conditionalRelationOP
+    // ........................................................
+
+    private Parser conditionalRelationOPParser = null;
+
+    public Parser conditionalRelationOP() {
+        if (conditionalRelationOPParser == null) {
+           FutureParser future = scoped("conditionalRelationOP");
+           conditionalRelationOPParser = future;
+           future.setParser(
+               choice(
+                   token("AND"),
+                   token("OR")
+               )
+           );
+        }
+
+        return conditionalRelationOPParser;
+    }
+
+    // ========================================================
+    // generalRelationOp
+    // ........................................................
+
+    private Parser generalRelationOpParser = null;
+
+    public Parser generalRelationOp() {
+        if (generalRelationOpParser == null) {
+           FutureParser future = scoped("generalRelationOp");
+           generalRelationOpParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       greaterOrEqualOp(),
+                       lessOrEqualOp(),
+                       greaterThanOp(),
+                       notGreaterThanOp(),
+                       lessThanOp(),
+                       notLessThanOp(),
+                       equalToOp(),
+                       notEqualToOp()
+                   )
+               )
+           );
+        }
+
+        return generalRelationOpParser;
+    }
+
+    // ========================================================
+    // negationOp
+    // ........................................................
+
+    private Parser negationOpParser = null;
+
+    public Parser negationOp() {
+        if (negationOpParser == null) {
+           FutureParser future = scoped("negationOp");
+           negationOpParser = future;
+           future.setParser(
+               token("NOT")
+           );
+        }
+
+        return negationOpParser;
+    }
+
+    // ========================================================
+    // greaterThanOp
+    // ........................................................
+
+    private Parser greaterThanOpParser = null;
+
+    public Parser greaterThanOp() {
+        if (greaterThanOpParser == null) {
+           FutureParser future = scoped("greaterThanOp");
+           greaterThanOpParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("GREATER"),
+                       optional(
+                           token("THAN")
+                       )
+                   ),
+                   token(">")
+               )
+           );
+        }
+
+        return greaterThanOpParser;
+    }
+
+    // ========================================================
+    // notGreaterThanOp
+    // ........................................................
+
+    private Parser notGreaterThanOpParser = null;
+
+    public Parser notGreaterThanOp() {
+        if (notGreaterThanOpParser == null) {
+           FutureParser future = scoped("notGreaterThanOp");
+           notGreaterThanOpParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   choice(
+                       sequence(
+                           token("GREATER"),
+                           optional(
+                               token("THAN")
+                           )
+                       ),
+                       token(">")
+                   )
+               )
+           );
+        }
+
+        return notGreaterThanOpParser;
+    }
+
+    // ========================================================
+    // lessThanOp
+    // ........................................................
+
+    private Parser lessThanOpParser = null;
+
+    public Parser lessThanOp() {
+        if (lessThanOpParser == null) {
+           FutureParser future = scoped("lessThanOp");
+           lessThanOpParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("LESS"),
+                       optional(
+                           token("THAN")
+                       )
+                   ),
+                   token("<")
+               )
+           );
+        }
+
+        return lessThanOpParser;
+    }
+
+    // ========================================================
+    // notLessThanOp
+    // ........................................................
+
+    private Parser notLessThanOpParser = null;
+
+    public Parser notLessThanOp() {
+        if (notLessThanOpParser == null) {
+           FutureParser future = scoped("notLessThanOp");
+           notLessThanOpParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   choice(
+                       sequence(
+                           token("LESS"),
+                           optional(
+                               token("THAN")
+                           )
+                       ),
+                       token("<")
+                   )
+               )
+           );
+        }
+
+        return notLessThanOpParser;
+    }
+
+    // ========================================================
+    // equalToOp
+    // ........................................................
+
+    private Parser equalToOpParser = null;
+
+    public Parser equalToOp() {
+        if (equalToOpParser == null) {
+           FutureParser future = scoped("equalToOp");
+           equalToOpParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("EQUAL"),
+                       optional(
+                           token("TO")
+                       )
+                   ),
+                   token("=")
+               )
+           );
+        }
+
+        return equalToOpParser;
+    }
+
+    // ========================================================
+    // notEqualToOp
+    // ........................................................
+
+    private Parser notEqualToOpParser = null;
+
+    public Parser notEqualToOp() {
+        if (notEqualToOpParser == null) {
+           FutureParser future = scoped("notEqualToOp");
+           notEqualToOpParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   choice(
+                       sequence(
+                           token("EQUAL"),
+                           optional(
+                               token("TO")
+                           )
+                       ),
+                       token("=")
+                   )
+               )
+           );
+        }
+
+        return notEqualToOpParser;
+    }
+
+    // ========================================================
+    // greaterOrEqualOp
+    // ........................................................
+
+    private Parser greaterOrEqualOpParser = null;
+
+    public Parser greaterOrEqualOp() {
+        if (greaterOrEqualOpParser == null) {
+           FutureParser future = scoped("greaterOrEqualOp");
+           greaterOrEqualOpParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("GREATER"),
+                       optional(
+                           token("THAN")
+                       ),
+                       token("OR"),
+                       token("EQUAL"),
+                       optional(
+                           token("TO")
+                       )
+                   ),
+                   token(">=")
+               )
+           );
+        }
+
+        return greaterOrEqualOpParser;
+    }
+
+    // ========================================================
+    // lessOrEqualOp
+    // ........................................................
+
+    private Parser lessOrEqualOpParser = null;
+
+    public Parser lessOrEqualOp() {
+        if (lessOrEqualOpParser == null) {
+           FutureParser future = scoped("lessOrEqualOp");
+           lessOrEqualOpParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("LESS"),
+                       optional(
+                           token("THAN")
+                       ),
+                       token("OR"),
+                       token("EQUAL"),
+                       optional(
+                           token("TO")
+                       )
+                   ),
+                   token("<=")
+               )
+           );
+        }
+
+        return lessOrEqualOpParser;
     }
 
     // ========================================================
@@ -7602,7 +9734,10 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("mnemonicName");
            mnemonicNameParser = future;
            future.setParser(
-               cobolWord()
+               choice(
+                   cobolWord(),
+                   identifier()
+               )
            );
         }
 
@@ -7702,7 +9837,10 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("assignmentName");
            assignmentNameParser = future;
            future.setParser(
-               cobolWord()
+               choice(
+                   cobolWord(),
+                   literal()
+               )
            );
         }
 

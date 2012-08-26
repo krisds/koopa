@@ -1,7 +1,14 @@
 package koopa.grammars.test;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import koopa.parsers.Metrics;
 import koopa.parsers.ParseResults;
@@ -71,8 +78,7 @@ public class TargetResult {
 			if (this.valid) {
 				messages.add("- This file used to parse. It no longer does.");
 			} else {
-				messages
-						.add("+ This file used to fail parsing. It is now valid.");
+				messages.add("+ This file used to fail parsing. It is now valid.");
 			}
 		}
 
@@ -131,4 +137,55 @@ public class TargetResult {
 
 		return messages;
 	}
+
+	public static Map<String, TargetResult> loadFromFile(File expectedFile)
+			throws IOException {
+		CSVReader reader = null;
+		try {
+			reader = new CSVReader(new FileReader(expectedFile));
+			String[] entries = null;
+
+			// Header.
+			if ((entries = reader.readNext()) == null) {
+				return null;
+			}
+
+			final Map<String, TargetResult> targets = new HashMap<String, TargetResult>();
+
+			// Entries.
+			while ((entries = reader.readNext()) != null) {
+				final String name = entries[0];
+				final String valid = entries[1];
+				final String tokenCount = entries[2];
+				final String coverage = entries[3];
+				final String errorCount = entries[4];
+				// final String errors = entries[5];
+				final String warningCount = entries[6];
+				// final String warnings = entries[7];
+
+				TargetResult results = new TargetResult();
+				results.setName(name);
+				results.setValid("true".equalsIgnoreCase(valid));
+				results.setTokenCount(Integer.parseInt(tokenCount));
+				results.setCoverage(Float.parseFloat(coverage));
+				results.setErrorCount(Integer.parseInt(errorCount));
+				// TODO List of errors.
+				results.setWarningCount(Integer.parseInt(warningCount));
+				// TODO List of warnings.
+
+				targets.put(name, results);
+			}
+
+			return targets;
+
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
+
 }

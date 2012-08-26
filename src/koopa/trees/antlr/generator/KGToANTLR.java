@@ -1,6 +1,5 @@
 package koopa.trees.antlr.generator;
 
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -43,6 +42,10 @@ public class KGToANTLR {
 		CommonTree ast = getKoopaAST(path + name + ".kg");
 
 		if (ast != null) {
+			// TODO Split up these two targets into two separate applications.
+			// E.g. for
+			// the preprocessor we're interested in the tokens but not in the
+			// tree parser.
 			generateTokens(ast, contents(path + name + ".antlr-tokens"),
 					outputPath + name + ".tokens");
 			generateTreeParser(ast, name, pack, contents(path + name
@@ -122,9 +125,11 @@ public class KGToANTLR {
 
 		System.out.println("Reading " + filename);
 
+		FileReader fileReader = null;
+		BufferedReader bufferedReader = null;
 		try {
-			FileReader fileReader = new FileReader(filename);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			fileReader = new FileReader(filename);
+			bufferedReader = new BufferedReader(fileReader);
 			StringBuffer buffer = new StringBuffer();
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
@@ -132,9 +137,18 @@ public class KGToANTLR {
 				buffer.append('\n');
 			}
 			return buffer.toString();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+			
+		} finally {
+			if (bufferedReader != null) {
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 	}
 

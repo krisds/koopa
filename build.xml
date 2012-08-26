@@ -25,7 +25,7 @@
 		<antlr-gen2 grammar="src/koopa/grammars/test/generator/StageTreeParser.g" tokens="src/koopa/grammars/test/generator/" />
 		<antlr-gen2 grammar="src/koopa/grammars/test/generator/StageGenerator.g" tokens="src/koopa/grammars/test/generator/" />
 
-		<echo>Generating the ANTRL tree parser generator...</echo>
+		<echo>Generating the ANTLR tree parser generator...</echo>
 		<copy file="src/koopa/grammars/generator/KG.tokens" tofile="src/koopa/trees/antlr/generator/KG.tokens" />
 		<antlr-gen2 grammar="src/koopa/trees/antlr/generator/KGToANTLRTokens.g" tokens="src/koopa/trees/antlr/generator/" />
 		<antlr-gen2 grammar="src/koopa/trees/antlr/generator/KGToANTLRTreeGrammar.g" tokens="src/koopa/trees/antlr/generator/" />
@@ -59,12 +59,41 @@
 	</target>
 
 
-	<!-- COBOL GRAMMAR -->
+	<!-- GRAMMAR COMPILATION -->
 
-	<target name="grammar" depends="bootstrap">
+	<target name="update-kg-tokens" depends="bootstrap">
 		<echo>Copying the latest KG.tokens definition...</echo>
 		<synchronize-file file="src/koopa/grammars/generator/KG.tokens" root="grammar/" />
+	</target>
+	
+	<target name="grammar-cobol-preprocessing" depends="update-kg-tokens">
+		<echo>Generating the Cobol parser...</echo>
+		<kgg name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing" path="grammar/koopa/grammars/cobolPreprocessing/" />
 
+		<echo>Generating secondary classes...</echo>
+		<kg2antlr name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing.antlr" path="grammar/koopa/grammars/cobolPreprocessing/" output="grammar/koopa/grammars/cobolPreprocessing/antlr/" />
+<!--
+		<generate-verifications name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
+		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
+		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
+-->
+		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
+		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
+		</delete>
+<!--
+		<echo>Compiling Cobol parser...</echo>
+		<javac srcdir="grammar/" destdir="build/" debug="on" source="1.5">
+			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+-->
+	</target>
+	
+	<target name="grammar-cobol" depends="update-kg-tokens, grammar-cobol-preprocessing">
 		<echo>Generating the Cobol parser...</echo>
 		<kgg name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
 
@@ -87,8 +116,10 @@
 				</fileset>
 			</classpath>
 		</javac>
-
-		<echo>Copying additional resources...</echo>
+	</target>
+	
+	<target name="grammar" depends="bootstrap, update-kg-tokens, grammar-cobol-preprocessing, grammar-cobol">
+		<echo>Copying additional grammar resources...</echo>
 		<copy todir="build/">
 			<fileset dir="grammar/" excludes="**/*.java,**/*.g" />
 		</copy>
@@ -132,12 +163,14 @@
 			<test name="koopa.tokenizers.test.TokenizerTests" />
 			<test name="koopa.parsers.test.KoopaGrammarTest" />
 			<test name="koopa.grammars.cobol.test.CobolGrammarTests" />
+			
+			<test name="koopa.parsers.cobol.test.Cobol85RegressionTest" />
 		</junit>
 	</target>
 	
-	<target name="run-regression-test">
+	<!--target name="run-regression-test">
 		<regression-test folder="testsuite/cobol85/" results="testsuite/cobol85-results.csv" targets="testsuite/cobol85.csv" />
-	</target>
+	</target-->
 
 
 	<!-- BACK END -->
@@ -146,7 +179,7 @@
 	</target>
 
 	<target name="back-end-generate">
-		<echo>Generating the ANTRL tree filter generator...</echo>
+		<echo>Generating the ANTLR tree filter generator...</echo>
 		<antlr-gen grammar="back-end/koopa/trees/antlr/filter/generator/ANTLRv3.g" />
 		<antlr-gen2 grammar="back-end/koopa/trees/antlr/filter/generator/ANTLRv3Tree.g" tokens="back-end/koopa/trees/antlr/filter/generator/" />
 		<antlr-gen2 grammar="back-end/koopa/trees/antlr/filter/generator/ANTLRv3TreeFilter.g" tokens="back-end/koopa/trees/antlr/filter/generator/" />

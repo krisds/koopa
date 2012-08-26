@@ -2,10 +2,8 @@ package koopa.grammars.test;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +13,10 @@ import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.tokens.Token;
 import koopa.util.Tuple;
-import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
+// TODO Reduce this to a class which generates a results file.
+// The actual regression test is now in Cobol85RegressionTest.
 public class RegressionTest {
 
 	private static ParsingCoordinator coordinator = null;
@@ -48,7 +47,7 @@ public class RegressionTest {
 			targetResults = null;
 
 		} else {
-			targetResults = loadTargetResults(targetFile);
+			targetResults = TargetResult.loadFromFile(targetFile);
 			if (verbose) {
 				System.out.println("Loaded " + targetResults.size()
 						+ " targets for this regression test.");
@@ -158,56 +157,6 @@ public class RegressionTest {
 		}
 
 		System.exit(sawRegressions ? 1 : 0);
-	}
-
-	private static Map<String, TargetResult> loadTargetResults(File expectedFile)
-			throws IOException {
-		CSVReader reader = null;
-		try {
-			reader = new CSVReader(new FileReader(expectedFile));
-			String[] entries = null;
-
-			// Header.
-			if ((entries = reader.readNext()) == null) {
-				return null;
-			}
-
-			final Map<String, TargetResult> targets = new HashMap<String, TargetResult>();
-
-			// Entries.
-			while ((entries = reader.readNext()) != null) {
-				final String name = entries[0];
-				final String valid = entries[1];
-				final String tokenCount = entries[2];
-				final String coverage = entries[3];
-				final String errorCount = entries[4];
-				// final String errors = entries[5];
-				final String warningCount = entries[6];
-				// final String warnings = entries[7];
-
-				TargetResult results = new TargetResult();
-				results.setName(name);
-				results.setValid("true".equalsIgnoreCase(valid));
-				results.setTokenCount(Integer.parseInt(tokenCount));
-				results.setCoverage(Float.parseFloat(coverage));
-				results.setErrorCount(Integer.parseInt(errorCount));
-				// TODO List of errors.
-				results.setWarningCount(Integer.parseInt(warningCount));
-				// TODO List of warnings.
-
-				targets.put(name, results);
-			}
-
-			return targets;
-
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-				}
-			}
-		}
 	}
 
 	private static void writeResultsHeader(final CSVWriter writer)

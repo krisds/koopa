@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.antlr.runtime.tree.CommonTree;
+
 public class TokenTypes {
 	private Map<String, Integer> types = null;
 	private Set<Integer> literals = null;
@@ -68,5 +70,9 @@ public class TokenTypes {
 
 	public boolean isToken(int value) {
 		return this.types.get("TOKEN").intValue() == value;
+	}
+	
+	public boolean isNodeOfType(CommonTree node, String type) {
+		return forNode(type) == node.getType();
 	}
 }

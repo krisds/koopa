@@ -3,7 +3,9 @@ package koopa.parsers.cobol;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +15,7 @@ import koopa.grammars.cobol.CobolVerifier;
 import koopa.parsers.ParseResults;
 import koopa.parsers.Parser;
 import koopa.parsers.ParserConfiguration;
+import koopa.parsers.cobol.preprocessing.PreprocessingTokenizer;
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
 import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
@@ -57,6 +60,11 @@ public class CobolParser implements ParserConfiguration {
 
 	private SourceFormat format = SourceFormat.FIXED;
 
+	/** EXPERIMENTAL */
+	// TODO Extend ParserConfiguration to allow changing these from there.
+	private boolean preprocessing = false;
+	private List<File> copybookPaths = new ArrayList<File>();
+
 	public ParseResults parse(File file) throws IOException {
 		LOGGER.info("Parsing " + file);
 
@@ -67,91 +75,8 @@ public class CobolParser implements ParserConfiguration {
 
 		FileReader reader = new FileReader(file);
 
-		// We will be building up our tokenizer in several stages. Each stage
-		// takes the preceding tokenizer, and extends its abilities.
-		Tokenizer tokenizer;
-
-		// The tokenizers in this sequence should generate the expected tokens.
-		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
-		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
-		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
-		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
-
-		if (this.format == SourceFormat.FIXED) {
-			tokenizer = new LineContinuationTokenizer(tokenizer);
-			tokenizer = new ContinuationWeldingTokenizer(tokenizer);
-		}
-
-		tokenizer = new SeparatorTokenizer(tokenizer);
-		tokenizer = new PseudoLiteralTokenizer(tokenizer);
-
-		if (this.keepingTrackOfTokens) {
-			final TokenTrackerTokenizer tokenTracker = new TokenTrackerTokenizer(
-					tokenizer);
-
-			results.setTokenTracker(tokenTracker.getTokenTracker());
-
-			tokenizer = tokenTracker;
-		}
-
-		// This allows external tools to see all tokens before further
-		// processing. At the moment it is not guaranteed that all tokens will
-		// make it to the token sinks.
-		for (IntermediateTokenizer intermediate : this.intermediateTokenizers) {
-			intermediate.setPreviousTokenizer(tokenizer);
-			tokenizer = intermediate;
-		}
-
-		// Here we filter out all tokens which are not part of the program text
-		// area (comments are not considered part of this area). This leaves us
-		// with the pure code, which should be perfect for processing by a
-		// parser.
-		tokenizer = new FilteringTokenizer(tokenizer, AreaTag.PROGRAM_TEXT_AREA);
-
-		// Here we filter out all pure whitespace separators. This leaves us
-		// with only the "structural" tokens which are of interest to a parser.
-		// 
-		// When we do this we need to tag tokens which were not separated by
-		// whitespace. This is needed to correctly build picture strings while
-		// parsing. It would be nicer if we could recognize picture strings
-		// in the tokenizer stages, but I don't see how we can do that without
-		// some form of parsing...
-		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
-			boolean lastWasWhitespace = true;
-			int lastLinenumber = -1;
-
-			public boolean accepts(Token token) {
-				final int currentLinenumber = token.getStart().getLinenumber();
-
-				// A change of line is seen as whitespace.
-				if (lastLinenumber != currentLinenumber) {
-					lastWasWhitespace = true;
-				}
-
-				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
-					if (!lastWasWhitespace) {
-						token.addTag(TokenizerTag.CHAINED);
-					}
-					lastWasWhitespace = false;
-					lastLinenumber = currentLinenumber;
-					return true;
-				}
-
-				final String text = token.getText().trim();
-				if (text.equals("")) {
-					lastWasWhitespace = true;
-					lastLinenumber = currentLinenumber;
-					return false;
-				}
-
-				if (!lastWasWhitespace) {
-					token.addTag(TokenizerTag.CHAINED);
-				}
-				lastWasWhitespace = false;
-				lastLinenumber = currentLinenumber;
-				return !text.equals(",") && !text.equals(";");
-			}
-		});
+		// Build the tokenisation stage.
+		Tokenizer tokenizer = getNewTokenizationStage(results, reader);
 
 		// This object holds all grammar productions. It is not thread-safe,
 		// meaning that you can only ask it to parse one thing at a time.
@@ -349,6 +274,108 @@ public class CobolParser implements ParserConfiguration {
 		return results;
 	}
 
+	public Tokenizer getNewTokenizationStage(ParseResults results, Reader reader) {
+		// We will be building up our tokenization stage in several steps. Each
+		// step takes the preceding tokenizer, and extends its abilities.
+		Tokenizer tokenizer;
+
+		// Split the input into lines.
+		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
+		// Filter out some compiler directives.
+		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
+		// Split up the different areas of each line (depending on the format).
+		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
+		// Filter out some source formatting directives.
+		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
+
+		// In case of fixed format: take care of line continuations
+		if (this.format == SourceFormat.FIXED) {
+			tokenizer = new LineContinuationTokenizer(tokenizer);
+			tokenizer = new ContinuationWeldingTokenizer(tokenizer);
+		}
+
+		// Split up the lines into separators and non-separators.
+		tokenizer = new SeparatorTokenizer(tokenizer);
+		// Find (and mark) pseudo literals.
+		tokenizer = new PseudoLiteralTokenizer(tokenizer);
+
+		// Keep track of all tokens passing through here, if so requested.
+		if (this.keepingTrackOfTokens && results != null) {
+			final TokenTrackerTokenizer tokenTracker = new TokenTrackerTokenizer(
+					tokenizer);
+			results.setTokenTracker(tokenTracker.getTokenTracker());
+			tokenizer = tokenTracker;
+		}
+
+		// This allows external tools to see all tokens before further
+		// processing. At the moment it is not guaranteed that all tokens will
+		// make it to the token sinks.
+		for (IntermediateTokenizer intermediate : this.intermediateTokenizers) {
+			intermediate.setPreviousTokenizer(tokenizer);
+			tokenizer = intermediate;
+		}
+
+		// Here we filter out all tokens which are not part of the program text
+		// area (comments are not considered part of this area). This leaves us
+		// with the pure code, which should be perfect for processing by a
+		// parser.
+		tokenizer = new FilteringTokenizer(tokenizer, AreaTag.PROGRAM_TEXT_AREA);
+
+		// Here we filter out all pure whitespace separators. This leaves us
+		// with only the "structural" tokens which are of interest to a parser.
+		//
+		// When we do this we need to tag tokens which were not separated by
+		// whitespace. This is needed to correctly build picture strings while
+		// parsing. It would be nicer if we could recognize picture strings
+		// in the tokenizer stages, but I don't see how we can do that without
+		// some form of parsing...
+		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
+			boolean lastWasWhitespace = true;
+			int lastLinenumber = -1;
+
+			public boolean accepts(Token token) {
+				final int currentLinenumber = token.getStart().getLinenumber();
+
+				// A change of line is seen as whitespace.
+				if (lastLinenumber != currentLinenumber) {
+					lastWasWhitespace = true;
+				}
+
+				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
+					if (!lastWasWhitespace) {
+						token.addTag(TokenizerTag.CHAINED);
+					}
+					lastWasWhitespace = false;
+					lastLinenumber = currentLinenumber;
+					return true;
+				}
+
+				final String text = token.getText().trim();
+				if (text.equals("")) {
+					lastWasWhitespace = true;
+					lastLinenumber = currentLinenumber;
+					return false;
+				}
+
+				if (!lastWasWhitespace) {
+					token.addTag(TokenizerTag.CHAINED);
+				}
+				lastWasWhitespace = false;
+				lastLinenumber = currentLinenumber;
+				return !text.equals(",") && !text.equals(";");
+			}
+		});
+
+		// EXPERIMENTAL: optional preprocessing stage.
+		// TODO Work on this stage.
+		if (this.preprocessing) {
+			tokenizer = new PreprocessingTokenizer(tokenizer, this);
+		}
+
+		return tokenizer;
+	}
+
+	// TODO Make this part of the CobolGrammar as a static method.
 	private TokenTypes getTokenTypes() {
 		if (tokenTypes == null) {
 			try {
@@ -437,5 +464,38 @@ public class CobolParser implements ParserConfiguration {
 
 	public SourceFormat getFormat() {
 		return this.format;
+	}
+
+	public boolean isPreprocessing() {
+		return preprocessing;
+	}
+
+	/** EXPERIMENTAL ! */
+	public void setPreprocessing(boolean preprocessing) {
+		this.preprocessing = preprocessing;
+	}
+
+	/** EXPERIMENTAL ! */
+	public void setCopybookPath(List<File> copybookPaths) {
+		this.copybookPaths = copybookPaths;
+	}
+	
+	// TODO Smarter lookup system, with variations in extensions.
+	public File lookup(final String textName, final String libraryName) {
+		if (this.copybookPaths == null)
+			return null;
+
+		for (File path : this.copybookPaths) {
+			File[] matches = path.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.equalsIgnoreCase(textName + ".cpy");
+				}
+			});
+
+			if (matches != null && matches.length > 0)
+				return matches[0];
+		}
+
+		return null;
 	}
 }

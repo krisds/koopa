@@ -1,0 +1,31 @@
+cobolWord
+  : ^(COBOL_WORD token)
+  ;
+
+integer
+  : ^(INTEGER token)
+  ;
+
+decimal
+  : ^(DECIMAL token)
+  ;
+
+hexadecimal
+  : ^(HEXADECIMAL token)
+  ;
+
+alphanumeric
+  : ^(ALPHANUMERIC token)
+  ;
+
+pictureString
+  : ^(PICTURE_STRING token+)
+  ;
+
+levelNumber
+  : ^(LEVEL_NUMBER token)
+  ;
+
+pseudoLiteral
+  : ^(PSEUDO_LITERAL token)
+  ;

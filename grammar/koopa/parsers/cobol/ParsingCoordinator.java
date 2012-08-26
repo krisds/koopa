@@ -2,6 +2,7 @@ package koopa.parsers.cobol;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +19,12 @@ public class ParsingCoordinator {
 
 	private SourceFormat format = SourceFormat.FIXED;
 
+	/** EXPERIMENTAL */
+	private boolean preprocessing = false;
+
+	/** EXPERIMENTAL */
+	private List<File> copybookPaths = new ArrayList<File>();
+
 	public SourceFormat getFormat() {
 		return format;
 	}
@@ -31,18 +38,21 @@ public class ParsingCoordinator {
 	}
 
 	public ParseResults parse(File file) throws IOException {
-		CobolParser config = new CobolParser();
+		CobolParser parser = new CobolParser();
 
-		config.setFormat(this.format);
-		config.setKeepingTrackOfTokens(keepingTrackOfTokens);
+		parser.setFormat(this.format);
+		parser.setKeepingTrackOfTokens(keepingTrackOfTokens);
 
 		for (IntermediateTokenizer intermediateTokenizer : this.intermediateTokenizers) {
-			config.addIntermediateTokenizer(intermediateTokenizer);
+			parser.addIntermediateTokenizer(intermediateTokenizer);
 		}
 
-		fireBeforeParsing(file, config);
+		parser.setPreprocessing(this.preprocessing);
+		parser.setCopybookPath(this.copybookPaths);
+		
+		fireBeforeParsing(file, parser);
 
-		ParseResults results = config.parse(file);
+		ParseResults results = parser.parse(file);
 
 		fireAfterParsing(file, results);
 
@@ -71,5 +81,23 @@ public class ParsingCoordinator {
 
 	public void setKeepingTrackOfTokens(boolean keepingTrackOfTokens) {
 		this.keepingTrackOfTokens = keepingTrackOfTokens;
+	}
+
+	/** EXPERIMENTAL ! */
+	public boolean isPreprocessing() {
+		return preprocessing;
+	}
+
+	/** EXPERIMENTAL ! */
+	public void setPreprocessing(boolean preprocessing) {
+		this.preprocessing = preprocessing;
+	}
+
+	/** EXPERIMENTAL ! */
+	public void addCopybookPath(File path) {
+		if (path == null)
+			return;
+
+		this.copybookPaths.add(path);
 	}
 }

@@ -1,0 +1,65 @@
+## #############################################################################
+## Top level definitions.
+## -----------------------------------------------------------------------------
+
+# Preprocessing.
+def preprocessing =
+	( (--> preprocessingDirective) preprocessingDirective )*
+end
+
+def preprocessingDirective =
+	copyStatement
+end
+
+
+## #############################################################################
+## COPY statement.
+## -----------------------------------------------------------------------------
+
+def copyStatement =
+    COPY textName [ (OF | IN) libraryName ]
+    [SUPPRESS]
+    [copyReplacingPhrase]
+    .
+end
+
+def copyReplacingPhrase =
+	REPLACING
+	(copyReplacementInstruction)+
+end
+
+def copyReplacementInstruction =
+	copyOperandName BY copyOperandName
+end
+
+def copyOperandName =
+	(pseudoLiteral | literal | cobolWord)
+end
+
+
+## #############################################################################
+## Lower level stuff.
+## -----------------------------------------------------------------------------
+
+def textName =
+    ( cobolWord
+    | alphanumeric
+    )
+end
+
+def libraryName =
+    cobolWord
+end
+
+def literal =
+    ( numeric
+    | alphanumeric
+    )
+end
+
+def numeric =
+    ( integer
+    | decimal
+    | hexadecimal
+    )
+end

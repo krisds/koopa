@@ -171,7 +171,7 @@
 <!ELEMENT transactionName (literal|identifier)>
 <!ELEMENT commareaName (literal|identifier)>
 <!ELEMENT cicsWaterInBrackets (t,water?,t)>
-<!ELEMENT exitStatement (t,t?)>
+<!ELEMENT exitStatement (t,(t|(t,t?))?)>
 <!ELEMENT gobackStatement (t)>
 <!ELEMENT goToStatement (t,t?,(procedureName,(procedureName*,t,t?,identifier)?)?)>
 <!ELEMENT ifStatement (t,condition,t?,(nestedStatements|(t,t)),(t,(nestedStatements|(t,t)))?,t?)>

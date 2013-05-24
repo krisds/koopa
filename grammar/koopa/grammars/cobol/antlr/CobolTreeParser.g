@@ -3259,6 +3259,10 @@ exitStatement
       ( 'EXIT'
         ( ( 'PROGRAM'
         | 'PARAGRAPH'
+        | 'SECTION'
+        | ( 'PERFORM'
+          ( 'CYCLE' )?
+        )
         ) )?
       )
     )
@@ -5658,6 +5662,7 @@ token
   | 'CSP'
   | 'CURRENCY'
   | 'CURSOR'
+  | 'CYCLE'
   | 'DATA'
   | 'DATALENGTH'
   | 'DATASET'

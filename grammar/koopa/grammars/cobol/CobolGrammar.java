@@ -5839,7 +5839,14 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        choice(
                            token("PROGRAM"),
-                           token("PARAGRAPH")
+                           token("PARAGRAPH"),
+                           token("SECTION"),
+                           sequence(
+                               token("PERFORM"),
+                               optional(
+                                   token("CYCLE")
+                               )
+                           )
                        )
                    )
                )

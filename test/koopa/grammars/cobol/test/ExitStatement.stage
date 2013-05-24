@@ -6,3 +6,12 @@ target exitStatement;
 +[ EXIT ]
 +[ EXIT PROGRAM ]
 +[ EXIT PARAGRAPH ]
+
+
++[ EXIT SECTION ]           # *MF
+
++[ EXIT PERFORM ]           # *MF
++[ EXIT PERFORM CYCLE ]     # *MF
+
+# Refs:
+# MF. http://supportline.microfocus.com/documentation/books/nx60/lhpdf907.htm

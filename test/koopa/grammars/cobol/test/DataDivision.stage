@@ -227,13 +227,17 @@ target value;
 
 +[ VALUE 42.10 ]
 
-+[ VALUE IS "UNDEFINED" ]
++[ VALUE IS "this is a constant" ]
 
-+[ VALUE "UNDEFINED" ]
++[ VALUE "this is a constant" ]
 
 +[ VALUE IS NULL ]
 
 +[ VALUE NULL ]
+
++[ VALUE IS 'this is a constant' ]
+
++[ VALUE 'this is a constant' ]
 
 
 target dataDescriptionEntry;

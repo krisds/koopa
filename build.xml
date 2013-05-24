@@ -168,9 +168,9 @@
 		</junit>
 	</target>
 	
-	<!--target name="run-regression-test">
+	<target name="run-regression-test">
 		<regression-test folder="testsuite/cobol85/" results="testsuite/cobol85-results.csv" targets="testsuite/cobol85.csv" />
-	</target-->
+	</target>
 
 
 	<!-- BACK END -->

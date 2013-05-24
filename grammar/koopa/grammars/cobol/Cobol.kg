@@ -1330,8 +1330,16 @@ end
 ## -----------------------------------------------------------------------------
 
 def exitStatement =
-    EXIT [PROGRAM | PARAGRAPH]
+    EXIT [
+      PROGRAM
+    | PARAGRAPH
+    | SECTION            # *MF
+    | PERFORM [CYCLE]    # *MF
+    ]
 end
+
+# Refs:
+# MF. http://supportline.microfocus.com/documentation/books/nx60/lhpdf907.htm
 
 ## #############################################################################
 ## GOBACK statement.

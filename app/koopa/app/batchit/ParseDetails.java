@@ -82,14 +82,14 @@ public class ParseDetails extends AbstractTableModel {
 		}
 
 		case MESSAGE_COLUMN:
-			return get(rowIndex).getSecond();
+			return getDetails(rowIndex).getSecond();
 
 		case TOKEN_COLUMN:
-			return get(rowIndex).getFirst().getText();
+			return getDetails(rowIndex).getFirst().getText();
 
 		case LINE_COLUMN:
 			try {
-				return get(rowIndex).getFirst().getStart().getLinenumber();
+				return getDetails(rowIndex).getFirst().getStart().getLinenumber();
 
 			} catch (NullPointerException e) {
 				return "-";
@@ -97,7 +97,7 @@ public class ParseDetails extends AbstractTableModel {
 
 		case CHAR_COLUMN:
 			try {
-				return get(rowIndex).getFirst().getStart().getPositionInLine();
+				return getDetails(rowIndex).getFirst().getStart().getPositionInLine();
 
 			} catch (NullPointerException e) {
 				return "-";
@@ -113,7 +113,7 @@ public class ParseDetails extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
-	private Tuple<Token, String> get(int i) {
+	public Tuple<Token, String> getDetails(int i) {
 		if (i < this.parseResults.getErrorCount()) {
 			return this.parseResults.getError(i);
 

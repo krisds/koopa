@@ -34,6 +34,8 @@ import koopa.app.ConfigurableApplication;
 import koopa.app.actions.ExportBatchResultsToCSVAction;
 import koopa.app.actions.ParsingProvider;
 import koopa.app.actions.PickAndParseAction;
+import koopa.app.components.detailstable.DetailsTable;
+import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
 import koopa.app.showit.ShowIt;
@@ -42,7 +44,9 @@ import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
 import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.generic.IntermediateTokenizer;
+import koopa.tokens.Token;
 import koopa.util.Getter;
+import koopa.util.Tuple;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -202,8 +206,9 @@ public class BatchIt extends JFrame implements ParsingProvider,
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.WARNINGS_COLUMN)
 				.setPreferredWidth(70);
-		overviewTable.getColumnModel().getColumn(
-				BatchResults.TOKEN_COUNT_COLUMN).setPreferredWidth(70);
+		overviewTable.getColumnModel()
+				.getColumn(BatchResults.TOKEN_COUNT_COLUMN)
+				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.FILE_COLUMN)
@@ -219,17 +224,19 @@ public class BatchIt extends JFrame implements ParsingProvider,
 		JScrollPane overviewScroll = new JScrollPane(overviewTable);
 		overviewScroll.setBorder(null);
 
-		JXTable detailsTable = new JXTable();
-		detailsTable.setBorder(null);
-		detailsTable.setModel(parseDetails);
-		detailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		detailsTable.setHighlighters(HighlighterFactory.createSimpleStriping());
+		final DetailsTable detailsTable = new DetailsTable(parseDetails);
 
-		detailsTable.getColumnModel().getColumn(0).setPreferredWidth(70);
-		detailsTable.getColumnModel().getColumn(1).setPreferredWidth(40);
-		detailsTable.getColumnModel().getColumn(2).setPreferredWidth(40);
-		detailsTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-		detailsTable.getColumnModel().getColumn(4).setPreferredWidth(600);
+		detailsTable.addListener(new DetailsTableListener() {
+			@Override
+			public void userSelectedDetail(Tuple<Token, String> detail) {
+				final int selected = overviewTable
+						.convertRowIndexToModel(overviewTable.getSelectedRow());
+				final File file = results.getResults(selected).getFile();
+				final ShowIt showIt = new ShowIt(file, true, coordinator.getFormat());
+				showIt.setVisible(true);
+				showIt.selectDetail(detail);
+			}
+		});
 
 		JScrollPane detailsScroll = new JScrollPane(detailsTable);
 		detailsScroll.setBorder(null);

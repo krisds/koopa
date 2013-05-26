@@ -1,11 +1,11 @@
 package koopa.app.batchit;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 import koopa.app.Icons;
 import koopa.parsers.ParseResults;
+import koopa.tokens.Position;
 import koopa.tokens.Token;
 import koopa.util.Tuple;
 
@@ -53,12 +53,11 @@ public class ParseDetails extends AbstractTableModel {
 	}
 
 	public int getRowCount() {
-		if (this.parseResults == null) {
+		if (parseResults == null) {
 			return 0;
 		}
 
-		return this.parseResults.getErrorCount()
-				+ this.parseResults.getWarningCount();
+		return parseResults.getErrorCount() + parseResults.getWarningCount();
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
@@ -74,7 +73,7 @@ public class ParseDetails extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN: {
-			if (rowIndex < this.parseResults.getErrorCount()) {
+			if (rowIndex < parseResults.getErrorCount()) {
 				return ERROR;
 			} else {
 				return WARNING;
@@ -89,7 +88,8 @@ public class ParseDetails extends AbstractTableModel {
 
 		case LINE_COLUMN:
 			try {
-				return getDetails(rowIndex).getFirst().getStart().getLinenumber();
+				return getDetails(rowIndex).getFirst().getStart()
+						.getLinenumber();
 
 			} catch (NullPointerException e) {
 				return "-";
@@ -97,7 +97,8 @@ public class ParseDetails extends AbstractTableModel {
 
 		case CHAR_COLUMN:
 			try {
-				return getDetails(rowIndex).getFirst().getStart().getPositionInLine();
+				return getDetails(rowIndex).getFirst().getStart()
+						.getPositionInLine();
 
 			} catch (NullPointerException e) {
 				return "-";
@@ -114,12 +115,32 @@ public class ParseDetails extends AbstractTableModel {
 	}
 
 	public Tuple<Token, String> getDetails(int i) {
-		if (i < this.parseResults.getErrorCount()) {
-			return this.parseResults.getError(i);
+		if (i < parseResults.getErrorCount()) {
+			return parseResults.getError(i);
 
 		} else {
-			return this.parseResults.getWarning(i
-					- this.parseResults.getErrorCount());
+			return parseResults.getWarning(i - parseResults.getErrorCount());
 		}
+	}
+
+	public int getIndex(Tuple<Token, String> detail) {
+		final Position end = detail.getFirst().getEnd();
+		final Position start = detail.getFirst().getStart();
+
+		for (int i = 0; i < parseResults.getErrorCount(); i++) {
+			final Tuple<Token, String> error = parseResults.getError(i);
+			if (error.getFirst().getStart().equals(start)
+					&& error.getFirst().getEnd().equals(end))
+				return i;
+		}
+
+		for (int i = 0; i < parseResults.getWarningCount(); i++) {
+			final Tuple<Token, String> warning = parseResults.getWarning(i);
+			if (warning.getFirst().getStart().equals(start)
+					&& warning.getFirst().getEnd().equals(end))
+				return i + parseResults.getErrorCount();
+		}
+
+		return -1;
 	}
 }

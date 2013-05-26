@@ -2,8 +2,6 @@ package koopa.app.showit;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -19,7 +17,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -34,6 +31,8 @@ import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
 import koopa.app.actions.ReloadFileAction;
 import koopa.app.batchit.ParseDetails;
+import koopa.app.components.detailstable.DetailsTable;
+import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
@@ -49,8 +48,6 @@ import koopa.util.Tuple;
 
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.PropertyConfigurator;
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 @SuppressWarnings("serial")
 public class ShowIt extends JFrame implements FileManager,
@@ -62,6 +59,7 @@ public class ShowIt extends JFrame implements FileManager,
 	private ParseDetails parseDetails = new ParseDetails();
 	private SourceView pane = null;
 	private CobolOutline outline = null;
+	private DetailsTable detailsTable = null;
 
 	private JMenu syntaxTree = null;
 
@@ -166,10 +164,9 @@ public class ShowIt extends JFrame implements FileManager,
 
 		// File ----------------------------------------------------------------
 
-
 		if (!isDialog) {
 			final JMenu file = new JMenu("File");
-			
+
 			final JMenuItem open = new JMenuItem(new OpenFileAction(this,
 					new FileFilter() {
 						public boolean accept(File f) {
@@ -192,10 +189,9 @@ public class ShowIt extends JFrame implements FileManager,
 			final JMenuItem reload = new JMenuItem(new ReloadFileAction(this));
 			reload.setAccelerator(KeyStroke.getKeyStroke("meta R"));
 			file.add(reload);
-			
+
 			bar.add(file);
 		}
-
 
 		// Parser settings ----------------------------------------------------
 
@@ -296,43 +292,28 @@ public class ShowIt extends JFrame implements FileManager,
 			}
 		});
 
-		final JXTable detailsTable = new JXTable();
-		detailsTable.setBorder(null);
-		detailsTable.setModel(parseDetails);
-		detailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		detailsTable.setHighlighters(HighlighterFactory.createSimpleStriping());
+		detailsTable = new DetailsTable(parseDetails);
 
-		detailsTable.getColumnModel().getColumn(0).setPreferredWidth(70);
-		detailsTable.getColumnModel().getColumn(1).setPreferredWidth(40);
-		detailsTable.getColumnModel().getColumn(2).setPreferredWidth(40);
-		detailsTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-		detailsTable.getColumnModel().getColumn(4).setPreferredWidth(600);
-
-		detailsTable.addMouseListener(new MouseAdapter() {
+		detailsTable.addListener(new DetailsTableListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					int row = detailsTable.getSelectedRow();
-					if (row < 0) return;
-					Tuple<Token, String> detail = parseDetails.getDetails(row);
-					final Token token = detail.getFirst();
-					pane.scrollTo(token.getStart().getPositionInFile());
-				}
+			public void userSelectedDetail(Tuple<Token, String> detail) {
+				final Token token = detail.getFirst();
+				pane.scrollTo(token.getStart().getPositionInFile());
 			}
 		});
-		
+
 		JScrollPane detailsScroll = new JScrollPane(detailsTable);
 		detailsScroll.setBorder(null);
-		
+
 		JSplitPane horizontalSplit = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT, outline, pane);
 		horizontalSplit.setResizeWeight(0.5);
 
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				horizontalSplit, detailsScroll);
-		verticalSplit.setResizeWeight(0.9);
-		verticalSplit.setDividerLocation(0.8);
-		
+		verticalSplit.setResizeWeight(0.8);
+		// verticalSplit.setDividerLocation(0.8);
+
 		getContentPane().add(verticalSplit, BorderLayout.CENTER);
 	}
 
@@ -357,7 +338,7 @@ public class ShowIt extends JFrame implements FileManager,
 			}
 
 			parseDetails.setParseResults(results);
-			
+
 			float coverage = Metrics.getCoverage(results);
 
 			setTitle("Koopa Show It - " + this.cobolFile + " ("
@@ -377,6 +358,12 @@ public class ShowIt extends JFrame implements FileManager,
 	public void scrollTo(int position) {
 		if (pane != null) {
 			pane.scrollTo(position);
+		}
+	}
+	
+	public void selectDetail(Tuple<Token, String> detail) {
+		if (detail != null) {
+			detailsTable.selectDetail(detail);
 		}
 	}
 }

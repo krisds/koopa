@@ -35,4 +35,12 @@ public final class Position {
 	public String toString() {
 		return linenumber + ":" + positionInLine;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Position)) return false;
+		
+		Position other = (Position) obj;
+		return positionInFile == other.positionInFile;
+	}
 }

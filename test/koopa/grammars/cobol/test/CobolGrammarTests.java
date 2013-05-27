@@ -17,6 +17,7 @@ public class CobolGrammarTests {
 		suite.addTestSuite(ArithmeticExpressionTest.class);
 
 		suite.addTestSuite(AddStatementTest.class);
+		suite.addTestSuite(AllocateStatementTest.class);
 		suite.addTestSuite(CallStatementTest.class);
 		suite.addTestSuite(CancelStatementTest.class);
 		suite.addTestSuite(CloseStatementTest.class);
@@ -34,6 +35,7 @@ public class CobolGrammarTests {
 		suite.addTestSuite(ExitStatementTest.class);
 		suite.addTestSuite(FileDescriptionEntryTest.class);
 		suite.addTestSuite(FileSectionTest.class);
+		suite.addTestSuite(FreeStatementTest.class);
 		suite.addTestSuite(FunctionTest.class);
 		suite.addTestSuite(GoToStatementTest.class);
 		suite.addTestSuite(IdentificationDivisionTest.class);

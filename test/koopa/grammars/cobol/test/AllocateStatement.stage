@@ -1,0 +1,44 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target allocateStatement;
+
+# Example from http://opencobol.add1tocobol.com/#allocate 
++[ ALLOCATE based-var
+   INITIALIZED
+   RETURNING pointer-var ]
+
++[ ALLOCATE based-var
+   INITIALIZED ]
+
++[ ALLOCATE based-var
+   RETURNING pointer-var ]
+
++[ ALLOCATE based-var ]
+
+
++[ ALLOCATE 13 CHARACTERS
+   INITIALIZED
+   RETURNING pointer-var ]
+
++[ ALLOCATE 13 CHARACTERS
+   INITIALIZED ]
+
++[ ALLOCATE 13 CHARACTERS
+   RETURNING pointer-var ]
+
++[ ALLOCATE 13 CHARACTERS ]
+
+
++[ ALLOCATE N + 2 CHARACTERS
+   INITIALIZED
+   RETURNING pointer-var ]
+
++[ ALLOCATE N + 2 CHARACTERS
+   INITIALIZED ]
+
++[ ALLOCATE N + 2 CHARACTERS
+   RETURNING pointer-var ]
+
++[ ALLOCATE N + 2 CHARACTERS ]
+

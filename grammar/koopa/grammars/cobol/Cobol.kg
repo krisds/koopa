@@ -454,6 +454,7 @@ def dataDescriptionEntry_format1 =
     | sync
     | usage
     | value
+    | based
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -544,6 +545,11 @@ end
 
 def value =
     VALUE [IS] literal
+end
+
+# See http://opencobol.add1tocobol.com/#based
+def based =
+    BASED
 end
 
 ## #############################################################################
@@ -656,6 +662,9 @@ def statement =
     | displayStatement
     | inspectStatement
     
+    | allocateStatement
+    | freeStatement
+    
     | verb
       [--> ( . | endOfStatement | verb | subStatementMarker)]
     )
@@ -764,6 +773,9 @@ def verb =
     | COMPUTE
     | INSPECT
     
+    | ALLOCATE
+    | FREE
+    
     # Verbs for statements implemented by Adrian
     | START
     | USE
@@ -815,6 +827,23 @@ def addition_format3 =
     (identifier | literal)+
     TO (identifier [ROUNDED])+
 end
+
+
+## #############################################################################
+## ALLOCATE statement.
+## -----------------------------------------------------------------------------
+
+# See https://sourceforge.net/p/open-cobol/manual/, page 6-33.
+
+def allocateStatement =
+    ALLOCATE
+    ( arithmeticExpression CHARACTERS
+    | identifier
+    )
+    [ INITIALIZED ]
+    [ RETURNING identifier ]
+end
+
 
 ## #############################################################################
 ## CALL statement.
@@ -1346,6 +1375,18 @@ end
 
 # Refs:
 # MF. http://supportline.microfocus.com/documentation/books/nx60/lhpdf907.htm
+
+
+## #############################################################################
+## FREE statement.
+## -----------------------------------------------------------------------------
+
+# See https://sourceforge.net/p/open-cobol/manual/, page 6-53.
+
+def freeStatement =
+    FREE ( [ADDRESS [OF]] identifier )+
+end
+
 
 ## #############################################################################
 ## GOBACK statement.

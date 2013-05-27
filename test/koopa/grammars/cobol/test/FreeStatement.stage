@@ -1,0 +1,35 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target freeStatement;
+
++[ FREE ADDRESS OF A ]
++[ FREE ADDRESS A ]
++[ FREE A ]
+
++[ FREE
+   ADDRESS OF A
+   ADDRESS OF B ]
+
++[ FREE 
+   ADDRESS A
+   ADDRESS B ]
+
++[ FREE
+   A
+   B ]
+
++[ FREE
+   ADDRESS OF A
+   ADDRESS B
+   C ]
+
++[ FREE
+   A
+   ADDRESS OF B
+   ADDRESS C ]
+   
++[ FREE
+   ADDRESS A
+   B
+   ADDRESS OF C ]

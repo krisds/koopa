@@ -66,7 +66,7 @@
 <!ELEMENT valueOf (t+,((t|cobolWord),t?,(dataName|literal))+)>
 <!ELEMENT report (t,t?,reportName+)>
 <!ELEMENT dataDescriptionEntry (dataDescriptionEntry_format1|dataDescriptionEntry_format2|dataDescriptionEntry_format3|constantDescriptionEntry)>
-<!ELEMENT dataDescriptionEntry_format1 (levelNumber,dataName?,redefines?,(blankWhenZero|external|global|justified|occurs|picture|sign|sync|usage|value)*,water?,t)>
+<!ELEMENT dataDescriptionEntry_format1 (levelNumber,dataName?,redefines?,(blankWhenZero|external|global|justified|occurs|picture|sign|sync|usage|value|based)*,water?,t)>
 <!ELEMENT dataDescriptionEntry_format2 (t,dataName,t,dataName,qualifier*,(t,dataName,qualifier*)?,t)>
 <!ELEMENT dataDescriptionEntry_format3 (t,cobolWord,((t,t?)|(t,t?)),(literal,(t,literal)?)+,t)>
 <!ELEMENT constantDescriptionEntry (t,cobolWord,value?,t)>
@@ -81,6 +81,7 @@
 <!ELEMENT sync (t,t?)>
 <!ELEMENT usage ((t,t?)?,t)>
 <!ELEMENT value (t,t?,literal)>
+<!ELEMENT based (t)>
 <!ELEMENT procedureDivision (t+,usingPhrase?,returningPhrase?,t,declaratives?,sentence*,paragraph*,section*)>
 <!ELEMENT usingPhrase (t,(dataReference|dataValue)*)>
 <!ELEMENT dataReference ((t?,t)?,dataName)>
@@ -91,7 +92,7 @@
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>
 <!ELEMENT sentence ((statement,(statement|continuationOfStatement)*,t)|copyStatement|replaceStatement|useStatement)>
-<!ELEMENT statement (addStatement|callStatement|cancelStatement|closeStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|releaseStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|setStatement|initializeStatement|displayStatement|inspectStatement|(verb,water?))>
+<!ELEMENT statement (addStatement|callStatement|cancelStatement|closeStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|releaseStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
 <!ELEMENT subStatementMarker (t|(t,t)|t|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t,t?,t)|(t?,t)|(t?,t))>
 <!ELEMENT continuationOfStatement ((eventPhrase,statement)|endOfStatementMarker)>
 <!ELEMENT nestedStatements (statement+)>
@@ -102,6 +103,7 @@
 <!ELEMENT addition_format1 (t,identifier,t,identifier,t?)>
 <!ELEMENT addition_format2 ((identifier|literal)+,(t,(identifier|literal))?,t,(identifier,t?)+)>
 <!ELEMENT addition_format3 ((identifier|literal)+,t,(identifier,t?)+)>
+<!ELEMENT allocateStatement (t,((arithmeticExpression,t)|identifier),t?,(t,identifier)?)>
 <!ELEMENT callStatement (t,programID,callUsing?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
 <!ELEMENT callUsing (t,identifier*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
@@ -173,6 +175,7 @@
 <!ELEMENT commareaName (literal|identifier)>
 <!ELEMENT cicsWaterInBrackets (t,water?,t)>
 <!ELEMENT exitStatement (t,(t|(t,t?))?)>
+<!ELEMENT freeStatement (t,((t,t?)?,identifier)+)>
 <!ELEMENT gobackStatement (t)>
 <!ELEMENT goToStatement (t,t?,(procedureName,(procedureName*,t,t?,identifier)?)?)>
 <!ELEMENT ifStatement (t,condition,t?,(nestedStatements|(t,t)),(t,(nestedStatements|(t,t)))?,t?)>

@@ -1118,6 +1118,7 @@ dataDescriptionEntry_format1
         | sync
         | usage
         | value
+        | based
         ) )*
         (water)?
         '.'
@@ -1383,6 +1384,16 @@ value
   ;
 
 // ========================================================
+// based
+// ........................................................
+
+based
+  : ^(BASED
+      'BASED'
+    )
+  ;
+
+// ========================================================
 // procedureDivision
 // ........................................................
 
@@ -1573,6 +1584,8 @@ statement
       | initializeStatement
       | displayStatement
       | inspectStatement
+      | allocateStatement
+      | freeStatement
       | ( verb
         (water)?
       )
@@ -1756,6 +1769,8 @@ verb
       | 'DISPLAY'
       | 'COMPUTE'
       | 'INSPECT'
+      | 'ALLOCATE'
+      | 'FREE'
       | 'START'
       | 'USE'
       | 'ACCEPT'
@@ -1854,6 +1869,26 @@ addition_format3
         ( ( identifier
           ( 'ROUNDED' )?
         ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// allocateStatement
+// ........................................................
+
+allocateStatement
+  : ^(ALLOCATE_STATEMENT
+      ( 'ALLOCATE'
+        ( ( arithmeticExpression
+          'CHARACTERS'
+        )
+        | identifier
+        )
+        ( 'INITIALIZED' )?
+        ( ( 'RETURNING'
+          identifier
+        ) )?
       )
     )
   ;
@@ -3279,6 +3314,22 @@ exitStatement
           ( 'CYCLE' )?
         )
         ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// freeStatement
+// ........................................................
+
+freeStatement
+  : ^(FREE_STATEMENT
+      ( 'FREE'
+        ( ( ( ( 'ADDRESS'
+          ( 'OF' )?
+        ) )?
+          identifier
+        ) )+
       )
     )
   ;
@@ -5594,6 +5645,7 @@ token
   | 'AFP-5A'
   | 'AFTER'
   | 'ALL'
+  | 'ALLOCATE'
   | 'ALPHABET'
   | 'ALPHABETIC'
   | 'ALPHABETIC-LOWER'
@@ -5609,6 +5661,7 @@ token
   | 'ASSIGN'
   | 'AT'
   | 'AUXILIARY'
+  | 'BASED'
   | 'BEEP'
   | 'BEFORE'
   | 'BEGINNING'
@@ -5747,6 +5800,7 @@ token
   | 'FIRST'
   | 'FOOTING'
   | 'FOR'
+  | 'FREE'
   | 'FROM'
   | 'FUNCTION'
   | 'GENERATE'
@@ -5772,6 +5826,7 @@ token
   | 'INDEXED'
   | 'INITIAL'
   | 'INITIALIZE'
+  | 'INITIALIZED'
   | 'INITIATE'
   | 'INPUT'
   | 'INPUT-OUTPUT'

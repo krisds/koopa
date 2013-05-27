@@ -2112,7 +2112,8 @@ public class CobolGrammar extends KoopaGrammar {
                        sign(),
                        sync(),
                        usage(),
-                       value()
+                       value(),
+                       based()
                    ),
                    skipto(
                        token(".")
@@ -2601,6 +2602,24 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // based
+    // ........................................................
+
+    private Parser basedParser = null;
+
+    public Parser based() {
+        if (basedParser == null) {
+           FutureParser future = scoped("based");
+           basedParser = future;
+           future.setParser(
+               token("BASED")
+           );
+        }
+
+        return basedParser;
+    }
+
+    // ========================================================
     // procedureDivision
     // ........................................................
 
@@ -2925,6 +2944,8 @@ public class CobolGrammar extends KoopaGrammar {
                    initializeStatement(),
                    displayStatement(),
                    inspectStatement(),
+                   allocateStatement(),
+                   freeStatement(),
                    sequence(
                        verb(),
                        optional(
@@ -3243,6 +3264,8 @@ public class CobolGrammar extends KoopaGrammar {
                    token("DISPLAY"),
                    token("COMPUTE"),
                    token("INSPECT"),
+                   token("ALLOCATE"),
+                   token("FREE"),
                    token("START"),
                    token("USE"),
                    token("ACCEPT"),
@@ -3418,6 +3441,42 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return addition_format3Parser;
+    }
+
+    // ========================================================
+    // allocateStatement
+    // ........................................................
+
+    private Parser allocateStatementParser = null;
+
+    public Parser allocateStatement() {
+        if (allocateStatementParser == null) {
+           FutureParser future = scoped("allocateStatement");
+           allocateStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("ALLOCATE"),
+                   choice(
+                       sequence(
+                           arithmeticExpression(),
+                           token("CHARACTERS")
+                       ),
+                       identifier()
+                   ),
+                   optional(
+                       token("INITIALIZED")
+                   ),
+                   optional(
+                       sequence(
+                           token("RETURNING"),
+                           identifier()
+                       )
+                   )
+               )
+           );
+        }
+
+        return allocateStatementParser;
     }
 
     // ========================================================
@@ -5880,6 +5939,39 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return exitStatementParser;
+    }
+
+    // ========================================================
+    // freeStatement
+    // ........................................................
+
+    private Parser freeStatementParser = null;
+
+    public Parser freeStatement() {
+        if (freeStatementParser == null) {
+           FutureParser future = scoped("freeStatement");
+           freeStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("FREE"),
+                   plus(
+                       sequence(
+                           optional(
+                               sequence(
+                                   token("ADDRESS"),
+                                   optional(
+                                       token("OF")
+                                   )
+                               )
+                           ),
+                           identifier()
+                       )
+                   )
+               )
+           );
+        }
+
+        return freeStatementParser;
     }
 
     // ========================================================

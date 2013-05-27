@@ -334,6 +334,9 @@ target dataDescriptionEntry;
 +[ 78 lines-to-display value is 12 . ]
 +[ 78 lines-to-display value 12 . ]
 
+# Example from http://opencobol.add1tocobol.com/#based.
++[ 01 based-var PIC X(80) BASED . ]
+
 target workingStorageSection;
 
 +[ WORKING-STORAGE Section .

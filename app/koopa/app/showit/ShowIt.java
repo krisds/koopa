@@ -168,20 +168,7 @@ public class ShowIt extends JFrame implements FileManager,
 			final JMenu file = new JMenu("File");
 
 			final JMenuItem open = new JMenuItem(new OpenFileAction(this,
-					new FileFilter() {
-						public boolean accept(File f) {
-							if (!f.isFile())
-								return false;
-							final String name = f.getName().toUpperCase();
-							return name.endsWith(".CBL")
-									|| name.endsWith(".COB")
-									|| name.endsWith(".CPY");
-						}
-
-						public String getDescription() {
-							return "Cobol file (*.cpy, *.cbl, *.cob)";
-						}
-					}, this));
+					ApplicationSupport.getCobolFileFilter(), this));
 
 			open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
 			file.add(open);

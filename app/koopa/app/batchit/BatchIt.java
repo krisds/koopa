@@ -318,9 +318,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 			return;
 		}
 
-		String name = file.getName().toUpperCase();
-		if (name.endsWith(".CBL") || name.endsWith(".COB")
-				|| name.endsWith(".CPY")) {
+		if (ApplicationSupport.isCobolFile(file)) {
 			targets.add(file);
 		}
 	}

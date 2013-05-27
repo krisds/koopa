@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JFileChooser;
@@ -19,6 +22,29 @@ public class ApplicationSupport {
 	private static final String PROPERTIES_FILE = "koopa.properties";
 
 	private static Properties properties = getProperties();
+
+	private static List<String> EXTENSIONS = new LinkedList<String>();
+	private static String DESCRIPTION = "";
+	static {
+		EXTENSIONS.add(".CPY");
+		EXTENSIONS.add(".COPY");
+		EXTENSIONS.add(".CBL");
+		EXTENSIONS.add(".COB");
+
+		String extraExtensions = System.getProperty("koopa.cobolFileExtensions");
+		if (extraExtensions != null) {
+			for (String extraExtension : extraExtensions.split(",")) {
+				EXTENSIONS.add("." + extraExtension.trim().toUpperCase());
+			}
+		}
+
+		for (String extension : EXTENSIONS) {
+			if (DESCRIPTION.length() > 0)
+				DESCRIPTION += ", ";
+
+			DESCRIPTION += extension;
+		}
+	}
 
 	public static File askUserForFile(boolean openFile, String key,
 			FileFilter filter, Component parent) {
@@ -102,5 +128,43 @@ public class ApplicationSupport {
 		} catch (IOException e) {
 			LOGGER.error("IOException while reading \"" + filename + "\".", e);
 		}
+	}
+
+	public static FileFilter getCobolFileFilter() {
+		return new FileFilter() {
+			public boolean accept(File f) {
+				return isCobolFile(f);
+			}
+
+			public String getDescription() {
+				return "Cobol file (" + DESCRIPTION + ")";
+			}
+		};
+	}
+
+	public static FilenameFilter getFilenameFilter() {
+		return new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return isCobolFileName(name);
+			}
+		};
+	}
+
+	public static boolean isCobolFile(File file) {
+		if (!file.isFile())
+			return false;
+
+		return isCobolFileName(file.getName());
+	}
+
+	public static boolean isCobolFileName(String name) {
+		name = name.toUpperCase();
+
+		for (String extension : EXTENSIONS) {
+			if (name.endsWith(extension))
+				return true;
+		}
+
+		return false;
 	}
 }

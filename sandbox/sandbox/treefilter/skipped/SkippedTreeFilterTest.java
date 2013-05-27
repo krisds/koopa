@@ -1,11 +1,11 @@
 package sandbox.treefilter.skipped;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.app.ApplicationSupport;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.CobolParser;
 import koopa.trees.antlr.filter.Filter;
@@ -26,12 +26,8 @@ public class SkippedTreeFilterTest {
 		File folder = new File("testsuite/cobol85");
 		// File folder = new File("testsuite/koopa");
 
-		File[] sources = folder.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				name = name.toUpperCase();
-				return name.endsWith(".CBL") || name.endsWith(".CPY");
-			}
-		});
+		File[] sources = folder.listFiles(ApplicationSupport
+				.getFilenameFilter());
 
 		final CobolParser parser = new CobolParser();
 		parser.setBuildTrees(true);

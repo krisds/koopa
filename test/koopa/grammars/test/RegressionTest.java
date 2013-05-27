@@ -223,7 +223,7 @@ public class RegressionTest {
 
 		String name = file.getName().toUpperCase();
 		if (name.endsWith(".CBL") || name.endsWith(".COB")
-				|| name.endsWith(".CPY")) {
+				|| name.endsWith(".CPY") || name.endsWith(".COPY")) {
 			targets.add(file);
 		}
 	}

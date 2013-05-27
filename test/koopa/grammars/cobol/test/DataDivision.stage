@@ -329,6 +329,11 @@ target dataDescriptionEntry;
 
 +[ 77 OPTIONS PIC S9(9) BINARY . ]
 
+# Examples of level 78 from Simon Sobisch.
++[ 78 lines-to-display . ]
++[ 78 lines-to-display value is 12 . ]
++[ 78 lines-to-display value 12 . ]
+
 target workingStorageSection;
 
 +[ WORKING-STORAGE Section .

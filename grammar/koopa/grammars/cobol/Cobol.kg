@@ -437,6 +437,7 @@ def dataDescriptionEntry =
     ( dataDescriptionEntry_format1
     | dataDescriptionEntry_format2
     | dataDescriptionEntry_format3
+    | constantDescriptionEntry
     )
 end
 
@@ -472,6 +473,11 @@ def dataDescriptionEntry_format3 =
     )
     ( literal [(THROUGH | THRU) literal] )+
     .
+end
+
+# See https://sourceforge.net/p/open-cobol/manual/, page 5-15.
+def constantDescriptionEntry =
+    78 cobolWord [ value ] .
 end
 
 def redefines =

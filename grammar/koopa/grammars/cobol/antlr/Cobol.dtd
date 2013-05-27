@@ -65,10 +65,11 @@
 <!ELEMENT recordingMode (t,t?,t?,t)>
 <!ELEMENT valueOf (t+,((t|cobolWord),t?,(dataName|literal))+)>
 <!ELEMENT report (t,t?,reportName+)>
-<!ELEMENT dataDescriptionEntry (dataDescriptionEntry_format1|dataDescriptionEntry_format2|dataDescriptionEntry_format3)>
+<!ELEMENT dataDescriptionEntry (dataDescriptionEntry_format1|dataDescriptionEntry_format2|dataDescriptionEntry_format3|constantDescriptionEntry)>
 <!ELEMENT dataDescriptionEntry_format1 (levelNumber,dataName?,redefines?,(blankWhenZero|external|global|justified|occurs|picture|sign|sync|usage|value)*,water?,t)>
 <!ELEMENT dataDescriptionEntry_format2 (t,dataName,t,dataName,qualifier*,(t,dataName,qualifier*)?,t)>
 <!ELEMENT dataDescriptionEntry_format3 (t,cobolWord,((t,t?)|(t,t?)),(literal,(t,literal)?)+,t)>
+<!ELEMENT constantDescriptionEntry (t,cobolWord,value?,t)>
 <!ELEMENT redefines (t,cobolWord)>
 <!ELEMENT blankWhenZero (t,t?,t)>
 <!ELEMENT external (t?,t)>

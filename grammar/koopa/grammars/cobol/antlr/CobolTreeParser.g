@@ -1094,6 +1094,7 @@ dataDescriptionEntry
       ( dataDescriptionEntry_format1
       | dataDescriptionEntry_format2
       | dataDescriptionEntry_format3
+      | constantDescriptionEntry
       )
     )
   ;
@@ -1168,6 +1169,20 @@ dataDescriptionEntry_format3
             literal
           ) )?
         ) )+
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// constantDescriptionEntry
+// ........................................................
+
+constantDescriptionEntry
+  : ^(CONSTANT_DESCRIPTION_ENTRY
+      ( '78'
+        cobolWord
+        ( value )?
         '.'
       )
     )
@@ -5564,6 +5579,7 @@ token
   | '.'
   | '/'
   | '66'
+  | '78'
   | '88'
   | ':'
   | '<'

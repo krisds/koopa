@@ -2074,7 +2074,8 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    dataDescriptionEntry_format1(),
                    dataDescriptionEntry_format2(),
-                   dataDescriptionEntry_format3()
+                   dataDescriptionEntry_format3(),
+                   constantDescriptionEntry()
                )
            );
         }
@@ -2211,6 +2212,31 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return dataDescriptionEntry_format3Parser;
+    }
+
+    // ========================================================
+    // constantDescriptionEntry
+    // ........................................................
+
+    private Parser constantDescriptionEntryParser = null;
+
+    public Parser constantDescriptionEntry() {
+        if (constantDescriptionEntryParser == null) {
+           FutureParser future = scoped("constantDescriptionEntry");
+           constantDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   token("78"),
+                   cobolWord(),
+                   optional(
+                       value()
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return constantDescriptionEntryParser;
     }
 
     // ========================================================

@@ -5,7 +5,7 @@
 		<delete dir="build/" />
 	</target>
 
-	<target name="all" depends="bootstrap,grammar,tests,back-end,applications,sandbox">
+	<target name="all" depends="bootstrap,back-end,grammar,tests,applications,sandbox">
 	</target>
 
 

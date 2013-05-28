@@ -11,6 +11,16 @@ only in that it splits up the different programs in separate files, where the
 original puts them all in one big file. The licensing is unclear, but the code
 is offered publicly at the above site.
 
+= Configuration options =
+
+Following options can be set on the command line by passing them as 
+"-D<option>=<value>" to the JVM.
+
+* koopa.maxCobolWordLength: defaults to 31. Use a value greater than zero to
+  override this. Setting it to 0 makes it use the default value. Setting it
+  to a negative value disables the length check all together.
+  
+
 = Generation =
 
 Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the

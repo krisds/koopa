@@ -10604,6 +10604,27 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("ZEROS");
     }
 
+    private static final int DEFAULT_MAX_COBOL_WORD_LENGTH = 31;
+    private static final int MAX_COBOL_WORD_LENGTH;
+
+    static {
+    	String maxCobolWordLengthSetting = System.getProperty("koopa.maxCobolWordLength", "" + DEFAULT_MAX_COBOL_WORD_LENGTH);
+    	
+    	int maxCobolWordLengthValue;
+    	try {
+    		maxCobolWordLengthValue = Integer.parseInt(maxCobolWordLengthSetting);
+    		
+    	} catch(NumberFormatException e) {
+    		System.err.println("Warning: value for koopa.maxCobolWordLength is not a number: " + maxCobolWordLengthSetting);
+    		maxCobolWordLengthValue = DEFAULT_MAX_COBOL_WORD_LENGTH;
+    	}
+    	
+    	if (maxCobolWordLengthValue == 0)
+    	    maxCobolWordLengthValue = DEFAULT_MAX_COBOL_WORD_LENGTH;
+    	
+    	MAX_COBOL_WORD_LENGTH = maxCobolWordLengthValue;
+    }
+
     // ============================================================================
     // cobolWord
     // ............................................................................
@@ -10656,7 +10677,7 @@ public class CobolGrammar extends KoopaGrammar {
     	             * http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html
     	             */
     	            final int len = text.length();
-    	            if (len < 1 || len > 31)
+    	            if (len < 1 || (MAX_COBOL_WORD_LENGTH > 0 && len > MAX_COBOL_WORD_LENGTH))
     	                return false;
     	
     	            if (text.charAt(0) == '-')

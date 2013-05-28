@@ -1403,6 +1403,7 @@ procedureDivision
         'DIVISION'
         ( usingPhrase )?
         ( returningPhrase )?
+        (water)?
         '.'
         ( declaratives )?
         ( sentence )*
@@ -1920,7 +1921,9 @@ callStatement
 callUsing
   : ^(CALL_USING
       ( 'USING'
-        ( identifier )*
+        ( ( literal
+        | identifier
+        ) )*
         ( ( ( ( 'BY' )?
           'REFERENCE'
           ( ( identifier
@@ -2106,6 +2109,7 @@ displayStatement
         | displayScreenFormat
         | (water)?
         )
+        ( 'END-DISPLAY' )?
       )
     )
   ;
@@ -4017,12 +4021,10 @@ setStatement
 setFormat1
   : ^(SET_FORMAT1
       ( ( ( indexName
-      | addressOfIdentifier
       | identifier
       ) )+
         'TO'
         ( indexName
-        | addressOfIdentifier
         | identifier
         | integer
         )
@@ -4723,6 +4725,7 @@ identifier
   : ^(IDENTIFIER
       ( identifier_format1
       | identifier_format2
+      | dataAddressIdentifier
       )
     )
   ;
@@ -4762,13 +4765,13 @@ identifier_format2
   ;
 
 // ========================================================
-// addressOfIdentifier
+// dataAddressIdentifier
 // ........................................................
 
-addressOfIdentifier
-  : ^(ADDRESS_OF_IDENTIFIER
+dataAddressIdentifier
+  : ^(DATA_ADDRESS_IDENTIFIER
       ( 'ADDRESS'
-        'OF'
+        ( 'OF' )?
         identifier
       )
     )

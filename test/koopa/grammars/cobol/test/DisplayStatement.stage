@@ -3,5 +3,9 @@ grammar koopa.grammars.cobol.CobolGrammar;
 
 target displayStatement;
 
++[ display some-name ]
+
++[ display some-name end-display ]
+
 # Test of comma-separated identifiers.
 +{       DISPLAY A,B }

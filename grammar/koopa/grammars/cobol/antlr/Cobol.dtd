@@ -82,7 +82,7 @@
 <!ELEMENT usage ((t,t?)?,t)>
 <!ELEMENT value (t,t?,literal)>
 <!ELEMENT based (t)>
-<!ELEMENT procedureDivision (t+,usingPhrase?,returningPhrase?,t,declaratives?,sentence*,paragraph*,section*)>
+<!ELEMENT procedureDivision (t+,usingPhrase?,returningPhrase?,water?,t,declaratives?,sentence*,paragraph*,section*)>
 <!ELEMENT usingPhrase (t,(dataReference|dataValue)*)>
 <!ELEMENT dataReference ((t?,t)?,dataName)>
 <!ELEMENT dataValue (t?,t,dataName)>
@@ -105,7 +105,7 @@
 <!ELEMENT addition_format3 ((identifier|literal)+,t,(identifier,t?)+)>
 <!ELEMENT allocateStatement (t,((arithmeticExpression,t)|identifier),t?,(t,identifier)?)>
 <!ELEMENT callStatement (t,programID,callUsing?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
-<!ELEMENT callUsing (t,identifier*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
+<!ELEMENT callUsing (t,(literal|identifier)*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
 <!ELEMENT onException (t?,t,nestedStatements)>
 <!ELEMENT notOnException (t,t?,t,nestedStatements)>
@@ -114,7 +114,7 @@
 <!ELEMENT closeStatement (t,(fileName,((t?,((t,t)|t))|(t,(t?,t)?)|(t?,t))?)+)>
 <!ELEMENT computeStatement (t,(identifier,t?)+,t,arithmeticExpression,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT deleteStatement (t,fileName,t?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
-<!ELEMENT displayStatement (t,(displayUponFormat|displayTerminalFormat|displayScreenFormat|water?))>
+<!ELEMENT displayStatement (t,(displayUponFormat|displayTerminalFormat|displayScreenFormat|water?),t?)>
 <!ELEMENT displayUponFormat ((identifier|literal)+,uponClause,withNoAdvancing?)>
 <!ELEMENT uponClause (t,(environmentName|mnemonicName))>
 <!ELEMENT withNoAdvancing (t?,t,t)>
@@ -209,7 +209,7 @@
 <!ELEMENT atEnd (t?,t,nestedStatements)>
 <!ELEMENT notAtEnd (t,t?,t,nestedStatements)>
 <!ELEMENT setStatement (t,(setFormat1|setFormat2|setFormat3),water?)>
-<!ELEMENT setFormat1 ((indexName|addressOfIdentifier|identifier)+,t,(indexName|addressOfIdentifier|identifier|integer))>
+<!ELEMENT setFormat1 ((indexName|identifier)+,t,(indexName|identifier|integer))>
 <!ELEMENT setFormat2 (mnemonicName+,t,t)>
 <!ELEMENT setFormat3 (identifier+,t,t)>
 <!ELEMENT startStatement (t,fileName,keyModifier?,sizeModifier?,whileKeyModifier?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
@@ -242,10 +242,10 @@
 <!ELEMENT divisionStart (((t,t)|(t,t)|(t,t)|(t+,usingPhrase?,returningPhrase?)),t)>
 <!ELEMENT dataSectionStart (t+,t)>
 <!ELEMENT endOfStatement (verb|t|(t?,t?,(t|(t,t)|(t,t?)|t)))>
-<!ELEMENT identifier (identifier_format1|identifier_format2)>
+<!ELEMENT identifier (identifier_format1|identifier_format2|dataAddressIdentifier)>
 <!ELEMENT identifier_format1 (t,functionName,(t,argument+,t)?,referenceModifier?)>
 <!ELEMENT identifier_format2 (dataName,qualifier*,(t,subscript+,t)?,referenceModifier?)>
-<!ELEMENT addressOfIdentifier (t+,identifier)>
+<!ELEMENT dataAddressIdentifier (t,t?,identifier)>
 <!ELEMENT argument (arithmeticExpression|identifier|literal)>
 <!ELEMENT qualifier (t,dataName)>
 <!ELEMENT subscript (relativeSubscript|directSubscript)>

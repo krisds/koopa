@@ -2639,6 +2639,11 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        returningPhrase()
                    ),
+                   optional(
+                       skipto(
+                           token(".")
+                       )
+                   ),
                    token("."),
                    optional(
                        declaratives()
@@ -3532,7 +3537,10 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("USING"),
                    star(
-                       identifier()
+                       choice(
+                           literal(),
+                           identifier()
+                       )
                    ),
                    star(
                        choice(
@@ -3888,6 +3896,9 @@ public class CobolGrammar extends KoopaGrammar {
                                endOfStatement()
                            )
                        )
+                   ),
+                   optional(
+                       token("END-DISPLAY")
                    )
                )
            );
@@ -7239,14 +7250,12 @@ public class CobolGrammar extends KoopaGrammar {
                    plus(
                        choice(
                            indexName(),
-                           addressOfIdentifier(),
                            identifier()
                        )
                    ),
                    token("TO"),
                    choice(
                        indexName(),
-                       addressOfIdentifier(),
                        identifier(),
                        integer()
                    )
@@ -8512,7 +8521,8 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                choice(
                    identifier_format1(),
-                   identifier_format2()
+                   identifier_format2(),
+                   dataAddressIdentifier()
                )
            );
         }
@@ -8589,25 +8599,27 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // addressOfIdentifier
+    // dataAddressIdentifier
     // ........................................................
 
-    private Parser addressOfIdentifierParser = null;
+    private Parser dataAddressIdentifierParser = null;
 
-    public Parser addressOfIdentifier() {
-        if (addressOfIdentifierParser == null) {
-           FutureParser future = scoped("addressOfIdentifier");
-           addressOfIdentifierParser = future;
+    public Parser dataAddressIdentifier() {
+        if (dataAddressIdentifierParser == null) {
+           FutureParser future = scoped("dataAddressIdentifier");
+           dataAddressIdentifierParser = future;
            future.setParser(
                sequence(
                    token("ADDRESS"),
-                   token("OF"),
+                   optional(
+                       token("OF")
+                   ),
                    identifier()
                )
            );
         }
 
-        return addressOfIdentifierParser;
+        return dataAddressIdentifierParser;
     }
 
     // ========================================================

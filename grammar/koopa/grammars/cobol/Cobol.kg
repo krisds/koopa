@@ -563,7 +563,7 @@ end
 # and paragraphs.
 
 def procedureDivision =
-	PROCEDURE DIVISION [usingPhrase] [returningPhrase] .
+	PROCEDURE DIVISION [usingPhrase] [returningPhrase] [--> .] .
 	[declaratives]
     (sentence)*
     (paragraph)*
@@ -868,7 +868,7 @@ def callStatement =
 end
 
 def callUsing =
-    USING (identifier)*
+    USING (literal | identifier)*
           ( [BY] REFERENCE (identifier | OMITTED)+
           | [BY] CONTENT (literal | identifier)+
           | [BY] VALUE (literal | identifier)+
@@ -950,6 +950,7 @@ def displayStatement =
 	| displayScreenFormat
 	| --> (. | endOfStatement)
 	)
+	[END-DISPLAY]
 end
 
 def displayUponFormat =
@@ -1722,9 +1723,9 @@ def setStatement =
 end
 
 def setFormat1 =
-	(indexName | addressOfIdentifier | identifier)+
+	(indexName | identifier)+
 	TO
-	(indexName | addressOfIdentifier | identifier | integer)
+	(indexName | identifier | integer)
 end
 
 def setFormat2 =
@@ -2039,6 +2040,7 @@ end
 def identifier =
     ( identifier_format1
     | identifier_format2
+    | dataAddressIdentifier
     )
 end
 
@@ -2050,8 +2052,8 @@ def identifier_format2 =
     dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
 end
 
-def addressOfIdentifier =
-	ADDRESS OF identifier
+def dataAddressIdentifier =
+	ADDRESS [OF] identifier
 end
 
 def argument =

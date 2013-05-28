@@ -16,6 +16,24 @@ public class DisplayStatementTest extends TestCase {
     public void testDisplayStatement_1() {
       Parser parser = grammar.displayStatement();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " display some-name ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDisplayStatement_2() {
+      Parser parser = grammar.displayStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " display some-name end-display ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDisplayStatement_3() {
+      Parser parser = grammar.displayStatement();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "       DISPLAY A,B ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());

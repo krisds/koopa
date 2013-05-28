@@ -665,8 +665,9 @@ public class CobolVerifier extends VerifyingSink {
         { final int p0 = 0;
           final int p1 = lastIndexOf("performStatement");
           final int p2 = lastIndexOf("statement");
+          final int p3 = lastIndexOf("exitStatement");
 
-          if (p0 < p1 && p1 < p2) {
+          if (p0 < p1 && p1 < p2 && p3 < p2) {
             warn(t, "PERFORM not in perform statement.");
           }
         }
@@ -674,10 +675,11 @@ public class CobolVerifier extends VerifyingSink {
         { final int p0 = 0;
           final int p1 = lastIndexOf("statement");
           final int p2 = lastIndexOf("execStatement");
-          final int p3 = lastIndexOf("performStatement");
+          final int p3 = lastIndexOf("exitStatement");
+          final int p4 = lastIndexOf("performStatement");
 
-          if (p0 < p1 && p2 < p1 && p3 < p1) {
-            warn(t, "PERFORM not in perform statement.");
+          if (p0 < p1 && p2 < p1 && p3 < p1 && p4 < p1) {
+            warn(t, "PERFORM not in perform or exit statement.");
           }
         }
       }

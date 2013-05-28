@@ -109,8 +109,8 @@ verify OPEN
 
 verify PERFORM
 - !execStatement water : warn "PERFORM in the water."
-- performStatement statement : warn "PERFORM not in perform statement."
-- statement !execStatement !performStatement : warn "PERFORM not in perform statement."
+- performStatement statement !exitStatement : warn "PERFORM not in perform statement."
+- statement !execStatement !exitStatement !performStatement : warn "PERFORM not in perform or exit statement."
 
 verify READ
 - !readStatement water : warn "READ in the water."

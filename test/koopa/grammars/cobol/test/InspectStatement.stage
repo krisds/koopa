@@ -5,6 +5,8 @@ target tallyingPhrase;
 
 +[ TALLYING WRK-DU-999-1 FOR ALL "A" ]
 +[ TALLYING WRK-DU-999-2 FOR LEADING "A" ]
++[ TALLYING WRK-DU-999-2 FOR TRAILING "A" ]
+
 +[ TALLYING WRK-DU-999-3 FOR CHARACTERS BEFORE "." ]
 +[ TALLYING WRK-DU-999-4 FOR CHARACTERS AFTER "AL" ]
 
@@ -19,6 +21,14 @@ target tallyingPhrase;
                                      "T" AFTER WS-Y
                                      "T" AFTER "U" ]
 
+target replacingPhrase;
+
++[ REPLACING CHARACTERS BY "A" ]
+
++[ REPLACING ALL SPACES BY A ]
++[ REPLACING LEADING SPACES BY A ]
++[ REPLACING FIRST SPACES BY A ]
++[ REPLACING TRAILING SPACES BY A ]
 
 target inspectStatement;
 

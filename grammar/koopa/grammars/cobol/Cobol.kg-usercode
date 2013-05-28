@@ -474,7 +474,7 @@ static {
     RESERVED_WORDS.add("TIMES");
     RESERVED_WORDS.add("TO");
     RESERVED_WORDS.add("TOP");
-    RESERVED_WORDS.add("TRAILING");
+    // RESERVED_WORDS.add("TRAILING");
     // RESERVED_WORDS.add("TRUE");
     RESERVED_WORDS.add("TRY");
     RESERVED_WORDS.add("TYPE");

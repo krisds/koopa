@@ -293,7 +293,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_32() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY VALUE MY-VALUE-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE GIVING A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -302,7 +302,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_33() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY CONTENT MY-CONTENT-DATA\n     BY VALUE MY-VALUE-DATA\n     BY REFERENCE MY-REFERENCED-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE GIVING INTO A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -311,7 +311,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_34() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     REFERENCE MY-REFERENCED-DATA\n     BY VALUE MY-VALUE-DATA\n     CONTENT MY-CONTENT-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE RETURNING A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -320,7 +320,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_35() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     CONTENT MY-CONTENT-DATA\n     VALUE MY-VALUE-DATA\n     REFERENCE MY-REFERENCED-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE RETURNING INTO A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -329,7 +329,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_36() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     MY-REFERENCED-DATA\n     BY VALUE MY-VALUE-DATA\n     BY CONTENT MY-CONTENT-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY VALUE MY-VALUE-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -338,7 +338,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_37() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY VALUE MY-VALUE-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY CONTENT MY-CONTENT-DATA\n     BY VALUE MY-VALUE-DATA\n     BY REFERENCE MY-REFERENCED-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -347,7 +347,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_38() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     REFERENCE MY-REFERENCED-DATA\n     BY VALUE MY-VALUE-DATA\n     CONTENT MY-CONTENT-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -356,7 +356,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_39() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     CONTENT MY-CONTENT-DATA\n     VALUE MY-VALUE-DATA\n     REFERENCE MY-REFERENCED-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -365,7 +365,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_40() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     MY-REFERENCED-DATA\n     BY VALUE MY-VALUE-DATA\n     BY CONTENT MY-CONTENT-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -374,7 +374,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_41() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY VALUE MY-VALUE-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -383,7 +383,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_42() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     ON OVERFLOW\n        DISPLAY \"SERVICE OVERFLOW\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -392,7 +392,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_43() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     OVERFLOW\n        DISPLAY \"SERVICE OVERFLOW\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -401,7 +401,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_44() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     ON EXCEPTION\n        DISPLAY \"SERVICE EXCEPTION\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -410,7 +410,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_45() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     EXCEPTION\n        DISPLAY \"SERVICE EXCEPTION\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING\n     MY-REFERENCED-DATA\n     BY CONTENT MY-CONTENT-DATA\n     BY REFERENCE MY-OTHER-REFERENCED-DATA\n     BY CONTENT MY-OTHER-CONTENT-DATA ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -419,7 +419,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_46() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     NOT ON EXCEPTION\n        DISPLAY \"NO SERVICE EXCEPTION\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     ON OVERFLOW\n        DISPLAY \"SERVICE OVERFLOW\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -428,7 +428,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_47() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     NOT EXCEPTION\n        DISPLAY \"NO SERVICE EXCEPTION\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     OVERFLOW\n        DISPLAY \"SERVICE OVERFLOW\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -437,7 +437,7 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_48() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE END-CALL ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     ON EXCEPTION\n        DISPLAY \"SERVICE EXCEPTION\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -446,13 +446,49 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_49() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING MY-DATA END-CALL ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     EXCEPTION\n        DISPLAY \"SERVICE EXCEPTION\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testCallStatement_50() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     NOT ON EXCEPTION\n        DISPLAY \"NO SERVICE EXCEPTION\" ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_51() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n     NOT EXCEPTION\n        DISPLAY \"NO SERVICE EXCEPTION\" ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_52() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE END-CALL ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_53() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE USING MY-DATA END-CALL ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_54() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL MY-SERVICE\n 	 ON EXCEPTION\n		DISPLAY \"SERVICE EXCEPTION\"\n   END-CALL ");

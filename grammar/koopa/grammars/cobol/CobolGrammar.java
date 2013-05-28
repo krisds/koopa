@@ -3502,6 +3502,9 @@ public class CobolGrammar extends KoopaGrammar {
                        callUsing()
                    ),
                    optional(
+                       callGivingOrReturning()
+                   ),
+                   optional(
                        choice(
                            onOverflow(),
                            sequence(
@@ -3587,6 +3590,33 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return callUsingParser;
+    }
+
+    // ========================================================
+    // callGivingOrReturning
+    // ........................................................
+
+    private Parser callGivingOrReturningParser = null;
+
+    public Parser callGivingOrReturning() {
+        if (callGivingOrReturningParser == null) {
+           FutureParser future = scoped("callGivingOrReturning");
+           callGivingOrReturningParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("GIVING"),
+                       token("RETURNING")
+                   ),
+                   optional(
+                       token("INTO")
+                   ),
+                   identifier()
+               )
+           );
+        }
+
+        return callGivingOrReturningParser;
     }
 
     // ========================================================
@@ -6263,7 +6293,7 @@ public class CobolGrammar extends KoopaGrammar {
                            star(
                                choice(
                                    tallyingCharactersPhrase(),
-                                   tallyingAllLeadingPhrase()
+                                   tallyingAllLeadingOrTrailingPhrase()
                                )
                            )
                        )
@@ -6299,20 +6329,21 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // tallyingAllLeadingPhrase
+    // tallyingAllLeadingOrTrailingPhrase
     // ........................................................
 
-    private Parser tallyingAllLeadingPhraseParser = null;
+    private Parser tallyingAllLeadingOrTrailingPhraseParser = null;
 
-    public Parser tallyingAllLeadingPhrase() {
-        if (tallyingAllLeadingPhraseParser == null) {
-           FutureParser future = scoped("tallyingAllLeadingPhrase");
-           tallyingAllLeadingPhraseParser = future;
+    public Parser tallyingAllLeadingOrTrailingPhrase() {
+        if (tallyingAllLeadingOrTrailingPhraseParser == null) {
+           FutureParser future = scoped("tallyingAllLeadingOrTrailingPhrase");
+           tallyingAllLeadingOrTrailingPhraseParser = future;
            future.setParser(
                sequence(
                    choice(
                        token("ALL"),
-                       token("LEADING")
+                       token("LEADING"),
+                       token("TRAILING")
                    ),
                    star(
                        sequence(
@@ -6334,7 +6365,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return tallyingAllLeadingPhraseParser;
+        return tallyingAllLeadingOrTrailingPhraseParser;
     }
 
     // ========================================================
@@ -6353,7 +6384,7 @@ public class CobolGrammar extends KoopaGrammar {
                    star(
                        choice(
                            replacingCharactersPhrase(),
-                           replacingAllLeadingFirstPhrase()
+                           replacingAllLeadingFirstOrTrailingPhrase()
                        )
                    )
                )
@@ -6392,21 +6423,22 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // replacingAllLeadingFirstPhrase
+    // replacingAllLeadingFirstOrTrailingPhrase
     // ........................................................
 
-    private Parser replacingAllLeadingFirstPhraseParser = null;
+    private Parser replacingAllLeadingFirstOrTrailingPhraseParser = null;
 
-    public Parser replacingAllLeadingFirstPhrase() {
-        if (replacingAllLeadingFirstPhraseParser == null) {
-           FutureParser future = scoped("replacingAllLeadingFirstPhrase");
-           replacingAllLeadingFirstPhraseParser = future;
+    public Parser replacingAllLeadingFirstOrTrailingPhrase() {
+        if (replacingAllLeadingFirstOrTrailingPhraseParser == null) {
+           FutureParser future = scoped("replacingAllLeadingFirstOrTrailingPhrase");
+           replacingAllLeadingFirstOrTrailingPhraseParser = future;
            future.setParser(
                sequence(
                    choice(
                        token("ALL"),
                        token("LEADING"),
-                       token("FIRST")
+                       token("FIRST"),
+                       token("TRAILING")
                    ),
                    star(
                        sequence(
@@ -6428,7 +6460,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return replacingAllLeadingFirstPhraseParser;
+        return replacingAllLeadingFirstOrTrailingPhraseParser;
     }
 
     // ========================================================
@@ -10578,7 +10610,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("TIMES");
         RESERVED_WORDS.add("TO");
         RESERVED_WORDS.add("TOP");
-        RESERVED_WORDS.add("TRAILING");
+        // RESERVED_WORDS.add("TRAILING");
         // RESERVED_WORDS.add("TRUE");
         RESERVED_WORDS.add("TRY");
         RESERVED_WORDS.add("TYPE");

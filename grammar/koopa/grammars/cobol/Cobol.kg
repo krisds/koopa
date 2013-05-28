@@ -852,6 +852,7 @@ end
 def callStatement =
     CALL programID
     [ callUsing ]
+    [ callGivingOrReturning ]
 
     [ # Call statement format 1.
       onOverflow
@@ -873,6 +874,10 @@ def callUsing =
           | [BY] CONTENT (literal | identifier)+
           | [BY] VALUE (literal | identifier)+
           )*
+end
+
+def callGivingOrReturning =
+    (GIVING | RETURNING) [INTO] identifier
 end
 
 def onOverflow =
@@ -1485,7 +1490,7 @@ def tallyingPhrase =
 	TALLYING
 	( identifier FOR
 	  ( tallyingCharactersPhrase
-	  | tallyingAllLeadingPhrase
+	  | tallyingAllLeadingOrTrailingPhrase
 	  )*
 	)*
 end
@@ -1495,8 +1500,8 @@ def tallyingCharactersPhrase =
 	(locationPhrase)*
 end
 
-def tallyingAllLeadingPhrase =
-	(ALL | LEADING)
+def tallyingAllLeadingOrTrailingPhrase =
+	(ALL | LEADING | TRAILING)
 	( (identifier -FOR | literal)
 	  (locationPhrase)*
 	)*
@@ -1505,7 +1510,7 @@ end
 def replacingPhrase =
 	REPLACING
 	( replacingCharactersPhrase 
-	| replacingAllLeadingFirstPhrase
+	| replacingAllLeadingFirstOrTrailingPhrase
 	)*
 end
 
@@ -1515,8 +1520,8 @@ def replacingCharactersPhrase =
 	(locationPhrase)*
 end
 
-def replacingAllLeadingFirstPhrase =
-	(ALL | LEADING | FIRST)
+def replacingAllLeadingFirstOrTrailingPhrase =
+	(ALL | LEADING | FIRST | TRAILING)
 	( (identifier | literal) BY (identifier | literal) (locationPhrase)* )*
 end
 

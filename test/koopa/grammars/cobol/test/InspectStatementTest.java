@@ -34,7 +34,7 @@ public class InspectStatementTest extends TestCase {
     public void testTallyingPhrase_3() {
       Parser parser = grammar.tallyingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-3 FOR CHARACTERS BEFORE \".\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-2 FOR TRAILING \"A\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -43,7 +43,7 @@ public class InspectStatementTest extends TestCase {
     public void testTallyingPhrase_4() {
       Parser parser = grammar.tallyingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-4 FOR CHARACTERS AFTER \"AL\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-3 FOR CHARACTERS BEFORE \".\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -52,7 +52,7 @@ public class InspectStatementTest extends TestCase {
     public void testTallyingPhrase_5() {
       Parser parser = grammar.tallyingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-1 FOR ALL \"A\"\n            WRK-DU-999-2 FOR ALL \"B\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-4 FOR CHARACTERS AFTER \"AL\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -61,7 +61,7 @@ public class InspectStatementTest extends TestCase {
     public void testTallyingPhrase_6() {
       Parser parser = grammar.tallyingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-1 FOR LEADING \"A\"\n            WRK-DU-999-2 FOR LEADING \"B\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-1 FOR ALL \"A\"\n            WRK-DU-999-2 FOR ALL \"B\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -70,13 +70,67 @@ public class InspectStatementTest extends TestCase {
     public void testTallyingPhrase_7() {
       Parser parser = grammar.tallyingPhrase();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-1 FOR LEADING \"A\"\n            WRK-DU-999-2 FOR LEADING \"B\" ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testTallyingPhrase_8() {
+      Parser parser = grammar.tallyingPhrase();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " TALLYING WRK-DU-999-1 FOR LEADING \"S\" AFTER WS-Y\n                                     \"S\" AFTER \"U\"\n                                     \"T\" AFTER WS-Y\n                                     \"T\" AFTER \"U\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testInspectStatement_8() {
+    public void testReplacingPhrase_9() {
+      Parser parser = grammar.replacingPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REPLACING CHARACTERS BY \"A\" ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReplacingPhrase_10() {
+      Parser parser = grammar.replacingPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REPLACING ALL SPACES BY A ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReplacingPhrase_11() {
+      Parser parser = grammar.replacingPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REPLACING LEADING SPACES BY A ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReplacingPhrase_12() {
+      Parser parser = grammar.replacingPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REPLACING FIRST SPACES BY A ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReplacingPhrase_13() {
+      Parser parser = grammar.replacingPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REPLACING TRAILING SPACES BY A ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testInspectStatement_14() {
       Parser parser = grammar.inspectStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " INSPECT WRK-XN-83-1 \n     TALLYING\n         WRK-DU-999-1 FOR ALL \"A\"\n         WRK-DU-999-2 FOR LEADING \"AH\"\n         WRK-DU-999-3 FOR CHARACTERS BEFORE \".\"\n         WRK-DU-999-4 FOR CHARACTERS AFTER \"AL\"\n     REPLACING\n         FIRST \"L \" BY \"ZZ\" AFTER INITIAL \"AL\"\n         FIRST \"BAD\" BY \"ZZZ\" AFTER \"L \"\n         LEADING \"BAD\" BY \"ZZZ\" BEFORE INITIAL \"Q\"\n         FIRST \"BAD\" BY \"ZZZ\" BEFORE INITIAL \"Z\"\n         FIRST \"BAD\" BY \"ZZZ\" AFTER \"ALL \"\n         ALL \".\" BY \"Z\" AFTER \"AL\" ");
@@ -85,7 +139,7 @@ public class InspectStatementTest extends TestCase {
     }
 
     @Test
-    public void testInspectStatement_9() {
+    public void testInspectStatement_15() {
       Parser parser = grammar.inspectStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " INSPECT TEST-32-DATA \n     TALLYING \n         WRK-DU-999-1 FOR LEADING \"S\" AFTER WS-Y\n                                  \"S\" AFTER \"U\"\n                                  \"T\" AFTER WS-Y\n                                  \"T\" AFTER \"U\" ");

@@ -1903,6 +1903,7 @@ callStatement
       ( 'CALL'
         programID
         ( callUsing )?
+        ( callGivingOrReturning )?
         ( ( onOverflow
         | ( onException
           ( notOnException )?
@@ -1943,6 +1944,21 @@ callUsing
           ) )+
         )
         ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// callGivingOrReturning
+// ........................................................
+
+callGivingOrReturning
+  : ^(CALL_GIVING_OR_RETURNING
+      ( ( 'GIVING'
+      | 'RETURNING'
+      )
+        ( 'INTO' )?
+        identifier
       )
     )
   ;
@@ -3490,7 +3506,7 @@ tallyingPhrase
         ( ( identifier
           'FOR'
           ( ( tallyingCharactersPhrase
-          | tallyingAllLeadingPhrase
+          | tallyingAllLeadingOrTrailingPhrase
           ) )*
         ) )*
       )
@@ -3510,13 +3526,14 @@ tallyingCharactersPhrase
   ;
 
 // ========================================================
-// tallyingAllLeadingPhrase
+// tallyingAllLeadingOrTrailingPhrase
 // ........................................................
 
-tallyingAllLeadingPhrase
-  : ^(TALLYING_ALL_LEADING_PHRASE
+tallyingAllLeadingOrTrailingPhrase
+  : ^(TALLYING_ALL_LEADING_OR_TRAILING_PHRASE
       ( ( 'ALL'
       | 'LEADING'
+      | 'TRAILING'
       )
         ( ( ( identifier
         | literal
@@ -3535,7 +3552,7 @@ replacingPhrase
   : ^(REPLACING_PHRASE
       ( 'REPLACING'
         ( ( replacingCharactersPhrase
-        | replacingAllLeadingFirstPhrase
+        | replacingAllLeadingFirstOrTrailingPhrase
         ) )*
       )
     )
@@ -3558,14 +3575,15 @@ replacingCharactersPhrase
   ;
 
 // ========================================================
-// replacingAllLeadingFirstPhrase
+// replacingAllLeadingFirstOrTrailingPhrase
 // ........................................................
 
-replacingAllLeadingFirstPhrase
-  : ^(REPLACING_ALL_LEADING_FIRST_PHRASE
+replacingAllLeadingFirstOrTrailingPhrase
+  : ^(REPLACING_ALL_LEADING_FIRST_OR_TRAILING_PHRASE
       ( ( 'ALL'
       | 'LEADING'
       | 'FIRST'
+      | 'TRAILING'
       )
         ( ( ( identifier
         | literal

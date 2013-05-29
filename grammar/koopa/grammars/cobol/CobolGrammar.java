@@ -2634,15 +2634,10 @@ public class CobolGrammar extends KoopaGrammar {
                    token("PROCEDURE"),
                    token("DIVISION"),
                    optional(
-                       usingPhrase()
+                       usingOrChainingPhrase()
                    ),
                    optional(
                        returningPhrase()
-                   ),
-                   optional(
-                       skipto(
-                           token(".")
-                       )
                    ),
                    token("."),
                    optional(
@@ -2665,18 +2660,21 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // usingPhrase
+    // usingOrChainingPhrase
     // ........................................................
 
-    private Parser usingPhraseParser = null;
+    private Parser usingOrChainingPhraseParser = null;
 
-    public Parser usingPhrase() {
-        if (usingPhraseParser == null) {
-           FutureParser future = scoped("usingPhrase");
-           usingPhraseParser = future;
+    public Parser usingOrChainingPhrase() {
+        if (usingOrChainingPhraseParser == null) {
+           FutureParser future = scoped("usingOrChainingPhrase");
+           usingOrChainingPhraseParser = future;
            future.setParser(
                sequence(
-                   token("USING"),
+                   choice(
+                       token("USING"),
+                       token("CHAINING")
+                   ),
                    star(
                        choice(
                            dataReference(),
@@ -2687,7 +2685,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return usingPhraseParser;
+        return usingOrChainingPhraseParser;
     }
 
     // ========================================================
@@ -8426,7 +8424,7 @@ public class CobolGrammar extends KoopaGrammar {
                            token("PROCEDURE"),
                            token("DIVISION"),
                            optional(
-                               usingPhrase()
+                               usingOrChainingPhrase()
                            ),
                            optional(
                                returningPhrase()
@@ -10199,6 +10197,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("CBL-CTR");
         RESERVED_WORDS.add("CF");
         RESERVED_WORDS.add("CH");
+        RESERVED_WORDS.add("CHAINING");
         RESERVED_WORDS.add("CHARACTER");
         RESERVED_WORDS.add("CHARACTERS");
         RESERVED_WORDS.add("CHECKING");

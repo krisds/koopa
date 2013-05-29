@@ -82,8 +82,8 @@
 <!ELEMENT usage ((t,t?)?,t)>
 <!ELEMENT value (t,t?,literal)>
 <!ELEMENT based (t)>
-<!ELEMENT procedureDivision (t+,usingPhrase?,returningPhrase?,water?,t,declaratives?,sentence*,paragraph*,section*)>
-<!ELEMENT usingPhrase (t,(dataReference|dataValue)*)>
+<!ELEMENT procedureDivision (t+,usingOrChainingPhrase?,returningPhrase?,t,declaratives?,sentence*,paragraph*,section*)>
+<!ELEMENT usingOrChainingPhrase (t,(dataReference|dataValue)*)>
 <!ELEMENT dataReference ((t?,t)?,dataName)>
 <!ELEMENT dataValue (t?,t,dataName)>
 <!ELEMENT returningPhrase (t,dataName)>
@@ -240,7 +240,7 @@
 <!ELEMENT copyReplacementInstruction (copyOperandName,t,copyOperandName)>
 <!ELEMENT copyOperandName (pseudoLiteral|verb|literal|identifier|cobolWord)>
 <!ELEMENT replaceStatement (t,water?,t)>
-<!ELEMENT divisionStart (((t,t)|(t,t)|(t,t)|(t+,usingPhrase?,returningPhrase?)),t)>
+<!ELEMENT divisionStart (((t,t)|(t,t)|(t,t)|(t+,usingOrChainingPhrase?,returningPhrase?)),t)>
 <!ELEMENT dataSectionStart (t+,t)>
 <!ELEMENT endOfStatement (verb|t|(t?,t?,(t|(t,t)|(t,t?)|t)))>
 <!ELEMENT identifier (identifier_format1|identifier_format2|dataAddressIdentifier)>

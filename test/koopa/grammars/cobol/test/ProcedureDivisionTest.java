@@ -291,91 +291,91 @@ public class ProcedureDivisionTest extends TestCase {
     }
 
     @Test
-    public void testProcedureDivision_32() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_32() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " USING BY REFERENCE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_33() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_33() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION USING DATA-AREA . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " USING REFERENCE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_34() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_34() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION USING DATA-AREA-A DATA-AREA-B DATA-AREA-C . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " USING A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_35() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_35() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 18 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " USING BY VALUE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_36() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_36() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 19 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " USING VALUE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_37() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_37() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   PARAGRAPH-20 .\n   DISPLAY 20 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CHAINING BY REFERENCE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_38() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_38() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   PARAGRAPH-21 .\n   DISPLAY 21 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CHAINING REFERENCE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_39() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_39() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 22A .\n   PARAGRAPH-22 .\n   DISPLAY 22B . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CHAINING A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_40() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_40() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 23A .\n   PARAGRAPH-23 .\n   DISPLAY 23B . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CHAINING BY VALUE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_41() {
-      Parser parser = grammar.procedureDivision();
+    public void testUsingOrChainingPhrase_41() {
+      Parser parser = grammar.usingOrChainingPhrase();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   SECTION-24 SECTION .\n   DISPLAY 24 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CHAINING VALUE A ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -384,7 +384,7 @@ public class ProcedureDivisionTest extends TestCase {
     public void testProcedureDivision_42() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   SECTION-25 SECTION .\n   DISPLAY 25 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -393,7 +393,7 @@ public class ProcedureDivisionTest extends TestCase {
     public void testProcedureDivision_43() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 26A .\n   SECTION-26 SECTION .\n   DISPLAY 26B . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION USING DATA-AREA . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -402,7 +402,7 @@ public class ProcedureDivisionTest extends TestCase {
     public void testProcedureDivision_44() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 27A .\n   SECTION-27 SECTION .\n   DISPLAY 27B . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION USING DATA-AREA-A DATA-AREA-B DATA-AREA-C . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -411,7 +411,7 @@ public class ProcedureDivisionTest extends TestCase {
     public void testProcedureDivision_45() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 28A .\n   SECTION-28 SECTION .\n   DISPLAY 28B .\n   PARAGRAPH-28 .\n   DISPLAY 28C . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION CHAINING DATA-AREA . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -420,7 +420,7 @@ public class ProcedureDivisionTest extends TestCase {
     public void testProcedureDivision_46() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 29A .\n   SECTION-29 SECTION .\n   DISPLAY 29B .\n   PARAGRAPH-29 .\n   DISPLAY 29C . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION CHAINING DATA-AREA-A DATA-AREA-B DATA-AREA-C . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -429,13 +429,137 @@ public class ProcedureDivisionTest extends TestCase {
     public void testProcedureDivision_47() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION USING DATA-AREA-A CHAINING DATA-AREA-B . ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_48() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION CHAINING DATA-AREA-A USING DATA-AREA-B . ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_49() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 18 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_50() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 19 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_51() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   PARAGRAPH-20 .\n   DISPLAY 20 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_52() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   PARAGRAPH-21 .\n   DISPLAY 21 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_53() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 22A .\n   PARAGRAPH-22 .\n   DISPLAY 22B . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_54() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 23A .\n   PARAGRAPH-23 .\n   DISPLAY 23B . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_55() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   SECTION-24 SECTION .\n   DISPLAY 24 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_56() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   SECTION-25 SECTION .\n   DISPLAY 25 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_57() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 26A .\n   SECTION-26 SECTION .\n   DISPLAY 26B . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_58() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 27A .\n   SECTION-27 SECTION .\n   DISPLAY 27B . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_59() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 28A .\n   SECTION-28 SECTION .\n   DISPLAY 28B .\n   PARAGRAPH-28 .\n   DISPLAY 28C . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_60() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 29A .\n   SECTION-29 SECTION .\n   DISPLAY 29B .\n   PARAGRAPH-29 .\n   DISPLAY 29C . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testProcedureDivision_61() {
+      Parser parser = grammar.procedureDivision();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 30A .\n   PARAGRAPH-30 .\n   DISPLAY 30B .\n   SECTION-30 SECTION .\n   DISPLAY 30C . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testProcedureDivision_48() {
+    public void testProcedureDivision_62() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 31A .\n   PARAGRAPH-31 .\n   DISPLAY 31B .\n   SECTION-31 SECTION .\n   DISPLAY 31C . ");
@@ -444,7 +568,7 @@ public class ProcedureDivisionTest extends TestCase {
     }
 
     @Test
-    public void testProcedureDivision_49() {
+    public void testProcedureDivision_63() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DISPLAY 32A .\n   PARAGRAPH-32A .\n   DISPLAY 32B .\n   SECTION-32 SECTION .\n   DISPLAY 32C .\n   PARAGRAPH-32B .\n   DISPLAY 32D . ");
@@ -453,7 +577,7 @@ public class ProcedureDivisionTest extends TestCase {
     }
 
     @Test
-    public void testProcedureDivision_50() {
+    public void testProcedureDivision_64() {
       Parser parser = grammar.procedureDivision();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PROCEDURE DIVISION .\n   DECLARATIVES .\n   OUTPUT-ERROR SECTION .\n     USE AFTER ERROR PROCEDURE ON OUTPUT .\n   REPORT-ERROR .\n     DISPLAY \"Output error.\" .\n   END DECLARATIVES .\n   DISPLAY 33A .\n   PARAGRAPH-33A .\n   DISPLAY 33B .\n   SECTION-33 SECTION .\n   DISPLAY 33C .\n   PARAGRAPH-33B .\n   DISPLAY 33D . ");

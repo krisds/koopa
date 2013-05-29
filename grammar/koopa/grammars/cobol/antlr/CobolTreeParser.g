@@ -1401,9 +1401,8 @@ procedureDivision
   : ^(PROCEDURE_DIVISION
       ( 'PROCEDURE'
         'DIVISION'
-        ( usingPhrase )?
+        ( usingOrChainingPhrase )?
         ( returningPhrase )?
-        (water)?
         '.'
         ( declaratives )?
         ( sentence )*
@@ -1414,12 +1413,14 @@ procedureDivision
   ;
 
 // ========================================================
-// usingPhrase
+// usingOrChainingPhrase
 // ........................................................
 
-usingPhrase
-  : ^(USING_PHRASE
-      ( 'USING'
+usingOrChainingPhrase
+  : ^(USING_OR_CHAINING_PHRASE
+      ( ( 'USING'
+      | 'CHAINING'
+      )
         ( ( dataReference
         | dataValue
         ) )*
@@ -4657,7 +4658,7 @@ divisionStart
       )
       | ( 'PROCEDURE'
         'DIVISION'
-        ( usingPhrase )?
+        ( usingOrChainingPhrase )?
         ( returningPhrase )?
       )
       )
@@ -5709,6 +5710,7 @@ token
   | 'CANCEL'
   | 'CASE-INSENSITIVE'
   | 'CASE-SENSITIVE'
+  | 'CHAINING'
   | 'CHANNEL'
   | 'CHARACTER'
   | 'CHARACTERS'

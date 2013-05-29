@@ -563,7 +563,7 @@ end
 # and paragraphs.
 
 def procedureDivision =
-	PROCEDURE DIVISION [usingPhrase] [returningPhrase] [--> .] .
+	PROCEDURE DIVISION [usingOrChainingPhrase] [returningPhrase] .
 	[declaratives]
     (sentence)*
     (paragraph)*
@@ -571,8 +571,9 @@ def procedureDivision =
 #	[--> divisionStart]
 end
 
-def usingPhrase =
-    USING 
+# Refs. http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
+def usingOrChainingPhrase =
+    (USING | CHAINING) 
     (dataReference | dataValue)*
 end
 
@@ -1979,7 +1980,7 @@ def divisionStart =
     ( IDENTIFICATION DIVISION
     | ENVIRONMENT DIVISION
     | DATA DIVISION
-    | PROCEDURE DIVISION [usingPhrase] [returningPhrase]
+    | PROCEDURE DIVISION [usingOrChainingPhrase] [returningPhrase]
     )
     .
 end

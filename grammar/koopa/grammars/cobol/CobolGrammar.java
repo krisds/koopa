@@ -2112,7 +2112,7 @@ public class CobolGrammar extends KoopaGrammar {
                        sign(),
                        sync(),
                        usage(),
-                       value(),
+                       valueIs(),
                        based()
                    ),
                    skipto(
@@ -2230,7 +2230,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("78"),
                    cobolWord(),
                    optional(
-                       value()
+                       valueIs()
                    ),
                    token(".")
                )
@@ -2578,27 +2578,27 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // value
+    // valueIs
     // ........................................................
 
-    private Parser valueParser = null;
+    private Parser valueIsParser = null;
 
-    public Parser value() {
-        if (valueParser == null) {
-           FutureParser future = scoped("value");
-           valueParser = future;
+    public Parser valueIs() {
+        if (valueIsParser == null) {
+           FutureParser future = scoped("valueIs");
+           valueIsParser = future;
            future.setParser(
                sequence(
                    token("VALUE"),
                    optional(
                        token("IS")
                    ),
-                   literal()
+                   value()
                )
            );
         }
 
-        return valueParser;
+        return valueIsParser;
     }
 
     // ========================================================
@@ -8731,9 +8731,9 @@ public class CobolGrammar extends KoopaGrammar {
            directSubscriptParser = future;
            future.setParser(
                choice(
-                   integer(),
+                   token("ALL"),
                    identifier(),
-                   token("ALL")
+                   integer()
                )
            );
         }
@@ -10026,8 +10026,8 @@ public class CobolGrammar extends KoopaGrammar {
            literalParser = future;
            future.setParser(
                choice(
-                   numeric(),
-                   alphanumeric(),
+                   numericLiteral(),
+                   alphanumericLiteral(),
                    figurativeConstant(),
                    booleanLiteral()
                )
@@ -10035,6 +10035,28 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return literalParser;
+    }
+
+    // ========================================================
+    // value
+    // ........................................................
+
+    private Parser valueParser = null;
+
+    public Parser value() {
+        if (valueParser == null) {
+           FutureParser future = scoped("value");
+           valueParser = future;
+           future.setParser(
+               choice(
+                   literal(),
+                   integerConstant(),
+                   alphanumericConstant()
+               )
+           );
+        }
+
+        return valueParser;
     }
 
     // ========================================================
@@ -10102,6 +10124,33 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // numericLiteral
+    // ........................................................
+
+    private Parser numericLiteralParser = null;
+
+    public Parser numericLiteral() {
+        if (numericLiteralParser == null) {
+           FutureParser future = scoped("numericLiteral");
+           numericLiteralParser = future;
+           future.setParser(
+               choice(
+                   integerLiteral(),
+                   decimal(),
+                   hexadecimal(),
+                   sequence(
+                       token("LENGTH"),
+                       token("OF"),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return numericLiteralParser;
+    }
+
+    // ========================================================
     // numeric
     // ........................................................
 
@@ -10126,6 +10175,84 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return numericParser;
+    }
+
+    // ========================================================
+    // integer
+    // ........................................................
+
+    private Parser integerParser = null;
+
+    public Parser integer() {
+        if (integerParser == null) {
+           FutureParser future = scoped("integer");
+           integerParser = future;
+           future.setParser(
+               choice(
+                   integerLiteral(),
+                   integerConstant()
+               )
+           );
+        }
+
+        return integerParser;
+    }
+
+    // ========================================================
+    // integerConstant
+    // ........................................................
+
+    private Parser integerConstantParser = null;
+
+    public Parser integerConstant() {
+        if (integerConstantParser == null) {
+           FutureParser future = scoped("integerConstant");
+           integerConstantParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return integerConstantParser;
+    }
+
+    // ========================================================
+    // alphanumeric
+    // ........................................................
+
+    private Parser alphanumericParser = null;
+
+    public Parser alphanumeric() {
+        if (alphanumericParser == null) {
+           FutureParser future = scoped("alphanumeric");
+           alphanumericParser = future;
+           future.setParser(
+               choice(
+                   alphanumericLiteral(),
+                   alphanumericConstant()
+               )
+           );
+        }
+
+        return alphanumericParser;
+    }
+
+    // ========================================================
+    // alphanumericConstant
+    // ........................................................
+
+    private Parser alphanumericConstantParser = null;
+
+    public Parser alphanumericConstant() {
+        if (alphanumericConstantParser == null) {
+           FutureParser future = scoped("alphanumericConstant");
+           alphanumericConstantParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return alphanumericConstantParser;
     }
 
     // ========================================================
@@ -10766,15 +10893,15 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ============================================================================
-    // integer
+    // integerLiteral
     // ............................................................................
 
-    private Parser integerParser = null;
+    private Parser integerLiteralParser = null;
 
-    public Parser integer() {
-    	if (integerParser == null) {
-    	    FutureParser future = scoped("integer");
-    	    integerParser = future;
+    public Parser integerLiteral() {
+    	if (integerLiteralParser == null) {
+    	    FutureParser future = scoped("integerLiteral");
+    	    integerLiteralParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
     	            Token token = null;
@@ -10799,7 +10926,7 @@ public class CobolGrammar extends KoopaGrammar {
     			}
     		});
     	}
-    	return integerParser;
+    	return integerLiteralParser;
     }
 
     // ============================================================================
@@ -10877,15 +11004,15 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ============================================================================
-    // alphanumeric
+    // alphanumericLiteral
     // ............................................................................
 
-    private Parser alphanumericParser = null;
+    private Parser alphanumericLiteralParser = null;
 
-    public Parser alphanumeric() {
-    	if (alphanumericParser == null) {
-    	    FutureParser future = scoped("alphanumeric");
-    	    alphanumericParser = future;
+    public Parser alphanumericLiteral() {
+    	if (alphanumericLiteralParser == null) {
+    	    FutureParser future = scoped("alphanumericLiteral");
+    	    alphanumericLiteralParser = future;
     	    future.setParser(new Parser() {
     			protected boolean accepts(TokenStream stream) {
     	            Token token = null;
@@ -10910,7 +11037,7 @@ public class CobolGrammar extends KoopaGrammar {
     			}
     		});
     	}
-    	return alphanumericParser;
+    	return alphanumericLiteralParser;
     }
 
     // ============================================================================

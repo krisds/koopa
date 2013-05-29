@@ -1117,7 +1117,7 @@ dataDescriptionEntry_format1
         | sign
         | sync
         | usage
-        | value
+        | valueIs
         | based
         ) )*
         (water)?
@@ -1183,7 +1183,7 @@ constantDescriptionEntry
   : ^(CONSTANT_DESCRIPTION_ENTRY
       ( '78'
         cobolWord
-        ( value )?
+        ( valueIs )?
         '.'
       )
     )
@@ -1371,14 +1371,14 @@ usage
   ;
 
 // ========================================================
-// value
+// valueIs
 // ........................................................
 
-value
-  : ^(VALUE
+valueIs
+  : ^(VALUE_IS
       ( 'VALUE'
         ( 'IS' )?
-        literal
+        value
       )
     )
   ;
@@ -4841,9 +4841,9 @@ subscript
 
 directSubscript
   : ^(DIRECT_SUBSCRIPT
-      ( integer
+      ( 'ALL'
       | identifier
-      | 'ALL'
+      | integer
       )
     )
   ;
@@ -5569,10 +5569,23 @@ assignmentName
 
 literal
   : ^(LITERAL
-      ( numeric
-      | alphanumeric
+      ( numericLiteral
+      | alphanumericLiteral
       | figurativeConstant
       | booleanLiteral
+      )
+    )
+  ;
+
+// ========================================================
+// value
+// ........................................................
+
+value
+  : ^(VALUE
+      ( literal
+      | integerConstant
+      | alphanumericConstant
       )
     )
   ;
@@ -5619,6 +5632,23 @@ figurativeConstant
   ;
 
 // ========================================================
+// numericLiteral
+// ........................................................
+
+numericLiteral
+  : ^(NUMERIC_LITERAL
+      ( integerLiteral
+      | decimal
+      | hexadecimal
+      | ( 'LENGTH'
+        'OF'
+        identifier
+      )
+      )
+    )
+  ;
+
+// ========================================================
 // numeric
 // ........................................................
 
@@ -5632,6 +5662,50 @@ numeric
         identifier
       )
       )
+    )
+  ;
+
+// ========================================================
+// integer
+// ........................................................
+
+integer
+  : ^(INTEGER
+      ( integerLiteral
+      | integerConstant
+      )
+    )
+  ;
+
+// ========================================================
+// integerConstant
+// ........................................................
+
+integerConstant
+  : ^(INTEGER_CONSTANT
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// alphanumeric
+// ........................................................
+
+alphanumeric
+  : ^(ALPHANUMERIC
+      ( alphanumericLiteral
+      | alphanumericConstant
+      )
+    )
+  ;
+
+// ========================================================
+// alphanumericConstant
+// ........................................................
+
+alphanumericConstant
+  : ^(ALPHANUMERIC_CONSTANT
+      cobolWord
     )
   ;
 
@@ -6066,8 +6140,8 @@ cobolWord
   : ^(COBOL_WORD token)
   ;
 
-integer
-  : ^(INTEGER token)
+integerLiteral
+  : ^(INTEGER_LITERAL token)
   ;
 
 decimal
@@ -6078,8 +6152,8 @@ hexadecimal
   : ^(HEXADECIMAL token)
   ;
 
-alphanumeric
-  : ^(ALPHANUMERIC token)
+alphanumericLiteral
+  : ^(ALPHANUMERIC_LITERAL token)
   ;
 
 pictureString

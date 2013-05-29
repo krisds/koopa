@@ -1008,8 +1008,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_112() {
-      Parser parser = grammar.value();
+    public void testValueIs_112() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE IS ZERO ");
       assertTrue(parser.accepts(tokenizer));
@@ -1017,8 +1017,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_113() {
-      Parser parser = grammar.value();
+    public void testValueIs_113() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE ZERO ");
       assertTrue(parser.accepts(tokenizer));
@@ -1026,8 +1026,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_114() {
-      Parser parser = grammar.value();
+    public void testValueIs_114() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE IS 42 ");
       assertTrue(parser.accepts(tokenizer));
@@ -1035,8 +1035,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_115() {
-      Parser parser = grammar.value();
+    public void testValueIs_115() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE 42 ");
       assertTrue(parser.accepts(tokenizer));
@@ -1044,8 +1044,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_116() {
-      Parser parser = grammar.value();
+    public void testValueIs_116() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE IS 42.10 ");
       assertTrue(parser.accepts(tokenizer));
@@ -1053,8 +1053,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_117() {
-      Parser parser = grammar.value();
+    public void testValueIs_117() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE 42.10 ");
       assertTrue(parser.accepts(tokenizer));
@@ -1062,8 +1062,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_118() {
-      Parser parser = grammar.value();
+    public void testValueIs_118() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE IS \"this is a constant\" ");
       assertTrue(parser.accepts(tokenizer));
@@ -1071,8 +1071,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_119() {
-      Parser parser = grammar.value();
+    public void testValueIs_119() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE \"this is a constant\" ");
       assertTrue(parser.accepts(tokenizer));
@@ -1080,8 +1080,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_120() {
-      Parser parser = grammar.value();
+    public void testValueIs_120() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE IS NULL ");
       assertTrue(parser.accepts(tokenizer));
@@ -1089,8 +1089,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_121() {
-      Parser parser = grammar.value();
+    public void testValueIs_121() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE NULL ");
       assertTrue(parser.accepts(tokenizer));
@@ -1098,8 +1098,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_122() {
-      Parser parser = grammar.value();
+    public void testValueIs_122() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE IS 'this is a constant' ");
       assertTrue(parser.accepts(tokenizer));
@@ -1107,8 +1107,8 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValue_123() {
-      Parser parser = grammar.value();
+    public void testValueIs_123() {
+      Parser parser = grammar.valueIs();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUE 'this is a constant' ");
       assertTrue(parser.accepts(tokenizer));

@@ -2,8 +2,8 @@ cobolWord
   : ^(COBOL_WORD token)
   ;
 
-integer
-  : ^(INTEGER token)
+integerLiteral
+  : ^(INTEGER_LITERAL token)
   ;
 
 decimal
@@ -14,8 +14,8 @@ hexadecimal
   : ^(HEXADECIMAL token)
   ;
 
-alphanumeric
-  : ^(ALPHANUMERIC token)
+alphanumericLiteral
+  : ^(ALPHANUMERIC_LITERAL token)
   ;
 
 pictureString

@@ -632,15 +632,15 @@ public Parser cobolWord() {
 }
 
 // ============================================================================
-// integer
+// integerLiteral
 // ............................................................................
 
-private Parser integerParser = null;
+private Parser integerLiteralParser = null;
 
-public Parser integer() {
-	if (integerParser == null) {
-	    FutureParser future = scoped("integer");
-	    integerParser = future;
+public Parser integerLiteral() {
+	if (integerLiteralParser == null) {
+	    FutureParser future = scoped("integerLiteral");
+	    integerLiteralParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
 	            Token token = null;
@@ -665,7 +665,7 @@ public Parser integer() {
 			}
 		});
 	}
-	return integerParser;
+	return integerLiteralParser;
 }
 
 // ============================================================================
@@ -743,15 +743,15 @@ public Parser hexadecimal() {
 }
 
 // ============================================================================
-// alphanumeric
+// alphanumericLiteral
 // ............................................................................
 
-private Parser alphanumericParser = null;
+private Parser alphanumericLiteralParser = null;
 
-public Parser alphanumeric() {
-	if (alphanumericParser == null) {
-	    FutureParser future = scoped("alphanumeric");
-	    alphanumericParser = future;
+public Parser alphanumericLiteral() {
+	if (alphanumericLiteralParser == null) {
+	    FutureParser future = scoped("alphanumericLiteral");
+	    alphanumericLiteralParser = future;
 	    future.setParser(new Parser() {
 			protected boolean accepts(TokenStream stream) {
 	            Token token = null;
@@ -776,7 +776,7 @@ public Parser alphanumeric() {
 			}
 		});
 	}
-	return alphanumericParser;
+	return alphanumericLiteralParser;
 }
 
 // ============================================================================

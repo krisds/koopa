@@ -213,7 +213,7 @@ target usage;
 +[ USAGE IS POINTER ]
 
 
-target value;
+target valueIs;
 
 +[ VALUE IS ZERO ]
 

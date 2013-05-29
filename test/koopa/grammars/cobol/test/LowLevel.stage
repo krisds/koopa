@@ -15,7 +15,7 @@ target cobolWord;
 
 
 
-target integer;
+target integerLiteral;
 
 +[ 1 ]
 -[ 2.0 ]
@@ -33,7 +33,7 @@ target decimal;
 
 
 
-target alphanumeric;
+target alphanumericLiteral;
 
 -[ 1 ]
 -[ 2.0 ]

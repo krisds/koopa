@@ -453,7 +453,7 @@ def dataDescriptionEntry_format1 =
     | sign
     | sync
     | usage
-    | value
+    | valueIs
     | based
     )
     (--> .)  # TODO Handle skipped.
@@ -478,7 +478,7 @@ end
 
 # See https://sourceforge.net/p/open-cobol/manual/, page 5-15.
 def constantDescriptionEntry =
-    78 cobolWord [ value ] .
+    78 cobolWord [ valueIs ] .
 end
 
 def redefines =
@@ -543,8 +543,8 @@ def usage =
     )
 end
 
-def value =
-    VALUE [IS] literal
+def valueIs =
+    VALUE [IS] value
 end
 
 # See http://opencobol.add1tocobol.com/#based
@@ -2083,10 +2083,15 @@ def subscript =
     )
 end
 
-def directSubscript = 
-    ( integer
+def directSubscript =
+    # The order is important here ! Cobol words, when they are integer
+    # constants, count as integers. But because Koopa can't verify the type
+    # of a given Cobol word it accepts all Cobol words as integers. So
+    # integer would match any Cobol word, making it impossible for other cases
+    # to get a chance at matching the input. 
+    ( ALL
     | identifier
-    | ALL
+    | integer
     )
 end
 
@@ -2399,8 +2404,8 @@ def assignmentName =
 end
 
 def literal =
-    ( numeric
-    | alphanumeric
+    ( numericLiteral
+    | alphanumericLiteral
 
     # According to my documentation a figurative constant can appear anywhere a
     # literal can, except for a few edge cases. I'll ignore the edge cases here.
@@ -2409,6 +2414,13 @@ def literal =
     # TODO Correct ?
     | booleanLiteral
     )
+end
+
+def value =
+	( literal
+	| integerConstant
+	| alphanumericConstant
+	)
 end
 
 def booleanLiteral =
@@ -2436,10 +2448,42 @@ def figurativeConstant =
     )
 end
 
+def numericLiteral =
+    ( integerLiteral
+    | decimal
+    | hexadecimal
+    | LENGTH OF identifier	
+    )
+end
+
 def numeric =
     ( integer
     | decimal
     | hexadecimal
     | LENGTH OF identifier	
     )
+end
+
+def integer =
+    ( integerLiteral
+    | integerConstant
+    )
+end
+
+# Ideally we should check if the cobolWord actually is an integer constant.
+# This is, however, outside the current scope of Koopa.
+def integerConstant =
+    cobolWord
+end
+
+def alphanumeric =
+    ( alphanumericLiteral
+    | alphanumericConstant
+    )
+end
+
+# Ideally we should check if the cobolWord actually is an alphanumeric constant.
+# This is, however, outside the current scope of Koopa.
+def alphanumericConstant =
+    cobolWord
 end

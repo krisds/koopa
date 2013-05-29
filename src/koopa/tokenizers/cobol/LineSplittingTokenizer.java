@@ -184,5 +184,12 @@ public class LineSplittingTokenizer implements Tokenizer {
 	}
 
 	public void quit() {
+		try {
+			if (reader != null)
+				reader.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

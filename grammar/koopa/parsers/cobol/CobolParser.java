@@ -68,13 +68,22 @@ public class CobolParser implements ParserConfiguration {
 	public ParseResults parse(File file) throws IOException {
 		LOGGER.info("Parsing " + file);
 
-		ParseResults results = new ParseResults(file);
+		FileReader reader = null;
+		try {
+			reader = new FileReader(file);
+			return parse(file, reader);
+			
+		} finally {
+			if (reader != null) reader.close();
+		}
+	}
 
+	private ParseResults parse(File file, FileReader reader) throws IOException {
+		ParseResults results = new ParseResults(file);
+		
 		final boolean isCopybook = file.getName().toUpperCase()
 				.endsWith(".CPY");
-
-		FileReader reader = new FileReader(file);
-
+		
 		// Build the tokenisation stage.
 		Tokenizer tokenizer = getNewTokenizationStage(results, reader);
 

@@ -72,10 +72,12 @@ public class ANTLRToFilter {
 	public static void generate(File input, String pack) {
 		System.out.println("Processing " + input);
 
+		FileReader reader = null;
+		FileWriter writer = null;
 		try {
 			// 1. Basic parsing step; building AST.
 
-			Reader reader = new FileReader(input);
+			reader = new FileReader(input);
 
 			ANTLRv3Lexer lexer = new ANTLRv3Lexer(new ANTLRReaderStream(reader));
 
@@ -122,9 +124,9 @@ public class ANTLRToFilter {
 			File output = new File(input.getParentFile(), name);
 			System.out.println("Writing output to " + output);
 
-			FileWriter fw = new FileWriter(output);
-			fw.append(code);
-			fw.close();
+			writer = new FileWriter(output);
+			writer.append(code);
+			writer.close();
 
 			System.out.println("Code generation complete.");
 
@@ -139,6 +141,21 @@ public class ANTLRToFilter {
 		} catch (UnsupportedSyntaxException e) {
 			e.printStackTrace();
 			System.exit(-1);
+
+		} finally {
+			try {
+				if (reader != null)
+					reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if (writer != null)
+					writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

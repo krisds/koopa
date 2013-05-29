@@ -1,6 +1,5 @@
 package koopa.grammars.generator;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -76,8 +75,9 @@ public class KGG {
 		// KGTreeParser treeParser = new KGTreeParser(nodes);
 		// treeParser.koopa();
 
-		Reader templatesIn = new InputStreamReader(KGG.class
-				.getResourceAsStream("/koopa/grammars/generator/koopa.stg"));
+		Reader templatesIn = new InputStreamReader(
+				KGG.class
+						.getResourceAsStream("/koopa/grammars/generator/koopa.stg"));
 		StringTemplateGroup templates = new StringTemplateGroup(templatesIn,
 				DefaultTemplateLexer.class);
 
@@ -101,8 +101,9 @@ public class KGG {
 			return null;
 		}
 
+		FileReader fileReader = null;
 		try {
-			FileReader fileReader = new FileReader(filename);
+			fileReader = new FileReader(filename);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			StringBuffer buffer = new StringBuffer();
 			String line;
@@ -111,9 +112,19 @@ public class KGG {
 				buffer.append('\n');
 			}
 			return buffer.toString();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+
+		} finally {
+			try {
+				if (fileReader != null)
+					fileReader.close();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -164,16 +164,24 @@ public class SourceView extends JPanel implements ParsingListener {
 	private static String getContents(File file) throws IOException {
 		StringBuilder builder = new StringBuilder();
 
-		BufferedReader br = new BufferedReader(new FileReader(file));
+		BufferedReader br = null;
 
-		char[] buffer = new char[1024];
-		int len;
+		try {
+			br = new BufferedReader(new FileReader(file));
 
-		while ((len = br.read(buffer)) > 0) {
-			builder.append(buffer, 0, len);
+			char[] buffer = new char[1024];
+			int len;
+
+			while ((len = br.read(buffer)) > 0) {
+				builder.append(buffer, 0, len);
+			}
+
+			return builder.toString();
+			
+		} finally {
+			if (br != null)
+				br.close();
 		}
-
-		return builder.toString();
 	}
 
 	public void scrollTo(int positionInFile) {

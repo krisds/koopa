@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -21,11 +22,12 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.Highlighter.HighlightPainter;
 
+import koopa.app.listeners.TokenSelectionListener;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.CobolParser;
 import koopa.parsers.cobol.ParsingCoordinator;
@@ -47,6 +49,10 @@ public class SourceView extends JPanel implements ParsingListener {
 	private TokenTracker tokenTracker = null;
 
 	private SourceViewSink sink = null;
+
+	private Token selectedToken = null;
+
+	private List<TokenSelectionListener> tokenSelectionListeners = new ArrayList<TokenSelectionListener>();
 
 	public SourceView(ParsingCoordinator coordinator) {
 		setupComponents();
@@ -70,6 +76,15 @@ public class SourceView extends JPanel implements ParsingListener {
 				final Caret caret = pane.getCaret();
 				if (!caret.isVisible() && pane.getDocument().getLength() > 0) {
 					caret.setVisible(true);
+				}
+
+				// TODO Add support for Token selection listeners.
+				Token token = getTokenAt(e.getDot() + 1);
+				if (token != selectedToken) {
+					selectedToken = token;
+					for (TokenSelectionListener listener : tokenSelectionListeners) {
+						listener.selectedToken(selectedToken);
+					}
 				}
 			}
 		});
@@ -177,7 +192,7 @@ public class SourceView extends JPanel implements ParsingListener {
 			}
 
 			return builder.toString();
-			
+
 		} finally {
 			if (br != null)
 				br.close();
@@ -334,5 +349,9 @@ public class SourceView extends JPanel implements ParsingListener {
 		} else {
 			return this.tokenTracker.getTokenAt(position);
 		}
+	}
+
+	public void addTokenSelectionListener(TokenSelectionListener listener) {
+		this.tokenSelectionListeners.add(listener);
 	}
 }

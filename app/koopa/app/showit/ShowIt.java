@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -31,6 +32,7 @@ import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
 import koopa.app.actions.ReloadFileAction;
 import koopa.app.batchit.ParseDetails;
+import koopa.app.components.breadcrumb.Breadcrumb;
 import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.outline.CobolOutline;
@@ -60,6 +62,7 @@ public class ShowIt extends JFrame implements FileManager,
 	private SourceView pane = null;
 	private CobolOutline outline = null;
 	private DetailsTable detailsTable = null;
+	private Breadcrumb breadcrumb = null;
 
 	private JMenu syntaxTree = null;
 
@@ -259,6 +262,7 @@ public class ShowIt extends JFrame implements FileManager,
 
 	private void setupComponents() {
 		pane = new SourceView(this.coordinator);
+
 		outline = new CobolOutline(this.coordinator);
 
 		outline.addTreeSelectionListener(new TreeSelectionListener() {
@@ -279,6 +283,9 @@ public class ShowIt extends JFrame implements FileManager,
 			}
 		});
 
+		breadcrumb = new Breadcrumb(this.coordinator);
+		pane.addTokenSelectionListener(breadcrumb);
+
 		detailsTable = new DetailsTable(parseDetails);
 
 		detailsTable.addListener(new DetailsTableListener() {
@@ -296,8 +303,13 @@ public class ShowIt extends JFrame implements FileManager,
 				JSplitPane.HORIZONTAL_SPLIT, outline, pane);
 		horizontalSplit.setResizeWeight(0.5);
 
+		JPanel x = new JPanel();
+		x.setLayout(new BorderLayout());
+		x.add(horizontalSplit, BorderLayout.CENTER);
+		x.add(breadcrumb, BorderLayout.SOUTH);
+
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				horizontalSplit, detailsScroll);
+				x, detailsScroll);
 		verticalSplit.setResizeWeight(0.8);
 		// verticalSplit.setDividerLocation(0.8);
 
@@ -347,7 +359,7 @@ public class ShowIt extends JFrame implements FileManager,
 			pane.scrollTo(position);
 		}
 	}
-	
+
 	public void selectDetail(Tuple<Token, String> detail) {
 		if (detail != null) {
 			detailsTable.selectDetail(detail);

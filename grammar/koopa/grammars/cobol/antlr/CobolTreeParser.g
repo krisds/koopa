@@ -1170,7 +1170,24 @@ dataDescriptionEntry_format3
             literal
           ) )?
         ) )+
+        ( whenSetToFalseClause )?
         '.'
+      )
+    )
+  ;
+
+// ========================================================
+// whenSetToFalseClause
+// ........................................................
+
+whenSetToFalseClause
+  : ^(WHEN_SET_TO_FALSE_CLAUSE
+      ( ( 'WHEN' )?
+        ( 'SET' )?
+        ( 'TO' )?
+        'FALSE'
+        ( 'IS' )?
+        literal
       )
     )
   ;

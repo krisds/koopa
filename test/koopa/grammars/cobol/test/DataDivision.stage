@@ -240,6 +240,14 @@ target valueIs;
 +[ VALUE 'this is a constant' ]
 
 
+target whenSetToFalseClause;
+
++[ WHEN SET TO FALSE IS 'A' ]
++[ WHEN SET TO FALSE 'A' ]
++[ FALSE IS 'A' ]
++[ FALSE 'A' ]
+
+
 target dataDescriptionEntry;
 
 +[ 01 FILLER . ]
@@ -311,6 +319,23 @@ target dataDescriptionEntry;
 
 +[ 88 TEST-21
       VALUE IS ZERO . ]
+
++[ 88 TEST-22
+      VALUE IS 'B'
+      WHEN SET TO FALSE IS 'A' . ]
+
++[ 88 TEST-23
+      VALUE IS 'B'
+      WHEN SET TO FALSE 'A' . ]
+
++[ 88 TEST-24
+      VALUE IS 'B'
+      FALSE IS 'A' . ]
+
++[ 88 TEST-25
+      VALUE IS 'B'
+      FALSE 'A' . ]
+
 
 +[ 05 BUFFER
       POINTER

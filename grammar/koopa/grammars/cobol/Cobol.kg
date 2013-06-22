@@ -472,11 +472,17 @@ def dataDescriptionEntry_format3 =
     ( VALUE [IS]
     | VALUES [ARE]
     )
-    ( literal [(THROUGH | THRU) literal] )+
+    ( (-FALSE) literal [(THROUGH | THRU) literal] )+
+    [ whenSetToFalseClause ]
     .
 end
 
 # See https://sourceforge.net/p/open-cobol/manual/, page 5-15.
+def whenSetToFalseClause =
+    [WHEN] [SET] [TO] FALSE [IS] literal
+end
+
+# See https://sourceforge.net/p/open-cobol/manual/, page 5-16.
 def constantDescriptionEntry =
     78 cobolWord [ valueIs ] .
 end

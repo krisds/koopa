@@ -2195,6 +2195,9 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    plus(
                        sequence(
+                           not(
+                               token("FALSE")
+                           ),
                            literal(),
                            optional(
                                sequence(
@@ -2207,12 +2210,48 @@ public class CobolGrammar extends KoopaGrammar {
                            )
                        )
                    ),
+                   optional(
+                       whenSetToFalseClause()
+                   ),
                    token(".")
                )
            );
         }
 
         return dataDescriptionEntry_format3Parser;
+    }
+
+    // ========================================================
+    // whenSetToFalseClause
+    // ........................................................
+
+    private Parser whenSetToFalseClauseParser = null;
+
+    public Parser whenSetToFalseClause() {
+        if (whenSetToFalseClauseParser == null) {
+           FutureParser future = scoped("whenSetToFalseClause");
+           whenSetToFalseClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WHEN")
+                   ),
+                   optional(
+                       token("SET")
+                   ),
+                   optional(
+                       token("TO")
+                   ),
+                   token("FALSE"),
+                   optional(
+                       token("IS")
+                   ),
+                   literal()
+               )
+           );
+        }
+
+        return whenSetToFalseClauseParser;
     }
 
     // ========================================================

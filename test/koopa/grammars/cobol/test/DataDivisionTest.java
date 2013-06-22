@@ -1116,37 +1116,37 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_124() {
-      Parser parser = grammar.dataDescriptionEntry();
+    public void testWhenSetToFalseClause_124() {
+      Parser parser = grammar.whenSetToFalseClause();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 FILLER . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WHEN SET TO FALSE IS 'A' ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDataDescriptionEntry_125() {
-      Parser parser = grammar.dataDescriptionEntry();
+    public void testWhenSetToFalseClause_125() {
+      Parser parser = grammar.whenSetToFalseClause();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 TEST-2 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WHEN SET TO FALSE 'A' ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDataDescriptionEntry_126() {
-      Parser parser = grammar.dataDescriptionEntry();
+    public void testWhenSetToFalseClause_126() {
+      Parser parser = grammar.whenSetToFalseClause();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FALSE IS 'A' ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDataDescriptionEntry_127() {
-      Parser parser = grammar.dataDescriptionEntry();
+    public void testWhenSetToFalseClause_127() {
+      Parser parser = grammar.whenSetToFalseClause();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 TEST-3 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FALSE 'A' ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1155,7 +1155,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_128() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 11 TEST-4 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 FILLER . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1164,7 +1164,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_129() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 49 TEST-5 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 TEST-2 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1173,7 +1173,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_130() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 77 TEST-6 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1182,31 +1182,34 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_131() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0 TEST-7 . ");
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 TEST-3 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_132() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 50 TEST-8 . ");
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 11 TEST-4 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_133() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " AA TEST-9 . ");
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 49 TEST-5 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_134() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-10\n      RENAMES TEST-1 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 77 TEST-6 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1215,34 +1218,31 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_135() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-11\n      RENAMES TEST-2 THROUGH TEST-3 . ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0 TEST-7 . ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_136() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-12\n      RENAMES TEST-4 THRU TEST-5 . ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 50 TEST-8 . ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_137() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-10B\n      RENAMES TEST-1 OF TESTSUITE . ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " AA TEST-9 . ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDataDescriptionEntry_138() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-11B\n      RENAMES TEST-2 OF TESTSUITE THROUGH TEST-3 OF TESTSUITE . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-10\n      RENAMES TEST-1 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1251,7 +1251,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_139() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-12B\n      RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-11\n      RENAMES TEST-2 THROUGH TEST-3 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1260,7 +1260,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_140() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-13\n      VALUE IS \"AAA\" . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-12\n      RENAMES TEST-4 THRU TEST-5 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1269,7 +1269,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_141() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-14\n      VALUE \"BBB\" . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-10B\n      RENAMES TEST-1 OF TESTSUITE . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1278,7 +1278,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_142() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-15\n      VALUES ARE \"CCC\" . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-11B\n      RENAMES TEST-2 OF TESTSUITE THROUGH TEST-3 OF TESTSUITE . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1287,7 +1287,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_143() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-16\n      VALUES \"DDD\" . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 66 TEST-12B\n      RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1296,7 +1296,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_144() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-17\n      VALUES ARE 0 THROUGH 10 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-13\n      VALUE IS \"AAA\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1305,7 +1305,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_145() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-18\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-14\n      VALUE \"BBB\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1314,7 +1314,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_146() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-19\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30\n                 66 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-15\n      VALUES ARE \"CCC\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1323,7 +1323,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_147() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-20\n      VALUES ARE 0 THROUGH 10\n                 15\n                 20 THROUGH 30 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-16\n      VALUES \"DDD\" . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1332,7 +1332,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_148() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-21\n      VALUE IS ZERO . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-17\n      VALUES ARE 0 THROUGH 10 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1341,7 +1341,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_149() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 05 BUFFER\n      POINTER\n      VALUE NULL . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-18\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1350,7 +1350,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_150() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "\n004400 77  WS-TEST-12-DATA                                              NC2054.2\n004500                        PIC S9(                                   NC2054.2\n004600-                              6)V9(6).                           NC2054.2\n");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-19\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30\n                 66 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1359,7 +1359,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_151() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "\n003800     03 GUBBINS PIC X(1                                           NC4014.2\n003900-                      00).                                       NC4014.2\n");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-20\n      VALUES ARE 0 THROUGH 10\n                 15\n                 20 THROUGH 30 . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1368,7 +1368,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_152() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 77 OPTIONS PIC S9(9) BINARY . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-21\n      VALUE IS ZERO . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1377,7 +1377,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_153() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 78 lines-to-display . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-22\n      VALUE IS 'B'\n      WHEN SET TO FALSE IS 'A' . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1386,7 +1386,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_154() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 78 lines-to-display value is 12 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-23\n      VALUE IS 'B'\n      WHEN SET TO FALSE 'A' . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1395,7 +1395,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_155() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 78 lines-to-display value 12 . ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-24\n      VALUE IS 'B'\n      FALSE IS 'A' . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1404,13 +1404,85 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_156() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 88 TEST-25\n      VALUE IS 'B'\n      FALSE 'A' . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_157() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 05 BUFFER\n      POINTER\n      VALUE NULL . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_158() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "\n004400 77  WS-TEST-12-DATA                                              NC2054.2\n004500                        PIC S9(                                   NC2054.2\n004600-                              6)V9(6).                           NC2054.2\n");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_159() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FIXED, "\n003800     03 GUBBINS PIC X(1                                           NC4014.2\n003900-                      00).                                       NC4014.2\n");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_160() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 77 OPTIONS PIC S9(9) BINARY . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_161() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 78 lines-to-display . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_162() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 78 lines-to-display value is 12 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_163() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 78 lines-to-display value 12 . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDataDescriptionEntry_164() {
+      Parser parser = grammar.dataDescriptionEntry();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 01 based-var PIC X(80) BASED . ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testWorkingStorageSection_157() {
+    public void testWorkingStorageSection_165() {
       Parser parser = grammar.workingStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WORKING-STORAGE Section .\n   COPY \"WORKSTOR.WS\" .\n");

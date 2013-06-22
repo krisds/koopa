@@ -678,6 +678,7 @@ dataDivision
         ( linkageSection )?
         ( communicationSection )?
         ( reportSection )?
+        ( screenSection )?
       )
     )
   ;
@@ -791,6 +792,20 @@ communicationSection
 reportSection
   : ^(REPORT_SECTION
       ( 'REPORT'
+        'SECTION'
+        '.'
+        (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// screenSection
+// ........................................................
+
+screenSection
+  : ^(SCREEN_SECTION
+      ( 'SCREEN'
         'SECTION'
         '.'
         (water)?
@@ -4695,6 +4710,7 @@ dataSectionStart
       | 'LINKAGE'
       | 'COMMUNICATION'
       | 'REPORT'
+      | 'SCREEN'
       )
         'SECTION'
         '.'
@@ -6067,6 +6083,7 @@ token
   | 'S03'
   | 'S04'
   | 'S05'
+  | 'SCREEN'
   | 'SD'
   | 'SEARCH'
   | 'SECTION'

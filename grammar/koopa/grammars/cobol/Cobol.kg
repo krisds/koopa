@@ -288,6 +288,7 @@ def dataDivision =
 	[linkageSection]
 	[communicationSection]
 	[reportSection]
+	[screenSection]
 #	[--> divisionStart]
 end
 
@@ -335,6 +336,11 @@ end
 
 def reportSection =
 	REPORT SECTION .
+    [--> (dataSectionStart | divisionStart)]
+end
+
+def screenSection =
+	SCREEN SECTION .
     [--> (dataSectionStart | divisionStart)]
 end
 
@@ -1998,6 +2004,7 @@ def dataSectionStart =
     | LINKAGE
     | COMMUNICATION
     | REPORT
+    | SCREEN
     ) SECTION .
 end
 

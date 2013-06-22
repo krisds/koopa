@@ -1300,6 +1300,9 @@ public class CobolGrammar extends KoopaGrammar {
                    ),
                    optional(
                        reportSection()
+                   ),
+                   optional(
+                       screenSection()
                    )
                )
            );
@@ -1530,6 +1533,36 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return reportSectionParser;
+    }
+
+    // ========================================================
+    // screenSection
+    // ........................................................
+
+    private Parser screenSectionParser = null;
+
+    public Parser screenSection() {
+        if (screenSectionParser == null) {
+           FutureParser future = scoped("screenSection");
+           screenSectionParser = future;
+           future.setParser(
+               sequence(
+                   token("SCREEN"),
+                   token("SECTION"),
+                   token("."),
+                   optional(
+                       skipto(
+                           choice(
+                               dataSectionStart(),
+                               divisionStart()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return screenSectionParser;
     }
 
     // ========================================================
@@ -8495,7 +8528,8 @@ public class CobolGrammar extends KoopaGrammar {
                        token("WORKING-STORAGE"),
                        token("LINKAGE"),
                        token("COMMUNICATION"),
-                       token("REPORT")
+                       token("REPORT"),
+                       token("SCREEN")
                    ),
                    token("SECTION"),
                    token(".")

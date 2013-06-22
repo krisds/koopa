@@ -42,7 +42,7 @@
 <!ELEMENT fileStatusClause (t?,t,t?,dataName,dataName?)>
 <!ELEMENT ioControlParagraph (t+,water?)>
 <!ELEMENT environmentSectionStart (t+,t)>
-<!ELEMENT dataDivision (t+,fileSection?,workingStorageSection?,localStorageSection?,linkageSection?,communicationSection?,reportSection?)>
+<!ELEMENT dataDivision (t+,fileSection?,workingStorageSection?,localStorageSection?,linkageSection?,communicationSection?,reportSection?,screenSection?)>
 <!ELEMENT fileSection (t+,(copyStatement|(fileDescriptionEntry,recordDescriptionEntry*))*,water?)>
 <!ELEMENT recordDescriptionEntry (dataDescriptionEntry|copyStatement)>
 <!ELEMENT localStorageSection (t+,(recordDescriptionEntry|replaceStatement|(execStatement,t?))*)>
@@ -50,6 +50,7 @@
 <!ELEMENT linkageSection (t+,(recordDescriptionEntry|replaceStatement|(execStatement,t?))*)>
 <!ELEMENT communicationSection (t+,water?)>
 <!ELEMENT reportSection (t+,water?)>
+<!ELEMENT screenSection (t+,water?)>
 <!ELEMENT fileDescriptionEntry (fdFileDescriptionEntry|sdFileDescriptionEntry)>
 <!ELEMENT fdFileDescriptionEntry (t,fileName,(blockContains|codeSet|dataRecords|external|global|labelRecords|linage|record|recordingMode|valueOf|report)*,water?,t)>
 <!ELEMENT sdFileDescriptionEntry (t,fileName,(blockContains|dataRecords|labelRecords|record|recordingMode)*,water?,t)>

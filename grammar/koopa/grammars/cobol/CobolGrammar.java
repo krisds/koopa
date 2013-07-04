@@ -2986,6 +2986,7 @@ public class CobolGrammar extends KoopaGrammar {
            statementParser = future;
            future.setParser(
                choice(
+                   acceptStatement(),
                    addStatement(),
                    callStatement(),
                    cancelStatement(),
@@ -3339,11 +3340,11 @@ public class CobolGrammar extends KoopaGrammar {
                    token("DISPLAY"),
                    token("COMPUTE"),
                    token("INSPECT"),
+                   token("ACCEPT"),
                    token("ALLOCATE"),
                    token("FREE"),
                    token("START"),
                    token("USE"),
-                   token("ACCEPT"),
                    token("ALTER"),
                    token("CONTINUE"),
                    token("MERGE"),
@@ -3361,6 +3362,155 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return verbParser;
+    }
+
+    // ========================================================
+    // acceptStatement
+    // ........................................................
+
+    private Parser acceptStatementParser = null;
+
+    public Parser acceptStatement() {
+        if (acceptStatementParser == null) {
+           FutureParser future = scoped("acceptStatement");
+           acceptStatementParser = future;
+           future.setParser(
+               choice(
+                   acceptStatement_fromDate(),
+                   acceptStatement_messageCount(),
+                   acceptStatement_fromMnemonic(),
+                   sequence(
+                       token("ACCEPT"),
+                       skipto(
+                           endOfStatement()
+                       ),
+                       optional(
+                           token("END-ACCEPT")
+                       )
+                   )
+               )
+           );
+        }
+
+        return acceptStatementParser;
+    }
+
+    // ========================================================
+    // acceptStatement_fromMnemonic
+    // ........................................................
+
+    private Parser acceptStatement_fromMnemonicParser = null;
+
+    public Parser acceptStatement_fromMnemonic() {
+        if (acceptStatement_fromMnemonicParser == null) {
+           FutureParser future = scoped("acceptStatement_fromMnemonic");
+           acceptStatement_fromMnemonicParser = future;
+           future.setParser(
+               sequence(
+                   token("ACCEPT"),
+                   identifier(),
+                   optional(
+                       sequence(
+                           token("FROM"),
+                           mnemonicName()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           onException(),
+                           optional(
+                               notOnException()
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-ACCEPT")
+                   )
+               )
+           );
+        }
+
+        return acceptStatement_fromMnemonicParser;
+    }
+
+    // ========================================================
+    // acceptStatement_fromDate
+    // ........................................................
+
+    private Parser acceptStatement_fromDateParser = null;
+
+    public Parser acceptStatement_fromDate() {
+        if (acceptStatement_fromDateParser == null) {
+           FutureParser future = scoped("acceptStatement_fromDate");
+           acceptStatement_fromDateParser = future;
+           future.setParser(
+               sequence(
+                   token("ACCEPT"),
+                   identifier(),
+                   token("FROM"),
+                   choice(
+                       sequence(
+                           token("DATE"),
+                           optional(
+                               choice(
+                                   token("YYYYMMDD"),
+                                   token("CENTURY-DATE")
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("DAY"),
+                           optional(
+                               choice(
+                                   token("YYYYDDD"),
+                                   token("CENTURY-DAY")
+                               )
+                           )
+                       ),
+                       token("DAY-OF-WEEK"),
+                       token("TIME"),
+                       token("YEAR"),
+                       token("YYYYMMDD"),
+                       token("CENTURY-DATE"),
+                       token("YYYYDDD"),
+                       token("CENTURY-DAY")
+                   ),
+                   optional(
+                       token("END-ACCEPT")
+                   )
+               )
+           );
+        }
+
+        return acceptStatement_fromDateParser;
+    }
+
+    // ========================================================
+    // acceptStatement_messageCount
+    // ........................................................
+
+    private Parser acceptStatement_messageCountParser = null;
+
+    public Parser acceptStatement_messageCount() {
+        if (acceptStatement_messageCountParser == null) {
+           FutureParser future = scoped("acceptStatement_messageCount");
+           acceptStatement_messageCountParser = future;
+           future.setParser(
+               sequence(
+                   token("ACCEPT"),
+                   identifier(),
+                   optional(
+                       token("MESSAGE")
+                   ),
+                   token("COUNT"),
+                   optional(
+                       token("END-ACCEPT")
+                   )
+               )
+           );
+        }
+
+        return acceptStatement_messageCountParser;
     }
 
     // ========================================================
@@ -9975,8 +10125,8 @@ public class CobolGrammar extends KoopaGrammar {
            mnemonicNameParser = future;
            future.setParser(
                choice(
-                   cobolWord(),
-                   identifier()
+                   identifier(),
+                   cobolWord()
                )
            );
         }

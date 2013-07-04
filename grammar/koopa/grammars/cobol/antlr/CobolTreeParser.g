@@ -1585,7 +1585,8 @@ sentence
 
 statement
   : ^(STATEMENT
-      ( addStatement
+      ( acceptStatement
+      | addStatement
       | callStatement
       | cancelStatement
       | closeStatement
@@ -1803,11 +1804,11 @@ verb
       | 'DISPLAY'
       | 'COMPUTE'
       | 'INSPECT'
+      | 'ACCEPT'
       | 'ALLOCATE'
       | 'FREE'
       | 'START'
       | 'USE'
-      | 'ACCEPT'
       | 'ALTER'
       | 'CONTINUE'
       | 'MERGE'
@@ -1820,6 +1821,89 @@ verb
       | 'INITIATE'
       | 'GENERATE'
       | 'TERMINATE'
+      )
+    )
+  ;
+
+// ========================================================
+// acceptStatement
+// ........................................................
+
+acceptStatement
+  : ^(ACCEPT_STATEMENT
+      ( acceptStatement_fromDate
+      | acceptStatement_messageCount
+      | acceptStatement_fromMnemonic
+      | ( 'ACCEPT'
+        (water)?
+        ( 'END-ACCEPT' )?
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// acceptStatement_fromMnemonic
+// ........................................................
+
+acceptStatement_fromMnemonic
+  : ^(ACCEPT_STATEMENT_FROM_MNEMONIC
+      ( 'ACCEPT'
+        identifier
+        ( ( 'FROM'
+          mnemonicName
+        ) )?
+        ( ( onException
+          ( notOnException )?
+        ) )?
+        ( 'END-ACCEPT' )?
+      )
+    )
+  ;
+
+// ========================================================
+// acceptStatement_fromDate
+// ........................................................
+
+acceptStatement_fromDate
+  : ^(ACCEPT_STATEMENT_FROM_DATE
+      ( 'ACCEPT'
+        identifier
+        'FROM'
+        ( ( 'DATE'
+          ( ( 'YYYYMMDD'
+          | 'CENTURY-DATE'
+          ) )?
+        )
+        | ( 'DAY'
+          ( ( 'YYYYDDD'
+          | 'CENTURY-DAY'
+          ) )?
+        )
+        | 'DAY-OF-WEEK'
+        | 'TIME'
+        | 'YEAR'
+        | 'YYYYMMDD'
+        | 'CENTURY-DATE'
+        | 'YYYYDDD'
+        | 'CENTURY-DAY'
+        )
+        ( 'END-ACCEPT' )?
+      )
+    )
+  ;
+
+// ========================================================
+// acceptStatement_messageCount
+// ........................................................
+
+acceptStatement_messageCount
+  : ^(ACCEPT_STATEMENT_MESSAGE_COUNT
+      ( 'ACCEPT'
+        identifier
+        ( 'MESSAGE' )?
+        'COUNT'
+        ( 'END-ACCEPT' )?
       )
     )
   ;
@@ -5521,8 +5605,8 @@ recordName
 
 mnemonicName
   : ^(MNEMONIC_NAME
-      ( cobolWord
-      | identifier
+      ( identifier
+      | cobolWord
       )
     )
   ;
@@ -5817,6 +5901,8 @@ token
   | 'CANCEL'
   | 'CASE-INSENSITIVE'
   | 'CASE-SENSITIVE'
+  | 'CENTURY-DATE'
+  | 'CENTURY-DAY'
   | 'CHAINING'
   | 'CHANNEL'
   | 'CHARACTER'
@@ -5865,6 +5951,9 @@ token
   | 'DATA'
   | 'DATALENGTH'
   | 'DATASET'
+  | 'DATE'
+  | 'DAY'
+  | 'DAY-OF-WEEK'
   | 'DBCS'
   | 'DEBUGGING'
   | 'DECIMAL-POINT'
@@ -5995,6 +6084,7 @@ token
   | 'MAIN'
   | 'MASSINSERT'
   | 'MERGE'
+  | 'MESSAGE'
   | 'MODE'
   | 'MOVE'
   | 'MULTIPLY'
@@ -6131,6 +6221,7 @@ token
   | 'THEN'
   | 'THROUGH'
   | 'THRU'
+  | 'TIME'
   | 'TIMES'
   | 'TO'
   | 'TOKEN'
@@ -6163,6 +6254,9 @@ token
   | 'WRITEQ'
   | 'XCTL'
   | 'XRBA'
+  | 'YEAR'
+  | 'YYYYDDD'
+  | 'YYYYMMDD'
   | 'ZERO'
   | 'ZEROES'
   | 'ZEROS'

@@ -11,6 +11,8 @@ target condition;
 
 + [ V-ARIABLE = 2 OR = 3 ]
 
++ [ V-ARIABLE = 2 OR 3 ]
+
 + [ ( V-ARIABLE = 2 OR = 3 ) ]
 
 + [ V-ARIABLE NOT = 3 AND ( V-ARIABLE = 2 OR = 3 ) ]

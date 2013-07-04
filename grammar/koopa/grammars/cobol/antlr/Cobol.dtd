@@ -94,13 +94,17 @@
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>
 <!ELEMENT sentence ((statement,(statement|continuationOfStatement)*,t)|copyStatement|replaceStatement|useStatement)>
-<!ELEMENT statement (addStatement|callStatement|cancelStatement|closeStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|releaseStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
+<!ELEMENT statement (acceptStatement|addStatement|callStatement|cancelStatement|closeStatement|computeStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|execStatement|exitStatement|gobackStatement|goToStatement|ifStatement|moveStatement|multiplyStatement|openStatement|performStatement|readStatement|releaseStatement|returnStatement|rewriteStatement|searchStatement|startStatement|stopStatement|stringStatement|subtractStatement|unstringStatement|writeStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
 <!ELEMENT subStatementMarker (t|(t,t)|t|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t,t?,t)|(t?,t)|(t?,t))>
 <!ELEMENT continuationOfStatement ((eventPhrase,statement)|endOfStatementMarker)>
 <!ELEMENT nestedStatements (statement+)>
 <!ELEMENT eventPhrase (t?,t?,(t|(t,t)|t|(t,t?)|t))>
 <!ELEMENT endOfStatementMarker (t)>
 <!ELEMENT verb (t)>
+<!ELEMENT acceptStatement (acceptStatement_fromDate|acceptStatement_messageCount|acceptStatement_fromMnemonic|(t,water?,t?))>
+<!ELEMENT acceptStatement_fromMnemonic (t,identifier,(t,mnemonicName)?,(onException,notOnException?)?,t?)>
+<!ELEMENT acceptStatement_fromDate (t,identifier,t,((t,t?)|(t,t?)|t),t?)>
+<!ELEMENT acceptStatement_messageCount (t,identifier,t?,t,t?)>
 <!ELEMENT addStatement (t,(addition_format1|addition_format2|addition_format3),(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT addition_format1 (t,identifier,t,identifier,t?)>
 <!ELEMENT addition_format2 ((identifier|literal)+,(t,(identifier|literal))?,t,(identifier,t?)+)>
@@ -298,7 +302,7 @@
 <!ELEMENT textName (cobolWord|alphanumeric)>
 <!ELEMENT libraryName (cobolWord)>
 <!ELEMENT recordName (identifier)>
-<!ELEMENT mnemonicName (cobolWord|identifier)>
+<!ELEMENT mnemonicName (identifier|cobolWord)>
 <!ELEMENT environmentName (t)>
 <!ELEMENT alphabetName (cobolWord)>
 <!ELEMENT reportName (cobolWord)>

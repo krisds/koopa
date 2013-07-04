@@ -641,7 +641,8 @@ def sentence =
 end
 
 def statement =
-    ( addStatement
+    ( acceptStatement
+    | addStatement
     | callStatement
     | cancelStatement
     | closeStatement
@@ -785,6 +786,7 @@ def verb =
     | DISPLAY
     | COMPUTE
     | INSPECT
+    | ACCEPT
     
     | ALLOCATE
     | FREE
@@ -797,7 +799,6 @@ def verb =
     
 
     # Verbs for statements which remain to be implemented:
-    | ACCEPT
     | ALTER
     | CONTINUE
     | MERGE
@@ -813,6 +814,56 @@ def verb =
     | GENERATE
     | TERMINATE
     )
+end
+
+
+## #############################################################################
+## ACCEPT statement.
+## -----------------------------------------------------------------------------
+
+def acceptStatement =
+    ( acceptStatement_fromDate
+    | acceptStatement_messageCount
+    | acceptStatement_fromMnemonic
+    
+    # Catch all.
+    | ACCEPT (--> endOfStatement) [END-ACCEPT]
+    )
+end
+
+def acceptStatement_fromMnemonic =
+    ACCEPT identifier
+    [ FROM mnemonicName ]
+    
+    # "NOT ON EXCEPTION can only be specified if ON EXCEPTION is also specified."
+    # Src:  U41112-J-Z125-3-76, p370.
+    [ onException
+      [notOnException]
+    ]
+        
+    [END-ACCEPT]
+end
+
+def acceptStatement_fromDate =
+    ACCEPT identifier
+    
+    FROM
+    ( DATE [YYYYMMDD | CENTURY-DATE]
+    | DAY  [YYYYDDD | CENTURY-DAY]
+    | DAY-OF-WEEK
+    | TIME
+    | YEAR
+    | YYYYMMDD
+    | CENTURY-DATE
+    | YYYYDDD 
+    | CENTURY-DAY
+    )
+    
+    [END-ACCEPT]
+end
+
+def acceptStatement_messageCount =
+    ACCEPT identifier [MESSAGE] COUNT [END-ACCEPT]
 end
 
 ## #############################################################################
@@ -2370,7 +2421,7 @@ def recordName =
 end
 
 def mnemonicName =
-    (cobolWord | identifier)
+    (identifier | cobolWord)
 end
 
 def environmentName =

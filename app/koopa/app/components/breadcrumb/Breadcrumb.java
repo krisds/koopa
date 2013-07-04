@@ -80,11 +80,15 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 
 	private List<String> find(Token token, CommonTree tree,
 			List<String> breadcrumb) {
+		
 		if (token == null)
 			return breadcrumb;
 
 		Token node = ANTLR.getToken(tree);
 
+		if (node == null)
+			return breadcrumb;
+		
 		// TODO Found it ?
 		if (node instanceof BasicToken)
 			return breadcrumb;

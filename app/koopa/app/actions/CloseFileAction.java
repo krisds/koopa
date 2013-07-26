@@ -7,19 +7,21 @@ import javax.swing.Action;
 
 import koopa.app.Application;
 
-@SuppressWarnings("serial")
-public class ReloadFileAction extends AbstractAction implements Action {
+public class CloseFileAction extends AbstractAction implements Action {
+
+	private static final long serialVersionUID = 1L;
+
 	private Application application = null;
 
-	public ReloadFileAction(Application application) {
-		super("Reload File");
+	public CloseFileAction(Application application) {
+		super("Close File");
 		this.application = application;
 	}
 
 	public void actionPerformed(ActionEvent ae) {
 		new Thread(new Runnable() {
 			public void run() {
-				application.reloadFile();
+				application.closeView();
 			}
 		}).start();
 	}

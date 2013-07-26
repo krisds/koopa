@@ -31,7 +31,8 @@ public class ApplicationSupport {
 		EXTENSIONS.add(".CBL");
 		EXTENSIONS.add(".COB");
 
-		String extraExtensions = System.getProperty("koopa.cobolFileExtensions");
+		String extraExtensions = System
+				.getProperty("koopa.cobolFileExtensions");
 		if (extraExtensions != null) {
 			for (String extraExtension : extraExtensions.split(",")) {
 				EXTENSIONS.add("." + extraExtension.trim().toUpperCase());
@@ -104,8 +105,7 @@ public class ApplicationSupport {
 		properties.store(new FileOutputStream(PROPERTIES_FILE), null);
 	}
 
-	public static void configureFromProperties(String filename,
-			ConfigurableApplication app) {
+	public static void configureFromProperties(String filename, Configurable app) {
 		try {
 			LOGGER.info("Loading configuration options from \"" + filename
 					+ "\".");
@@ -131,8 +131,15 @@ public class ApplicationSupport {
 	}
 
 	public static FileFilter getCobolFileFilter() {
+		return getCobolFileFilter(true);
+	}
+
+	public static FileFilter getCobolFileFilter(final boolean filesOnly) {
 		return new FileFilter() {
 			public boolean accept(File f) {
+				if (!filesOnly && f.isDirectory())
+					return true;
+
 				return isCobolFile(f);
 			}
 

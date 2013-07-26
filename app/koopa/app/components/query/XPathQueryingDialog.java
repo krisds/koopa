@@ -7,8 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.List;
-import java.util.WeakHashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,77 +19,83 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import koopa.app.actions.FileManager;
+import koopa.app.Application;
+import koopa.app.ApplicationListener;
+import koopa.app.components.detail.Detail;
+import koopa.app.components.overview.Overview;
 import koopa.trees.antlr.jaxen.Jaxen;
 import koopa.trees.antlr.jaxen.XPathException;
-import koopa.util.Getter;
 
 import org.antlr.runtime.tree.CommonTree;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
-public class XPathQueryingDialog extends JDialog {
+public class XPathQueryingDialog extends JDialog implements ApplicationListener {
 
 	private static final long serialVersionUID = 8823045458789993217L;
 
-	private static final WeakHashMap<Component, XPathQueryingDialog> DIALOGS = new WeakHashMap<Component, XPathQueryingDialog>();
+	private static XPathQueryingDialog dialog = null;
 
-	private FileManager manager = null;
+	private Application application = null;
 
-	private Getter<CommonTree> treeGetter = null;
+	private JButton queryButton = null;
+	private JTextField xpathQuery = null;
+	private JXTable resultsTable = null;
+	private JLabel status = null;
+
+	private Map<Detail, XPathResults> resultsPerDetail = new HashMap<Detail, XPathResults>();
+	private XPathResults selectedResults = new XPathResults();
 
 	public static synchronized XPathQueryingDialog getDialog(Frame owner,
-			FileManager manager, Getter<CommonTree> treeGetter) {
+			Application application) {
 
-		XPathQueryingDialog dialog = DIALOGS.get(owner);
-
-		if (dialog == null) {
-			dialog = new XPathQueryingDialog(owner, manager, treeGetter);
-			DIALOGS.put(owner, dialog);
-		}
+		if (dialog == null)
+			dialog = new XPathQueryingDialog(owner, application);
 
 		return dialog;
 	}
 
-	public XPathQueryingDialog(Frame owner, FileManager manager,
-			Getter<CommonTree> treeGetter) {
+	public XPathQueryingDialog(Frame owner, Application application) {
 		super(owner, "Query using XPath", false);
 
-		this.manager = manager;
-		this.treeGetter = treeGetter;
+		this.application = application;
+
+		resultsPerDetail.put(null, selectedResults);
 
 		setupComponents();
 
 		setSize(600, 300);
 		setLocationRelativeTo(owner);
+
+		application.addApplicationListener(this);
 	}
 
 	private void setupComponents() {
-		final JTextField xpathQuery = new JTextField();
-		final JButton queryButton = new JButton("Query");
-		final XPathResults results = new XPathResults();
-		final JLabel status = new JLabel(
-				"Please enter a valid XPath expression.");
+		xpathQuery = new JTextField();
+		queryButton = new JButton("Query");
+
+		status = new JLabel("Please enter a valid XPath expression.");
 
 		final ActionListener performSearch = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final String theQuery = xpathQuery.getText();
 
 				if (theQuery == null) {
-					results.setResults(null);
+					selectedResults.setResults(null);
 					return;
 				}
 
 				try {
-					final List<?> matches = Jaxen.evaluate(treeGetter.getIt(),
-							theQuery);
+					CommonTree tree = application.getSyntaxTree();
 
-					results.setResults(matches);
+					final List<?> matches = Jaxen.evaluate(tree, theQuery);
+
+					selectedResults.setResults(matches);
 					status.setText(matches == null ? "No" : matches.size()
 							+ " matches.");
 
 				} catch (XPathException xpe) {
-					results.setResults(null);
+					selectedResults.setResults(null);
 					status.setText(xpe.getMessage());
 				}
 			}
@@ -97,8 +104,8 @@ public class XPathQueryingDialog extends JDialog {
 		xpathQuery.addActionListener(performSearch);
 		queryButton.addActionListener(performSearch);
 
-		final JXTable resultsTable = new JXTable();
-		resultsTable.setModel(results);
+		resultsTable = new JXTable();
+		resultsTable.setModel(selectedResults);
 
 		resultsTable.getColumnModel().getColumn(XPathResults.TYPE_COLUMN)
 				.setPreferredWidth(40);
@@ -121,9 +128,9 @@ public class XPathQueryingDialog extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					final int row = resultsTable.rowAtPoint(e.getPoint());
-					final int pos = results.getPositionInFile(row);
+					final int pos = selectedResults.getPositionInFile(row);
 					if (pos >= 0) {
-						manager.scrollTo(pos);
+						application.scrollTo(pos);
 					}
 				}
 			}
@@ -144,5 +151,68 @@ public class XPathQueryingDialog extends JDialog {
 		add(queryPanel, BorderLayout.NORTH);
 		add(scrollableResultsTable, BorderLayout.CENTER);
 		add(status, BorderLayout.SOUTH);
+
+		switchedView(application.getView());
+	}
+
+	@Override
+	public void switchedView(Component view) {
+		if (view instanceof Overview) {
+			xpathQuery.setEnabled(false);
+			queryButton.setEnabled(false);
+			selectedResults = resultsPerDetail.get(null);
+			resultsTable.setModel(selectedResults);
+			resultsTable.updateUI();
+
+		} else {
+			Detail detail = (Detail) view;
+
+			selectedResults = resultsPerDetail.get(detail);
+			if (selectedResults == null) {
+				selectedResults = new XPathResults();
+				resultsPerDetail.put(detail, selectedResults);
+			}
+
+			resultsTable.setModel(selectedResults);
+			resultsTable.updateUI();
+
+			if (detail.hasSyntaxTree()) {
+				queryButton.setEnabled(true);
+				xpathQuery.setEnabled(true);
+
+			} else {
+				xpathQuery.setEnabled(false);
+				queryButton.setEnabled(false);
+			}
+		}
+
+		int matches = selectedResults.getRowCount();
+		status.setText((matches == 0 ? "No" : matches) + " matches.");
+
+	}
+
+	@Override
+	public void updatedView(Component view) {
+		if (view instanceof Detail) {
+			Detail detail = (Detail) view;
+			XPathResults results = resultsPerDetail.get(detail);
+
+			if (results == null)
+				return;
+
+			results.setResults(null);
+
+			if (results == selectedResults)
+				resultsTable.updateUI();
+		}
+	}
+
+	@Override
+	public void closedDetail(Component view) {
+		if (view instanceof Detail)
+			resultsPerDetail.remove((Detail) view);
+
+		xpathQuery.setEnabled(false);
+		queryButton.setEnabled(false);
 	}
 }

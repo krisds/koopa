@@ -1,9 +1,8 @@
-package koopa.app.batchit;
+package koopa.app.components.overview;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -11,55 +10,39 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 
+import koopa.app.Application;
 import koopa.app.ApplicationSupport;
-import koopa.app.ConfigurableApplication;
-import koopa.app.actions.ExportBatchResultsToCSVAction;
+import koopa.app.Configurable;
 import koopa.app.actions.ParsingProvider;
-import koopa.app.actions.PickAndParseAction;
+import koopa.app.batchit.BatchResults;
+import koopa.app.batchit.ParseDetails;
 import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
-import koopa.app.showit.ShowIt;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
 import koopa.tokenizers.cobol.SourceFormat;
 import koopa.tokenizers.generic.IntermediateTokenizer;
 import koopa.tokens.Token;
-import koopa.util.Getter;
 import koopa.util.Tuple;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 @SuppressWarnings("serial")
-public class BatchIt extends JFrame implements ParsingProvider,
-		ConfigurableApplication {
+public class Overview extends JPanel implements ParsingProvider, Configurable {
 
-	private JMenuItem pick = null;
-
-	private JMenuItem clearResults = null;
-
-	private JMenuItem saveCSV = null;
+	private Application application = null;
 
 	private JProgressBar progress = null;
 
@@ -69,125 +52,25 @@ public class BatchIt extends JFrame implements ParsingProvider,
 
 	private ParsingCoordinator coordinator = null;
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				new BatchIt().setVisible(true);
-			}
-		});
-	}
+	private boolean parsing = false;
 
-	public BatchIt() {
-		super("Koopa Batch It");
+	public Overview(Application application) {
+		this.application = application;
+		coordinator = new ParsingCoordinator();
+		coordinator.setKeepingTrackOfTokens(true);
 
-		this.coordinator = new ParsingCoordinator();
-		this.coordinator.setKeepingTrackOfTokens(true);
+		// TODO Can do this better, I think.
+		ApplicationSupport.configureFromProperties("batching.properties", this);
 
-		ApplicationSupport.configureFromProperties("batchit.properties", this);
-
-		setupMenuBar();
-		setupToolBar();
+		setLayout(new BorderLayout());
 		setupComponents();
-
-		setSize(800, 600);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setupProgressBar();
+		setBorder(null);
 	}
 
-	private void setupMenuBar() {
-		// Be nice to mac users.
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-
-		JMenuBar bar = new JMenuBar();
-
-		JMenu file = new JMenu("File");
-		this.pick = new JMenuItem(new PickAndParseAction(this, this));
-
-		this.pick.setAccelerator(KeyStroke.getKeyStroke("meta O"));
-		file.add(this.pick);
-
-		file.addSeparator();
-
-		this.clearResults = new JMenuItem(new ClearResultsAction(this));
-		this.clearResults.setEnabled(false);
-		file.add(this.clearResults);
-
-		saveCSV = new JMenuItem(new ExportBatchResultsToCSVAction(
-				new Getter<BatchResults>() {
-					public BatchResults getIt() {
-						return results;
-					}
-				}, new FileFilter() {
-					public boolean accept(File f) {
-						if (!f.isFile())
-							return false;
-						final String name = f.getName().toUpperCase();
-						return name.endsWith(".CSV");
-					}
-
-					public String getDescription() {
-						return "CSV file (*.csv)";
-					}
-				}, this));
-
-		saveCSV.setEnabled(false);
-		saveCSV.setAccelerator(KeyStroke.getKeyStroke("meta E"));
-		file.add(saveCSV);
-
-		bar.add(file);
-
-		// Parser settings ----------------------------------------------------
-
-		// TODO Clicking the same radioButtonMenuItem twice deselects it !?
-
-		final JMenu parserSettings = new JMenu("Parser settings");
-
-		final ButtonGroup group = new ButtonGroup();
-
-		final JRadioButtonMenuItem fixedFormat = new JRadioButtonMenuItem();
-
-		AbstractAction selectFixedFormat = new AbstractAction("Fixed format") {
-			public void actionPerformed(ActionEvent e) {
-				coordinator.setFormat(SourceFormat.FIXED);
-			}
-		};
-
-		fixedFormat.setAction(selectFixedFormat);
-
-		fixedFormat.setSelected(true);
-		group.add(fixedFormat);
-		parserSettings.add(fixedFormat);
-
-		final JRadioButtonMenuItem freeFormat = new JRadioButtonMenuItem();
-
-		AbstractAction selectFreeFormat = new AbstractAction("Free format") {
-			public void actionPerformed(ActionEvent e) {
-				coordinator.setFormat(SourceFormat.FREE);
-			}
-		};
-
-		freeFormat.setAction(selectFreeFormat);
-
-		group.add(freeFormat);
-		parserSettings.add(freeFormat);
-
-		bar.add(parserSettings);
-
-		setJMenuBar(bar);
-	}
-
-	private void setupToolBar() {
-		JToolBar toolBar = new JToolBar();
-		toolBar.setFloatable(false);
-		add(toolBar, BorderLayout.PAGE_END);
-
-		// pick = new JButton(new PickAndParseAction(this, this));
-		// toolBar.add(pick);
-
-		// toolBar.add(new JLabel("  "));
-
+	private void setupProgressBar() {
 		progress = new JProgressBar();
-		toolBar.add(progress);
+		add(progress, BorderLayout.SOUTH);
 	}
 
 	private void setupComponents() {
@@ -232,9 +115,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 				final int selected = overviewTable
 						.convertRowIndexToModel(overviewTable.getSelectedRow());
 				final File file = results.getResults(selected).getFile();
-				final ShowIt showIt = new ShowIt(file, true, coordinator.getFormat());
-				showIt.setVisible(true);
-				showIt.selectDetail(detail);
+				application.openFile(file, coordinator.getFormat(), detail);
 			}
 		});
 
@@ -245,7 +126,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 				overviewScroll, detailsScroll);
 		split.setResizeWeight(0.8);
 
-		getContentPane().add(split, BorderLayout.CENTER);
+		add(split, BorderLayout.CENTER);
 
 		overviewTable.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -273,36 +154,44 @@ public class BatchIt extends JFrame implements ParsingProvider,
 								.convertRowIndexToModel(row);
 						final File file = results.getResults(selected)
 								.getFile();
-						new ShowIt(file, true, coordinator.getFormat())
-								.setVisible(true);
+						application.openFile(file, coordinator.getFormat());
 					}
 				}
 			}
 		});
 	}
 
+	public boolean isParsing() {
+		return parsing;
+	}
+
 	public void walkAndParse(File file) {
-		this.pick.setEnabled(false);
-		this.progress.setIndeterminate(true);
+		if (parsing)
+			return;
 
-		List<File> targets = new LinkedList<File>();
-		walk(file, targets);
+		try {
+			parsing = true;
 
-		this.progress.setValue(0);
-		this.progress.setMaximum(targets.size());
-		this.progress.setIndeterminate(false);
+			application.walkingAndParsing();
+			progress.setIndeterminate(true);
 
-		int count = 0;
-		for (File target : targets) {
-			parse(target);
-			this.progress.setValue(++count);
+			List<File> targets = new LinkedList<File>();
+			walk(file, targets);
+
+			progress.setValue(0);
+			progress.setMaximum(targets.size());
+			progress.setIndeterminate(false);
+
+			int count = 0;
+			for (File target : targets) {
+				parse(target);
+				progress.setValue(++count);
+			}
+
+		} finally {
+			parsing = false;
+			application.doneWalkingAndParsing();
 		}
-
-		this.pick.setEnabled(true);
-
-		final boolean hasResults = this.results.getRowCount() > 0;
-		this.clearResults.setEnabled(hasResults);
-		this.saveCSV.setEnabled(hasResults);
 	}
 
 	private void walk(File file, List<File> targets) {
@@ -325,15 +214,19 @@ public class BatchIt extends JFrame implements ParsingProvider,
 
 	private void parse(File file) {
 		try {
-			this.results.add(this.coordinator.parse(file));
+			results.add(coordinator.parse(file));
 
 		} catch (IOException e) {
 			ParseResults failed = new ParseResults(file);
 			failed.setValidInput(false);
 			failed.addError(null, e.getMessage());
-			this.results.add(failed);
+			results.add(failed);
 			e.printStackTrace();
 		}
+	}
+
+	public void addParseResults(ParseResults parseResults) {
+		results.add(parseResults.copy());
 	}
 
 	public Component getGUI() {
@@ -354,8 +247,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 			Class<?> clazz = Class.forName(classname);
 			Object o = clazz.newInstance();
 			if (o instanceof IntermediateTokenizer) {
-				this.coordinator
-						.addIntermediateTokenizer((IntermediateTokenizer) o);
+				coordinator.addIntermediateTokenizer((IntermediateTokenizer) o);
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -375,7 +267,7 @@ public class BatchIt extends JFrame implements ParsingProvider,
 			Class<?> clazz = Class.forName(classname);
 			Object o = clazz.newInstance();
 			if (o instanceof ParsingListener) {
-				this.coordinator.addParsingListener((ParsingListener) o);
+				coordinator.addParsingListener((ParsingListener) o);
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -391,8 +283,19 @@ public class BatchIt extends JFrame implements ParsingProvider,
 	}
 
 	public void clearResults() {
-		this.results.clear();
-		this.clearResults.setEnabled(false);
-		this.saveCSV.setEnabled(false);
+		results.clear();
+		application.resultsWereCleared();
+	}
+
+	public BatchResults getResults() {
+		return results;
+	}
+	
+	public SourceFormat getSourceFormat() {
+		return coordinator.getFormat();
+	}
+
+	public void setSourceFormat(SourceFormat format) {
+		coordinator.setFormat(format);
 	}
 }

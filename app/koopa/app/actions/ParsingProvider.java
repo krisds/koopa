@@ -9,4 +9,6 @@ public interface ParsingProvider {
 
 	public Component getGUI();
 
+	public void clearResults();
+
 }

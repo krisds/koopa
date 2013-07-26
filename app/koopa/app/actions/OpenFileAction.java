@@ -8,18 +8,24 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.filechooser.FileFilter;
 
+import koopa.app.Application;
 import koopa.app.ApplicationSupport;
 
 @SuppressWarnings("serial")
 public class OpenFileAction extends AbstractAction implements Action {
-	private FileManager manager = null;
+	private Application application = null;
 	private FileFilter filter = null;
 	private Component parent = null;
 
-	public OpenFileAction(FileManager manager, FileFilter filter,
+	public OpenFileAction(Application application, FileFilter filter,
 			Component parent) {
-		super("Open File...");
-		this.manager = manager;
+		this("Open File...", application, filter, parent);
+	}
+
+	public OpenFileAction(String actionName, Application application,
+			FileFilter filter, Component parent) {
+		super(actionName);
+		this.application = application;
 		this.filter = filter;
 		this.parent = parent;
 	}
@@ -31,7 +37,7 @@ public class OpenFileAction extends AbstractAction implements Action {
 						"last-folder", filter, parent);
 
 				if (file != null) {
-					manager.openFile(file);
+					application.openFile(file);
 				}
 			}
 		}).start();

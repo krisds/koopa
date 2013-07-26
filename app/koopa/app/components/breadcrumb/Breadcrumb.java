@@ -16,7 +16,6 @@ import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.CobolParser;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
-import koopa.tokens.BasicToken;
 import koopa.tokens.Position;
 import koopa.tokens.Token;
 import koopa.tokenstreams.Marker;
@@ -89,8 +88,8 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		if (node == null)
 			return breadcrumb;
 		
-		// TODO Found it ?
-		if (node instanceof BasicToken)
+		// TODO Really found it ?
+		if (!(node instanceof Marker))
 			return breadcrumb;
 
 		breadcrumb.add(((Marker) node).getName());

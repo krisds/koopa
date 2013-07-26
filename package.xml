@@ -3,7 +3,7 @@
 	<target name="koopa.jar">
 		<jar destfile="koopa.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="koopa.app.batchit.BatchIt" />
+				<attribute name="Main-Class" value="koopa.app.Koopa" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
 			<fileset dir="build" />

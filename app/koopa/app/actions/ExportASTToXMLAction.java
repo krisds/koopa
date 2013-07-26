@@ -10,30 +10,41 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import koopa.app.Application;
 import koopa.app.ApplicationSupport;
 import koopa.trees.antlr.CommonTreeSerializer;
-import koopa.util.Getter;
 
 import org.antlr.runtime.tree.CommonTree;
 
 @SuppressWarnings("serial")
 public class ExportASTToXMLAction extends AbstractAction implements Action {
-	private Getter<CommonTree> astGetter = null;
-	private FileFilter filter = null;
-	private Component parent = null;
 
-	public ExportASTToXMLAction(Getter<CommonTree> astGetter,
-			FileFilter filter, Component parent) {
+	private static FileFilter filter = new FileFilter() {
+		public boolean accept(File f) {
+			if (!f.isFile())
+				return false;
+			final String name = f.getName().toUpperCase();
+			return name.endsWith(".XML");
+		}
+
+		public String getDescription() {
+			return "XML file (*.xml)";
+		}
+	};
+
+	private Component parent = null;
+	private Application application = null;
+
+	public ExportASTToXMLAction(Application application, Component parent) {
 		super("Export to XML...");
-		this.astGetter = astGetter;
-		this.filter = filter;
+		this.application = application;
 		this.parent = parent;
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new ThreadGroup("actions"), new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
-				final CommonTree tree = astGetter.getIt();
+				final CommonTree tree = application.getSyntaxTree();
 				File file = ApplicationSupport.askUserForFile(false,
 						"last-folder", filter, parent);
 

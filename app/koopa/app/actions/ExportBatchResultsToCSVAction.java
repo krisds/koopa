@@ -26,16 +26,27 @@ public class ExportBatchResultsToCSVAction extends AbstractAction implements
 	private Component parent = null;
 
 	public ExportBatchResultsToCSVAction(
-			Getter<BatchResults> batchResultsGetter, FileFilter filter,
-			Component parent) {
+			Getter<BatchResults> batchResultsGetter, Component parent) {
 		super("Export batch results to CSV...");
 		this.batchResultsGetter = batchResultsGetter;
-		this.filter = filter;
 		this.parent = parent;
+
+		this.filter = new FileFilter() {
+			public boolean accept(File f) {
+				if (!f.isFile())
+					return false;
+				final String name = f.getName().toUpperCase();
+				return name.endsWith(".CSV");
+			}
+
+			public String getDescription() {
+				return "CSV file (*.csv)";
+			}
+		};
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new ThreadGroup("actions"), new Runnable() {
+		new Thread(new Runnable() {
 			public void run() {
 				final BatchResults batchResults = batchResultsGetter.getIt();
 				File file = ApplicationSupport.askUserForFile(false,

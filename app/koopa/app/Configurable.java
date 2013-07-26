@@ -1,6 +1,6 @@
 package koopa.app;
 
-public interface ConfigurableApplication {
+public interface Configurable {
 
 	void setOption(String name, String value);
 }

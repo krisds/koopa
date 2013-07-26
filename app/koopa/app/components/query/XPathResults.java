@@ -1,6 +1,7 @@
 package koopa.app.components.query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -78,6 +79,10 @@ public class XPathResults extends AbstractTableModel {
 
 	public void setResults(List<?> results) {
 		this.results = results;
+
+		if (results == null)
+			results = Collections.EMPTY_LIST;
+
 		this.types = new ArrayList<XPathResultType>(results.size());
 		this.positions = new ArrayList<Position>(results.size());
 

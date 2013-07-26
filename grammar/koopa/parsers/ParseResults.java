@@ -92,4 +92,14 @@ public class ParseResults {
 	public void clearTokens() {
 		this.tokenTracker = null;
 	}
+
+	public ParseResults copy() {
+		ParseResults copy = new ParseResults(file);
+		copy.validInput = validInput;
+		copy.tokenTracker = tokenTracker;
+		copy.warnings = warnings;
+		copy.errors = errors;
+		copy.tree = tree;
+		return copy;
+	}
 }

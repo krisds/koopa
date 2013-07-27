@@ -27,6 +27,7 @@ import javax.swing.event.ChangeListener;
 import koopa.app.actions.CloseFileAction;
 import koopa.app.actions.ExportASTToXMLAction;
 import koopa.app.actions.ExportBatchResultsToCSVAction;
+import koopa.app.actions.GoToLineAction;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
 import koopa.app.actions.ReloadFileAction;
@@ -74,6 +75,9 @@ public class Koopa extends JFrame implements Application, Configurable {
 	private JMenu parserSettings = null;
 	private JRadioButtonMenuItem fixedFormat = null;
 	private JRadioButtonMenuItem freeFormat = null;
+
+	private JMenu navigation = null;
+	private JMenuItem goToLine = null;
 
 	private JMenu syntaxTree = null;
 	private JMenuItem saveXML = null;
@@ -192,6 +196,18 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		bar.add(parserSettings);
 
+		// Navigation ---------------------------------------------------------
+
+		navigation = new JMenu("Navigation");
+
+		goToLine = new JMenuItem(new GoToLineAction(this, this));
+
+		goToLine.setAccelerator(KeyStroke.getKeyStroke("meta L"));
+
+		navigation.add(goToLine);
+
+		bar.add(navigation);
+
 		// Parse results ------------------------------------------------------
 
 		syntaxTree = new JMenu("Syntax tree");
@@ -257,6 +273,10 @@ public class Koopa extends JFrame implements Application, Configurable {
 				break;
 			}
 
+			// Navigation ...
+			navigation.setEnabled(false);
+			goToLine.setEnabled(false);
+
 			// Syntax tree ...
 			syntaxTree.setEnabled(false);
 			saveXML.setEnabled(false);
@@ -284,6 +304,10 @@ public class Koopa extends JFrame implements Application, Configurable {
 				freeFormat.setSelected(true);
 				break;
 			}
+
+			// Navigation ...
+			navigation.setEnabled(true);
+			goToLine.setEnabled(true);
 
 			// Syntax tree ...
 			boolean hasSyntaxTree = detail.hasSyntaxTree();

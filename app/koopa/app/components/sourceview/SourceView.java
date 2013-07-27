@@ -46,6 +46,8 @@ public class SourceView extends JPanel implements ParsingListener {
 
 	// private SourceViewIntermediateTokenizer tokenizer = null;
 
+	private List<Integer> lineOffsets = new ArrayList<Integer>();
+
 	private TokenTracker tokenTracker = null;
 
 	private SourceViewSink sink = null;
@@ -176,10 +178,15 @@ public class SourceView extends JPanel implements ParsingListener {
 		return stringStyle;
 	}
 
-	private static String getContents(File file) throws IOException {
+	private String getContents(File file) throws IOException {
 		StringBuilder builder = new StringBuilder();
 
 		BufferedReader br = null;
+
+		lineOffsets.clear();
+
+		int offset = 0;
+		lineOffsets.add(offset);
 
 		try {
 			br = new BufferedReader(new FileReader(file));
@@ -189,6 +196,17 @@ public class SourceView extends JPanel implements ParsingListener {
 
 			while ((len = br.read(buffer)) > 0) {
 				builder.append(buffer, 0, len);
+
+				for (int i = 0; i < len; i++) {
+					if (buffer[i] == '\n') {
+						if (buffer[i] == '\r')
+							lineOffsets.add(offset + i + 3);
+						else
+							lineOffsets.add(offset + i + 2);
+					}
+				}
+
+				offset += len;
 			}
 
 			return builder.toString();
@@ -207,6 +225,15 @@ public class SourceView extends JPanel implements ParsingListener {
 		}
 
 		centerLineWithCaretInScrollPane();
+
+		pane.requestFocus();
+	}
+
+	public void scrollToLine(int line) {
+		if (line < 0 || line >= lineOffsets.size())
+			throw new IllegalArgumentException("No such line number: " + line);
+
+		scrollTo(lineOffsets.get(line));
 	}
 
 	private void centerLineWithCaretInScrollPane() {
@@ -272,7 +299,8 @@ public class SourceView extends JPanel implements ParsingListener {
 			// }
 			// }
 
-			for (List<Token> line : sink.getLines()) {
+			final List<List<Token>> lines = sink.getLines();
+			for (List<Token> line : lines) {
 				for (Token token : line) {
 					final int start = token.getStart().getPositionInFile() - 1;
 					final int end = token.getEnd().getPositionInFile();
@@ -353,5 +381,9 @@ public class SourceView extends JPanel implements ParsingListener {
 
 	public void addTokenSelectionListener(TokenSelectionListener listener) {
 		this.tokenSelectionListeners.add(listener);
+	}
+
+	public int getNumberOfLines() {
+		return lineOffsets.size();
 	}
 }

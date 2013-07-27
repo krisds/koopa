@@ -196,6 +196,12 @@ public class Detail extends JPanel implements Configurable {
 		}
 	}
 
+	public void scrollToLine(int line) {
+		if (pane != null) {
+			pane.scrollToLine(line);
+		}
+	}
+
 	public void selectDetail(Tuple<Token, String> detail) {
 		if (detail != null) {
 			detailsTable.selectDetail(detail);
@@ -224,5 +230,9 @@ public class Detail extends JPanel implements Configurable {
 
 	public File getFile() {
 		return cobolFile;
+	}
+
+	public int getNumberOfLines() {
+		return pane.getNumberOfLines();
 	}
 }

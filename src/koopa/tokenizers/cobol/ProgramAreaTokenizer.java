@@ -2,6 +2,8 @@ package koopa.tokenizers.cobol;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.util.ThreadedTokenizerBase;
@@ -11,6 +13,9 @@ import koopa.tokens.Token;
 
 public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 		Tokenizer {
+
+	private static final Logger LOGGER = Logger
+			.getLogger("tokenising.programarea");
 
 	private final SourceFormat format;
 
@@ -44,6 +49,11 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 
 			if (token.hasTag(AreaTag.END_OF_LINE)
 					|| token.hasTag(AreaTag.COMMENT)) {
+
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("Whitespace: " + token);
+				}
+
 				enqueue(token);
 				continue;
 			}
@@ -89,37 +99,63 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 
 			} else if (this.format == SourceFormat.FIXED) {
 				// 1-6 (in Java: 0-5) = sequence number
-				// 7 (in Java: 6) = indicator
-				// 8-72 (in Java: 7-71) = program text
-				// 73-... (in Java: 72-...) = identification
 
 				final int endOfSequenceNumber = Math.min(6, length);
-				enqueue(tokenizeArea(token, 0, endOfSequenceNumber,
-						AreaTag.SEQUENCE_NUMBER_AREA));
+				final Token sequenceNumber = tokenizeArea(token, 0,
+						endOfSequenceNumber, AreaTag.SEQUENCE_NUMBER_AREA);
 
-				boolean comment = false;
-				if (length > 7) {
+				if (LOGGER.isTraceEnabled())
+					LOGGER.trace("Sequence number: " + sequenceNumber);
+
+				enqueue(sequenceNumber);
+
+				// 7 (in Java: 6) = indicator
+				boolean lineIsComment = false;
+				if (length >= 7) {
 					final int endOfIndicator = Math.min(7, length);
-					enqueue(tokenizeArea(token, 6, endOfIndicator,
-							AreaTag.INDICATOR_AREA));
+					final Token indicator = tokenizeArea(token, 6,
+							endOfIndicator, AreaTag.INDICATOR_AREA);
 
-					comment = indicatesComment(text.charAt(6));
+					if (LOGGER.isTraceEnabled())
+						LOGGER.trace("Indicator: " + indicator);
+
+					enqueue(indicator);
+
+					lineIsComment = indicatesComment(text.charAt(6));
 				}
 
-				if (length > 8) {
+				// 8-72 (in Java: 7-71) = program text
+				if (length >= 8) {
 					final int endOfProgramText = Math.min(72, length);
-					if (comment) {
-						enqueue(tokenizeArea(token, 7, endOfProgramText,
-								AreaTag.COMMENT));
+					if (lineIsComment) {
+						final Token comment = tokenizeArea(token, 7,
+								endOfProgramText, AreaTag.COMMENT);
+
+						if (LOGGER.isTraceEnabled())
+							LOGGER.trace("Comment: " + comment);
+
+						enqueue(comment);
+
 					} else {
-						enqueue(tokenizeArea(token, 7, endOfProgramText,
-								AreaTag.PROGRAM_TEXT_AREA));
+						final Token programText = tokenizeArea(token, 7,
+								endOfProgramText, AreaTag.PROGRAM_TEXT_AREA);
+
+						if (LOGGER.isTraceEnabled())
+							LOGGER.trace("Program text: " + programText);
+
+						enqueue(programText);
 					}
 				}
 
-				if (length > 72) {
-					enqueue(tokenizeArea(token, 72, length,
-							AreaTag.IDENTIFICATION_AREA));
+				// 73-... (in Java: 72-...) = identification
+				if (length >= 72) {
+					final Token identification = tokenizeArea(token, 72,
+							length, AreaTag.IDENTIFICATION_AREA);
+
+					if (LOGGER.isTraceEnabled())
+						LOGGER.trace("Identificatio: " + identification);
+
+					enqueue(identification);
 				}
 
 			} else {

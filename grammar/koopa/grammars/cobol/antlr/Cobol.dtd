@@ -89,7 +89,7 @@
 <!ELEMENT dataReference ((t?,t)?,dataName)>
 <!ELEMENT dataValue (t?,t,dataName)>
 <!ELEMENT returningPhrase (t,dataName)>
-<!ELEMENT declaratives (t+,declarativeSection+,t+,t)>
+<!ELEMENT declaratives (t+,declarativeSection*,t+,t)>
 <!ELEMENT declarativeSection (sectionName,t+,useStatement,paragraph*)>
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>

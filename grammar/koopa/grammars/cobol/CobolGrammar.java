@@ -2848,7 +2848,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    token("DECLARATIVES"),
                    token("."),
-                   plus(
+                   star(
                        declarativeSection()
                    ),
                    token("END"),

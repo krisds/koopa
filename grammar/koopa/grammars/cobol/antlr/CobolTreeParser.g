@@ -1508,7 +1508,7 @@ declaratives
   : ^(DECLARATIVES
       ( 'DECLARATIVES'
         '.'
-        ( declarativeSection )+
+        ( declarativeSection )*
         'END'
         'DECLARATIVES'
         '.'

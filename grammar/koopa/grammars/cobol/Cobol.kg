@@ -605,7 +605,7 @@ end
 
 def declaratives =
     DECLARATIVES .
-    (declarativeSection)+
+    (declarativeSection)*
     END DECLARATIVES .
 end
 

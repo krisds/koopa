@@ -2640,7 +2640,8 @@ public class CobolGrammar extends KoopaGrammar {
                        token("COMP-4"),
                        token("COMPUTATIONAL-5"),
                        token("COMP-5"),
-                       token("POINTER")
+                       token("POINTER"),
+                       token("BINARY-LONG")
                    )
                )
            );

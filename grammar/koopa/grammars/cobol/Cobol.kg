@@ -552,6 +552,7 @@ def usage =
     | COMPUTATIONAL-5 
     | COMP-5
     | POINTER
+    | BINARY-LONG
     )
 end
 

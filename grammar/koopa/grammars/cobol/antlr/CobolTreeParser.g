@@ -1397,6 +1397,7 @@ usage
         | 'COMPUTATIONAL-5'
         | 'COMP-5'
         | 'POINTER'
+        | 'BINARY-LONG'
         )
       )
     )
@@ -5880,6 +5881,7 @@ token
   | 'BEGINNING'
   | 'BELL'
   | 'BINARY'
+  | 'BINARY-LONG'
   | 'BLANK'
   | 'BLINK'
   | 'BLOCK'

@@ -212,6 +212,10 @@ target usage;
 +[ USAGE POINTER ] 
 +[ USAGE IS POINTER ]
 
++[ BINARY-LONG ] 
++[ USAGE BINARY-LONG ] 
++[ USAGE IS BINARY-LONG ]
+
 
 target valueIs;
 

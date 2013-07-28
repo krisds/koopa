@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
@@ -173,5 +174,14 @@ public class ApplicationSupport {
 		}
 
 		return false;
+	}
+
+	public static JFrame inFrame(String title, Component component) {
+		JFrame frame = new JFrame(title);
+
+		frame.add(component);
+
+		frame.setSize(800, 600);
+		return frame;
 	}
 }

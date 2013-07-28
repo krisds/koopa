@@ -43,6 +43,7 @@ import koopa.app.actions.ShowGrammarAction;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
 import koopa.app.components.detail.Detail;
+import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.misc.Tab;
 import koopa.app.components.overview.Overview;
 import koopa.parsers.Metrics;
@@ -95,6 +96,9 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 	private JTabbedPane tabbedPane = null;
 	private Overview overview = null;
+
+	private JFrame grammarViewDialog = null;
+	private GrammarView grammarView = null;
 
 	public Koopa() {
 		super("Koopa");
@@ -228,7 +232,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		syntaxTree = new JMenu("Syntax tree");
 
-		showGrammar = new JMenuItem(new ShowGrammarAction());
+		showGrammar = new JMenuItem(new ShowGrammarAction(this));
 		showGrammar.setAccelerator(KeyStroke.getKeyStroke("meta G"));
 		syntaxTree.add(showGrammar);
 
@@ -433,7 +437,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		// TODO Check if there already exists a tab for the given file. In that
 		// case do a reload instead.
 
-		final Detail detail = new Detail(file, true, format);
+		final Detail detail = new Detail(this, file, format);
 		overview.addParseResults(detail.getParseResults());
 
 		String title = getTitleForDetail(detail);
@@ -554,5 +558,22 @@ public class Koopa extends JFrame implements Application, Configurable {
 	@Override
 	public void closeView() {
 		closeView(getView());
+	}
+
+	@Override
+	public void showGrammarRules() {
+		showGrammarRule(null);
+	}
+
+	@Override
+	public void showGrammarRule(String name) {
+		if (grammarView == null) {
+			grammarView = new GrammarView("/koopa/grammars/cobol/Cobol.kg");
+			grammarViewDialog = ApplicationSupport.inFrame("Cobol grammar",
+					grammarView);
+		}
+
+		grammarViewDialog.setVisible(true);
+		grammarView.showRule(name);
 	}
 }

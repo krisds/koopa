@@ -13,9 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -30,6 +31,7 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.TabSet;
 import javax.swing.text.TabStop;
 
+import koopa.app.ApplicationSupport;
 import koopa.app.components.sourceview.LineNumberView;
 import koopa.app.components.sourceview.LinePainter;
 import koopa.grammars.generator.KGLexer;
@@ -47,6 +49,8 @@ public class GrammarView extends JPanel {
 	private JScrollPane scroll = null;
 
 	private List<Integer> lineOffsets = new ArrayList<Integer>();
+
+	private Map<String, Integer> ruleNameOffsets = new HashMap<String, Integer>();
 
 	public GrammarView(String pathToGrammarResource) {
 		setupComponents();
@@ -303,6 +307,7 @@ public class GrammarView extends JPanel {
 
 			KGLexer lexer = new KGLexer(new ANTLRReaderStream(reader));
 
+			boolean justSawDef = false;
 			while (true) {
 				CommonToken token = (CommonToken) lexer.nextToken();
 
@@ -312,17 +317,35 @@ public class GrammarView extends JPanel {
 				Style style = null;
 				if (token.getType() == KGLexer.COMMENT) {
 					style = getCommentStyle(document);
+					justSawDef = false;
 
-				} else if ("def".equals(token.getText())
-						|| "end".equals(token.getText())) {
+				} else if ("def".equals(token.getText())) {
 					style = getKeywordStyle(document);
+					justSawDef = true;
+
+				} else if ("def".equals(token.getText())) {
+					style = getKeywordStyle(document);
+					justSawDef = false;
 
 				} else if (token.getType() == KGLexer.IDENTIFIER) {
 					if (!token.getText().toUpperCase().equals(token.getText()))
 						style = getIdentifierStyle(document);
 
+					if (justSawDef)
+						ruleNameOffsets.put(token.getText(),
+								token.getStartIndex());
+
+					justSawDef = false;
+
 				} else if (token.getType() == KGLexer.NATIVE_CODE) {
 					style = getNativeStyle(document);
+					justSawDef = false;
+
+				} else if (token.getType() == KGLexer.WHITESPACE) {
+					// Nop.
+
+				} else {
+					justSawDef = false;
 				}
 
 				if (style != null) {
@@ -341,13 +364,17 @@ public class GrammarView extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		JFrame frame = new JFrame("Cobol grammar");
+		ApplicationSupport.inFrame("Cobol grammar",
+				new GrammarView("/koopa/grammars/cobol/Cobol.kg")).setVisible(
+				true);
+	}
 
-		final GrammarView grammarView = new GrammarView(
-				"/koopa/grammars/cobol/Cobol.kg");
-		frame.add(grammarView);
+	public void showRule(String name) {
+		if (name == null || !ruleNameOffsets.containsKey(name))
+			pane.setCaretPosition(0);
+		else
+			pane.setCaretPosition(ruleNameOffsets.get(name));
 
-		frame.setSize(800, 600);
-		frame.setVisible(true);
+		centerLineWithCaretInScrollPane();
 	}
 }

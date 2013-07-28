@@ -11,6 +11,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import koopa.app.Application;
 import koopa.app.ApplicationSupport;
 import koopa.app.Configurable;
 import koopa.app.batchit.ParseDetails;
@@ -32,6 +33,7 @@ import koopa.util.Tuple;
 public class Detail extends JPanel implements Configurable {
 	private static final long serialVersionUID = 1L;
 
+	private Application application = null;
 	private File cobolFile = null;
 	private ParseResults results = null;
 	private ParsingCoordinator coordinator = null;
@@ -42,7 +44,8 @@ public class Detail extends JPanel implements Configurable {
 	private Breadcrumb breadcrumb = null;
 	private boolean parsing = false;
 
-	public Detail(File file, boolean isDialog, SourceFormat format) {
+	public Detail(Application application, File file, SourceFormat format) {
+		this.application = application;
 		this.coordinator = new ParsingCoordinator();
 		this.coordinator.setKeepingTrackOfTokens(true);
 		this.coordinator.setFormat(format);
@@ -130,7 +133,7 @@ public class Detail extends JPanel implements Configurable {
 			}
 		});
 
-		breadcrumb = new Breadcrumb(this.coordinator);
+		breadcrumb = new Breadcrumb(application, coordinator);
 		pane.addTokenSelectionListener(breadcrumb);
 
 		detailsTable = new DetailsTable(parseDetails);

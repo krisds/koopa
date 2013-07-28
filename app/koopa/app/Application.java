@@ -37,4 +37,8 @@ public interface Application {
 	Component getView();
 
 	void closeView(Component component);
+
+	void showGrammarRule(String name);
+
+	void showGrammarRules();
 }

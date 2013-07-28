@@ -4,31 +4,23 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JFrame;
 
-import koopa.app.components.grammarview.GrammarView;
+import koopa.app.Application;
 
 @SuppressWarnings("serial")
 public class ShowGrammarAction extends AbstractAction implements Action {
 
-	private static JFrame frame = null;
+	private Application application;
 
-	public ShowGrammarAction() {
+	public ShowGrammarAction(Application application) {
 		super("Show grammar...");
+		this.application = application;
 	}
 
 	public void actionPerformed(ActionEvent ae) {
 		new Thread(new Runnable() {
 			public void run() {
-				if (frame == null) {
-					frame = new JFrame("Cobol grammar");
-
-					final GrammarView grammarView = new GrammarView(
-							"/koopa/grammars/cobol/Cobol.kg");
-					frame.add(grammarView);
-					frame.setSize(800, 600);
-				}
-				frame.setVisible(true);
+				application.showGrammarRules();
 			}
 		}).start();
 	}

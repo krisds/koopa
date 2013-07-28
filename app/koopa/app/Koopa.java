@@ -13,6 +13,8 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -127,7 +129,13 @@ public class Koopa extends JFrame implements Application, Configurable {
 		file.add(reload);
 
 		close = new JMenuItem(new CloseFileAction(this));
-		close.setAccelerator(KeyStroke.getKeyStroke("meta W"));
+		KeyStroke keystrokeForClosingATab = KeyStroke.getKeyStroke("meta W");
+		KeyStroke alternateKeystrokeForClosingATab = KeyStroke
+				.getKeyStroke("ESCAPE");
+		close.setAccelerator(keystrokeForClosingATab);
+		InputMap im = close.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		im.put(alternateKeystrokeForClosingATab,
+				im.get(keystrokeForClosingATab));
 		file.add(close);
 
 		file.addSeparator();

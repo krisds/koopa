@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Koopa" default="all" basedir=".">
+<project name="Koopa" default="build" basedir=".">
 
 	<target name="clean">
 		<delete dir="build/" />
 	</target>
 
-	<target name="all" depends="bootstrap,back-end,grammar,tests,applications,sandbox">
+	<target name="build" depends="bootstrap,back-end,grammar,tests,applications,sandbox">
 	</target>
 
 
@@ -263,6 +263,21 @@
 		</copy>
 	</target>
 
+	<target name="jar">
+		<jar destfile="koopa.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="koopa.app.Koopa" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="build" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/stringtemplate-3.2.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/antlr-2.7.7.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/antlr-3.1.1-runtime.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
+		</jar>
+	</target>
 
 	<!-- MACROS -->
 

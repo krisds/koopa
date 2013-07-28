@@ -4,8 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -19,10 +23,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -97,6 +103,8 @@ public class Koopa extends JFrame implements Application, Configurable {
 		setupMenuBar();
 
 		updateMenus();
+
+		setupDragAndDropOfFiles();
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width - 100, screenSize.height - 100);
@@ -255,6 +263,76 @@ public class Koopa extends JFrame implements Application, Configurable {
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	}
 
+	private void setupDragAndDropOfFiles() {
+		TransferHandler handler = new TransferHandler() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean canImport(TransferHandler.TransferSupport info) {
+				return info
+						.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
+			}
+
+			@Override
+			public boolean importData(TransferHandler.TransferSupport info) {
+				// TODO Check that Koopa isn't already doing something else...
+
+				if (!info.isDrop())
+					return false;
+
+				if (!info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+					JOptionPane.showMessageDialog(Koopa.this,
+							"Koopa doesn't accept this type of data.",
+							"Sorry...", JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+
+				try {
+					Transferable t = info.getTransferable();
+
+					@SuppressWarnings("unchecked")
+					final List<File> data = (List<File>) t
+							.getTransferData(DataFlavor.javaFileListFlavor);
+
+					if (data != null && !data.isEmpty()) {
+						new Thread(new Runnable() {
+							public void run() {
+								if (data.size() == 1) {
+									File file = data.get(0);
+
+									if (file.isDirectory()) {
+										tabbedPane
+												.setSelectedComponent(overview);
+										overview.walkAndParse(file);
+
+									} else {
+										openFile(file);
+									}
+
+								} else {
+									tabbedPane.setSelectedComponent(overview);
+									for (File file : data)
+										overview.walkAndParse(file);
+								}
+							}
+						}).start();
+					}
+
+					return true;
+
+				} catch (UnsupportedFlavorException e) {
+					return false;
+
+				} catch (IOException e) {
+					return false;
+				}
+			}
+		};
+
+		this.setTransferHandler(handler);
+	}
+
 	private void updateMenus() {
 		Component view = getView();
 
@@ -327,7 +405,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 	@Override
 	public void openFile(File file) {
-
 		Component view = getView();
 
 		if (overview == view) {

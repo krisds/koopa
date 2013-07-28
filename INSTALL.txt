@@ -1,14 +1,22 @@
+= Building =
+
+Koopa is built with ANT.
+
+On the command line just invoke:
+
+	ant build
+	
+To run all tests:
+
+	ant tests
+
+To build the koopa.jar:
+
+	ant jar
+
+
 = Development Environment =
 
 Koopa is currently being developed using:
 
 * Eclipse 3.5        (http://www.eclipse.org/)
-* ANTLR IDE v2.0.0   (http://antlrv3ide.sourceforge.net/)
-
-The ANTLR IDE will need an ANTLR package to function properly. The source
-package currently in use is ANTLR v3.1.1. (http://www.antlr.org/)
-
-= Building =
-
-Simply run ANT in the root folder, and sit back. If you're using an IDE you may
-need to refresh your workspace afterwards (or let your IDE do this for you).

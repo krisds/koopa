@@ -39,6 +39,7 @@ import koopa.app.actions.GoToLineAction;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
 import koopa.app.actions.ReloadFileAction;
+import koopa.app.actions.ShowGrammarAction;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
 import koopa.app.components.detail.Detail;
@@ -90,6 +91,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 	private JMenu syntaxTree = null;
 	private JMenuItem saveXML = null;
 	private JMenuItem queryUsingXath = null;
+	private JMenuItem showGrammar = null;
 
 	private JTabbedPane tabbedPane = null;
 	private Overview overview = null;
@@ -217,9 +219,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		navigation = new JMenu("Navigation");
 
 		goToLine = new JMenuItem(new GoToLineAction(this, this));
-
 		goToLine.setAccelerator(KeyStroke.getKeyStroke("meta L"));
-
 		navigation.add(goToLine);
 
 		bar.add(navigation);
@@ -228,15 +228,17 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		syntaxTree = new JMenu("Syntax tree");
 
-		saveXML = new JMenuItem(new ExportASTToXMLAction(this, this));
+		showGrammar = new JMenuItem(new ShowGrammarAction());
+		showGrammar.setAccelerator(KeyStroke.getKeyStroke("meta G"));
+		syntaxTree.add(showGrammar);
 
-		saveXML.setAccelerator(KeyStroke.getKeyStroke("meta E"));
-
-		syntaxTree.add(saveXML);
 		syntaxTree.addSeparator();
 
-		queryUsingXath = new JMenuItem(new QueryUsingXPathAction(this, this));
+		saveXML = new JMenuItem(new ExportASTToXMLAction(this, this));
+		saveXML.setAccelerator(KeyStroke.getKeyStroke("meta E"));
+		syntaxTree.add(saveXML);
 
+		queryUsingXath = new JMenuItem(new QueryUsingXPathAction(this, this));
 		queryUsingXath.setAccelerator(KeyStroke.getKeyStroke("meta P"));
 		syntaxTree.add(queryUsingXath);
 
@@ -364,7 +366,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 			goToLine.setEnabled(false);
 
 			// Syntax tree ...
-			syntaxTree.setEnabled(false);
 			saveXML.setEnabled(false);
 			queryUsingXath.setEnabled(false);
 
@@ -397,7 +398,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 			// Syntax tree ...
 			boolean hasSyntaxTree = detail.hasSyntaxTree();
-			syntaxTree.setEnabled(hasSyntaxTree);
 			saveXML.setEnabled(hasSyntaxTree);
 			queryUsingXath.setEnabled(hasSyntaxTree);
 		}

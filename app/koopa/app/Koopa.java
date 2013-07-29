@@ -135,21 +135,15 @@ public class Koopa extends JFrame implements Application, Configurable {
 		open = new JMenuItem(new OpenFileAction("Parse ...", this,
 				ApplicationSupport.getCobolFileFilter(false), this));
 
-		open.setAccelerator(KeyStroke.getKeyStroke("meta O"));
+		setAccelerators(open, "meta O", "ctrl O");
 		file.add(open);
 
 		reload = new JMenuItem(new ReloadFileAction(this));
-		reload.setAccelerator(KeyStroke.getKeyStroke("meta R"));
+		setAccelerators(reload, "meta R", "ctrl R");
 		file.add(reload);
 
 		close = new JMenuItem(new CloseFileAction(this));
-		KeyStroke keystrokeForClosingATab = KeyStroke.getKeyStroke("meta W");
-		KeyStroke alternateKeystrokeForClosingATab = KeyStroke
-				.getKeyStroke("ESCAPE");
-		close.setAccelerator(keystrokeForClosingATab);
-		InputMap im = close.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		im.put(alternateKeystrokeForClosingATab,
-				im.get(keystrokeForClosingATab));
+		setAccelerators(close, "meta W", "ctrl W", "ESCAPE");
 		file.add(close);
 
 		file.addSeparator();
@@ -164,7 +158,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 					}
 				}, this));
 
-		saveCSV.setAccelerator(KeyStroke.getKeyStroke("meta E"));
+		setAccelerators(saveCSV, "meta E", "ctrl E");
 		file.add(saveCSV);
 
 		bar.add(file);
@@ -223,7 +217,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		navigation = new JMenu("Navigation");
 
 		goToLine = new JMenuItem(new GoToLineAction(this, this));
-		goToLine.setAccelerator(KeyStroke.getKeyStroke("meta L"));
+		setAccelerators(goToLine, "meta L", "ctrl L");
 		navigation.add(goToLine);
 
 		bar.add(navigation);
@@ -233,17 +227,17 @@ public class Koopa extends JFrame implements Application, Configurable {
 		syntaxTree = new JMenu("Syntax tree");
 
 		showGrammar = new JMenuItem(new ShowGrammarAction(this));
-		showGrammar.setAccelerator(KeyStroke.getKeyStroke("meta G"));
+		setAccelerators(showGrammar, "meta G", "ctrl G");
 		syntaxTree.add(showGrammar);
 
 		syntaxTree.addSeparator();
 
 		saveXML = new JMenuItem(new ExportASTToXMLAction(this, this));
-		saveXML.setAccelerator(KeyStroke.getKeyStroke("meta E"));
+		setAccelerators(saveXML, "meta E", "ctrl E");
 		syntaxTree.add(saveXML);
 
 		queryUsingXath = new JMenuItem(new QueryUsingXPathAction(this, this));
-		queryUsingXath.setAccelerator(KeyStroke.getKeyStroke("meta P"));
+		setAccelerators(queryUsingXath, "meta Q", "ctrl Q");
 		syntaxTree.add(queryUsingXath);
 
 		bar.add(syntaxTree);
@@ -575,5 +569,24 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		grammarViewDialog.setVisible(true);
 		grammarView.showRule(name);
+	}
+
+	private void setAccelerators(JMenuItem item, String keyStrokeDefinition,
+			String... alternateKeyStrokesDefinitions) {
+
+		KeyStroke keystroke = KeyStroke.getKeyStroke(keyStrokeDefinition);
+		item.setAccelerator(keystroke);
+
+		if (alternateKeyStrokesDefinitions != null
+				&& alternateKeyStrokesDefinitions.length > 0) {
+			InputMap im = item.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+			final Object actionMapKey = im.get(keystroke);
+
+			for (String alternateKeyStrokeDefinition : alternateKeyStrokesDefinitions) {
+				KeyStroke alternateKeystroke = KeyStroke
+						.getKeyStroke(alternateKeyStrokeDefinition);
+				im.put(alternateKeystroke, actionMapKey);
+			}
+		}
 	}
 }

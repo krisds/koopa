@@ -125,6 +125,17 @@ KOOPAH* Testing continuation lines.                                     :0
 KOOPAH MOVE SPACEMAN-SPIFF TO THE-FIFTH-
 KOOPAH-     DIMENSION.                                                  :9
 KOOPAH
+KOOPAH* Testing continuation lines with an empty comment in between.    :0
+KOOPAH* See issue #7, reported by  Simon Sobisch.                       :0
+KOOPAH DISPLAY THE-FIFTH-
+KOOPAH*
+KOOPAH-     DIMENSION.                                                  :5
+KOOPAH
+KOOPAH* Testing continuation lines with an non-empty comment in between.:0
+KOOPAH DISPLAY THE-SIXTH-
+KOOPAH* Yes, this comment is actually here.
+KOOPAH-     DIMENSION.                                                  :5
+KOOPAH
 KOOPAH ACCEPT THE-ANSWER-TO-QUESTION-7
 KOOPAH-       -FROM-SUSIE-DERKINS.                                      :5
 KOOPAH

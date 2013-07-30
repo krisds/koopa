@@ -8,7 +8,7 @@ On the command line just invoke:
 	
 To run all tests:
 
-	ant tests
+	ant run-tests
 
 To build the koopa.jar:
 

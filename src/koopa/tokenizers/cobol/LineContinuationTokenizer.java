@@ -55,8 +55,11 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 				continue;
 			}
 
-			if (token.hasTag(AreaTag.COMMENT)) {
-				// Possible intervening comment line. Buffer all up to next line.
+			if ((token.hasTag(AreaTag.INDICATOR_AREA) && ProgramAreaTokenizer
+					.indicatesComment(token.getText().charAt(0)))
+					|| token.hasTag(AreaTag.COMMENT)) {
+				// Possible intervening comment line. Buffer all up to next
+				// line.
 				buffer(token);
 				bufferUpToNextLine();
 				continue;
@@ -97,8 +100,7 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		if (continuedLine == null) {
 			// TODO ERROR.
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER
-						.trace("ERROR while handling continuation: continuedLine == null");
+				LOGGER.trace("ERROR while handling continuation: continuedLine == null");
 			}
 			return;
 		}
@@ -113,10 +115,9 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 				|| continuingLine.hasTag(AreaTag.COMMENT)) {
 			// TODO ERROR.
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER
-						.trace("ERROR while handling continuation: continuingLine == null"
-								+ " || !continuingLine.hasTag(AreaTag.PROGRAM_TEXT_AREA)"
-								+ " || || continuingLine.hasTag(AreaTag.COMMENT)");
+				LOGGER.trace("ERROR while handling continuation: continuingLine == null"
+						+ " || !continuingLine.hasTag(AreaTag.PROGRAM_TEXT_AREA)"
+						+ " || || continuingLine.hasTag(AreaTag.COMMENT)");
 			}
 			return;
 		}
@@ -197,13 +198,13 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 			if (secondCharInContinuingLine != lastCharInContinuedLine) {
 				// We have only a single quotation mark. This is another special
 				// case. Here's why:
-				// 
+				//
 				// 'If the last character on the continued line of an
 				// alphanumeric or national literal is a single quotation mark
 				// in Area B, the continuation line can start with a single
 				// quotation mark. This will result in two consecutive literals
 				// instead of one continued literal.'
-				// 
+				//
 				// This will need some special treatment.
 				handleContinuationOfClosedLiteralWithAConsecutiveLiteral(
 						continuedLine, continuingLine);
@@ -246,8 +247,7 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 			// The line is all blanks...
 			// TODO Throw error.
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER
-						.trace("ERROR while handling continuation: continuation is all blanks.");
+				LOGGER.trace("ERROR while handling continuation: continuation is all blanks.");
 			}
 			return;
 		}
@@ -257,9 +257,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 			// No quotation mark...
 			// TODO Throw error.
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER
-						.trace("ERROR while handling continuation: "
-								+ "expected quotation mark as start of the continuation");
+				LOGGER.trace("ERROR while handling continuation: "
+						+ "expected quotation mark as start of the continuation");
 			}
 			return;
 		}
@@ -303,16 +302,15 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		final Token correctedContinuingLine = splitContinuingLine[1];
 
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER
-					.trace("Continue closed literal in "
-							+ correctedContinuedLine);
+			LOGGER.trace("Continue closed literal in " + correctedContinuedLine);
 			LOGGER.trace("   with a consecutive literal in "
 					+ correctedContinuingLine);
 		}
 
 		// We need an extra token to keep the two literals separated.
-		final Token spacer = new BasicToken(" ", correctedContinuedLine
-				.getEnd(), correctedContinuedLine.getEnd());
+		final Token spacer = new BasicToken(" ",
+				correctedContinuedLine.getEnd(),
+				correctedContinuedLine.getEnd());
 
 		buffer(continued(correctedContinuedLine));
 		buffer(continuing(continued(spacer)));
@@ -333,9 +331,7 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		final Token correctedContinuingLine = splitContinuingLine[1];
 
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER
-					.trace("Continue closed literal in "
-							+ correctedContinuedLine);
+			LOGGER.trace("Continue closed literal in " + correctedContinuedLine);
 			LOGGER.trace("    with " + correctedContinuingLine);
 		}
 
@@ -387,7 +383,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 
 	private Token rewindToContinuedLine(final Token continuationIndicator) {
 		// The line number of the continuing line:
-		final int lineNumber = this.buffer.getFirst().getStart().getLinenumber();
+		final int lineNumber = this.buffer.getFirst().getStart()
+				.getLinenumber();
 
 		// We skip past the continuation indicator.
 		this.skippedByContinuation.addFirst(continuationIndicator);

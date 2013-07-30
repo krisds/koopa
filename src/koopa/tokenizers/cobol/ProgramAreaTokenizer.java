@@ -168,7 +168,7 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 		}
 	}
 
-	private boolean indicatesComment(int c) {
+	public static boolean indicatesComment(int c) {
 		return c == '*' || c == '/' || c == '$' || c == 'D' || c == 'd';
 	}
 

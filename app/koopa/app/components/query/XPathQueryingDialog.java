@@ -56,7 +56,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 	}
 
 	public XPathQueryingDialog(Frame owner, Application application) {
-		super(owner, "Query using XPath", false);
+		super(owner, "Find by XPath", false);
 
 		this.application = application;
 

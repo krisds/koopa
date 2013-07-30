@@ -15,7 +15,7 @@ public class QueryUsingXPathAction extends AbstractAction implements Action {
 	private Application application = null;
 
 	public QueryUsingXPathAction(Frame parent, Application application) {
-		super("Query using XPath...");
+		super("Find by XPath...");
 		this.parent = parent;
 		this.application = application;
 	}

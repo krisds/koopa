@@ -1526,6 +1526,7 @@ declarativeSection
         'SECTION'
         '.'
         useStatement
+        ( sentence )*
         ( paragraph )*
       )
     )

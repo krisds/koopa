@@ -115,6 +115,11 @@ target declarativeSection;
 
 +[ INPUT-ERROR SECTION .
      USE AFTER ERROR PROCEDURE ON MASTER-FILE . 
+     DISPLAY "Input error " . 
+]
+
++[ INPUT-ERROR SECTION .
+     USE AFTER ERROR PROCEDURE ON MASTER-FILE . 
    REPORT-ERROR . 
      DISPLAY "Input error " . 
 ]

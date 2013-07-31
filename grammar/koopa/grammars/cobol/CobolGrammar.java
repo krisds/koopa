@@ -2878,6 +2878,9 @@ public class CobolGrammar extends KoopaGrammar {
                    token("."),
                    useStatement(),
                    star(
+                       sentence()
+                   ),
+                   star(
                        paragraph()
                    )
                )

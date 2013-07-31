@@ -612,6 +612,7 @@ end
 def declarativeSection =
     sectionName SECTION .
     useStatement
+    (sentence)*
     (paragraph)*
 end
 

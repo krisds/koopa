@@ -4,12 +4,17 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokens.BasicToken;
 import koopa.tokens.Token;
 
 public class CompilerDirectivesTokenizer implements Tokenizer {
+
+	private static final Logger LOGGER = Logger
+			.getLogger("tokenising.compiler-directives");
 
 	// For the '$ SET SOURCEFORMAT'. A Micro Focus compiler directive.
 	private static final Pattern MF_SET_DIRECTIVE = Pattern
@@ -21,6 +26,12 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 
 	private static final Pattern TITLE_STATEMENT = Pattern
 			.compile("(^|\\s)TITLE\\s.*");
+
+	private static final Pattern OPEN_COBOL_SOURCE_FORMAT_DIRECTIVE = Pattern
+			.compile("^.{7}\\s*>>\\s*SOURCE\\s+(FORMAT\\s+)?(IS\\s+)?(FREE|FIXED)\\s*");
+
+	private static final Pattern OPEN_COBOL_DEBUG_DIRECTIVE = Pattern
+			.compile("^\\s*>>D.*");
 
 	private final Tokenizer tokenizer;
 
@@ -57,6 +68,10 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 			return this.queuedTokens.removeFirst();
 		}
 
+		if (isOpenCobolDirective(token)) {
+			return this.queuedTokens.removeFirst();
+		}
+
 		return token;
 	}
 
@@ -75,6 +90,10 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		token.addTag(AreaTag.COMMENT);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("MicroFocus compiler directive: " + token);
+
 		this.queuedTokens.addFirst(token);
 		return true;
 	}
@@ -94,6 +113,10 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		token.addTag(AreaTag.COMMENT);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("Title statement: " + token);
+
 		this.queuedTokens.addFirst(token);
 		return true;
 	}
@@ -155,7 +178,9 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 					5));
 			sequenceNumber.addTag(AreaTag.SEQUENCE_NUMBER_AREA);
 
-			System.out.println("Sequence number: " + sequenceNumber);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("Sequence number: " + sequenceNumber);
+
 			this.queuedTokens.add(sequenceNumber);
 		}
 
@@ -166,7 +191,9 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		// TODO Add a compiler directive area tag ?
 		directive.addTag(AreaTag.COMMENT);
 
-		System.out.println("CBL (PROCESS) statement: " + directive);
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("CBL (PROCESS) statement: " + directive);
+
 		this.queuedTokens.add(directive);
 
 		if (endOfToken < text.length()) {
@@ -175,11 +202,50 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 					token.getStart().offsetBy(endOfToken), token.getEnd());
 			identification.addTag(AreaTag.INDICATOR_AREA);
 
-			System.out.println("Identification: " + identification);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("Identification: " + identification);
+
 			this.queuedTokens.add(identification);
 		}
 
 		return true;
+	}
+
+	private boolean isOpenCobolDirective(final Token token) {
+		// Cfr. OpenCobol Programmer's Guide, section 1.5.
+		final String text = token.getText().toUpperCase();
+
+		final Matcher sourceFormatMatcher = OPEN_COBOL_SOURCE_FORMAT_DIRECTIVE
+				.matcher(text);
+
+		if (sourceFormatMatcher.find()) {
+			// TODO Could separate the sequence number and indicator here as
+			// well.
+			token.addTag(AreaTag.COMMENT);
+			this.queuedTokens.addFirst(token);
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("OpenCobol source format directive: " + token);
+
+			return true;
+		}
+
+		final Matcher debugDirectiveMatcher = OPEN_COBOL_DEBUG_DIRECTIVE
+				.matcher(text);
+
+		if (debugDirectiveMatcher.find()) {
+			// TODO Could separate the sequence number and indicator here as
+			// well.
+			token.addTag(AreaTag.COMMENT);
+			this.queuedTokens.addFirst(token);
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("OpenCobol debug directive: " + token);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public void quit() {

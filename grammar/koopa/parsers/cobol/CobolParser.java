@@ -291,7 +291,7 @@ public class CobolParser implements ParserConfiguration {
 		// Split the input into lines.
 		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
 		// Filter out some compiler directives.
-		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
+		tokenizer = new CompilerDirectivesTokenizer(tokenizer, format);
 		// Split up the different areas of each line (depending on the format).
 		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		// Filter out some source formatting directives.

@@ -161,6 +161,24 @@ public class SourceView extends JPanel implements ParsingListener {
 		return commentStyle;
 	}
 
+	private static Style compilerDirectiveStyle = null;
+
+	private static Style getCompilerDirectiveStyle(StyledDocument document) {
+		if (compilerDirectiveStyle == null) {
+			Style style = compilerDirectiveStyle = document.addStyle(
+					"compilerDirective", null);
+
+			StyleConstants.setItalic(style, false);
+			StyleConstants.setBold(style, false);
+			StyleConstants.setFontFamily(style, "Courier");
+			StyleConstants.setFontSize(style, 14);
+			StyleConstants.setBackground(style, new Color(77, 144, 114));
+			StyleConstants.setForeground(style, Color.WHITE);
+		}
+
+		return compilerDirectiveStyle;
+	}
+
 	private static Style stringStyle = null;
 
 	private static Style getStringStyle(StyledDocument document) {
@@ -284,8 +302,12 @@ public class SourceView extends JPanel implements ParsingListener {
 				final int end = token.getEnd().getPositionInFile();
 				final int len = end - start;
 
-				document.setCharacterAttributes(start, len,
-						getCommentStyle(document), false);
+				if (token.hasTag(AreaTag.COMPILER_DIRECTIVE))
+					document.setCharacterAttributes(start, len,
+							getCompilerDirectiveStyle(document), false);
+				else
+					document.setCharacterAttributes(start, len,
+							getCommentStyle(document), false);
 			}
 
 			// for (List<Token> line : tokenizer.getLines()) {

@@ -33,7 +33,7 @@ public class TestTokenizer implements PushbackTokenizer {
 	public TestTokenizer(SourceFormat format, String data) {
 		// The tokenizers in this sequence should generate the expected tokens.
 		Tokenizer tokenizer = new LineSplittingTokenizer(new StringReader(data));
-		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
+		tokenizer = new CompilerDirectivesTokenizer(tokenizer, format);
 		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 		tokenizer = new SeparatorTokenizer(tokenizer);

@@ -15,5 +15,10 @@ public enum AreaTag {
 	/**
 	 * This token holds a source formatting directive.
 	 */
-	SOURCE_FORMATTING_DIRECTIVE
+	SOURCE_FORMATTING_DIRECTIVE,
+	
+	/**
+	 * This token holds a compiler directive.
+	 */
+	COMPILER_DIRECTIVE
 }

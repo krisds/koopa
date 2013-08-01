@@ -95,7 +95,7 @@ public class TokenizerTest {
 		// The tokenizers in this sequence should generate the expected tokens.
 
 		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
-		tokenizer = new CompilerDirectivesTokenizer(tokenizer);
+		tokenizer = new CompilerDirectivesTokenizer(tokenizer, format);
 		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
 		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
 

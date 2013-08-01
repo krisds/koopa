@@ -27,18 +27,26 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 	private static final Pattern TITLE_STATEMENT = Pattern
 			.compile("(^|\\s)TITLE\\s.*");
 
-	private static final Pattern OPEN_COBOL_SOURCE_FORMAT_DIRECTIVE = Pattern
-			.compile("^.{7}\\s*>>\\s*SOURCE\\s+(FORMAT\\s+)?(IS\\s+)?(FREE|FIXED)\\s*");
+	private static final Pattern FIXED_FORM_COMPILER_DIRECTIVE = Pattern
+			.compile("^.{6}\\s\\s*>>.*");
 
-	private static final Pattern OPEN_COBOL_DEBUG_DIRECTIVE = Pattern
-			.compile("^\\s*>>D.*");
+	private static final Pattern FREE_FORM_COMPILER_DIRECTIVE = Pattern
+			.compile("^\\s*>>.*");
+
+	private final SourceFormat format;
 
 	private final Tokenizer tokenizer;
 
 	private final LinkedList<Token> queuedTokens = new LinkedList<Token>();
 
-	public CompilerDirectivesTokenizer(Tokenizer tokenizer) {
+	public CompilerDirectivesTokenizer(Tokenizer tokenizer, SourceFormat format) {
+		super();
+
+		assert (tokenizer != null);
+		assert (format != null);
+
 		this.tokenizer = tokenizer;
+		this.format = format;
 	}
 
 	public Token nextToken() {
@@ -56,6 +64,10 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 			return token;
 		}
 
+		if (isCompilerDirective(token)) {
+			return this.queuedTokens.removeFirst();
+		}
+
 		if (isMicroFocusCompilerDirective(token)) {
 			return this.queuedTokens.removeFirst();
 		}
@@ -65,10 +77,6 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		if (isCblProcessStatement(token)) {
-			return this.queuedTokens.removeFirst();
-		}
-
-		if (isOpenCobolDirective(token)) {
 			return this.queuedTokens.removeFirst();
 		}
 
@@ -90,6 +98,7 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		token.addTag(AreaTag.COMMENT);
+		token.addTag(AreaTag.COMPILER_DIRECTIVE);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("MicroFocus compiler directive: " + token);
@@ -113,6 +122,7 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		token.addTag(AreaTag.COMMENT);
+		token.addTag(AreaTag.COMPILER_DIRECTIVE);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Title statement: " + token);
@@ -188,8 +198,9 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		final Token directive = new BasicToken(text.substring(startOfToken,
 				endOfToken), token.getStart().offsetBy(startOfToken), token
 				.getStart().offsetBy(endOfToken - 1));
-		// TODO Add a compiler directive area tag ?
+
 		directive.addTag(AreaTag.COMMENT);
+		directive.addTag(AreaTag.COMPILER_DIRECTIVE);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("CBL (PROCESS) statement: " + directive);
@@ -211,36 +222,29 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		return true;
 	}
 
-	private boolean isOpenCobolDirective(final Token token) {
-		// Cfr. OpenCobol Programmer's Guide, section 1.5.
+	/**
+	 * Based on ISO/IEC 1989:20xx FCD 1.0 (E), section 7.3
+	 * "Compiler directives".
+	 */
+	private boolean isCompilerDirective(final Token token) {
 		final String text = token.getText().toUpperCase();
 
-		final Matcher sourceFormatMatcher = OPEN_COBOL_SOURCE_FORMAT_DIRECTIVE
-				.matcher(text);
+		final Matcher matcher;
+		if (format == SourceFormat.FIXED) {
+			matcher = FIXED_FORM_COMPILER_DIRECTIVE.matcher(text);
+			// TODO Separate out the sequence number and indicator areas.
 
-		if (sourceFormatMatcher.find()) {
-			// TODO Could separate the sequence number and indicator here as
-			// well.
-			token.addTag(AreaTag.COMMENT);
-			this.queuedTokens.addFirst(token);
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("OpenCobol source format directive: " + token);
-
-			return true;
+		} else {
+			matcher = FREE_FORM_COMPILER_DIRECTIVE.matcher(text);
 		}
 
-		final Matcher debugDirectiveMatcher = OPEN_COBOL_DEBUG_DIRECTIVE
-				.matcher(text);
-
-		if (debugDirectiveMatcher.find()) {
-			// TODO Could separate the sequence number and indicator here as
-			// well.
+		if (matcher.find()) {
 			token.addTag(AreaTag.COMMENT);
+			token.addTag(AreaTag.COMPILER_DIRECTIVE);
 			this.queuedTokens.addFirst(token);
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("OpenCobol debug directive: " + token);
+				LOGGER.trace("Compiler directive: " + token);
 
 			return true;
 		}

@@ -48,7 +48,8 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 			}
 
 			if (token.hasTag(AreaTag.END_OF_LINE)
-					|| token.hasTag(AreaTag.COMMENT)) {
+					|| token.hasTag(AreaTag.COMMENT)
+					|| token.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
 
 				if (LOGGER.isTraceEnabled()) {
 					LOGGER.trace("Whitespace: " + token);

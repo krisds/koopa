@@ -11,6 +11,7 @@ import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokens.BasicToken;
 import koopa.tokens.Token;
 
+// TODO Set up unit tests for these...
 public class CompilerDirectivesTokenizer implements Tokenizer {
 
 	private static final Logger LOGGER = Logger
@@ -97,7 +98,6 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 			return false;
 		}
 
-		token.addTag(AreaTag.COMMENT);
 		token.addTag(AreaTag.COMPILER_DIRECTIVE);
 
 		if (LOGGER.isTraceEnabled())
@@ -121,7 +121,6 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 			return false;
 		}
 
-		token.addTag(AreaTag.COMMENT);
 		token.addTag(AreaTag.COMPILER_DIRECTIVE);
 
 		if (LOGGER.isTraceEnabled())
@@ -199,7 +198,6 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 				endOfToken), token.getStart().offsetBy(startOfToken), token
 				.getStart().offsetBy(endOfToken - 1));
 
-		directive.addTag(AreaTag.COMMENT);
 		directive.addTag(AreaTag.COMPILER_DIRECTIVE);
 
 		if (LOGGER.isTraceEnabled())
@@ -239,7 +237,6 @@ public class CompilerDirectivesTokenizer implements Tokenizer {
 		}
 
 		if (matcher.find()) {
-			token.addTag(AreaTag.COMMENT);
 			token.addTag(AreaTag.COMPILER_DIRECTIVE);
 			this.queuedTokens.addFirst(token);
 

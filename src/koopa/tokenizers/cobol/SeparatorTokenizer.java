@@ -33,7 +33,8 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				break;
 
 			} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-					&& !token.hasTag(AreaTag.COMMENT)) {
+					&& !token.hasTag(AreaTag.COMMENT)
+					&& !token.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
 				separate(token);
 
 			} else {
@@ -103,8 +104,8 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 			} else if (startOfHexadecimal(text, length, position, c)) {
 				// HEXADECIMAL LITERAL.
-				position = hexadecimal(token, text, position, length, text
-						.charAt(position + 1));
+				position = hexadecimal(token, text, position, length,
+						text.charAt(position + 1));
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.

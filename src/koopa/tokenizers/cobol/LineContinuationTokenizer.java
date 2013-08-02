@@ -57,7 +57,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 
 			if ((token.hasTag(AreaTag.INDICATOR_AREA) && ProgramAreaTokenizer
 					.indicatesComment(token.getText().charAt(0)))
-					|| token.hasTag(AreaTag.COMMENT)) {
+					|| token.hasTag(AreaTag.COMMENT)
+					|| token.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
 				// Possible intervening comment line. Buffer all up to next
 				// line.
 				buffer(token);
@@ -112,7 +113,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 
 		if (continuingLine == null
 				|| !continuingLine.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-				|| continuingLine.hasTag(AreaTag.COMMENT)) {
+				|| continuingLine.hasTag(AreaTag.COMMENT)
+				|| continuingLine.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
 			// TODO ERROR.
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("ERROR while handling continuation: continuingLine == null"

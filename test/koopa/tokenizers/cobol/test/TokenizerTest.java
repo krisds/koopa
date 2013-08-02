@@ -1,10 +1,15 @@
-package sandbox;
+package koopa.tokenizers.cobol.test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import koopa.tokenizers.Tokenizer;
 import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
@@ -25,9 +30,10 @@ import koopa.tokenizers.generic.FilteringTokenizer;
 import koopa.tokens.Token;
 import koopa.tokens.TokenFilter;
 
-public class TokenizerTest {
+public class TokenizerTest extends TestCase {
 
-	public static void main(String[] args) throws IOException {
+	@Test
+	public void test() throws IOException {
 		final List<Token> fixedTokens = process("testsuite/koopa/test.CBL",
 				SourceFormat.FIXED);
 		final List<Token> freeTokens = process("testsuite/koopa/free.CBL",
@@ -72,14 +78,8 @@ public class TokenizerTest {
 			}
 		}
 
-		if (mismatched || numberOfFixedTokens != numberOfFreeTokens) {
-			System.out.println("Inputs differ in the tokens they produce.");
-			System.out.println("That's bad!");
-
-		} else {
-			System.out.println("Inputs generate the same tokens.");
-			System.out.println("That's good !");
-		}
+		Assert.assertFalse("Inputs should produce the same tokens.", mismatched
+				|| numberOfFixedTokens != numberOfFreeTokens);
 	}
 
 	public static List<Token> process(String filename, SourceFormat format)
@@ -160,20 +160,24 @@ public class TokenizerTest {
 				+ " top level token(s).");
 
 		if (countVerifier != null) {
-			// TODO General logger/reporter ?
 			for (String message : countVerifier.getErrorMessages()) {
 				System.out.println(message);
 			}
 		}
 
 		if (stateVerifier != null) {
-			// TODO General logger/reporter ?
 			for (String message : stateVerifier.getErrorMessages()) {
 				System.out.println(message);
 			}
 		}
 
 		System.out.println();
+
+		Assert.assertTrue("Counts as defined in source should match.",
+				countVerifier.getErrorMessages().size() == 0);
+
+		Assert.assertTrue("Token states should be as expected.", countVerifier
+				.getErrorMessages().size() == 0);
 
 		return tokens;
 	}

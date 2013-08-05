@@ -2046,7 +2046,8 @@ callUsing
         ) )*
         ( ( ( ( 'BY' )?
           'REFERENCE'
-          ( ( identifier
+          ( ( literal
+          | identifier
           | 'OMITTED'
           ) )+
         )
@@ -4861,7 +4862,8 @@ endOfStatement
 
 identifier
   : ^(IDENTIFIER
-      ( identifier_format1
+      ( identifier_format6
+      | identifier_format1
       | identifier_format2
       | dataAddressIdentifier
       )
@@ -4898,6 +4900,24 @@ identifier_format2
           ')'
         ) )?
         ( referenceModifier )?
+      )
+    )
+  ;
+
+// ========================================================
+// identifier_format6
+// ........................................................
+
+identifier_format6
+  : ^(IDENTIFIER_FORMAT6
+      ( 'EXCEPTION-OBJECT'
+      | 'NULL'
+      | 'SELF'
+      | ( ( ( className
+        'OF'
+      ) )?
+        'SUPER'
+      )
       )
     )
   ;
@@ -6009,6 +6029,7 @@ token
   | 'ERROR'
   | 'EVALUATE'
   | 'EXCEPTION'
+  | 'EXCEPTION-OBJECT'
   | 'EXEC'
   | 'EXIT'
   | 'EXTEND'
@@ -6181,6 +6202,7 @@ token
   | 'SEARCH'
   | 'SECTION'
   | 'SELECT'
+  | 'SELF'
   | 'SEND'
   | 'SENTENCE'
   | 'SEPARATE'
@@ -6202,6 +6224,7 @@ token
   | 'STOP'
   | 'STRING'
   | 'SUBTRACT'
+  | 'SUPER'
   | 'SUPPRESS'
   | 'SYMBOLIC'
   | 'SYNC'

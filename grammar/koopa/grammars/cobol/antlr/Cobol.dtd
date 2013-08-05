@@ -111,7 +111,7 @@
 <!ELEMENT addition_format3 ((identifier|literal)+,t,(identifier,t?)+)>
 <!ELEMENT allocateStatement (t,((arithmeticExpression,t)|identifier),t?,(t,identifier)?)>
 <!ELEMENT callStatement (t,programID,callUsing?,callGivingOrReturning?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
-<!ELEMENT callUsing (t,(literal|identifier)*,((t?,t,(identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
+<!ELEMENT callUsing (t,(literal|identifier)*,((t?,t,(literal|identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
 <!ELEMENT callGivingOrReturning (t,t?,identifier)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
 <!ELEMENT onException (t?,t,nestedStatements)>
@@ -249,9 +249,10 @@
 <!ELEMENT divisionStart (((t,t)|(t,t)|(t,t)|(t+,usingOrChainingPhrase?,returningPhrase?)),t)>
 <!ELEMENT dataSectionStart (t+,t)>
 <!ELEMENT endOfStatement (verb|t|(t?,t?,(t|(t,t)|(t,t?)|t)))>
-<!ELEMENT identifier (identifier_format1|identifier_format2|dataAddressIdentifier)>
+<!ELEMENT identifier (identifier_format6|identifier_format1|identifier_format2|dataAddressIdentifier)>
 <!ELEMENT identifier_format1 (t,functionName,(t,argument+,t)?,referenceModifier?)>
 <!ELEMENT identifier_format2 (dataName,qualifier*,(t,subscript+,t)?,referenceModifier?)>
+<!ELEMENT identifier_format6 (t|((className,t)?,t))>
 <!ELEMENT dataAddressIdentifier (t,t?,identifier)>
 <!ELEMENT argument (arithmeticExpression|identifier|literal)>
 <!ELEMENT qualifier (t,dataName)>

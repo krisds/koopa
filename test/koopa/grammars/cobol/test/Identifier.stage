@@ -57,3 +57,10 @@ target identifier;
 
 
 +[ ADDRESS OF CAT ]
+
+# Cfr. ISO/IEC 1989:20xx FCD 1.0 (E), 8.4.2.1.1
++[ EXCEPTION-OBJECT ]
++[ NULL ]
++[ SELF ]
++[ SUPER ]
++[ FOO OF SUPER ]

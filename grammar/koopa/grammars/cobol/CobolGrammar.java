@@ -3778,6 +3778,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("REFERENCE"),
                                plus(
                                    choice(
+                                       literal(),
                                        identifier(),
                                        token("OMITTED")
                                    )
@@ -8777,6 +8778,7 @@ public class CobolGrammar extends KoopaGrammar {
            identifierParser = future;
            future.setParser(
                choice(
+                   identifier_format6(),
                    identifier_format1(),
                    identifier_format2(),
                    dataAddressIdentifier()
@@ -8853,6 +8855,37 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return identifier_format2Parser;
+    }
+
+    // ========================================================
+    // identifier_format6
+    // ........................................................
+
+    private Parser identifier_format6Parser = null;
+
+    public Parser identifier_format6() {
+        if (identifier_format6Parser == null) {
+           FutureParser future = scoped("identifier_format6");
+           identifier_format6Parser = future;
+           future.setParser(
+               choice(
+                   token("EXCEPTION-OBJECT"),
+                   token("NULL"),
+                   token("SELF"),
+                   sequence(
+                       optional(
+                           sequence(
+                               className(),
+                               token("OF")
+                           )
+                       ),
+                       token("SUPER")
+                   )
+               )
+           );
+        }
+
+        return identifier_format6Parser;
     }
 
     // ========================================================

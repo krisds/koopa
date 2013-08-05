@@ -936,7 +936,7 @@ end
 
 def callUsing =
     USING (literal | identifier)*
-          ( [BY] REFERENCE (identifier | OMITTED)+
+          ( [BY] REFERENCE (literal |Êidentifier | OMITTED)+
           | [BY] CONTENT (literal | identifier)+
           | [BY] VALUE (literal | identifier)+
           )*
@@ -2110,7 +2110,8 @@ end
 # TODO FUNCTION format.
 
 def identifier =
-    ( identifier_format1
+    ( identifier_format6
+    | identifier_format1
     | identifier_format2
     | dataAddressIdentifier
     )
@@ -2122,6 +2123,15 @@ end
 
 def identifier_format2 =
     dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
+end
+
+# Cfr. ISO/IEC 1989:20xx FCD 1.0 (E), 8.4.2.1.1
+def identifier_format6 =
+    ( EXCEPTION-OBJECT
+    | NULL
+    | SELF
+    | [ className OF ] SUPER
+    )
 end
 
 def dataAddressIdentifier =

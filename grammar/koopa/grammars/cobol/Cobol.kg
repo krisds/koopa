@@ -935,7 +935,7 @@ def callStatement =
 end
 
 def callUsing =
-    USING (literal | identifier)*
+    USING (literal | identifier | OMITTED )*
           ( [BY] REFERENCE (literal |Êidentifier | OMITTED)+
           | [BY] CONTENT (literal | identifier)+
           | [BY] VALUE (literal | identifier)+

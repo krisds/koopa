@@ -3766,7 +3766,8 @@ public class CobolGrammar extends KoopaGrammar {
                    star(
                        choice(
                            literal(),
-                           identifier()
+                           identifier(),
+                           token("OMITTED")
                        )
                    ),
                    star(

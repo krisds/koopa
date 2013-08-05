@@ -549,4 +549,13 @@ public class CallStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testCallStatement_61() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL 'sub'\n      USING '123'\n            OMITTED\n            OMITTED\n            '456'\n    END-CALL ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

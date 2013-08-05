@@ -145,3 +145,12 @@ target callStatement;
  	 ON EXCEPTION
 		DISPLAY "SERVICE EXCEPTION"
    END-CALL ]
+
+
+# Sample from issue #13, by Simon Sobisch.
++ [ CALL 'sub'
+      USING '123'
+            OMITTED
+            OMITTED
+            '456'
+    END-CALL ]

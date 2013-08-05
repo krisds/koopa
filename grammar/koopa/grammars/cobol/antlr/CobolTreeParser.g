@@ -2043,6 +2043,7 @@ callUsing
       ( 'USING'
         ( ( literal
         | identifier
+        | 'OMITTED'
         ) )*
         ( ( ( ( 'BY' )?
           'REFERENCE'

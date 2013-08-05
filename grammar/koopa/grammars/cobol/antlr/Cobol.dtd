@@ -111,7 +111,7 @@
 <!ELEMENT addition_format3 ((identifier|literal)+,t,(identifier,t?)+)>
 <!ELEMENT allocateStatement (t,((arithmeticExpression,t)|identifier),t?,(t,identifier)?)>
 <!ELEMENT callStatement (t,programID,callUsing?,callGivingOrReturning?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
-<!ELEMENT callUsing (t,(literal|identifier)*,((t?,t,(literal|identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
+<!ELEMENT callUsing (t,(literal|identifier|t)*,((t?,t,(literal|identifier|t)+)|(t?,t,(literal|identifier)+)|(t?,t,(literal|identifier)+))*)>
 <!ELEMENT callGivingOrReturning (t,t?,identifier)>
 <!ELEMENT onOverflow (t?,t,nestedStatements)>
 <!ELEMENT onException (t?,t,nestedStatements)>

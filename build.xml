@@ -40,9 +40,11 @@
 		<antlr-gen2 grammar="src/koopa/verifiers/generator/ScoringGenerator.g" tokens="src/koopa/verifiers/generator/" />
 	</target>
 
-	<target name="bootstrap-compile">
+	<target name="bootstrap-build">
 		<mkdir dir="build/" />
+	</target>
 
+	<target name="bootstrap-compile" depends="bootstrap-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
 		<javac srcdir="src/" destdir="build/" debug="on" source="1.5">
 			<classpath>
@@ -65,14 +67,14 @@
 		<echo>Copying the latest KG.tokens definition...</echo>
 		<synchronize-file file="src/koopa/grammars/generator/KG.tokens" root="grammar/" />
 	</target>
-	
+
 	<target name="grammar-cobol-preprocessing" depends="update-kg-tokens">
 		<echo>Generating the Cobol parser...</echo>
 		<kgg name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing" path="grammar/koopa/grammars/cobolPreprocessing/" />
 
 		<echo>Generating secondary classes...</echo>
 		<kg2antlr name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing.antlr" path="grammar/koopa/grammars/cobolPreprocessing/" output="grammar/koopa/grammars/cobolPreprocessing/antlr/" />
-<!--
+		<!--
 		<generate-verifications name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
 		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
 		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
@@ -80,7 +82,7 @@
 		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
 		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
 		</delete>
-<!--
+		<!--
 		<echo>Compiling Cobol parser...</echo>
 		<javac srcdir="grammar/" destdir="build/" debug="on" source="1.5">
 			<classpath>
@@ -92,7 +94,7 @@
 		</javac>
 -->
 	</target>
-	
+
 	<target name="grammar-cobol" depends="update-kg-tokens, grammar-cobol-preprocessing">
 		<echo>Generating the Cobol parser...</echo>
 		<kgg name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
@@ -117,7 +119,7 @@
 			</classpath>
 		</javac>
 	</target>
-	
+
 	<target name="grammar" depends="bootstrap, update-kg-tokens, grammar-cobol-preprocessing, grammar-cobol">
 		<echo>Copying additional grammar resources...</echo>
 		<copy todir="build/">
@@ -162,15 +164,15 @@
 			<test name="koopa.tokenstreams.test.TokenStreamTests" />
 			<test name="koopa.tokenizers.test.TokenizerTests" />
 			<test name="koopa.parsers.test.KoopaGrammarTest" />
-			
+
 			<test name="koopa.tokenizers.cobol.test.CompilerDirectivesTokenizerTest" />
 			<test name="koopa.tokenizers.cobol.test.TokenizerTest" />
 			<test name="koopa.grammars.cobol.test.CobolGrammarTests" />
-			
+
 			<test name="koopa.parsers.cobol.test.Cobol85RegressionTest" />
 		</junit>
 	</target>
-	
+
 	<target name="run-regression-test">
 		<regression-test folder="testsuite/cobol85/" results="testsuite/cobol85-results.csv" targets="testsuite/cobol85.csv" />
 	</target>
@@ -280,6 +282,21 @@
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
 		</jar>
+	</target>
+
+	<!-- SVN -->
+
+	<target name="check-svn-entries">
+		<available file=".svn/entries" property="svn.entries.present" />
+	</target>
+
+	<target name="revision-number" depends="check-svn-entries,bootstrap-build" if="svn.entries.present">
+		<loadfile srcfile=".svn/entries" property="revision">
+			<filterchain>
+				<headfilter lines="1" skip="3" />
+			</filterchain>
+		</loadfile>
+		<echo file="build/REVISION" message="${revision}" />
 	</target>
 
 	<!-- MACROS -->

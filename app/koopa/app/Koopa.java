@@ -111,7 +111,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 	private GrammarView grammarView = null;
 
 	public Koopa() {
-		super("Koopa");
+		super("Koopa - revision " + ApplicationSupport.getRevision());
 
 		ApplicationSupport.configureFromProperties("koopa.properties", this);
 

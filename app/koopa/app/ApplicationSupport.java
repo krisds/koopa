@@ -1,12 +1,15 @@
 package koopa.app;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -183,5 +186,40 @@ public class ApplicationSupport {
 
 		frame.setSize(800, 600);
 		return frame;
+	}
+
+	public static String getRevision() {
+		InputStream in = null;
+		try {
+			in = ApplicationSupport.class.getResourceAsStream("/REVISION");
+
+			if (in == null)
+				return "unkown";
+
+			InputStreamReader r = new InputStreamReader(in);
+			BufferedReader b = new BufferedReader(r);
+
+			String revision = b.readLine();
+
+			if (revision == null)
+				return "unkown";
+
+			revision = revision.trim();
+			if (revision.length() == 0)
+				return "unkown";
+			else
+				return revision;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "unkown";
+
+		} finally {
+			if (in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+				}
+		}
 	}
 }

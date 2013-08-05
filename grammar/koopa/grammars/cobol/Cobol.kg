@@ -936,7 +936,7 @@ end
 
 def callUsing =
     USING (literal | identifier | OMITTED )*
-          ( [BY] REFERENCE (literal |Êidentifier | OMITTED)+
+          ( [BY] REFERENCE (literal | identifier | OMITTED)+
           | [BY] CONTENT (literal | identifier)+
           | [BY] VALUE (literal | identifier)+
           )*

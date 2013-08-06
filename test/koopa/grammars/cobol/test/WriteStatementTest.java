@@ -479,4 +479,22 @@ public class WriteStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testWriteStatement_53() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WRITE myrec \n   FROM something\n   BEFORE num-item\n   END-WRITE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testWriteStatement_54() {
+      Parser parser = grammar.writeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " WRITE myrec \n   FROM something\n   AFTER num-item\n   END-WRITE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

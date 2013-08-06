@@ -41,4 +41,6 @@ public interface Application {
 	void showGrammarRule(String name);
 
 	void showGrammarRules();
+
+	void quitParsing();
 }

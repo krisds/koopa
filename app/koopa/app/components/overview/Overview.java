@@ -54,6 +54,8 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 
 	private boolean parsing = false;
 
+	private boolean quitParsing = false;
+
 	public Overview(Application application) {
 		this.application = application;
 		coordinator = new ParsingCoordinator();
@@ -171,6 +173,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 
 		try {
 			parsing = true;
+			quitParsing = false;
 
 			application.walkingAndParsing();
 			progress.setIndeterminate(true);
@@ -186,6 +189,11 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 			for (File target : targets) {
 				parse(target);
 				progress.setValue(++count);
+
+				if (quitParsing) {
+					progress.setValue(0);
+					break;
+				}
 			}
 
 		} finally {
@@ -290,12 +298,16 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 	public BatchResults getResults() {
 		return results;
 	}
-	
+
 	public SourceFormat getSourceFormat() {
 		return coordinator.getFormat();
 	}
 
 	public void setSourceFormat(SourceFormat format) {
 		coordinator.setFormat(format);
+	}
+
+	public void quitParsing() {
+		quitParsing = true;
 	}
 }

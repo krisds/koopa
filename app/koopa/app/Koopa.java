@@ -38,6 +38,7 @@ import koopa.app.actions.ExportBatchResultsToCSVAction;
 import koopa.app.actions.GoToLineAction;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
+import koopa.app.actions.QuitParsingAction;
 import koopa.app.actions.ReloadFileAction;
 import koopa.app.actions.ShowGrammarAction;
 import koopa.app.batchit.BatchResults;
@@ -89,6 +90,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 	private JMenuItem open = null;
 	private JMenuItem reload = null;
 	private JMenuItem close = null;
+	private JMenuItem quitParsing = null;
 	private JMenuItem clearResults = null;
 	private JMenuItem saveCSV = null;
 
@@ -155,6 +157,12 @@ public class Koopa extends JFrame implements Application, Configurable {
 		close = new JMenuItem(new CloseFileAction(this));
 		setAccelerators(close, MODIFIER + " W", "ESCAPE");
 		file.add(close);
+
+		file.addSeparator();
+
+		quitParsing = new JMenuItem(new QuitParsingAction(this));
+		setAccelerators(quitParsing, MODIFIER + " B");
+		file.add(quitParsing);
 
 		file.addSeparator();
 
@@ -347,19 +355,20 @@ public class Koopa extends JFrame implements Application, Configurable {
 		Component view = getView();
 
 		if (view == overview) {
-			boolean canDoExtraActions = !overview.isParsing();
-			boolean hasResults = canDoExtraActions
+			boolean isParsing = overview.isParsing();
+			boolean hasResults = !isParsing
 					&& overview.getResults().getRowCount() > 0;
 
 			// File menu ...
-			open.setEnabled(canDoExtraActions);
+			open.setEnabled(!isParsing);
 			reload.setEnabled(false);
 			close.setEnabled(false);
+			quitParsing.setEnabled(isParsing);
 			clearResults.setEnabled(hasResults);
 			saveCSV.setEnabled(hasResults);
 
 			// Parse settings ...
-			parserSettings.setEnabled(canDoExtraActions);
+			parserSettings.setEnabled(!isParsing);
 			switch (overview.getSourceFormat()) {
 			case FIXED:
 				fixedFormat.setSelected(true);
@@ -380,13 +389,14 @@ public class Koopa extends JFrame implements Application, Configurable {
 		} else {
 			Detail detail = (Detail) view;
 
-			boolean canDoExtraActions = !overview.isParsing()
-					&& !detail.isParsing();
+			boolean isParsing = overview.isParsing();
+			boolean canDoExtraActions = isParsing && !detail.isParsing();
 
 			// File menu ...
 			open.setEnabled(canDoExtraActions);
 			reload.setEnabled(canDoExtraActions);
 			close.setEnabled(canDoExtraActions);
+			quitParsing.setEnabled(isParsing);
 			clearResults.setEnabled(false);
 			saveCSV.setEnabled(false);
 
@@ -600,5 +610,10 @@ public class Koopa extends JFrame implements Application, Configurable {
 				im.put(alternateKeystroke, actionMapKey);
 			}
 		}
+	}
+
+	@Override
+	public void quitParsing() {
+		overview.quitParsing();
 	}
 }

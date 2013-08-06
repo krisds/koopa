@@ -218,3 +218,15 @@ target writeStatement;
    NOT INVALID
       DISPLAY "A-OK." 
    END-WRITE ]
+
+   
+# Samples from issue #10 "not all input was consumed": WRITE ... FROM ... BEFORE/AFTER
++[ WRITE myrec 
+   FROM something
+   BEFORE num-item
+   END-WRITE ]
++[ WRITE myrec 
+   FROM something
+   AFTER num-item
+   END-WRITE ]
+

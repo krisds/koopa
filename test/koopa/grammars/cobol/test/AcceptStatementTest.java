@@ -16,7 +16,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_1() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +25,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_2() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar END-ACCEPT ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +34,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_3() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo END-ACCEPT ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -43,7 +43,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_4() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar END-ACCEPT ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -52,7 +52,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_5() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -61,7 +61,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_6() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -70,7 +70,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_7() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo \n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -79,7 +79,7 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_8() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n   END-ACCEPT\n ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -88,100 +88,12 @@ public class AcceptStatementTest extends TestCase {
     public void testAcceptStatement_fromMnemonic_9() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_10() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_11() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n   EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n     END-ACCEPT\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_12() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_13() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     ON EXCEPTION DISPLAY \"OOPS\"\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_14() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_15() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     ON EXCEPTION DISPLAY \"OOPS\"\n   END-ACCEPT\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_16() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     ON EXCEPTION DISPLAY \"OOPS\"\n   END-ACCEPT\n ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_17() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_18() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAcceptStatement_fromMnemonic_19() {
-      Parser parser = grammar.acceptStatement_fromMnemonic();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAcceptStatement_fromMnemonic_20() {
+    public void testAcceptStatement_fromMnemonic_10() {
       Parser parser = grammar.acceptStatement_fromMnemonic();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM bar\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
@@ -189,7 +101,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_21() {
+    public void testAcceptStatement_fromDate_11() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DATE ");
@@ -198,7 +110,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_22() {
+    public void testAcceptStatement_fromDate_12() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY ");
@@ -207,7 +119,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_23() {
+    public void testAcceptStatement_fromDate_13() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY-OF-WEEK ");
@@ -216,7 +128,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_24() {
+    public void testAcceptStatement_fromDate_14() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM TIME ");
@@ -225,7 +137,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_25() {
+    public void testAcceptStatement_fromDate_15() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM YEAR ");
@@ -234,7 +146,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_26() {
+    public void testAcceptStatement_fromDate_16() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DATE YYYYMMDD ");
@@ -243,7 +155,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_27() {
+    public void testAcceptStatement_fromDate_17() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DATE CENTURY-DATE ");
@@ -252,7 +164,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_28() {
+    public void testAcceptStatement_fromDate_18() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM YYYYMMDD ");
@@ -261,7 +173,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_29() {
+    public void testAcceptStatement_fromDate_19() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM CENTURY-DATE ");
@@ -270,7 +182,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_30() {
+    public void testAcceptStatement_fromDate_20() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY YYYYDDD ");
@@ -279,7 +191,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_31() {
+    public void testAcceptStatement_fromDate_21() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY CENTURY-DAY ");
@@ -288,7 +200,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_32() {
+    public void testAcceptStatement_fromDate_22() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM YYYYDDD ");
@@ -297,7 +209,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_33() {
+    public void testAcceptStatement_fromDate_23() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM CENTURY-DAY ");
@@ -306,7 +218,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_34() {
+    public void testAcceptStatement_fromDate_24() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DATE END-ACCEPT ");
@@ -315,7 +227,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_35() {
+    public void testAcceptStatement_fromDate_25() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY END-ACCEPT ");
@@ -324,7 +236,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_36() {
+    public void testAcceptStatement_fromDate_26() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY-OF-WEEK END-ACCEPT ");
@@ -333,7 +245,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_37() {
+    public void testAcceptStatement_fromDate_27() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM TIME END-ACCEPT ");
@@ -342,7 +254,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_38() {
+    public void testAcceptStatement_fromDate_28() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM YEAR END-ACCEPT ");
@@ -351,7 +263,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_39() {
+    public void testAcceptStatement_fromDate_29() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DATE YYYYMMDD END-ACCEPT ");
@@ -360,7 +272,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_40() {
+    public void testAcceptStatement_fromDate_30() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DATE CENTURY-DATE END-ACCEPT ");
@@ -369,7 +281,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_41() {
+    public void testAcceptStatement_fromDate_31() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM YYYYMMDD END-ACCEPT ");
@@ -378,7 +290,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_42() {
+    public void testAcceptStatement_fromDate_32() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM CENTURY-DATE END-ACCEPT ");
@@ -387,7 +299,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_43() {
+    public void testAcceptStatement_fromDate_33() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY YYYYDDD END-ACCEPT ");
@@ -396,7 +308,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_44() {
+    public void testAcceptStatement_fromDate_34() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM DAY CENTURY-DAY END-ACCEPT ");
@@ -405,7 +317,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_45() {
+    public void testAcceptStatement_fromDate_35() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM YYYYDDD END-ACCEPT ");
@@ -414,7 +326,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_fromDate_46() {
+    public void testAcceptStatement_fromDate_36() {
       Parser parser = grammar.acceptStatement_fromDate();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo FROM CENTURY-DAY END-ACCEPT ");
@@ -423,7 +335,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_messageCount_47() {
+    public void testAcceptStatement_messageCount_37() {
       Parser parser = grammar.acceptStatement_messageCount();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo MESSAGE COUNT ");
@@ -432,7 +344,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_messageCount_48() {
+    public void testAcceptStatement_messageCount_38() {
       Parser parser = grammar.acceptStatement_messageCount();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo MESSAGE COUNT END-ACCEPT ");
@@ -441,7 +353,7 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_messageCount_49() {
+    public void testAcceptStatement_messageCount_39() {
       Parser parser = grammar.acceptStatement_messageCount();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo COUNT ");
@@ -450,10 +362,172 @@ public class AcceptStatementTest extends TestCase {
     }
 
     @Test
-    public void testAcceptStatement_messageCount_50() {
+    public void testAcceptStatement_messageCount_40() {
       Parser parser = grammar.acceptStatement_messageCount();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo COUNT END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_41() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_42() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_43() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_44() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo \n     ON EXCEPTION DISPLAY \"OOPS\"\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_45() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_46() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n   EXCEPTION DISPLAY \"OOPS\"\n     NOT EXCEPTION DISPLAY \"OK\"\n     END-ACCEPT\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_47() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     ON EXCEPTION DISPLAY \"OOPS\"\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_48() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     ON EXCEPTION DISPLAY \"OOPS\"\n   END-ACCEPT\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_49() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     NOT ON EXCEPTION DISPLAY \"OK\"\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_50() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT foo\n     NOT ON EXCEPTION DISPLAY \"OK\"\n   END-ACCEPT\n ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_51() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT LINE NUMBER 27 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_52() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT LINE 27 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_53() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT COLUMN NUMBER 27 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_54() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT COLUMN 27 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_55() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT COL NUMBER 27 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_56() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT COL 27 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_57() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT LINE NUMBER 27 COLUMN NUMBER 28 END-ACCEPT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testAcceptStatement_screenName_58() {
+      Parser parser = grammar.acceptStatement_screenName();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT MYVAR AT COLUMN NUMBER 27 LINE NUMBER 28 END-ACCEPT ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

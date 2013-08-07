@@ -390,7 +390,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 			Detail detail = (Detail) view;
 
 			boolean isParsing = overview.isParsing();
-			boolean canDoExtraActions = isParsing && !detail.isParsing();
+			boolean canDoExtraActions = !isParsing && !detail.isParsing();
 
 			// File menu ...
 			open.setEnabled(canDoExtraActions);

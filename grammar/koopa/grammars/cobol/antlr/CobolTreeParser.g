@@ -95,11 +95,12 @@ compilationUnit
 
 identificationDivision
   : ^(IDENTIFICATION_DIVISION
-      ( ( 'ID'
+      ( ( ( ( 'ID'
       | 'IDENTIFICATION'
       )
         'DIVISION'
         '.'
+      ) )?
         'PROGRAM-ID'
         ( '.' )?
         programName
@@ -1106,10 +1107,10 @@ report
 
 dataDescriptionEntry
   : ^(DATA_DESCRIPTION_ENTRY
-      ( dataDescriptionEntry_format1
+      ( constantDescriptionEntry
+      | dataDescriptionEntry_format1
       | dataDescriptionEntry_format2
       | dataDescriptionEntry_format3
-      | constantDescriptionEntry
       )
     )
   ;
@@ -1171,13 +1172,7 @@ dataDescriptionEntry_format3
   : ^(DATA_DESCRIPTION_ENTRY_FORMAT3
       ( '88'
         cobolWord
-        ( ( 'VALUE'
-          ( 'IS' )?
-        )
-        | ( 'VALUES'
-          ( 'ARE' )?
-        )
-        )
+        valueClause
         ( ( literal
           ( ( ( 'THROUGH'
           | 'THRU'
@@ -1213,9 +1208,25 @@ whenSetToFalseClause
 
 constantDescriptionEntry
   : ^(CONSTANT_DESCRIPTION_ENTRY
-      ( '78'
+      ( ( ( '78'
         cobolWord
         ( valueIs )?
+      )
+      | ( ( '1'
+      | '01'
+      )
+        cobolWord
+        'CONSTANT'
+        ( global )?
+        ( ( ( 'AS' )?
+          identifier
+        )
+        | ( 'FROM'
+          cobolWord
+        )
+        )
+      )
+      )
         '.'
       )
     )
@@ -1241,10 +1252,7 @@ blankWhenZero
   : ^(BLANK_WHEN_ZERO
       ( 'BLANK'
         ( 'WHEN' )?
-        ( 'ZERO'
-        | 'ZEROS'
-        | 'ZEROES'
-        )
+        zero
       )
     )
   ;
@@ -1269,6 +1277,31 @@ global
   : ^(GLOBAL
       ( ( 'IS' )?
         'GLOBAL'
+      )
+    )
+  ;
+
+// ========================================================
+// zero
+// ........................................................
+
+zero
+  : ^(ZERO
+      ( 'ZERO'
+      | 'ZEROS'
+      | 'ZEROES'
+      )
+    )
+  ;
+
+// ========================================================
+// space
+// ........................................................
+
+space
+  : ^(SPACE
+      ( 'SPACE'
+      | 'SPACES'
       )
     )
   ;
@@ -1396,8 +1429,26 @@ usage
         | 'COMP-4'
         | 'COMPUTATIONAL-5'
         | 'COMP-5'
+        | 'COMP-X'
         | 'POINTER'
+        | 'PROGRAM-POINTER'
+        | 'BINARY-CHAR'
+        | 'BINARY-SHORT'
         | 'BINARY-LONG'
+        | 'BINARY-DOUBLE'
+        | 'FLOAT-SHORT'
+        | 'FLOAT-LONG'
+        | 'FLOAT-EXTENDED'
+        | ( 'OBJECT'
+          'REFERENCE'
+        )
+        | 'BINARY-C-LONG'
+        | 'SIGNED-INT'
+        | 'UNSIGNED-INT'
+        | 'SIGNED-LONG'
+        | 'UNSIGNED-LONG'
+        | 'SIGNED-SHORT'
+        | 'UNSIGNED-SHORT'
         )
       )
     )
@@ -1409,9 +1460,24 @@ usage
 
 valueIs
   : ^(VALUE_IS
-      ( 'VALUE'
-        ( 'IS' )?
+      ( valueClause
         value
+      )
+    )
+  ;
+
+// ========================================================
+// valueClause
+// ........................................................
+
+valueClause
+  : ^(VALUE_CLAUSE
+      ( ( 'VALUE'
+        ( 'IS' )?
+      )
+      | ( 'VALUES'
+        ( 'ARE' )?
+      )
       )
     )
   ;
@@ -1435,7 +1501,7 @@ procedureDivision
       ( 'PROCEDURE'
         'DIVISION'
         ( usingOrChainingPhrase )?
-        ( returningPhrase )?
+        ( returningProcedurePhrase )?
         '.'
         ( declaratives )?
         ( sentence )*
@@ -1489,11 +1555,11 @@ dataValue
   ;
 
 // ========================================================
-// returningPhrase
+// returningProcedurePhrase
 // ........................................................
 
-returningPhrase
-  : ^(RETURNING_PHRASE
+returningProcedurePhrase
+  : ^(RETURNING_PROCEDURE_PHRASE
       ( 'RETURNING'
         dataName
       )
@@ -1739,6 +1805,30 @@ eventPhrase
   ;
 
 // ========================================================
+// retryPhrase
+// ........................................................
+
+retryPhrase
+  : ^(RETRY_PHRASE
+      ( 'RETRY'
+        ( ( ( identifier
+        | integer
+        )
+          'TIMES'
+        )
+        | ( 'FOR'
+          ( identifier
+          | integer
+          )
+          'SECONDS'
+        )
+        | 'FOREVER'
+        )
+      )
+    )
+  ;
+
+// ========================================================
 // endOfStatementMarker
 // ........................................................
 
@@ -1836,6 +1926,7 @@ acceptStatement
       ( acceptStatement_fromDate
       | acceptStatement_messageCount
       | acceptStatement_fromMnemonic
+      | acceptStatement_screenName
       | ( 'ACCEPT'
         (water)?
         ( 'END-ACCEPT' )?
@@ -1852,12 +1943,43 @@ acceptStatement_fromMnemonic
   : ^(ACCEPT_STATEMENT_FROM_MNEMONIC
       ( 'ACCEPT'
         identifier
-        ( ( 'FROM'
-          mnemonicName
-        ) )?
+        'FROM'
+        mnemonicName
         ( ( onException
           ( notOnException )?
         ) )?
+        ( 'END-ACCEPT' )?
+      )
+    )
+  ;
+
+// ========================================================
+// acceptStatement_screenName
+// ........................................................
+
+acceptStatement_screenName
+  : ^(ACCEPT_STATEMENT_SCREEN_NAME
+      ( 'ACCEPT'
+        identifier
+        ( ( 'AT'
+          ( ( ( 'LINE'
+            ( 'NUMBER' )?
+            ( identifier
+            | integer
+            )
+          )
+          | ( ( 'COLUMN'
+          | 'COL'
+          )
+            ( 'NUMBER' )?
+            ( identifier
+            | integer
+            )
+          )
+          ) )*
+        ) )?
+        ( onException )?
+        ( notOnException )?
         ( 'END-ACCEPT' )?
       )
     )
@@ -2053,13 +2175,9 @@ callUsing
           ) )+
         )
         | ( ( 'BY' )?
-          'CONTENT'
-          ( ( literal
-          | identifier
-          ) )+
-        )
-        | ( ( 'BY' )?
-          'VALUE'
+          ( 'CONTENT'
+          | 'VALUE'
+          )
           ( ( literal
           | identifier
           ) )+
@@ -2241,9 +2359,9 @@ deleteStatement
 displayStatement
   : ^(DISPLAY_STATEMENT
       ( 'DISPLAY'
-        ( displayUponFormat
+        ( displayScreenFormat
+        | displayDeviceFormat
         | displayTerminalFormat
-        | displayScreenFormat
         | (water)?
         )
         ( 'END-DISPLAY' )?
@@ -2252,15 +2370,15 @@ displayStatement
   ;
 
 // ========================================================
-// displayUponFormat
+// displayDeviceFormat
 // ........................................................
 
-displayUponFormat
-  : ^(DISPLAY_UPON_FORMAT
+displayDeviceFormat
+  : ^(DISPLAY_DEVICE_FORMAT
       ( ( ( identifier
       | literal
       ) )+
-        uponClause
+        ( uponClause )?
         ( withNoAdvancing )?
       )
     )
@@ -2422,10 +2540,8 @@ dtLightingMod
 
 dtPositioningMod
   : ^(DT_POSITIONING_MOD
-      ( ( 'WITH' )?
-        ( dtAtPositioning
-        | dtLineColPositioning
-        )
+      ( dtAtPositioning
+      | dtLineColPositioning
       )
     )
   ;
@@ -3448,13 +3564,29 @@ cicsWaterInBrackets
 exitStatement
   : ^(EXIT_STATEMENT
       ( 'EXIT'
-        ( ( 'PROGRAM'
+        ( ( ( 'PROGRAM'
+          ( returningPhrase )?
+        )
         | 'PARAGRAPH'
         | 'SECTION'
         | ( 'PERFORM'
           ( 'CYCLE' )?
         )
         ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// returningPhrase
+// ........................................................
+
+returningPhrase
+  : ^(RETURNING_PHRASE
+      ( 'RETURNING'
+        ( integer
+        | cobolWord
+        )
       )
     )
   ;
@@ -3981,10 +4113,6 @@ readStatement
   : ^(READ_STATEMENT
       ( 'READ'
         fileName
-        ( ( ( 'WITH' )?
-          ( 'NO' )?
-          'LOCK'
-        ) )?
         ( ( 'NEXT'
         | 'PREVIOUS'
         ) )?
@@ -3992,9 +4120,22 @@ readStatement
         ( ( 'INTO'
           identifier
         ) )?
+        ( ( ( 'ADVANCING'
+          ( 'ON' )?
+          'LOCK'
+        )
+        | ( 'IGNORING'
+          'LOCK'
+        )
+        | retryPhrase
+        ) )?
+        ( ( ( 'WITH' )?
+          ( 'NO' )?
+          'LOCK'
+        ) )?
         ( ( 'KEY'
           ( 'IS' )?
-          dataName
+          identifier_format2
         ) )?
         ( ( ( 'AT' )?
           'END'
@@ -4062,7 +4203,14 @@ rewriteStatement
       ( 'REWRITE'
         recordName
         ( ( 'FROM'
-          identifier
+          ( identifier
+          | literal
+          )
+        ) )?
+        ( retryPhrase )?
+        ( ( ( 'WITH' )?
+          ( 'NO' )?
+          'LOCK'
         ) )?
         ( ( 'INVALID'
           ( 'KEY' )?
@@ -4344,7 +4492,9 @@ caseInsensitive
 stopStatement
   : ^(STOP_STATEMENT
       ( 'STOP'
-        ( 'RUN'
+        ( ( 'RUN'
+          ( returningPhrase )?
+        )
         | literal
         )
       )
@@ -4643,7 +4793,9 @@ writeStatement
       ( 'WRITE'
         recordName
         ( ( 'FROM'
-          identifier
+          ( identifier
+          | literal
+          )
         ) )?
         ( ( ( 'AFTER'
         | 'BEFORE'
@@ -4651,7 +4803,7 @@ writeStatement
           ( 'ADVANCING' )?
           ( ( ( identifier
           | integer
-          | 'ZERO'
+          | zero
           )
             ( ( 'LINE'
             | 'LINES'
@@ -4673,6 +4825,11 @@ writeStatement
           | 'EOP'
           )
           nestedStatements
+        ) )?
+        ( retryPhrase )?
+        ( ( ( 'WITH' )?
+          ( 'NO' )?
+          'LOCK'
         ) )?
         ( ( 'INVALID'
           ( 'KEY' )?
@@ -4779,7 +4936,7 @@ divisionStart
       | ( 'PROCEDURE'
         'DIVISION'
         ( usingOrChainingPhrase )?
-        ( returningPhrase )?
+        ( returningProcedurePhrase )?
       )
       )
         '.'
@@ -5081,7 +5238,7 @@ factor
 
 atomicExpression
   : ^(ATOMIC_EXPRESSION
-      ( 'ZERO'
+      ( zero
       | identifier
       | numeric
       | ( '('
@@ -5197,7 +5354,7 @@ signType
   : ^(SIGN_TYPE
       ( 'POSITIVE'
       | 'NEGATIVE'
-      | 'ZERO'
+      | zero
       )
     )
   ;
@@ -5290,12 +5447,11 @@ conditionalRelationOP
 generalRelationOp
   : ^(GENERAL_RELATION_OP
       ( ( 'IS' )?
+        ( negationOp )?
         ( greaterOrEqualOp
         | lessOrEqualOp
         | greaterThanOp
-        | notGreaterThanOp
         | lessThanOp
-        | notLessThanOp
         | equalToOp
         | notEqualToOp
         )
@@ -5328,22 +5484,6 @@ greaterThanOp
   ;
 
 // ========================================================
-// notGreaterThanOp
-// ........................................................
-
-notGreaterThanOp
-  : ^(NOT_GREATER_THAN_OP
-      ( 'NOT'
-        ( ( 'GREATER'
-          ( 'THAN' )?
-        )
-        | '>'
-        )
-      )
-    )
-  ;
-
-// ========================================================
 // lessThanOp
 // ........................................................
 
@@ -5353,22 +5493,6 @@ lessThanOp
         ( 'THAN' )?
       )
       | '<'
-      )
-    )
-  ;
-
-// ========================================================
-// notLessThanOp
-// ........................................................
-
-notLessThanOp
-  : ^(NOT_LESS_THAN_OP
-      ( 'NOT'
-        ( ( 'LESS'
-          ( 'THAN' )?
-        )
-        | '<'
-        )
       )
     )
   ;
@@ -5393,13 +5517,7 @@ equalToOp
 
 notEqualToOp
   : ^(NOT_EQUAL_TO_OP
-      ( 'NOT'
-        ( ( 'EQUAL'
-          ( 'TO' )?
-        )
-        | '='
-        )
-      )
+      '<>'
     )
   ;
 
@@ -5628,8 +5746,12 @@ recordName
 
 mnemonicName
   : ^(MNEMONIC_NAME
-      ( identifier
+      ( ( identifier
       | cobolWord
+      )
+        ( ( identifier
+        | cobolWord
+        ) )*
       )
     )
   ;
@@ -5752,11 +5874,8 @@ figurativeConstant
         literal
       )
       | ( ( 'ALL' )?
-        ( 'ZERO'
-        | 'ZEROS'
-        | 'ZEROES'
-        | 'SPACE'
-        | 'SPACES'
+        ( zero
+        | space
         | 'HIGH-VALUE'
         | 'HIGH-VALUES'
         | 'LOW-VALUE'
@@ -5780,8 +5899,10 @@ numericLiteral
       ( integerLiteral
       | decimal
       | hexadecimal
-      | ( 'LENGTH'
-        'OF'
+      | ( ( 'LENGTH'
+      | 'BYTE-LENGTH'
+      )
+        ( 'OF' )?
         identifier
       )
       )
@@ -5797,8 +5918,10 @@ numeric
       ( integer
       | decimal
       | hexadecimal
-      | ( 'LENGTH'
-        'OF'
+      | ( ( 'LENGTH'
+      | 'BYTE-LENGTH'
+      )
+        ( 'OF' )?
         identifier
       )
       )
@@ -5865,12 +5988,15 @@ token
   | '-'
   | '.'
   | '/'
+  | '01'
+  | '1'
   | '66'
   | '78'
   | '88'
   | ':'
   | '<'
   | '<='
+  | '<>'
   | '='
   | '>'
   | '>='
@@ -5893,6 +6019,7 @@ token
   | 'AND'
   | 'ANY'
   | 'ARE'
+  | 'AS'
   | 'ASCENDING'
   | 'ASSIGN'
   | 'AT'
@@ -5903,12 +6030,17 @@ token
   | 'BEGINNING'
   | 'BELL'
   | 'BINARY'
+  | 'BINARY-C-LONG'
+  | 'BINARY-CHAR'
+  | 'BINARY-DOUBLE'
   | 'BINARY-LONG'
+  | 'BINARY-SHORT'
   | 'BLANK'
   | 'BLINK'
   | 'BLOCK'
   | 'BOTTOM'
   | 'BY'
+  | 'BYTE-LENGTH'
   | 'C01'
   | 'C02'
   | 'C03'
@@ -5947,6 +6079,7 @@ token
   | 'COMP-3'
   | 'COMP-4'
   | 'COMP-5'
+  | 'COMP-X'
   | 'COMPUTATIONAL'
   | 'COMPUTATIONAL-1'
   | 'COMPUTATIONAL-2'
@@ -5957,6 +6090,7 @@ token
   | 'CONFIGURATION'
   | 'CONSISTENT'
   | 'CONSOLE'
+  | 'CONSTANT'
   | 'CONTAINS'
   | 'CONTENT'
   | 'CONTINUE'
@@ -6042,8 +6176,12 @@ token
   | 'FILE-CONTROL'
   | 'FILLER'
   | 'FIRST'
+  | 'FLOAT-EXTENDED'
+  | 'FLOAT-LONG'
+  | 'FLOAT-SHORT'
   | 'FOOTING'
   | 'FOR'
+  | 'FOREVER'
   | 'FREE'
   | 'FROM'
   | 'FUNCTION'
@@ -6064,6 +6202,7 @@ token
   | 'ID'
   | 'IDENTIFICATION'
   | 'IF'
+  | 'IGNORING'
   | 'IN'
   | 'INCLUDE'
   | 'INDEX'
@@ -6127,6 +6266,7 @@ token
   | 'NUMERIC'
   | 'NUMERIC-EDITED'
   | 'NUMITEMS'
+  | 'OBJECT'
   | 'OBJECT-COMPUTER'
   | 'OCCURS'
   | 'OF'
@@ -6154,6 +6294,7 @@ token
   | 'PROCEDURES'
   | 'PROGRAM'
   | 'PROGRAM-ID'
+  | 'PROGRAM-POINTER'
   | 'PURGE'
   | 'QNAME'
   | 'QUEUE'
@@ -6180,6 +6321,7 @@ token
   | 'REPLACING'
   | 'REPORT'
   | 'REPORTS'
+  | 'RETRY'
   | 'RETURN'
   | 'RETURNING'
   | 'REVERSE'
@@ -6201,6 +6343,7 @@ token
   | 'SCREEN'
   | 'SD'
   | 'SEARCH'
+  | 'SECONDS'
   | 'SECTION'
   | 'SELECT'
   | 'SELF'
@@ -6210,6 +6353,9 @@ token
   | 'SEQUENTIAL'
   | 'SET'
   | 'SIGN'
+  | 'SIGNED-INT'
+  | 'SIGNED-LONG'
+  | 'SIGNED-SHORT'
   | 'SIZE'
   | 'SORT'
   | 'SOURCE-COMPUTER'
@@ -6262,6 +6408,9 @@ token
   | 'U'
   | 'UNCOMMITTED'
   | 'UNIT'
+  | 'UNSIGNED-INT'
+  | 'UNSIGNED-LONG'
+  | 'UNSIGNED-SHORT'
   | 'UNSTRING'
   | 'UNTIL'
   | 'UPDATE'

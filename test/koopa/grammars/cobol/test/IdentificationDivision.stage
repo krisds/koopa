@@ -9,11 +9,17 @@ target identificationDivision;
 +[ ID DIVISION .
    PROGRAM-ID . TEST-01 . ]
 
++[ PROGRAM-ID . TEST-01 . ]
+
+
 +[ IDENTIFICATION DIVISION .
    PROGRAM-ID . "TEST-01" . ]
 
 +[ ID DIVISION .
    PROGRAM-ID . "TEST-01" . ]
+
++[ PROGRAM-ID . "TEST-01" . ]
+
 
 +[ IDENTIFICATION DIVISION .
    PROGRAM-ID . TEST-01 ]
@@ -23,6 +29,14 @@ target identificationDivision;
 
 +[ IDENTIFICATION DIVISION .
    PROGRAM-ID TEST-01 . ]
+
+
++[ PROGRAM-ID . TEST-01 ]
+
++[ PROGRAM-ID TEST-01 ]
+
++[ PROGRAM-ID TEST-01 . ]
+
 
 +[ IDENTIFICATION DIVISION .
    PROGRAM-ID . TEST-02 INITIAL . ]

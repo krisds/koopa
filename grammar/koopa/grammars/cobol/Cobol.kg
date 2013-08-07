@@ -51,7 +51,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def identificationDivision =
-	( ID | IDENTIFICATION ) DIVISION .
+	[( ID | IDENTIFICATION ) DIVISION .]
 	PROGRAM-ID [.]
 	programName
 	[ [IS]
@@ -440,10 +440,10 @@ def report =
 end
 
 def dataDescriptionEntry =
-    ( dataDescriptionEntry_format1
+    ( constantDescriptionEntry
+    | dataDescriptionEntry_format1
     | dataDescriptionEntry_format2
     | dataDescriptionEntry_format3
-    | constantDescriptionEntry
     )
 end
 
@@ -475,9 +475,7 @@ end
 
 def dataDescriptionEntry_format3 =
     88 cobolWord 
-    ( VALUE [IS]
-    | VALUES [ARE]
-    )
+    valueClause
     ( (-FALSE) literal [(THROUGH | THRU) literal] )+
     [ whenSetToFalseClause ]
     .
@@ -490,7 +488,13 @@ end
 
 # See https://sourceforge.net/p/open-cobol/manual/, page 5-16.
 def constantDescriptionEntry =
-    78 cobolWord [ valueIs ] .
+    (78 cobolWord [ valueIs ]
+    |(1 | 01) cobolWord CONSTANT [global]
+        ( [AS] identifier
+        | FROM cobolWord
+        )
+    )
+    .
 end
 
 def redefines =
@@ -498,7 +502,7 @@ def redefines =
 end
 
 def blankWhenZero =
-    BLANK [WHEN] (ZERO |  ZEROS  |  ZEROES )
+    BLANK [WHEN] zero
 end
 
 def external =
@@ -507,6 +511,14 @@ end
 
 def global =
     [IS] GLOBAL
+end
+
+def zero =
+    (ZERO | ZEROS | ZEROES)
+end
+
+def space =
+    (SPACE | SPACES)
 end
 
 def justified =
@@ -551,13 +563,35 @@ def usage =
     | COMP-4 
     | COMPUTATIONAL-5 
     | COMP-5
+    | COMP-X
     | POINTER
+    | PROGRAM-POINTER
+    | BINARY-CHAR
+    | BINARY-SHORT
     | BINARY-LONG
+    | BINARY-DOUBLE
+    | FLOAT-SHORT
+    | FLOAT-LONG
+    | FLOAT-EXTENDED
+    | OBJECT REFERENCE
+    | BINARY-C-LONG
+    | SIGNED-INT
+    | UNSIGNED-INT
+    | SIGNED-LONG
+    | UNSIGNED-LONG
+    | SIGNED-SHORT
+    | UNSIGNED-SHORT
     )
 end
 
 def valueIs =
-    VALUE [IS] value
+    valueClause value
+end
+
+def valueClause =
+    ( VALUE [IS]
+    | VALUES [ARE]
+    )
 end
 
 # See http://opencobol.add1tocobol.com/#based
@@ -576,7 +610,7 @@ end
 # and paragraphs.
 
 def procedureDivision =
-	PROCEDURE DIVISION [usingOrChainingPhrase] [returningPhrase] .
+	PROCEDURE DIVISION [usingOrChainingPhrase] [returningProcedurePhrase] .
 	[declaratives]
     (sentence)*
     (paragraph)*
@@ -598,7 +632,7 @@ def dataValue =
 	[BY] VALUE dataName
 end
 
-def returningPhrase =
+def returningProcedurePhrase =
 	RETURNING
 	dataName
 end
@@ -731,6 +765,14 @@ def eventPhrase (Token t) returns t =
     )
 end
 
+def retryPhrase =
+    RETRY 
+    ( (identifier | integer) TIMES
+    | FOR (identifier | integer) SECONDS
+    | FOREVER
+    )
+end
+
 def endOfStatementMarker (Token t) returns t =
     ( t=END-ACCEPT
     | t=END-ADD
@@ -827,6 +869,7 @@ def acceptStatement =
     ( acceptStatement_fromDate
     | acceptStatement_messageCount
     | acceptStatement_fromMnemonic
+    | acceptStatement_screenName
     
     # Catch all.
     | ACCEPT (--> endOfStatement) [END-ACCEPT]
@@ -835,13 +878,27 @@ end
 
 def acceptStatement_fromMnemonic =
     ACCEPT identifier
-    [ FROM mnemonicName ]
+    FROM mnemonicName
     
     # "NOT ON EXCEPTION can only be specified if ON EXCEPTION is also specified."
     # Src:  U41112-J-Z125-3-76, p370.
     [ onException
       [notOnException]
     ]
+        
+    [END-ACCEPT]
+end
+
+def acceptStatement_screenName =
+    ACCEPT identifier
+    [ AT
+        !( LINE [NUMBER] (identifier | integer)
+         | (COLUMN | COL) [NUMBER] (identifier | integer)
+         )
+    ]
+    
+    [onException]
+    [notOnException]
         
     [END-ACCEPT]
 end
@@ -935,11 +992,11 @@ def callStatement =
 end
 
 def callUsing =
-    USING (literal | identifier | OMITTED )*
-          ( [BY] REFERENCE (literal | identifier | OMITTED)+
-          | [BY] CONTENT (literal | identifier)+
-          | [BY] VALUE (literal | identifier)+
-          )*
+    USING 
+       (literal | identifier | OMITTED)*
+       ( [BY] REFERENCE (literal | identifier | OMITTED)+
+       | [BY] (CONTENT | VALUE) (literal | identifier)+
+       )*
 end
 
 def callGivingOrReturning =
@@ -1016,17 +1073,17 @@ end
 
 def displayStatement =
 	DISPLAY 
-	( displayUponFormat  
+	( displayScreenFormat
+	| displayDeviceFormat  
 	| displayTerminalFormat
-	| displayScreenFormat
 	| --> (. | endOfStatement)
 	)
 	[END-DISPLAY]
 end
 
-def displayUponFormat =
+def displayDeviceFormat =
 	(identifier | literal)+
-	uponClause
+	[uponClause]
 	[withNoAdvancing]
 end
 
@@ -1085,7 +1142,7 @@ def dtLightingMod =
 end
 
 def dtPositioningMod =
-	[WITH] (dtAtPositioning | dtLineColPositioning)
+	(dtAtPositioning | dtLineColPositioning)
 end
 
 def dtModeBlockMod =
@@ -1438,11 +1495,16 @@ end
 
 def exitStatement =
     EXIT [
-      PROGRAM
+      PROGRAM [returningPhrase]
     | PARAGRAPH
     | SECTION            # *MF
     | PERFORM [CYCLE]    # *MF
     ]
+end
+
+def returningPhrase =
+	RETURNING
+	(integer | cobolWord)
 end
 
 # Refs:
@@ -1706,9 +1768,18 @@ end
 ## -----------------------------------------------------------------------------
 
 def readStatement =
-    READ fileName [[WITH] [NO] LOCK] [NEXT | PREVIOUS] [RECORD] [INTO identifier]
+    READ fileName
     
-    [KEY [IS] dataName]
+    [NEXT | PREVIOUS] [RECORD] [INTO identifier]
+    
+    [ ADVANCING [ON] LOCK
+    | IGNORING LOCK
+    | retryPhrase
+    ]
+    
+    [[WITH] [NO] LOCK]
+    
+    [KEY [IS] identifier_format2]
     
     [[AT] END nestedStatements]
     [NOT [AT] END nestedStatements]
@@ -1743,7 +1814,11 @@ end
 ## -----------------------------------------------------------------------------
 
 def rewriteStatement =
-    REWRITE recordName [FROM identifier]
+    REWRITE recordName [FROM (identifier | literal)]
+    
+    [retryPhrase]
+    
+    [[WITH] [NO] LOCK]
     
     [INVALID [KEY] nestedStatements]
     [NOT INVALID [KEY] nestedStatements]
@@ -1870,7 +1945,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def stopStatement =
-    STOP (RUN | literal)
+    STOP (RUN [returningPhrase]| literal)
 end
 
 ## #############################################################################
@@ -1990,10 +2065,10 @@ end
 ## -----------------------------------------------------------------------------
 
 def writeStatement =
-    WRITE recordName [FROM identifier]
+    WRITE recordName [FROM (identifier | literal)]
     
     [ (AFTER | BEFORE) [ADVANCING]
-      ( (identifier | integer | ZERO) [LINE | LINES]
+      ( (identifier | integer | zero) [LINE | LINES]
       | mnemonicName
       | PAGE
       )
@@ -2001,6 +2076,10 @@ def writeStatement =
     
     [[AT] (END-OF-PAGE | EOP) nestedStatements]
     [NOT [AT] (END-OF-PAGE | EOP) nestedStatements]
+    
+    [retryPhrase]
+    
+    [[WITH] [NO] LOCK]
     
     [INVALID [KEY] nestedStatements]
     [NOT INVALID [KEY] nestedStatements]
@@ -2045,7 +2124,7 @@ def divisionStart =
     ( IDENTIFICATION DIVISION
     | ENVIRONMENT DIVISION
     | DATA DIVISION
-    | PROCEDURE DIVISION [usingOrChainingPhrase] [returningPhrase]
+    | PROCEDURE DIVISION [usingOrChainingPhrase] [returningProcedurePhrase]
     )
     .
 end
@@ -2201,7 +2280,7 @@ end
 
 # TODO Check sources for use of ZERO in this case.
 def atomicExpression =
-    ( ZERO
+    ( zero
     | identifier
     | numeric
     | '(' arithmeticExpression ')'
@@ -2246,7 +2325,7 @@ def signPrimaryCondition =
 end
 
 def signType =
-	(POSITIVE | NEGATIVE | ZERO)
+	(POSITIVE | NEGATIVE | zero)
 end
 
 def monoElemPrimaryCondition =
@@ -2281,13 +2360,11 @@ def conditionalRelationOP =
 end
 
 def generalRelationOp =
-	[IS]
+	[IS] [negationOp]
 	(greaterOrEqualOp
 	|lessOrEqualOp
 	|greaterThanOp
-	|notGreaterThanOp
 	|lessThanOp
-	|notLessThanOp
 	|equalToOp
 	|notEqualToOp)
 end
@@ -2300,16 +2377,8 @@ def greaterThanOp =
 	(GREATER [THAN] | '>')
 end
 
-def notGreaterThanOp =
-	NOT (GREATER [THAN] | '>')
-end
-
 def lessThanOp =
 	(LESS [THAN] | '<')
-end
-
-def notLessThanOp =
-	NOT (LESS [THAN] | '<')
 end
 
 def equalToOp =
@@ -2317,7 +2386,7 @@ def equalToOp =
 end
 
 def notEqualToOp =
-	NOT (EQUAL [TO] | '=')
+	('<>')
 end
 
 def greaterOrEqualOp =
@@ -2433,7 +2502,7 @@ def recordName =
 end
 
 def mnemonicName =
-    (identifier | cobolWord)
+    (identifier | cobolWord) (identifier | cobolWord)*
 end
 
 def environmentName =
@@ -2507,11 +2576,8 @@ end
 def figurativeConstant =
     ( ALL literal
     | [ALL]
-      ( ZERO
-      | ZEROS
-      | ZEROES 
-      | SPACE
-      | SPACES 
+      ( zero 
+      | space
       | HIGH-VALUE 
       | HIGH-VALUES 
       | LOW-VALUE 
@@ -2528,7 +2594,7 @@ def numericLiteral =
     ( integerLiteral
     | decimal
     | hexadecimal
-    | LENGTH OF identifier	
+    | (LENGTH | BYTE-LENGTH) [OF] identifier
     )
 end
 
@@ -2536,7 +2602,7 @@ def numeric =
     ( integer
     | decimal
     | hexadecimal
-    | LENGTH OF identifier	
+    | (LENGTH | BYTE-LENGTH) [OF] identifier
     )
 end
 

@@ -111,3 +111,38 @@ target readStatement;
    NOT INVALID
       DISPLAY "A-OK." 
    END-READ ]
+
+   
++[ READ MY-FILE
+     ADVANCING ON LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     ADVANCING LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     IGNORING LOCK
+   END-READ ]
+ 
+ 
++[ READ MY-FILE 
+     RETRY N TIMES
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY 3 TIMES
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY FOR N SECONDS
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY FOR 3 SECONDS
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY FOREVER
+   END-READ ]
+ 

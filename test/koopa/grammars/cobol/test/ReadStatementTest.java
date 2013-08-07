@@ -245,4 +245,76 @@ public class ReadStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testReadStatement_27() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     ADVANCING ON LOCK\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_28() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     ADVANCING LOCK\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_29() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     IGNORING LOCK\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_30() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE \n     RETRY N TIMES\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_31() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE \n     RETRY 3 TIMES\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_32() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE \n     RETRY FOR N SECONDS\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_33() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE \n     RETRY FOR 3 SECONDS\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_34() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE \n     RETRY FOREVER\n   END-READ ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

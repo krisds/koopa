@@ -15,6 +15,32 @@ target division_format1;
 +[ ZERO BY 2 GIVING C REMAINDER D ]
 +[ ZERO BY 2 GIVING C ROUNDED REMAINDER D ]
 
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A INTO B GIVING FUNCTION FN ( X ) REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER FUNCTION FN ( X ) ]
+
+-[ A INTO B GIVING EXCEPTION-OBJECT REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER EXCEPTION-OBJECT ]
+
+-[ A INTO B GIVING NULL REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER NULL ]
+
+-[ A INTO B GIVING SELF REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER SELF ]
+
+-[ A INTO B GIVING SUPER REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER SUPER ]
+
+-[ A INTO B GIVING MY-CLASS-NAME OF SUPER REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER MY-CLASS-NAME OF SUPER ]
+
+-[ A INTO B GIVING ADDRESS OF SOMETHING REMAINDER D ]
+-[ A INTO B GIVING C REMAINDER ADDRESS OF SOMETHING ]
+
+
+
 target division_format2;
 
 +[ A INTO B GIVING C ]
@@ -41,6 +67,18 @@ target division_format2;
 +[ ZERO BY 2 GIVING C ROUNDED ]
 +[ ZERO BY 2 GIVING C ROUNDED D ROUNDED ]
 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A INTO B GIVING FUNCTION FN ( X ) ]
+-[ A INTO B GIVING EXCEPTION-OBJECT ]
+-[ A INTO B GIVING NULL ]
+-[ A INTO B GIVING SELF ]
+-[ A INTO B GIVING SUPER ]
+-[ A INTO B GIVING MY-CLASS-NAME OF SUPER ]
+-[ A INTO B GIVING ADDRESS OF SOMETHING ]
+
+
+
 target division_format3;
 
 +[ A INTO B ]
@@ -54,6 +92,18 @@ target division_format3;
 
 +[ ZERO INTO B ROUNDED ]
 +[ ZERO INTO B ROUNDED C ROUNDED ]
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A INTO FUNCTION FN ( X ) ]
+-[ A INTO EXCEPTION-OBJECT ]
+-[ A INTO NULL ]
+-[ A INTO SELF ]
+-[ A INTO SUPER ]
+-[ A INTO MY-CLASS-NAME OF SUPER ]
+-[ A INTO ADDRESS OF SOMETHING ]
+
+
 
 target divideStatement;
 

@@ -52,3 +52,15 @@ target computeStatement;
 +[ COMPUTE WS-NUM = FUNCTION RANDOM END-COMPUTE ]
 
 +[ COMPUTE WS-NUM = FUNCTION SUM ( 5 -2 -14 0 ) END-COMPUTE ]
+
+
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ COMPUTE FUNCTION FN ( X ) = A + B ]
+-[ COMPUTE EXCEPTION-OBJECT = A + B ]
+-[ COMPUTE NULL = A + B ]
+-[ COMPUTE SELF = A + B ]
+-[ COMPUTE SUPER = A + B ]
+-[ COMPUTE MY-CLASS-NAME OF SUPER = A + B ]
+-[ COMPUTE ADDRESS OF SOMETHING = A + B ]

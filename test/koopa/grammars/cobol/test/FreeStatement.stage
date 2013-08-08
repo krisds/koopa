@@ -33,3 +33,14 @@ target freeStatement;
    ADDRESS A
    B
    ADDRESS OF C ]
+
+   
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ FREE ADDRESS OF FUNCTION FN ( X ) ]
+-[ FREE ADDRESS OF EXCEPTION-OBJECT ]
+-[ FREE ADDRESS OF NULL ]
+-[ FREE ADDRESS OF SELF ]
+-[ FREE ADDRESS OF SUPER ]
+-[ FREE ADDRESS OF MY-CLASS-NAME OF SUPER ]
+-[ FREE ADDRESS OF ADDRESS OF SOMETHING ]

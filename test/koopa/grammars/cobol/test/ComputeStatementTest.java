@@ -137,4 +137,60 @@ public class ComputeStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testComputeStatement_15() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE FUNCTION FN ( X ) = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_16() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE EXCEPTION-OBJECT = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_17() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE NULL = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_18() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE SELF = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_19() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE SUPER = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_20() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE MY-CLASS-NAME OF SUPER = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_21() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE ADDRESS OF SOMETHING = A + B ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
 }

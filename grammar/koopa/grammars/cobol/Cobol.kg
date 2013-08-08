@@ -448,7 +448,7 @@ def dataDescriptionEntry =
 end
 
 def dataDescriptionEntry_format1 =
-    levelNumber [dataName]
+    levelNumber [dataDescName]
     [redefines]
    !( blankWhenZero
     | external
@@ -468,8 +468,8 @@ end
 
 def dataDescriptionEntry_format2 =
     66 dataName
-    RENAMES dataName (qualifier)*
-    [(THROUGH | THRU) dataName (qualifier)*]
+    RENAMES qualifiedDataName
+    [(THROUGH | THRU) qualifiedDataName]
     . 
 end
 
@@ -528,8 +528,8 @@ end
 def occurs =
     # TODO The "TO numeric" part should only occur when "DEPENDING ON" occurs.
     OCCURS integer [TO integer] [TIMES]
-    [ DEPENDING [ON] dataName (qualifier)* ]
-    ((ASCENDING | DESCENDING) [KEY] [IS] (dataName (qualifier)*)+)* 
+    [ DEPENDING [ON] qualifiedDataName ]
+    ((ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+)* 
     [INDEXED [BY] (indexName)+]
 end
 
@@ -881,7 +881,7 @@ def acceptStatement =
 end
 
 def acceptFromMnemonic =
-    identifier
+    identifier_format2
     FROM mnemonicName
     
     [onException]
@@ -889,7 +889,7 @@ def acceptFromMnemonic =
 end
 
 def acceptFromOther =
-    identifier
+    identifier_format2
     FROM
     
     ( TERMINAL-INFO
@@ -907,7 +907,7 @@ def acceptFromOther =
 end
 
 def acceptScreenFormat =
-    (identifier | OMITTED) 
+    (identifier_format2 | OMITTED) 
     [dtAcceptPositioningMod]
     
     [onException]
@@ -915,7 +915,7 @@ def acceptScreenFormat =
 end
 
 def acceptFromDate =
-    identifier
+    identifier_format2
     FROM
 
     ( DATE [YYYYMMDD | CENTURY-DATE]
@@ -946,13 +946,13 @@ def addStatement =
 end
 
 def addition_format1 =
-    (CORRESPONDING | CORR) identifier TO identifier [ROUNDED]
+    (CORRESPONDING | CORR) qualifiedDataName TO qualifiedDataName [ROUNDED]
 end
 
 def addition_format2 =
     (identifier | literal)+
     [TO (identifier | literal)]
-    GIVING (identifier [ROUNDED])+
+    GIVING (qualifiedDataName [ROUNDED])+
 end
 
 def addition_format3 =
@@ -970,10 +970,10 @@ end
 def allocateStatement =
     ALLOCATE
     ( arithmeticExpression CHARACTERS
-    | identifier
+    | qualifiedDataName
     )
     [ INITIALIZED ]
-    [ RETURNING identifier ]
+    [ RETURNING qualifiedDataName ]
 end
 
 
@@ -1055,7 +1055,7 @@ end
 
 def computeStatement =
     COMPUTE
-    (identifier [ROUNDED])+
+    (qualifiedDataName [ROUNDED])+
     ('=' | EQUAL)
     arithmeticExpression
     [[ON] SIZE ERROR nestedStatements]
@@ -1220,19 +1220,19 @@ end
 def division_format1 =
     (identifier | literal)
     (INTO | BY) (identifier | literal)
-    GIVING identifier [ROUNDED]
-    REMAINDER identifier
+    GIVING qualifiedDataName [ROUNDED]
+    REMAINDER qualifiedDataName
 end
 
 def division_format2 =
     (identifier | literal)
     (INTO | BY) (identifier | literal)
-    GIVING (identifier [ROUNDED])+
+    GIVING (qualifiedDataName [ROUNDED])+
 end
 
 def division_format3 =
     (identifier | literal)
-    INTO (identifier [ROUNDED])+
+    INTO (qualifiedDataName [ROUNDED])+
 end
 
 ## #############################################################################
@@ -1512,7 +1512,7 @@ end
 
 def returningPhrase =
 	RETURNING
-	(integer | cobolWord)
+	(integer | identifier)
 end
 
 # Refs:
@@ -1526,7 +1526,7 @@ end
 # See https://sourceforge.net/p/open-cobol/manual/, page 6-53.
 
 def freeStatement =
-    FREE ( [ADDRESS [OF]] identifier )+
+    FREE ( [ADDRESS [OF]] qualifiedDataName )+
 end
 
 
@@ -1624,7 +1624,7 @@ end
 
 def tallyingPhrase =
 	TALLYING
-	( identifier FOR
+	( qualifiedDataName FOR
 	  ( tallyingCharactersPhrase
 	  | tallyingAllLeadingOrTrailingPhrase
 	  )*
@@ -1696,12 +1696,12 @@ end
 def multiplication_format1 =
     (identifier | literal)
     BY (identifier | literal)
-    GIVING (identifier [ROUNDED])+
+    GIVING (qualifiedDataName [ROUNDED])+
 end
 
 def multiplication_format2 =
     (identifier | literal)
-    BY (identifier [ROUNDED])+
+    BY (qualifiedDataName [ROUNDED])+
 end
 
 ## #############################################################################
@@ -1778,7 +1778,7 @@ end
 def readStatement =
     READ fileName
     
-    [NEXT | PREVIOUS] [RECORD] [INTO identifier]
+    [NEXT | PREVIOUS] [RECORD] [INTO identifier_format2]
     
     [ ADVANCING [ON] LOCK
     | IGNORING LOCK
@@ -1787,7 +1787,7 @@ def readStatement =
     
     [[WITH] [NO] LOCK]
     
-    [KEY [IS] identifier_format2]
+    [KEY [IS] qualifiedDataName]
     
     [[AT] END nestedStatements]
     [NOT [AT] END nestedStatements]
@@ -2209,7 +2209,7 @@ def identifier_format1 =
 end
 
 def identifier_format2 =
-    dataName (qualifier)* ['(' (subscript)+ ')'] [referenceModifier]
+    qualifiedDataName [referenceModifier]
 end
 
 # Cfr. ISO/IEC 1989:20xx FCD 1.0 (E), 8.4.2.1.1
@@ -2233,7 +2233,7 @@ def argument =
 end
 
 def qualifier =
-    (IN | OF) dataName
+    ((IN | OF) dataName)*
 end
 
 def subscript =
@@ -2428,7 +2428,17 @@ end
 
 # Data name.
 def dataName =
-	(cobolWord | FILLER | CURSOR)
+	cobolWord
+end
+
+# Full Qualified Data name with subscripts.
+def qualifiedDataName =
+	dataName qualifier ['(' (subscript)+ ')']
+end
+
+# Data name on describe.
+def dataDescName =
+	(dataName | FILLER)
 end
 
 # Section name.

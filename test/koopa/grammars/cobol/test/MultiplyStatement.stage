@@ -9,6 +9,18 @@ target multiplication_format1;
 +[ A BY B GIVING C ROUNDED ]
 +[ A BY B GIVING C ROUNDED D ROUNDED ]
 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A BY B GIVING FUNCTION FN ( X ) ]
+-[ A BY B GIVING EXCEPTION-OBJECT ]
+-[ A BY B GIVING NULL ]
+-[ A BY B GIVING SELF ]
+-[ A BY B GIVING SUPER ]
+-[ A BY B GIVING MY-CLASS-NAME OF SUPER ]
+-[ A BY B GIVING ADDRESS OF SOMETHING ]
+
+
+
 target multiplication_format2;
 
 +[ A BY B ]
@@ -16,6 +28,18 @@ target multiplication_format2;
 
 +[ A BY B ROUNDED ]
 +[ A BY B ROUNDED C ROUNDED ]
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A BY FUNCTION FN ( X ) ]
+-[ A BY EXCEPTION-OBJECT ]
+-[ A BY NULL ]
+-[ A BY SELF ]
+-[ A BY SUPER ]
+-[ A BY MY-CLASS-NAME OF SUPER ]
+-[ A BY ADDRESS OF SOMETHING ]
+
+
 
 target multiplyStatement;
 

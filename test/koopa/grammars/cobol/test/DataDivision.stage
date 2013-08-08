@@ -110,6 +110,25 @@ target occurs;
 +[ OCCURS 42 TIMES 
    DESCENDING KEY IS MY-KEY IN MY-TABLE ]
 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed.
+-[ OCCURS 42 TIMES DEPENDING ON FUNCTION FN ( X ) ]
+-[ OCCURS 42 TIMES DEPENDING ON EXCEPTION-OBJECT ]
+-[ OCCURS 42 TIMES DEPENDING ON NULL ]
+-[ OCCURS 42 TIMES DEPENDING ON SELF ]
+-[ OCCURS 42 TIMES DEPENDING ON SUPER ]
+-[ OCCURS 42 TIMES DEPENDING ON MY-CLASS-NAME OF SUPER ]
+-[ OCCURS 42 TIMES DEPENDING ON ADDRESS OF SOMETHING ]
+
+-[ OCCURS 42 TIMES ASCENDING KEY IS FUNCTION FN ( X ) ]
+-[ OCCURS 42 TIMES ASCENDING KEY IS EXCEPTION-OBJECT ]
+-[ OCCURS 42 TIMES ASCENDING KEY IS NULL ]
+-[ OCCURS 42 TIMES ASCENDING KEY IS SELF ]
+-[ OCCURS 42 TIMES ASCENDING KEY IS SUPER ]
+-[ OCCURS 42 TIMES ASCENDING KEY IS MY-CLASS-NAME OF SUPER ]
+-[ OCCURS 42 TIMES ASCENDING KEY IS ADDRESS OF SOMETHING ]
+
+
 
 
 target sign;
@@ -254,9 +273,9 @@ target whenSetToFalseClause;
 
 target dataDescriptionEntry;
 
-+[ 01 FILLER . ]
++[ 17 FILLER . ]
 
-+[ 01 TEST-2 . ]
++[ 17 TEST-2 . ]
 
 +[ 01 . ]
 
@@ -273,6 +292,8 @@ target dataDescriptionEntry;
 -[ 50 TEST-8 . ]
 
 -[ AA TEST-9 . ]
+
+
 
 +[ 66 TEST-10
       RENAMES TEST-1 . ]
@@ -291,6 +312,7 @@ target dataDescriptionEntry;
 
 +[ 66 TEST-12B
       RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE . ]
+
 
 +[ 88 TEST-13
       VALUE IS "AAA" . ]
@@ -358,13 +380,62 @@ target dataDescriptionEntry;
 
 +[ 77 OPTIONS PIC S9(9) BINARY . ]
 
+
 # Examples of level 78 from Simon Sobisch.
 +[ 78 lines-to-display . ]
 +[ 78 lines-to-display value is 12 . ]
 +[ 78 lines-to-display value 12 . ]
 
+
 # Example from http://opencobol.add1tocobol.com/#based.
 +[ 01 based-var PIC X(80) BASED . ]
+
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed.
+-[ 66 FAULTY
+      RENAMES FUNCTION FN ( X ) . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH FUNCTION FN ( X ) . ]
+
+-[ 66 FAULTY
+      RENAMES EXCEPTION-OBJECT . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH EXCEPTION-OBJECT . ]
+
+-[ 66 FAULTY
+      RENAMES NULL . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH NULL . ]
+
+-[ 66 FAULTY
+      RENAMES SELF . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH SELF . ]
+
+-[ 66 FAULTY
+      RENAMES SUPER . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH SUPER . ]
+
+-[ 66 FAULTY
+      RENAMES MY-CLASS-NAME OF SUPER . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH MY-CLASS-NAME OF SUPER . ]
+
+-[ 66 FAULTY
+      RENAMES ADDRESS OF SOMETHING . ]
+-[ 66 FAULTY
+      RENAMES FOO
+      THROUGH ADDRESS OF SOMETHING . ]
+
+
 
 target workingStorageSection;
 

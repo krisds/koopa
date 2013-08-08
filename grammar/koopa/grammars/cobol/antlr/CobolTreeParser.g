@@ -1122,7 +1122,7 @@ dataDescriptionEntry
 dataDescriptionEntry_format1
   : ^(DATA_DESCRIPTION_ENTRY_FORMAT1
       ( levelNumber
-        ( dataName )?
+        ( dataDescName )?
         ( redefines )?
         ( ( blankWhenZero
         | external
@@ -1151,13 +1151,11 @@ dataDescriptionEntry_format2
       ( '66'
         dataName
         'RENAMES'
-        dataName
-        ( qualifier )*
+        qualifiedDataName
         ( ( ( 'THROUGH'
         | 'THRU'
         )
-          dataName
-          ( qualifier )*
+          qualifiedDataName
         ) )?
         '.'
       )
@@ -1334,17 +1332,14 @@ occurs
         ( 'TIMES' )?
         ( ( 'DEPENDING'
           ( 'ON' )?
-          dataName
-          ( qualifier )*
+          qualifiedDataName
         ) )?
         ( ( ( 'ASCENDING'
         | 'DESCENDING'
         )
           ( 'KEY' )?
           ( 'IS' )?
-          ( ( dataName
-            ( qualifier )*
-          ) )+
+          ( qualifiedDataName )+
         ) )*
         ( ( 'INDEXED'
           ( 'BY' )?
@@ -1942,7 +1937,7 @@ acceptStatement
 
 acceptFromMnemonic
   : ^(ACCEPT_FROM_MNEMONIC
-      ( identifier
+      ( identifier_format2
         'FROM'
         mnemonicName
         ( onException )?
@@ -1957,7 +1952,7 @@ acceptFromMnemonic
 
 acceptFromOther
   : ^(ACCEPT_FROM_OTHER
-      ( identifier
+      ( identifier_format2
         'FROM'
         ( 'TERMINAL-INFO'
         | 'SYSTEM-INFO'
@@ -1998,7 +1993,7 @@ acceptFromOther
 
 acceptScreenFormat
   : ^(ACCEPT_SCREEN_FORMAT
-      ( ( identifier
+      ( ( identifier_format2
       | 'OMITTED'
       )
         ( dtAcceptPositioningMod )?
@@ -2014,7 +2009,7 @@ acceptScreenFormat
 
 acceptFromDate
   : ^(ACCEPT_FROM_DATE
-      ( identifier
+      ( identifier_format2
         'FROM'
         ( ( 'DATE'
           ( ( 'YYYYMMDD'
@@ -2087,9 +2082,9 @@ addition_format1
       ( ( 'CORRESPONDING'
       | 'CORR'
       )
-        identifier
+        qualifiedDataName
         'TO'
-        identifier
+        qualifiedDataName
         ( 'ROUNDED' )?
       )
     )
@@ -2110,7 +2105,7 @@ addition_format2
           )
         ) )?
         'GIVING'
-        ( ( identifier
+        ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
       )
@@ -2144,11 +2139,11 @@ allocateStatement
         ( ( arithmeticExpression
           'CHARACTERS'
         )
-        | identifier
+        | qualifiedDataName
         )
         ( 'INITIALIZED' )?
         ( ( 'RETURNING'
-          identifier
+          qualifiedDataName
         ) )?
       )
     )
@@ -2325,7 +2320,7 @@ closeStatement
 computeStatement
   : ^(COMPUTE_STATEMENT
       ( 'COMPUTE'
-        ( ( identifier
+        ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
         ( '='
@@ -2757,10 +2752,10 @@ division_format1
         | literal
         )
         'GIVING'
-        identifier
+        qualifiedDataName
         ( 'ROUNDED' )?
         'REMAINDER'
-        identifier
+        qualifiedDataName
       )
     )
   ;
@@ -2781,7 +2776,7 @@ division_format2
         | literal
         )
         'GIVING'
-        ( ( identifier
+        ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
       )
@@ -2798,7 +2793,7 @@ division_format3
       | literal
       )
         'INTO'
-        ( ( identifier
+        ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
       )
@@ -3594,7 +3589,7 @@ returningPhrase
   : ^(RETURNING_PHRASE
       ( 'RETURNING'
         ( integer
-        | cobolWord
+        | identifier
         )
       )
     )
@@ -3610,7 +3605,7 @@ freeStatement
         ( ( ( ( 'ADDRESS'
           ( 'OF' )?
         ) )?
-          identifier
+          qualifiedDataName
         ) )+
       )
     )
@@ -3765,7 +3760,7 @@ convertingPhrase
 tallyingPhrase
   : ^(TALLYING_PHRASE
       ( 'TALLYING'
-        ( ( identifier
+        ( ( qualifiedDataName
           'FOR'
           ( ( tallyingCharactersPhrase
           | tallyingAllLeadingOrTrailingPhrase
@@ -3941,7 +3936,7 @@ multiplication_format1
         | literal
         )
         'GIVING'
-        ( ( identifier
+        ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
       )
@@ -3958,7 +3953,7 @@ multiplication_format2
       | literal
       )
         'BY'
-        ( ( identifier
+        ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
       )
@@ -4127,7 +4122,7 @@ readStatement
         ) )?
         ( 'RECORD' )?
         ( ( 'INTO'
-          identifier
+          identifier_format2
         ) )?
         ( ( ( 'ADVANCING'
           ( 'ON' )?
@@ -4144,7 +4139,7 @@ readStatement
         ) )?
         ( ( 'KEY'
           ( 'IS' )?
-          identifier_format2
+          qualifiedDataName
         ) )?
         ( ( ( 'AT' )?
           'END'
@@ -5060,12 +5055,7 @@ identifier_format1
 
 identifier_format2
   : ^(IDENTIFIER_FORMAT2
-      ( dataName
-        ( qualifier )*
-        ( ( '('
-          ( subscript )+
-          ')'
-        ) )?
+      ( qualifiedDataName
         ( referenceModifier )?
       )
     )
@@ -5121,11 +5111,11 @@ argument
 
 qualifier
   : ^(QUALIFIER
-      ( ( 'IN'
+      ( ( ( 'IN'
       | 'OF'
       )
         dataName
-      )
+      ) )*
     )
   ;
 
@@ -5582,9 +5572,34 @@ programName
 
 dataName
   : ^(DATA_NAME
-      ( cobolWord
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// qualifiedDataName
+// ........................................................
+
+qualifiedDataName
+  : ^(QUALIFIED_DATA_NAME
+      ( dataName
+        qualifier
+        ( ( '('
+          ( subscript )+
+          ')'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// dataDescName
+// ........................................................
+
+dataDescName
+  : ^(DATA_DESC_NAME
+      ( dataName
       | 'FILLER'
-      | 'CURSOR'
       )
     )
   ;

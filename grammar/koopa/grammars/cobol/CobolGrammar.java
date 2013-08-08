@@ -2134,7 +2134,7 @@ public class CobolGrammar extends KoopaGrammar {
                sequence(
                    levelNumber(),
                    optional(
-                       dataName()
+                       dataDescName()
                    ),
                    optional(
                        redefines()
@@ -2178,20 +2178,14 @@ public class CobolGrammar extends KoopaGrammar {
                    token("66"),
                    dataName(),
                    token("RENAMES"),
-                   dataName(),
-                   star(
-                       qualifier()
-                   ),
+                   qualifiedDataName(),
                    optional(
                        sequence(
                            choice(
                                token("THROUGH"),
                                token("THRU")
                            ),
-                           dataName(),
-                           star(
-                               qualifier()
-                           )
+                           qualifiedDataName()
                        )
                    ),
                    token(".")
@@ -2519,10 +2513,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("ON")
                            ),
-                           dataName(),
-                           star(
-                               qualifier()
-                           )
+                           qualifiedDataName()
                        )
                    ),
                    star(
@@ -2538,12 +2529,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("IS")
                            ),
                            plus(
-                               sequence(
-                                   dataName(),
-                                   star(
-                                       qualifier()
-                                   )
-                               )
+                               qualifiedDataName()
                            )
                        )
                    ),
@@ -3555,7 +3541,7 @@ public class CobolGrammar extends KoopaGrammar {
            acceptFromMnemonicParser = future;
            future.setParser(
                sequence(
-                   identifier(),
+                   identifier_format2(),
                    token("FROM"),
                    mnemonicName(),
                    optional(
@@ -3583,7 +3569,7 @@ public class CobolGrammar extends KoopaGrammar {
            acceptFromOtherParser = future;
            future.setParser(
                sequence(
-                   identifier(),
+                   identifier_format2(),
                    token("FROM"),
                    choice(
                        token("TERMINAL-INFO"),
@@ -3643,7 +3629,7 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    choice(
-                       identifier(),
+                       identifier_format2(),
                        token("OMITTED")
                    ),
                    optional(
@@ -3674,7 +3660,7 @@ public class CobolGrammar extends KoopaGrammar {
            acceptFromDateParser = future;
            future.setParser(
                sequence(
-                   identifier(),
+                   identifier_format2(),
                    token("FROM"),
                    choice(
                        sequence(
@@ -3799,9 +3785,9 @@ public class CobolGrammar extends KoopaGrammar {
                        token("CORRESPONDING"),
                        token("CORR")
                    ),
-                   identifier(),
+                   qualifiedDataName(),
                    token("TO"),
-                   identifier(),
+                   qualifiedDataName(),
                    optional(
                        token("ROUNDED")
                    )
@@ -3842,7 +3828,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("GIVING"),
                    plus(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            optional(
                                token("ROUNDED")
                            )
@@ -3907,7 +3893,7 @@ public class CobolGrammar extends KoopaGrammar {
                            arithmeticExpression(),
                            token("CHARACTERS")
                        ),
-                       identifier()
+                       qualifiedDataName()
                    ),
                    optional(
                        token("INITIALIZED")
@@ -3915,7 +3901,7 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        sequence(
                            token("RETURNING"),
-                           identifier()
+                           qualifiedDataName()
                        )
                    )
                )
@@ -4249,7 +4235,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("COMPUTE"),
                    plus(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            optional(
                                token("ROUNDED")
                            )
@@ -5038,12 +5024,12 @@ public class CobolGrammar extends KoopaGrammar {
                        literal()
                    ),
                    token("GIVING"),
-                   identifier(),
+                   qualifiedDataName(),
                    optional(
                        token("ROUNDED")
                    ),
                    token("REMAINDER"),
-                   identifier()
+                   qualifiedDataName()
                )
            );
         }
@@ -5078,7 +5064,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("GIVING"),
                    plus(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            optional(
                                token("ROUNDED")
                            )
@@ -5110,7 +5096,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("INTO"),
                    plus(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            optional(
                                token("ROUNDED")
                            )
@@ -6417,7 +6403,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("RETURNING"),
                    choice(
                        integer(),
-                       cobolWord()
+                       identifier()
                    )
                )
            );
@@ -6449,7 +6435,7 @@ public class CobolGrammar extends KoopaGrammar {
                                    )
                                )
                            ),
-                           identifier()
+                           qualifiedDataName()
                        )
                    )
                )
@@ -6732,7 +6718,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("TALLYING"),
                    star(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            token("FOR"),
                            star(
                                choice(
@@ -7052,7 +7038,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("GIVING"),
                    plus(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            optional(
                                token("ROUNDED")
                            )
@@ -7084,7 +7070,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("BY"),
                    plus(
                        sequence(
-                           identifier(),
+                           qualifiedDataName(),
                            optional(
                                token("ROUNDED")
                            )
@@ -7388,7 +7374,7 @@ public class CobolGrammar extends KoopaGrammar {
                    optional(
                        sequence(
                            token("INTO"),
-                           identifier()
+                           identifier_format2()
                        )
                    ),
                    optional(
@@ -7424,7 +7410,7 @@ public class CobolGrammar extends KoopaGrammar {
                            optional(
                                token("IS")
                            ),
-                           identifier_format2()
+                           qualifiedDataName()
                        )
                    ),
                    optional(
@@ -9108,19 +9094,7 @@ public class CobolGrammar extends KoopaGrammar {
            identifier_format2Parser = future;
            future.setParser(
                sequence(
-                   dataName(),
-                   star(
-                       qualifier()
-                   ),
-                   optional(
-                       sequence(
-                           token("("),
-                           plus(
-                               subscript()
-                           ),
-                           token(")")
-                       )
-                   ),
+                   qualifiedDataName(),
                    optional(
                        referenceModifier()
                    )
@@ -9219,12 +9193,14 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("qualifier");
            qualifierParser = future;
            future.setParser(
-               sequence(
-                   choice(
-                       token("IN"),
-                       token("OF")
-                   ),
-                   dataName()
+               star(
+                   sequence(
+                       choice(
+                           token("IN"),
+                           token("OF")
+                       ),
+                       dataName()
+                   )
                )
            );
         }
@@ -10062,15 +10038,62 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("dataName");
            dataNameParser = future;
            future.setParser(
-               choice(
-                   cobolWord(),
-                   token("FILLER"),
-                   token("CURSOR")
-               )
+               cobolWord()
            );
         }
 
         return dataNameParser;
+    }
+
+    // ========================================================
+    // qualifiedDataName
+    // ........................................................
+
+    private Parser qualifiedDataNameParser = null;
+
+    public Parser qualifiedDataName() {
+        if (qualifiedDataNameParser == null) {
+           FutureParser future = scoped("qualifiedDataName");
+           qualifiedDataNameParser = future;
+           future.setParser(
+               sequence(
+                   dataName(),
+                   qualifier(),
+                   optional(
+                       sequence(
+                           token("("),
+                           plus(
+                               subscript()
+                           ),
+                           token(")")
+                       )
+                   )
+               )
+           );
+        }
+
+        return qualifiedDataNameParser;
+    }
+
+    // ========================================================
+    // dataDescName
+    // ........................................................
+
+    private Parser dataDescNameParser = null;
+
+    public Parser dataDescName() {
+        if (dataDescNameParser == null) {
+           FutureParser future = scoped("dataDescName");
+           dataDescNameParser = future;
+           future.setParser(
+               choice(
+                   dataName(),
+                   token("FILLER")
+               )
+           );
+        }
+
+        return dataDescNameParser;
     }
 
     // ========================================================
@@ -10845,7 +10868,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("CRT");
         RESERVED_WORDS.add("CURRENCY");
         // RESERVED_WORDS.add("CURRENT");
-        RESERVED_WORDS.add("CURSOR");
+        // RESERVED_WORDS.add("CURSOR");
         RESERVED_WORDS.add("DATA");
         RESERVED_WORDS.add("DATA-POINTER");
         // RESERVED_WORDS.add("DATABASE-EXCEPTION");

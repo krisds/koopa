@@ -146,3 +146,29 @@ target readStatement;
      RETRY FOREVER
    END-READ ]
  
+ 
+ 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ READ MY-FILE
+     KEY IS FUNCTION FN ( X )
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS EXCEPTION-OBJECT
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS NULL
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS SELF
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS SUPER
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS MY-CLASS-NAME OF SUPER
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS ADDRESS OF SOMETHING
+   END-READ ]
+   

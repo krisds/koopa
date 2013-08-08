@@ -9,6 +9,32 @@ target addition_format1;
 +[ CORRESPONDING A TO B ROUNDED ]
 +[ CORR A TO B ROUNDED ]
 
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ CORRESPONDING FUNCTION FN ( X ) TO B ]
+-[ CORRESPONDING A TO FUNCTION FN ( X ) ]
+
+-[ CORRESPONDING EXCEPTION-OBJECT TO B ]
+-[ CORRESPONDING A TO EXCEPTION-OBJECT ]
+
+-[ CORRESPONDING NULL TO B ]
+-[ CORRESPONDING A TO NULL ]
+
+-[ CORRESPONDING SELF TO B ]
+-[ CORRESPONDING A TO SELF ]
+
+-[ CORRESPONDING SUPER TO B ]
+-[ CORRESPONDING A TO SUPER ]
+
+-[ CORRESPONDING MY-CLASS-NAME OF SUPER TO B ]
+-[ CORRESPONDING A TO MY-CLASS-NAME OF SUPER ]
+
+-[ CORRESPONDING ADDRESS OF SOMETHING TO B ]
+-[ CORRESPONDING A TO ADDRESS OF SOMETHING ]
+
+
+
 target addition_format2;
 
 +[ A TO B GIVING C ]
@@ -26,6 +52,18 @@ target addition_format2;
 +[ ZERO TO B GIVING C ]
 +[ A TO ZERO GIVING C ]
 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A TO B GIVING FUNCTION FN ( X ) ]
+-[ A TO B GIVING EXCEPTION-OBJECT ]
+-[ A TO B GIVING NULL ]
+-[ A TO B GIVING SELF ]
+-[ A TO B GIVING SUPER ]
+-[ A TO B GIVING MY-CLASS-NAME OF SUPER ]
+-[ A TO B GIVING ADDRESS OF SOMETHING ]
+
+
+
 target addition_format3;
 
 +[ A TO B ]
@@ -35,6 +73,8 @@ target addition_format3;
 +[ A B TO C ROUNDED D ROUNDED ]
 
 +[ A ZERO TO C D ]
+
+
 
 target addStatement;
 

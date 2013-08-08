@@ -317,4 +317,60 @@ public class ReadStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testReadStatement_35() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS FUNCTION FN ( X )\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_36() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS EXCEPTION-OBJECT\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_37() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS NULL\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_38() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS SELF\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_39() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS SUPER\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_40() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS MY-CLASS-NAME OF SUPER\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testReadStatement_41() {
+      Parser parser = grammar.readStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " READ MY-FILE\n     KEY IS ADDRESS OF SOMETHING\n   END-READ ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
 }

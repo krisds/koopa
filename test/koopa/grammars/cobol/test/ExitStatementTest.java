@@ -34,7 +34,7 @@ public class ExitStatementTest extends TestCase {
     public void testExitStatement_3() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PARAGRAPH ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PROGRAM RETURNING 0 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -43,7 +43,7 @@ public class ExitStatementTest extends TestCase {
     public void testExitStatement_4() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT SECTION ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PROGRAM RETURNING MY-RETURN-VALUE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -52,13 +52,31 @@ public class ExitStatementTest extends TestCase {
     public void testExitStatement_5() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PERFORM ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PARAGRAPH ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testExitStatement_6() {
+      Parser parser = grammar.exitStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT SECTION ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testExitStatement_7() {
+      Parser parser = grammar.exitStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PERFORM ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testExitStatement_8() {
       Parser parser = grammar.exitStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EXIT PERFORM CYCLE ");

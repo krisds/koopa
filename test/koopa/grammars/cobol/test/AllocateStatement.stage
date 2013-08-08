@@ -42,3 +42,30 @@ target allocateStatement;
 
 +[ ALLOCATE N + 2 CHARACTERS ]
 
+
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ ALLOCATE FUNCTION FN ( X ) ]
+-[ ALLOCATE based-var RETURNING FUNCTION FN ( X ) ]
+
+-[ ALLOCATE EXCEPTION-OBJECT ]
+-[ ALLOCATE based-var RETURNING EXCEPTION-OBJECT ]
+
+-[ ALLOCATE NULL ]
+-[ ALLOCATE based-var RETURNING NULL ]
+
+-[ ALLOCATE SELF ]
+-[ ALLOCATE based-var RETURNING SELF ]
+
+-[ ALLOCATE SUPER ]
+-[ ALLOCATE based-var RETURNING SUPER ]
+
+-[ ALLOCATE MY-CLASS-NAME OF SUPER ]
+-[ ALLOCATE based-var RETURNING MY-CLASS-NAME OF SUPER ]
+
+-[ ALLOCATE ADDRESS OF SOMETHING ]
+-[ ALLOCATE based-var RETURNING ADDRESS OF SOMETHING ]
+
+
+

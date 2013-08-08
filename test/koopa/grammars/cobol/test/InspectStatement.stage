@@ -21,6 +21,17 @@ target tallyingPhrase;
                                      "T" AFTER WS-Y
                                      "T" AFTER "U" ]
 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ TALLYING FUNCTION FN ( X ) FOR ALL "A" ]
+-[ TALLYING EXCEPTION-OBJECT FOR ALL "A" ]
+-[ TALLYING NULL FOR ALL "A" ]
+-[ TALLYING SELF FOR ALL "A" ]
+-[ TALLYING SUPER FOR ALL "A" ]
+-[ TALLYING MY-CLASS-NAME OF SUPER FOR ALL "A" ]
+-[ TALLYING ADDRESS OF SOMETHING FOR ALL "A" ]
+
+
 target replacingPhrase;
 
 +[ REPLACING CHARACTERS BY "A" ]
@@ -29,6 +40,8 @@ target replacingPhrase;
 +[ REPLACING LEADING SPACES BY A ]
 +[ REPLACING FIRST SPACES BY A ]
 +[ REPLACING TRAILING SPACES BY A ]
+
+
 
 target inspectStatement;
 

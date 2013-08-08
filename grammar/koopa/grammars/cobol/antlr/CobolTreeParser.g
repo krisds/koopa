@@ -1923,76 +1923,98 @@ verb
 
 acceptStatement
   : ^(ACCEPT_STATEMENT
-      ( acceptStatement_fromDate
-      | acceptStatement_messageCount
-      | acceptStatement_fromMnemonic
-      | acceptStatement_screenName
-      | ( 'ACCEPT'
-        (water)?
+      ( 'ACCEPT'
+        ( acceptFromDate
+        | acceptFromOther
+        | acceptFromMnemonic
+        | acceptMessageCount
+        | acceptScreenFormat
+        | (water)?
+        )
         ( 'END-ACCEPT' )?
-      )
       )
     )
   ;
 
 // ========================================================
-// acceptStatement_fromMnemonic
+// acceptFromMnemonic
 // ........................................................
 
-acceptStatement_fromMnemonic
-  : ^(ACCEPT_STATEMENT_FROM_MNEMONIC
-      ( 'ACCEPT'
-        identifier
+acceptFromMnemonic
+  : ^(ACCEPT_FROM_MNEMONIC
+      ( identifier
         'FROM'
         mnemonicName
-        ( ( onException
-          ( notOnException )?
-        ) )?
-        ( 'END-ACCEPT' )?
-      )
-    )
-  ;
-
-// ========================================================
-// acceptStatement_screenName
-// ........................................................
-
-acceptStatement_screenName
-  : ^(ACCEPT_STATEMENT_SCREEN_NAME
-      ( 'ACCEPT'
-        identifier
-        ( ( 'AT'
-          ( ( ( 'LINE'
-            ( 'NUMBER' )?
-            ( identifier
-            | integer
-            )
-          )
-          | ( ( 'COLUMN'
-          | 'COL'
-          )
-            ( 'NUMBER' )?
-            ( identifier
-            | integer
-            )
-          )
-          ) )*
-        ) )?
         ( onException )?
         ( notOnException )?
-        ( 'END-ACCEPT' )?
       )
     )
   ;
 
 // ========================================================
-// acceptStatement_fromDate
+// acceptFromOther
 // ........................................................
 
-acceptStatement_fromDate
-  : ^(ACCEPT_STATEMENT_FROM_DATE
-      ( 'ACCEPT'
-        identifier
+acceptFromOther
+  : ^(ACCEPT_FROM_OTHER
+      ( identifier
+        'FROM'
+        ( 'TERMINAL-INFO'
+        | 'SYSTEM-INFO'
+        | ( 'INPUT'
+          'STATUS'
+        )
+        | ( 'ESCAPE'
+          'KEY'
+        )
+        | ( 'EXCEPTION'
+          'STATUS'
+        )
+        | ( 'LINE'
+          'NUMBER'
+        )
+        | ( 'USER'
+          'NAME'
+        )
+        | 'COMMAND-LINE'
+        | ( 'STANDARD'
+          'OBJECT'
+          identifier
+        )
+        | ( 'THREAD'
+          'HANDLE'
+        )
+        | ( 'WINDOW'
+          'HANDLE'
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// acceptScreenFormat
+// ........................................................
+
+acceptScreenFormat
+  : ^(ACCEPT_SCREEN_FORMAT
+      ( ( identifier
+      | 'OMITTED'
+      )
+        ( dtAcceptPositioningMod )?
+        ( onException )?
+        ( notOnException )?
+      )
+    )
+  ;
+
+// ========================================================
+// acceptFromDate
+// ........................................................
+
+acceptFromDate
+  : ^(ACCEPT_FROM_DATE
+      ( identifier
         'FROM'
         ( ( 'DATE'
           ( ( 'YYYYMMDD'
@@ -2012,22 +2034,19 @@ acceptStatement_fromDate
         | 'YYYYDDD'
         | 'CENTURY-DAY'
         )
-        ( 'END-ACCEPT' )?
       )
     )
   ;
 
 // ========================================================
-// acceptStatement_messageCount
+// acceptMessageCount
 // ........................................................
 
-acceptStatement_messageCount
-  : ^(ACCEPT_STATEMENT_MESSAGE_COUNT
-      ( 'ACCEPT'
-        identifier
+acceptMessageCount
+  : ^(ACCEPT_MESSAGE_COUNT
+      ( identifier
         ( 'MESSAGE' )?
         'COUNT'
-        ( 'END-ACCEPT' )?
       )
     )
   ;
@@ -2547,6 +2566,18 @@ dtPositioningMod
   ;
 
 // ========================================================
+// dtAcceptPositioningMod
+// ........................................................
+
+dtAcceptPositioningMod
+  : ^(DT_ACCEPT_POSITIONING_MOD
+      ( dtAtPositioning
+      | dtFromLineColPositioning
+      )
+    )
+  ;
+
+// ========================================================
 // dtModeBlockMod
 // ........................................................
 
@@ -2619,12 +2650,29 @@ dtLineColPositioning
   ;
 
 // ========================================================
+// dtFromLineColPositioning
+// ........................................................
+
+dtFromLineColPositioning
+  : ^(DT_FROM_LINE_COL_POSITIONING
+      ( ( ( 'AT' )?
+      | 'FROM'
+      )
+        ( ( dtLinePos
+        | dtColPos
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
 // dtLinePos
 // ........................................................
 
 dtLinePos
   : ^(DT_LINE_POS
       ( 'LINE'
+        ( 'NUMBER' )?
         ( identifier
         | literal
         )
@@ -2641,7 +2689,9 @@ dtColPos
       ( ( 'COL'
       | 'COLUMN'
       | 'POSITION'
+      | 'POS'
       )
+        ( 'NUMBER' )?
         ( identifier
         | literal
         )
@@ -2657,51 +2707,10 @@ displayScreenFormat
   : ^(DISPLAY_SCREEN_FORMAT
       ( ( ( identifier
       | literal
+      | 'OMITTED'
       )
-        ( screenLineColClause
-        | screenAtClause
-        )
+        dtPositioningMod
       ) )+
-    )
-  ;
-
-// ========================================================
-// screenAtClause
-// ........................................................
-
-screenAtClause
-  : ^(SCREEN_AT_CLAUSE
-      ( 'AT'
-        ( identifier
-        | integer
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// screenLineColClause
-// ........................................................
-
-screenLineColClause
-  : ^(SCREEN_LINE_COL_CLAUSE
-      ( ( 'AT' )?
-        ( ( ( 'LINE'
-          ( 'NUMBER' )?
-          ( identifier
-          | integer
-          )
-        )
-        | ( ( 'COLUMN'
-        | 'COL'
-        )
-          ( 'NUMBER' )?
-          ( identifier
-          | integer
-          )
-        )
-        ) )+
-      )
     )
   ;
 
@@ -5746,12 +5755,8 @@ recordName
 
 mnemonicName
   : ^(MNEMONIC_NAME
-      ( ( identifier
+      ( identifier
       | cobolWord
-      )
-        ( ( identifier
-        | cobolWord
-        ) )*
       )
     )
   ;
@@ -6070,6 +6075,7 @@ token
   | 'COL'
   | 'COLUMN'
   | 'COMMA'
+  | 'COMMAND-LINE'
   | 'COMMAREA'
   | 'COMMON'
   | 'COMMUNICATION'
@@ -6162,6 +6168,7 @@ token
   | 'EQUAL'
   | 'ERASE'
   | 'ERROR'
+  | 'ESCAPE'
   | 'EVALUATE'
   | 'EXCEPTION'
   | 'EXCEPTION-OBJECT'
@@ -6193,6 +6200,7 @@ token
   | 'GOBACK'
   | 'GREATER'
   | 'GTEQ'
+  | 'HANDLE'
   | 'HIGH'
   | 'HIGH-VALUE'
   | 'HIGH-VALUES'
@@ -6252,6 +6260,7 @@ token
   | 'MODE'
   | 'MOVE'
   | 'MULTIPLY'
+  | 'NAME'
   | 'NATIONAL'
   | 'NATIONAL-EDITED'
   | 'NATIVE'
@@ -6287,6 +6296,7 @@ token
   | 'PIC'
   | 'PICTURE'
   | 'POINTER'
+  | 'POS'
   | 'POSITION'
   | 'POSITIVE'
   | 'PREVIOUS'
@@ -6386,12 +6396,15 @@ token
   | 'SYSOUT'
   | 'SYSPCH'
   | 'SYSPUNCH'
+  | 'SYSTEM-INFO'
   | 'TALLYING'
   | 'TD'
+  | 'TERMINAL-INFO'
   | 'TERMINATE'
   | 'TEST'
   | 'THAN'
   | 'THEN'
+  | 'THREAD'
   | 'THROUGH'
   | 'THRU'
   | 'TIME'
@@ -6417,6 +6430,7 @@ token
   | 'UPON'
   | 'USAGE'
   | 'USE'
+  | 'USER'
   | 'USING'
   | 'V'
   | 'VALUE'
@@ -6424,6 +6438,7 @@ token
   | 'VARYING'
   | 'WHEN'
   | 'WHILE'
+  | 'WINDOW'
   | 'WITH'
   | 'WORKING-STORAGE'
   | 'WRITE'

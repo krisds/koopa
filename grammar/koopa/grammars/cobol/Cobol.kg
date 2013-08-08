@@ -866,47 +866,58 @@ end
 ## -----------------------------------------------------------------------------
 
 def acceptStatement =
-    ( acceptStatement_fromDate
-    | acceptStatement_messageCount
-    | acceptStatement_fromMnemonic
-    | acceptStatement_screenName
+    ACCEPT 
+    ( acceptFromDate
+    | acceptFromOther
+    | acceptFromMnemonic
+    | acceptMessageCount
+    | acceptScreenFormat
     
     # Catch all.
-    | ACCEPT (--> endOfStatement) [END-ACCEPT]
+    | (--> endOfStatement)
     )
-end
-
-def acceptStatement_fromMnemonic =
-    ACCEPT identifier
-    FROM mnemonicName
-    
-    # "NOT ON EXCEPTION can only be specified if ON EXCEPTION is also specified."
-    # Src:  U41112-J-Z125-3-76, p370.
-    [ onException
-      [notOnException]
-    ]
         
     [END-ACCEPT]
 end
 
-def acceptStatement_screenName =
-    ACCEPT identifier
-    [ AT
-        !( LINE [NUMBER] (identifier | integer)
-         | (COLUMN | COL) [NUMBER] (identifier | integer)
-         )
-    ]
+def acceptFromMnemonic =
+    identifier
+    FROM mnemonicName
     
     [onException]
     [notOnException]
-        
-    [END-ACCEPT]
 end
 
-def acceptStatement_fromDate =
-    ACCEPT identifier
-    
+def acceptFromOther =
+    identifier
     FROM
+    
+    ( TERMINAL-INFO
+    | SYSTEM-INFO
+    | INPUT STATUS
+    | ESCAPE KEY
+    | EXCEPTION STATUS
+    | LINE NUMBER
+    | USER NAME
+    | COMMAND-LINE
+    | STANDARD OBJECT identifier
+    | THREAD HANDLE
+    | WINDOW HANDLE
+    )
+end
+
+def acceptScreenFormat =
+    (identifier | OMITTED) 
+    [dtAcceptPositioningMod]
+    
+    [onException]
+    [notOnException]
+end
+
+def acceptFromDate =
+    identifier
+    FROM
+
     ( DATE [YYYYMMDD | CENTURY-DATE]
     | DAY  [YYYYDDD | CENTURY-DAY]
     | DAY-OF-WEEK
@@ -917,12 +928,10 @@ def acceptStatement_fromDate =
     | YYYYDDD 
     | CENTURY-DAY
     )
-    
-    [END-ACCEPT]
 end
 
-def acceptStatement_messageCount =
-    ACCEPT identifier [MESSAGE] COUNT [END-ACCEPT]
+def acceptMessageCount =
+    identifier [MESSAGE] COUNT
 end
 
 ## #############################################################################
@@ -1145,6 +1154,10 @@ def dtPositioningMod =
 	(dtAtPositioning | dtLineColPositioning)
 end
 
+def dtAcceptPositioningMod =
+	(dtAtPositioning | dtFromLineColPositioning)
+end
+
 def dtModeBlockMod =
 	[WITH] MODE [IS] BLOCK
 end
@@ -1168,31 +1181,26 @@ def dtLineColPositioning =
 	)+
 end
 
+def dtFromLineColPositioning =
+	([AT] | FROM)
+	( dtLinePos
+	| dtColPos
+	)+
+end
+
 def dtLinePos =
-	LINE (identifier | literal)
+	LINE [NUMBER] (identifier | literal)
 end
 
 def dtColPos =
-	(COL | COLUMN | POSITION) (identifier | literal)
+	(COL | COLUMN | POSITION | POS) [NUMBER] (identifier | literal)
 end
 
 def displayScreenFormat =
 	(
-	 (identifier | literal) 
-	  ( screenLineColClause
-	  | screenAtClause
-	  )
+	 (identifier | literal | OMITTED) 
+	  dtPositioningMod
 	)+
-end
-
-def screenAtClause =
-	AT (identifier | integer)
-end
-
-def screenLineColClause =
-	[AT] ( LINE [NUMBER] (identifier | integer) 
-		 | (COLUMN | COL) [NUMBER] (identifier | integer) 
-		 )+
 end
 
 
@@ -2502,7 +2510,7 @@ def recordName =
 end
 
 def mnemonicName =
-    (identifier | cobolWord) (identifier | cobolWord)*
+    (identifier | cobolWord)
 end
 
 def environmentName =

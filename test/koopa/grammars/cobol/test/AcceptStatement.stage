@@ -1,7 +1,7 @@
 package koopa.grammars.cobol.test;
 grammar koopa.grammars.cobol.CobolGrammar;
 
-target acceptStatement_fromMnemonic;
+target acceptStatement;
 
 +[ ACCEPT foo FROM bar ]
 
@@ -38,18 +38,29 @@ target acceptStatement_fromMnemonic;
    END-ACCEPT
  ]
 
--[ ACCEPT foo FROM bar
++[ ACCEPT foo FROM bar
      NOT ON EXCEPTION DISPLAY "OK"
  ]
 
--[ ACCEPT foo FROM bar
++[ ACCEPT foo FROM bar
      NOT ON EXCEPTION DISPLAY "OK"
    END-ACCEPT
  ]
 
 
-target acceptStatement_fromDate;
++[ ACCEPT fee FROM TERMINAL-INFO ]
++[ ACCEPT fee FROM SYSTEM-INFO ]
++[ ACCEPT fee FROM INPUT STATUS ]
++[ ACCEPT fee FROM ESCAPE KEY ]
++[ ACCEPT fee FROM EXCEPTION STATUS ]
++[ ACCEPT fee FROM LINE NUMBER ]
++[ ACCEPT fee FROM USER NAME ]
++[ ACCEPT fee FROM COMMAND-LINE ]
++[ ACCEPT fee FROM STANDARD OBJECT MY-OBJECT ]
++[ ACCEPT fee FROM THREAD HANDLE ]
++[ ACCEPT fee FROM WINDOW HANDLE ]
 
+ 
 +[ ACCEPT foo FROM DATE ]
 +[ ACCEPT foo FROM DAY ]
 +[ ACCEPT foo FROM DAY-OF-WEEK ]
@@ -83,7 +94,6 @@ target acceptStatement_fromDate;
 +[ ACCEPT foo FROM CENTURY-DAY END-ACCEPT ]
 
 
-target acceptStatement_messageCount
 
 +[ ACCEPT foo MESSAGE COUNT ]
 +[ ACCEPT foo MESSAGE COUNT END-ACCEPT ]
@@ -92,7 +102,6 @@ target acceptStatement_messageCount
 +[ ACCEPT foo COUNT END-ACCEPT ]
 
 
-target acceptStatement_screenName;
 
 +[ ACCEPT foo ]
 +[ ACCEPT foo END-ACCEPT ]

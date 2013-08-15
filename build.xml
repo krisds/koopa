@@ -286,16 +286,13 @@
 
 	<!-- SVN -->
 
-	<target name="check-svn-entries">
-		<available file=".svn/entries" property="svn.entries.present" />
-	</target>
+	<target name="revision-number" depends="bootstrap-build">
+		<!-- find out revision number of HEAD, need svn.exe installed on local machine -->
+		<exec executable="svnversion" outputproperty="revision" failonerror="false" failifexecutionfails="false">
+		</exec>
 
-	<target name="revision-number" depends="check-svn-entries,bootstrap-build" if="svn.entries.present">
-		<loadfile srcfile=".svn/entries" property="revision">
-			<filterchain>
-				<headfilter lines="1" skip="3" />
-			</filterchain>
-		</loadfile>
+		<property name="revision" value="unknown"/>
+		
 		<echo file="build/REVISION" message="${revision}" />
 	</target>
 

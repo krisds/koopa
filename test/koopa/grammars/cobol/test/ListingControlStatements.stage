@@ -1,0 +1,20 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+# TODO These source formatting directives get filtered out by the
+# SourceFormattingDirectivesFilter. So the tests will always fail...
+# Ignored these tests in the CobolGrammarTests, for now.
+
+target ejectStatement;
+
++[ EJECT ]
+
+target skipStatement;
+
++[ SKIP1 ]
++[ SKIP2 ]
++[ SKIP3 ]
+
+target titleStatement;
+
++[ TITLE "foo" ]

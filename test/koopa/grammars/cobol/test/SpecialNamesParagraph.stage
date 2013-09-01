@@ -1,0 +1,113 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target specialNamesParagraph;
+
++[ SPECIAL-NAMES.
+     CALL-CONVENTION 74 IS winapi . ]
+
++[ SPECIAL-NAMES.
+     CONSOLE CRT ]
+
++[ SPECIAL-NAMES.
+     CONSOLE IS CRT ]
+
++[ SPECIAL-NAMES.
+     SYSIN IS foo ]
+
++[ SPECIAL-NAMES.
+     CONSOLE IS foo ]
+
++[ SPECIAL-NAMES.
+     SWITCH-0 IS foo ]
+
++[ SPECIAL-NAMES.
+     SWITCH-0 IS foo
+        ON STATUS IS bar ]
+
++[ SPECIAL-NAMES.
+     SWITCH-0 IS foo
+        OFF STATUS IS bar ]
+
++[ SPECIAL-NAMES.
+     SWITCH-0 IS foo
+        ON STATUS IS bar
+        OFF STATUS IS baz ]
+
++[ SPECIAL-NAMES.
+     C01 IS foo ]
+
++[ SPECIAL-NAMES.
+     S01 IS foo ]
+
++[ SPECIAL-NAMES.
+     ALPHABET foo IS NATIVE ]
+
++[ SPECIAL-NAMES.
+     ALPHABET foo IS STANDARD-1 ]
+
++[ SPECIAL-NAMES.
+     ALPHABET foo IS EBCDIC ]
+
++[ SPECIAL-NAMES.
+     ALPHABET foo IS "f" THROUGH "o" ]
+
++[ SPECIAL-NAMES.
+     ALPHABET foo IS "f" THROUGH "o" ALSO "b" ALSO "a" ALSO "z" ]
+
++[ SPECIAL-NAMES.
+     CLASS foo IS "f" ]
+
++[ SPECIAL-NAMES.
+     CLASS foo IS "f" THROUGH "o" ]
+
++[ SPECIAL-NAMES.
+     CLASS Hexadecimal IS "0" THRU "9", "A" THRU "F", "a" THRU "f" ]
+
++[ SPECIAL-NAMES.
+     LOCALE foo IS bar ]
+
++[ SPECIAL-NAMES.
+     CURRENCY "$" ]
+
++[ SPECIAL-NAMES.
+     CURRENCY SIGN "$" ]
+
++[ SPECIAL-NAMES.
+     CURRENCY SIGN IS "$" ]
+
++[ SPECIAL-NAMES.
+     DECIMAL-POINT COMMA ]
+
++[ SPECIAL-NAMES.
+     DECIMAL-POINT IS COMMA ]
+
++[ SPECIAL-NAMES.
+     CURSOR IS foo ]
+
++[ SPECIAL-NAMES.
+     CRT STATUS IS foo ]
+
++[ SPECIAL-NAMES.
+     SCREEN CONTROL IS foo ]
+
++[ SPECIAL-NAMES.
+     EVENT STATUS IS foo ]
+
++[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS "a" IS 1 IN foo ]
+
++[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS "a" "b" ARE 1 2 IN foo ]
+
++[ SPECIAL-NAMES.
+     NUMERIC SIGN IS TRAILING SEPARATE ]
+
++[ SPECIAL-NAMES.
+     XML-SCHEMA foo IS "foo" ]
+
++[ SPECIAL-NAMES.
+     XML-SCHEMA foo IS "foo" ]
+
++[ SPECIAL-NAMES.
+     XML-SCHEMA foo IS bar ]

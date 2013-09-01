@@ -100,12 +100,7 @@ target section;
    DISPLAY 15A .
    PARAGRAPH-15-B .
    DISPLAY 15B . ]
-
-
-target useStatement;
-
-+[ USE AFTER ERROR PROCEDURE ON MASTER-FILE . ]
-
+   
 
 target declarativeSection;
 
@@ -303,3 +298,114 @@ target procedureDivision;
    DISPLAY 33C .
    PARAGRAPH-33B .
    DISPLAY 33D . ]
+
+# From The OpenCOBOL Programmer's Guide, 06FEB2009, p.7-7:
+
++[ PROCEDURE DIVISION USING
+     BY VALUE Arg1,
+     BY REFERENCE Arg2,
+     BY REFERENCE Arg3.
+   000-Main.
+     DISPLAY 'Starting cobsub.cbl'.
+     DISPLAY 'Arg1=' Arg1.
+     DISPLAY 'Arg2=' Arg2.
+     DISPLAY 'Arg3=' Arg3.
+     MOVE 'X' TO Arg1 (1:1).
+     MOVE 'X' TO Arg2 (1:1).
+     MOVE 987654321 TO Arg3.
+     MOVE 2 TO RETURN-CODE.
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY REFERENCE ANY .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY REFERENCE bar DELIMITED .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY REFERENCE bar DELIMITED BY SIZE .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY VALUE ANY .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY VALUE bar REPEATED .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY VALUE bar REPEATED 1 TO 10 .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY VALUE bar REPEATED 1 TO 10
+     GIVING baz .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY VALUE bar REPEATED 1 TO 10
+     RETURNING baz .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY OUTPUT .
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
++[ PROCEDURE DIVISION foo USING
+     BY OUTPUT foo AS bar.
+   000-Main.
+     DISPLAY "Hello, world!" .
+     GOBACK. ]
+
+# PROCEDURE DIVISION header is never optional:
+
+-[ DECLARATIVES .
+   OUTPUT-ERROR SECTION .
+     USE AFTER ERROR PROCEDURE ON OUTPUT .
+   REPORT-ERROR .
+     DISPLAY "Output error." .
+   END DECLARATIVES .
+   DISPLAY 33A .
+   PARAGRAPH-33A .
+   DISPLAY 33B .
+   SECTION-33 SECTION .
+   DISPLAY 33C .
+   PARAGRAPH-33B .
+   DISPLAY 33D . ]
+
+-[ 000-Main.
+     DISPLAY 'Starting cobsub.cbl'.
+     DISPLAY 'Arg1=' Arg1.
+     DISPLAY 'Arg2=' Arg2.
+     DISPLAY 'Arg3=' Arg3.
+     MOVE 'X' TO Arg1 (1:1).
+     MOVE 'X' TO Arg2 (1:1).
+     MOVE 987654321 TO Arg3.
+     MOVE 2 TO RETURN-CODE.
+     GOBACK. ]

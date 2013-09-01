@@ -7,13 +7,19 @@ target exitStatement;
 +[ EXIT PROGRAM ]
 +[ EXIT PROGRAM RETURNING 0 ]
 +[ EXIT PROGRAM RETURNING MY-RETURN-VALUE ]
++[ EXIT PROGRAM RETURNING ADDRESS OF MY-RETURN-VALUE ]
++[ EXIT PROGRAM GIVING 0 ]
++[ EXIT PROGRAM GIVING MY-RETURN-VALUE ]
++[ EXIT PROGRAM GIVING ADDRESS OF MY-RETURN-VALUE ]
 +[ EXIT PARAGRAPH ]
 
-
 +[ EXIT SECTION ]           # *MF
-
 +[ EXIT PERFORM ]           # *MF
 +[ EXIT PERFORM CYCLE ]     # *MF
+
++[ EXIT METHOD ]            # *ISO2002
++[ EXIT FUNCTION ]          # *ISO2002
++[ EXIT ITERATOR ]          # *.NET
 
 # Refs:
 # MF. http://supportline.microfocus.com/documentation/books/nx60/lhpdf907.htm

@@ -241,7 +241,7 @@ public class RewriteStatementTest extends TestCase {
     public void testRewriteStatement_26() {
       Parser parser = grammar.rewriteStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REWRITE MY-RECORD\n     NO LOCK \n   END-REWRITE ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " REWRITE MY-RECORD\n     LOCK \n   END-REWRITE ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

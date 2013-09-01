@@ -161,8 +161,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DATA RECORD ARE MY-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -170,8 +169,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DATA RECORD ARE MY-DATA-NAME MY-OTHER-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -197,8 +195,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DATA RECORDS IS MY-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -206,8 +203,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DATA RECORDS IS MY-DATA-NAME MY-OTHER-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -269,8 +265,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " RECORD ARE MY-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -278,8 +273,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " RECORD ARE MY-DATA-NAME MY-OTHER-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -305,8 +299,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " RECORDS IS MY-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -314,8 +307,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.dataRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " RECORDS IS MY-DATA-NAME MY-OTHER-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -395,8 +387,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORD ARE OMITTED ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -404,8 +395,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORD ARE STANDARD ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -413,8 +403,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORD ARE MY-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -422,8 +411,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORD ARE MY-DATA-NAME MY-OTHER-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -467,8 +455,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORDS IS OMITTED ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -476,8 +463,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORDS IS STANDARD ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -485,8 +471,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORDS IS MY-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
@@ -494,8 +479,7 @@ public class FileDescriptionEntryTest extends TestCase {
       Parser parser = grammar.labelRecords();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LABEL RECORDS IS MY-DATA-NAME MY-OTHER-DATA-NAME ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test

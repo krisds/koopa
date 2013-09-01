@@ -82,8 +82,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		overviewTable.setModel(results);
 		overviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		overviewTable
-				.setHighlighters(HighlighterFactory.createSimpleStriping());
+		overviewTable.setHighlighters(HighlighterFactory.createSimpleStriping());
 
 		overviewTable.getColumnModel().getColumn(BatchResults.STATUS_COLUMN)
 				.setPreferredWidth(70);
@@ -91,8 +90,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.WARNINGS_COLUMN)
 				.setPreferredWidth(70);
-		overviewTable.getColumnModel()
-				.getColumn(BatchResults.TOKEN_COUNT_COLUMN)
+		overviewTable.getColumnModel().getColumn(BatchResults.TOKEN_COUNT_COLUMN)
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setPreferredWidth(70);
@@ -105,7 +103,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 				.setCellRenderer(new StatusRenderer());
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setCellRenderer(new DecimalFormattingRenderer("0.0"));
-
+		
 		JScrollPane overviewScroll = new JScrollPane(overviewTable);
 		overviewScroll.setBorder(null);
 

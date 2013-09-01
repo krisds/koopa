@@ -100,6 +100,22 @@ KOOPAH
 KOOPAH 01 PROCEDURE                                                     KOOPAH
 KOOPAH-            DIVISION  PIC X.                                     :9
 KOOPAH
+KOOPAH 01 NULL-TERMINATED-STRING-1 VALUE z"string".                     :9
+KOOPAH 01 NULL-TERMINATED-STRING-2 VALUE Z"string".                     :9
+KOOPAH
+KOOPAH 01 NATIONAL-STRING-1 VALUE n"string".                            :9
+KOOPAH 01 NATIONAL-STRING-2 VALUE N"string".                            :9
+KOOPAH
+KOOPAH 01 HEXADECIMAL-STRING-1 VALUE x"string".                         :9
+KOOPAH 01 HEXADECIMAL-STRING-2 VALUE X"string".                         :9
+KOOPAH 01 HEXADECIMAL-STRING-3 VALUE h"string".                         :9
+KOOPAH 01 HEXADECIMAL-STRING-4 VALUE H"string".                         :9
+KOOPAH
+KOOPAH 01 NATIONAL-HEXADECIMAL-STRING-1 VALUE nx"string".               :9
+KOOPAH 01 NATIONAL-HEXADECIMAL-STRING-2 VALUE nX"string".               :9
+KOOPAH 01 NATIONAL-HEXADECIMAL-STRING-3 VALUE Nx"string".               :9
+KOOPAH 01 NATIONAL-HEXADECIMAL-STRING-4 VALUE NX"string".               :9
+KOOPAH
 KOOPAH******************************************************************:0
 KOOPAH
 KOOPAH PROCEDURE DIVISION.                                              :5

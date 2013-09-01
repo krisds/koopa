@@ -1,0 +1,61 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target repositoryParagraph;
+
++[ REPOSITORY .
+     FUNCTION ALL INTRINSIC . ]
+
++[ REPOSITORY .
+     FUNCTION foo INTRINSIC . ]
+
+# TODO Add support for this.
+# +[ REPOSITORY .
+#     FUNCTION foo bar INTRINSIC . ]
+
++[ REPOSITORY .
+     FUNCTION foo . ]
+
++[ REPOSITORY .
+     FUNCTION foo AS "foo" . ]
+
++[ REPOSITORY .
+     CLASS foo . ]
+
++[ REPOSITORY .
+     CLASS foo AS "foo" . ]
+
++[ REPOSITORY .
+     CLASS foo AS "foo" EXPANDS bar USING baz . ]
+
++[ REPOSITORY .
+     CLASS foo EXPANDS bar USING baz . ]
+
++[ REPOSITORY .
+     INTERFACE foo AS "foo" . ]
+
++[ REPOSITORY .
+     INTERFACE foo AS "foo" EXPANDS bar USING baz . ]
+
++[ REPOSITORY .
+     INTERFACE foo EXPANDS bar USING baz . ]
+
++[ REPOSITORY .
+     PROGRAM foo . ]
+
++[ REPOSITORY .
+     PROGRAM foo AS "foo" . ]
+
++[ REPOSITORY .
+     PROPERTY foo . ]
+
++[ REPOSITORY .
+     PROPERTY foo AS "foo" . ]
+
++[ REPOSITORY .
+     FUNCTION ALL INTRINSIC
+     FUNCTION foo AS "foo"
+     CLASS foo AS "foo" EXPANDS bar USING baz
+     INTERFACE foo AS "foo" EXPANDS bar USING baz
+     PROGRAM foo AS "foo"
+     PROPERTY foo AS "foo" . ]

@@ -17,11 +17,27 @@ target readStatement;
    END-READ ]
 
 +[ READ MY-FILE
+     WITH LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     LOCK
+   END-READ ]
+
++[ READ MY-FILE
      NEXT RECORD
    END-READ ]
 
 +[ READ MY-FILE
      PREVIOUS RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     NEXT
+   END-READ ]
+
++[ READ MY-FILE
+     PREVIOUS
    END-READ ]
 
 +[ READ MY-FILE
@@ -172,3 +188,19 @@ target readStatement;
      KEY IS ADDRESS OF SOMETHING
    END-READ ]
    
+   
++[ READ foo
+    END DISPLAY "Done."
+    NOT END DISPLAY "Wait."
+   END-READ ]
+
++[ READ foo
+    NEXT RECORD INTO bar
+    AT END DISPLAY "Done."
+    NOT AT END DISPLAY "Wait."
+   END-READ ]
+
++[ READ stock-file WITH KEPT LOCK ]
+
++[ READ stock-file WITH WAIT ]
++[ READ stock-file WAIT ]

@@ -1,6 +1,17 @@
 package koopa.grammars.cobol.test;
 grammar koopa.grammars.cobol.CobolGrammar;
 
+target dataDivision;
+
++[ DATA DIVISION .
+   WORKING-STORAGE Section .
+   COPY "WORKSTOR.WS" .
+]
+
++[ WORKING-STORAGE Section .
+   COPY "WORKSTOR.WS" .
+]
+
 target redefines;
 
 +[ REDEFINES TEST-1 ]
@@ -17,23 +28,50 @@ target blankWhenZero;
 +[ BLANK ZEROES ]
 
 
+target space;
+
++[ SPACE ]
++[ SPACES ]
+
 target external;
 
-+[ IS EXTERNAL ]
 +[ EXTERNAL ]
++[ IS EXTERNAL ]
++[ IS EXTERNAL AS "foo" ]
++[ IS EXTERNAL BY "foo" ]
+-[ EXTERNAL "foo" ]
 
+target propertyClause;
+
++[ PROPERTY ]
++[ PROPERTY NO GET ]
++[ PROPERTY NO SET ]
++[ PROPERTY WITH NO GET ]
++[ PROPERTY WITH NO SET ]
+-[ PROPERTY GET ]
+-[ PROPERTY SET ]
+-[ PROPERTY WITH GET ]
+-[ PROPERTY WITH SET ]
 
 target global;
 
 +[ IS GLOBAL ]
 +[ GLOBAL ]
 
+target typedefClause;
+
++[ IS TYPEDEF ]
++[ TYPEDEF ]
+
+target threadLocalClause;
+
++[ IS THREAD-LOCAL ]
++[ THREAD-LOCAL ]
 
 target justified;
 
 +[ JUSTIFIED RIGHT ]
 +[ JUST RIGHT ]
-
 
 target occurs;
 
@@ -83,7 +121,7 @@ target occurs;
    INDEXED BY MY-INDEX MY-OTHER-INDEX ]
 
 +[ OCCURS 7 TO 42 TIMES ]
-+[ OCCURS 7 # TO 42.0 TIMES ]
+-[ OCCURS 7 TO 42.0 TIMES ]
 -[ OCCURS 7.0 TO 42 TIMES ]
 -[ OCCURS 7.0 TO 42.0 TIMES ]
 
@@ -173,7 +211,71 @@ target usage;
 
 +[ BINARY ] 
 +[ USAGE BINARY ] 
-+[ USAGE IS BINARY ] 
++[ USAGE IS BINARY ]
+
++[ BINARY-CHAR ] 
++[ USAGE BINARY-CHAR ] 
++[ USAGE IS BINARY-CHAR ]
++[ BINARY-CHAR SIGNED ]
++[ USAGE BINARY-CHAR SIGNED ]
++[ USAGE IS BINARY-CHAR SIGNED ] 
++[ BINARY-CHAR UNSIGNED ]
++[ USAGE BINARY-CHAR UNSIGNED ]
++[ USAGE IS BINARY-CHAR UNSIGNED ]
+
++[ BINARY-LONG ] 
++[ USAGE BINARY-LONG ] 
++[ USAGE IS BINARY-LONG ]
++[ BINARY-LONG SIGNED ]
++[ USAGE BINARY-LONG SIGNED ]
++[ USAGE IS BINARY-LONG SIGNED ] 
++[ BINARY-LONG UNSIGNED ]
++[ USAGE BINARY-LONG UNSIGNED ]
++[ USAGE IS BINARY-LONG UNSIGNED ]
+
++[ BINARY-SHORT ] 
++[ USAGE BINARY-SHORT ] 
++[ USAGE IS BINARY-SHORT ]
++[ BINARY-SHORT SIGNED ]
++[ USAGE BINARY-SHORT SIGNED ]
++[ USAGE IS BINARY-SHORT SIGNED ] 
++[ BINARY-SHORT UNSIGNED ]
++[ USAGE BINARY-SHORT UNSIGNED ]
++[ USAGE IS BINARY-SHORT UNSIGNED ]
+
++[ BINARY-DOUBLE ] 
++[ USAGE BINARY-DOUBLE ] 
++[ USAGE IS BINARY-DOUBLE ]
++[ BINARY-DOUBLE SIGNED ]
++[ USAGE BINARY-DOUBLE SIGNED ]
++[ USAGE IS BINARY-DOUBLE SIGNED ] 
++[ BINARY-DOUBLE UNSIGNED ]
++[ USAGE BINARY-DOUBLE UNSIGNED ]
++[ USAGE IS BINARY-DOUBLE UNSIGNED ]
+
++[ BINARY-C-LONG ] 
++[ USAGE BINARY-C-LONG ] 
++[ USAGE IS BINARY-C-LONG ]
+
++ [ FLOAT-SHORT ]
++ [ USAGE FLOAT-SHORT ]
++ [ USAGE IS FLOAT-SHORT ]
+
++ [ FLOAT-LONG ]
++ [ USAGE FLOAT-LONG ]
++ [ USAGE IS FLOAT-LONG ]
+
++ [ FLOAT-EXTENDED ]
++ [ USAGE FLOAT-EXTENDED ]
++ [ USAGE IS FLOAT-EXTENDED ]
+
++ [ BIT ]
++ [ USAGE BIT ]
++ [ USAGE IS BIT ]
+
++ [ CHARACTER ]
++ [ USAGE CHARACTER ]
++ [ USAGE IS CHARACTER ]
 
 +[ COMPUTATIONAL ] 
 +[ USAGE COMPUTATIONAL ] 
@@ -182,6 +284,10 @@ target usage;
 +[ COMP ] 
 +[ USAGE COMP ] 
 +[ USAGE IS COMP ] 
+
++ [ DECIMAL ]
++ [ USAGE DECIMAL ]
++ [ USAGE IS DECIMAL ]
 
 +[ DISPLAY ] 
 +[ USAGE DISPLAY ] 
@@ -227,16 +333,54 @@ target usage;
 +[ USAGE COMP-5 ] 
 +[ USAGE IS COMP-5 ]
 
++[ COMPUTATIONAL-X ] 
++[ USAGE COMPUTATIONAL-X ] 
++[ USAGE IS COMPUTATIONAL-X ]
+
++[ COMP-X ] 
++[ USAGE COMP-X ] 
++[ USAGE IS COMP-X ]
+
 +[ POINTER ] 
 +[ USAGE POINTER ] 
 +[ USAGE IS POINTER ]
 
-+[ BINARY-LONG ] 
-+[ USAGE BINARY-LONG ] 
-+[ USAGE IS BINARY-LONG ]
++ [ MONITOR-POINTER ]
++ [ USAGE MONITOR-POINTER ]
++ [ USAGE IS MONITOR-POINTER ]
+
++ [ MUTEX-POINTER ]
++ [ USAGE MUTEX-POINTER ]
++ [ USAGE IS MUTEX-POINTER ]
+
++ [ NATIONAL ]
++ [ USAGE NATIONAL ]
++ [ USAGE IS NATIONAL ]
+
++ [          OBJECT REFERENCE ]
++ [ USAGE    OBJECT REFERENCE ]
++ [ USAGE IS OBJECT REFERENCE ]
++ [          OBJECT REFERENCE            ACTIVE-CLASS ]
++ [ USAGE    OBJECT REFERENCE            ACTIVE-CLASS ]
++ [ USAGE IS OBJECT REFERENCE            ACTIVE-CLASS ]
++ [          OBJECT REFERENCE FACTORY OF ACTIVE-CLASS ]
++ [ USAGE    OBJECT REFERENCE FACTORY OF ACTIVE-CLASS ]
++ [ USAGE IS OBJECT REFERENCE FACTORY OF ACTIVE-CLASS ]
++ [          OBJECT REFERENCE            foo ONLY ]
++ [ USAGE    OBJECT REFERENCE            foo ONLY ]
++ [ USAGE IS OBJECT REFERENCE            foo ONLY ]
++ [          OBJECT REFERENCE FACTORY OF foo ONLY ]
++ [ USAGE    OBJECT REFERENCE FACTORY OF foo ONLY ]
++ [ USAGE IS OBJECT REFERENCE FACTORY OF foo ONLY ]
++ [          OBJECT REFERENCE            foo EVENT ]
++ [ USAGE    OBJECT REFERENCE            foo EVENT ]
++ [ USAGE IS OBJECT REFERENCE            foo EVENT ]
++ [          OBJECT REFERENCE FACTORY OF foo EVENT ]
++ [ USAGE    OBJECT REFERENCE FACTORY OF foo EVENT ]
++ [ USAGE IS OBJECT REFERENCE FACTORY OF foo EVENT ]
 
 
-target valueIs;
+target valueClause;
 
 +[ VALUE IS ZERO ]
 
@@ -261,6 +405,10 @@ target valueIs;
 +[ VALUE IS 'this is a constant' ]
 
 +[ VALUE 'this is a constant' ]
+
++[ VALUE IS SOME-CONSTANT ]
+
++[ VALUE SOME-CONSTANT ]
 
 
 target whenSetToFalseClause;
@@ -293,8 +441,6 @@ target dataDescriptionEntry;
 
 -[ AA TEST-9 . ]
 
-
-
 +[ 66 TEST-10
       RENAMES TEST-1 . ]
 
@@ -313,8 +459,10 @@ target dataDescriptionEntry;
 +[ 66 TEST-12B
       RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE . ]
 
++[ 88 TEST-13A
+    VALUE -1 . ]
 
-+[ 88 TEST-13
++[ 88 TEST-13B
       VALUE IS "AAA" . ]
 
 +[ 88 TEST-14
@@ -367,6 +515,31 @@ target dataDescriptionEntry;
       POINTER
       VALUE NULL . ]
 
++[ 05 foo ANY LENGTH . ]
++[ 05 foo ANY LENGTH . ]
++[ 05 foo ANY LENGTH
+   BLANK WHEN ZERO . ]
+
++[ 05 foo IS EXTERNAL AS "bar" . ]
+
++[ 05 foo PUBLIC . ]
++[ 05 foo INTERNAL . ]
++[ 05 foo PRIVATE . ]
++[ 05 foo PROTECTED . ]
++[ 05 foo ATTRIBUTE bar ( n ) . ]
++[ 05 foo PUBLIC
+   ATTRIBUTE bar ( NAME n = v ) . ]
++[ 05 foo PRIVATE
+   CUSTOM-ATTRIBUTE bar . ]
++[ 05 foo PROTECTED
+   CUSTOM-ATTRIBUTE bar ( n = v ) . ]
+
++[ 05 foo IS TYPEDEF . ]
++[ 05 foo IS THREAD-LOCAL . ]
+
++[ 05 foo PROPERTY . ]
++[ 05 foo PROPERTY WITH NO SET . ]
+
 +{
 004400 77  WS-TEST-12-DATA                                              NC2054.2
 004500                        PIC S9(                                   NC2054.2
@@ -382,10 +555,24 @@ target dataDescriptionEntry;
 
 
 # Examples of level 78 from Simon Sobisch.
-+[ 78 lines-to-display . ]
+-[ 78 lines-to-display . ]              # VALUE is required
 +[ 78 lines-to-display value is 12 . ]
 +[ 78 lines-to-display value 12 . ]
 
++[ 78 foo VALUE NEXT . ]
++[ 78 foo VALUE NEXT + 1 . ]
+
++[ 78 foo VALUE START bar . ]
++[ 78 foo VALUE START OF bar . ]
++[ 78 foobar VALUE START OF foo + LENGTH OF bar . ]
+
++[ 78 foo VALUE LENGTH bar . ]
++[ 78 foo VALUE LENGTH OF bar . ]
++[ 78 foobar VALUE "foo" & bar . ]
+
++[ 78 foo VALUE 4 * 2 . ]
++[ 78 foo VALUE bar ** 2 . ]
++[ 78 foo VALUE 4 * bar . ]
 
 # Example from http://opencobol.add1tocobol.com/#based.
 +[ 01 based-var PIC X(80) BASED . ]
@@ -435,10 +622,32 @@ target dataDescriptionEntry;
       RENAMES FOO
       THROUGH ADDRESS OF SOMETHING . ]
 
+target localStorageSection;
 
++[ LOCAL-STORAGE Section .
+   COPY "LOCLSTOR.LS" . ]
+
++[ LOCAL-STORAGE SECTION .
+   77 OPTIONS PIC S9(9) BINARY . ]
 
 target workingStorageSection;
 
 +[ WORKING-STORAGE Section .
    COPY "WORKSTOR.WS" .
 ]
+
+target threadLocalStorageSection;
+
++[ THREAD-LOCAL-STORAGE Section .
+   COPY "THRDSTOR.LS" . ]
+
++[ THREAD-LOCAL-STORAGE SECTION .
+   77 OPTIONS PIC S9(9) BINARY . ]
+
+target objectStorageSection;
+
++[ OBJECT-STORAGE Section .
+   COPY "OBJSTOR.OS" . ]
+
++[ OBJECT-STORAGE SECTION .
+   77 OPTIONS PIC S9(9) BINARY . ]

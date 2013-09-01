@@ -1,0 +1,83 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target compilerDisplayStatement;
+
++[ $DISPLAY "foo" ]
++[ $DISPLAY VCS = z"@(#)2.0" ]
++[ $DISPLAY VCS = "2.0" ]
+-[ $DISPLAY VCS = ]
+
+target compilerIfStatement;
+
++{
+      $IF foo SET
+        CALL bar.
+      $ELSE
+        CALL baz.
+      $END
+}
+
+-{
+      $IF foo NOT SET
+        CALL bar.
+      $ELSE
+        CALL baz.
+      $END
+}
+
++{
+      $IF foo DEFINED
+        PERFORM bar.
+      $END
+}
+
++{
+      $IF foo NOT DEFINED
+        CALL bar.
+      $END
+}
+
++{
+      $IF foo < 5
+        CALL bar.
+      $END
+}
+
++{
+      $IF foo NOT < 5
+        CALL baz.
+      $END
+}
+
++{
+      $IF foo > 5
+        CALL bar.
+      $END
+}
+
++{
+      $IF foo NOT > 5
+        CALL baz.
+      $END
+}
+
++{
+      $IF foo = 5
+        CALL bar.
+      $END
+}
+
++{
+      $IF foo NOT = 5
+        CALL baz.
+      $END
+}
+
++{
+      $IF foo = 1
+      $IF bar = 2
+        CALL baz.
+      $END
+      $END
+}

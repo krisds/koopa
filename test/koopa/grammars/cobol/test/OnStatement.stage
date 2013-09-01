@@ -1,0 +1,68 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target onStatement;
+
++[ ON foo PERFORM bar ]
++[ ON "foo" PERFORM bar ]
++[ ON foo NEXT SENTENCE ]
+
++[ ON foo
+     AND EVERY bar
+     PERFORM baz
+ ]
+ 
++[ ON foo
+     AND EVERY "bar"
+     PERFORM baz
+ ]
+ 
++[ ON foo
+     AND EVERY bar
+     UNTIL baz
+     PERFORM boojum
+ ]
+
++[ ON foo
+     AND EVERY bar
+     UNTIL "baz"
+     PERFORM boojum
+ ]
+ 
++[ ON foo
+     AND EVERY "bar"
+     UNTIL "baz"
+     PERFORM boojum
+ ]
+ 
++[ ON foo
+     PERFORM bar
+   ELSE
+     PERFORM baz
+ ]
+ 
++[ ON foo
+     PERFORM bar
+   OTHERWISE
+     PERFORM baz
+ ]
+ 
++[ ON foo
+     PERFORM bar
+   ELSE
+     NEXT SENTENCE
+ ]
+ 
++[ ON foo
+     PERFORM bar
+   OTHERWISE
+     NEXT SENTENCE
+ ]
+ 
++[ ON foo
+     AND EVERY bar
+     UNTIL baz
+     PERFORM boojum
+   OTHERWISE
+     PERFORM snark
+ ]

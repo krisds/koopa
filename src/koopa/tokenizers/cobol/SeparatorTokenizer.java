@@ -97,15 +97,28 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			} else if (startsStringLiteral(c)) {
 				// STRING LITERAL.
 				position = stringLiteral(token, text, position, length, c);
+            
+            } else if (startOfNullTerminatedString(text, length, position, c)) {
+                // NULL-TERMINATED STRING LITERAL: z"String"
+				position = stringLiteral(token, text, position + 1, length, text.charAt(position + 1));
+
+            } else if (startOfNationalString(text, length, position, c)) {
+                // NATIONAL STRING LITERAL: n"String"
+				position = stringLiteral(token, text, position + 1, length, text.charAt(position + 1));
 
 			} else if (isPseudoLiteralMarker(text, length, position, c)) {
 				// PSEUDO LITERAL (marker)
 				position = pseudoLiteral(token, position);
 
 			} else if (startOfHexadecimal(text, length, position, c)) {
-				// HEXADECIMAL LITERAL.
-				position = hexadecimal(token, text, position, length,
-						text.charAt(position + 1));
+				// HEXADECIMAL LITERAL: x"00" or h"00"
+				position = hexadecimal(token, text, position + 1, length, text
+						.charAt(position + 1));
+            
+            } else if (startOfNationalHexadecimal(text, length, position, c)) {
+                // NATIONAL HEXADECIMAL LITERAL: nx"00"
+				position = hexadecimal(token, text, position + 2, length, text
+						.charAt(position + 2));
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.
@@ -155,13 +168,37 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		return (c == ',' || c == ';' || c == '.')
 				&& (position + 1 == length || text.charAt(position + 1) == ' ');
 	}
+    
+    private boolean startOfNullTerminatedString (final String text, final int length,
+			int position, final char c) {
+        return (c == 'z' || c == 'Z')
+        	    && position + 1 < length
+        	    && (text.charAt(position + 1) == '"' || text
+        				.charAt(position + 1) == '\'');
+    }
+
+    private boolean startOfNationalString (final String text, final int length,
+			int position, final char c) {
+        return (c == 'n' || c == 'N')
+        	    && position + 1 < length
+        	    && (text.charAt(position + 1) == '"' || text
+        				.charAt(position + 1) == '\'');
+    }
 
 	private boolean startOfHexadecimal(final String text, final int length,
 			int position, final char c) {
-		return (c == 'x' || c == 'X')
+		return (c == 'x' || c == 'X' || c == 'h' || c == 'H')
 				&& position + 1 < length
 				&& (text.charAt(position + 1) == '"' || text
 						.charAt(position + 1) == '\'');
+	}
+
+	private boolean startOfNationalHexadecimal (final String text, final int length,
+			int position, final char c) {
+		return (c == 'n' || c == 'N')
+				&& position + 2 < length
+				&& (text.charAt(position + 1) == 'x' || text.charAt(position + 1) == 'X')
+				&& (text.charAt(position + 2) == '"' || text.charAt(position + 2) == '\'');
 	}
 
 	private boolean startOfInlineComment(final String text, int position,
@@ -567,6 +604,14 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				// STRING LITERAL.
 				break;
 
+            } else if (startOfNationalString(text, length, position, c)) {
+                // NATIONAL STRING.
+                break;
+
+            } else if (startOfNullTerminatedString(text, length, position, c)) {
+                // NULL-TERMINATED STRING
+                break;
+
 			} else if (isPseudoLiteralMarker(text, length, position, c)) {
 				// PSEUDO LITERAL (marker)
 				break;
@@ -574,6 +619,10 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			} else if (startOfHexadecimal(text, length, position, c)) {
 				// HEXADECIMAL LITERAL.
 				break;
+
+            } else if (startOfNationalHexadecimal(text, length, position, c)) {
+                // NATIONAL HEXADECIMAL LITERAL.
+                break;
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.

@@ -52,3 +52,14 @@ target condition;
 
 +[ 1 >= 2 ]
 +[ 1 NOT >= 2 ]
+
++[ foo IS GREATER THAN bar ]
++[ foo ARE GREATER THAN bar ]
++[ foo IS NOT GREATER THAN bar ]
++[ foo ARE NOT GREATER THAN bar ]
+
++[ foo EXCEEDS bar ]
++[ foo EQUALS bar ]
++[ foo IS UNEQUAL TO bar ]
++[ foo IS <> bar ]
+

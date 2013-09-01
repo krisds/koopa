@@ -1,0 +1,97 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target chainStatement;
+
++[ CHAIN foo ]
+
++[ CHAIN "foo" ]
+
++[ CHAIN foo
+   END-CHAIN ]
+   
++[ CHAIN "foo"
+   END-CHAIN ]
+   
++[ CHAIN foo
+     USING bar ]
+   
++[ CHAIN foo
+     USING REFERENCE bar ]
+
++[ CHAIN foo
+     USING BY REFERENCE bar ]
+     
++[ CHAIN foo
+     USING BY REFERENCE "bar" ]
+     
++[ CHAIN foo
+     USING BY REFERENCE ADDRESS OF bar ]
+     
++[ CHAIN foo
+     USING BY REFERENCE OMITTED ]
+
++[ CHAIN foo USING
+     BY REFERENCE bar
+     BY REFERENCE "bar"
+     BY REFERENCE ADDRESS OF bar
+     BY REFERENCE OMITTED ]
+     
++[ CHAIN foo
+     USING CONTENT bar ]
+     
++[ CHAIN foo
+     USING BY CONTENT bar ]
+     
++[ CHAIN foo
+     USING BY CONTENT "bar" ]
+     
++[ CHAIN foo
+     USING BY CONTENT LENGTH OF bar ]
+
++[ CHAIN foo USING
+     BY CONTENT bar
+     BY CONTENT "bar"
+     BY CONTENT LENGTH OF bar ]
+     
++[ CHAIN foo
+     USING VALUE bar ]
+     
++[ CHAIN foo
+     USING BY VALUE bar ]
+     
++[ CHAIN foo
+     USING BY VALUE 100 ]
+
++[ CHAIN foo
+     USING BY VALUE 100 SIZE 200 ]
+
++[ CHAIN foo
+     USING BY VALUE 100 SIZE IS 200 ]
+
++[ CHAIN foo
+     USING BY VALUE LENGTH OF bar ]
+
++[ CHAIN foo USING
+     BY VALUE bar
+     BY VALUE 100
+     BY VALUE 100 SIZE 200
+     BY VALUE LENGTH OF bar ]
+     
++[ CHAIN foo USING
+     BY REFERENCE bar
+     BY REFERENCE "bar"
+     BY REFERENCE ADDRESS OF bar
+     BY REFERENCE OMITTED
+     BY CONTENT bar
+     BY CONTENT "bar"
+     BY CONTENT LENGTH OF bar
+     BY VALUE bar
+     BY VALUE 100
+     BY VALUE 100 SIZE 200
+     BY VALUE LENGTH OF bar
+   END-CHAIN ]
+     
+-[ CHAIN foo
+     USING BY REFERENCE bar
+     USING BY CONTENT bar ]

@@ -16,7 +16,9 @@ options {
 
 compilationGroup
   : ^(COMPILATION_GROUP
-      ( compilationUnit )*
+      ( ( compilerDirective
+      | compilationUnit
+      ) )*
     )
   ;
 
@@ -74,17 +76,90 @@ copybookHoldingBehaviour
 
 compilationUnit
   : ^(COMPILATION_UNIT
-      ( identificationDivision
+      ( ( ( identificationDivision
         ( environmentDivision )?
         ( dataDivision )?
+      )
+      | ( environmentDivision
+        ( dataDivision )?
+      )
+      | dataDivision
+      )
         ( ( procedureDivision
           ( compilationUnit )*
         ) )?
-        ( ( 'END'
-          'PROGRAM'
-          programName
-          '.'
-        ) )?
+        ( endMarker )?
+      )
+    )
+  ;
+
+// ========================================================
+// endMarker
+// ........................................................
+
+endMarker
+  : ^(END_MARKER
+      ( ( 'END'
+        'FUNCTION'
+        functionName
+        '.'
+      )
+      | ( 'END'
+        'CLASS'
+        className
+        '.'
+      )
+      | ( 'END'
+        'FACTORY'
+        '.'
+      )
+      | ( 'END'
+        'STATIC'
+        '.'
+      )
+      | ( 'END'
+        'OBJECT'
+        '.'
+      )
+      | ( 'END'
+        'OPERATOR'
+        '.'
+      )
+      | ( 'END'
+        'METHOD'
+        ( methodName )?
+        '.'
+      )
+      | ( 'END'
+        'INTERFACE'
+        interfaceName
+        '.'
+      )
+      | ( 'END'
+        'DELEGATE'
+        delegateName
+        '.'
+      )
+      | ( 'END'
+        'ENUM'
+        enumName
+        '.'
+      )
+      | ( 'END'
+        'OPERATOR'
+        cobolWord
+        '.'
+      )
+      | ( 'END'
+        'VALUETYPE'
+        valuetypeName
+        '.'
+      )
+      | ( 'END'
+        'PROGRAM'
+        programName
+        '.'
+      )
       )
     )
   ;
@@ -95,15 +170,122 @@ compilationUnit
 
 identificationDivision
   : ^(IDENTIFICATION_DIVISION
-      ( ( ( ( 'ID'
+      ( ( ( 'ID'
       | 'IDENTIFICATION'
       )
         'DIVISION'
         '.'
-      ) )?
-        'PROGRAM-ID'
+        ( identificationDivisionBody )?
+      )
+      | identificationDivisionBody
+      )
+    )
+  ;
+
+// ========================================================
+// identificationDivisionBody
+// ........................................................
+
+identificationDivisionBody
+  : ^(IDENTIFICATION_DIVISION_BODY
+      ( ( ( callPrototypeIdParagraph
+      | programPrototypeIdParagraph
+      | programIdParagraph
+      | classIdParagrah
+      | factoryParagraph
+      | objectParagraph
+      | methodIdParagraph
+      | interfaceIdParagraph
+      | functionIdParagraph
+      | delegateIdParagraph
+      | enumIdParagraph
+      | iteratorIdParagraph
+      | operatorIdParagraph
+      | valuetypeIdParagraph
+      | ( 'AUTHOR'
+        '.'
+        (water)?
+        '.'
+      )
+      | ( 'INSTALLATION'
+        '.'
+        (water)?
+        '.'
+      )
+      | ( 'DATE-WRITTEN'
+        '.'
+        (water)?
+        '.'
+      )
+      | ( 'DATE-COMPILED'
+        '.'
+        (water)?
+        '.'
+      )
+      | ( 'SECURITY'
+        '.'
+        (water)?
+        '.'
+      )
+      | ( 'REMARKS'
+        '.'
+        (water)?
+        '.'
+      )
+      ) )+
+        (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// callPrototypeIdParagraph
+// ........................................................
+
+callPrototypeIdParagraph
+  : ^(CALL_PROTOTYPE_ID_PARAGRAPH
+      ( 'PROGRAM-ID'
         ( '.' )?
         programName
+        ( 'IS' )?
+        'EXTERNAL'
+        ( 'PROGRAM' )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// programPrototypeIdParagraph
+// ........................................................
+
+programPrototypeIdParagraph
+  : ^(PROGRAM_PROTOTYPE_ID_PARAGRAPH
+      ( 'PROGRAM-ID'
+        ( '.' )?
+        programName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( 'IS' )?
+        'PROTOTYPE'
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// programIdParagraph
+// ........................................................
+
+programIdParagraph
+  : ^(PROGRAM_ID_PARAGRAPH
+      ( 'PROGRAM-ID'
+        ( '.' )?
+        programName
+        ( ( 'AS'
+          literal
+        ) )?
         ( ( ( 'IS' )?
           ( ( 'INITIAL'
             ( 'COMMON' )?
@@ -111,12 +293,370 @@ identificationDivision
           | ( 'COMMON'
             ( 'INITIAL' )?
           )
+          | 'RECURSIVE'
           )
           ( 'PROGRAM' )?
         ) )?
-        ( '.' )?
-        (water)?
+        ( ( (water)?
+          '.'
+        ) )?
       )
+    )
+  ;
+
+// ========================================================
+// classIdParagrah
+// ........................................................
+
+classIdParagrah
+  : ^(CLASS_ID_PARAGRAH
+      ( 'CLASS-ID'
+        ( '.' )?
+        className
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( 'INHERITS'
+          ( 'FROM' )?
+          ( typeSpecifier )+
+        ) )?
+        ( ( ( 'IS' )?
+          'STATIC'
+        ) )?
+        ( ( ( 'IS' )?
+          ( ( 'PARTIAL'
+          | 'FINAL'
+          | 'ABSTRACT'
+          ) )+
+        ) )?
+        ( ( ( 'IS' )?
+          ( 'PUBLIC'
+          | 'INTERNAL'
+          )
+        ) )?
+        ( attributeClause )?
+        ( ( 'IMPLEMENTS'
+          ( typeSpecifier )+
+        ) )?
+        ( ( 'USING'
+          ( parameterName )+
+        ) )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// factoryParagraph
+// ........................................................
+
+factoryParagraph
+  : ^(FACTORY_PARAGRAPH
+      ( ( 'FACTORY'
+      | 'STATIC'
+      )
+        ( '.' )?
+        ( ( 'IMPLEMENTS'
+          ( interfaceName )+
+          '.'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// objectParagraph
+// ........................................................
+
+objectParagraph
+  : ^(OBJECT_PARAGRAPH
+      ( 'OBJECT'
+        ( '.' )?
+        ( ( 'IMPLEMENTS'
+          ( interfaceName )+
+          '.'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// methodIdParagraph
+// ........................................................
+
+methodIdParagraph
+  : ^(METHOD_ID_PARAGRAPH
+      ( 'METHOD-ID'
+        ( '.' )?
+        ( methodName
+        | ( ( 'GET'
+        | 'SET'
+        )
+          'PROPERTY'
+          propertyName
+        )
+        )
+        ( ( 'AS'
+          literal
+        ) )?
+        ( 'SYNC' )?
+        ( ( ( 'IS' )?
+          ( 'STATIC'
+          | ( ( 'STATIC' )?
+            'EXTENSION'
+          )
+          )
+        ) )?
+        ( ( ( 'IS' )?
+          ( 'PUBLIC'
+          | 'PRIVATE'
+          | 'PROTECTED'
+          | 'INTERNAL'
+          )
+        ) )?
+        ( ( 'OVERRIDE'
+        | 'REDEFINE'
+        ) )?
+        ( ( ( 'IS' )?
+          ( 'FINAL'
+          | 'ABSTRACT'
+          )
+        ) )?
+        ( ( 'FOR'
+          interfaceName
+        ) )?
+        ( attributeClause )?
+        ( ( 'USING'
+          ( parameterName )+
+        ) )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// interfaceIdParagraph
+// ........................................................
+
+interfaceIdParagraph
+  : ^(INTERFACE_ID_PARAGRAPH
+      ( 'INTERFACE-ID'
+        ( '.' )?
+        interfaceName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( ( 'IS' )?
+          ( 'PUBLIC'
+          | 'INTERNAL'
+          )
+        ) )?
+        ( ( 'INHERITS'
+          ( 'FROM' )?
+          ( typeSpecifier )+
+        ) )?
+        ( attributeClause )?
+        ( ( 'USING'
+          ( parameterName )+
+        ) )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// functionIdParagraph
+// ........................................................
+
+functionIdParagraph
+  : ^(FUNCTION_ID_PARAGRAPH
+      ( 'FUNCTION-ID'
+        ( '.' )?
+        functionName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( ( 'IS' )?
+          'PROTOTYPE'
+        ) )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// delegateIdParagraph
+// ........................................................
+
+delegateIdParagraph
+  : ^(DELEGATE_ID_PARAGRAPH
+      ( 'DELEGATE-ID'
+        ( '.' )?
+        delegateName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( ( 'IS' )?
+          ( ( 'PUBLIC'
+          | 'PRIVATE'
+          | 'PROTECTED'
+          | 'INTERNAL'
+          ) )+
+        ) )?
+        ( attributeClause )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// enumIdParagraph
+// ........................................................
+
+enumIdParagraph
+  : ^(ENUM_ID_PARAGRAPH
+      ( 'ENUM-ID'
+        ( '.' )?
+        enumName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( ( 'IS' )?
+          ( ( 'PUBLIC'
+          | 'PRIVATE'
+          | 'PROTECTED'
+          | 'INTERNAL'
+          ) )+
+        ) )?
+        ( attributeClause )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// iteratorIdParagraph
+// ........................................................
+
+iteratorIdParagraph
+  : ^(ITERATOR_ID_PARAGRAPH
+      ( 'ITERATOR-ID'
+        ( '.' )?
+        iteratorName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( ( 'IS' )?
+          ( ( 'PUBLIC'
+          | 'PRIVATE'
+          | 'PROTECTED'
+          | 'INTERNAL'
+          ) )+
+        ) )?
+        ( attributeClause )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// operatorIdParagraph
+// ........................................................
+
+operatorIdParagraph
+  : ^(OPERATOR_ID_PARAGRAPH
+      ( 'OPERATOR-ID'
+        ( '.' )?
+        ( ( '='
+          ( 'EXTENSION' )?
+        )
+        | '<>'
+        | '>='
+        | '>'
+        | '<='
+        | '<'
+        | '+'
+        | '-'
+        | '*'
+        | '/'
+        | 'B-AND'
+        | 'B-OR'
+        | 'B-XOR'
+        | 'B-NOT'
+        | 'B-LEFT'
+        | 'B-RIGHT'
+        | 'IMPLICIT'
+        | 'EXPLICIT'
+        )
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// valuetypeIdParagraph
+// ........................................................
+
+valuetypeIdParagraph
+  : ^(VALUETYPE_ID_PARAGRAPH
+      ( 'VALUETYPE-ID'
+        ( '.' )?
+        valuetypeName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( ( 'IS' )?
+          ( 'FINAL'
+          | 'PARTIAL'
+          | 'ABSTRACT'
+          )
+        ) )?
+        ( ( ( 'IS' )?
+          ( 'PUBLIC'
+          | 'INTERNAL'
+          )
+        ) )?
+        ( attributeClause )?
+        ( ( 'IMPLEMENTS'
+          ( interfaceName )+
+        ) )?
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// attributeClause
+// ........................................................
+
+attributeClause
+  : ^(ATTRIBUTE_CLAUSE
+      ( ( ( 'ATTRIBUTE'
+        attributeName
+        '('
+        ( ( ( 'NAME'
+          propertyName
+          '='
+          propertyValue
+        )
+        | parameterName
+        ) )*
+        ')'
+      )
+      | ( 'CUSTOM-ATTRIBUTE'
+        'IS'
+        className
+        ( ( '('
+          ( ( ( propertyName
+            '='
+            propertyValue
+          )
+          | parameterName
+          ) )*
+          ')'
+        ) )?
+      )
+      ) )+
     )
   ;
 
@@ -126,11 +666,34 @@ identificationDivision
 
 environmentDivision
   : ^(ENVIRONMENT_DIVISION
-      ( 'ENVIRONMENT'
+      ( ( 'ENVIRONMENT'
         'DIVISION'
         '.'
-        ( configurationSection )?
+        ( environmentDivisionBody )?
+      )
+      | environmentDivisionBody
+      | ( configurationSectionBody
         ( ioSection )?
+        (water)?
+      )
+      | ( ioSectionBody
+        ( configurationSection )?
+        (water)?
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// environmentDivisionBody
+// ........................................................
+
+environmentDivisionBody
+  : ^(ENVIRONMENT_DIVISION_BODY
+      ( ( ( configurationSection
+      | ioSection
+      | objectSection
+      ) )+
         (water)?
       )
     )
@@ -145,10 +708,25 @@ configurationSection
       ( 'CONFIGURATION'
         'SECTION'
         '.'
-        ( ( sourceComputerParagraph
-        | objectComputerParagraph
-        | specialNamesParagraph
-        ) )*
+        ( configurationSectionBody )?
+      )
+    )
+  ;
+
+// ========================================================
+// configurationSectionBody
+// ........................................................
+
+configurationSectionBody
+  : ^(CONFIGURATION_SECTION_BODY
+      ( ( ( sourceComputerParagraph
+      | objectComputerParagraph
+      | specialNamesParagraph
+      | repositoryParagraph
+      | constraintsParagraph
+      | classAttributesParagraph
+      | assemblyAttributesParagraph
+      ) )+
         (water)?
       )
     )
@@ -202,6 +780,45 @@ objectComputerParagraph
   ;
 
 // ========================================================
+// constraintsParagraph
+// ........................................................
+
+constraintsParagraph
+  : ^(CONSTRAINTS_PARAGRAPH
+      ( 'CONSTRAINTS'
+        '.'
+        (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// classAttributesParagraph
+// ........................................................
+
+classAttributesParagraph
+  : ^(CLASS_ATTRIBUTES_PARAGRAPH
+      ( 'CLASS-ATTRIBUTES'
+        '.'
+        (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// assemblyAttributesParagraph
+// ........................................................
+
+assemblyAttributesParagraph
+  : ^(ASSEMBLY_ATTRIBUTES_PARAGRAPH
+      ( 'ASSEMBLY-ATTRIBUTES'
+        '.'
+        (water)?
+      )
+    )
+  ;
+
+// ========================================================
 // genericStringDef
 // ........................................................
 
@@ -224,8 +841,8 @@ specialNamesParagraph
   : ^(SPECIAL_NAMES_PARAGRAPH
       ( 'SPECIAL-NAMES'
         '.'
-        ( ( copyStatement
-        | specialNameStatement
+        ( ( specialNameStatement
+        | copyStatement
         ) )*
         ( '.' )?
         (water)?
@@ -239,43 +856,35 @@ specialNamesParagraph
 
 specialNameStatement
   : ^(SPECIAL_NAME_STATEMENT
-      ( decimalIsComma
+      ( consoleIsCRT
+      | alphabetIs
+      | symbolicChars
+      | classIs
+      | localeIs
       | currencySignIs
-      | consoleIsCRT
+      | decimalIsComma
+      | numericSignIs
+      | callConvention
       | cursorIs
       | crtStatusIs
-      | numericSignIs
-      | classIs
-      | symbolicChars
-      | alphabetIs
-      | mnemonicClause
+      | xmlSchemaIs
+      | screenControlIs
+      | eventStatusIs
+      | ( cobolSwitch
+        'IS'
+        mnemonicName
+        ( ( ( 'ON'
+        | 'OFF'
+        )
+          ( 'STATUS' )?
+          ( 'IS' )?
+          conditionName
+        ) )*
       )
-    )
-  ;
-
-// ========================================================
-// decimalIsComma
-// ........................................................
-
-decimalIsComma
-  : ^(DECIMAL_IS_COMMA
-      ( 'DECIMAL-POINT'
-        ( 'IS' )?
-        'COMMA'
+      | ( cobolDevice
+        'IS'
+        mnemonicName
       )
-    )
-  ;
-
-// ========================================================
-// currencySignIs
-// ........................................................
-
-currencySignIs
-  : ^(CURRENCY_SIGN_IS
-      ( 'CURRENCY'
-        ( 'SIGN' )?
-        ( 'IS' )?
-        literal
       )
     )
   ;
@@ -294,64 +903,176 @@ consoleIsCRT
   ;
 
 // ========================================================
-// cursorIs
+// cobolDevice
 // ........................................................
 
-cursorIs
-  : ^(CURSOR_IS
-      ( 'CURSOR'
-        ( 'IS' )?
-        dataName
+cobolDevice
+  : ^(COBOL_DEVICE
+      ( 'SYSIN'
+      | 'SYSIPT'
+      | 'SYSOUT'
+      | 'SYSLIST'
+      | 'SYSLST'
+      | 'SYSPCH'
+      | 'SYSPUNCH'
+      | 'CONSOLE'
+      | 'TAB'
+      | 'PRINTER'
+      | 'FORMFEED'
+      | 'COMMAND-LINE'
+      | 'ARGUMENT-NUMBER'
+      | 'ENVIRONMENT-NAME'
+      | 'ENVIRONMENT-VALUE'
+      | 'SYSERR'
+      | 'C01'
+      | 'C02'
+      | 'C03'
+      | 'C04'
+      | 'C05'
+      | 'C06'
+      | 'C07'
+      | 'C08'
+      | 'C09'
+      | 'C10'
+      | 'C11'
+      | 'C12'
+      | 'S01'
+      | 'S02'
+      | 'S03'
+      | 'S04'
+      | 'S05'
+      | 'CSP'
+      | alphanumericLiteral
+      | cobolWord
       )
     )
   ;
 
 // ========================================================
-// crtStatusIs
+// cobolSwitch
 // ........................................................
 
-crtStatusIs
-  : ^(CRT_STATUS_IS
-      ( 'CRT'
-        'STATUS'
-        ( 'IS' )?
-        dataName
+cobolSwitch
+  : ^(COBOL_SWITCH
+      ( 'SWITCH-0'
+      | 'SWITCH-1'
+      | 'SWITCH-2'
+      | 'SWITCH-3'
+      | 'SWITCH-4'
+      | 'SWITCH-5'
+      | 'SWITCH-6'
+      | 'SWITCH-7'
+      | 'SWITCH-8'
       )
     )
   ;
 
 // ========================================================
-// numericSignIs
+// alphabetIs
 // ........................................................
 
-numericSignIs
-  : ^(NUMERIC_SIGN_IS
-      ( 'NUMERIC'
-        'SIGN'
-        ( 'IS' )?
-        ( 'LEADING'
-        | 'TRAILING'
-        )
-        ( ( 'SEPARATE'
-          ( 'CHARACTER' )?
-        ) )?
-      )
-    )
-  ;
-
-// ========================================================
-// classIs
-// ........................................................
-
-classIs
-  : ^(CLASS_IS
-      ( 'CLASS'
+alphabetIs
+  : ^(ALPHABET_IS
+      ( 'ALPHABET'
         identifier
         ( 'IS' )?
-        ( ( literalRange
-        | literal
-        ) )+
+        alphabetType
       )
+    )
+  ;
+
+// ========================================================
+// alphabetType
+// ........................................................
+
+alphabetType
+  : ^(ALPHABET_TYPE
+      ( standard1AlphabetType
+      | standard2AlphabetType
+      | nativeAlphabetType
+      | asciiAlphabetType
+      | ebcdicAlphabetType
+      | explicitAlphabetType
+      | codeNameAlphabetType
+      )
+    )
+  ;
+
+// ========================================================
+// standard1AlphabetType
+// ........................................................
+
+standard1AlphabetType
+  : ^(STANDARD1_ALPHABET_TYPE
+      'STANDARD-1'
+    )
+  ;
+
+// ========================================================
+// standard2AlphabetType
+// ........................................................
+
+standard2AlphabetType
+  : ^(STANDARD2_ALPHABET_TYPE
+      'STANDARD-2'
+    )
+  ;
+
+// ========================================================
+// nativeAlphabetType
+// ........................................................
+
+nativeAlphabetType
+  : ^(NATIVE_ALPHABET_TYPE
+      'NATIVE'
+    )
+  ;
+
+// ========================================================
+// asciiAlphabetType
+// ........................................................
+
+asciiAlphabetType
+  : ^(ASCII_ALPHABET_TYPE
+      'ASCII'
+    )
+  ;
+
+// ========================================================
+// ebcdicAlphabetType
+// ........................................................
+
+ebcdicAlphabetType
+  : ^(EBCDIC_ALPHABET_TYPE
+      'EBCDIC'
+    )
+  ;
+
+// ========================================================
+// explicitAlphabetType
+// ........................................................
+
+explicitAlphabetType
+  : ^(EXPLICIT_ALPHABET_TYPE
+      ( ( literalRange
+      | literal
+      )
+        ( ( 'ALSO'
+          ( literalRange
+          | literal
+          )
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// codeNameAlphabetType
+// ........................................................
+
+codeNameAlphabetType
+  : ^(CODE_NAME_ALPHABET_TYPE
+      cobolWord
     )
   ;
 
@@ -394,98 +1115,55 @@ symbolicChars
   ;
 
 // ========================================================
-// alphabetIs
+// classIs
 // ........................................................
 
-alphabetIs
-  : ^(ALPHABET_IS
-      ( ( 'ALPHABET' )?
+classIs
+  : ^(CLASS_IS
+      ( 'CLASS'
         identifier
         ( 'IS' )?
-        alphabetType
+        ( ( literalRange
+        | literal
+        ) )+
       )
     )
   ;
 
 // ========================================================
-// alphabetType
+// localeIs
 // ........................................................
 
-alphabetType
-  : ^(ALPHABET_TYPE
-      ( standard1AlphabetType
-      | standard2AlphabetType
-      | nativeAlphabetType
-      | explicitAlphabetType
-      | codeNameAlphabetType
+localeIs
+  : ^(LOCALE_IS
+      ( 'LOCALE'
+        identifier
+        ( 'IS' )?
+        identifier
       )
     )
   ;
 
 // ========================================================
-// standard1AlphabetType
+// currencySignIs
 // ........................................................
 
-standard1AlphabetType
-  : ^(STANDARD1_ALPHABET_TYPE
-      'STANDARD-1'
-    )
-  ;
-
-// ========================================================
-// standard2AlphabetType
-// ........................................................
-
-standard2AlphabetType
-  : ^(STANDARD2_ALPHABET_TYPE
-      'STANDARD-2'
-    )
-  ;
-
-// ========================================================
-// nativeAlphabetType
-// ........................................................
-
-nativeAlphabetType
-  : ^(NATIVE_ALPHABET_TYPE
-      'NATIVE'
-    )
-  ;
-
-// ========================================================
-// explicitAlphabetType
-// ........................................................
-
-explicitAlphabetType
-  : ^(EXPLICIT_ALPHABET_TYPE
-      ( ( literalRange
-      | literal
-      )
-        ( ( 'ALSO'
-          ( literalRange
-          | literal
-          )
-        ) )*
+currencySignIs
+  : ^(CURRENCY_SIGN_IS
+      ( 'CURRENCY'
+        ( 'SIGN' )?
+        ( 'IS' )?
+        literal
       )
     )
   ;
 
 // ========================================================
-// codeNameAlphabetType
+// decimalIsComma
 // ........................................................
 
-codeNameAlphabetType
-  : ^(CODE_NAME_ALPHABET_TYPE
-      cobolWord
-    )
-  ;
-
-// ========================================================
-// mnemonicClause
-// ........................................................
-
-mnemonicClause
-  : ^(MNEMONIC_CLAUSE
+decimalIsComma
+  : ^(DECIMAL_IS_COMMA
       ( 'DECIMAL-POINT'
         ( 'IS' )?
         'COMMA'
@@ -494,16 +1172,253 @@ mnemonicClause
   ;
 
 // ========================================================
-// confParagraphStart
+// numericSignIs
 // ........................................................
 
-confParagraphStart
-  : ^(CONF_PARAGRAPH_START
-      ( ( 'SOURCE-COMPUTER'
-      | 'OBJECT-COMPUTER'
-      | 'SPECIAL-NAMES'
+numericSignIs
+  : ^(NUMERIC_SIGN_IS
+      ( 'NUMERIC'
+        'SIGN'
+        ( 'IS' )?
+        ( 'LEADING'
+        | 'TRAILING'
+        )
+        ( ( 'SEPARATE'
+          ( 'CHARACTER' )?
+        ) )?
       )
+    )
+  ;
+
+// ========================================================
+// callConvention
+// ........................................................
+
+callConvention
+  : ^(CALL_CONVENTION
+      ( 'CALL-CONVENTION'
+        integer
+        ( 'IS' )?
+        mnemonicName
+      )
+    )
+  ;
+
+// ========================================================
+// cursorIs
+// ........................................................
+
+cursorIs
+  : ^(CURSOR_IS
+      ( 'CURSOR'
+        ( 'IS' )?
+        dataName
+      )
+    )
+  ;
+
+// ========================================================
+// crtStatusIs
+// ........................................................
+
+crtStatusIs
+  : ^(CRT_STATUS_IS
+      ( 'CRT'
+        'STATUS'
+        ( 'IS' )?
+        dataName
+      )
+    )
+  ;
+
+// ========================================================
+// xmlSchemaIs
+// ........................................................
+
+xmlSchemaIs
+  : ^(XML_SCHEMA_IS
+      ( 'XML-SCHEMA'
+        identifier
+        ( 'IS' )?
+        ( dataName
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// screenControlIs
+// ........................................................
+
+screenControlIs
+  : ^(SCREEN_CONTROL_IS
+      ( 'SCREEN'
+        'CONTROL'
+        ( 'IS' )?
+        identifier
+      )
+    )
+  ;
+
+// ========================================================
+// eventStatusIs
+// ........................................................
+
+eventStatusIs
+  : ^(EVENT_STATUS_IS
+      ( 'EVENT'
+        'STATUS'
+        ( 'IS' )?
+        identifier
+      )
+    )
+  ;
+
+// ========================================================
+// repositoryParagraph
+// ........................................................
+
+repositoryParagraph
+  : ^(REPOSITORY_PARAGRAPH
+      ( 'REPOSITORY'
         '.'
+        ( ( ( ( classSpecifier
+        | interfaceSpecifier
+        | programSpecifier
+        | propertySpecifier
+        | functionSpecifier
+        | delegateSpecifier
+        | enumSpecifier
+        ) )+
+          '.'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// classSpecifier
+// ........................................................
+
+classSpecifier
+  : ^(CLASS_SPECIFIER
+      ( 'CLASS'
+        className
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( 'EXPANDS'
+          className
+          'USING'
+          ( className
+          | interfaceName
+          )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// interfaceSpecifier
+// ........................................................
+
+interfaceSpecifier
+  : ^(INTERFACE_SPECIFIER
+      ( 'INTERFACE'
+        interfaceName
+        ( ( 'AS'
+          literal
+        ) )?
+        ( ( 'EXPANDS'
+          interfaceName
+          'USING'
+          ( className
+          | interfaceName
+          )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// programSpecifier
+// ........................................................
+
+programSpecifier
+  : ^(PROGRAM_SPECIFIER
+      ( 'PROGRAM'
+        programName
+        ( ( 'AS'
+          literal
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// propertySpecifier
+// ........................................................
+
+propertySpecifier
+  : ^(PROPERTY_SPECIFIER
+      ( 'PROPERTY'
+        propertyName
+        ( ( 'AS'
+          literal
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// functionSpecifier
+// ........................................................
+
+functionSpecifier
+  : ^(FUNCTION_SPECIFIER
+      ( 'FUNCTION'
+        ( ( ( 'ALL'
+        | functionName
+        )
+          'INTRINSIC'
+        )
+        | ( functionName
+          ( ( 'AS'
+            literal
+          ) )?
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// delegateSpecifier
+// ........................................................
+
+delegateSpecifier
+  : ^(DELEGATE_SPECIFIER
+      ( 'DELEGATE'
+        delegateName
+        ( ( 'AS'
+          literal
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// enumSpecifier
+// ........................................................
+
+enumSpecifier
+  : ^(ENUM_SPECIFIER
+      ( 'ENUM'
+        enumName
+        ( ( 'AS'
+          literal
+        ) )?
       )
     )
   ;
@@ -517,8 +1432,20 @@ ioSection
       ( 'INPUT-OUTPUT'
         'SECTION'
         '.'
-        fileControlParagraph
-        ( ioControlParagraph )?
+        ( ioSectionBody )?
+      )
+    )
+  ;
+
+// ========================================================
+// ioSectionBody
+// ........................................................
+
+ioSectionBody
+  : ^(IO_SECTION_BODY
+      ( ( ( fileControlParagraph
+      | ioControlParagraph
+      ) )+
         (water)?
       )
     )
@@ -532,10 +1459,20 @@ fileControlParagraph
   : ^(FILE_CONTROL_PARAGRAPH
       ( 'FILE-CONTROL'
         '.'
-        ( ( selectStatement
-        | copyStatement
-        ) )*
+        ( fileControlEntry )?
       )
+    )
+  ;
+
+// ========================================================
+// fileControlEntry
+// ........................................................
+
+fileControlEntry
+  : ^(FILE_CONTROL_ENTRY
+      ( ( selectStatement
+      | copyStatement
+      ) )+
     )
   ;
 
@@ -547,10 +1484,19 @@ selectStatement
   : ^(SELECT_STATEMENT
       ( selectClause
         assignClause
-        ( ( organizationIsSequentialClause
+        ( ( organizationClause
+        | collationClause
+        | recordDelimiterClause
+        | reserveClause
+        | accessModeClause
+        | lockModeClause
+        | relativeKeyClause
+        | recordKeyClause
+        | alternateRecordKeyClause
         | fileStatusClause
+        | sharingClause
+        | paddingClause
         ) )*
-        (water)?
         '.'
       )
     )
@@ -563,7 +1509,11 @@ selectStatement
 selectClause
   : ^(SELECT_CLAUSE
       ( 'SELECT'
-        ( 'OPTIONAL' )?
+        ( ( 'OPTIONAL'
+        | ( 'NOT'
+          'OPTIONAL'
+        )
+        ) )?
         fileName
       )
     )
@@ -602,21 +1552,272 @@ assignUsingClause
 assignToClause
   : ^(ASSIGN_TO_CLAUSE
       ( ( 'TO' )?
-        assignmentName
+        ( ( 'EXTERNAL'
+        | 'DYNAMIC'
+        ) )?
+        ( diskClause
+        | dataName
+        | assignmentName
+        )
       )
     )
   ;
 
 // ========================================================
-// organizationIsSequentialClause
+// diskClause
 // ........................................................
 
-organizationIsSequentialClause
-  : ^(ORGANIZATION_IS_SEQUENTIAL_CLAUSE
+diskClause
+  : ^(DISK_CLAUSE
+      ( ( 'DISK'
+        'FROM'
+        dataName
+      )
+      | ( 'LINE'
+        'ADVANCING'
+        ( 'FILE' )?
+        ( ( dataName
+        | literal
+        ) )+
+      )
+      | ( ( 'MULTIPLE' )?
+        ( 'REEL'
+        | 'UNIT'
+        )
+        ( 'FILE' )?
+        ( ( dataName
+        | literal
+        ) )+
+      )
+      | ( ( 'DISK' )?
+        'FILE'
+        ( ( dataName
+        | literal
+        ) )+
+      )
+      | ( ( 'DISK'
+      | 'PRINTER'
+      )
+        'DISPLAY'
+      )
+      | ( ( ( 'DISK'
+      | 'KEYBOARD'
+      | 'DISPLAY'
+      | 'PRINTER'
+      | 'PRINTER-1'
+      ) )?
+        ( ( dataName
+        | literal
+        ) )*
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// collationClause
+// ........................................................
+
+collationClause
+  : ^(COLLATION_CLAUSE
+      ( 'COLLATING'
+        ( 'SEQUENCE' )?
+        ( 'IS' )?
+        alphabetName
+      )
+    )
+  ;
+
+// ========================================================
+// recordDelimiterClause
+// ........................................................
+
+recordDelimiterClause
+  : ^(RECORD_DELIMITER_CLAUSE
+      ( 'RECORD'
+        'DELIMITER'
+        ( 'IS' )?
+        ( 'STANDARD-1'
+        | alphanumericLiteral
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// reserveClause
+// ........................................................
+
+reserveClause
+  : ^(RESERVE_CLAUSE
+      ( 'RESERVE'
+        ( integer
+        | 'NO'
+        )
+        ( 'ALTERNATE' )?
+        ( 'AREA'
+        | 'AREAS'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// organizationClause
+// ........................................................
+
+organizationClause
+  : ^(ORGANIZATION_CLAUSE
       ( ( ( 'ORGANIZATION'
         ( 'IS' )?
       ) )?
-        'SEQUENTIAL'
+        ( ( 'LINE'
+        | ( 'RECORD'
+          'BINARY'
+        )
+        | 'RECORD'
+        | 'BINARY'
+        ) )?
+        ( 'SEQUENTIAL'
+        | 'RELATIVE'
+        | 'INDEXED'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// accessModeClause
+// ........................................................
+
+accessModeClause
+  : ^(ACCESS_MODE_CLAUSE
+      ( 'ACCESS'
+        ( 'MODE' )?
+        ( 'IS' )?
+        ( 'SEQUENTIAL'
+        | 'RANDOM'
+        | 'DYNAMIC'
+        | 'EXCLUSIVE'
+        | ( 'MANUAL'
+          ( lockModeWithClause )?
+        )
+        | ( 'AUTOMATIC'
+          ( lockModeWithClause )?
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// lockModeClause
+// ........................................................
+
+lockModeClause
+  : ^(LOCK_MODE_CLAUSE
+      ( 'LOCK'
+        ( 'MODE' )?
+        ( 'IS' )?
+        ( 'EXCLUSIVE'
+        | ( 'MANUAL'
+          ( lockModeWithClause )?
+        )
+        | ( 'AUTOMATIC'
+          ( lockModeWithClause )?
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// lockModeWithClause
+// ........................................................
+
+lockModeWithClause
+  : ^(LOCK_MODE_WITH_CLAUSE
+      ( ( 'WITH' )?
+        ( 'ROLLBACK'
+        | ( 'LOCK'
+          'ON'
+          ( 'MULTIPLE' )?
+          ( 'RECORD'
+          | 'RECORDS'
+          )
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// relativeKeyClause
+// ........................................................
+
+relativeKeyClause
+  : ^(RELATIVE_KEY_CLAUSE
+      ( 'RELATIVE'
+        ( 'KEY' )?
+        ( 'IS' )?
+        recordKeyDefinition
+      )
+    )
+  ;
+
+// ========================================================
+// recordKeyClause
+// ........................................................
+
+recordKeyClause
+  : ^(RECORD_KEY_CLAUSE
+      ( 'RECORD'
+        ( 'KEY' )?
+        ( 'IS' )?
+        recordKeyDefinition
+        ( passwordClause )?
+      )
+    )
+  ;
+
+// ========================================================
+// alternateRecordKeyClause
+// ........................................................
+
+alternateRecordKeyClause
+  : ^(ALTERNATE_RECORD_KEY_CLAUSE
+      ( 'ALTERNATE'
+        ( 'RECORD' )?
+        ( 'KEY' )?
+        ( 'IS' )?
+        recordKeyDefinition
+        ( ( passwordClause
+        | suppressClause
+        | ( ( 'WITH' )?
+          'DUPLICATES'
+        )
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// recordKeyDefinition
+// ........................................................
+
+recordKeyDefinition
+  : ^(RECORD_KEY_DEFINITION
+      ( ( ( literal
+      | identifier
+      )
+        ( '='
+        | ( 'SOURCE'
+          ( 'IS' )?
+        )
+        )
+        ( dataName )+
+      )
+      | dataName
       )
     )
   ;
@@ -627,11 +1828,81 @@ organizationIsSequentialClause
 
 fileStatusClause
   : ^(FILE_STATUS_CLAUSE
-      ( ( 'FILE' )?
+      ( ( ( 'FILE'
+      | 'SORT'
+      ) )?
         'STATUS'
         ( 'IS' )?
         dataName
         ( dataName )?
+      )
+    )
+  ;
+
+// ========================================================
+// passwordClause
+// ........................................................
+
+passwordClause
+  : ^(PASSWORD_CLAUSE
+      ( 'PASSWORD'
+        ( 'IS' )?
+        dataName
+      )
+    )
+  ;
+
+// ========================================================
+// suppressClause
+// ........................................................
+
+suppressClause
+  : ^(SUPPRESS_CLAUSE
+      ( 'SUPPRESS'
+        ( 'WHEN' )?
+        ( zero
+        | space
+        | ( ( 'ALL' )?
+          literal
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// sharingClause
+// ........................................................
+
+sharingClause
+  : ^(SHARING_CLAUSE
+      ( 'SHARING'
+        ( 'WITH' )?
+        ( ( 'READ'
+          'ONLY'
+        )
+        | ( ( 'ALL'
+        | 'NO'
+        )
+          ( 'OTHER' )?
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// paddingClause
+// ........................................................
+
+paddingClause
+  : ^(PADDING_CLAUSE
+      ( 'PADDING'
+        ( 'CHARACTER' )?
+        ( 'IS' )?
+        ( literal
+        | identifier
+        )
       )
     )
   ;
@@ -650,16 +1921,49 @@ ioControlParagraph
   ;
 
 // ========================================================
-// environmentSectionStart
+// objectSection
 // ........................................................
 
-environmentSectionStart
-  : ^(ENVIRONMENT_SECTION_START
-      ( ( 'CONFIGURATION'
-      | 'INPUT-OUTPUT'
-      )
+objectSection
+  : ^(OBJECT_SECTION
+      ( ( 'OBJECT'
         'SECTION'
         '.'
+        ( objectSectionBody )?
+      )
+      | objectSectionBody
+      )
+    )
+  ;
+
+// ========================================================
+// objectSectionBody
+// ........................................................
+
+objectSectionBody
+  : ^(OBJECT_SECTION_BODY
+      ( ( classControlParagraph
+      | copyStatement
+      ) )+
+    )
+  ;
+
+// ========================================================
+// classControlParagraph
+// ........................................................
+
+classControlParagraph
+  : ^(CLASS_CONTROL_PARAGRAPH
+      ( 'CLASS-CONTROL'
+        '.'
+        ( ( ( className
+          'IS'
+          'CLASS'
+          literal
+        )
+        | copyStatement
+        ) )+
+        ( '.' )?
       )
     )
   ;
@@ -670,17 +1974,32 @@ environmentSectionStart
 
 dataDivision
   : ^(DATA_DIVISION
-      ( 'DATA'
+      ( ( 'DATA'
         'DIVISION'
         '.'
-        ( fileSection )?
-        ( workingStorageSection )?
-        ( localStorageSection )?
-        ( linkageSection )?
-        ( communicationSection )?
-        ( reportSection )?
-        ( screenSection )?
+        ( dataDivisionBody )?
       )
+      | dataDivisionBody
+      )
+    )
+  ;
+
+// ========================================================
+// dataDivisionBody
+// ........................................................
+
+dataDivisionBody
+  : ^(DATA_DIVISION_BODY
+      ( ( fileSection
+      | workingStorageSection
+      | threadLocalStorageSection
+      | objectStorageSection
+      | localStorageSection
+      | linkageSection
+      | communicationSection
+      | reportSection
+      | screenSection
+      ) )+
     )
   ;
 
@@ -693,11 +2012,22 @@ fileSection
       ( 'FILE'
         'SECTION'
         '.'
-        ( ( copyStatement
-        | ( fileDescriptionEntry
-          ( recordDescriptionEntry )*
-        )
-        ) )*
+        ( fileSectionBody )?
+      )
+    )
+  ;
+
+// ========================================================
+// fileSectionBody
+// ........................................................
+
+fileSectionBody
+  : ^(FILE_SECTION_BODY
+      ( ( ( copyStatement
+      | ( fileDescriptionEntry
+        ( recordDescriptionEntry )*
+      )
+      ) )+
         (water)?
       )
     )
@@ -716,12 +2046,12 @@ recordDescriptionEntry
   ;
 
 // ========================================================
-// localStorageSection
+// workingStorageSection
 // ........................................................
 
-localStorageSection
-  : ^(LOCAL_STORAGE_SECTION
-      ( 'LOCAL-STORAGE'
+workingStorageSection
+  : ^(WORKING_STORAGE_SECTION
+      ( 'WORKING-STORAGE'
         'SECTION'
         '.'
         ( ( recordDescriptionEntry
@@ -735,12 +2065,50 @@ localStorageSection
   ;
 
 // ========================================================
-// workingStorageSection
+// threadLocalStorageSection
 // ........................................................
 
-workingStorageSection
-  : ^(WORKING_STORAGE_SECTION
-      ( 'WORKING-STORAGE'
+threadLocalStorageSection
+  : ^(THREAD_LOCAL_STORAGE_SECTION
+      ( 'THREAD-LOCAL-STORAGE'
+        'SECTION'
+        '.'
+        ( ( recordDescriptionEntry
+        | replaceStatement
+        | ( execStatement
+          ( '.' )?
+        )
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// objectStorageSection
+// ........................................................
+
+objectStorageSection
+  : ^(OBJECT_STORAGE_SECTION
+      ( 'OBJECT-STORAGE'
+        'SECTION'
+        '.'
+        ( ( recordDescriptionEntry
+        | replaceStatement
+        | ( execStatement
+          ( '.' )?
+        )
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// localStorageSection
+// ........................................................
+
+localStorageSection
+  : ^(LOCAL_STORAGE_SECTION
+      ( 'LOCAL-STORAGE'
         'SECTION'
         '.'
         ( ( recordDescriptionEntry
@@ -839,10 +2207,12 @@ fdFileDescriptionEntry
         | dataRecords
         | external
         | global
+        | threadLocalClause
         | labelRecords
         | linage
         | record
         | recordingMode
+        | valueOfFileId
         | valueOf
         | report
         ) )*
@@ -865,6 +2235,7 @@ sdFileDescriptionEntry
         | labelRecords
         | record
         | recordingMode
+        | valueOfFileId
         ) )*
         (water)?
         '.'
@@ -900,6 +2271,9 @@ codeSet
       ( 'CODE-SET'
         ( 'IS' )?
         alphabetName
+        ( ( 'FOR'
+          ( identifier )+
+        ) )?
       )
     )
   ;
@@ -911,12 +2285,13 @@ codeSet
 dataRecords
   : ^(DATA_RECORDS
       ( ( 'DATA' )?
-        ( 'RECORD'
-        | 'RECORDS'
+        ( ( 'RECORD'
+          ( 'IS' )?
         )
-        ( ( 'IS'
-        | 'ARE'
-        ) )?
+        | ( 'RECORDS'
+          ( 'ARE' )?
+        )
+        )
         ( dataName )+
       )
     )
@@ -929,12 +2304,13 @@ dataRecords
 labelRecords
   : ^(LABEL_RECORDS
       ( 'LABEL'
-        ( 'RECORD'
-        | 'RECORDS'
+        ( ( 'RECORD'
+          ( 'IS' )?
         )
-        ( ( 'IS'
-        | 'ARE'
-        ) )?
+        | ( 'RECORDS'
+          ( 'ARE' )?
+        )
+        )
         ( 'OMITTED'
         | 'STANDARD'
         | ( dataName )+
@@ -1058,6 +2434,25 @@ recordingMode
         | 'V'
         | 'U'
         | 'S'
+        | 'FIXED'
+        | 'VARIABLE'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// valueOfFileId
+// ........................................................
+
+valueOfFileId
+  : ^(VALUE_OF_FILE_ID
+      ( 'VALUE'
+        'OF'
+        'FILE-ID'
+        ( 'IS' )?
+        ( dataName
+        | literal
         )
       )
     )
@@ -1108,9 +2503,9 @@ report
 dataDescriptionEntry
   : ^(DATA_DESCRIPTION_ENTRY
       ( constantDescriptionEntry
-      | dataDescriptionEntry_format1
-      | dataDescriptionEntry_format2
       | dataDescriptionEntry_format3
+      | dataDescriptionEntry_format2
+      | dataDescriptionEntry_format1
       )
     )
   ;
@@ -1123,18 +2518,59 @@ dataDescriptionEntry_format1
   : ^(DATA_DESCRIPTION_ENTRY_FORMAT1
       ( levelNumber
         ( dataDescName )?
-        ( redefines )?
-        ( ( blankWhenZero
+        ( ( redefines
         | external
         | global
-        | justified
-        | occurs
+        | typedefClause
+        | threadLocalClause
         | picture
+        | occurs
+        | dtLinePos
+        | dtColPos
         | sign
+        | valueClause
         | sync
-        | usage
-        | valueIs
+        | justified
+        | blankWhenZero
+        | anyLengthClause
+        | autoPhrase
+        | backgroundPhrase
+        | beepPhrase
+        | blinkPhrase
+        | controlPhrase
+        | erasePhrase
+        | fillPhrase
+        | foregroundPhrase
+        | fullPhrase
+        | gridPhrase
+        | highPhrase
+        | lowPhrase
+        | linePhrase
+        | promptPhrase
+        | requiredPhrase
+        | reversePhrase
+        | securePhrase
+        | sizePhrase
+        | propertyClause
+        | ( 'USING'
+          identifier
+        )
+        | ( 'FROM'
+          ( identifier
+          | literal
+          )
+          ( ( 'TO'
+            identifier
+          ) )?
+        )
+        | 'PUBLIC'
+        | 'PRIVATE'
+        | 'PROTECTED'
+        | 'INTERNAL'
         | based
+        | attributeClause
+        | usage
+        | literal
         ) )*
         (water)?
         '.'
@@ -1169,8 +2605,14 @@ dataDescriptionEntry_format2
 dataDescriptionEntry_format3
   : ^(DATA_DESCRIPTION_ENTRY_FORMAT3
       ( '88'
-        cobolWord
-        valueClause
+        conditionName
+        ( ( 'VALUE'
+          ( 'IS' )?
+        )
+        | ( 'VALUES'
+          ( 'ARE' )?
+        )
+        )
         ( ( literal
           ( ( ( 'THROUGH'
           | 'THRU'
@@ -1208,7 +2650,12 @@ constantDescriptionEntry
   : ^(CONSTANT_DESCRIPTION_ENTRY
       ( ( ( '78'
         cobolWord
-        ( valueIs )?
+        'VALUE'
+        ( 'IS' )?
+        valueIsOperand
+        ( ( valueIsOperator
+          valueIsOperand
+        ) )*
       )
       | ( ( '1'
       | '01'
@@ -1256,6 +2703,18 @@ blankWhenZero
   ;
 
 // ========================================================
+// anyLengthClause
+// ........................................................
+
+anyLengthClause
+  : ^(ANY_LENGTH_CLAUSE
+      ( 'ANY'
+        'LENGTH'
+      )
+    )
+  ;
+
+// ========================================================
 // external
 // ........................................................
 
@@ -1263,6 +2722,11 @@ external
   : ^(EXTERNAL
       ( ( 'IS' )?
         'EXTERNAL'
+        ( ( ( 'AS'
+        | 'BY'
+        )
+          literal
+        ) )?
       )
     )
   ;
@@ -1275,6 +2739,30 @@ global
   : ^(GLOBAL
       ( ( 'IS' )?
         'GLOBAL'
+      )
+    )
+  ;
+
+// ========================================================
+// typedefClause
+// ........................................................
+
+typedefClause
+  : ^(TYPEDEF_CLAUSE
+      ( ( 'IS' )?
+        'TYPEDEF'
+      )
+    )
+  ;
+
+// ========================================================
+// threadLocalClause
+// ........................................................
+
+threadLocalClause
+  : ^(THREAD_LOCAL_CLAUSE
+      ( ( 'IS' )?
+        'THREAD-LOCAL'
       )
     )
   ;
@@ -1325,26 +2813,29 @@ justified
 occurs
   : ^(OCCURS
       ( 'OCCURS'
-        integer
-        ( ( 'TO'
+        ( ( ( ( ( integer
+          'TO'
+        ) )?
           integer
-        ) )?
-        ( 'TIMES' )?
-        ( ( 'DEPENDING'
-          ( 'ON' )?
-          qualifiedDataName
-        ) )?
-        ( ( ( 'ASCENDING'
-        | 'DESCENDING'
+          ( 'TIMES' )?
+          ( ( 'DEPENDING'
+            ( 'ON' )?
+            qualifiedDataName
+          ) )?
+          ( ( ( 'ASCENDING'
+          | 'DESCENDING'
+          )
+            ( 'KEY' )?
+            ( 'IS' )?
+            ( qualifiedDataName )+
+          ) )*
+          ( ( 'INDEXED'
+            ( 'BY' )?
+            ( indexName )+
+          ) )*
         )
-          ( 'KEY' )?
-          ( 'IS' )?
-          ( qualifiedDataName )+
-        ) )*
-        ( ( 'INDEXED'
-          ( 'BY' )?
-          ( indexName )+
-        ) )?
+        | 'ANY'
+        ) )+
       )
     )
   ;
@@ -1408,55 +2899,102 @@ usage
       ( ( ( 'USAGE'
         ( 'IS' )?
       ) )?
-        ( 'BINARY'
-        | 'COMPUTATIONAL'
-        | 'COMP'
-        | 'DISPLAY'
-        | 'INDEX'
-        | 'PACKED-DECIMAL'
-        | 'COMPUTATIONAL-1'
-        | 'COMP-1'
-        | 'COMPUTATIONAL-2'
-        | 'COMP-2'
-        | 'COMPUTATIONAL-3'
-        | 'COMP-3'
-        | 'COMPUTATIONAL-4'
-        | 'COMP-4'
-        | 'COMPUTATIONAL-5'
-        | 'COMP-5'
-        | 'COMP-X'
-        | 'POINTER'
-        | 'PROGRAM-POINTER'
-        | 'BINARY-CHAR'
-        | 'BINARY-SHORT'
-        | 'BINARY-LONG'
-        | 'BINARY-DOUBLE'
-        | 'FLOAT-SHORT'
-        | 'FLOAT-LONG'
-        | 'FLOAT-EXTENDED'
-        | ( 'OBJECT'
-          'REFERENCE'
-        )
-        | 'BINARY-C-LONG'
-        | 'SIGNED-INT'
-        | 'UNSIGNED-INT'
-        | 'SIGNED-LONG'
-        | 'UNSIGNED-LONG'
-        | 'SIGNED-SHORT'
-        | 'UNSIGNED-SHORT'
-        )
+        usageClause
       )
     )
   ;
 
 // ========================================================
-// valueIs
+// usageClause
 // ........................................................
 
-valueIs
-  : ^(VALUE_IS
-      ( valueClause
-        value
+usageClause
+  : ^(USAGE_CLAUSE
+      ( 'BINARY'
+      | ( 'BINARY-CHAR'
+        ( ( 'SIGNED'
+        | 'UNSIGNED'
+        ) )?
+      )
+      | ( 'BINARY-SHORT'
+        ( ( 'SIGNED'
+        | 'UNSIGNED'
+        ) )?
+      )
+      | ( 'BINARY-LONG'
+        ( ( 'SIGNED'
+        | 'UNSIGNED'
+        ) )?
+      )
+      | ( 'BINARY-DOUBLE'
+        ( ( 'SIGNED'
+        | 'UNSIGNED'
+        ) )?
+      )
+      | 'BINARY-C-LONG'
+      | 'FLOAT-SHORT'
+      | 'FLOAT-LONG'
+      | 'FLOAT-EXTENDED'
+      | 'BIT'
+      | 'CHARACTER'
+      | 'COMPUTATIONAL'
+      | 'COMP'
+      | 'COMPUTATIONAL-1'
+      | 'COMP-1'
+      | 'COMPUTATIONAL-2'
+      | 'COMP-2'
+      | 'COMPUTATIONAL-3'
+      | 'COMP-3'
+      | 'COMPUTATIONAL-4'
+      | 'COMP-4'
+      | 'COMPUTATIONAL-5'
+      | 'COMP-5'
+      | 'COMPUTATIONAL-X'
+      | 'COMP-X'
+      | 'CONDITION-VALUE'
+      | 'DECIMAL'
+      | 'DISPLAY'
+      | 'INDEX'
+      | 'MONITOR-POINTER'
+      | 'MUTEX-POINTER'
+      | 'NATIONAL'
+      | ( 'OBJECT'
+        'REFERENCE'
+        ( ( ( ( ( 'FACTORY'
+          'OF'
+        ) )?
+          'ACTIVE-CLASS'
+        )
+        | ( ( ( 'FACTORY'
+          'OF'
+        ) )?
+          className
+          ( ( 'ONLY'
+          | 'EVENT'
+          ) )?
+        )
+        ) )?
+      )
+      | 'OBJECT'
+      | 'PACKED-DECIMAL'
+      | 'POINTER'
+      | 'PROCEDURE-POINTER'
+      | ( 'PROGRAM-POINTER'
+        ( ( ( 'TO' )?
+          programName
+        ) )?
+      )
+      | 'SEMAPHORE-POINTER'
+      | 'SIGNED-INT'
+      | 'SIGNED-LONG'
+      | 'SIGNED-SHORT'
+      | 'UNSIGNED-INT'
+      | 'UNSIGNED-LONG'
+      | 'UNSIGNED-SHORT'
+      | 'STRING'
+      | 'THREAD-POINTER'
+      | typedefName
+      | className
       )
     )
   ;
@@ -1467,12 +3005,89 @@ valueIs
 
 valueClause
   : ^(VALUE_CLAUSE
-      ( ( 'VALUE'
+      ( valueClause_format2
+      | valueClause_format1
+      )
+    )
+  ;
+
+// ========================================================
+// valueClause_format1
+// ........................................................
+
+valueClause_format1
+  : ^(VALUE_CLAUSE_FORMAT1
+      ( 'VALUE'
+        ( 'IS' )?
+        ( literal
+        | constant
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// valueClause_format2
+// ........................................................
+
+valueClause_format2
+  : ^(VALUE_CLAUSE_FORMAT2
+      ( ( ( 'VALUE'
         ( 'IS' )?
       )
       | ( 'VALUES'
         ( 'ARE' )?
       )
+      )
+        ( ( ( literal )+
+          'FROM'
+          '('
+          ( subscript )+
+          ')'
+          ( ( 'TO'
+            '('
+            ( subscript )+
+            ')'
+          ) )?
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// valueIsOperand
+// ........................................................
+
+valueIsOperand
+  : ^(VALUE_IS_OPERAND
+      ( 'NEXT'
+      | ( 'START'
+        ( 'OF' )?
+        dataName
+      )
+      | ( 'LENGTH'
+        ( 'OF' )?
+        dataName
+      )
+      | arithmeticExpression
+      | literal
+      )
+    )
+  ;
+
+// ========================================================
+// valueIsOperator
+// ........................................................
+
+valueIsOperator
+  : ^(VALUE_IS_OPERATOR
+      ( 'AND'
+      | 'OR'
+      | '&'
+      | '+'
+      | '-'
+      | '*'
+      | '/'
       )
     )
   ;
@@ -1488,6 +3103,23 @@ based
   ;
 
 // ========================================================
+// propertyClause
+// ........................................................
+
+propertyClause
+  : ^(PROPERTY_CLAUSE
+      ( 'PROPERTY'
+        ( ( ( 'WITH' )?
+          'NO'
+          ( 'GET'
+          | 'SET'
+          )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
 // procedureDivision
 // ........................................................
 
@@ -1495,6 +3127,7 @@ procedureDivision
   : ^(PROCEDURE_DIVISION
       ( 'PROCEDURE'
         'DIVISION'
+        ( mnemonicName )?
         ( usingOrChainingPhrase )?
         ( returningProcedurePhrase )?
         '.'
@@ -1514,10 +3147,13 @@ usingOrChainingPhrase
   : ^(USING_OR_CHAINING_PHRASE
       ( ( 'USING'
       | 'CHAINING'
+      | 'GIVING'
       )
         ( ( dataReference
         | dataValue
-        ) )*
+        | dataOutput
+        ) )+
+        ( repeatedPhrase )?
       )
     )
   ;
@@ -1531,7 +3167,21 @@ dataReference
       ( ( ( ( 'BY' )?
         'REFERENCE'
       ) )?
-        dataName
+        ( ( 'ANY'
+        | ( ( 'OPTIONAL' )?
+          dataName
+          ( ( 'DELIMITED'
+            ( ( 'BY'
+              'SIZE'
+            ) )?
+          ) )?
+          ( ( 'AS'
+            typeName
+            ( attributeClause )?
+          ) )?
+        )
+        | typedefName
+        ) )+
       )
     )
   ;
@@ -1544,7 +3194,47 @@ dataValue
   : ^(DATA_VALUE
       ( ( 'BY' )?
         'VALUE'
-        dataName
+        ( ( 'ANY'
+        | ( dataName
+          ( ( 'AS'
+            typeName
+            ( attributeClause )?
+          ) )?
+        )
+        | typedefName
+        ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// dataOutput
+// ........................................................
+
+dataOutput
+  : ^(DATA_OUTPUT
+      ( ( 'BY' )?
+        'OUTPUT'
+        ( ( dataName
+          'AS'
+          typeName
+          ( attributeClause )?
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// repeatedPhrase
+// ........................................................
+
+repeatedPhrase
+  : ^(REPEATED_PHRASE
+      ( 'REPEATED'
+        ( ( integer
+          'TO'
+          integer
+        ) )?
       )
     )
   ;
@@ -1555,8 +3245,15 @@ dataValue
 
 returningProcedurePhrase
   : ^(RETURNING_PROCEDURE_PHRASE
-      ( 'RETURNING'
+      ( ( 'RETURNING'
+      | 'YIELDING'
+      | 'GIVING'
+      )
         dataName
+        ( ( 'AS'
+          typeName
+          ( attributeClause )?
+        ) )?
       )
     )
   ;
@@ -1628,15 +3325,14 @@ paragraph
 
 sentence
   : ^(SENTENCE
-      ( ( statement
-        ( ( statement
+      ( compilerStatement
+      | ( statement
+        ( ( compilerStatement
+        | statement
         | continuationOfStatement
         ) )*
         '.'
       )
-      | copyStatement
-      | replaceStatement
-      | useStatement
       | '.'
       )
     )
@@ -1651,33 +3347,58 @@ statement
       ( acceptStatement
       | addStatement
       | callStatement
+      | chainStatement
       | cancelStatement
       | closeStatement
+      | commitStatement
       | computeStatement
+      | deleteFileStatement
       | deleteStatement
       | divideStatement
       | entryStatement
       | evaluateStatement
+      | examineStatement
       | execStatement
+      | exhibitStatement
       | exitStatement
+      | generateStatement
       | gobackStatement
       | goToStatement
+      | identifiedByStatement
       | ifStatement
+      | initiateStatement
+      | invokeStatement
+      | mergeStatement
       | moveStatement
       | multiplyStatement
+      | nextSentenceStatement
+      | onStatement
       | openStatement
       | performStatement
+      | raiseStatement
       | readStatement
+      | readyTraceStatement
       | releaseStatement
+      | resetTraceStatement
       | returnStatement
       | rewriteStatement
+      | rollbackStatement
       | searchStatement
+      | serviceStatement
+      | sortStatement
       | startStatement
       | stopStatement
       | stringStatement
       | subtractStatement
+      | suppressStatement
+      | terminateStatement
+      | transformStatement
+      | unlockStatement
       | unstringStatement
+      | waitStatement
       | writeStatement
+      | xmlGenerateStatement
+      | xmlParseStatement
       | setStatement
       | initializeStatement
       | displayStatement
@@ -1832,6 +3553,7 @@ endOfStatementMarker
       ( 'END-ACCEPT'
       | 'END-ADD'
       | 'END-CALL'
+      | 'END-CHAIN'
       | 'END-COMPUTE'
       | 'END-DELETE'
       | 'END-DIVIDE'
@@ -1848,6 +3570,7 @@ endOfStatementMarker
       | 'END-STRING'
       | 'END-SUBTRACT'
       | 'END-UNSTRING'
+      | 'END-WAIT'
       | 'END-WRITE'
       )
     )
@@ -1862,30 +3585,65 @@ verb
       ( 'ADD'
       | 'CALL'
       | 'CANCEL'
+      | 'CHAIN'
       | 'CLOSE'
+      | 'COMMIT'
       | 'DELETE'
       | 'DIVIDE'
+      | 'EJECT'
       | 'ENTRY'
       | 'EVALUATE'
       | 'EXEC'
       | 'EXIT'
+      | 'GENERATE'
       | 'GOBACK'
       | 'GO'
+      | 'IDENTIFIED'
       | 'IF'
+      | 'INITIATE'
+      | 'INVOKE'
+      | 'MERGE'
       | 'MOVE'
       | 'MULTIPLY'
+      | ( 'NEXT'
+        'SENTENCE'
+      )
       | 'OPEN'
       | 'PERFORM'
+      | 'RAISE'
       | 'READ'
+      | ( 'READY'
+        'TRACE'
+      )
       | 'RELEASE'
+      | 'REPLACE'
+      | ( 'RESET'
+        'TRACE'
+      )
       | 'RETURN'
       | 'REWRITE'
+      | 'ROLLBACK'
       | 'SEARCH'
+      | 'SERVICE'
+      | 'SKIP1'
+      | 'SKIP2'
+      | 'SKIP3'
+      | 'SORT'
       | 'STOP'
       | 'STRING'
       | 'SUBTRACT'
+      | 'SUPPRESS'
+      | 'TERMINATE'
+      | 'TITLE'
       | 'UNSTRING'
+      | 'WAIT'
       | 'WRITE'
+      | ( 'XML'
+        'GENERATE'
+      )
+      | ( 'XML'
+        'PARSE'
+      )
       | 'SET'
       | 'INITIALIZE'
       | 'DISPLAY'
@@ -1898,16 +3656,11 @@ verb
       | 'USE'
       | 'ALTER'
       | 'CONTINUE'
-      | 'MERGE'
-      | 'SORT'
       | 'ENABLE'
       | 'DISABLE'
       | 'SEND'
       | 'RECEIVE'
       | 'PURGE'
-      | 'INITIATE'
-      | 'GENERATE'
-      | 'TERMINATE'
       )
     )
   ;
@@ -1924,7 +3677,6 @@ acceptStatement
         | acceptFromMnemonic
         | acceptMessageCount
         | acceptScreenFormat
-        | (water)?
         )
         ( 'END-ACCEPT' )?
       )
@@ -1940,8 +3692,12 @@ acceptFromMnemonic
       ( identifier_format2
         'FROM'
         mnemonicName
-        ( onException )?
-        ( notOnException )?
+        ( ( onException
+        | onEscape
+        ) )?
+        ( ( notOnException
+        | notOnEscape
+        ) )?
       )
     )
   ;
@@ -1993,12 +3749,26 @@ acceptFromOther
 
 acceptScreenFormat
   : ^(ACCEPT_SCREEN_FORMAT
-      ( ( identifier_format2
-      | 'OMITTED'
+      ( ( 'OMITTED'
+      | identifier
       )
-        ( dtAcceptPositioningMod )?
-        ( onException )?
-        ( notOnException )?
+        ( unitPhrase )?
+        ( ( dtLineColPositioning
+        | dtAtPositioning
+        ) )?
+        ( ( 'FROM'
+          'CRT'
+        ) )?
+        ( modeIsBlockPhrase )?
+        ( ( 'WITH'
+          ( screenEntryPhrases )+
+        ) )?
+        ( ( onException
+        | onEscape
+        ) )?
+        ( ( notOnException
+        | notOnEscape
+        ) )?
       )
     )
   ;
@@ -2042,6 +3812,33 @@ acceptMessageCount
       ( identifier
         ( 'MESSAGE' )?
         'COUNT'
+      )
+    )
+  ;
+
+// ========================================================
+// unitPhrase
+// ........................................................
+
+unitPhrase
+  : ^(UNIT_PHRASE
+      ( 'UNIT'
+        ( identifier
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// modeIsBlockPhrase
+// ........................................................
+
+modeIsBlockPhrase
+  : ^(MODE_IS_BLOCK_PHRASE
+      ( 'MODE'
+        ( 'IS' )?
+        'BLOCK'
       )
     )
   ;
@@ -2156,7 +3953,22 @@ allocateStatement
 callStatement
   : ^(CALL_STATEMENT
       ( 'CALL'
-        programID
+        ( 'NESTED'
+        | ( mnemonicName
+          ( alphanumericLiteral
+          | identifier
+          )
+        )
+        | ( ( alphanumericLiteral
+        | identifier
+        )
+          ( ( 'AS'
+            ( 'NESTED'
+            | programName
+            )
+          ) )?
+        )
+        )
         ( callUsing )?
         ( callGivingOrReturning )?
         ( ( onOverflow
@@ -2177,26 +3989,60 @@ callStatement
 callUsing
   : ^(CALL_USING
       ( 'USING'
-        ( ( literal
-        | identifier
-        | 'OMITTED'
-        ) )*
-        ( ( ( ( 'BY' )?
+        ( ( ( ( ( ( 'BY' )?
           'REFERENCE'
-          ( ( literal
-          | identifier
+        ) )?
+          ( ( 'ADDRESS'
+            'OF'
+            identifier
+          )
           | 'OMITTED'
-          ) )+
+          | identifier
+          | literal
+          )
         )
         | ( ( 'BY' )?
-          ( 'CONTENT'
-          | 'VALUE'
+          'CONTENT'
+          ( ( 'LENGTH'
+            'OF'
+            identifier
           )
-          ( ( literal
+          | arithmeticExpression
           | identifier
-          ) )+
+          | literal
+          )
         )
-        ) )*
+        | ( ( 'BY' )?
+          'VALUE'
+          ( ( 'LENGTH'
+            'OF'
+            identifier
+            ( ( 'SIZE'
+              ( 'IS' )?
+              ( ( ( 'LENGTH'
+                'OF'
+                identifier
+              )
+              | integer
+              ) )?
+            ) )?
+          )
+          | ( integer
+            'SIZE'
+            ( 'IS' )?
+            ( ( ( 'LENGTH'
+              'OF'
+              identifier
+            )
+            | integer
+            ) )?
+          )
+          | arithmeticExpression
+          | identifier
+          | literal
+          )
+        )
+        ) )+
       )
     )
   ;
@@ -2210,7 +4056,11 @@ callGivingOrReturning
       ( ( 'GIVING'
       | 'RETURNING'
       )
-        ( 'INTO' )?
+        ( ( 'INTO'
+        | ( 'ADDRESS'
+          'OF'
+        )
+        ) )?
         identifier
       )
     )
@@ -2257,6 +4107,33 @@ notOnException
   ;
 
 // ========================================================
+// onEscape
+// ........................................................
+
+onEscape
+  : ^(ON_ESCAPE
+      ( ( 'ON' )?
+        'ESCAPE'
+        nestedStatements
+      )
+    )
+  ;
+
+// ========================================================
+// notOnEscape
+// ........................................................
+
+notOnEscape
+  : ^(NOT_ON_ESCAPE
+      ( 'NOT'
+        ( 'ON' )?
+        'ESCAPE'
+        nestedStatements
+      )
+    )
+  ;
+
+// ========================================================
 // programID
 // ........................................................
 
@@ -2278,6 +4155,70 @@ cancelStatement
         ( ( identifier
         | alphanumeric
         ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// chainStatement
+// ........................................................
+
+chainStatement
+  : ^(CHAIN_STATEMENT
+      ( 'CHAIN'
+        ( identifier
+        | literal
+        )
+        ( chainUsing )?
+        ( 'END-CHAIN' )?
+      )
+    )
+  ;
+
+// ========================================================
+// chainUsing
+// ........................................................
+
+chainUsing
+  : ^(CHAIN_USING
+      ( 'USING'
+        ( ( literal
+        | identifier
+        ) )*
+        ( ( ( ( 'BY' )?
+          'REFERENCE'
+          ( ( ( ( ( 'ADDRESS'
+            'OF'
+          ) )?
+            identifier
+          )
+          | 'OMITTED'
+          | literal
+          ) )+
+        )
+        | ( ( 'BY' )?
+          'CONTENT'
+          ( ( literal
+          | identifier
+          ) )+
+        )
+        | ( ( 'BY' )?
+          'VALUE'
+          ( ( ( ( ( 'LENGTH'
+            'OF'
+          ) )?
+            identifier
+          )
+          | ( integer
+            ( ( 'SIZE'
+              ( 'IS' )?
+              integer
+            ) )?
+          )
+          | literal
+          ) )+
+        )
+        ) )*
       )
     )
   ;
@@ -2310,6 +4251,16 @@ closeStatement
           ) )?
         ) )+
       )
+    )
+  ;
+
+// ========================================================
+// commitStatement
+// ........................................................
+
+commitStatement
+  : ^(COMMIT_STATEMENT
+      'COMMIT'
     )
   ;
 
@@ -2367,16 +4318,27 @@ deleteStatement
   ;
 
 // ========================================================
+// deleteFileStatement
+// ........................................................
+
+deleteFileStatement
+  : ^(DELETE_FILE_STATEMENT
+      ( 'DELETE'
+        'FILE'
+        ( fileName )+
+      )
+    )
+  ;
+
+// ========================================================
 // displayStatement
 // ........................................................
 
 displayStatement
   : ^(DISPLAY_STATEMENT
       ( 'DISPLAY'
-        ( displayScreenFormat
+        ( displayTerminalFormat
         | displayDeviceFormat
-        | displayTerminalFormat
-        | (water)?
         )
         ( 'END-DISPLAY' )?
       )
@@ -2394,6 +4356,8 @@ displayDeviceFormat
       ) )+
         ( uponClause )?
         ( withNoAdvancing )?
+        ( onException )?
+        ( notOnException )?
       )
     )
   ;
@@ -2405,7 +4369,11 @@ displayDeviceFormat
 uponClause
   : ^(UPON_CLAUSE
       ( 'UPON'
-        ( environmentName
+        ( 'ARGUMENT-NUMBER'
+        | 'COMMAND-LINE'
+        | 'ENVIRONMENT-VALUE'
+        | 'ENVIRONMENT-NAME'
+        | environmentName
         | mnemonicName
         )
       )
@@ -2431,7 +4399,8 @@ withNoAdvancing
 
 displayTerminalFormat
   : ^(DISPLAY_TERMINAL_FORMAT
-      ( ( ( identifier
+      ( ( ( 'OMITTED'
+      | identifier
       | literal
       )
         ( ( 'UNIT'
@@ -2439,180 +4408,15 @@ displayTerminalFormat
           | literal
           )
         ) )?
-        ( displayTerminalMods )?
+        ( dtAtPositioning
+        | dtLineColPositioning
+        )
+        ( uponClause )?
+        ( modeIsBlockPhrase )?
+        ( ( 'WITH'
+          ( screenEntryPhrases )+
+        ) )?
       ) )+
-    )
-  ;
-
-// ========================================================
-// displayTerminalMods
-// ........................................................
-
-displayTerminalMods
-  : ^(DISPLAY_TERMINAL_MODS
-      ( ( dtBellMod
-      | dtBlinkMod
-      | dtControlMod
-      | dtConvertMod
-      | dtEraseMod
-      | dtLightingMod
-      | dtPositioningMod
-      | dtModeBlockMod
-      | dtReverseMod
-      | dtSizeMod
-      ) )+
-    )
-  ;
-
-// ========================================================
-// dtBellMod
-// ........................................................
-
-dtBellMod
-  : ^(DT_BELL_MOD
-      ( ( 'WITH' )?
-        ( 'BEEP'
-        | 'BELL'
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// dtBlinkMod
-// ........................................................
-
-dtBlinkMod
-  : ^(DT_BLINK_MOD
-      ( ( 'WITH' )?
-        'BLINK'
-      )
-    )
-  ;
-
-// ========================================================
-// dtControlMod
-// ........................................................
-
-dtControlMod
-  : ^(DT_CONTROL_MOD
-      ( ( 'WITH' )?
-        'CONTROL'
-        ( identifier
-        | literal
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// dtConvertMod
-// ........................................................
-
-dtConvertMod
-  : ^(DT_CONVERT_MOD
-      ( ( 'WITH' )?
-        'CONVERT'
-      )
-    )
-  ;
-
-// ========================================================
-// dtEraseMod
-// ........................................................
-
-dtEraseMod
-  : ^(DT_ERASE_MOD
-      ( ( 'WITH' )?
-        'ERASE'
-        ( 'EOL'
-        | 'EOS'
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// dtLightingMod
-// ........................................................
-
-dtLightingMod
-  : ^(DT_LIGHTING_MOD
-      ( ( 'WITH' )?
-        ( 'HIGH'
-        | 'HIGHLIGHT'
-        | 'LOW'
-        | 'LOWLIGHT'
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// dtPositioningMod
-// ........................................................
-
-dtPositioningMod
-  : ^(DT_POSITIONING_MOD
-      ( dtAtPositioning
-      | dtLineColPositioning
-      )
-    )
-  ;
-
-// ========================================================
-// dtAcceptPositioningMod
-// ........................................................
-
-dtAcceptPositioningMod
-  : ^(DT_ACCEPT_POSITIONING_MOD
-      ( dtAtPositioning
-      | dtFromLineColPositioning
-      )
-    )
-  ;
-
-// ========================================================
-// dtModeBlockMod
-// ........................................................
-
-dtModeBlockMod
-  : ^(DT_MODE_BLOCK_MOD
-      ( ( 'WITH' )?
-        'MODE'
-        ( 'IS' )?
-        'BLOCK'
-      )
-    )
-  ;
-
-// ========================================================
-// dtReverseMod
-// ........................................................
-
-dtReverseMod
-  : ^(DT_REVERSE_MOD
-      ( ( 'WITH' )?
-        ( 'REVERSED'
-        | 'REVERSE-VIDEO'
-        | 'REVERSE'
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// dtSizeMod
-// ........................................................
-
-dtSizeMod
-  : ^(DT_SIZE_MOD
-      ( ( 'WITH' )?
-        'SIZE'
-        ( identifier
-        | literal
-        )
-      )
     )
   ;
 
@@ -2636,26 +4440,16 @@ dtAtPositioning
 
 dtLineColPositioning
   : ^(DT_LINE_COL_POSITIONING
-      ( ( 'AT' )?
-        ( ( dtLinePos
-        | dtColPos
-        ) )+
-      )
-    )
-  ;
-
-// ========================================================
-// dtFromLineColPositioning
-// ........................................................
-
-dtFromLineColPositioning
-  : ^(DT_FROM_LINE_COL_POSITIONING
-      ( ( ( 'AT' )?
+      ( ( ( 'AT'
       | 'FROM'
-      )
+      ) )?
         ( ( dtLinePos
-        | dtColPos
-        ) )+
+          ( dtColPos )?
+        )
+        | ( dtColPos
+          ( dtLinePos )?
+        )
+        )
       )
     )
   ;
@@ -2668,6 +4462,11 @@ dtLinePos
   : ^(DT_LINE_POS
       ( 'LINE'
         ( 'NUMBER' )?
+        ( 'IS' )?
+        ( ( 'PLUS'
+        | '+'
+        | '-'
+        ) )?
         ( identifier
         | literal
         )
@@ -2687,6 +4486,11 @@ dtColPos
       | 'POS'
       )
         ( 'NUMBER' )?
+        ( 'IS' )?
+        ( ( 'PLUS'
+        | '+'
+        | '-'
+        ) )?
         ( identifier
         | literal
         )
@@ -2695,17 +4499,447 @@ dtColPos
   ;
 
 // ========================================================
-// displayScreenFormat
+// screenEntryPhrases
 // ........................................................
 
-displayScreenFormat
-  : ^(DISPLAY_SCREEN_FORMAT
-      ( ( ( identifier
-      | literal
-      | 'OMITTED'
+screenEntryPhrases
+  : ^(SCREEN_ENTRY_PHRASES
+      ( autoPhrase
+      | beepPhrase
+      | blankPhrase
+      | blinkPhrase
+      | capitalizationPhrase
+      | controlPhrase
+      | convertPhrase
+      | cursorPhrase
+      | echoPhrase
+      | erasePhrase
+      | fillPhrase
+      | fullPhrase
+      | gridPhrase
+      | justificationPhrase
+      | highPhrase
+      | lowPhrase
+      | linePhrase
+      | offPhrase
+      | promptPhrase
+      | requiredPhrase
+      | reversePhrase
+      | scrollPhrase
+      | securePhrase
+      | sizePhrase
+      | foregroundPhrase
+      | backgroundPhrase
+      | timeoutPhrase
+      | trailingSignPhrase
+      | tabPhrase
+      | timePhrase
+      | updatePhrase
       )
-        dtPositioningMod
-      ) )+
+    )
+  ;
+
+// ========================================================
+// autoPhrase
+// ........................................................
+
+autoPhrase
+  : ^(AUTO_PHRASE
+      ( 'AUTO'
+      | 'AUTO-SKIP'
+      )
+    )
+  ;
+
+// ========================================================
+// backgroundPhrase
+// ........................................................
+
+backgroundPhrase
+  : ^(BACKGROUND_PHRASE
+      ( ( 'BACKGROUND-COLOR'
+      | 'BACKGROUND-COLOUR'
+      )
+        ( 'IS' )?
+        integer
+      )
+    )
+  ;
+
+// ========================================================
+// beepPhrase
+// ........................................................
+
+beepPhrase
+  : ^(BEEP_PHRASE
+      ( ( 'NO' )?
+        ( 'BEEP'
+        | 'BELL'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// blankPhrase
+// ........................................................
+
+blankPhrase
+  : ^(BLANK_PHRASE
+      ( 'BLANK'
+        ( 'SCREEN'
+        | 'LINE'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// blinkPhrase
+// ........................................................
+
+blinkPhrase
+  : ^(BLINK_PHRASE
+      'BLINK'
+    )
+  ;
+
+// ========================================================
+// capitalizationPhrase
+// ........................................................
+
+capitalizationPhrase
+  : ^(CAPITALIZATION_PHRASE
+      ( 'UPPER'
+      | 'LOWER'
+      )
+    )
+  ;
+
+// ========================================================
+// controlPhrase
+// ........................................................
+
+controlPhrase
+  : ^(CONTROL_PHRASE
+      ( 'CONTROL'
+        ( 'IS' )?
+        ( identifier_format2
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// convertPhrase
+// ........................................................
+
+convertPhrase
+  : ^(CONVERT_PHRASE
+      'CONVERT'
+    )
+  ;
+
+// ========================================================
+// cursorPhrase
+// ........................................................
+
+cursorPhrase
+  : ^(CURSOR_PHRASE
+      ( 'CURSOR'
+        ( identifier
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// echoPhrase
+// ........................................................
+
+echoPhrase
+  : ^(ECHO_PHRASE
+      'ECHO'
+    )
+  ;
+
+// ========================================================
+// erasePhrase
+// ........................................................
+
+erasePhrase
+  : ^(ERASE_PHRASE
+      ( 'ERASE'
+        ( ( 'EOL'
+        | 'EOS'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// foregroundPhrase
+// ........................................................
+
+foregroundPhrase
+  : ^(FOREGROUND_PHRASE
+      ( ( 'FOREGROUND-COLOR'
+      | 'FOREGROUND-COLOUR'
+      )
+        ( 'IS' )?
+        integer
+      )
+    )
+  ;
+
+// ========================================================
+// fullPhrase
+// ........................................................
+
+fullPhrase
+  : ^(FULL_PHRASE
+      ( 'FULL'
+      | 'LENGTH-CHECK'
+      )
+    )
+  ;
+
+// ========================================================
+// gridPhrase
+// ........................................................
+
+gridPhrase
+  : ^(GRID_PHRASE
+      'GRID'
+    )
+  ;
+
+// ========================================================
+// highPhrase
+// ........................................................
+
+highPhrase
+  : ^(HIGH_PHRASE
+      ( 'HIGH'
+      | 'HIGHLIGHT'
+      )
+    )
+  ;
+
+// ========================================================
+// linePhrase
+// ........................................................
+
+linePhrase
+  : ^(LINE_PHRASE
+      ( 'LEFTLINE'
+      | 'OVERLINE'
+      | 'UNDERLINE'
+      )
+    )
+  ;
+
+// ========================================================
+// lowPhrase
+// ........................................................
+
+lowPhrase
+  : ^(LOW_PHRASE
+      ( 'LOW'
+      | 'LOWLIGHT'
+      )
+    )
+  ;
+
+// ========================================================
+// offPhrase
+// ........................................................
+
+offPhrase
+  : ^(OFF_PHRASE
+      'OFF'
+    )
+  ;
+
+// ========================================================
+// promptPhrase
+// ........................................................
+
+promptPhrase
+  : ^(PROMPT_PHRASE
+      ( 'PROMPT'
+        ( ( ( 'CHARACTER'
+          ( 'IS' )?
+          identifier
+        )
+        | ( ( 'CHARACTER' )?
+          ( 'IS' )?
+          literal
+        )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// requiredPhrase
+// ........................................................
+
+requiredPhrase
+  : ^(REQUIRED_PHRASE
+      ( 'REQUIRED'
+      | 'EMPTY-CHECK'
+      )
+    )
+  ;
+
+// ========================================================
+// reversePhrase
+// ........................................................
+
+reversePhrase
+  : ^(REVERSE_PHRASE
+      ( 'REVERSE'
+      | 'REVERSED'
+      | 'REVERSE-VIDEO'
+      )
+    )
+  ;
+
+// ========================================================
+// scrollPhrase
+// ........................................................
+
+scrollPhrase
+  : ^(SCROLL_PHRASE
+      ( 'SCROLL'
+        ( 'UP'
+        | 'DOWN'
+        )
+        ( ( ( 'BY' )?
+          ( integer
+          | identifier
+          )
+          ( 'LINE'
+          | 'LINES'
+          )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// securePhrase
+// ........................................................
+
+securePhrase
+  : ^(SECURE_PHRASE
+      ( 'SECURE'
+      | 'NO-ECHO'
+      )
+    )
+  ;
+
+// ========================================================
+// sizePhrase
+// ........................................................
+
+sizePhrase
+  : ^(SIZE_PHRASE
+      ( 'SIZE'
+        ( 'IS' )?
+        ( identifier
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// tabPhrase
+// ........................................................
+
+tabPhrase
+  : ^(TAB_PHRASE
+      'TAB'
+    )
+  ;
+
+// ========================================================
+// timePhrase
+// ........................................................
+
+timePhrase
+  : ^(TIME_PHRASE
+      ( ( 'BEFORE' )?
+        'TIME'
+        ( identifier
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// timeoutPhrase
+// ........................................................
+
+timeoutPhrase
+  : ^(TIMEOUT_PHRASE
+      ( ( 'TIME-OUT'
+      | 'TIMEOUT'
+      )
+        'AFTER'
+        ( identifier
+        | integer
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// justificationPhrase
+// ........................................................
+
+justificationPhrase
+  : ^(JUSTIFICATION_PHRASE
+      ( 'LEFT-JUSTIFY'
+      | 'RIGHT-JUSTIFY'
+      )
+    )
+  ;
+
+// ========================================================
+// fillPhrase
+// ........................................................
+
+fillPhrase
+  : ^(FILL_PHRASE
+      ( 'SPACE-FILL'
+      | 'ZERO-FILL'
+      )
+    )
+  ;
+
+// ========================================================
+// trailingSignPhrase
+// ........................................................
+
+trailingSignPhrase
+  : ^(TRAILING_SIGN_PHRASE
+      'TRAILING-SIGN'
+    )
+  ;
+
+// ========================================================
+// updatePhrase
+// ........................................................
+
+updatePhrase
+  : ^(UPDATE_PHRASE
+      'UPDATE'
     )
   ;
 
@@ -2807,9 +5041,35 @@ division_format3
 entryStatement
   : ^(ENTRY_STATEMENT
       ( 'ENTRY'
-        alphanumeric
+        literal
+        ( mnemonicName )?
         ( ( 'USING'
-          ( dataName )+
+          ( ( ( ( ( 'BY' )?
+            ( 'REFERENCE'
+            | 'VALUE'
+            )
+          ) )?
+            ( 'ANY'
+            | ( dataName
+              ( ( 'DELIMITED'
+                ( ( 'BY'
+                  'SIZE'
+                ) )?
+              ) )?
+            )
+            )
+          ) )+
+          ( ( 'REPEATED'
+            ( ( integer
+              'TO'
+              integer
+            ) )?
+          ) )?
+        ) )?
+        ( ( ( 'GIVING'
+        | 'RETURNING'
+        )
+          dataName
         ) )?
       )
     )
@@ -2840,8 +5100,8 @@ evaluateStatement
 subject
   : ^(SUBJECT
       ( condition
-      | identifier
       | arithmeticExpression
+      | identifier
       | literal
       )
     )
@@ -2889,9 +5149,9 @@ object
       | 'FALSE'
       | condition
       | ( ( 'NOT' )?
-        ( identifier
+        ( arithmeticExpression
+        | identifier
         | literal
-        | arithmeticExpression
         )
       )
       | ( '('
@@ -2909,16 +5169,54 @@ object
 rangeExpression
   : ^(RANGE_EXPRESSION
       ( ( 'NOT' )?
-        ( identifier
+        ( arithmeticExpression
+        | identifier
         | literal
-        | arithmeticExpression
         )
         ( 'THROUGH'
         | 'THRU'
         )
-        ( identifier
+        ( arithmeticExpression
+        | identifier
         | literal
-        | arithmeticExpression
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// examineStatement
+// ........................................................
+
+examineStatement
+  : ^(EXAMINE_STATEMENT
+      ( 'EXAMINE'
+        identifier
+        ( ( 'TALLYING'
+          ( ( 'UNTIL'
+            'FIRST'
+          )
+          | 'ALL'
+          | 'LEADING'
+          )
+          literal
+          ( ( 'REPLACING'
+            'BY'
+            literal
+          ) )?
+        )
+        | ( 'REPLACING'
+          ( 'ALL'
+          | 'LEADING'
+          | 'FIRST'
+          | ( 'UNTIL'
+            'FIRST'
+          )
+          )
+          literal
+          'BY'
+          literal
+        )
         )
       )
     )
@@ -2932,11 +5230,9 @@ execStatement
   : ^(EXEC_STATEMENT
       ( execSQLStatement
       | execCICSStatement
-      | ( 'EXEC'
-        cobolWord
-        (water)?
-        'END-EXEC'
-      )
+      | execDLIStatement
+      | execHTMLStatement
+      | execTextDataStatement
       )
     )
   ;
@@ -2947,7 +5243,9 @@ execStatement
 
 execSQLStatement
   : ^(EXEC_S_Q_L_STATEMENT
-      ( 'EXEC'
+      ( ( 'EXEC'
+      | 'EXECUTE'
+      )
         'SQL'
         sqlStatement
         (water)?
@@ -3068,7 +5366,9 @@ tableName
 
 execCICSStatement
   : ^(EXEC_C_I_C_S_STATEMENT
-      ( 'EXEC'
+      ( ( 'EXEC'
+      | 'EXECUTE'
+      )
         'CICS'
         cicsStatement
         (water)?
@@ -3562,6 +5862,54 @@ cicsWaterInBrackets
   ;
 
 // ========================================================
+// execDLIStatement
+// ........................................................
+
+execDLIStatement
+  : ^(EXEC_D_L_I_STATEMENT
+      ( ( 'EXEC'
+      | 'EXECUTE'
+      )
+        'DLI'
+        (water)?
+        'END-EXEC'
+      )
+    )
+  ;
+
+// ========================================================
+// execHTMLStatement
+// ........................................................
+
+execHTMLStatement
+  : ^(EXEC_H_T_M_L_STATEMENT
+      ( ( 'EXEC'
+      | 'EXECUTE'
+      )
+        'HTML'
+        (water)?
+        'END-EXEC'
+      )
+    )
+  ;
+
+// ========================================================
+// execTextDataStatement
+// ........................................................
+
+execTextDataStatement
+  : ^(EXEC_TEXT_DATA_STATEMENT
+      ( ( 'EXEC'
+      | 'EXECUTE'
+      )
+        textName
+        (water)?
+        'END-EXEC'
+      )
+    )
+  ;
+
+// ========================================================
 // exitStatement
 // ........................................................
 
@@ -3576,6 +5924,9 @@ exitStatement
         | ( 'PERFORM'
           ( 'CYCLE' )?
         )
+        | 'METHOD'
+        | 'FUNCTION'
+        | 'ITERATOR'
         ) )?
       )
     )
@@ -3587,9 +5938,28 @@ exitStatement
 
 returningPhrase
   : ^(RETURNING_PHRASE
-      ( 'RETURNING'
+      ( ( 'GIVING'
+      | 'RETURNING'
+      )
         ( integer
-        | identifier
+        | ( 'ADDRESS'
+          'OF'
+          identifier
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// generateStatement
+// ........................................................
+
+generateStatement
+  : ^(GENERATE_STATEMENT
+      ( 'GENERATE'
+        ( dataName
+        | reportName
         )
       )
     )
@@ -3617,7 +5987,19 @@ freeStatement
 
 gobackStatement
   : ^(GOBACK_STATEMENT
-      'GOBACK'
+      ( 'GOBACK'
+        ( ( ( 'GIVING'
+        | 'RETURNING'
+        )
+          ( ( ( ( 'ADDRESS'
+            'OF'
+          ) )?
+            identifier
+          )
+          | integer
+          )
+        ) )?
+      )
     )
   ;
 
@@ -3662,6 +6044,128 @@ ifStatement
           )
         ) )?
         ( 'END-IF' )?
+      )
+    )
+  ;
+
+// ========================================================
+// initiateStatement
+// ........................................................
+
+initiateStatement
+  : ^(INITIATE_STATEMENT
+      ( 'INITIATE'
+        ( reportName )+
+      )
+    )
+  ;
+
+// ========================================================
+// invokeStatement
+// ........................................................
+
+invokeStatement
+  : ^(INVOKE_STATEMENT
+      ( 'INVOKE'
+        identifier
+        ( ( 'AS'
+          ( 'OBJECT'
+          | identifier
+          )
+        ) )?
+        ( literal
+        | identifier
+        )
+        ( ( 'USING'
+          ( ( ( ( ( ( 'BY' )?
+            'REFERENCE'
+          ) )?
+            ( ( 'ADDRESS'
+              'OF'
+              identifier
+            )
+            | 'OMITTED'
+            | literal
+            | identifier
+            )
+          )
+          | ( ( 'BY' )?
+            'CONTENT'
+            ( ( 'LENGTH'
+              'OF'
+              identifier
+            )
+            | arithmeticExpression
+            | literal
+            | identifier
+            )
+          )
+          | ( ( 'BY' )?
+            'VALUE'
+            ( ( 'LENGTH'
+              'OF'
+              identifier
+            )
+            | ( integer
+              'SIZE'
+              ( 'IS' )?
+              integer
+            )
+            | arithmeticExpression
+            | integer
+            | identifier
+            )
+          )
+          ) )+
+        ) )?
+        ( ( ( 'GIVING'
+        | 'RETURNING'
+        )
+          ( ( 'INTO'
+          | ( 'ADDRESS'
+            'OF'
+          )
+          ) )?
+          identifier
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// exhibitStatement
+// ........................................................
+
+exhibitStatement
+  : ^(EXHIBIT_STATEMENT
+      ( 'EXHIBIT'
+        ( 'NAMED'
+        | ( 'CHANGED'
+          'NAMED'
+        )
+        | 'CHANGED'
+        )
+        ( identifier
+        | literal
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// identifiedByStatement
+// ........................................................
+
+identifiedByStatement
+  : ^(IDENTIFIED_BY_STATEMENT
+      ( 'IDENTIFIED'
+        ( 'BY' )?
+        ( dataName
+        | literal
+        )
+        ( ( ( 'IS' )?
+          'ATTRIBUTE'
+        ) )?
       )
     )
   ;
@@ -3873,6 +6377,48 @@ locationPhrase
   ;
 
 // ========================================================
+// mergeStatement
+// ........................................................
+
+mergeStatement
+  : ^(MERGE_STATEMENT
+      ( 'MERGE'
+        fileName
+        ( ( ( 'ON' )?
+          ( 'ASCENDING'
+          | 'DESCENDING'
+          )
+          ( 'KEY' )?
+          ( 'IS' )?
+          ( dataName )+
+        ) )+
+        ( ( ( 'COLLATING' )?
+          'SEQUENCE'
+          ( 'IS' )?
+          alphabetName
+        ) )?
+        'USING'
+        fileName
+        ( fileName )+
+        ( ( 'OUTPUT'
+          'PROCEDURE'
+          ( 'IS' )?
+          procedureName
+          ( ( ( 'THROUGH'
+          | 'THRU'
+          )
+            procedureName
+          ) )?
+        )
+        | ( 'GIVING'
+          ( fileName )+
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
 // moveStatement
 // ........................................................
 
@@ -3892,6 +6438,7 @@ moveStatement
         )
         'TO'
         ( identifier )+
+        (water)?
       )
     )
   ;
@@ -3961,6 +6508,57 @@ multiplication_format2
   ;
 
 // ========================================================
+// nextSentenceStatement
+// ........................................................
+
+nextSentenceStatement
+  : ^(NEXT_SENTENCE_STATEMENT
+      ( 'NEXT'
+        'SENTENCE'
+      )
+    )
+  ;
+
+// ========================================================
+// onStatement
+// ........................................................
+
+onStatement
+  : ^(ON_STATEMENT
+      ( 'ON'
+        ( literal
+        | identifier
+        )
+        ( ( 'AND'
+          'EVERY'
+          ( literal
+          | identifier
+          )
+        ) )?
+        ( ( 'UNTIL'
+          ( literal
+          | identifier
+          )
+        ) )?
+        ( nestedStatements
+        | ( 'NEXT'
+          'SENTENCE'
+        )
+        )
+        ( ( ( 'ELSE'
+        | 'OTHERWISE'
+        )
+          ( nestedStatements
+          | ( 'NEXT'
+            'SENTENCE'
+          )
+          )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
 // openStatement
 // ........................................................
 
@@ -4007,8 +6605,12 @@ performStatement
         | until
         | varying
         ) )?
-          ( nestedStatements )?
-          'END-PERFORM'
+          ( ( nestedStatements
+            'END-PERFORM'
+          )
+          | statement
+          | 'END-PERFORM'
+          )
         )
         | ( procedureName
           ( ( ( 'THROUGH'
@@ -4020,6 +6622,13 @@ performStatement
           | until
           | varying
           ) )?
+        )
+        | ( 'VARYING'
+          identifier
+          'THROUGH'
+          identifier
+          nestedStatements
+          'END-PERFORM'
         )
         )
       )
@@ -4041,19 +6650,6 @@ times
   ;
 
 // ========================================================
-// until
-// ........................................................
-
-until
-  : ^(UNTIL
-      ( ( testPosition )?
-        'UNTIL'
-        condition
-      )
-    )
-  ;
-
-// ========================================================
 // testPosition
 // ........................................................
 
@@ -4069,17 +6665,27 @@ testPosition
   ;
 
 // ========================================================
+// until
+// ........................................................
+
+until
+  : ^(UNTIL
+      ( ( testPosition )?
+        'UNTIL'
+        ( condition
+        | 'EXIT'
+        )
+      )
+    )
+  ;
+
+// ========================================================
 // varying
 // ........................................................
 
 varying
   : ^(VARYING
-      ( ( ( ( 'WITH' )?
-        'TEST'
-        ( 'BEFORE'
-        | 'AFTER'
-        )
-      ) )?
+      ( ( testPosition )?
         'VARYING'
         identifier
         'FROM'
@@ -4110,6 +6716,18 @@ varying
   ;
 
 // ========================================================
+// raiseStatement
+// ........................................................
+
+raiseStatement
+  : ^(RAISE_STATEMENT
+      ( 'RAISE'
+        ( identifier )?
+      )
+    )
+  ;
+
+// ========================================================
 // readStatement
 // ........................................................
 
@@ -4131,11 +6749,17 @@ readStatement
         | ( 'IGNORING'
           'LOCK'
         )
+        | ( ( 'WITH' )?
+          ( ( ( ( 'KEPT'
+          | 'NO'
+          | 'IGNORE'
+          ) )?
+            'LOCK'
+          )
+          | 'WAIT'
+          )
+        )
         | retryPhrase
-        ) )?
-        ( ( ( 'WITH' )?
-          ( 'NO' )?
-          'LOCK'
         ) )?
         ( ( 'KEY'
           ( 'IS' )?
@@ -4165,6 +6789,48 @@ readStatement
   ;
 
 // ========================================================
+// readWithClause
+// ........................................................
+
+readWithClause
+  : ^(READ_WITH_CLAUSE
+      ( ( 'WITH' )?
+        ( readLockClause
+        | 'WAIT'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// readLockClause
+// ........................................................
+
+readLockClause
+  : ^(READ_LOCK_CLAUSE
+      ( ( ( 'KEPT'
+      | 'NO'
+      | 'IGNORE'
+      ) )?
+        'LOCK'
+      )
+    )
+  ;
+
+// ========================================================
+// readyTraceStatement
+// ........................................................
+
+readyTraceStatement
+  : ^(READY_TRACE_STATEMENT
+      ( 'READY'
+        'TRACE'
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
 // releaseStatement
 // ........................................................
 
@@ -4175,6 +6841,19 @@ releaseStatement
         ( ( 'FROM'
           identifier
         ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// resetTraceStatement
+// ........................................................
+
+resetTraceStatement
+  : ^(RESET_TRACE_STATEMENT
+      ( 'RESET'
+        'TRACE'
+        ( '.' )?
       )
     )
   ;
@@ -4227,6 +6906,16 @@ rewriteStatement
         ) )?
         ( 'END-REWRITE' )?
       )
+    )
+  ;
+
+// ========================================================
+// rollbackStatement
+// ........................................................
+
+rollbackStatement
+  : ^(ROLLBACK_STATEMENT
+      'ROLLBACK'
     )
   ;
 
@@ -4290,13 +6979,117 @@ notAtEnd
   ;
 
 // ========================================================
+// serviceStatement
+// ........................................................
+
+serviceStatement
+  : ^(SERVICE_STATEMENT
+      ( 'SERVICE'
+        ( 'LABEL'
+        | ( 'RELOAD'
+          identifier
+        )
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// sortStatement
+// ........................................................
+
+sortStatement
+  : ^(SORT_STATEMENT
+      ( ( 'SORT'
+        fileName
+        ( ( 'ON'
+          ( ( ( 'ASCENDING'
+          | 'DESCENDING'
+          )
+            ( 'KEY' )?
+            ( 'IS' )?
+            ( qualifiedDataName )+
+          ) )+
+        ) )+
+        ( ( ( 'WITH' )?
+          'DUPLICATES'
+          ( ( 'IN'
+            'ORDER'
+          ) )?
+        ) )?
+        ( ( ( 'COLLATING' )?
+          'SEQUENCE'
+          ( 'IS' )?
+          alphabetName
+        ) )?
+        ( ( 'INPUT'
+          'PROCEDURE'
+          ( 'IS' )?
+          procedureName
+          ( ( ( 'THROUGH'
+          | 'THRU'
+          )
+            procedureName
+          ) )?
+        )
+        | ( 'USING'
+          ( fileName )+
+        )
+        )
+        ( ( 'OUTPUT'
+          'PROCEDURE'
+          ( 'IS' )?
+          procedureName
+          ( ( ( 'THROUGH'
+          | 'THRU'
+          )
+            procedureName
+          ) )?
+        )
+        | ( 'GIVING'
+          ( fileName )+
+        )
+        )
+      )
+      | ( 'SORT'
+        dataName
+        ( ( 'ON'
+          ( ( ( 'ASCENDING'
+          | 'DESCENDING'
+          )
+            ( 'KEY' )?
+            ( 'IS' )?
+            ( qualifiedDataName )+
+          ) )+
+        ) )+
+        ( ( ( 'WITH' )?
+          'DUPLICATES'
+          ( ( 'IN'
+            'ORDER'
+          ) )?
+        ) )?
+        ( ( ( 'COLLATING' )?
+          'SEQUENCE'
+          ( 'IS' )?
+          alphabetName
+        ) )?
+      )
+      )
+    )
+  ;
+
+// ========================================================
 // setStatement
 // ........................................................
 
 setStatement
   : ^(SET_STATEMENT
       ( 'SET'
-        ( setFormat1
+        ( setFormatMonitorValue
+        | setFormatDataPointerAssignment
+        | setFormatProcedurePointerAssignment
+        | setFormatSemaphoreValue
+        | setFormat1
         | setFormat2
         | setFormat3
         )
@@ -4346,7 +7139,97 @@ setFormat3
   : ^(SET_FORMAT3
       ( ( identifier )+
         'TO'
-        'TRUE'
+        ( 'TRUE'
+        | 'FALSE'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// setFormatDataPointerAssignment
+// ........................................................
+
+setFormatDataPointerAssignment
+  : ^(SET_FORMAT_DATA_POINTER_ASSIGNMENT
+      ( ( ( ( 'ADDRESS'
+        ( 'OF' )?
+        identifier
+      )
+      | identifier
+      ) )+
+        'TO'
+        ( ( 'ADDRESS'
+          ( 'OF' )?
+          identifier
+        )
+        | mnemonicName
+        | 'NULL'
+        | 'NULLS'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// setFormatProcedurePointerAssignment
+// ........................................................
+
+setFormatProcedurePointerAssignment
+  : ^(SET_FORMAT_PROCEDURE_POINTER_ASSIGNMENT
+      ( procedureName
+        'TO'
+        ( procedureName
+        | ( 'ENTRY'
+          ( identifier
+          | literal
+          )
+        )
+        | 'NULL'
+        | 'NULLS'
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// setFormatMonitorValue
+// ........................................................
+
+setFormatMonitorValue
+  : ^(SET_FORMAT_MONITOR_VALUE
+      ( ( mnemonicName )+
+        'TO'
+        ( 'NOT' )?
+        ( 'BROWSING'
+        | 'READING'
+        | 'WRITING'
+        )
+        ( ( 'CONVERTING'
+          'FROM'
+          ( 'BROWSING'
+          | 'WRITING'
+          )
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// setFormatSemaphoreValue
+// ........................................................
+
+setFormatSemaphoreValue
+  : ^(SET_FORMAT_SEMAPHORE_VALUE
+      ( ( mnemonicName )+
+        'TO'
+        ( 'UP'
+        | 'DOWN'
+        )
+        'BY'
+        ( integer
+        | identifier
+        )
       )
     )
   ;
@@ -4495,12 +7378,31 @@ caseInsensitive
 
 stopStatement
   : ^(STOP_STATEMENT
-      ( 'STOP'
-        ( ( 'RUN'
-          ( returningPhrase )?
+      ( ( 'STOP'
+        literal
+      )
+      | ( 'STOP'
+        'RUN'
+        ( ( ( 'GIVING'
+        | 'RETURNING'
         )
-        | literal
-        )
+          ( ( ( ( 'ADDRESS'
+            'OF'
+          ) )?
+            identifier
+          )
+          | ( integer
+            ( ( 'SIZE'
+              ( 'IS' )?
+              integer
+            ) )?
+          )
+          )
+        ) )?
+      )
+      | ( 'STOP'
+        'ITERATOR'
+      )
       )
     )
   ;
@@ -4627,6 +7529,68 @@ subtraction_format3
   ;
 
 // ========================================================
+// suppressStatement
+// ........................................................
+
+suppressStatement
+  : ^(SUPPRESS_STATEMENT
+      ( 'SUPPRESS'
+        ( 'PRINTING' )?
+      )
+    )
+  ;
+
+// ========================================================
+// terminateStatement
+// ........................................................
+
+terminateStatement
+  : ^(TERMINATE_STATEMENT
+      ( 'TERMINATE'
+        ( reportName )+
+      )
+    )
+  ;
+
+// ========================================================
+// transformStatement
+// ........................................................
+
+transformStatement
+  : ^(TRANSFORM_STATEMENT
+      ( 'TRANSFORM'
+        identifier
+        ( 'CHARACTERS' )?
+        'FROM'
+        ( figurativeConstant
+        | alphanumericLiteral
+        | identifier
+        )
+        'TO'
+        ( figurativeConstant
+        | alphanumericLiteral
+        | identifier
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// unlockStatement
+// ........................................................
+
+unlockStatement
+  : ^(UNLOCK_STATEMENT
+      ( 'UNLOCK'
+        fileName
+        ( ( 'RECORD'
+        | 'RECORDS'
+        ) )?
+      )
+    )
+  ;
+
+// ========================================================
 // unstringStatement
 // ........................................................
 
@@ -4688,9 +7652,9 @@ useStatement
   : ^(USE_STATEMENT
       ( 'USE'
         ( errorDeclarative
-        | debugOnAllDeclarative
         | debugDeclarative
         | labelDeclarative
+        | beforeReportingDeclarative
         )
         '.'
       )
@@ -4711,12 +7675,16 @@ errorDeclarative
         )
         'PROCEDURE'
         ( 'ON' )?
-        ( ( 'INPUT'
+        ( 'INPUT'
         | 'OUTPUT'
         | 'I-O'
         | 'EXTEND'
-        | fileName
-        ) )*
+        | ( fileName )*
+        )
+        ( ( 'GIVING'
+          dataName
+          ( dataName )?
+        ) )?
       )
     )
   ;
@@ -4730,31 +7698,18 @@ debugDeclarative
       ( ( 'FOR' )?
         'DEBUGGING'
         ( 'ON' )?
-        ( ( procedureName
-        | fileName
+        ( ( ( 'ALL'
+          'PROCEDURES'
+        )
         | ( ( ( 'ALL'
-          ( ( 'REFERENCES'
-            'OF'
-          ) )?
+          ( 'REFERENCES' )?
+          ( 'OF' )?
         ) )?
           identifier
         )
+        | procedureName
+        | fileName
         ) )*
-      )
-    )
-  ;
-
-// ========================================================
-// debugOnAllDeclarative
-// ........................................................
-
-debugOnAllDeclarative
-  : ^(DEBUG_ON_ALL_DECLARATIVE
-      ( ( 'FOR' )?
-        'DEBUGGING'
-        ( 'ON' )?
-        'ALL'
-        'PROCEDURES'
       )
     )
   ;
@@ -4778,12 +7733,55 @@ labelDeclarative
         'LABEL'
         'PROCEDURE'
         ( 'ON' )?
-        ( ( 'INPUT'
+        ( 'INPUT'
         | 'OUTPUT'
         | 'I-O'
         | 'EXTEND'
-        | fileName
-        ) )*
+        | ( fileName )*
+        )
+      )
+    )
+  ;
+
+// ========================================================
+// beforeReportingDeclarative
+// ........................................................
+
+beforeReportingDeclarative
+  : ^(BEFORE_REPORTING_DECLARATIVE
+      ( ( 'GLOBAL' )?
+        'BEFORE'
+        'REPORTING'
+        identifier
+      )
+    )
+  ;
+
+// ========================================================
+// waitStatement
+// ........................................................
+
+waitStatement
+  : ^(WAIT_STATEMENT
+      ( ( 'WAIT'
+        ( 'FOR' )?
+        threadPointer
+        ( ( 'RETURNING'
+          ( 'INTO' )?
+          identifier
+        ) )?
+        ( ( 'STATUS'
+          ( 'IS' )?
+          identifier
+        ) )?
+        ( onException )?
+        ( notOnException )?
+        ( 'END-WAIT' )?
+      )
+      | ( 'WAIT'
+        ( 'FOR' )?
+        eventPointer
+      )
       )
     )
   ;
@@ -4804,7 +7802,9 @@ writeStatement
         ( ( ( 'AFTER'
         | 'BEFORE'
         )
-          ( 'ADVANCING' )?
+          ( ( 'ADVANCING'
+          | 'POSITIONING'
+          ) )?
           ( ( ( identifier
           | integer
           | zero
@@ -4815,6 +7815,8 @@ writeStatement
           )
           | mnemonicName
           | 'PAGE'
+          | 'TAB'
+          | 'FORMFEED'
           )
         ) )?
         ( ( ( 'AT' )?
@@ -4845,6 +7847,152 @@ writeStatement
           nestedStatements
         ) )?
         ( 'END-WRITE' )?
+      )
+    )
+  ;
+
+// ========================================================
+// xmlGenerateStatement
+// ........................................................
+
+xmlGenerateStatement
+  : ^(XML_GENERATE_STATEMENT
+      ( 'XML'
+        'GENERATE'
+        identifier
+        'FROM'
+        identifier
+        ( ( 'COUNT'
+          ( 'IN' )?
+          identifier
+        ) )?
+        ( ( ( 'ON' )?
+          'EXCEPTION'
+          statement
+        ) )?
+        ( ( 'NOT'
+          ( 'ON' )?
+          'EXCEPTION'
+          statement
+        ) )?
+        ( 'END-XML' )?
+      )
+    )
+  ;
+
+// ========================================================
+// xmlParseStatement
+// ........................................................
+
+xmlParseStatement
+  : ^(XML_PARSE_STATEMENT
+      ( 'XML'
+        'PARSE'
+        identifier
+        ( ( 'PROCESSING'
+          'PROCEDURE'
+          ( 'IS' )?
+          procedureName
+        ) )?
+        ( ( ( 'THROUGH'
+        | 'THRU'
+        )
+          procedureName
+        ) )?
+        ( ( ( 'ON' )?
+          'EXCEPTION'
+          statement
+        ) )?
+        ( ( 'NOT'
+          ( 'ON' )?
+          'EXCEPTION'
+          statement
+        ) )?
+        ( 'END-XML' )?
+      )
+    )
+  ;
+
+// ========================================================
+// compilerStatement
+// ........................................................
+
+compilerStatement
+  : ^(COMPILER_STATEMENT
+      ( compilerDirective
+      | compilerIfStatement
+      | compilerDisplayStatement
+      | copyStatement
+      | replaceStatement
+      | useStatement
+      )
+    )
+  ;
+
+// ========================================================
+// compilerDirective
+// ........................................................
+
+compilerDirective
+  : ^(COMPILER_DIRECTIVE
+      ( ( '\u0024'
+        'SET'
+      )
+        (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// compilerIfStatement
+// ........................................................
+
+compilerIfStatement
+  : ^(COMPILER_IF_STATEMENT
+      ( '\u0024'
+        'IF'
+        operand
+        ( ( 'SET'
+        | ( ( 'NOT' )?
+          'DEFINED'
+        )
+        | ( ( 'NOT' )?
+          ( '<'
+          | '>'
+          | '='
+          )
+          operand
+        )
+        ) )?
+        ( compilerStatement
+        | nestedStatements
+        )
+        ( ( '\u0024'
+          'ELSE'
+          ( compilerStatement
+          | nestedStatements
+          )
+        ) )?
+        '\u0024'
+        'END'
+      )
+    )
+  ;
+
+// ========================================================
+// compilerDisplayStatement
+// ........................................................
+
+compilerDisplayStatement
+  : ^(COMPILER_DISPLAY_STATEMENT
+      ( '\u0024'
+        'DISPLAY'
+        ( ( 'VCS'
+          '='
+          literal
+        )
+        | textName
+        )
       )
     )
   ;
@@ -4900,7 +8048,11 @@ copyReplacementInstruction
 
 copyOperandName
   : ^(COPY_OPERAND_NAME
-      ( pseudoLiteral
+      ( ( ( ( 'LEADING'
+      | 'TRAILING'
+      ) )?
+        pseudoLiteral
+      )
       | verb
       | literal
       | identifier
@@ -4916,8 +8068,94 @@ copyOperandName
 replaceStatement
   : ^(REPLACE_STATEMENT
       ( 'REPLACE'
-        (water)?
-        '.'
+        ( 'OFF'
+        | ( ( ( pseudoLiteral
+          'BY'
+          pseudoLiteral
+        )
+        | ( ( 'LEADING'
+        | 'TRAILING'
+        )
+          pseudoLiteral
+          'BY'
+          pseudoLiteral
+        )
+        ) )+
+        )
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// pseudoText
+// ........................................................
+
+pseudoText
+  : ^(PSEUDO_TEXT
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// partialWord
+// ........................................................
+
+partialWord
+  : ^(PARTIAL_WORD
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// sourceFormattingDirective
+// ........................................................
+
+sourceFormattingDirective
+  : ^(SOURCE_FORMATTING_DIRECTIVE
+      ( ejectStatement
+      | skipStatement
+      | titleStatement
+      )
+    )
+  ;
+
+// ========================================================
+// ejectStatement
+// ........................................................
+
+ejectStatement
+  : ^(EJECT_STATEMENT
+      ( 'EJECT'
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// skipStatement
+// ........................................................
+
+skipStatement
+  : ^(SKIP_STATEMENT
+      ( ( 'SKIP1'
+      | 'SKIP2'
+      | 'SKIP3'
+      )
+        ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// titleStatement
+// ........................................................
+
+titleStatement
+  : ^(TITLE_STATEMENT
+      ( 'TITLE'
+        literal
+        ( '.' )?
       )
     )
   ;
@@ -4949,19 +8187,47 @@ divisionStart
   ;
 
 // ========================================================
-// dataSectionStart
+// sectionStart
 // ........................................................
 
-dataSectionStart
-  : ^(DATA_SECTION_START
-      ( ( 'FILE'
+sectionStart
+  : ^(SECTION_START
+      ( ( 'CONFIGURATION'
+      | 'INPUT-OUTPUT'
+      | 'FILE'
       | 'WORKING-STORAGE'
+      | 'THREAD-LOCAL-STORAGE'
+      | 'OBJECT-STORAGE'
+      | 'LOCAL-STORAGE'
       | 'LINKAGE'
       | 'COMMUNICATION'
+      | 'OBJECT'
       | 'REPORT'
       | 'SCREEN'
       )
         'SECTION'
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// paragraphStart
+// ........................................................
+
+paragraphStart
+  : ^(PARAGRAPH_START
+      ( ( 'SOURCE-COMPUTER'
+      | 'OBJECT-COMPUTER'
+      | 'SPECIAL-NAMES'
+      | 'REPOSITORY'
+      | 'CONSTRAINTS'
+      | 'CLASS-ATTRIBUTES'
+      | 'ASSEMBLY-ATTRIBUTES'
+      | 'FILE-CONTROL'
+      | 'I-O-CONTROL'
+      | 'CLASS-CONTROL'
+      )
         '.'
       )
     )
@@ -4979,6 +8245,7 @@ endOfStatement
       | 'END-ACCEPT'
       | 'END-ADD'
       | 'END-CALL'
+      | 'END-CHAIN'
       | 'END-COMPUTE'
       | 'END-DELETE'
       | 'END-DISPLAY'
@@ -4996,7 +8263,9 @@ endOfStatement
       | 'END-STRING'
       | 'END-SUBTRACT'
       | 'END-UNSTRING'
+      | 'END-WAIT'
       | 'END-WRITE'
+      | 'END-XML'
       | ( ( 'NOT' )?
         ( ( 'ON'
         | 'AT'
@@ -5014,6 +8283,388 @@ endOfStatement
         | 'EOP'
         )
       )
+      )
+    )
+  ;
+
+// ========================================================
+// function
+// ........................................................
+
+function
+  : ^(FUNCTION
+      ( 'FUNCTION'
+        ( ( 'ABS'
+          '('
+          argument
+          ')'
+        )
+        | ( 'ACOS'
+          '('
+          argument
+          ')'
+        )
+        | ( 'ANNUITY'
+          '('
+          argument
+          argument
+          ')'
+        )
+        | ( 'ASIN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'ATAN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'BOOLEAN-OF-INTEGER'
+          '('
+          argument
+          argument
+          ')'
+        )
+        | ( 'BYTE-LENGTH'
+          '('
+          argument
+          ')'
+        )
+        | ( 'CHAR'
+          '('
+          argument
+          ')'
+        )
+        | ( 'CHAR-NATIONAL'
+          '('
+          argument
+          ')'
+        )
+        | ( 'COMBINED-DATETIME'
+          '('
+          argument
+          argument
+          ')'
+        )
+        | ( 'CONCATENATE'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'COS'
+          '('
+          argument
+          ')'
+        )
+        | 'CURRENT-DATE'
+        | ( 'DATE-OF-INTEGER'
+          '('
+          argument
+          ')'
+        )
+        | ( 'DATE-TO-YYYYMMDD'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'DAY-OF-INTEGER'
+          '('
+          argument
+          ')'
+        )
+        | ( 'DAY-TO-YYYYDDD'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'DISPLAY-OF'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | 'E'
+        | 'EXCEPTION-FILE'
+        | 'EXCEPTION-LOCATION'
+        | 'EXCEPTION-STATEMENT'
+        | 'EXCEPTION-STATUS'
+        | ( 'EXP'
+          '('
+          argument
+          ')'
+        )
+        | ( 'EXP10'
+          '('
+          argument
+          ')'
+        )
+        | ( 'FACTORIAL'
+          '('
+          argument
+          ')'
+        )
+        | ( 'FRACTION-PART'
+          '('
+          argument
+          ')'
+        )
+        | ( 'INTEGER'
+          '('
+          argument
+          ')'
+        )
+        | ( 'INTEGER-OF-BOOLEAN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'INTEGER-OF-DATE'
+          '('
+          argument
+          ')'
+        )
+        | ( 'INTEGER-OF-DAY'
+          '('
+          argument
+          ')'
+        )
+        | ( 'INTEGER-PART'
+          '('
+          argument
+          ')'
+        )
+        | ( 'LENGTH'
+          '('
+          argument
+          ')'
+        )
+        | ( 'LENGTH-AN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'LOCALE-DATE'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'LOCALE-TIME'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'LOCALE-TIME-FROM-SECS'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'LOG'
+          '('
+          argument
+          ')'
+        )
+        | ( 'LOG10'
+          '('
+          argument
+          ')'
+        )
+        | ( 'LOWER-CASE'
+          '('
+          argument
+          ')'
+        )
+        | ( 'MAX'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'MEAN'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'MEDIAN'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'MIDRANGE'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'MIN'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'MOD'
+          '('
+          argument
+          argument
+          ')'
+        )
+        | ( 'NATIONAL-OF'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'NUMVAL'
+          '('
+          argument
+          ')'
+        )
+        | ( 'NUMVAL-C'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( 'ORD'
+          '('
+          argument
+          ')'
+        )
+        | ( 'ORD-MAX'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'ORD-MIN'
+          '('
+          ( argument )+
+          ')'
+        )
+        | 'PI'
+        | ( 'PRESENT-VALUE'
+          '('
+          argument
+          ( argument )+
+          ')'
+        )
+        | ( 'RANDOM'
+          ( ( '('
+            argument
+            ')'
+          ) )?
+        )
+        | ( 'RANGE'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'REM'
+          '('
+          argument
+          argument
+          ')'
+        )
+        | ( 'REVERSE'
+          '('
+          argument
+          ')'
+        )
+        | ( 'SECONDS-FROM-FORMATTED-TIME'
+          '('
+          argument
+          argument
+          ')'
+        )
+        | 'SECONDS-PAST-MIDNIGHT'
+        | ( 'SIGN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'SIN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'SQRT'
+          '('
+          argument
+          ')'
+        )
+        | ( 'STANDARD-DEVIATION'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'STORED-CHAR-LENGTH'
+          '('
+          argument
+          ')'
+        )
+        | ( 'SUBSTITUTE'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'SUBSTITUTE-CASE'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'SUM'
+          '('
+          ( argument )+
+          ')'
+        )
+        | ( 'TAN'
+          '('
+          argument
+          ')'
+        )
+        | ( 'TEST-DATE-YYYYMMDD'
+          '('
+          argument
+          ')'
+        )
+        | ( 'TEST-DAY-YYYYDDD'
+          '('
+          argument
+          ')'
+        )
+        | ( 'TRIM'
+          '('
+          argument
+          ( ( 'LEADING'
+          | 'TRAILING'
+          ) )?
+          ')'
+        )
+        | ( 'UPPER-CASE'
+          '('
+          argument
+          ')'
+        )
+        | ( 'VARIANCE'
+          '('
+          ( argument )+
+          ')'
+        )
+        | 'WHEN-COMPILED'
+        | ( 'YEAR-TO-YYYY'
+          '('
+          argument
+          ( argument )?
+          ')'
+        )
+        | ( functionName
+          ( ( '('
+            ( argument )+
+            ')'
+          ) )?
+        )
+        )
       )
     )
   ;
@@ -5038,12 +8689,7 @@ identifier
 
 identifier_format1
   : ^(IDENTIFIER_FORMAT1
-      ( 'FUNCTION'
-        functionName
-        ( ( '('
-          ( argument )+
-          ')'
-        ) )?
+      ( function
         ( referenceModifier )?
       )
     )
@@ -5180,6 +8826,34 @@ referenceModifier
 
 arithmeticExpression
   : ^(ARITHMETIC_EXPRESSION
+      ( bitwiseOperand
+        ( ( bitwiseOperator
+          bitwiseOperand
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// bitwiseOperator
+// ........................................................
+
+bitwiseOperator
+  : ^(BITWISE_OPERATOR
+      ( 'B-AND'
+      | 'B-OR'
+      | 'B-XOR'
+      | 'B-EXOR'
+      )
+    )
+  ;
+
+// ========================================================
+// bitwiseOperand
+// ........................................................
+
+bitwiseOperand
+  : ^(BITWISE_OPERAND
       ( summand
         ( ( signDef
           summand
@@ -5217,14 +8891,28 @@ summand
   ;
 
 // ========================================================
+// unaryOperator
+// ........................................................
+
+unaryOperator
+  : ^(UNARY_OPERATOR
+      ( '+'
+      | '-'
+      | 'B-NOT'
+      )
+    )
+  ;
+
+// ========================================================
 // factor
 // ........................................................
 
 factor
   : ^(FACTOR
-      ( ( signDef )?
+      ( ( unaryOperator )?
         atomicExpression
         ( ( '**'
+          ( unaryOperator )?
           atomicExpression
         ) )*
       )
@@ -5445,14 +9133,27 @@ conditionalRelationOP
 
 generalRelationOp
   : ^(GENERAL_RELATION_OP
-      ( ( 'IS' )?
-        ( negationOp )?
-        ( greaterOrEqualOp
-        | lessOrEqualOp
-        | greaterThanOp
-        | lessThanOp
-        | equalToOp
-        | notEqualToOp
+      ( ( ( 'IS'
+      | 'ARE'
+      ) )?
+        ( ( ( negationOp )?
+          greaterOrEqualOp
+        )
+        | ( ( negationOp )?
+          lessOrEqualOp
+        )
+        | ( ( negationOp )?
+          greaterThanOp
+        )
+        | ( ( negationOp )?
+          lessThanOp
+        )
+        | ( ( negationOp )?
+          equalToOp
+        )
+        | exceedsOp
+        | equalsOp
+        | unequalToOp
         )
       )
     )
@@ -5511,12 +9212,36 @@ equalToOp
   ;
 
 // ========================================================
-// notEqualToOp
+// exceedsOp
 // ........................................................
 
-notEqualToOp
-  : ^(NOT_EQUAL_TO_OP
-      '<>'
+exceedsOp
+  : ^(EXCEEDS_OP
+      'EXCEEDS'
+    )
+  ;
+
+// ========================================================
+// equalsOp
+// ........................................................
+
+equalsOp
+  : ^(EQUALS_OP
+      'EQUALS'
+    )
+  ;
+
+// ========================================================
+// unequalToOp
+// ........................................................
+
+unequalToOp
+  : ^(UNEQUAL_TO_OP
+      ( ( 'UNEQUAL'
+        ( 'TO' )?
+      )
+      | '<>'
+      )
     )
   ;
 
@@ -5600,6 +9325,7 @@ dataDescName
   : ^(DATA_DESC_NAME
       ( dataName
       | 'FILLER'
+      | 'CURSOR'
       )
     )
   ;
@@ -5671,6 +9397,26 @@ operand
   ;
 
 // ========================================================
+// threadPointer
+// ........................................................
+
+threadPointer
+  : ^(THREAD_POINTER
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// eventPointer
+// ........................................................
+
+eventPointer
+  : ^(EVENT_POINTER
+      cobolWord
+    )
+  ;
+
+// ========================================================
 // conditionName
 // ........................................................
 
@@ -5696,6 +9442,140 @@ indexName
 
 className
   : ^(CLASS_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// typeSpecifier
+// ........................................................
+
+typeSpecifier
+  : ^(TYPE_SPECIFIER
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// parameterName
+// ........................................................
+
+parameterName
+  : ^(PARAMETER_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// interfaceName
+// ........................................................
+
+interfaceName
+  : ^(INTERFACE_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// methodName
+// ........................................................
+
+methodName
+  : ^(METHOD_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// propertyName
+// ........................................................
+
+propertyName
+  : ^(PROPERTY_NAME
+      ( identifier
+      | alphanumeric
+      )
+    )
+  ;
+
+// ========================================================
+// propertyValue
+// ........................................................
+
+propertyValue
+  : ^(PROPERTY_VALUE
+      ( identifier
+      | literal
+      )
+    )
+  ;
+
+// ========================================================
+// delegateName
+// ........................................................
+
+delegateName
+  : ^(DELEGATE_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// iteratorName
+// ........................................................
+
+iteratorName
+  : ^(ITERATOR_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// enumName
+// ........................................................
+
+enumName
+  : ^(ENUM_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// valuetypeName
+// ........................................................
+
+valuetypeName
+  : ^(VALUETYPE_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// typeName
+// ........................................................
+
+typeName
+  : ^(TYPE_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// attributeName
+// ........................................................
+
+attributeName
+  : ^(ATTRIBUTE_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
+// typedefName
+// ........................................................
+
+typedefName
+  : ^(TYPEDEF_NAME
       cobolWord
     )
   ;
@@ -5790,6 +9670,8 @@ environmentName
       | 'SYSPUNCH'
       | 'SYSPCH'
       | 'CONSOLE'
+      | 'CRT'
+      | 'CRT-UNDER'
       | 'C01'
       | 'C02'
       | 'C03'
@@ -5961,6 +9843,18 @@ integer
   ;
 
 // ========================================================
+// constant
+// ........................................................
+
+constant
+  : ^(CONSTANT
+      ( integerConstant
+      | alphanumericConstant
+      )
+    )
+  ;
+
+// ========================================================
 // integerConstant
 // ........................................................
 
@@ -6000,6 +9894,7 @@ water
 
 token
   : TOKEN
+  | '&'
   | '('
   | ')'
   | '*'
@@ -6020,7 +9915,12 @@ token
   | '='
   | '>'
   | '>='
+  | 'ABS'
+  | 'ABSTRACT'
   | 'ACCEPT'
+  | 'ACCESS'
+  | 'ACOS'
+  | 'ACTIVE-CLASS'
   | 'ADD'
   | 'ADDRESS'
   | 'ADVANCING'
@@ -6036,14 +9936,37 @@ token
   | 'ALPHANUMERIC-EDITED'
   | 'ALSO'
   | 'ALTER'
+  | 'ALTERNATE'
   | 'AND'
+  | 'ANNUITY'
   | 'ANY'
   | 'ARE'
+  | 'AREA'
+  | 'AREAS'
+  | 'ARGUMENT-NUMBER'
   | 'AS'
   | 'ASCENDING'
+  | 'ASCII'
+  | 'ASIN'
+  | 'ASSEMBLY-ATTRIBUTES'
   | 'ASSIGN'
   | 'AT'
+  | 'ATAN'
+  | 'ATTRIBUTE'
+  | 'AUTHOR'
+  | 'AUTO'
+  | 'AUTO-SKIP'
+  | 'AUTOMATIC'
   | 'AUXILIARY'
+  | 'B-AND'
+  | 'B-EXOR'
+  | 'B-LEFT'
+  | 'B-NOT'
+  | 'B-OR'
+  | 'B-RIGHT'
+  | 'B-XOR'
+  | 'BACKGROUND-COLOR'
+  | 'BACKGROUND-COLOUR'
   | 'BASED'
   | 'BEEP'
   | 'BEFORE'
@@ -6055,10 +9978,13 @@ token
   | 'BINARY-DOUBLE'
   | 'BINARY-LONG'
   | 'BINARY-SHORT'
+  | 'BIT'
   | 'BLANK'
   | 'BLINK'
   | 'BLOCK'
+  | 'BOOLEAN-OF-INTEGER'
   | 'BOTTOM'
+  | 'BROWSING'
   | 'BY'
   | 'BYTE-LENGTH'
   | 'C01'
@@ -6074,24 +10000,35 @@ token
   | 'C11'
   | 'C12'
   | 'CALL'
+  | 'CALL-CONVENTION'
   | 'CANCEL'
   | 'CASE-INSENSITIVE'
   | 'CASE-SENSITIVE'
   | 'CENTURY-DATE'
   | 'CENTURY-DAY'
+  | 'CHAIN'
   | 'CHAINING'
+  | 'CHANGED'
   | 'CHANNEL'
+  | 'CHAR'
+  | 'CHAR-NATIONAL'
   | 'CHARACTER'
   | 'CHARACTERS'
   | 'CICS'
   | 'CLASS'
+  | 'CLASS-ATTRIBUTES'
+  | 'CLASS-CONTROL'
+  | 'CLASS-ID'
   | 'CLOSE'
   | 'CODE-SET'
   | 'COL'
+  | 'COLLATING'
   | 'COLUMN'
+  | 'COMBINED-DATETIME'
   | 'COMMA'
   | 'COMMAND-LINE'
   | 'COMMAREA'
+  | 'COMMIT'
   | 'COMMON'
   | 'COMMUNICATION'
   | 'COMP'
@@ -6107,11 +10044,15 @@ token
   | 'COMPUTATIONAL-3'
   | 'COMPUTATIONAL-4'
   | 'COMPUTATIONAL-5'
+  | 'COMPUTATIONAL-X'
   | 'COMPUTE'
+  | 'CONCATENATE'
+  | 'CONDITION-VALUE'
   | 'CONFIGURATION'
   | 'CONSISTENT'
   | 'CONSOLE'
   | 'CONSTANT'
+  | 'CONSTRAINTS'
   | 'CONTAINS'
   | 'CONTENT'
   | 'CONTINUE'
@@ -6121,23 +10062,37 @@ token
   | 'COPY'
   | 'CORR'
   | 'CORRESPONDING'
+  | 'COS'
   | 'COUNT'
   | 'CRT'
+  | 'CRT-UNDER'
   | 'CSP'
   | 'CURRENCY'
+  | 'CURRENT-DATE'
   | 'CURSOR'
+  | 'CUSTOM-ATTRIBUTE'
   | 'CYCLE'
   | 'DATA'
   | 'DATALENGTH'
   | 'DATASET'
   | 'DATE'
+  | 'DATE-COMPILED'
+  | 'DATE-OF-INTEGER'
+  | 'DATE-TO-YYYYMMDD'
+  | 'DATE-WRITTEN'
   | 'DAY'
+  | 'DAY-OF-INTEGER'
   | 'DAY-OF-WEEK'
+  | 'DAY-TO-YYYYDDD'
   | 'DBCS'
   | 'DEBUGGING'
+  | 'DECIMAL'
   | 'DECIMAL-POINT'
   | 'DECLARATIVES'
   | 'DECLARE'
+  | 'DEFINED'
+  | 'DELEGATE'
+  | 'DELEGATE-ID'
   | 'DELETE'
   | 'DELETEQ'
   | 'DELIMITED'
@@ -6145,16 +10100,28 @@ token
   | 'DEPENDING'
   | 'DESCENDING'
   | 'DISABLE'
+  | 'DISK'
   | 'DISPLAY'
+  | 'DISPLAY-OF'
   | 'DIVIDE'
   | 'DIVISION'
+  | 'DLI'
+  | 'DOWN'
+  | 'DUPLICATES'
+  | 'DYNAMIC'
+  | 'E'
+  | 'EBCDIC'
+  | 'ECHO'
   | 'EGCS'
+  | 'EJECT'
   | 'ELSE'
+  | 'EMPTY-CHECK'
   | 'ENABLE'
   | 'END'
   | 'END-ACCEPT'
   | 'END-ADD'
   | 'END-CALL'
+  | 'END-CHAIN'
   | 'END-COMPUTE'
   | 'END-DELETE'
   | 'END-DISPLAY'
@@ -6173,63 +10140,105 @@ token
   | 'END-STRING'
   | 'END-SUBTRACT'
   | 'END-UNSTRING'
+  | 'END-WAIT'
   | 'END-WRITE'
+  | 'END-XML'
   | 'ENDING'
   | 'ENTRY'
+  | 'ENUM'
+  | 'ENUM-ID'
   | 'ENVIRONMENT'
+  | 'ENVIRONMENT-NAME'
+  | 'ENVIRONMENT-VALUE'
   | 'EOL'
   | 'EOP'
   | 'EOS'
   | 'EQUAL'
+  | 'EQUALS'
   | 'ERASE'
   | 'ERROR'
   | 'ESCAPE'
   | 'EVALUATE'
+  | 'EVENT'
+  | 'EVERY'
+  | 'EXAMINE'
+  | 'EXCEEDS'
   | 'EXCEPTION'
+  | 'EXCEPTION-FILE'
+  | 'EXCEPTION-LOCATION'
   | 'EXCEPTION-OBJECT'
+  | 'EXCEPTION-STATEMENT'
+  | 'EXCEPTION-STATUS'
+  | 'EXCLUSIVE'
   | 'EXEC'
+  | 'EXECUTE'
+  | 'EXHIBIT'
   | 'EXIT'
+  | 'EXP'
+  | 'EXP10'
+  | 'EXPANDS'
+  | 'EXPLICIT'
   | 'EXTEND'
+  | 'EXTENSION'
   | 'EXTERNAL'
   | 'F'
+  | 'FACTORIAL'
+  | 'FACTORY'
   | 'FALSE'
   | 'FD'
   | 'FILE'
   | 'FILE-CONTROL'
+  | 'FILE-ID'
   | 'FILLER'
+  | 'FINAL'
   | 'FIRST'
+  | 'FIXED'
   | 'FLOAT-EXTENDED'
   | 'FLOAT-LONG'
   | 'FLOAT-SHORT'
   | 'FOOTING'
   | 'FOR'
+  | 'FOREGROUND-COLOR'
+  | 'FOREGROUND-COLOUR'
   | 'FOREVER'
+  | 'FORMFEED'
+  | 'FRACTION-PART'
   | 'FREE'
   | 'FROM'
+  | 'FULL'
   | 'FUNCTION'
+  | 'FUNCTION-ID'
   | 'GENERATE'
   | 'GENERIC'
+  | 'GET'
   | 'GIVING'
   | 'GLOBAL'
   | 'GO'
   | 'GOBACK'
   | 'GREATER'
+  | 'GRID'
   | 'GTEQ'
   | 'HANDLE'
   | 'HIGH'
   | 'HIGH-VALUE'
   | 'HIGH-VALUES'
   | 'HIGHLIGHT'
+  | 'HTML'
   | 'I-O'
   | 'I-O-CONTROL'
   | 'ID'
   | 'IDENTIFICATION'
+  | 'IDENTIFIED'
   | 'IF'
+  | 'IGNORE'
   | 'IGNORING'
+  | 'IMPLEMENTS'
+  | 'IMPLICIT'
   | 'IN'
   | 'INCLUDE'
   | 'INDEX'
   | 'INDEXED'
+  | 'INHERITS'
   | 'INITIAL'
   | 'INITIALIZE'
   | 'INITIALIZED'
@@ -6240,20 +10249,39 @@ token
   | 'INPUTMSGLEN'
   | 'INSERT'
   | 'INSPECT'
+  | 'INSTALLATION'
+  | 'INTEGER'
+  | 'INTEGER-OF-BOOLEAN'
+  | 'INTEGER-OF-DATE'
+  | 'INTEGER-OF-DAY'
+  | 'INTEGER-PART'
+  | 'INTERFACE'
+  | 'INTERFACE-ID'
+  | 'INTERNAL'
   | 'INTO'
+  | 'INTRINSIC'
   | 'INVALID'
+  | 'INVOKE'
   | 'IS'
   | 'ITEM'
+  | 'ITERATOR'
+  | 'ITERATOR-ID'
   | 'JUST'
   | 'JUSTIFIED'
   | 'KANJI'
+  | 'KEPT'
   | 'KEY'
+  | 'KEYBOARD'
   | 'KEYLENGTH'
   | 'LABEL'
   | 'LAST'
   | 'LEADING'
   | 'LEFT'
+  | 'LEFT-JUSTIFY'
+  | 'LEFTLINE'
   | 'LENGTH'
+  | 'LENGTH-AN'
+  | 'LENGTH-CHECK'
   | 'LESS'
   | 'LIKE'
   | 'LINAGE'
@@ -6263,25 +10291,49 @@ token
   | 'LINKAGE'
   | 'LOAD'
   | 'LOCAL-STORAGE'
+  | 'LOCALE'
+  | 'LOCALE-DATE'
+  | 'LOCALE-TIME'
+  | 'LOCALE-TIME-FROM-SECS'
   | 'LOCK'
+  | 'LOG'
+  | 'LOG10'
   | 'LOW'
   | 'LOW-VALUE'
   | 'LOW-VALUES'
+  | 'LOWER'
+  | 'LOWER-CASE'
   | 'LOWLIGHT'
   | 'MAIN'
+  | 'MANUAL'
   | 'MASSINSERT'
+  | 'MAX'
+  | 'MEAN'
+  | 'MEDIAN'
   | 'MERGE'
   | 'MESSAGE'
+  | 'METHOD'
+  | 'METHOD-ID'
+  | 'MIDRANGE'
+  | 'MIN'
+  | 'MOD'
   | 'MODE'
+  | 'MONITOR-POINTER'
   | 'MOVE'
+  | 'MULTIPLE'
   | 'MULTIPLY'
+  | 'MUTEX-POINTER'
   | 'NAME'
+  | 'NAMED'
   | 'NATIONAL'
   | 'NATIONAL-EDITED'
+  | 'NATIONAL-OF'
   | 'NATIVE'
   | 'NEGATIVE'
+  | 'NESTED'
   | 'NEXT'
   | 'NO'
+  | 'NO-ECHO'
   | 'NOSUSPEND'
   | 'NOT'
   | 'NULL'
@@ -6290,62 +10342,111 @@ token
   | 'NUMERIC'
   | 'NUMERIC-EDITED'
   | 'NUMITEMS'
+  | 'NUMVAL'
+  | 'NUMVAL-C'
   | 'OBJECT'
   | 'OBJECT-COMPUTER'
+  | 'OBJECT-STORAGE'
   | 'OCCURS'
   | 'OF'
   | 'OFF'
   | 'OMITTED'
   | 'ON'
+  | 'ONLY'
   | 'OPEN'
+  | 'OPERATOR'
+  | 'OPERATOR-ID'
   | 'OPTIONAL'
   | 'OR'
+  | 'ORD'
+  | 'ORD-MAX'
+  | 'ORD-MIN'
+  | 'ORDER'
   | 'ORGANIZATION'
   | 'OTHER'
+  | 'OTHERWISE'
   | 'OUTPUT'
   | 'OVERFLOW'
+  | 'OVERLINE'
+  | 'OVERRIDE'
   | 'PACKED-DECIMAL'
+  | 'PADDING'
   | 'PAGE'
   | 'PARAGRAPH'
+  | 'PARSE'
+  | 'PARTIAL'
+  | 'PASSWORD'
   | 'PERFORM'
+  | 'PI'
   | 'PIC'
   | 'PICTURE'
+  | 'PLUS'
   | 'POINTER'
   | 'POS'
   | 'POSITION'
+  | 'POSITIONING'
   | 'POSITIVE'
+  | 'PRESENT-VALUE'
   | 'PREVIOUS'
+  | 'PRINTER'
+  | 'PRINTER-1'
+  | 'PRINTING'
+  | 'PRIVATE'
   | 'PROCEDURE'
+  | 'PROCEDURE-POINTER'
   | 'PROCEDURES'
+  | 'PROCESSING'
   | 'PROGRAM'
   | 'PROGRAM-ID'
   | 'PROGRAM-POINTER'
+  | 'PROMPT'
+  | 'PROPERTY'
+  | 'PROTECTED'
+  | 'PROTOTYPE'
+  | 'PUBLIC'
   | 'PURGE'
   | 'QNAME'
   | 'QUEUE'
   | 'QUOTE'
   | 'QUOTES'
+  | 'RAISE'
+  | 'RANDOM'
+  | 'RANGE'
   | 'RBA'
   | 'READ'
+  | 'READING'
   | 'READNEXT'
   | 'READQ'
+  | 'READY'
   | 'RECEIVE'
   | 'RECORD'
   | 'RECORDING'
   | 'RECORDS'
+  | 'RECURSIVE'
+  | 'REDEFINE'
   | 'REDEFINES'
   | 'REEL'
   | 'REFERENCE'
   | 'REFERENCES'
+  | 'RELATIVE'
   | 'RELEASE'
+  | 'RELOAD'
+  | 'REM'
   | 'REMAINDER'
+  | 'REMARKS'
   | 'REMOVAL'
   | 'RENAMES'
   | 'REPEATABLE'
+  | 'REPEATED'
   | 'REPLACE'
   | 'REPLACING'
   | 'REPORT'
+  | 'REPORTING'
   | 'REPORTS'
+  | 'REPOSITORY'
+  | 'REQUIRED'
+  | 'RESERVE'
+  | 'RESET'
   | 'RETRY'
   | 'RETURN'
   | 'RETURNING'
@@ -6356,6 +10457,8 @@ token
   | 'REWRITE'
   | 'RIDFLD'
   | 'RIGHT'
+  | 'RIGHT-JUSTIFY'
+  | 'ROLLBACK'
   | 'ROUNDED'
   | 'RRN'
   | 'RUN'
@@ -6366,43 +10469,76 @@ token
   | 'S04'
   | 'S05'
   | 'SCREEN'
+  | 'SCROLL'
   | 'SD'
   | 'SEARCH'
   | 'SECONDS'
+  | 'SECONDS-FROM-FORMATTED-TIME'
+  | 'SECONDS-PAST-MIDNIGHT'
   | 'SECTION'
+  | 'SECURE'
+  | 'SECURITY'
   | 'SELECT'
   | 'SELF'
+  | 'SEMAPHORE-POINTER'
   | 'SEND'
   | 'SENTENCE'
   | 'SEPARATE'
+  | 'SEQUENCE'
   | 'SEQUENTIAL'
+  | 'SERVICE'
   | 'SET'
+  | 'SHARING'
   | 'SIGN'
+  | 'SIGNED'
   | 'SIGNED-INT'
   | 'SIGNED-LONG'
   | 'SIGNED-SHORT'
+  | 'SIN'
   | 'SIZE'
+  | 'SKIP1'
+  | 'SKIP2'
+  | 'SKIP3'
   | 'SORT'
+  | 'SOURCE'
   | 'SOURCE-COMPUTER'
   | 'SPACE'
+  | 'SPACE-FILL'
   | 'SPACES'
   | 'SPECIAL-NAMES'
   | 'SQL'
+  | 'SQRT'
   | 'STANDARD'
   | 'STANDARD-1'
   | 'STANDARD-2'
+  | 'STANDARD-DEVIATION'
   | 'START'
+  | 'STATIC'
   | 'STATUS'
   | 'STOP'
+  | 'STORED-CHAR-LENGTH'
   | 'STRING'
+  | 'SUBSTITUTE'
+  | 'SUBSTITUTE-CASE'
   | 'SUBTRACT'
+  | 'SUM'
   | 'SUPER'
   | 'SUPPRESS'
+  | 'SWITCH-0'
+  | 'SWITCH-1'
+  | 'SWITCH-2'
+  | 'SWITCH-3'
+  | 'SWITCH-4'
+  | 'SWITCH-5'
+  | 'SWITCH-6'
+  | 'SWITCH-7'
+  | 'SWITCH-8'
   | 'SYMBOLIC'
   | 'SYNC'
   | 'SYNCHRONIZED'
   | 'SYNCONRETURN'
   | 'SYS'
+  | 'SYSERR'
   | 'SYSID'
   | 'SYSIN'
   | 'SYSIPT'
@@ -6412,37 +10548,59 @@ token
   | 'SYSPCH'
   | 'SYSPUNCH'
   | 'SYSTEM-INFO'
+  | 'TAB'
   | 'TALLYING'
+  | 'TAN'
   | 'TD'
   | 'TERMINAL-INFO'
   | 'TERMINATE'
   | 'TEST'
+  | 'TEST-DATE-YYYYMMDD'
+  | 'TEST-DAY-YYYYDDD'
   | 'THAN'
   | 'THEN'
   | 'THREAD'
+  | 'THREAD-LOCAL'
+  | 'THREAD-LOCAL-STORAGE'
+  | 'THREAD-POINTER'
   | 'THROUGH'
   | 'THRU'
   | 'TIME'
+  | 'TIME-OUT'
+  | 'TIMEOUT'
   | 'TIMES'
+  | 'TITLE'
   | 'TO'
   | 'TOKEN'
   | 'TOP'
   | 'TR'
+  | 'TRACE'
   | 'TRAILING'
+  | 'TRAILING-SIGN'
+  | 'TRANSFORM'
   | 'TRANSID'
+  | 'TRIM'
   | 'TRIMMED'
   | 'TRUE'
   | 'TS'
+  | 'TYPEDEF'
   | 'U'
   | 'UNCOMMITTED'
+  | 'UNDERLINE'
+  | 'UNEQUAL'
   | 'UNIT'
+  | 'UNLOCK'
+  | 'UNSIGNED'
   | 'UNSIGNED-INT'
   | 'UNSIGNED-LONG'
   | 'UNSIGNED-SHORT'
   | 'UNSTRING'
   | 'UNTIL'
+  | 'UP'
   | 'UPDATE'
   | 'UPON'
+  | 'UPPER'
+  | 'UPPER-CASE'
   | 'USAGE'
   | 'USE'
   | 'USER'
@@ -6450,22 +10608,36 @@ token
   | 'V'
   | 'VALUE'
   | 'VALUES'
+  | 'VALUETYPE'
+  | 'VALUETYPE-ID'
+  | 'VARIABLE'
+  | 'VARIANCE'
   | 'VARYING'
+  | 'VCS'
+  | 'WAIT'
   | 'WHEN'
+  | 'WHEN-COMPILED'
   | 'WHILE'
   | 'WINDOW'
   | 'WITH'
   | 'WORKING-STORAGE'
   | 'WRITE'
   | 'WRITEQ'
+  | 'WRITING'
   | 'XCTL'
+  | 'XML'
+  | 'XML-SCHEMA'
   | 'XRBA'
   | 'YEAR'
+  | 'YEAR-TO-YYYY'
+  | 'YIELDING'
   | 'YYYYDDD'
   | 'YYYYMMDD'
   | 'ZERO'
+  | 'ZERO-FILL'
   | 'ZEROES'
   | 'ZEROS'
+  | '\u0024'
   ;
 
 // ========================================================

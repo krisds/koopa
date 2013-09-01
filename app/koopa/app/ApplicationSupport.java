@@ -8,11 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,11 +27,17 @@ public class ApplicationSupport {
 	private static final Logger LOGGER = Logger.getLogger("config");
 
 	private static final String PROPERTIES_FILE = "koopa.properties";
-
+	private static final String PROPERTY_CUSTOM_COLUMNS = "koopa.customColumns";
+	private static final String PROPERTY_CUSTOM_COLUMN_PREFIX = "koopa.customColumn.";	
 	private static Properties properties = getProperties();
-
+	
+	private static final String PREFERENCES_ROOT = "net.sourceforge.koopa.app.preferences";
+	private static Preferences preferences = getPreferences();
+	
 	private static List<String> EXTENSIONS = new LinkedList<String>();
+	
 	private static String DESCRIPTION = "";
+	
 	static {
 		EXTENSIONS.add(".CPY");
 		EXTENSIONS.add(".COPY");
@@ -54,11 +63,19 @@ public class ApplicationSupport {
 	public static File askUserForFile(boolean openFile, String key,
 			FileFilter filter, Component parent) {
 		File start = null;
-		if (properties.containsKey(key)) {
-			File lastUsed = new File(properties.getProperty(key));
-			if (lastUsed.exists()) {
-				start = lastUsed.getParentFile();
+		try {
+			if (Arrays.asList(preferences.keys()).contains(key)) {
+				String lastUsedFileName = preferences.get(key, null);
+				
+				File lastUsed = new File(lastUsedFileName);
+				
+				if (lastUsed.exists()) {
+					start = lastUsed.getParentFile();
+				}
 			}
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+			start = null;
 		}
 
 		JFileChooser chooser = new JFileChooser(start);
@@ -75,9 +92,8 @@ public class ApplicationSupport {
 			File selectedFile = chooser.getSelectedFile();
 
 			try {
-				properties.setProperty(key, selectedFile.getCanonicalPath());
-				saveProperties();
-
+				preferences.put(key, selectedFile.getCanonicalPath());
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -86,6 +102,12 @@ public class ApplicationSupport {
 
 		} else
 			return null;
+	}
+	
+	private static synchronized Preferences getPreferences () {
+		Preferences preferencesRoot = Preferences.userRoot();
+		Preferences appPreferences = preferencesRoot.node(PREFERENCES_ROOT);
+		return appPreferences;
 	}
 
 	private static synchronized Properties getProperties() {
@@ -103,12 +125,23 @@ public class ApplicationSupport {
 
 		return properties;
 	}
-
-	private static void saveProperties() throws IOException,
-			FileNotFoundException {
-		properties.store(new FileOutputStream(PROPERTIES_FILE), null);
+	
+	public static List<String> getCustomColumnKeys()
+	{
+		String customColumnKeys = properties.getProperty(PROPERTY_CUSTOM_COLUMNS, "");
+		return Arrays.asList(customColumnKeys.trim().split("\\s*[,;|]\\s*"));
 	}
-
+	
+	public static String getCustomColumnProperty (String key, String property)
+	{
+		return getCustomColumnProperty(key, property, "");
+	}
+	
+	public static String getCustomColumnProperty (String key, String property, String defaultValue)
+	{
+		return properties.getProperty(PROPERTY_CUSTOM_COLUMN_PREFIX + key + "." + property, defaultValue).trim();
+	}
+	
 	public static void configureFromProperties(String filename, Configurable app) {
 		try {
 			LOGGER.info("Loading configuration options from \"" + filename

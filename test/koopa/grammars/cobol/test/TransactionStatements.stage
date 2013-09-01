@@ -1,0 +1,10 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target commitStatement;
+
++[ COMMIT ]
+
+target rollbackStatement;
+
++[ ROLLBACK ]

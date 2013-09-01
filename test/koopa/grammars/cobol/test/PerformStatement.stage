@@ -133,3 +133,23 @@ target performStatement;
      VARYING MY-COUNT FROM 1 BY 1
      UNTIL MY-VALUE ( MY-INDEX ) NOT < THE-RETURN-CODE
    END-PERFORM ]
+   
++[ PERFORM WITH TEST AFTER
+     UNTIL char NOT = "Y" AND char NOT = "y"
+     CALL clear-screen
+   END-PERFORM ]
+
++[ PERFORM WITH TEST AFTER
+     UNTIL char NOT = "Y" AND char NOT = "y"
+     PERFORM init
+   END-PERFORM ]
+
++[ PERFORM foo WITH TEST AFTER UNTIL EXIT ]
++[ PERFORM foo THROUGH bar WITH TEST AFTER UNTIL EXIT ]
+
++[ PERFORM VARYING foo THROUGH bar
+     DISPLAY 1
+     DISPLAY 2
+     DISPLAY 3
+   END-PERFORM ]
+ 

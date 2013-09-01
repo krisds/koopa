@@ -1,0 +1,25 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target gobackStatement;
+
++[ GOBACK ]
+
++[ GOBACK GIVING 1 ]
++[ GOBACK RETURNING 1 ]
+
++[ GOBACK GIVING foo ]
++[ GOBACK RETURNING foo ]
+
++[ GOBACK GIVING ADDRESS OF foo ]
++[ GOBACK RETURNING ADDRESS OF foo ]
+
+-[ GOBACK GIVING 1.5 ]
+-[ GOBACK RETURNING 1.5 ]
+-[ GOBACK GIVING "foo" ]
+-[ GOBACK RETURNING "foo" ]
+
+-[ GOBACK GIVING ADDRESS OF 1 ]
+-[ GOBACK RETURNING ADDRESS OF 1 ]
+-[ GOBACK GIVING ADDRESS OF "foo" ]
+-[ GOBACK RETURNING ADDRESS OF "foo" ]

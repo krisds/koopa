@@ -1,0 +1,16 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target examineStatement;
+
++[ EXAMINE foo TALLYING UNTIL FIRST "bar" ]
++[ EXAMINE foo TALLYING ALL         "bar" ]
++[ EXAMINE foo TALLYING LEADING     "bar" ]
++[ EXAMINE foo TALLYING UNTIL FIRST "bar" REPLACING BY "baz" ]
++[ EXAMINE foo TALLYING ALL         "bar" REPLACING BY "baz" ]
++[ EXAMINE foo TALLYING LEADING     "bar" REPLACING BY "baz" ]
+
++[ EXAMINE foo REPLACING ALL            "bar" BY "baz" ]
++[ EXAMINE foo REPLACING LEADING        "bar" BY "baz" ]
++[ EXAMINE foo REPLACING FIRST          "bar" BY "baz" ]
++[ EXAMINE foo REPLACING UNTIL FIRST    "bar" BY "baz" ]

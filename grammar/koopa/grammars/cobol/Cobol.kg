@@ -1,10 +1,13 @@
+## Micro Focus COBOL Language Reference
+## http://documentation.microfocus.com/help/index.jsp?nav=%2F3_9_4_1
+
 ## #############################################################################
 ## Top level definitions.
 ## -----------------------------------------------------------------------------
 
 # Compilation group.
 def compilationGroup =
-	( compilationUnit )*
+    (compilerDirective | compilationUnit)*
 end
 
 # Copybook. This is just a guess at the likely suspect(s).
@@ -37,13 +40,38 @@ end
 
 # Compilation unit.
 def compilationUnit =
-	identificationDivision
- 	[environmentDivision]
- 	[dataDivision]
-	[procedureDivision
-	  (compilationUnit)*
-	]
-	[END PROGRAM programName .]
+    ( identificationDivision
+      [environmentDivision]
+      [dataDivision]
+      
+    # *MF: Identification division is optional.
+    
+    | environmentDivision
+      [dataDivision]
+      
+    | dataDivision
+ 	)
+    
+	[procedureDivision (compilationUnit)*]
+    
+	[endMarker]
+end
+
+def endMarker =
+    ( END FUNCTION functionName .       # *ISO2002 *MF
+    | END CLASS className .             # *ISO2002 *MF
+    | END FACTORY .                     # *ISO2002 *MF
+    | END STATIC .                      # *.NET *JVM
+    | END OBJECT .                      # *ISO2002 *MF
+    | END OPERATOR .                    # *.NET
+    | END METHOD [ methodName ] .       # *ISO2002 *MF
+    | END INTERFACE interfaceName .     # *ISO2002 *MF
+    | END DELEGATE delegateName .       # *.NET
+    | END ENUM enumName .               # *.NET *JVM
+    | END OPERATOR cobolWord .          # *.NET *JVM
+    | END VALUETYPE valuetypeName .     # *.NET *JVM
+    | END PROGRAM programName .
+    )
 end
 
 ## #############################################################################
@@ -51,17 +79,161 @@ end
 ## -----------------------------------------------------------------------------
 
 def identificationDivision =
-	[( ID | IDENTIFICATION ) DIVISION .]
-	PROGRAM-ID [.]
-	programName
-	[ [IS]
-	  ( INITIAL [COMMON]
-	  | COMMON [INITIAL] 
-	  )
-	  [PROGRAM]
-	]
-	[.]
-	[--> divisionStart]
+    ( (ID | IDENTIFICATION) DIVISION .
+      [ identificationDivisionBody ]
+      
+    # *MF: First division header is optional.
+    
+    | identificationDivisionBody
+    )
+end
+
+def identificationDivisionBody =
+    ( callPrototypeIdParagraph
+    | programPrototypeIdParagraph
+    | programIdParagraph
+    | classIdParagrah
+    | factoryParagraph
+    | objectParagraph
+    | methodIdParagraph
+    | interfaceIdParagraph
+    | functionIdParagraph
+    | delegateIdParagraph
+    | enumIdParagraph
+    | iteratorIdParagraph
+    | operatorIdParagraph
+    | valuetypeIdParagraph
+    | AUTHOR . (--> .) .
+    | INSTALLATION . (--> .) .
+    | DATE-WRITTEN . (--> .) .
+    | DATE-COMPILED . (--> .) .
+    | SECURITY . (--> .) .
+    | REMARKS . (--> .) .
+    )+
+	[--> (paragraphStart | sectionStart | divisionStart)]
+end
+
+def callPrototypeIdParagraph =
+    PROGRAM-ID [.] programName [IS] EXTERNAL [PROGRAM] [.]
+end
+
+def programPrototypeIdParagraph =
+    PROGRAM-ID [.] programName [AS literal] [IS] PROTOTYPE [.]
+end
+
+def programIdParagraph =
+    PROGRAM-ID [.] programName [ AS literal ]
+    [ [IS] ( INITIAL [COMMON] | COMMON [INITIAL] | RECURSIVE ) [PROGRAM] ]
+    [ (--> .) . ]
+end
+
+def classIdParagrah =
+    CLASS-ID [.] className [ AS literal ]
+    [ INHERITS [FROM] (typeSpecifier)+ ]
+    [ [IS] STATIC ]
+    [ [IS] (PARTIAL | FINAL | ABSTRACT)+ ]
+    [ [IS] (PUBLIC | INTERNAL) ]
+    [ attributeClause ]
+    [ IMPLEMENTS (typeSpecifier)+ ]
+    [ USING (parameterName)+ ]
+    [.]
+end
+
+def factoryParagraph =
+    (FACTORY | STATIC) [.] [IMPLEMENTS (interfaceName)+ .]
+end
+
+def objectParagraph =
+    OBJECT [.] [IMPLEMENTS (interfaceName)+ .]
+end
+
+def methodIdParagraph =
+    METHOD-ID [.] ( methodName  | (GET | SET) PROPERTY propertyName )
+                  [ AS literal ]
+    [ SYNC ]
+    [ [IS] (STATIC | [STATIC] EXTENSION) ]
+    [ [IS] (PUBLIC | PRIVATE | PROTECTED | INTERNAL) ]
+    [ (OVERRIDE | REDEFINE) ]
+    [ [IS] (FINAL | ABSTRACT) ]
+    [ FOR interfaceName ]
+    [ attributeClause ]
+    [ USING (parameterName)+ ]
+    [.]
+end
+
+def interfaceIdParagraph =
+    INTERFACE-ID [.] interfaceName [ AS literal ]
+    [ [IS] (PUBLIC | INTERNAL) ]
+    [ INHERITS [FROM] (typeSpecifier)+ ]
+    [ attributeClause ]
+    [ USING (parameterName)+ ]
+    [.]
+end
+
+def functionIdParagraph =
+    FUNCTION-ID [.] functionName [ AS literal ]
+    [ [IS] PROTOTYPE ]
+    [.] 
+end
+
+def delegateIdParagraph =
+    DELEGATE-ID [.] delegateName [ AS literal ]
+    [ [IS] (PUBLIC | PRIVATE | PROTECTED | INTERNAL)+ ]
+    [ attributeClause ]
+    [.]
+end
+
+def enumIdParagraph =
+    ENUM-ID [.] enumName [ AS literal ]
+    [ [IS] (PUBLIC | PRIVATE | PROTECTED | INTERNAL)+ ]
+    [ attributeClause ]
+    [.]
+end
+
+def iteratorIdParagraph =
+    ITERATOR-ID [.] iteratorName [ AS literal ]
+    [ [IS] (PUBLIC | PRIVATE | PROTECTED | INTERNAL)+ ]
+    [ attributeClause ]
+    [.]
+end
+
+def operatorIdParagraph =
+    OPERATOR-ID [.]
+    ( '=' [EXTENSION]
+    | '<>'
+    | '>='
+    | '>'
+    | '<='
+    | '<'
+    | '+'
+    | '-'
+    | '*'
+    | '/'
+    | B-AND
+    | B-OR
+    | B-XOR
+    | B-NOT
+    | B-LEFT
+    | B-RIGHT
+    | IMPLICIT
+    | EXPLICIT
+    )
+    [.]
+end
+
+def valuetypeIdParagraph =
+    VALUETYPE-ID [.] valuetypeName [ AS literal ]
+    [ [IS] (FINAL | PARTIAL | ABSTRACT) ]
+    [ [IS] (PUBLIC | INTERNAL) ]
+    [ attributeClause ]
+    [ IMPLEMENTS (interfaceName)+ ]
+    [.]
+end
+
+def attributeClause =
+    ( ATTRIBUTE attributeName '(' (NAME propertyName '=' propertyValue | parameterName)* ')'
+    | CUSTOM-ATTRIBUTE IS className [ '(' (propertyName '=' propertyValue | parameterName)* ')' ]
+    )+
 end
 
 ## #############################################################################
@@ -69,25 +241,59 @@ end
 ## -----------------------------------------------------------------------------
 
 def environmentDivision =
-	ENVIRONMENT DIVISION .
-	[configurationSection]
-	[ioSection]
-	[--> divisionStart]
+	( ENVIRONMENT DIVISION .
+      [environmentDivisionBody]
+      
+    # *MF: First division header is optional.
+      
+    | environmentDivisionBody
+    
+    | configurationSectionBody
+      [ioSection]
+      [--> (paragraphStart | sectionStart | divisionStart)]
+      
+    | ioSectionBody
+      [configurationSection]
+      [--> (paragraphStart | sectionStart | divisionStart)]
+    )
 end
 
-## Configuration Section
+def environmentDivisionBody =
+	( configurationSection
+	| ioSection
+	| objectSection
+    )+
+	[--> (paragraphStart | sectionStart | divisionStart)]
+end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF201.html
+
+## #############################################################################
+## CONFIGURATION SECTION
+## -----------------------------------------------------------------------------
+
 def configurationSection =
 	CONFIGURATION SECTION .
-	!(sourceComputerParagraph
+	[ configurationSectionBody ]
+end
+
+def configurationSectionBody =
+	( sourceComputerParagraph
 	| objectComputerParagraph
-	| specialNamesParagraph)
-	[--> (environmentSectionStart | divisionStart)]
+	| specialNamesParagraph
+    | repositoryParagraph
+    | constraintsParagraph          # *.NET *JVM
+    | classAttributesParagraph      # *.NET *JVM
+    | assemblyAttributesParagraph   # *.NET *JVM
+    )+
+	[--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def sourceComputerParagraph =
 	SOURCE-COMPUTER .
 	[computerName [withDebuggingMode] .]
-	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
+	[--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def withDebuggingMode =
@@ -97,7 +303,28 @@ end
 def objectComputerParagraph =
 	OBJECT-COMPUTER .
 	[computerName [--> .] .]
-	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
+	[--> (paragraphStart | sectionStart | divisionStart)]
+end
+
+# TODO: CONSTRAINTS.
+
+def constraintsParagraph =
+    CONSTRAINTS.
+    [--> (paragraphStart | sectionStart | divisionStart)]
+end
+
+# TODO: CLASS-ATTRIBUTES.
+
+def classAttributesParagraph =
+    CLASS-ATTRIBUTES.
+    [--> (paragraphStart | sectionStart | divisionStart)]
+end
+
+# TODO: ASSEMBLY-ATTRIBUTES.
+
+def assemblyAttributesParagraph =
+    ASSEMBLY-ATTRIBUTES.
+    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def genericStringDef =
@@ -106,74 +333,93 @@ def genericStringDef =
 	[.]
 end
 
+## ###############################################################################
+## SPECIAL-NAMES paragraph.
+## -----------------------------------------------------------------------------
+
 def specialNamesParagraph =
 	SPECIAL-NAMES .
-	(copyStatement
-	|specialNameStatement)*
+	( specialNameStatement
+    | copyStatement
+    )*
 	[.]
-	[--> (confParagraphStart | environmentSectionStart | divisionStart)]
+	[--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def specialNameStatement =
-	(decimalIsComma
-	|currencySignIs
-	|consoleIsCRT
-	|cursorIs
-	|crtStatusIs
-	|numericSignIs
-	|classIs
-	|symbolicChars
-	|alphabetIs
-	|mnemonicClause
-	)
+    ( consoleIsCRT
+	| alphabetIs
+    | symbolicChars
+    | classIs
+    | localeIs
+    | currencySignIs
+    | decimalIsComma
+    | numericSignIs
+    | callConvention
+    | cursorIs
+    | crtStatusIs
+    | xmlSchemaIs
+    | screenControlIs
+    | eventStatusIs
+	| cobolSwitch IS mnemonicName ((ON | OFF) [STATUS] [IS] conditionName)*
+	| cobolDevice IS mnemonicName
+    )
 end
 
-def decimalIsComma = 
-	DECIMAL-POINT [IS] COMMA
-end
-
-def currencySignIs = 
-	CURRENCY [SIGN] [IS] literal
-end
-
-def consoleIsCRT = 
+def consoleIsCRT =
 	CONSOLE [IS] CRT
 end
 
-def cursorIs = 
-	CURSOR [IS] dataName
+def cobolDevice =
+    ( SYSIN
+    | SYSIPT
+    | SYSOUT
+    | SYSLIST
+    | SYSLST
+    | SYSPCH
+    | SYSPUNCH
+    | CONSOLE
+    | TAB
+    | PRINTER
+    | FORMFEED
+    | COMMAND-LINE
+    | ARGUMENT-NUMBER
+    | ENVIRONMENT-NAME
+    | ENVIRONMENT-VALUE
+    | SYSERR
+    # Printer channels:
+    | C01 | C02 | C03 | C04 | C05 | C06
+    | C07 | C08 | C09 | C10 | C11 | C12
+    # Select punch pockets:
+    | S01 | S02 | S03 | S04 | S05
+    # Suppress spacing:
+    | CSP
+    # TODO: One-character non-numeric literal:
+    | alphanumericLiteral
+    # TODO: based on NC220M; find matching documentation.
+    | cobolWord
+    )
 end
 
-def crtStatusIs = 
-	CRT STATUS [IS] dataName
+def cobolSwitch =
+    ( SWITCH-0 | SWITCH-1 | SWITCH-2
+    | SWITCH-3 | SWITCH-4 | SWITCH-5
+    | SWITCH-6 | SWITCH-7 | SWITCH-8
+    )
 end
 
-def numericSignIs = 
-	NUMERIC SIGN [IS] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
-end
-
-def classIs = 
-	CLASS identifier [IS] (literalRange | literal)+
-end
-
-def literalRange =
-	literal (THROUGH | THRU) literal
-end
-
-def symbolicChars = 
-	SYMBOLIC [CHARACTER | CHARACTERS] ( (literal)+ [IS | ARE] (integer)+ )+ [IN identifier]
-end
-
-def alphabetIs = 
-	[ALPHABET] identifier [IS] alphabetType
+def alphabetIs =
+	ALPHABET identifier [IS] alphabetType
 end
 
 def alphabetType =
-	(standard1AlphabetType
-	|standard2AlphabetType
-	|nativeAlphabetType
-	|explicitAlphabetType
-	|codeNameAlphabetType
+	( standard1AlphabetType
+	| standard2AlphabetType
+	| nativeAlphabetType
+    | asciiAlphabetType
+    | ebcdicAlphabetType
+	| explicitAlphabetType
+	| codeNameAlphabetType
 	)
 end
 
@@ -189,91 +435,331 @@ def nativeAlphabetType =
 	NATIVE
 end
 
+def asciiAlphabetType =
+    ASCII
+end
+
+def ebcdicAlphabetType =
+    EBCDIC
+end
+
 def explicitAlphabetType =
 	(literalRange | literal)
-	( ALSO (literalRange | literal)	)*
+	(ALSO (literalRange | literal))*
 end
 
 def codeNameAlphabetType =
 	cobolWord
 end
-def mnemonicClause = 
+
+def literalRange =
+	literal (THROUGH | THRU) literal
+end
+
+def symbolicChars =
+	SYMBOLIC [CHARACTER | CHARACTERS] ( (literal)+ [IS | ARE] (integer)+ )+ [IN identifier]
+end
+
+def classIs =
+	CLASS identifier [IS] (literalRange | literal)+
+end
+
+def localeIs =
+    LOCALE identifier [IS] identifier
+end
+
+def currencySignIs =
+	CURRENCY [SIGN] [IS] literal
+end
+
+def decimalIsComma =
 	DECIMAL-POINT [IS] COMMA
 end
 
-def confParagraphStart =
-	(SOURCE-COMPUTER | OBJECT-COMPUTER 
-	| SPECIAL-NAMES) .
+def numericSignIs =
+	NUMERIC SIGN [IS] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
 end
 
-## input-Output Section
+def callConvention =
+    CALL-CONVENTION integer [IS] mnemonicName
+end
+
+def cursorIs =
+	CURSOR [IS] dataName
+end
+
+def crtStatusIs =
+	CRT STATUS [IS] dataName
+end
+
+def xmlSchemaIs =
+    XML-SCHEMA identifier [IS] (dataName | literal)
+end
+
+def screenControlIs =
+    SCREEN CONTROL [IS] identifier
+end
+
+def eventStatusIs =
+    EVENT STATUS [IS] identifier
+end
+
+## ###############################################################################
+## REPOSITORY paragraph.
+## -----------------------------------------------------------------------------
+
+def repositoryParagraph =
+    REPOSITORY .
+    [
+        ( classSpecifier
+        | interfaceSpecifier
+        | programSpecifier
+        | propertySpecifier
+        | functionSpecifier
+        | delegateSpecifier
+        | enumSpecifier
+        )+
+    . ]
+end
+
+def classSpecifier =
+    CLASS className [AS literal] [EXPANDS className USING (className | interfaceName)]
+end
+
+def interfaceSpecifier =
+    INTERFACE interfaceName [AS literal] [EXPANDS interfaceName USING (className | interfaceName)]
+end
+
+def programSpecifier =
+    PROGRAM programName [AS literal]
+end
+
+def propertySpecifier =
+    PROPERTY propertyName [AS literal]
+end
+
+def functionSpecifier =
+    FUNCTION
+    ( (ALL | functionName) INTRINSIC
+    | functionName [AS literal]
+    )
+end
+
+def delegateSpecifier =
+    DELEGATE delegateName [AS literal]
+end
+
+def enumSpecifier =
+    ENUM enumName [AS literal]
+end
+
+## ###############################################################################
+## Input-Output Section
+## -----------------------------------------------------------------------------
+
 def ioSection =
 	INPUT-OUTPUT SECTION .
-	fileControlParagraph
-	[ioControlParagraph]
-	[--> divisionStart]
+	[ ioSectionBody ]
+end
+
+def ioSectionBody =
+	( fileControlParagraph
+	| ioControlParagraph
+    )+
+	[--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 # TODO only skeletal implementation of this paragraph until now...
+# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.help.windows%2Fhtml%2Flhpdf209.htm
+
 def fileControlParagraph =
 	FILE-CONTROL .
-	( selectStatement
-	| copyStatement
-	)*
+	[fileControlEntry]
 end
 
+def fileControlEntry =
+    ( selectStatement
+    | copyStatement
+    )+
+end
+
+## #############################################################################
+## SELECT statement.
+## -----------------------------------------------------------------------------
+
 def selectStatement = 
-	selectClause
-	assignClause
-	!(organizationIsSequentialClause 
-	| fileStatusClause)
-	[--> .]
+    selectClause
+    assignClause
+    !( organizationClause
+     | collationClause
+     | recordDelimiterClause
+     | reserveClause
+     | accessModeClause
+     | lockModeClause
+     | relativeKeyClause
+     | recordKeyClause
+     | alternateRecordKeyClause
+     | fileStatusClause
+     | sharingClause
+     | paddingClause
+     )
+#    [--> .]
 	.
 end
 
 def selectClause =
 	SELECT
-	[OPTIONAL]
+	[OPTIONAL | NOT OPTIONAL]
 	fileName
 end
 
 def assignClause =
-	ASSIGN
-	(assignUsingClause
-	| assignToClause)
+	ASSIGN (assignUsingClause | assignToClause)
 end
 
 def assignUsingClause =
-	USING
-	dataName
+	USING dataName
 end
 
 def assignToClause =
-	[TO]
-	assignmentName
+	[TO] [EXTERNAL | DYNAMIC] (diskClause | dataName | assignmentName)
 end
 
-def organizationIsSequentialClause =
-	[ORGANIZATION [IS]]
-	SEQUENTIAL
+def diskClause =
+    ( DISK FROM dataName
+    | LINE ADVANCING [FILE] (dataName | literal)+
+    | [MULTIPLE] (REEL | UNIT) [FILE] (dataName | literal)+
+    | [DISK] FILE (dataName | literal)+
+    | (DISK | PRINTER) DISPLAY
+    | [DISK | KEYBOARD | DISPLAY | PRINTER | PRINTER-1] (dataName | literal)*
+    )
+end
+
+def collationClause =
+    COLLATING [SEQUENCE] [IS] alphabetName
+end
+
+def recordDelimiterClause =
+    RECORD DELIMITER [IS] ( STANDARD-1 | alphanumericLiteral )
+end
+
+def reserveClause =
+    RESERVE (integer | NO) [ALTERNATE] (AREA | AREAS)
+end
+
+def organizationClause =
+	[ ORGANIZATION [IS] ]
+    [ LINE | RECORD BINARY | RECORD | BINARY ]
+	( SEQUENTIAL | RELATIVE | INDEXED )
+end
+
+def accessModeClause =
+    ACCESS [MODE] [IS]
+    ( SEQUENTIAL
+    | RANDOM
+    | DYNAMIC
+    | EXCLUSIVE
+    | MANUAL [lockModeWithClause]
+    | AUTOMATIC [lockModeWithClause]
+    )
+end
+
+def lockModeClause =
+    LOCK [MODE] [IS]
+    ( EXCLUSIVE
+    | MANUAL [lockModeWithClause]
+    | AUTOMATIC [lockModeWithClause]
+    )
+end
+
+def lockModeWithClause =
+    [WITH]
+    ( ROLLBACK
+    | LOCK ON [MULTIPLE] (RECORD | RECORDS)
+    )
+end
+
+def relativeKeyClause =
+    RELATIVE [KEY] [IS] recordKeyDefinition
+end
+
+def recordKeyClause =
+    RECORD [KEY] [IS] recordKeyDefinition
+        [passwordClause]
+end
+
+def alternateRecordKeyClause =
+    ALTERNATE [RECORD] [KEY] [IS] recordKeyDefinition
+        !( passwordClause
+         | suppressClause
+         | [WITH] DUPLICATES
+         )
+end
+
+def recordKeyDefinition =
+    ( (literal | identifier) ('=' | SOURCE [IS]) (dataName)+
+    | dataName
+    )
 end
 
 def fileStatusClause =
-	[FILE] STATUS [IS]
-	dataName
-	[dataName]
+	[FILE | SORT] STATUS [IS] dataName [dataName]
 end
+
+def passwordClause =
+    PASSWORD [IS] dataName
+end
+
+def suppressClause =
+    SUPPRESS [WHEN] (zero | space | [ALL] literal)
+end
+
+def sharingClause =
+    SHARING [WITH] ( READ ONLY
+                   | (ALL | NO) [OTHER]
+                   )
+end
+
+def paddingClause =
+    PADDING [CHARACTER] [IS] (literal | identifier)
+end
+
+## #############################################################################
+## I-O-CONTROL .
+## -----------------------------------------------------------------------------
 
 def ioControlParagraph =
 	I-O-CONTROL .
-	[--> divisionStart]
+	# TODO
+	[--> (paragraphStart | sectionStart | divisionStart)]
 end
 
-# Start of section in environment division.
-def environmentSectionStart =
-    ( CONFIGURATION
-    | INPUT-OUTPUT
-    ) SECTION .
+## ###############################################################################
+## OBJECT SECTION
+## -------------------------------------------------------------------------------
+
+def objectSection =
+	( OBJECT SECTION . [objectSectionBody]
+	| objectSectionBody
+	)
+end
+
+def objectSectionBody =
+	( classControlParagraph
+	| copyStatement
+    )+
+end
+
+## ###############################################################################
+## CLASS-CONTROL
+## -------------------------------------------------------------------------------
+
+def classControlParagraph =
+    CLASS-CONTROL .
+        ( className IS CLASS literal
+        | copyStatement
+        )+
+        [.]
 end
 
 ## #############################################################################
@@ -281,26 +767,62 @@ end
 ## -----------------------------------------------------------------------------
 
 def dataDivision =
-	DATA DIVISION .
-	[fileSection]
-	[workingStorageSection]
-	[localStorageSection]
-	[linkageSection]
-	[communicationSection]
-	[reportSection]
-	[screenSection]
-#	[--> divisionStart]
+	( DATA DIVISION . [dataDivisionBody]
+    | dataDivisionBody
+    )
+end
+
+def dataDivisionBody =
+	( fileSection
+	| workingStorageSection
+    | threadLocalStorageSection
+    | objectStorageSection
+	| localStorageSection
+	| linkageSection
+	| communicationSection
+	| reportSection
+	| screenSection
+    )+
 end
 
 def fileSection =
 	FILE SECTION .
+	[fileSectionBody]
+end
+
+def fileSectionBody =
 	( copyStatement
-	| fileDescriptionEntry (recordDescriptionEntry)* )*
-    [--> (dataSectionStart | divisionStart)]
+	| fileDescriptionEntry (recordDescriptionEntry)*
+    )+
+    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def recordDescriptionEntry =
 	(dataDescriptionEntry | copyStatement)
+end
+
+def workingStorageSection =
+	WORKING-STORAGE SECTION .
+    ( recordDescriptionEntry
+    | replaceStatement
+    | execStatement [.]
+    )*
+end
+
+def threadLocalStorageSection =
+    THREAD-LOCAL-STORAGE SECTION .
+    ( recordDescriptionEntry
+    | replaceStatement
+    | execStatement [.]
+    )*
+end
+
+def objectStorageSection =
+    OBJECT-STORAGE SECTION .
+    ( recordDescriptionEntry
+    | replaceStatement
+    | execStatement [.]
+    )*
 end
 
 def localStorageSection =
@@ -311,37 +833,28 @@ def localStorageSection =
     )*
 end
 
-def workingStorageSection =
-	WORKING-STORAGE SECTION .
-    ( recordDescriptionEntry
-    | replaceStatement
-    | execStatement [.]
-    )*
-#    [--> (dataSectionStart | divisionStart)]
-end
-
 def linkageSection =
 	LINKAGE SECTION .
     ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
     )*
-#    [--> (dataSectionStart | divisionStart)]
+#    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def communicationSection =
 	COMMUNICATION SECTION .
-    [--> (dataSectionStart | divisionStart)]
+    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def reportSection =
 	REPORT SECTION .
-    [--> (dataSectionStart | divisionStart)]
+    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def screenSection =
 	SCREEN SECTION .
-    [--> (dataSectionStart | divisionStart)]
+    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def fileDescriptionEntry =
@@ -357,10 +870,12 @@ def fdFileDescriptionEntry =
     | dataRecords
     | external
     | global
+    | threadLocalClause
     | labelRecords
     | linage
     | record
     | recordingMode
+    | valueOfFileId
     | valueOf
     | report
     )
@@ -375,6 +890,7 @@ def sdFileDescriptionEntry =
     | labelRecords
     | record
     | recordingMode
+    | valueOfFileId
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -385,15 +901,15 @@ def blockContains =
 end
 
 def codeSet =
-    CODE-SET [IS] alphabetName
+    CODE-SET [IS] alphabetName [FOR (identifier)+]
 end
 
 def dataRecords =
-    [DATA] (RECORD | RECORDS) [IS | ARE] (dataName)+
+    [DATA] ( RECORD [IS] | RECORDS [ARE] ) (dataName)+
 end
 
 def labelRecords =
-    LABEL (RECORD | RECORDS) [IS | ARE] (OMITTED | STANDARD | (dataName)+)
+    LABEL ( RECORD [IS] | RECORDS [ARE] ) (OMITTED | STANDARD | (dataName)+)
 end
 
 def linage =
@@ -425,7 +941,11 @@ def record =
 end
 
 def recordingMode =
-    RECORDING [MODE] [IS] ( F | V | U | S )
+    RECORDING [MODE] [IS] ( F | V | U | S | FIXED | VARIABLE )
+end
+
+def valueOfFileId =
+    VALUE OF FILE-ID [IS] (dataName | literal)
 end
 
 def valueOf =
@@ -441,26 +961,58 @@ end
 
 def dataDescriptionEntry =
     ( constantDescriptionEntry
-    | dataDescriptionEntry_format1
-    | dataDescriptionEntry_format2
     | dataDescriptionEntry_format3
+    | dataDescriptionEntry_format2
+    | dataDescriptionEntry_format1
     )
 end
 
 def dataDescriptionEntry_format1 =
     levelNumber [dataDescName]
-    [redefines]
-   !( blankWhenZero
+   !( redefines
     | external
     | global
-    | justified
-    | occurs
+    | typedefClause
+    | threadLocalClause
     | picture
+    | occurs
+    | dtLinePos
+    | dtColPos
     | sign
+    | valueClause
     | sync
-    | usage
-    | valueIs
+    | justified
+    | blankWhenZero
+    | anyLengthClause
+    | autoPhrase
+    | backgroundPhrase
+    | beepPhrase
+    | blinkPhrase
+    | controlPhrase
+    | erasePhrase
+    | fillPhrase
+    | foregroundPhrase
+    | fullPhrase
+    | gridPhrase
+    | highPhrase
+    | lowPhrase
+    | linePhrase
+    | promptPhrase
+    | requiredPhrase
+    | reversePhrase
+    | securePhrase
+    | sizePhrase
+    | propertyClause
+    | USING identifier
+    | FROM (identifier | literal) [TO identifier]
+    | PUBLIC
+    | PRIVATE
+    | PROTECTED
+    | INTERNAL
     | based
+    | attributeClause
+    | usage      # Note: This has some catch-alls in it.
+    | literal
     )
     (--> .)  # TODO Handle skipped.
     .
@@ -474,8 +1026,8 @@ def dataDescriptionEntry_format2 =
 end
 
 def dataDescriptionEntry_format3 =
-    88 cobolWord 
-    valueClause
+    88 conditionName
+    ( VALUE [IS] | VALUES [ARE] )
     ( (-FALSE) literal [(THROUGH | THRU) literal] )+
     [ whenSetToFalseClause ]
     .
@@ -488,8 +1040,10 @@ end
 
 # See https://sourceforge.net/p/open-cobol/manual/, page 5-16.
 def constantDescriptionEntry =
-    (78 cobolWord [ valueIs ]
-    |(1 | 01) cobolWord CONSTANT [global]
+    ( 78 cobolWord
+        VALUE [IS] valueIsOperand (valueIsOperator valueIsOperand)*
+
+    | (1 | 01) cobolWord CONSTANT [global]
         ( [AS] identifier
         | FROM cobolWord
         )
@@ -505,12 +1059,24 @@ def blankWhenZero =
     BLANK [WHEN] zero
 end
 
+def anyLengthClause =
+    ANY LENGTH
+end
+
 def external =
-    [IS] EXTERNAL
+    [IS] EXTERNAL [(AS | BY) literal]
 end
 
 def global =
     [IS] GLOBAL
+end
+
+def typedefClause =
+    [IS] TYPEDEF
+end
+
+def threadLocalClause =
+    [IS] THREAD-LOCAL
 end
 
 def zero =
@@ -526,15 +1092,17 @@ def justified =
 end
 
 def occurs =
-    # TODO The "TO numeric" part should only occur when "DEPENDING ON" occurs.
-    OCCURS integer [TO integer] [TIMES]
-    [ DEPENDING [ON] qualifiedDataName ]
-    ((ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+)* 
-    [INDEXED [BY] (indexName)+]
+    OCCURS
+    ( [integer TO] integer [TIMES]
+        [ DEPENDING [ON] qualifiedDataName ]
+        ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )*
+        ( INDEXED [BY] (indexName)+ )*
+    | ANY
+    )+
 end
 
 def picture =
-    ( PIC | PICTURE ) [IS] pictureString
+    (PIC | PICTURE) [IS] pictureString
 end
 
 def sign =
@@ -546,57 +1114,105 @@ def sync =
 end
 
 def usage =
-    [USAGE [IS]] (
-      BINARY
-    | COMPUTATIONAL
-    | COMP
-    | DISPLAY
-    | INDEX
-    | PACKED-DECIMAL
-    | COMPUTATIONAL-1 
-    | COMP-1 
-    | COMPUTATIONAL-2 
-    | COMP-2 
-    | COMPUTATIONAL-3 
-    | COMP-3 
-    | COMPUTATIONAL-4 
-    | COMP-4 
-    | COMPUTATIONAL-5 
-    | COMP-5
-    | COMP-X
-    | POINTER
-    | PROGRAM-POINTER
-    | BINARY-CHAR
-    | BINARY-SHORT
-    | BINARY-LONG
-    | BINARY-DOUBLE
+    [USAGE [IS]] usageClause
+end
+
+def usageClause =
+    ( BINARY                                # *ANSI85
+    | BINARY-CHAR   [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-SHORT  [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-LONG   [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-DOUBLE [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-C-LONG
     | FLOAT-SHORT
     | FLOAT-LONG
     | FLOAT-EXTENDED
-    | OBJECT REFERENCE
-    | BINARY-C-LONG
+    | BIT
+    | CHARACTER                             # *.NET *JVM
+    | COMPUTATIONAL
+    | COMP
+    | COMPUTATIONAL-1                       # *OSVS *VSC2 *MF
+    | COMP-1                                # *OSVS *VSC2 *MF
+    | COMPUTATIONAL-2                       # *OSVS *VSC2 *MF
+    | COMP-2                                # *OSVS *VSC2 *MF
+    | COMPUTATIONAL-3                       # *OSVS *VSC2 *MF *XOPEN
+    | COMP-3                                # *OSVS *VSC2 *MF *XOPEN
+    | COMPUTATIONAL-4                       # *OSVS *VSC2 *MF
+    | COMP-4                                # *OSVS *VSC2 *MF
+    | COMPUTATIONAL-5                       # *OSVS *VSC2 *MF
+    | COMP-5                                # *OSVS *VSC2 *MF
+    | COMPUTATIONAL-X                       # *MF
+    | COMP-X                                # *MF
+    | CONDITION-VALUE                       # *.NET *JVM
+    | DECIMAL                               # *.NET *JVM
+    | DISPLAY
+    | INDEX
+    | MONITOR-POINTER                       # *MF
+    | MUTEX-POINTER                         # *MF
+    | NATIONAL                              # *ISO2002 *MF
+    | OBJECT REFERENCE                      # *.NET *ISO2002 *MF
+        [ [FACTORY OF] ACTIVE-CLASS
+        | [FACTORY OF] className [ONLY | EVENT]
+        ]
+    | OBJECT                                # *.NET *JVM
+    | PACKED-DECIMAL                        # *ANSI85
+    | POINTER                               # *VSC2 *MF
+    | PROCEDURE-POINTER                     # *COB370 *MF
+    | PROGRAM-POINTER [[TO] programName]    # *ISO2002 *MF
+    | SEMAPHORE-POINTER                     # *MF
     | SIGNED-INT
-    | UNSIGNED-INT
     | SIGNED-LONG
-    | UNSIGNED-LONG
     | SIGNED-SHORT
+    | UNSIGNED-INT
+    | UNSIGNED-LONG
     | UNSIGNED-SHORT
+    | STRING                                # *.NET *JVM
+    | THREAD-POINTER                        # *MF
+    | typedefName                           # *MF
+    | className                             # *.NET *JVM
     )
-end
-
-def valueIs =
-    valueClause value
 end
 
 def valueClause =
-    ( VALUE [IS]
-    | VALUES [ARE]
+    ( valueClause_format2
+    | valueClause_format1
     )
 end
+
+def valueClause_format1 =
+    VALUE [IS] ( literal | constant )
+end
+
+def valueClause_format2 =
+    ( VALUE [IS] | VALUES [ARE] )
+    ( (literal)+ FROM '(' (subscript)+ ')' [ TO '(' (subscript)+ ')' ] )+     # *ISO2002 *MF
+end
+
+def valueIsOperand =
+    (NEXT | START [OF] dataName | LENGTH [OF] dataName | arithmeticExpression | literal)
+end
+
+def valueIsOperator =
+    ( AND
+    | OR
+    | '&'
+    | '+'
+    | '-'
+    | '*'
+    | '/'
+    )
+end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF40R.html
 
 # See http://opencobol.add1tocobol.com/#based
 def based =
     BASED
+end
+
+def propertyClause =
+    PROPERTY [ [WITH] NO (GET | SET) ]      # *ISO2002
 end
 
 ## #############################################################################
@@ -610,7 +1226,7 @@ end
 # and paragraphs.
 
 def procedureDivision =
-	PROCEDURE DIVISION [usingOrChainingPhrase] [returningProcedurePhrase] .
+	PROCEDURE DIVISION [mnemonicName] [usingOrChainingPhrase] [returningProcedurePhrase] .
 	[declaratives]
     (sentence)*
     (paragraph)*
@@ -620,21 +1236,31 @@ end
 
 # Refs. http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
 def usingOrChainingPhrase =
-    (USING | CHAINING) 
-    (dataReference | dataValue)*
+    (USING | CHAINING | GIVING) 
+    (dataReference | dataValue | dataOutput)+
+    [repeatedPhrase]
 end
 
 def dataReference = 
-	[[BY] REFERENCE] dataName
+	[[BY] REFERENCE]
+    ( ANY | [OPTIONAL] dataName [DELIMITED [BY SIZE]] [AS typeName [attributeClause]] | typedefName )+
 end
 
 def dataValue =
-	[BY] VALUE dataName
+	[BY] VALUE ( ANY | dataName [AS typeName [attributeClause]] | typedefName )+
+end
+
+def dataOutput =
+    [BY] OUTPUT ( dataName AS typeName [attributeClause] )*
+end
+
+def repeatedPhrase =
+    REPEATED [integer TO integer]
 end
 
 def returningProcedurePhrase =
-	RETURNING
-	dataName
+	(RETURNING | YIELDING | GIVING)
+    dataName [AS typeName [attributeClause]]
 end
 
 def declaratives =
@@ -650,11 +1276,6 @@ def declarativeSection =
     (paragraph)*
 end
 
-# Unsing the new implementation!! (Adrian Noguero)
-#def useStatement =
-#    USE (--> .) .
-#end
-
 def section =
     sectionName SECTION [segmentNumber] .
     (sentence)*
@@ -668,10 +1289,8 @@ end
 
 #Modified by Adrian Noguero
 def sentence =
-    ( statement (statement | continuationOfStatement)* .
-    | copyStatement
-    | replaceStatement
-    | useStatement
+    ( compilerStatement
+    | statement (compilerStatement | statement | continuationOfStatement)* .
     | .
     )
 end
@@ -680,33 +1299,58 @@ def statement =
     ( acceptStatement
     | addStatement
     | callStatement
+    | chainStatement        # *MF
     | cancelStatement
     | closeStatement
+    | commitStatement       # *MF
     | computeStatement
+    | deleteFileStatement   # *MF
     | deleteStatement
     | divideStatement
     | entryStatement
     | evaluateStatement
+    | examineStatement      # *MF
     | execStatement
+    | exhibitStatement      # *MF
     | exitStatement
+    | generateStatement
     | gobackStatement
     | goToStatement
+    | identifiedByStatement # *MF
     | ifStatement
+    | initiateStatement
+    | invokeStatement       # *ISO2002 *MF
+    | mergeStatement
     | moveStatement
     | multiplyStatement
+    | nextSentenceStatement # *MF
+    | onStatement           # *OSVS
     | openStatement
     | performStatement
+    | raiseStatement        # *.NET
     | readStatement
+    | readyTraceStatement   # *OSVS *VSC2
     | releaseStatement
+    | resetTraceStatement   # *OSVS *VSC2
     | returnStatement
     | rewriteStatement
+    | rollbackStatement     # *MF
     | searchStatement
+    | serviceStatement      # *OSVS *VSC2
+    | sortStatement
     | startStatement
     | stopStatement
     | stringStatement
     | subtractStatement
+    | suppressStatement
+    | terminateStatement
+    | transformStatement    # *MF
+    | unlockStatement       # *MF
     | unstringStatement
+    | waitStatement         # *MF
     | writeStatement
+    | xmlGenerateStatement  # *MF
+    | xmlParseStatement     # *MF
     | setStatement
     | initializeStatement
     | displayStatement
@@ -777,6 +1421,7 @@ def endOfStatementMarker (Token t) returns t =
     ( t=END-ACCEPT
     | t=END-ADD
     | t=END-CALL
+    | t=END-CHAIN       # *MF
     | t=END-COMPUTE
     | t=END-DELETE
     | t=END-DIVIDE
@@ -793,6 +1438,7 @@ def endOfStatementMarker (Token t) returns t =
     | t=END-STRING
     | t=END-SUBTRACT
     | t=END-UNSTRING
+    | t=END-WAIT        # *MF
     | t=END-WRITE
     )
 end
@@ -801,30 +1447,55 @@ def verb =
     ( ADD
     | CALL
     | CANCEL
+    | CHAIN         # *MF
     | CLOSE
+    | COMMIT        # *MF
     | DELETE
     | DIVIDE
+    | EJECT
     | ENTRY
     | EVALUATE
     | EXEC
     | EXIT
+    | GENERATE
     | GOBACK
     | GO
+    | IDENTIFIED    # *MF
     | IF
+    | INITIATE
+    | INVOKE        # *MF
+    | MERGE
     | MOVE
     | MULTIPLY
+    | NEXT SENTENCE # *MF
     | OPEN
     | PERFORM
+    | RAISE         # *.NET
     | READ
+    | READY TRACE
     | RELEASE
+    | REPLACE
+    | RESET TRACE
     | RETURN
     | REWRITE
+    | ROLLBACK      # *MF
     | SEARCH
+    | SERVICE
+    | SKIP1
+    | SKIP2
+    | SKIP3
+    | SORT
     | STOP
     | STRING
     | SUBTRACT
+    | SUPPRESS
+    | TERMINATE
+    | TITLE
     | UNSTRING
+    | WAIT
     | WRITE
+    | XML GENERATE  # *MF
+    | XML PARSE     # *MF
     | SET
     | INITIALIZE
     | DISPLAY
@@ -841,12 +1512,9 @@ def verb =
     
     # Verbs for statements which have a skeletal implementation:
     
-
     # Verbs for statements which remain to be implemented:
     | ALTER
     | CONTINUE
-    | MERGE
-    | SORT
     
     # Following are verbs found in testsuite, not in documentation.
     | ENABLE
@@ -854,9 +1522,6 @@ def verb =
     | SEND
     | RECEIVE
     | PURGE
-    | INITIATE
-    | GENERATE
-    | TERMINATE
     )
 end
 
@@ -874,7 +1539,7 @@ def acceptStatement =
     | acceptScreenFormat
     
     # Catch all.
-    | (--> endOfStatement)
+    # | (--> endOfStatement)
     )
         
     [END-ACCEPT]
@@ -884,14 +1549,13 @@ def acceptFromMnemonic =
     identifier_format2
     FROM mnemonicName
     
-    [onException]
-    [notOnException]
+    [ onException | onEscape ]
+    [ notOnException | notOnEscape ]
 end
 
 def acceptFromOther =
     identifier_format2
     FROM
-    
     ( TERMINAL-INFO
     | SYSTEM-INFO
     | INPUT STATUS
@@ -907,17 +1571,19 @@ def acceptFromOther =
 end
 
 def acceptScreenFormat =
-    (identifier_format2 | OMITTED) 
-    [dtAcceptPositioningMod]
-    
-    [onException]
-    [notOnException]
+    ( OMITTED | identifier )
+    [ unitPhrase ]
+    [ dtLineColPositioning | dtAtPositioning ]
+    [ FROM CRT ]
+    [ modeIsBlockPhrase ]
+    [ WITH (screenEntryPhrases)+ ]
+    [ onException | onEscape ]
+    [ notOnException | notOnEscape ]
 end
 
 def acceptFromDate =
     identifier_format2
     FROM
-
     ( DATE [YYYYMMDD | CENTURY-DATE]
     | DAY  [YYYYDDD | CENTURY-DAY]
     | DAY-OF-WEEK
@@ -932,6 +1598,14 @@ end
 
 def acceptMessageCount =
     identifier [MESSAGE] COUNT
+end
+
+def unitPhrase =
+    UNIT (identifier | literal)
+end
+
+def modeIsBlockPhrase =
+    MODE [IS] BLOCK
 end
 
 ## #############################################################################
@@ -982,7 +1656,13 @@ end
 ## -----------------------------------------------------------------------------
 
 def callStatement =
-    CALL programID
+    CALL
+    
+    ( NESTED
+    | mnemonicName (alphanumericLiteral | identifier)
+    | (alphanumericLiteral | identifier) [AS (NESTED | programName)]
+    )
+    
     [ callUsing ]
     [ callGivingOrReturning ]
 
@@ -1001,15 +1681,27 @@ def callStatement =
 end
 
 def callUsing =
-    USING 
-       (literal | identifier | OMITTED)*
-       ( [BY] REFERENCE (literal | identifier | OMITTED)+
-       | [BY] (CONTENT | VALUE) (literal | identifier)+
-       )*
+    USING ( [[BY] REFERENCE] ( ADDRESS OF identifier
+                             | OMITTED
+                             | identifier
+                             | literal
+                             )
+          | [BY] CONTENT     ( LENGTH OF identifier
+                             | arithmeticExpression
+                             | identifier
+                             | literal
+                             )
+          | [BY] VALUE       ( LENGTH OF identifier [ SIZE [IS] [LENGTH OF identifier | integer] ]
+                             | integer SIZE [IS] [LENGTH OF identifier | integer]
+                             | arithmeticExpression
+                             | identifier
+                             | literal
+                             )
+          )+
 end
 
 def callGivingOrReturning =
-    (GIVING | RETURNING) [INTO] identifier
+    (GIVING | RETURNING) [INTO | ADDRESS OF] identifier
 end
 
 def onOverflow =
@@ -1022,6 +1714,14 @@ end
 
 def notOnException =
     NOT [ON] EXCEPTION nestedStatements
+end
+
+def onEscape =
+    [ON] ESCAPE nestedStatements
+end
+
+def notOnEscape =
+    NOT [ON] ESCAPE nestedStatements
 end
 
 def programID =
@@ -1037,6 +1737,24 @@ def cancelStatement =
 end
 
 ## #############################################################################
+## CHAIN statement.
+## -----------------------------------------------------------------------------
+
+def chainStatement =
+    CHAIN (identifier | literal)
+    [ chainUsing ]
+    [END-CHAIN]
+end
+
+def chainUsing =
+    USING (literal | identifier)*
+          ( [BY] REFERENCE ([ADDRESS OF] identifier | OMITTED | literal)+
+          | [BY] CONTENT (literal | identifier)+
+          | [BY] VALUE ([LENGTH OF] identifier | integer [SIZE [IS] integer] | literal)+
+          )*
+end
+
+## #############################################################################
 ## CLOSE statement.
 ## -----------------------------------------------------------------------------
 
@@ -1048,6 +1766,16 @@ def closeStatement =
       ]
     )+
 end
+
+## #############################################################################
+## COMMIT statement.
+## -----------------------------------------------------------------------------
+
+def commitStatement =
+    COMMIT
+end
+
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF808.html
 
 ## #############################################################################
 ## COMPUTE statement.
@@ -1077,15 +1805,24 @@ def deleteStatement =
 end
 
 ## #############################################################################
+## DELETE FILE statement.
+## -----------------------------------------------------------------------------
+
+def deleteFileStatement =
+    DELETE FILE (fileName)+
+end
+
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF80C.html
+
+## #############################################################################
 ## DISPLAY statement.
 ## -----------------------------------------------------------------------------
 
 def displayStatement =
 	DISPLAY 
-	( displayScreenFormat
-	| displayDeviceFormat  
-	| displayTerminalFormat
-	| --> (. | endOfStatement)
+	( displayTerminalFormat
+	| displayDeviceFormat
+##   | --> (. | endOfStatement)
 	)
 	[END-DISPLAY]
 end
@@ -1094,11 +1831,19 @@ def displayDeviceFormat =
 	(identifier | literal)+
 	[uponClause]
 	[withNoAdvancing]
+    [onException]
+    [notOnException]
 end
 
 def uponClause =
 	UPON
-	(environmentName | mnemonicName)
+	( ARGUMENT-NUMBER
+    | COMMAND-LINE
+    | ENVIRONMENT-VALUE
+    | ENVIRONMENT-NAME
+	| environmentName
+	| mnemonicName
+	)
 end
 
 def withNoAdvancing =
@@ -1106,68 +1851,14 @@ def withNoAdvancing =
 end
 
 def displayTerminalFormat =
-	(
-	 (identifier | literal) [ UNIT (identifier | literal)]
-	 [displayTerminalMods]
-	)+
-end
-
-def displayTerminalMods =
-	( dtBellMod
-	| dtBlinkMod
-	| dtControlMod
-	| dtConvertMod
-	| dtEraseMod
-	| dtLightingMod
-	| dtPositioningMod
-	| dtModeBlockMod
-	| dtReverseMod
-	| dtSizeMod
-	)+
-end
-
-def dtBellMod =
-	[WITH] (BEEP | BELL)
-end
-
-def dtBlinkMod =
-	[WITH] BLINK
-end
-
-def dtControlMod =
-	[WITH] CONTROL (identifier | literal)
-end
-
-def dtConvertMod =
-	[WITH] CONVERT
-end
-
-def dtEraseMod =
-	[WITH] ERASE (EOL | EOS)
-end
-
-def dtLightingMod =
-	[WITH] (HIGH | HIGHLIGHT | LOW | LOWLIGHT)
-end
-
-def dtPositioningMod =
-	(dtAtPositioning | dtLineColPositioning)
-end
-
-def dtAcceptPositioningMod =
-	(dtAtPositioning | dtFromLineColPositioning)
-end
-
-def dtModeBlockMod =
-	[WITH] MODE [IS] BLOCK
-end
-
-def dtReverseMod =
-	[WITH] (REVERSED | REVERSE-VIDEO | REVERSE)
-end
-
-def dtSizeMod =
-	[WITH] SIZE (identifier | literal)
+    (
+        ( OMITTED | identifier | literal )
+        [ UNIT (identifier | literal) ]
+        ( dtAtPositioning | dtLineColPositioning )
+        [ uponClause ]
+        [ modeIsBlockPhrase ]
+        [ WITH (screenEntryPhrases)+ ]
+    )+
 end
 
 def dtAtPositioning =
@@ -1175,36 +1866,181 @@ def dtAtPositioning =
 end
 
 def dtLineColPositioning =
-	[AT]
-	( dtLinePos
-	| dtColPos
-	)+
-end
-
-def dtFromLineColPositioning =
-	([AT] | FROM)
-	( dtLinePos
-	| dtColPos
-	)+
+	[AT | FROM] ( dtLinePos [dtColPos]
+	            | dtColPos [dtLinePos]
+	            )
 end
 
 def dtLinePos =
-	LINE [NUMBER] (identifier | literal)
+	LINE [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
 end
 
 def dtColPos =
-	(COL | COLUMN | POSITION | POS) [NUMBER] (identifier | literal)
+	(COL | COLUMN | POSITION | POS) [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
 end
 
-def displayScreenFormat =
-	(
-	 (identifier | literal | OMITTED) 
-	  dtPositioningMod
-	)+
+def screenEntryPhrases =
+    ( autoPhrase
+    | beepPhrase
+    | blankPhrase
+    | blinkPhrase
+    | capitalizationPhrase
+    | controlPhrase
+    | convertPhrase
+    | cursorPhrase
+    | echoPhrase
+    | erasePhrase
+    | fillPhrase
+    | fullPhrase
+    | gridPhrase
+    | justificationPhrase
+    | highPhrase
+    | lowPhrase
+    | linePhrase
+    | offPhrase
+    | promptPhrase
+    | requiredPhrase
+    | reversePhrase
+    | scrollPhrase
+    | securePhrase
+    | sizePhrase
+    | foregroundPhrase
+    | backgroundPhrase
+    | timeoutPhrase
+    | trailingSignPhrase
+    | tabPhrase
+    | timePhrase
+    | updatePhrase
+    )
 end
 
+def autoPhrase =
+    (AUTO | AUTO-SKIP)
+end
 
+def backgroundPhrase =
+    (BACKGROUND-COLOR | BACKGROUND-COLOUR) [IS] integer
+end
 
+def beepPhrase =
+    [NO] (BEEP | BELL)
+end
+
+def blankPhrase =
+    BLANK (SCREEN | LINE)
+end
+
+def blinkPhrase =
+    BLINK
+end
+
+def capitalizationPhrase =
+    (UPPER | LOWER)
+end
+
+def controlPhrase =
+    CONTROL [IS] (identifier_format2 | literal)
+end
+
+def convertPhrase =
+    CONVERT
+end
+
+def cursorPhrase =
+    CURSOR (identifier | literal)
+end
+
+def echoPhrase =
+    ECHO
+end
+
+def erasePhrase =
+    ERASE [EOL | EOS]
+end
+
+def foregroundPhrase =
+    (FOREGROUND-COLOR | FOREGROUND-COLOUR) [IS] integer
+end
+
+def fullPhrase =
+    (FULL | LENGTH-CHECK)
+end
+
+def gridPhrase =
+    GRID
+end
+
+def highPhrase =
+    (HIGH | HIGHLIGHT)
+end
+
+def linePhrase =
+    (LEFTLINE | OVERLINE | UNDERLINE)
+end
+
+def lowPhrase =
+    (LOW | LOWLIGHT)
+end
+
+def offPhrase =
+    OFF
+end
+
+def promptPhrase =
+    PROMPT
+    [ CHARACTER [IS] identifier
+    | [CHARACTER] [IS] literal
+    ]
+end
+
+def requiredPhrase =
+    (REQUIRED | EMPTY-CHECK)
+end
+
+def reversePhrase =
+    ( REVERSE | REVERSED | REVERSE-VIDEO )
+end
+
+def scrollPhrase =
+    SCROLL (UP | DOWN)
+    [[BY] (integer | identifier) (LINE | LINES)]
+end
+
+def securePhrase =
+    (SECURE | NO-ECHO)
+end
+
+def sizePhrase =
+    SIZE [IS] (identifier | literal)
+end
+
+def tabPhrase =
+    TAB
+end
+
+def timePhrase =
+    [BEFORE] TIME (identifier | literal)
+end
+
+def timeoutPhrase =
+    (TIME-OUT | TIMEOUT) AFTER (identifier | integer)
+end
+
+def justificationPhrase =
+    (LEFT-JUSTIFY | RIGHT-JUSTIFY)
+end
+
+def fillPhrase =
+    (SPACE-FILL | ZERO-FILL)
+end
+
+def trailingSignPhrase =
+    TRAILING-SIGN
+end
+
+def updatePhrase =
+    UPDATE
+end
 
 ## #############################################################################
 ## DIVIDE statement.
@@ -1240,7 +2076,10 @@ end
 ## -----------------------------------------------------------------------------
 
 def entryStatement =
-    ENTRY alphanumeric [USING (dataName)+]
+    ENTRY literal [mnemonicName]
+        [ USING ( [[BY] (REFERENCE | VALUE)] (ANY | dataName [DELIMITED [BY SIZE]]) )+
+            [REPEATED [integer TO integer]] ]
+        [ (GIVING | RETURNING) dataName ]
 end
 
 ## #############################################################################
@@ -1255,7 +2094,7 @@ def evaluateStatement =
 end
 
 def subject =
-	(condition | identifier | arithmeticExpression | literal)
+	(condition | arithmeticExpression | identifier | literal)
 end
 
 
@@ -1281,28 +2120,40 @@ def object =
 	| FALSE
     | condition
     
-    | [NOT] (
-        identifier
-      | literal
-      | arithmeticExpression
-      )
+    | [NOT] ( arithmeticExpression
+            | identifier
+            | literal
+            )
     | '(' object ')'
     )
 end
 
 def rangeExpression =
   [NOT] 
-  ( identifier
+  ( arithmeticExpression
+  | identifier
   | literal
-  | arithmeticExpression
   )
   ( THROUGH | THRU )
-  ( identifier
+  ( arithmeticExpression
+  | identifier
   | literal
-  | arithmeticExpression
   )
 end
 
+## #############################################################################
+## EXAMINE statement.
+## -----------------------------------------------------------------------------
+
+def examineStatement =
+    EXAMINE identifier
+    ( TALLYING (UNTIL FIRST | ALL | LEADING) literal [REPLACING BY literal]
+    | REPLACING (ALL | LEADING | FIRST | UNTIL FIRST) literal BY literal
+    )
+end
+
+# Ref:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF904.html
 
 ## #############################################################################
 ## EXEC statement.
@@ -1311,19 +2162,16 @@ end
 def execStatement =
    ( execSQLStatement
    | execCICSStatement
-     
-   # This is a catch-all, which includes SQL and CICS statements which somehow
-   # didn't match.
-   | EXEC cobolWord
-        [--> END-EXEC]
-     END-EXEC
+   | execDLIStatement
+   | execHTMLStatement
+   | execTextDataStatement
    )
 end
 
 # EXEC SQL support. ------------------------------------------------------------
 
 def execSQLStatement =
-   EXEC SQL 
+   (EXEC | EXECUTE) SQL 
      sqlStatement 
      [--> END-EXEC]
    END-EXEC
@@ -1366,10 +2214,10 @@ end
 # EXEC CICS support. -----------------------------------------------------------
 
 def execCICSStatement =
-   EXEC CICS
+    (EXEC | EXECUTE) CICS
         cicsStatement
         [--> END-EXEC]
-     END-EXEC
+    END-EXEC
 end
 
 def cicsStatement =
@@ -1497,27 +2345,61 @@ def cicsWaterInBrackets =
    '(' [--> ')'] ')'
 end
 
+# EXEC DLI support. -----------------------------------------------------------
+
+def execDLIStatement =
+    (EXEC | EXECUTE) DLI
+    [--> END-EXEC]
+    END-EXEC
+end
+
+# EXEC HTML support. ----------------------------------------------------------
+
+def execHTMLStatement =
+    (EXEC | EXECUTE) HTML
+    [--> END-EXEC]
+    END-EXEC
+end
+
+# EXEC text-data support. -----------------------------------------------------
+
+def execTextDataStatement =
+    (EXEC | EXECUTE) textName
+    [--> END-EXEC]
+    END-EXEC
+end
+
 ## #############################################################################
 ## EXIT statement.
 ## -----------------------------------------------------------------------------
 
 def exitStatement =
-    EXIT [
-      PROGRAM [returningPhrase]
+    EXIT
+    [ PROGRAM [returningPhrase]
     | PARAGRAPH
     | SECTION            # *MF
     | PERFORM [CYCLE]    # *MF
+    | METHOD             # *ISO2002
+    | FUNCTION           # *ISO2002
+    | ITERATOR           # *.NET
     ]
 end
 
 def returningPhrase =
-	RETURNING
-	(integer | identifier)
+	(GIVING | RETURNING)
+	(integer | ADDRESS OF identifier)
 end
 
 # Refs:
 # MF. http://supportline.microfocus.com/documentation/books/nx60/lhpdf907.htm
 
+## #############################################################################
+## GENERATE statement.
+## -----------------------------------------------------------------------------
+
+def generateStatement =
+    GENERATE (dataName | reportName)
+end
 
 ## #############################################################################
 ## FREE statement.
@@ -1536,6 +2418,7 @@ end
 
 def gobackStatement =
     GOBACK
+        [(GIVING | RETURNING) ([ADDRESS OF] identifier | integer)]  # *MF
 end
 
 ## #############################################################################
@@ -1566,6 +2449,49 @@ def ifStatement =
       )
     ]
     [END-IF]
+end
+
+## #############################################################################
+## INITIATE statement.
+## -----------------------------------------------------------------------------
+
+def initiateStatement =
+    INITIATE (reportName)+
+end
+
+## #############################################################################
+## INVOKE statement.
+## -----------------------------------------------------------------------------
+
+def invokeStatement =
+    INVOKE identifier [AS (OBJECT | identifier)] (literal | identifier)
+    
+    [ USING ( [[BY] REFERENCE] ( ADDRESS OF identifier | OMITTED | literal | identifier )
+            | [BY] CONTENT ( LENGTH OF identifier | arithmeticExpression | literal | identifier )
+            | [BY] VALUE ( LENGTH OF identifier | integer SIZE [IS] integer | arithmeticExpression | integer | identifier )
+            )+
+    ]
+
+    [ (GIVING | RETURNING) [INTO | ADDRESS OF] identifier ]
+end
+
+## #############################################################################
+## EXHIBIT statement.
+## -----------------------------------------------------------------------------
+
+def exhibitStatement =
+    EXHIBIT (NAMED | CHANGED NAMED | CHANGED) (identifier | literal)
+end
+
+# Ref:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF906.html
+
+## #############################################################################
+## IDENTIFIED BY statement.
+## -----------------------------------------------------------------------------
+
+def identifiedByStatement =
+    IDENTIFIED [BY] (dataName | literal) [[IS] ATTRIBUTE]
 end
 
 ## #############################################################################
@@ -1668,6 +2594,23 @@ def locationPhrase =
 end
 
 ## #############################################################################
+## MERGE statement.
+## -----------------------------------------------------------------------------
+
+def mergeStatement =
+    MERGE fileName
+        ( [ON] (ASCENDING | DESCENDING) [KEY] [IS] (dataName)+ )+
+        [ [COLLATING] SEQUENCE [IS] alphabetName ]
+        USING fileName (fileName)+
+        ( OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
+        | GIVING (fileName)+
+        )
+end
+
+# Refs:
+# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFA01.html
+
+## #############################################################################
 ## MOVE statement.
 ## -----------------------------------------------------------------------------
 
@@ -1678,6 +2621,7 @@ def moveStatement =
       | literal
       )
     TO (identifier)+
+    [--> (. | endOfStatement)]
 end
 
 ## #############################################################################
@@ -1705,6 +2649,35 @@ def multiplication_format2 =
 end
 
 ## #############################################################################
+## NEXT SENTENCE statement.
+## -----------------------------------------------------------------------------
+
+def nextSentenceStatement =
+    NEXT SENTENCE
+end
+
+## #############################################################################
+## ON statement.
+## -----------------------------------------------------------------------------
+
+def onStatement =
+    ON (literal | identifier)
+        [ AND EVERY (literal | identifier) ]
+        [ UNTIL (literal | identifier) ]
+        ( nestedStatements
+        | NEXT SENTENCE
+        )
+        [ (ELSE | OTHERWISE)
+            ( nestedStatements
+            | NEXT SENTENCE
+            )
+        ]
+end
+
+# Refs:
+# OS/VS: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFA06.html
+
+## #############################################################################
 ## OPEN statement.
 ## -----------------------------------------------------------------------------
 
@@ -1725,50 +2698,79 @@ end
 #   PERFORM 7 TIMES  ...
 # Then you need to check in-line first. If not, the parser will understand the
 # number as a procedureName (yes, 7 is a valid procedure name).
+#
+# *ANS85: If procedureName is omitted, nestedStatements and the END-PERFORM phrase
+#         must be specified; if procedureName is specified, nestedStatements and
+#         the END-PERFORM phrase must not be specified.
+#
+# *MF: When statement is specified, the END-PERFORM phrase is optional.
+
 def performStatement =
     PERFORM 
-    ( # "in-line"
-      [ times | until | varying ]
-      [ nestedStatements ]
-      END-PERFORM
-
-    | # "out-of-line"
-      procedureName [(THROUGH | THRU) procedureName]
-      [ times | until | varying ]
+    ( # Perform inline, without procedureName
+        [ times
+        | until
+        | varying
+        ]
+        ( nestedStatements END-PERFORM | statement | END-PERFORM )
+        
+    | # Perform procedureName
+        procedureName [(THROUGH | THRU) procedureName]
+        [ times
+        | until
+        | varying
+        ]
+        
+    | # Perform inline with VARYING
+        VARYING identifier THROUGH identifier
+        nestedStatements
+        END-PERFORM
     )
 end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFB01.html
 
 def times =
     (identifier | integer) TIMES
 end
 
-def until =
-    [testPosition]
-    UNTIL condition
-end
-
 def testPosition =
 	[WITH] TEST (BEFORE | AFTER)
-end 
+end
+
+def until =
+    [testPosition]
+    UNTIL (condition | EXIT)
+end
 
 # The documentation also explicitly mentions indices. Matching these, however,
 # requires tracking their definition in the data section. This is something we
 # don't do. This doesn't matter that much, as indices are a degenerate form of
 # identifiers, which we are able to match. So the catch is that while we do
 # match indices it is up to the end-user to distinguish them from identifiers.
+
 def varying =
-    [[WITH] TEST (BEFORE | AFTER)]
+    [testPosition]
     
-    VARYING identifier
+    VARYING (identifier)
         FROM (literal | identifier)
         BY (literal | identifier)
         UNTIL condition
     
-    (AFTER  identifier
+    (AFTER (identifier)
         FROM (literal | identifier)
         BY (literal | identifier)
         UNTIL condition
     )*
+end
+
+## #############################################################################
+## RAISE statement.
+## -----------------------------------------------------------------------------
+
+def raiseStatement =
+    RAISE [ identifier ]
 end
 
 ## #############################################################################
@@ -1782,10 +2784,11 @@ def readStatement =
     
     [ ADVANCING [ON] LOCK
     | IGNORING LOCK
+    | [WITH] ( [KEPT | NO | IGNORE] LOCK
+             | WAIT
+             )
     | retryPhrase
     ]
-    
-    [[WITH] [NO] LOCK]
     
     [KEY [IS] qualifiedDataName]
     
@@ -1798,12 +2801,36 @@ def readStatement =
     [END-READ]
 end
 
+def readWithClause =
+    [WITH] (readLockClause | WAIT)
+end
+
+def readLockClause =
+    [KEPT | NO | IGNORE] LOCK
+end
+
+## #############################################################################
+## READY TRACE statement.
+## -----------------------------------------------------------------------------
+
+def readyTraceStatement =
+    READY TRACE [.]
+end
+
 ## #############################################################################
 ## RELEASE statement.
 ## -----------------------------------------------------------------------------
 
 def releaseStatement =
     RELEASE recordName [FROM identifier]
+end
+
+## #############################################################################
+## RESET TRACE statement.
+## -----------------------------------------------------------------------------
+
+def resetTraceStatement =
+    RESET TRACE [.]
 end
 
 ## #############################################################################
@@ -1835,6 +2862,17 @@ def rewriteStatement =
 end
 
 ## #############################################################################
+## ROLLBACK statement.
+## -----------------------------------------------------------------------------
+
+def rollbackStatement =
+    ROLLBACK
+end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFB06.html
+
+## #############################################################################
 ## SEARCH statement.
 ## -----------------------------------------------------------------------------
 
@@ -1864,12 +2902,57 @@ def notAtEnd =
 end
 
 ## #############################################################################
+## SERVICE statement. OS/VS and VS COBOL II.
+## -----------------------------------------------------------------------------
+
+def serviceStatement =
+    SERVICE (LABEL | RELOAD identifier)
+end
+
+# Refs:
+# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC02.html
+
+## #############################################################################
+## SORT statement.
+## -----------------------------------------------------------------------------
+
+def sortStatement =
+    ( # File format
+        SORT fileName
+        ( ON ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )+ )+
+        [ [WITH] DUPLICATES [IN ORDER] ]
+        [ [COLLATING] SEQUENCE [IS] alphabetName ]
+        
+        ( INPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
+        | USING (fileName)+
+        )
+        
+        ( OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
+        | GIVING (fileName)+
+        )
+        
+    | # Data format
+        SORT dataName
+        ( ON ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )+ )+
+        [ [WITH] DUPLICATES [IN ORDER] ]
+        [ [COLLATING] SEQUENCE [IS] alphabetName ]
+    )
+end
+
+# Refs:
+# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC04.html
+
+## #############################################################################
 ## SET statement.
 ## -----------------------------------------------------------------------------
 
 def setStatement =
     SET
-    (setFormat1
+    ( setFormatMonitorValue
+    | setFormatDataPointerAssignment
+    | setFormatProcedurePointerAssignment
+    | setFormatSemaphoreValue
+    | setFormat1
     | setFormat2
     | setFormat3
     )
@@ -1891,9 +2974,37 @@ end
 def setFormat3 =
 	(identifier)+
 	TO
-	TRUE
+	(TRUE | FALSE)
 end
 
+def setFormatDataPointerAssignment =
+    (ADDRESS [OF] identifier | identifier)+
+    TO
+    (ADDRESS [OF] identifier | mnemonicName | NULL | NULLS)
+end
+
+def setFormatProcedurePointerAssignment =
+    procedureName
+    TO
+    (procedureName | ENTRY (identifier | literal) | NULL | NULLS)
+end
+
+def setFormatMonitorValue =
+    (mnemonicName)+
+    TO [NOT] (BROWSING | READING | WRITING)
+    [CONVERTING FROM (BROWSING | WRITING)]
+end
+
+def setFormatSemaphoreValue =
+    (mnemonicName)+
+    TO
+    (UP | DOWN)
+    BY
+    (integer | identifier)
+end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC03.html
 
 ## #############################################################################
 ## START statement.
@@ -1953,8 +3064,14 @@ end
 ## -----------------------------------------------------------------------------
 
 def stopStatement =
-    STOP (RUN [returningPhrase]| literal)
+    ( STOP literal
+    | STOP RUN [ (GIVING | RETURNING) ([ADDRESS OF] identifier | integer [SIZE [IS] integer]) ]
+    | STOP ITERATOR
+    )
 end
+
+# Refs:
+# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC06.html
 
 ## #############################################################################
 ## STRING statement.
@@ -1996,6 +3113,46 @@ def subtraction_format3 =
 end
 
 ## #############################################################################
+## SUPPRESS statement.
+## -----------------------------------------------------------------------------
+
+def suppressStatement =
+    SUPPRESS [PRINTING]
+end
+
+## #############################################################################
+## TERMINATE statement.
+## -----------------------------------------------------------------------------
+
+def terminateStatement =
+    TERMINATE (reportName)+
+end
+
+## #############################################################################
+## TRANSFORM statement. Micro Focus COBOL.
+## -----------------------------------------------------------------------------
+
+def transformStatement =
+    TRANSFORM identifier [CHARACTERS]
+    FROM (figurativeConstant | alphanumericLiteral | identifier)
+    TO (figurativeConstant | alphanumericLiteral | identifier)
+end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC09.html
+
+## #############################################################################
+## UNLOCK statement. Micro Focus COBOL.
+## -----------------------------------------------------------------------------
+
+def unlockStatement =
+    UNLOCK fileName [RECORD | RECORDS]
+end
+
+# Refs:
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC0A.html
+
+## #############################################################################
 ## UNSTRING statement.
 ## -----------------------------------------------------------------------------
 
@@ -2026,46 +3183,65 @@ end
 
 def useStatement =
 	USE 
-	(errorDeclarative
-	|debugOnAllDeclarative
-	|debugDeclarative
-	|labelDeclarative)
+	( errorDeclarative
+	| debugDeclarative
+	| labelDeclarative
+    | beforeReportingDeclarative)
 	.
 end
 
 def errorDeclarative =	
 	[GLOBAL] AFTER [STANDARD]
-	(ERROR | EXCEPTION)
+	( ERROR | EXCEPTION )
 	PROCEDURE [ON]
-	(INPUT
-	|OUTPUT
-	|I-O
-	|EXTEND
-	|fileName)*
+	( INPUT
+	| OUTPUT
+	| I-O
+	| EXTEND
+	| (fileName)*
+    )
+    [GIVING dataName [dataName]]
 end
 
 def debugDeclarative =
 	[FOR] DEBUGGING [ON]
-	(procedureName
-	|fileName
-	|[ALL [REFERENCES OF]] identifier)*
-end
-
-def debugOnAllDeclarative =
-	[FOR] DEBUGGING [ON]
-	ALL PROCEDURES
+	( ALL PROCEDURES
+	| [ALL [REFERENCES] [OF]] identifier
+    | procedureName
+    | fileName
+    )*
 end
 
 def labelDeclarative =
 	[GLOBAL] AFTER [STANDARD]
-	[(BEGINNING | ENDING)]
-	[(FILE | REEL | UNIT)]
+	[ BEGINNING | ENDING ]
+	[ FILE | REEL | UNIT ]
 	LABEL PROCEDURE [ON]
-	(INPUT
-	|OUTPUT
-	|I-O
-	|EXTEND
-	|fileName)*
+	( INPUT
+	| OUTPUT
+	| I-O
+	| EXTEND
+	| (fileName)*
+    )
+end
+
+def beforeReportingDeclarative =
+    [GLOBAL] BEFORE REPORTING identifier
+end
+
+## #############################################################################
+## WAIT statement. Micro Focus COBOL.
+## -----------------------------------------------------------------------------
+
+def waitStatement =
+    ( WAIT [FOR] threadPointer
+        [RETURNING [INTO] identifier]
+        [STATUS [IS] identifier]
+        [onException]
+        [notOnException]
+        [END-WAIT]
+    | WAIT [FOR] eventPointer
+    )
 end
 
 ## #############################################################################
@@ -2075,10 +3251,12 @@ end
 def writeStatement =
     WRITE recordName [FROM (identifier | literal)]
     
-    [ (AFTER | BEFORE) [ADVANCING]
+    [ (AFTER | BEFORE) [ADVANCING | POSITIONING]
       ( (identifier | integer | zero) [LINE | LINES]
       | mnemonicName
       | PAGE
+      | TAB                 # *MF
+      | FORMFEED            # *MF
       )
     ]
     
@@ -2096,8 +3274,63 @@ def writeStatement =
 end
 
 ## #############################################################################
+## XML GENERATE statement.
+## -----------------------------------------------------------------------------
+
+def xmlGenerateStatement =
+    XML GENERATE identifier FROM identifier
+    [COUNT [IN] identifier]
+    [[ON] EXCEPTION statement]
+    [NOT [ON] EXCEPTION statement]
+    [END-XML]
+end
+
+## #############################################################################
+## XML PARSE statement.
+## -----------------------------------------------------------------------------
+
+def xmlParseStatement =
+    XML PARSE identifier
+    [PROCESSING PROCEDURE [IS] procedureName]
+        [(THROUGH | THRU) procedureName]
+    [[ON] EXCEPTION statement]
+    [NOT [ON] EXCEPTION statement]
+    [END-XML]
+end
+
+## #############################################################################
 ## Controlling the compiler.
 ## -----------------------------------------------------------------------------
+
+def compilerStatement =
+    ( compilerDirective
+    | compilerIfStatement
+    | compilerDisplayStatement
+    | copyStatement
+    | replaceStatement
+    | useStatement
+    )
+end
+
+def compilerDirective =
+    ('\u0024' SET)
+    (--> ('\u0024' SET | divisionStart | compilationUnit | verb))
+end
+
+def compilerIfStatement =
+    '\u0024' IF operand [ SET | [NOT] DEFINED | [NOT] ('<' | '>' | '=') operand ]
+        # FIXME: Anything can go inside an $IF condition.
+        (compilerStatement | nestedStatements)
+    ['\u0024' ELSE
+        # FIXME: Anything can go inside an $IF condition.
+        (compilerStatement | nestedStatements)
+    ]
+    '\u0024' END
+end
+
+def compilerDisplayStatement =
+    '\u0024' DISPLAY ( VCS '=' literal | textName )
+end
 
 def copyStatement =
     COPY textName [ (OF | IN) libraryName ]
@@ -2116,18 +3349,55 @@ def copyReplacementInstruction =
 end
 
 def copyOperandName =
-	(pseudoLiteral | verb | literal | identifier | cobolWord)
+	([LEADING | TRAILING] pseudoLiteral | verb | literal | identifier | cobolWord)
 end
 
 def replaceStatement =
-    REPLACE (--> .) .
+    REPLACE
+    ( OFF
+    | ( pseudoLiteral BY pseudoLiteral
+      | (LEADING | TRAILING) pseudoLiteral BY pseudoLiteral
+      )+
+    ) [.]
 end
+
+def pseudoText =
+    cobolWord
+end
+
+def partialWord =
+    cobolWord
+end
+
+## #############################################################################
+## Source formatting directives.
+## TODO Merge this somehow with the SourceFormattingDirectivesFilter.
+## -----------------------------------------------------------------------------
+
+def sourceFormattingDirective =
+    ( ejectStatement
+    | skipStatement
+    | titleStatement
+    )
+end
+
+def ejectStatement =
+    EJECT [.]
+end
+
+def skipStatement =
+    (SKIP1 | SKIP2 | SKIP3) [.]
+end
+
+def titleStatement =
+    TITLE literal [.]
+end
+
 
 ## #############################################################################
 ## Lookaheads used for skipping.
 ## -----------------------------------------------------------------------------
 
-# Division start
 def divisionStart =
     ( IDENTIFICATION DIVISION
     | ENVIRONMENT DIVISION
@@ -2137,27 +3407,47 @@ def divisionStart =
     .
 end
 
-# Start of section in data division.
-def dataSectionStart =
-    ( FILE
+def sectionStart =
+    ( CONFIGURATION
+    | INPUT-OUTPUT
+    | FILE
     | WORKING-STORAGE
+    | THREAD-LOCAL-STORAGE
+    | OBJECT-STORAGE
+    | LOCAL-STORAGE
     | LINKAGE
     | COMMUNICATION
+    | OBJECT
     | REPORT
     | SCREEN
     ) SECTION .
 end
 
+def paragraphStart =
+    ( SOURCE-COMPUTER
+    | OBJECT-COMPUTER 
+	| SPECIAL-NAMES
+    | REPOSITORY
+    | CONSTRAINTS
+    | CLASS-ATTRIBUTES
+    | ASSEMBLY-ATTRIBUTES
+    | FILE-CONTROL
+    | I-O-CONTROL
+    | CLASS-CONTROL
+    ) .
+end
+
 # End of a (nested) statement.
 def endOfStatement =
     ( verb
-
+    
     | ELSE             # IF statement
     | WHEN             # SEARCH, EVALUATE statement
 
     | END-ACCEPT
     | END-ADD
     | END-CALL
+    | END-CHAIN        # *MF
     | END-COMPUTE
     | END-DELETE
     | END-DISPLAY
@@ -2175,7 +3465,9 @@ def endOfStatement =
     | END-STRING
     | END-SUBTRACT
     | END-UNSTRING
+    | END-WAIT          # *MF
     | END-WRITE
+    | END-XML           # *MF
 
     | [NOT] [ON | AT]
       ( OVERFLOW       # CALL statement
@@ -2194,7 +3486,89 @@ end
 ## -----------------------------------------------------------------------------
 
 # TODO Qualifiers, subscripts and reference modifiers.
-# TODO FUNCTION format.
+
+def function = 
+    FUNCTION
+    ( ABS                   '(' argument ')'                    # *MF *OC
+    | ACOS                  '(' argument ')'                    # *ANS85
+    | ANNUITY               '(' argument argument ')'           # *ANS85
+    | ASIN                  '(' argument ')'                    # *ANS85
+    | ATAN                  '(' argument ')'                    # *ANS85
+    | BOOLEAN-OF-INTEGER    '(' argument argument ')'
+    | BYTE-LENGTH           '(' argument ')'                    # *OC
+    | CHAR                  '(' argument ')'                    # *ANS85
+    | CHAR-NATIONAL         '(' argument ')'                    # *ISO2002 *MF
+    | COMBINED-DATETIME     '(' argument argument ')'           # *OC
+    | CONCATENATE           '(' (argument)+ ')'                 # *OC
+    | COS                   '(' argument ')'                    # *ANS85
+    | CURRENT-DATE                                              # *OC
+    | DATE-OF-INTEGER       '(' argument ')'                    # *ANS85
+    | DATE-TO-YYYYMMDD      '(' argument [argument] ')'         # *ANS85
+    | DAY-OF-INTEGER        '(' argument ')'                    # *ANS85
+    | DAY-TO-YYYYDDD        '(' argument [argument] ')'         # *ANS85
+    | DISPLAY-OF            '(' argument [argument] ')'         # *ISO2002 *MF
+    | E                                                         # *MF *OC
+    | EXCEPTION-FILE                                            # *OC
+    | EXCEPTION-LOCATION                                        # *OC
+    | EXCEPTION-STATEMENT                                       # *OC
+    | EXCEPTION-STATUS                                          # *OC
+    | EXP                   '(' argument ')'                    # *MF *OC
+    | EXP10                 '(' argument ')'                    # *MF *OC
+    | FACTORIAL             '(' argument ')'                    # *ANS85
+    | FRACTION-PART         '(' argument ')'                    # *MF *OC
+    | INTEGER               '(' argument ')'                    # *ANS85
+    | INTEGER-OF-BOOLEAN    '(' argument ')'
+    | INTEGER-OF-DATE       '(' argument ')'                    # *ANS85
+    | INTEGER-OF-DAY        '(' argument ')'                    # *ANS85
+    | INTEGER-PART          '(' argument ')'                    # *ANS85
+    | LENGTH                '(' argument ')'                    # *ANS85
+    | LENGTH-AN             '(' argument ')'                    # *MF
+    | LOCALE-DATE           '(' argument [argument] ')'         # *OC
+    | LOCALE-TIME           '(' argument [argument] ')'         # *OC
+    | LOCALE-TIME-FROM-SECS '(' argument [argument] ')'         # *OC
+    | LOG                   '(' argument ')'                    # *ANS85
+    | LOG10                 '(' argument ')'                    # *ANS85
+    | LOWER-CASE            '(' argument ')'                    # *ANS85
+    | MAX                   '(' (argument)+ ')'                 # *ANS85
+    | MEAN                  '(' (argument)+ ')'                 # *ANS85
+    | MEDIAN                '(' (argument)+ ')'                 # *ANS85
+    | MIDRANGE              '(' (argument)+ ')'                 # *ANS85
+    | MIN                   '(' (argument)+ ')'                 # *ANS85
+    | MOD                   '(' argument argument ')'           # *ANS85
+    | NATIONAL-OF           '(' argument [argument] ')'         # *ISO2002 *MF
+    | NUMVAL                '(' argument ')'                    # *ANS85
+    | NUMVAL-C              '(' argument [argument] ')'         # *ANS85
+    | ORD                   '(' argument ')'                    # *ANS85
+    | ORD-MAX               '(' (argument)+ ')'                 # *ANS85
+    | ORD-MIN               '(' (argument)+ ')'                 # *ANS85
+    | PI                                                        # *MF *OC
+    | PRESENT-VALUE         '(' argument (argument)+ ')'        # *ANS85
+    | RANDOM                [ '(' argument ')' ]                # *ANS85
+    | RANGE                 '(' (argument)+ ')'                 # *ANS85
+    | REM                   '(' argument argument ')'           # *ANS85
+    | REVERSE               '(' argument ')'                    # *ANS85
+    | SECONDS-FROM-FORMATTED-TIME
+                            '(' argument argument ')'           # *OC
+    | SECONDS-PAST-MIDNIGHT                                     # *OC
+    | SIGN                  '(' argument ')'                    # *ANS85
+    | SIN                   '(' argument ')'                    # *ANS85
+    | SQRT                  '(' argument ')'                    # *ANS85
+    | STANDARD-DEVIATION    '(' (argument)+ ')'                 # *ANS85
+    | STORED-CHAR-LENGTH    '(' argument ')'                    # *OC
+    | SUBSTITUTE            '(' (argument)+ ')'                 # *OC
+    | SUBSTITUTE-CASE       '(' (argument)+ ')'                 # *OC
+    | SUM                   '(' (argument)+ ')'                 # *ANS85
+    | TAN                   '(' argument ')'                    # *ANS85
+    | TEST-DATE-YYYYMMDD    '(' argument ')'                    # *OC
+    | TEST-DAY-YYYYDDD      '(' argument ')'                    # *OC
+    | TRIM                  '(' argument [LEADING|TRAILING] ')' # *OC
+    | UPPER-CASE            '(' argument ')'                    # *ANS85
+    | VARIANCE              '(' (argument)+ ')'                 # *ANS85
+    | WHEN-COMPILED                                             # *ANS85
+    | YEAR-TO-YYYY          '(' argument [argument] ')'         # *ANS85
+    | functionName          [ '(' (argument)+ ')' ]
+    )
+end
 
 def identifier =
     ( identifier_format6
@@ -2205,7 +3579,7 @@ def identifier =
 end
 
 def identifier_format1 =
-    FUNCTION functionName ['(' (argument)+ ')'] [referenceModifier]
+    function [referenceModifier]
 end
 
 def identifier_format2 =
@@ -2213,6 +3587,7 @@ def identifier_format2 =
 end
 
 # Cfr. ISO/IEC 1989:20xx FCD 1.0 (E), 8.4.2.1.1
+
 def identifier_format6 =
     ( EXCEPTION-OBJECT
     | NULL
@@ -2248,7 +3623,7 @@ end
 
 def directSubscript =
     # The order is important here ! Cobol words, when they are integer
-    # constants, count as integers. But because Koopa can't verify the type
+    # constants, count as integers. But because Koopa cannot verify the type
     # of a given Cobol word it accepts all Cobol words as integers. So
     # integer would match any Cobol word, making it impossible for other cases
     # to get a chance at matching the input. 
@@ -2270,7 +3645,17 @@ end
 ## Arithmetic expressions. Rewritten Adrian Noguero
 ## -----------------------------------------------------------------------------
 
+# FIXME: A single numeric/identifier is considered an arithmeticExpression by this grammar.
+
 def arithmeticExpression =
+    bitwiseOperand (bitwiseOperator bitwiseOperand)*
+end
+
+def bitwiseOperator =
+    (B-AND | B-OR | B-XOR | B-EXOR)
+end
+
+def bitwiseOperand =
     summand (signDef summand)*
 end
 
@@ -2282,11 +3667,15 @@ def summand =
     factor (('*' | '/') factor)*
 end
 
-def factor =
-    [signDef] atomicExpression ('**' atomicExpression)*
+def unaryOperator =
+    ('+' | '-' | B-NOT)
 end
 
-# TODO Check sources for use of ZERO in this case.
+def factor =
+    [unaryOperator] atomicExpression ('**' [unaryOperator] atomicExpression)*
+end
+
+# TODO: Check sources for use of ZERO in this case.
 def atomicExpression =
     ( zero
     | identifier
@@ -2368,13 +3757,15 @@ def conditionalRelationOP =
 end
 
 def generalRelationOp =
-	[IS] [negationOp]
-	(greaterOrEqualOp
-	|lessOrEqualOp
-	|greaterThanOp
-	|lessThanOp
-	|equalToOp
-	|notEqualToOp)
+	[IS | ARE]
+	( [negationOp] greaterOrEqualOp
+	| [negationOp] lessOrEqualOp
+	| [negationOp] greaterThanOp
+	| [negationOp] lessThanOp
+	| [negationOp] equalToOp
+    | exceedsOp
+    | equalsOp
+	| unequalToOp)
 end
 
 def negationOp =
@@ -2393,8 +3784,18 @@ def equalToOp =
 	(EQUAL [TO] | '=')
 end
 
-def notEqualToOp =
-	('<>')
+def exceedsOp =
+    EXCEEDS
+end
+
+def equalsOp =
+    EQUALS
+end
+
+def unequalToOp =
+	( UNEQUAL [TO]
+    | '<>'
+    )
 end
 
 def greaterOrEqualOp =
@@ -2438,7 +3839,7 @@ end
 
 # Data name on describe.
 def dataDescName =
-	(dataName | FILLER)
+	(dataName | FILLER | CURSOR)
 end
 
 # Section name.
@@ -2479,6 +3880,14 @@ def operand =
 	)
 end
 
+def threadPointer =
+    cobolWord
+end
+
+def eventPointer =
+    cobolWord
+end
+
 def conditionName =
 	identifier
 end 
@@ -2488,6 +3897,62 @@ def indexName =
 end
 
 def className =
+	cobolWord
+end
+
+def typeSpecifier =
+    cobolWord
+end
+
+def parameterName =
+	cobolWord
+end
+
+def interfaceName =
+	cobolWord
+end
+
+def methodName =
+	cobolWord
+end
+
+def propertyName =
+    ( identifier
+    | alphanumeric
+    )
+end
+
+def propertyValue =
+    ( identifier
+    | literal
+    )
+end
+
+def delegateName =
+    cobolWord
+end
+
+def iteratorName =
+    cobolWord
+end
+
+def enumName =
+    cobolWord
+end
+
+def valuetypeName =
+    cobolWord
+end
+
+def typeName = 
+    cobolWord
+end
+
+def attributeName =
+	cobolWord
+end
+
+def typedefName =
 	cobolWord
 end
 
@@ -2524,33 +3989,36 @@ def mnemonicName =
 end
 
 def environmentName =
-	(SYSIN
-	|SYSIPT
-	|SYSOUT
-	|SYSLIST
-	|SYSLST
-	|SYSPUNCH
-	|SYSPCH
-	|CONSOLE
-	|C01
-	|C02
-	|C03
-	|C04
-	|C05
-	|C06
-	|C07
-	|C08
-	|C09
-	|C10
-	|C11
-	|C12
-	|CSP
-	|S01
-	|S02
-	|S03
-	|S04
-	|S05
-	|AFP-5A)
+	( SYSIN
+	| SYSIPT
+	| SYSOUT
+	| SYSLIST
+	| SYSLST
+	| SYSPUNCH
+	| SYSPCH
+	| CONSOLE
+    | CRT
+    | CRT-UNDER
+	| C01
+	| C02
+	| C03
+	| C04
+	| C05
+	| C06
+	| C07
+	| C08
+	| C09
+	| C10
+	| C11
+	| C12
+	| CSP
+	| S01
+	| S02
+	| S03
+	| S04
+	| S05
+	| AFP-5A
+    )
 end
 
 def alphabetName =
@@ -2627,6 +4095,12 @@ end
 def integer =
     ( integerLiteral
     | integerConstant
+    )
+end
+
+def constant =
+    ( integerConstant
+    | alphanumericConstant
     )
 end
 

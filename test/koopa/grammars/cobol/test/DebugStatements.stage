@@ -1,0 +1,23 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target readyTraceStatement;
+
++[ READY TRACE ]
+
+target resetTraceStatement;
+
++[ RESET TRACE ]
+
+target useStatement;
+
++[ USE DEBUGGING "foo" . ]
++[ USE DEBUGGING foo . ]
++[ USE FOR DEBUGGING foo . ]
++[ USE FOR DEBUGGING ON foo . ]
++[ USE DEBUGGING ON foo . ]
++[ USE DEBUGGING ALL PROCEDURES . ]
++[ USE DEBUGGING ALL foo . ]
++[ USE DEBUGGING ALL OF foo . ]
++[ USE DEBUGGING ALL REFERENCES foo . ]
++[ USE DEBUGGING ALL REFERENCES OF foo . ]

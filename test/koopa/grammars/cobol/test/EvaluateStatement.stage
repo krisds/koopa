@@ -86,6 +86,8 @@ target evaluateStatement;
    END-EVALUATE ]
 
 +[ EVALUATE TRUE
+   WHEN PROCESSING > 100
+        DISPLAY "Keep going."
    WHEN PROCESSING < 100
         DISPLAY "Keep going."
    WHEN OTHER

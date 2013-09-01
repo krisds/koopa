@@ -4,13 +4,144 @@ grammar koopa.grammars.cobol.CobolGrammar;
 target identifier_format1;
 
 +[ FUNCTION ACOS ( IND ( 5 ) / 9 ) ]
++[ FUNCTION ASIN ( A / 9 ) ]
++[ FUNCTION ATAN ( A * 0.45 ) ]
++[ FUNCTION COS ( B ) ]
++[ FUNCTION SIN ( 90 ) ]
++[ FUNCTION TAN ( FUNCTION ATAN ( X + Y ) ) ]
+
++[ FUNCTION BOOLEAN-OF-INTEGER ( 10 2 ) ]
++[ FUNCTION DATE-OF-INTEGER ( 365 * Y ) ]
++[ FUNCTION DATE-TO-YYYYMMDD ( 1000000 ) ]
++[ FUNCTION DATE-TO-YYYYMMDD ( 851003 50 ) ]
++[ FUNCTION DATE-TO-YYYYMMDD ( FUNCTION DATE-OF-INTEGER ( 365 * Y ), (-10) ) ]
++[ FUNCTION DAY-OF-INTEGER ( 365 * Y ) ]
++[ FUNCTION DAY-TO-YYYYMMDD ( 1000000 ) ]
++[ FUNCTION DAY-TO-YYYYMMDD ( 1000000 50 ) ]
++[ FUNCTION DAY-TO-YYYYMMDD ( FUNCTION DAY-OF-INTEGER ( 365 * Y ), (-10) ) ]
++[ FUNCTION INTEGER-OF-BOOLEAN ( FUNCTION BOOLEAN-OF-INTEGER ( 10 2 ) ) ]
++[ FUNCTION INTEGER-OF-DATE ( 20130815 ) ]
++[ FUNCTION INTEGER-OF-DAY ( YYYY * 1000 + DDD ) ]
++[ FUNCTION YEAR-TO-YYYY ( 13 ) ]
++[ FUNCTION YEAR-TO-YYYY ( 95 50 ) ]
+
++[ FUNCTION ABS ( 1 ) ]
++[ FUNCTION ABS ( -1 ) ]
 
 +[ FUNCTION ANNUITY ( B / 2  8 ) ]
 
++[ FUNCTION CHAR ( 10 ) ]
++[ FUNCTION CHAR-NATIONAL ( 10 ) ]
+
++[ FUNCTION CURRENT-DATE ]
+
++[ FUNCTION DISPLAY-OF ( n"foo" ) ]         # National
++[ FUNCTION DISPLAY-OF ( n"bar" "?" ) ]     # National and alphanumeric (single char)
++[ FUNCTION DISPLAY-OF ( n"baz" 1208 ) ]    # National and integer (code page)
++[ FUNCTION NATIONAL-OF ( "foo" ) ]         # Alphanumeric
++[ FUNCTION NATIONAL-OF ( "bar" n"?" ) ]    # Alphanumeric and national (single char)
++[ FUNCTION NATIONAL-OF ( "baz" 1208 ) ]    # Alphanumeric and integer (code page)
+
++[ FUNCTION E ]
+
++[ FUNCTION EXP ( P / 2 ) ]
++[ FUNCTION EXP10 ( 9.04 ) ]
+
++[ FUNCTION FACTORIAL ( 5 ) ]
+
++[ FUNCTION FRACTION-PART ( FUNCTION PI ) ]
++[ FUNCTION FRACTION-PART ( 19 / 7 ) ]
++[ FUNCTION FRACTION-PART ( 1.5 ) ]
++[ FUNCTION INTEGER-PART ( FUNCTION PI ) ]
++[ FUNCTION INTEGER-PART ( 19 / 7 ) ]
++[ FUNCTION INTEGER-PART ( 1.5 ) ]
++[ FUNCTION INTEGER ( FUNCTION PI ) ]
++[ FUNCTION INTEGER ( 19 / 7 ) ]
++[ FUNCTION INTEGER ( 1.5 ) ]
+
 +[ FUNCTION LENGTH ( "A" ) ]
++[ FUNCTION LENGTH ( n"AB" ) ]
++[ FUNCTION LENGTH-AN ( "ABC" ) ]
+
++[ FUNCTION LOG ( FUNCTION E ) ]
++[ FUNCTION LOG10 ( 10 ) ]
 
 +[ FUNCTION MAX ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
++[ FUNCTION MAX ( "A" "B" "C" ) ]
++[ FUNCTION MEAN ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
++[ FUNCTION MEDIAN ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
++[ FUNCTION MIDRANGE ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
++[ FUNCTION MIN ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
++[ FUNCTION MIN ( "A" "B" "C" ) ]
++[ FUNCTION RANGE ( A * B  ( C + 1 ) / 2  3 + 4 ) ]
+
++[ FUNCTION MOD ( 11 5 ) ]
++[ FUNCTION MOD ( -11 5 ) ]
++[ FUNCTION MOD ( 11 -5 ) ]
++[ FUNCTION MOD ( -11 -5 ) ]
+
++[ FUNCTION NUMVAL ( foo ) ]
++[ FUNCTION NUMVAL ( "  2  " ) ]
++[ FUNCTION NUMVAL ( "-2.5" ) ]
++[ FUNCTION NUMVAL ( n"3.14" ) ]
++[ FUNCTION NUMVAL ( "3,14" ) ]
+
++[ FUNCTION NUMVAL-C ( foo ) ]
++[ FUNCTION NUMVAL-C ( "  2  " ) ]
++[ FUNCTION NUMVAL-C ( "-2.5" "$" ) ]
++[ FUNCTION NUMVAL-C ( n"3,14" ) ]
++[ FUNCTION NUMVAL-C ( "3.14" "£" ) ]
+
++[ FUNCTION ORD ( char ) ]
++[ FUNCTION ORD ( "A" ) ]
++[ FUNCTION ORD ( n"A" ) ]
+
++[ FUNCTION ORD-MAX ( char-1 char-2 char-3 ) ]
++[ FUNCTION ORD-MAX ( "A" "B" "C" ) ]
++[ FUNCTION ORD-MAX ( n"A" n"B" n"C" ) ]
+
++[ FUNCTION ORD-MIN ( char-1 char-2 char-3 ) ]
++[ FUNCTION ORD-MIN ( "A" "B" "C" ) ]
++[ FUNCTION ORD-MIN ( n"A" n"B" n"C" ) ]
+
++[ FUNCTION PI ]
+
++[ FUNCTION PRESENT-VALUE ( 5 100 ) ]
++[ FUNCTION PRESENT-VALUE ( 5 100 200 ) ]
++[ FUNCTION PRESENT-VALUE ( 5 100 200 300 ) ]
++[ FUNCTION PRESENT-VALUE ( 5 100 200 300 foo ) ]
 
 +[ FUNCTION RANDOM ]
++[ FUNCTION RANDOM ( seed ) ]
+
++[ FUNCTION REM ( 11 5 ) ]
++[ FUNCTION REM ( -11 5 ) ]
++[ FUNCTION REM ( 11 -5 ) ]
++[ FUNCTION REM ( -11 -5 ) ]
+
++[ FUNCTION REVERSE ( "oof" ) ]
++[ FUNCTION REVERSE ( n"rab" ) ]
+
++[ FUNCTION SIGN ( -5 ) ]
++[ FUNCTION SIGN ( 0 ) ]
++[ FUNCTION SIGN ( 5 ) ]
+
++[ FUNCTION SQRT ( 2 ) ]
++[ FUNCTION SQRT ( 2 * FUNCTION PI ) ]
+
++[ FUNCTION STANDARD-DEVIATION ( 5.4 -2.1 -14.7 0.2 ) ]
++[ FUNCTION VARIANCE ( 5.4 -2.1 -14.7 0.2 ) ]
 
 +[ FUNCTION SUM ( 5 -2 -14 0 ) ]
+
++[ FUNCTION LOWER-CASE ( "FOO" ) ]
++[ FUNCTION LOWER-CASE ( n"FOO" ) ]
++[ FUNCTION UPPER-CASE ( "bar" ) ]
++[ FUNCTION UPPER-CASE ( n"bar" ) ]
+
++[ FUNCTION WHEN-COMPILED ]
+
++[ FUNCTION foo ]
+-[ FUNCTION foo () ]
++[ FUNCTION foo ( bar ) ]
++[ FUNCTION foo ( bar baz ) ]

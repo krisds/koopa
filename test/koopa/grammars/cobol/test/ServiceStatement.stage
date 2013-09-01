@@ -1,0 +1,9 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target serviceStatement;
+
+-[ SERVICE ]
++[ SERVICE LABEL ]
+-[ SERVICE RELOAD ]
++[ SERVICE RELOAD foo ]

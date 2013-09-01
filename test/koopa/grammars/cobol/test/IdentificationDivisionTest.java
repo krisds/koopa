@@ -551,4 +551,535 @@ public class IdentificationDivisionTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testIdentificationDivision_61() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_62() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CLASS-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_63() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo  AS \"bar\" . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_64() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo INHERITS FROM bar . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_65() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo INHERITS FROM bar baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_66() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo INHERITS FROM bar IS STATIC FINAL PUBLIC . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_67() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo PUBLIC IMPLEMENTS bar baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_68() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo PUBLIC\n   ATTRIBUTE bar (b1 NAME b2 = v2 NAME b3 = v3 b4)\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_69() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo PUBLIC\n   ATTRIBUTE bar ()\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_70() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo PUBLIC\n   ATTRIBUTE bar (b1)\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_71() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo PUBLIC\n   ATTRIBUTE bar (b1 b2)\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_72() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo PUBLIC\n   ATTRIBUTE bar (b1 b2)\n   ATTRIBUTE baz (b3)\n   IMPLEMENTS boojum . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_73() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo\n   ATTRIBUTE bar (NAME snark = \"boojum\")\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_74() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   CLASS-ID . foo\n   CUSTOM-ATTRIBUTE IS bar (snark = \"boojum\")\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_75() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_76() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " METHOD-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_77() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . foo  AS \"bar\" . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_78() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . GET PROPERTY foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_79() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . SET PROPERTY foo SYNC . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_80() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . foo IS STATIC PUBLIC . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_81() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . foo ABSTRACT FOR bar . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_82() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " IDENTIFICATION DIVISION .\n   METHOD-ID . foo PUBLIC USING bar . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_83() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FACTORY . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_84() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FACTORY . IMPLEMENTS foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_85() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FACTORY . IMPLEMENTS foo bar . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_86() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " STATIC . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_87() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " STATIC . IMPLEMENTS foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_88() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " INTERFACE-ID . foo INTERNAL INHERITS FROM bar USING baz ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_89() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FUNCTION-ID . foo ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_90() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FUNCTION-ID . foo AS \"bar\" PROTOTYPE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_91() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FUNCTION-ID . foo PROTOTYPE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_92() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " FUNCTION-ID . foo IS PROTOTYPE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_93() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DELEGATE-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_94() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DELEGATE-ID . foo IS PROTECTED . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_95() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENUM-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_96() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENUM-ID . foo IS PUBLIC . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_97() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENUM-ID . foo IS PRIVATE . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_98() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENUM-ID . foo IS PROTECTED . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_99() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ENUM-ID . foo IS INTERNAL . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_100() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ITERATOR-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_101() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ITERATOR-ID . foo AS \"baz\" . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_102() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ITERATOR-ID . foo AS \"baz\" PUBLIC . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_103() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . = . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_104() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . = EXTENSION . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_105() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . <> . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_106() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . + . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_107() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . - . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_108() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . * . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_109() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . / . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_110() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . B-AND . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_111() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . B-XOR . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_112() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . B-NOT . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_113() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . IMPLICIT . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_114() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " OPERATOR-ID . EXPLICIT . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_115() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUETYPE-ID . foo . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_116() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUETYPE-ID . foo PARTIAL . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_117() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUETYPE-ID . foo IMPLEMENTS bar . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_118() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUETYPE-ID . foo\n   ATTRIBUTE bar (b1 b2)\n   IMPLEMENTS baz . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentificationDivision_119() {
+      Parser parser = grammar.identificationDivision();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " VALUETYPE-ID . foo\n   ATTRIBUTE bar (b1 b2)\n   ATTRIBUTE baz ()\n   IMPLEMENTS boojum . ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

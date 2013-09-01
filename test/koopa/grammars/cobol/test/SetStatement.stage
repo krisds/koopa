@@ -1,0 +1,60 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target setStatement;
+
++[ SET foo TO 1 ]
++[ SET foo TO bar ]
++[ SET foo bar TO baz ]
+
++[ SET foo TO ON ]
++[ SET foo bar TO ON ]
++[ SET foo TO OFF ]
++[ SET foo bar TO OFF ]
+
++[ SET foo TO TRUE ]
++[ SET foo bar TO TRUE ]
++[ SET foo TO FALSE ]
++[ SET foo bar TO FALSE ]
+
++[ SET foo ADDRESS OF bar TO baz ]
++[ SET foo TO ADDRESS bar ]
++[ SET foo TO NULL ]
++[ SET foo TO NULLS ]
++[ SET foo bar TO NULL ]
++[ SET foo bar TO NULLS ]
+
++[ SET ADDRESS foo TO bar ]
++[ SET ADDRESS foo TO ADDRESS bar ]
++[ SET ADDRESS foo TO NULL ]
++[ SET ADDRESS foo TO NULLS ]
+
++[ SET ADDRESS OF foo TO bar ]
++[ SET ADDRESS OF foo TO ADDRESS OF bar ]
++[ SET ADDRESS OF foo TO NULL ]
++[ SET ADDRESS OF foo TO NULLS ]
+
++[ SET foo TO ENTRY bar ]
++[ SET foo TO ENTRY "bar" ]
++[ SET foo TO ENTRY 10 ]
+
++[ SET foo TO BROWSING ]
++[ SET foo TO READING ]
++[ SET foo TO WRITING ]
++[ SET foo TO NOT BROWSING ]
++[ SET foo TO NOT READING ]
++[ SET foo TO NOT WRITING ]
+-[ SET foo TO BROWSING CONVERTING ]
+-[ SET foo TO READING CONVERTING FROM ]
+-[ SET foo TO WRITING BROWSING ]
++[ SET foo TO BROWSING CONVERTING FROM WRITING ]
++[ SET foo TO READING CONVERTING FROM WRITING ]
++[ SET foo TO WRITING CONVERTING FROM BROWSING ]
++[ SET foo TO NOT BROWSING CONVERTING FROM WRITING ]
++[ SET foo TO NOT READING CONVERTING FROM BROWSING ]
++[ SET foo TO NOT WRITING CONVERTING FROM WRITING ]
+
++[ SET foo TO UP BY 1 ]
++[ SET foo TO DOWN BY 1 ]
++[ SET foo TO UP BY bar ]
++[ SET foo bar TO DOWN BY baz ]

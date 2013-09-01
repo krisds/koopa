@@ -181,3 +181,155 @@ target identificationDivision;
 
 +[ IDENTIFICATION DIVISION . 
    PROGRAM-ID . TEST-17 COMMON INITIAL PROGRAM ]
+
+# CLASS-ID
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo . ]
+
++[ CLASS-ID . foo . ]
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo  AS "bar" . ]
+   
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo INHERITS FROM bar . ]
+   
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo INHERITS FROM bar baz . ]
+   
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo INHERITS FROM bar IS STATIC FINAL PUBLIC . ]
+   
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo PUBLIC IMPLEMENTS bar baz . ]
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo PUBLIC
+   ATTRIBUTE bar (b1 NAME b2 = v2 NAME b3 = v3 b4)
+   IMPLEMENTS baz . ]
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo PUBLIC
+   ATTRIBUTE bar ()
+   IMPLEMENTS baz . ]
+   
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo PUBLIC
+   ATTRIBUTE bar (b1)
+   IMPLEMENTS baz . ]
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo PUBLIC
+   ATTRIBUTE bar (b1 b2)
+   IMPLEMENTS baz . ]
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo PUBLIC
+   ATTRIBUTE bar (b1 b2)
+   ATTRIBUTE baz (b3)
+   IMPLEMENTS boojum . ]
+
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo
+   ATTRIBUTE bar (NAME snark = "boojum")
+   IMPLEMENTS baz . ]
+   
++[ IDENTIFICATION DIVISION .
+   CLASS-ID . foo
+   CUSTOM-ATTRIBUTE IS bar (snark = "boojum")
+   IMPLEMENTS baz . ]
+   
+# METHOD-ID
+
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . foo . ]
+
++[ METHOD-ID . foo . ]
+
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . foo  AS "bar" . ]
+   
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . GET PROPERTY foo . ]
+
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . SET PROPERTY foo SYNC . ]
+   
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . foo IS STATIC PUBLIC . ]
+   
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . foo ABSTRACT FOR bar . ]
+   
++[ IDENTIFICATION DIVISION .
+   METHOD-ID . foo PUBLIC USING bar . ]
+
+# FACTORY and STATIC
+
++[ FACTORY . ]
++[ FACTORY . IMPLEMENTS foo . ]
++[ FACTORY . IMPLEMENTS foo bar . ]
+
++[ STATIC . ]
++[ STATIC . IMPLEMENTS foo . ]
+
+# INTERFACE-ID
+
++[ INTERFACE-ID . foo INTERNAL INHERITS FROM bar USING baz ]
+
+# FUNCTION-ID
+
++[ FUNCTION-ID . foo ]
++[ FUNCTION-ID . foo AS "bar" PROTOTYPE ]
++[ FUNCTION-ID . foo PROTOTYPE ]
++[ FUNCTION-ID . foo IS PROTOTYPE ]
+
+# DELEGATE-ID
+
++[ DELEGATE-ID . foo . ]
++[ DELEGATE-ID . foo IS PROTECTED . ]
+
+# ENUM-ID
+
++[ ENUM-ID . foo . ]
++[ ENUM-ID . foo IS PUBLIC . ]
++[ ENUM-ID . foo IS PRIVATE . ]
++[ ENUM-ID . foo IS PROTECTED . ]
++[ ENUM-ID . foo IS INTERNAL . ]
+
+# ITERATOR-ID
+
++[ ITERATOR-ID . foo . ]
++[ ITERATOR-ID . foo AS "baz" . ]
++[ ITERATOR-ID . foo AS "baz" PUBLIC . ]
+
+# OPERATOR-ID
+
++[ OPERATOR-ID . = . ]
++[ OPERATOR-ID . = EXTENSION . ]
++[ OPERATOR-ID . <> . ]
++[ OPERATOR-ID . + . ]
++[ OPERATOR-ID . - . ]
++[ OPERATOR-ID . * . ]
++[ OPERATOR-ID . / . ]
++[ OPERATOR-ID . B-AND . ]
++[ OPERATOR-ID . B-XOR . ]
++[ OPERATOR-ID . B-NOT . ]
++[ OPERATOR-ID . IMPLICIT . ]
++[ OPERATOR-ID . EXPLICIT . ]
+
+# VALUETYPE-ID
+
++[ VALUETYPE-ID . foo . ]
++[ VALUETYPE-ID . foo PARTIAL . ]
++[ VALUETYPE-ID . foo IMPLEMENTS bar . ]
+
++[ VALUETYPE-ID . foo
+   ATTRIBUTE bar (b1 b2)
+   IMPLEMENTS baz . ]
+
++[ VALUETYPE-ID . foo
+   ATTRIBUTE bar (b1 b2)
+   ATTRIBUTE baz ()
+   IMPLEMENTS boojum . ]

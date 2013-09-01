@@ -8,3 +8,20 @@ target stopStatement;
 +[ STOP 42 ]
 
 # TODO The literal can't be anything other than an unsigned integer+
+
++[ STOP RUN GIVING foo ]
++[ STOP RUN RETURNING foo ]
+
++[ STOP RUN GIVING ADDRESS OF foo ]
++[ STOP RUN RETURNING ADDRESS OF foo ]
+
++[ STOP RUN GIVING 100 ]
++[ STOP RUN RETURNING 100 ]
+
++[ STOP RUN GIVING 100 SIZE 200 ]
++[ STOP RUN RETURNING 100 SIZE 200 ]
+
++[ STOP RUN GIVING 100 SIZE IS 200 ]
++[ STOP RUN RETURNING 100 SIZE IS 200 ]
+
++[ STOP ITERATOR ]

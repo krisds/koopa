@@ -1,0 +1,73 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target xmlGenerateStatement;
+
++[ XML GENERATE foo FROM bar ]
+
++[ XML GENERATE foo FROM bar END-XML ]
+
++[ XML GENERATE foo FROM bar
+     COUNT baz
+   END-XML ]
+
++[ XML GENERATE foo FROM bar
+     COUNT IN baz
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     ON EXCEPTION PERFORM p1
+   END-XML ]
+
++[ XML GENERATE foo FROM bar
+     ON EXCEPTION PERFORM p1
+     NOT ON EXCEPTION PERFORM p2
+   END-XML ]
+
++[ XML GENERATE foo FROM bar
+     NOT ON EXCEPTION PERFORM p2
+   END-XML ]
+
++[ XML GENERATE foo FROM bar
+     COUNT IN baz
+     ON EXCEPTION PERFORM p1
+     NOT ON EXCEPTION PERFORM p2
+   END-XML ]
+
+target xmlParseStatement;
+
++[ XML PARSE foo ]
+
++[ XML PARSE foo END-XML ]
+
++[ XML PARSE foo
+     PROCESSING PROCEDURE IS bar
+   END-XML ]
+
++[ XML PARSE foo
+     PROCESSING PROCEDURE IS bar THROUGH baz
+   END-XML ]
+
++[ XML PARSE foo
+     PROCESSING PROCEDURE IS bar THRU baz
+   END-XML ]
+   
++[ XML PARSE foo
+     ON EXCEPTION PERFORM p1
+   END-XML ]
+
++[ XML PARSE foo
+     ON EXCEPTION PERFORM p1
+     NOT ON EXCEPTION PERFORM p2
+   END-XML ]
+
++[ XML PARSE foo
+     NOT ON EXCEPTION PERFORM p2
+   END-XML ]
+
++[ XML PARSE foo
+     PROCESSING PROCEDURE IS bar THROUGH baz
+     ON EXCEPTION PERFORM p1
+     NOT ON EXCEPTION PERFORM p2
+   END-XML ]
+   

@@ -74,13 +74,27 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 					// This is only an indicator if it gets followed by a space.
 					// Otherwise it's program text.
 					if (text.charAt(1) == ' ') {
-						enqueue(tokenizeArea(token, 0, 1,
-								AreaTag.INDICATOR_AREA));
-						enqueue(tokenizeArea(token, 1, length, AreaTag.COMMENT));
+						final Token indicator = tokenizeArea(token, 0, 1,
+								AreaTag.INDICATOR_AREA);
+
+						if (LOGGER.isTraceEnabled())
+							LOGGER.trace("Indicator: " + indicator);
+						
+						enqueue(indicator);
+
+						final Token comment = tokenizeArea(token, 1, length,
+								AreaTag.COMMENT);
+						
+						if (LOGGER.isTraceEnabled())
+							LOGGER.trace("Comment: " + comment);
+						
+						enqueue(comment);
 
 					} else {
 						// Program text.
 						token.addTag(AreaTag.PROGRAM_TEXT_AREA);
+						if (LOGGER.isTraceEnabled())
+							LOGGER.trace("Program text: " + token);
 						enqueue(token);
 					}
 
@@ -89,12 +103,29 @@ public class ProgramAreaTokenizer extends ThreadedTokenizerBase implements
 					//
 					// Note: Keep this after the debug line check, as the
 					// indicatesComment method accepts 'd' and 'D' as well.
-					enqueue(tokenizeArea(token, 0, 1, AreaTag.INDICATOR_AREA));
-					enqueue(tokenizeArea(token, 1, length, AreaTag.COMMENT));
+					final Token indicator = tokenizeArea(token, 0, 1,
+							AreaTag.INDICATOR_AREA);
+
+					if (LOGGER.isTraceEnabled())
+						LOGGER.trace("Indicator: " + indicator);
+					
+					enqueue(indicator);
+
+					final Token comment = tokenizeArea(token, 1, length,
+							AreaTag.COMMENT);
+					
+					if (LOGGER.isTraceEnabled())
+						LOGGER.trace("Comment: " + comment);
+					
+					enqueue(comment);
 
 				} else {
 					// Program text.
 					token.addTag(AreaTag.PROGRAM_TEXT_AREA);
+					
+					if (LOGGER.isTraceEnabled())
+						LOGGER.trace("Program text: " + token);
+					
 					enqueue(token);
 				}
 

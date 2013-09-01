@@ -1,0 +1,19 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target identifiedByStatement;
+
++[ IDENTIFIED foo ]
++[ IDENTIFIED "foo" ]
++[ IDENTIFIED BY foo ]
++[ IDENTIFIED BY "foo" ]
+
++[ IDENTIFIED foo ATTRIBUTE ]
++[ IDENTIFIED "foo" ATTRIBUTE ]
++[ IDENTIFIED BY foo ATTRIBUTE ]
++[ IDENTIFIED BY "foo" ATTRIBUTE ]
+
++[ IDENTIFIED foo IS ATTRIBUTE ]
++[ IDENTIFIED "foo" IS ATTRIBUTE ]
++[ IDENTIFIED BY foo IS ATTRIBUTE ]
++[ IDENTIFIED BY "foo" IS ATTRIBUTE ]

@@ -1,0 +1,26 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target replaceStatement;
+
++[ REPLACE OFF ]
+
++[ REPLACE          ==foo bar== BY ==baz== ]
++[ REPLACE          ==foo bar== BY ==== ]
+
++[ REPLACE          ==foo bar== BY ==baz==
+                    ==foo bar== BY ==== ]
+
++[ REPLACE LEADING  ==foo==     BY ==bar== ]
++[ REPLACE LEADING  ==foo==     BY ==== ]
+
++[ REPLACE TRAILING ==foo==     BY ==bar== ]
++[ REPLACE TRAILING ==foo==     BY ==== ]
+
+# TODO: Partial-word-1 must consist of one text-word.
+# -[ REPLACE LEADING  ==foo bar== BY ==== ]
+# -[ REPLACE TRAILING ==foo bar== BY ==== ]
+
+# TODO: Partial-word-2 must consist of zero or one text-word.
+# -[ REPLACE LEADING  ==foo==     BY ==bar baz== ]
+# -[ REPLACE TRAILING ==foo==     BY ==bar baz== ]

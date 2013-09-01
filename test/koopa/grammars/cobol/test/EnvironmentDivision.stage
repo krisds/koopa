@@ -14,3 +14,20 @@ target environmentDivision;
    CONFIGURATION SECTION .
    SPECIAL-NAMES . 
    DECIMAL-POINT COMMA . ]
+
++[ CONFIGURATION SECTION .
+   SPECIAL-NAMES . 
+   DECIMAL-POINT COMMA . ]
+   
++[ SPECIAL-NAMES . ]
+
+target objectSection;
+
++[ OBJECT SECTION .
+     CLASS-CONTROL .
+       olesup is class "olesup"
+       wordapp is class "$OLE$word.application" ]
+
++[ CLASS-CONTROL .
+     olesup is class "olesup"
+     wordapp is class "$OLE$word.application" ]

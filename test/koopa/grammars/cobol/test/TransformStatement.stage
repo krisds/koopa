@@ -1,0 +1,15 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target transformStatement;
+
++[ TRANSFORM foo FROM bar TO baz ]
++[ TRANSFORM foo CHARACTERS FROM bar TO baz ]
++[ TRANSFORM foo FROM "bar" TO baz ]
++[ TRANSFORM foo FROM bar TO "baz" ]
++[ TRANSFORM foo FROM "bar" TO "baz" ]
+
+# Non-numeric literals only:
+
+-[ TRANSFORM foo FROM bar TO 100 ]
+-[ TRANSFORM foo FROM 100 TO baz ]

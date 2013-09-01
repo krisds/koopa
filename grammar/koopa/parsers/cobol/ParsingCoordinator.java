@@ -52,6 +52,8 @@ public class ParsingCoordinator {
 		
 		fireBeforeParsing(file, parser);
 
+		
+		parser.setBuildTrees(true);
 		ParseResults results = parser.parse(file);
 
 		fireAfterParsing(file, results);

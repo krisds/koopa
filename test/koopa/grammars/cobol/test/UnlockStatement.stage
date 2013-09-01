@@ -1,0 +1,8 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target unlockStatement;
+
++[ UNLOCK foo ]
++[ UNLOCK foo RECORD ]
++[ UNLOCK foo RECORDS ]

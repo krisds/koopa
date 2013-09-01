@@ -348,7 +348,7 @@ public class EvaluateStatementTest extends TestCase {
     public void testEvaluateStatement_38() {
       Parser parser = grammar.evaluateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EVALUATE TRUE\n   WHEN PROCESSING < 100\n        DISPLAY \"Keep going.\"\n   WHEN OTHER\n        DISPLAY \"Done.\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " EVALUATE TRUE\n   WHEN PROCESSING > 100\n        DISPLAY \"Keep going.\"\n   WHEN PROCESSING < 100\n        DISPLAY \"Keep going.\"\n   WHEN OTHER\n        DISPLAY \"Done.\" ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

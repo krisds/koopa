@@ -1,0 +1,100 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target mergeStatement;
+
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 DESCENDING data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ON ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 ON DESCENDING data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 ASCENDING KEY data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 ON ASCENDING KEY data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ASCENDING KEY IS data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 ON ASCENDING IS data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3 file-name-4
+     GIVING file-name-5 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     SEQUENCE alphabet-name
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     SEQUENCE IS alphabet-name
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     COLLATING SEQUENCE alphabet-name
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     COLLATING SEQUENCE IS alphabet-name
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     COLLATING SEQUENCE IS alphabet-name
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE procedure-name-1 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE IS procedure-name-1 ]
+
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE procedure-name-1 THROUGH procedure-name-2 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE IS procedure-name-1 THROUGH procedure-name-2 ]
+
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE procedure-name-1 THRU procedure-name-2 ]
+     
++[ MERGE file-name-1 ASCENDING data-name-1
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE IS procedure-name-1 THRU procedure-name-2 ]
+     
++[ MERGE file-name-1
+     DESCENDING KEY IS data-name-1
+     ASCENDING KEY IS data-name-2
+     COLLATING SEQUENCE IS alphabet-name
+     USING file-name-2 file-name-3
+     OUTPUT PROCEDURE procedure-name-1 THROUGH procedure-name-2 ]

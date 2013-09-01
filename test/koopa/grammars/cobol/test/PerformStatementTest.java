@@ -361,4 +361,49 @@ public class PerformStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testPerformStatement_40() {
+      Parser parser = grammar.performStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM WITH TEST AFTER\n     UNTIL char NOT = \"Y\" AND char NOT = \"y\"\n     CALL clear-screen\n   END-PERFORM ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testPerformStatement_41() {
+      Parser parser = grammar.performStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM WITH TEST AFTER\n     UNTIL char NOT = \"Y\" AND char NOT = \"y\"\n     PERFORM init\n   END-PERFORM ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testPerformStatement_42() {
+      Parser parser = grammar.performStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM foo WITH TEST AFTER UNTIL EXIT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testPerformStatement_43() {
+      Parser parser = grammar.performStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM foo THROUGH bar WITH TEST AFTER UNTIL EXIT ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testPerformStatement_44() {
+      Parser parser = grammar.performStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " PERFORM VARYING foo THROUGH bar\n     DISPLAY 1\n     DISPLAY 2\n     DISPLAY 3\n   END-PERFORM ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

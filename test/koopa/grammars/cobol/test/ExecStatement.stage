@@ -6,9 +6,28 @@ target execStatement;
 -[ EXEC ]
 -[ EXEC END-EXEC ]
 -[ EXEC SQL ]
+-[ EXEC DLI ]
+-[ EXEC HTML ]
+-[ EXEC foo ]
 
-+[ EXEC SQL END-EXEC ]
-+[ EXEC CICS END-EXEC ]
+-[ EXECUTE ]
+-[ EXECUTE END-EXEC ]
+-[ EXECUTE SQL ]
+-[ EXECUTE DLI ]
+-[ EXECUTE HTML ]
+-[ EXECUTE foo ]
+
++[ EXEC SQL  END-EXEC ]         # SQL
++[ EXEC CICS END-EXEC ]         # CICS
++[ EXEC DLI  END-EXEC ]         # DLI
++[ EXEC HTML END-EXEC ]         # HTML
++[ EXEC foo  END-EXEC ]         # text-data
+
++[ EXECUTE SQL  END-EXEC ]
++[ EXECUTE CICS END-EXEC ]
++[ EXECUTE DLI  END-EXEC ]
++[ EXECUTE HTML END-EXEC ]
++[ EXECUTE foo  END-EXEC ]
 
 target execSQLStatement;
 
@@ -32,3 +51,20 @@ target execCICSStatement;
 +[ EXEC CICS XCTL PROGRAM('PROG1') COMMAREA(W-DATA) END-EXEC ]
 +[ EXEC CICS LINK PROGRAM(W-PGM) SYSID('CICS') END-EXEC ]
 -[ EXEC CICS READ DATA (WHATEVER) RID(W-KEY-WHATEVER) END-EXEC ]
+
+target execDLIStatement;
+
++[ EXEC DLI END-EXEC ]
++[ EXECUTE DLI END-EXEC ]
+
+target execHTMLStatement;
+
++[ EXEC HTML END-EXEC ]
++[ EXECUTE HTML END-EXEC ]
++[ EXEC HTML <h1>Hello, :name!</h1> END-EXEC ]
++[ EXECUTE HTML <h1>Hello, :name!</h1> END-EXEC ]
+
+target execTextDataStatement;
+
++[ EXEC foo END-EXEC ]
++[ EXECUTE foo END-EXEC ]

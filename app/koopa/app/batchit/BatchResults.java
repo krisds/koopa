@@ -2,16 +2,19 @@ package koopa.app.batchit;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import koopa.app.ApplicationSupport;
 import koopa.parsers.Metrics;
 import koopa.parsers.ParseResults;
+import koopa.trees.antlr.jaxen.Jaxen;
+import koopa.trees.antlr.jaxen.XPathException;
 
 @SuppressWarnings("serial")
 public class BatchResults extends AbstractTableModel {
-
 	public static final int STATUS_COLUMN = 0;
 	public static final int ERRORS_COLUMN = 1;
 	public static final int WARNINGS_COLUMN = 2;
@@ -19,18 +22,34 @@ public class BatchResults extends AbstractTableModel {
 	public static final int COVERAGE_COLUMN = 4;
 	public static final int FILE_COLUMN = 5;
 	public static final int PATH_COLUMN = 6;
+	public static final int CUSTOM_COLUMN = 7;
+	
+	private static List<String> customKeys;
 
 	private List<File> files = new ArrayList<File>();
 	private List<ParseResults> parseResults = new ArrayList<ParseResults>();
 	private List<Integer> tokenCount = new ArrayList<Integer>();
 	private List<Float> coverage = new ArrayList<Float>();
+	private HashMap<String, ArrayList<Object>> custom = new HashMap<String, ArrayList<Object>>();
 
 	public enum Status {
 		OK, WARNING, ERROR
 	}
 
-	public int getColumnCount() {
-		return 7;
+	public BatchResults () {
+		super();
+		
+		customKeys = ApplicationSupport.getCustomColumnKeys();
+		
+		// Create value lists:
+		for (String key : customKeys) {
+			this.custom.put(key, new ArrayList<Object>());
+		}
+	}
+	
+	public int getColumnCount()
+	{
+		return 7 + customKeys.size();
 	}
 
 	public String getColumnName(int columnIndex) {
@@ -57,7 +76,15 @@ public class BatchResults extends AbstractTableModel {
 			return "Tokens";
 
 		default:
-			return "????";
+			// Return titles for custom columns:
+			int customColumnIndex = columnIndex - CUSTOM_COLUMN;
+
+			if (customColumnIndex < customKeys.size()) {
+				String key = customKeys.get(customColumnIndex);
+				return ApplicationSupport.getCustomColumnProperty(key, "title");
+			}
+			
+			return "<Unknown>";
 		}
 	}
 
@@ -97,22 +124,72 @@ public class BatchResults extends AbstractTableModel {
 
 		case TOKEN_COUNT_COLUMN:
 			return this.tokenCount.get(rowIndex);
-
+			
 		default:
-			return true;
+			// Get values from each custom report column key:
+			
+			int customColumnIndex = columnIndex - CUSTOM_COLUMN;
+
+			if (customColumnIndex < customKeys.size()) {
+				String key = customKeys.get(customColumnIndex);
+				if (rowIndex < this.custom.get(key).size()) {
+					return this.custom.get(key).get(rowIndex);
+				}
+			}
+			
+			return false;
+		}
+	}
+	
+	private void add (ParseResults results, String customColumnKey, int index) {
+		
+		String customXPathQuery = ApplicationSupport.getCustomColumnProperty(customColumnKey, "xpath", null);
+		
+		Object value = null;
+		
+		if (customXPathQuery != null) {
+			try {
+				List<?> matches = Jaxen.evaluate(results.getTree(), customXPathQuery);
+				
+				if (matches != null) {
+					if (matches.size() > 1) {
+						value = matches.toString();
+					} else if (matches.size() == 1) {					
+						value = matches.get(0).toString();
+					}
+				}
+			}
+			catch (NullPointerException e) {
+				// Ignore
+			}
+			catch (XPathException e) {
+				value = e.getMessage();
+			}
+		}
+		
+		if (index >= 0) {
+			this.custom.get(customColumnKey).set(index, value);
+			
+		} else {
+			this.custom.get(customColumnKey).add(value);
 		}
 	}
 
 	public void add(ParseResults results) {
 		final File file = results.getFile();
-
+		
 		int index = this.files.indexOf(file);
-
+		
 		if (index >= 0) {
 			this.parseResults.set(index, results);
 			this.coverage.set(index, Metrics.getCoverage(results));
 			this.tokenCount.set(index, Metrics
 					.getSignificantTokenCount(results));
+			
+			for (String key : customKeys) {
+				this.add(results, key, index);
+			}
+			
 			fireTableRowsUpdated(index, index);
 
 		} else {
@@ -122,6 +199,10 @@ public class BatchResults extends AbstractTableModel {
 			this.coverage.add(Metrics.getCoverage(results));
 			this.tokenCount.add(Metrics.getSignificantTokenCount(results));
 
+			for (String key : customKeys) {
+				this.add(results, key, index);
+			}
+			
 			index = files.size() - 1;
 			fireTableRowsInserted(index, index);
 		}
@@ -142,6 +223,11 @@ public class BatchResults extends AbstractTableModel {
 		this.parseResults.clear();
 		this.tokenCount.clear();
 		this.coverage.clear();
+		
+		// Clear custom column values:
+		for (String key : customKeys) {
+			this.custom.get(key).clear();
+		}
 
 		fireTableDataChanged();
 	}

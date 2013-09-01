@@ -1,0 +1,44 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target waitStatement;
+
++[ WAIT foo ]
++[ WAIT FOR foo ]
+
++[ WAIT foo END-WAIT ]
++[ WAIT FOR foo END-WAIT ]
+
++[ WAIT FOR foo
+     RETURNING bar ]
+
++[ WAIT FOR foo
+     RETURNING INTO bar ]
+     
++[ WAIT FOR foo
+     STATUS bar ]
+     
++[ WAIT FOR foo
+     STATUS IS bar ]
+     
++[ WAIT FOR foo
+     EXCEPTION DISPLAY bar ]
+     
++[ WAIT FOR foo
+     ON EXCEPTION DISPLAY bar ]
+     
++[ WAIT FOR foo
+     NOT EXCEPTION DISPLAY bar ]
+     
++[ WAIT FOR foo
+     NOT ON EXCEPTION DISPLAY bar ]
+     
++[ WAIT FOR foo
+     NOT ON EXCEPTION DISPLAY bar ]
+     
++[ WAIT FOR foo
+     RETURNING INTO bar
+     STATUS IS baz
+     ON EXCEPTION DISPLAY "ERROR"
+     NOT ON EXCEPTION DISPLAY "OK"
+     END-WAIT ]

@@ -1,0 +1,120 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target invokeStatement;
+
++[ INVOKE foo bar ]
+
+-[ INVOKE foo AS bar ]
+
++[ INVOKE foo AS OBJECT bar ]
++[ INVOKE foo AS OBJECT "bar" ]
+
++[ INVOKE foo AS baz bar ]
++[ INVOKE foo AS baz "bar" ]
+
++[ INVOKE foo bar
+     USING baz ]
+   
++[ INVOKE foo bar
+     USING REFERENCE baz ]
+
++[ INVOKE foo bar
+     USING BY REFERENCE baz ]
+     
++[ INVOKE foo bar
+     USING BY REFERENCE OMITTED ]
+     
++[ INVOKE foo bar
+     USING BY REFERENCE ADDRESS OF baz ]
+
++[ INVOKE foo bar USING
+     BY REFERENCE baz
+     BY REFERENCE ADDRESS OF baz
+     BY REFERENCE OMITTED ]
+     
++[ INVOKE foo bar
+     USING CONTENT baz ]
+     
++[ INVOKE foo bar
+     USING BY CONTENT baz ]
+     
++[ INVOKE foo bar
+     USING BY CONTENT "baz" ]
+     
++[ INVOKE foo bar
+     USING BY CONTENT baz + 1 ]
+
++[ INVOKE foo bar
+     USING BY CONTENT LENGTH OF baz ]
+
++[ INVOKE foo bar USING
+     BY CONTENT baz
+     BY CONTENT "baz"
+     BY CONTENT baz + 1
+     BY CONTENT LENGTH OF baz ]
+     
++[ INVOKE foo bar
+     USING VALUE baz ]
+     
++[ INVOKE foo bar
+     USING BY VALUE baz ]
+     
++[ INVOKE foo bar
+     USING BY VALUE 100 ]
+
++[ INVOKE foo bar
+     USING BY VALUE 100 SIZE 200 ]
+
++[ INVOKE foo bar
+     USING BY VALUE 100 SIZE IS 200 ]
+
++[ INVOKE foo bar
+     USING BY VALUE baz + 1 ]
+
++[ INVOKE foo bar
+     USING BY VALUE LENGTH OF baz ]
+
++[ INVOKE foo bar USING
+     BY VALUE baz
+     BY VALUE 100
+     BY VALUE 100 SIZE 200
+     BY VALUE baz + 1
+     BY VALUE LENGTH OF baz ]
+     
++[ INVOKE foo bar
+   RETURNING baz ]
+
++[ INVOKE foo bar
+   GIVING baz ]
+
++[ INVOKE foo bar
+   RETURNING INTO baz ]
+
++[ INVOKE foo bar
+   GIVING INTO baz ]
+
++[ INVOKE foo bar
+   RETURNING ADDRESS OF baz ]
+
++[ INVOKE foo bar
+   GIVING ADDRESS OF baz ]
+
++[ INVOKE foo bar USING
+     BY REFERENCE baz
+     BY REFERENCE ADDRESS OF baz
+     BY REFERENCE OMITTED
+     BY CONTENT baz
+     BY CONTENT "baz"
+     BY CONTENT baz + 1
+     BY CONTENT LENGTH OF baz
+     BY VALUE baz
+     BY VALUE 100
+     BY VALUE 100 SIZE 200
+     BY VALUE baz + 1
+     BY VALUE LENGTH OF baz
+     RETURNING ADDRESS OF baz ]
+     
+-[ INVOKE foo bar
+     USING BY REFERENCE bar
+     USING BY CONTENT bar ]

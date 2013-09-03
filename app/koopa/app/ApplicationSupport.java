@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -129,6 +130,8 @@ public class ApplicationSupport {
 	public static List<String> getCustomColumnKeys()
 	{
 		String customColumnKeys = properties.getProperty(PROPERTY_CUSTOM_COLUMNS, "");
+		if (customColumnKeys.length() == 0)
+			return new ArrayList<String>();
 		return Arrays.asList(customColumnKeys.trim().split("\\s*[,;|]\\s*"));
 	}
 	

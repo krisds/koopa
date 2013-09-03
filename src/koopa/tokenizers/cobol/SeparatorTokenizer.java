@@ -111,13 +111,18 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				position = pseudoLiteral(token, position);
 
 			} else if (startOfHexadecimal(text, length, position, c)) {
-				// HEXADECIMAL LITERAL: x"00" or h"00"
+				// NUMERIC HEXADECIMAL LITERAL: h"00"
 				position = hexadecimal(token, text, position + 1, length, text
+						.charAt(position + 1));
+				
+			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
+				// ALPHANUMERIC HEXADECIMAL LITERAL: x"00"
+				position = alphanumericHexadecimal(token, text, position + 1, length, text
 						.charAt(position + 1));
             
             } else if (startOfNationalHexadecimal(text, length, position, c)) {
-                // NATIONAL HEXADECIMAL LITERAL: nx"00"
-				position = hexadecimal(token, text, position + 2, length, text
+                // NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL: nx"00"
+				position = alphanumericHexadecimal(token, text, position + 2, length, text
 						.charAt(position + 2));
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
@@ -187,12 +192,20 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 	private boolean startOfHexadecimal(final String text, final int length,
 			int position, final char c) {
-		return (c == 'x' || c == 'X' || c == 'h' || c == 'H')
+		return (c == 'h' || c == 'H')
 				&& position + 1 < length
 				&& (text.charAt(position + 1) == '"' || text
 						.charAt(position + 1) == '\'');
 	}
-
+	
+	private boolean startOfAlphanumericHexadecimal(final String text, final int length,
+			int position, final char c) {
+		return (c == 'x' || c == 'X')
+				&& position + 1 < length
+				&& (text.charAt(position + 1) == '"' || text
+						.charAt(position + 1) == '\'');
+	}
+	
 	private boolean startOfNationalHexadecimal (final String text, final int length,
 			int position, final char c) {
 		return (c == 'n' || c == 'N')
@@ -375,6 +388,44 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
 		hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Incomplete hexadecimal: " + hexadecimal);
+		}
+		enqueue(hexadecimal);
+		return length;
+	}
+	
+	private int alphanumericHexadecimal(final Token token, final String text,
+			final int start, final int length, final char quotationMark) {
+
+		int position = start + 2;
+		while (position < length) {
+			final char c = text.charAt(position);
+			if (c != quotationMark) {
+				// TODO Check if legal character ?
+				position += 1;
+				continue;
+			}
+
+			final Token hexadecimal = token.subtoken(start, position + 1);
+			hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
+			hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
+			hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
+			hexadecimal.addTag(SyntacticTag.STRING_LITERAL);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Hexadecimal: " + hexadecimal);
+			}
+			enqueue(hexadecimal);
+			return position + 1;
+		}
+
+		// TODO Incomplete hexadecimal. Throw error ?
+
+		final Token hexadecimal = token.subtoken(start);
+		hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
+		hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
+		hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
+		hexadecimal.addTag(SyntacticTag.STRING_LITERAL);
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Incomplete hexadecimal: " + hexadecimal);
 		}
@@ -620,8 +671,12 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				// HEXADECIMAL LITERAL.
 				break;
 
+			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
+				// ALPHANUMERIC HEXADECIMAL LITERAL.
+				break;
+				
             } else if (startOfNationalHexadecimal(text, length, position, c)) {
-                // NATIONAL HEXADECIMAL LITERAL.
+                // NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL.
                 break;
 
 			} else if (startOfSignedNumber(text, position, length, c)) {

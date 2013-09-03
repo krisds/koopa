@@ -308,6 +308,8 @@ target acceptStatement;
      TIMEOUT AFTER 60
      UPPER
      SPACE-FILL ]
+     
++[ ACCEPT WANO-ACID-PART AT 0851 WITH SIZE 4 UPDATE AUTO ZERO-FILL ]
 
 # TODO: RM-COBOL Language Reference Manual examples
 #

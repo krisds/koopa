@@ -104,3 +104,6 @@ target displayStatement;
           BACKGROUND-COLOR IS 10
           BLANK SCREEN
    END-DISPLAY ]
+
++[ DISPLAY " " AT 2401 ERASE ]
++[ DISPLAY ERASE ]

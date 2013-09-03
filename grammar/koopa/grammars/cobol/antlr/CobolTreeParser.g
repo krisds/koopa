@@ -3761,7 +3761,7 @@ acceptScreenFormat
         ) )?
         ( modeIsBlockPhrase )?
         ( ( 'WITH'
-          ( screenEntryPhrases )+
+          ( screenEntryPhrase )+
         ) )?
         ( ( onException
         | onEscape
@@ -4413,8 +4413,8 @@ displayTerminalFormat
         )
         ( uponClause )?
         ( modeIsBlockPhrase )?
-        ( ( 'WITH'
-          ( screenEntryPhrases )+
+        ( ( ( 'WITH' )?
+          ( screenEntryPhrase )+
         ) )?
       ) )+
     )
@@ -4499,11 +4499,11 @@ dtColPos
   ;
 
 // ========================================================
-// screenEntryPhrases
+// screenEntryPhrase
 // ........................................................
 
-screenEntryPhrases
-  : ^(SCREEN_ENTRY_PHRASES
+screenEntryPhrase
+  : ^(SCREEN_ENTRY_PHRASE
       ( autoPhrase
       | beepPhrase
       | blankPhrase

@@ -1328,4 +1328,13 @@ public class AcceptStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testAcceptStatement_148() {
+      Parser parser = grammar.acceptStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ACCEPT WANO-ACID-PART AT 0851 WITH SIZE 4 UPDATE AUTO ZERO-FILL ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

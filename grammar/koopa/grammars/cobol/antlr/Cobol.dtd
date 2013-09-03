@@ -179,7 +179,7 @@
 <!ELEMENT acceptStatement (t,(acceptFromDate|acceptFromOther|acceptFromMnemonic|acceptMessageCount|acceptScreenFormat),t?)>
 <!ELEMENT acceptFromMnemonic (identifier_format2,t,mnemonicName,(onException|onEscape)?,(notOnException|notOnEscape)?)>
 <!ELEMENT acceptFromOther (identifier_format2,t,(t|(t,t)|(t,t)|(t,t)|(t,t)|(t,t)|t|(t+,identifier)|(t,t)|(t,t)))>
-<!ELEMENT acceptScreenFormat ((t|identifier),unitPhrase?,(dtLineColPositioning|dtAtPositioning)?,(t,t)?,modeIsBlockPhrase?,(t,screenEntryPhrases+)?,(onException|onEscape)?,(notOnException|notOnEscape)?)>
+<!ELEMENT acceptScreenFormat ((t|identifier),unitPhrase?,(dtLineColPositioning|dtAtPositioning)?,(t,t)?,modeIsBlockPhrase?,(t,screenEntryPhrase+)?,(onException|onEscape)?,(notOnException|notOnEscape)?)>
 <!ELEMENT acceptFromDate (identifier_format2,t,((t,t?)|(t,t?)|t))>
 <!ELEMENT acceptMessageCount (identifier,t?,t)>
 <!ELEMENT unitPhrase (t,(identifier|literal))>
@@ -210,12 +210,12 @@
 <!ELEMENT displayDeviceFormat ((identifier|literal)+,uponClause?,withNoAdvancing?,onException?,notOnException?)>
 <!ELEMENT uponClause (t,(t|environmentName|mnemonicName))>
 <!ELEMENT withNoAdvancing (t?,t,t)>
-<!ELEMENT displayTerminalFormat (((t|identifier|literal),(t,(identifier|literal))?,(dtAtPositioning|dtLineColPositioning),uponClause?,modeIsBlockPhrase?,(t,screenEntryPhrases+)?)+)>
+<!ELEMENT displayTerminalFormat (((t|identifier|literal),(t,(identifier|literal))?,(dtAtPositioning|dtLineColPositioning),uponClause?,modeIsBlockPhrase?,(t?,screenEntryPhrase+)?)+)>
 <!ELEMENT dtAtPositioning (t,(identifier|literal))>
 <!ELEMENT dtLineColPositioning (t?,((dtLinePos,dtColPos?)|(dtColPos,dtLinePos?)))>
 <!ELEMENT dtLinePos (t,t?,t?,t?,(identifier|literal))>
 <!ELEMENT dtColPos (t,t?,t?,t?,(identifier|literal))>
-<!ELEMENT screenEntryPhrases (autoPhrase|beepPhrase|blankPhrase|blinkPhrase|capitalizationPhrase|controlPhrase|convertPhrase|cursorPhrase|echoPhrase|erasePhrase|fillPhrase|fullPhrase|gridPhrase|justificationPhrase|highPhrase|lowPhrase|linePhrase|offPhrase|promptPhrase|requiredPhrase|reversePhrase|scrollPhrase|securePhrase|sizePhrase|foregroundPhrase|backgroundPhrase|timeoutPhrase|trailingSignPhrase|tabPhrase|timePhrase|updatePhrase)>
+<!ELEMENT screenEntryPhrase (autoPhrase|beepPhrase|blankPhrase|blinkPhrase|capitalizationPhrase|controlPhrase|convertPhrase|cursorPhrase|echoPhrase|erasePhrase|fillPhrase|fullPhrase|gridPhrase|justificationPhrase|highPhrase|lowPhrase|linePhrase|offPhrase|promptPhrase|requiredPhrase|reversePhrase|scrollPhrase|securePhrase|sizePhrase|foregroundPhrase|backgroundPhrase|timeoutPhrase|trailingSignPhrase|tabPhrase|timePhrase|updatePhrase)>
 <!ELEMENT autoPhrase (t)>
 <!ELEMENT backgroundPhrase (t,t?,integer)>
 <!ELEMENT beepPhrase (t?,t)>

@@ -186,6 +186,15 @@ target callStatement;
 +[ CALL 'sub' AS NESTED USING CONTENT foo + 1 ]
 +[ CALL 'sub' AS NESTED USING VALUE foo + 1 ]
 
+# Calling alphanumeric hexadecimal literals is allowed:
+
++[ CALL x"AF" USING set-bit-pairs user-key-control ]
++[ CALL nx"AF" USING set-bit-pairs user-key-control ]
+
+# ...but not numeric hexadecimals:
+
+-[ CALL h"AF" USING set-bit-pairs user-key-control ]
+
 # Arithmetic operations are not permitted in USING BY REFERENCE clauses:
 
 -[ CALL 'sub' AS NESTED USING foo + 1 ]

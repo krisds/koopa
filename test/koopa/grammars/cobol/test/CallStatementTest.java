@@ -714,12 +714,38 @@ public class CallStatementTest extends TestCase {
     public void testCallStatement_79() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL x\"AF\" USING set-bit-pairs user-key-control ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_80() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL nx\"AF\" USING set-bit-pairs user-key-control ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_81() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL h\"AF\" USING set-bit-pairs user-key-control ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCallStatement_82() {
+      Parser parser = grammar.callStatement();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL 'sub' AS NESTED USING foo + 1 ");
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testCallStatement_80() {
+    public void testCallStatement_83() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL 'sub' AS NESTED USING REFERENCE foo + 1 ");
@@ -727,7 +753,7 @@ public class CallStatementTest extends TestCase {
     }
 
     @Test
-    public void testCallStatement_81() {
+    public void testCallStatement_84() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL foo \"bar\"\n     USING BY REFERENCE bar-name\n           BY REFERENCE bar-handle\n           BY VALUE     0 SIZE 4\n     RETURNING bar-status\n   END-CALL ");
@@ -736,7 +762,7 @@ public class CallStatementTest extends TestCase {
     }
 
     @Test
-    public void testCallStatement_82() {
+    public void testCallStatement_85() {
       Parser parser = grammar.callStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CALL foo \"bar\"\n     USING BY VALUE bar-handle\n           BY REFERENCE baz\n           BY VALUE LENGTH OF baz SIZE 4\n     RETURNING ret\n   END-CALL ");

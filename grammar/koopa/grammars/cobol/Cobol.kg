@@ -1576,7 +1576,7 @@ def acceptScreenFormat =
     [ dtLineColPositioning | dtAtPositioning ]
     [ FROM CRT ]
     [ modeIsBlockPhrase ]
-    [ WITH (screenEntryPhrases)+ ]
+    [ WITH (screenEntryPhrase)+ ]
     [ onException | onEscape ]
     [ notOnException | notOnEscape ]
 end
@@ -1857,7 +1857,7 @@ def displayTerminalFormat =
         ( dtAtPositioning | dtLineColPositioning )
         [ uponClause ]
         [ modeIsBlockPhrase ]
-        [ WITH (screenEntryPhrases)+ ]
+        [ [WITH] (screenEntryPhrase)+ ]
     )+
 end
 
@@ -1879,7 +1879,7 @@ def dtColPos =
 	(COL | COLUMN | POSITION | POS) [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
 end
 
-def screenEntryPhrases =
+def screenEntryPhrase =
     ( autoPhrase
     | beepPhrase
     | blankPhrase

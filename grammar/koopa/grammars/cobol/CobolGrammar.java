@@ -6785,7 +6785,7 @@ public class CobolGrammar extends KoopaGrammar {
                        sequence(
                            token("WITH"),
                            plus(
-                               screenEntryPhrases()
+                               screenEntryPhrase()
                            )
                        )
                    ),
@@ -7984,9 +7984,11 @@ public class CobolGrammar extends KoopaGrammar {
                        ),
                        optional(
                            sequence(
-                               token("WITH"),
+                               optional(
+                                   token("WITH")
+                               ),
                                plus(
-                                   screenEntryPhrases()
+                                   screenEntryPhrase()
                                )
                            )
                        )
@@ -8141,15 +8143,15 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // screenEntryPhrases
+    // screenEntryPhrase
     // ........................................................
 
-    private Parser screenEntryPhrasesParser = null;
+    private Parser screenEntryPhraseParser = null;
 
-    public Parser screenEntryPhrases() {
-        if (screenEntryPhrasesParser == null) {
-           FutureParser future = scoped("screenEntryPhrases");
-           screenEntryPhrasesParser = future;
+    public Parser screenEntryPhrase() {
+        if (screenEntryPhraseParser == null) {
+           FutureParser future = scoped("screenEntryPhrase");
+           screenEntryPhraseParser = future;
            future.setParser(
                choice(
                    autoPhrase(),
@@ -8187,7 +8189,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return screenEntryPhrasesParser;
+        return screenEntryPhraseParser;
     }
 
     // ========================================================
@@ -17698,9 +17700,9 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("EOP");
         RESERVED_WORDS.add("EQUAL");
         RESERVED_WORDS.add("EQUAL");
-        RESERVED_WORDS.add("ERASE");
+        // RESERVED_WORDS.add("ERASE");
         RESERVED_WORDS.add("ERROR");
-        RESERVED_WORDS.add("ESCAPE");
+        // RESERVED_WORDS.add("ESCAPE");
         RESERVED_WORDS.add("EVALUATE");
         RESERVED_WORDS.add("EVERY");
         RESERVED_WORDS.add("EXCEPTION");

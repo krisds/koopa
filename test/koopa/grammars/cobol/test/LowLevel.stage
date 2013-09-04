@@ -36,6 +36,9 @@ target booleanLiteral;
 +[ b"0001" ]
 +[ B"0010" ]
 
++[ bx"A" ]
++[ BX"A" ]
+
 target hexadecimal;
 
 +[ h"00" ]

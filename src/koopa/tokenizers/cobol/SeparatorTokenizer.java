@@ -111,9 +111,14 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				position = pseudoLiteral(token, position);
 
 			} else if (startOfBoolean(text, length, position, c)) {
-				// NUMERIC BINARY LITERAL: b"00"
+				// NUMERIC BOOLEAN LITERAL: b"01"
 				position = booleanLiteral(token, text, position + 1, length, text
 						.charAt(position + 1));
+			
+			} else if (startOfBooleanHexadecimal(text, length, position, c)) {
+				// NUMERIC BOOLEAN HEXADECIMAL LITERAL: bx"0A"
+				position = booleanLiteral(token, text, position + 2, length, text
+						.charAt(position + 2));
 				
 			} else if (startOfHexadecimal(text, length, position, c)) {
 				// NUMERIC HEXADECIMAL LITERAL: h"00"
@@ -203,6 +208,14 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 						.charAt(position + 1) == '\'');
 	}
     
+	private boolean startOfBooleanHexadecimal (final String text, final int length,
+			int position, final char c) {
+		return (c == 'b' || c == 'B')
+				&& position + 2 < length
+				&& (text.charAt(position + 1) == 'x' || text.charAt(position + 1) == 'X')
+				&& (text.charAt(position + 2) == '"' || text.charAt(position + 2) == '\'');
+	}
+	
 	private boolean startOfHexadecimal(final String text, final int length,
 			int position, final char c) {
 		return (c == 'h' || c == 'H')

@@ -8980,7 +8980,7 @@ primaryCondition
 
 primaryCondDef
   : ^(PRIMARY_COND_DEF
-      ( booleanLiteral
+      ( bit
       | ( classPrimaryCondition
         ( ( conditionalRelationOP
           ( negationOp )?
@@ -9736,7 +9736,7 @@ literal
       ( numericLiteral
       | alphanumericLiteral
       | figurativeConstant
-      | booleanLiteral
+      | bit
       )
     )
   ;
@@ -9755,11 +9755,11 @@ value
   ;
 
 // ========================================================
-// booleanLiteral
+// bit
 // ........................................................
 
-booleanLiteral
-  : ^(BOOLEAN_LITERAL
+bit
+  : ^(BIT
       ( 'TRUE'
       | 'FALSE'
       )
@@ -9800,6 +9800,7 @@ numericLiteral
   : ^(NUMERIC_LITERAL
       ( integerLiteral
       | decimal
+      | booleanLiteral
       | hexadecimal
       | ( ( 'LENGTH'
       | 'BYTE-LENGTH'
@@ -9819,6 +9820,7 @@ numeric
   : ^(NUMERIC
       ( integer
       | decimal
+      | booleanLiteral
       | hexadecimal
       | ( ( 'LENGTH'
       | 'BYTE-LENGTH'
@@ -10652,6 +10654,10 @@ integerLiteral
 
 decimal
   : ^(DECIMAL token)
+  ;
+
+booleanLiteral
+  : ^(BOOLEAN_LITERAL token)
   ;
 
 hexadecimal

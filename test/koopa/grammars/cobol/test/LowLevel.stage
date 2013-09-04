@@ -31,7 +31,19 @@ target decimal;
 -[ "ABC" ]
 -[ DEF ]
 
+target booleanLiteral;
 
++[ b"0001" ]
++[ B"0010" ]
+
+target hexadecimal;
+
++[ h"00" ]
++[ H"00" ]
++[ x"00" ]
++[ X"00" ]
++[ nx"00" ]
++[ NX"00" ]
 
 target alphanumericLiteral;
 

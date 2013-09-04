@@ -417,7 +417,7 @@
 <!ELEMENT atomicExpression (zero|identifier|numeric|(t,arithmeticExpression,t))>
 <!ELEMENT condition ((primaryCondition|(negationOp?,t,condition,t)),(conditionalRelationOP,(primaryCondition|(negationOp?,t,condition,t)))*)>
 <!ELEMENT primaryCondition (negationOp?,primaryCondDef)>
-<!ELEMENT primaryCondDef (booleanLiteral|(classPrimaryCondition,(conditionalRelationOP,negationOp?,classSecondaryCondition)*)|signPrimaryCondition|(generalPrimaryCondition,(conditionalRelationOP,negationOp?,generalSecondaryCondition)*)|(monoElemPrimaryCondition,(t?,negationOp?,monoElemPrimaryCondition)*))>
+<!ELEMENT primaryCondDef (bit|(classPrimaryCondition,(conditionalRelationOP,negationOp?,classSecondaryCondition)*)|signPrimaryCondition|(generalPrimaryCondition,(conditionalRelationOP,negationOp?,generalSecondaryCondition)*)|(monoElemPrimaryCondition,(t?,negationOp?,monoElemPrimaryCondition)*))>
 <!ELEMENT generalPrimaryCondition (operand,generalRelationOp,operand)>
 <!ELEMENT signPrimaryCondition ((arithmeticExpression|identifier),t?,negationOp?,signType)>
 <!ELEMENT signType (t|zero)>
@@ -475,12 +475,12 @@
 <!ELEMENT alphabetName (cobolWord)>
 <!ELEMENT reportName (cobolWord)>
 <!ELEMENT assignmentName (cobolWord|literal)>
-<!ELEMENT literal (numericLiteral|alphanumericLiteral|figurativeConstant|booleanLiteral)>
+<!ELEMENT literal (numericLiteral|alphanumericLiteral|figurativeConstant|bit)>
 <!ELEMENT value (literal|integerConstant|alphanumericConstant)>
-<!ELEMENT booleanLiteral (t)>
+<!ELEMENT bit (t)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,(zero|space|t))|t)>
-<!ELEMENT numericLiteral (integerLiteral|decimal|hexadecimal|(t,t?,identifier))>
-<!ELEMENT numeric (integer|decimal|hexadecimal|(t,t?,identifier))>
+<!ELEMENT numericLiteral (integerLiteral|decimal|booleanLiteral|hexadecimal|(t,t?,identifier))>
+<!ELEMENT numeric (integer|decimal|booleanLiteral|hexadecimal|(t,t?,identifier))>
 <!ELEMENT integer (integerLiteral|integerConstant)>
 <!ELEMENT constant (integerConstant|alphanumericConstant)>
 <!ELEMENT integerConstant (cobolWord)>

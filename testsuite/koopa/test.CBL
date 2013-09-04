@@ -106,6 +106,9 @@ KOOPAH
 KOOPAH 01 NATIONAL-STRING-1 VALUE n"string".                            :9
 KOOPAH 01 NATIONAL-STRING-2 VALUE N"string".                            :9
 KOOPAH
+KOOPAH 01 BOOLEAN-STRING-1 VALUE b"string".                             :9
+KOOPAH 01 BOOLEAN-STRING-2 VALUE B"string".                             :9
+KOOPAH
 KOOPAH 01 HEXADECIMAL-STRING-1 VALUE x"string".                         :9
 KOOPAH 01 HEXADECIMAL-STRING-2 VALUE X"string".                         :9
 KOOPAH 01 HEXADECIMAL-STRING-3 VALUE h"string".                         :9

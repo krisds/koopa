@@ -15898,7 +15898,7 @@ public class CobolGrammar extends KoopaGrammar {
            primaryCondDefParser = future;
            future.setParser(
                choice(
-                   booleanLiteral(),
+                   bit(),
                    sequence(
                        classPrimaryCondition(),
                        star(
@@ -17251,7 +17251,7 @@ public class CobolGrammar extends KoopaGrammar {
                    numericLiteral(),
                    alphanumericLiteral(),
                    figurativeConstant(),
-                   booleanLiteral()
+                   bit()
                )
            );
         }
@@ -17282,15 +17282,15 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // booleanLiteral
+    // bit
     // ........................................................
 
-    private Parser booleanLiteralParser = null;
+    private Parser bitParser = null;
 
-    public Parser booleanLiteral() {
-        if (booleanLiteralParser == null) {
-           FutureParser future = scoped("booleanLiteral");
-           booleanLiteralParser = future;
+    public Parser bit() {
+        if (bitParser == null) {
+           FutureParser future = scoped("bit");
+           bitParser = future;
            future.setParser(
                choice(
                    token("TRUE"),
@@ -17299,7 +17299,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return booleanLiteralParser;
+        return bitParser;
     }
 
     // ========================================================
@@ -17356,6 +17356,7 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    integerLiteral(),
                    decimal(),
+                   booleanLiteral(),
                    hexadecimal(),
                    sequence(
                        choice(
@@ -17388,6 +17389,7 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    integer(),
                    decimal(),
+                   booleanLiteral(),
                    hexadecimal(),
                    sequence(
                        choice(
@@ -18214,6 +18216,43 @@ public class CobolGrammar extends KoopaGrammar {
     		});
     	}
     	return decimalParser;
+    }
+
+    // ============================================================================
+    // booleanLiteral
+    // ............................................................................
+
+    private Parser booleanLiteralParser = null;
+
+    public Parser booleanLiteral() {
+        if (booleanLiteralParser == null) {
+            FutureParser future = scoped("booleanLiteral");
+            booleanLiteralParser = future;
+            future.setParser(new Parser() {
+                protected boolean accepts(TokenStream stream) {
+                    Token token = null;
+                    
+                    // Skipping past commas and semi-colons which leaked through to the parser.
+                    do  {
+                        token = stream.nextToken();
+                    } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
+        
+                    if (token != null
+                            && token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+                        if (token.hasTag(SyntacticTag.BOOLEAN_LITERAL)) {
+        
+                            returnToken(token);
+                            return true;
+        
+                        } else
+                            return false;
+        
+                    } else
+                        return false;
+                }
+            });
+        }
+        return booleanLiteralParser;
     }
 
     // ============================================================================

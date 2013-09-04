@@ -706,6 +706,43 @@ public Parser decimal() {
 }
 
 // ============================================================================
+// booleanLiteral
+// ............................................................................
+
+private Parser booleanLiteralParser = null;
+
+public Parser booleanLiteral() {
+    if (booleanLiteralParser == null) {
+        FutureParser future = scoped("booleanLiteral");
+        booleanLiteralParser = future;
+        future.setParser(new Parser() {
+            protected boolean accepts(TokenStream stream) {
+                Token token = null;
+                
+                // Skipping past commas and semi-colons which leaked through to the parser.
+                do  {
+                    token = stream.nextToken();
+                } while (token != null && (token.getText().equals(",") || token.getText().equals(";")));
+    
+                if (token != null
+                        && token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+                    if (token.hasTag(SyntacticTag.BOOLEAN_LITERAL)) {
+    
+                        returnToken(token);
+                        return true;
+    
+                    } else
+                        return false;
+    
+                } else
+                    return false;
+            }
+        });
+    }
+    return booleanLiteralParser;
+}
+
+// ============================================================================
 // hexadecimal
 // ............................................................................
 

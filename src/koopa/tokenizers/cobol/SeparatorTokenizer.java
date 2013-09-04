@@ -110,6 +110,11 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				// PSEUDO LITERAL (marker)
 				position = pseudoLiteral(token, position);
 
+			} else if (startOfBoolean(text, length, position, c)) {
+				// NUMERIC BINARY LITERAL: b"00"
+				position = booleanLiteral(token, text, position + 1, length, text
+						.charAt(position + 1));
+				
 			} else if (startOfHexadecimal(text, length, position, c)) {
 				// NUMERIC HEXADECIMAL LITERAL: h"00"
 				position = hexadecimal(token, text, position + 1, length, text
@@ -190,6 +195,14 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
         				.charAt(position + 1) == '\'');
     }
 
+	private boolean startOfBoolean(final String text, final int length,
+			int position, final char c) {
+		return (c == 'b' || c == 'B')
+				&& position + 1 < length
+				&& (text.charAt(position + 1) == '"' || text
+						.charAt(position + 1) == '\'');
+	}
+    
 	private boolean startOfHexadecimal(final String text, final int length,
 			int position, final char c) {
 		return (c == 'h' || c == 'H')
@@ -357,6 +370,42 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		}
 		enqueue(pseudoLiteral);
 		return start + 2;
+	}
+	
+	private int booleanLiteral(final Token token, final String text,
+			final int start, final int length, final char quotationMark) {
+
+		int position = start + 2;
+		while (position < length) {
+			final char c = text.charAt(position);
+			if (c != quotationMark) {
+				// TODO Check if legal character ?
+				position += 1;
+				continue;
+			}
+
+			final Token booleanLiteral = token.subtoken(start, position + 1);
+			booleanLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
+			booleanLiteral.addTag(SyntacticTag.CHARACTER_STRING);
+			booleanLiteral.addTag(SyntacticTag.BOOLEAN_LITERAL);
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Boolean: " + booleanLiteral);
+			}
+			enqueue(booleanLiteral);
+			return position + 1;
+		}
+
+		// TODO Incomplete hexadecimal. Throw error ?
+
+		final Token booleanLiteral = token.subtoken(start);
+		booleanLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
+		booleanLiteral.addTag(SyntacticTag.CHARACTER_STRING);
+		booleanLiteral.addTag(SyntacticTag.BOOLEAN_LITERAL);
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace("Incomplete boolean: " + booleanLiteral);
+		}
+		enqueue(booleanLiteral);
+		return length;
 	}
 
 	private int hexadecimal(final Token token, final String text,
@@ -665,6 +714,10 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 			} else if (isPseudoLiteralMarker(text, length, position, c)) {
 				// PSEUDO LITERAL (marker)
+				break;
+			
+			} else if (startOfBoolean(text, length, position, c)) {
+				// BOOLEAN LITERAL
 				break;
 
 			} else if (startOfHexadecimal(text, length, position, c)) {

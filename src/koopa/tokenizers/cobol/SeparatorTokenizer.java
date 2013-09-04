@@ -96,15 +96,15 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 			} else if (startsStringLiteral(c)) {
 				// STRING LITERAL.
-				position = stringLiteral(token, text, position, length, c);
+				position = stringLiteral(token, text, position, 0, length);
             
             } else if (startOfNullTerminatedString(text, length, position, c)) {
                 // NULL-TERMINATED STRING LITERAL: z"String"
-				position = stringLiteral(token, text, position + 1, length, text.charAt(position + 1));
+				position = stringLiteral(token, text, position, 1, length);
 
             } else if (startOfNationalString(text, length, position, c)) {
                 // NATIONAL STRING LITERAL: n"String"
-				position = stringLiteral(token, text, position + 1, length, text.charAt(position + 1));
+				position = stringLiteral(token, text, position, 1, length);
 
 			} else if (isPseudoLiteralMarker(text, length, position, c)) {
 				// PSEUDO LITERAL (marker)
@@ -112,28 +112,23 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 			} else if (startOfBoolean(text, length, position, c)) {
 				// NUMERIC BOOLEAN LITERAL: b"01"
-				position = booleanLiteral(token, text, position + 1, length, text
-						.charAt(position + 1));
+				position = booleanLiteral(token, text, position, 1, length);
 			
 			} else if (startOfBooleanHexadecimal(text, length, position, c)) {
 				// NUMERIC BOOLEAN HEXADECIMAL LITERAL: bx"0A"
-				position = booleanLiteral(token, text, position + 2, length, text
-						.charAt(position + 2));
+				position = booleanLiteral(token, text, position, 2, length);
 				
 			} else if (startOfHexadecimal(text, length, position, c)) {
 				// NUMERIC HEXADECIMAL LITERAL: h"00"
-				position = hexadecimal(token, text, position + 1, length, text
-						.charAt(position + 1));
+				position = hexadecimal(token, text, position, 1, length, false);
 				
 			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
 				// ALPHANUMERIC HEXADECIMAL LITERAL: x"00"
-				position = alphanumericHexadecimal(token, text, position + 1, length, text
-						.charAt(position + 1));
+				position = hexadecimal(token, text, position, 1, length, true);
             
             } else if (startOfNationalHexadecimal(text, length, position, c)) {
                 // NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL: nx"00"
-				position = alphanumericHexadecimal(token, text, position + 2, length, text
-						.charAt(position + 2));
+				position = hexadecimal(token, text, position, 2, length, true);
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.
@@ -305,9 +300,11 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	private int stringLiteral(final Token token, final String text,
-			final int start, final int length, final char quotationMark) {
+			final int start, final int prefixLength, final int length) {
 
-		int position = start + 1;
+		final char quotationMark = text.charAt(start + prefixLength);
+		
+		int position = start + prefixLength + 1;
 		while (position < length) {
 			final char c = text.charAt(position);
 
@@ -386,9 +383,12 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 	}
 	
 	private int booleanLiteral(final Token token, final String text,
-			final int start, final int length, final char quotationMark) {
+			final int start, final int prefixLength, final int length) {
+		
+		final char quotationMark = text.charAt(start + prefixLength);
 
-		int position = start + 2;
+		int position = start + prefixLength + 2;
+		
 		while (position < length) {
 			final char c = text.charAt(position);
 			if (c != quotationMark) {
@@ -422,9 +422,12 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	private int hexadecimal(final Token token, final String text,
-			final int start, final int length, final char quotationMark) {
+			final int start, final int prefixLength, final int length,
+			final boolean isAlphanumeric) {
 
-		int position = start + 2;
+		final char quotationMark = text.charAt(start + prefixLength);
+		
+		int position = start + prefixLength + 2;
 		while (position < length) {
 			final char c = text.charAt(position);
 			if (c != quotationMark) {
@@ -432,11 +435,16 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				position += 1;
 				continue;
 			}
+			
+			// TODO Subtoken should include prefix.
 
 			final Token hexadecimal = token.subtoken(start, position + 1);
 			hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
 			hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
+			if (isAlphanumeric) {
+				hexadecimal.addTag(SyntacticTag.STRING_LITERAL);
+			}
 			if (LOGGER.isTraceEnabled()) {
 				LOGGER.trace("Hexadecimal: " + hexadecimal);
 			}
@@ -450,44 +458,9 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
 		hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
-		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Incomplete hexadecimal: " + hexadecimal);
-		}
-		enqueue(hexadecimal);
-		return length;
-	}
-	
-	private int alphanumericHexadecimal(final Token token, final String text,
-			final int start, final int length, final char quotationMark) {
-
-		int position = start + 2;
-		while (position < length) {
-			final char c = text.charAt(position);
-			if (c != quotationMark) {
-				// TODO Check if legal character ?
-				position += 1;
-				continue;
-			}
-
-			final Token hexadecimal = token.subtoken(start, position + 1);
-			hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
-			hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
-			hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
+		if (isAlphanumeric) {
 			hexadecimal.addTag(SyntacticTag.STRING_LITERAL);
-			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("Hexadecimal: " + hexadecimal);
-			}
-			enqueue(hexadecimal);
-			return position + 1;
 		}
-
-		// TODO Incomplete hexadecimal. Throw error ?
-
-		final Token hexadecimal = token.subtoken(start);
-		hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
-		hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
-		hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
-		hexadecimal.addTag(SyntacticTag.STRING_LITERAL);
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Incomplete hexadecimal: " + hexadecimal);
 		}

@@ -54,6 +54,8 @@ target alphanumericLiteral;
 -[ 2.0 ]
 +[ "ABC" ]
 -[ DEF ]
++[ "THIS ISN""T WRONG" ]
++[ 'THIS ISN''T WRONG EITHER' ]
 
 target literal;
 
@@ -61,8 +63,6 @@ target literal;
 +[ " 0 " ]
 +[ " 1 " ]
 +[ " 00 " ]
-
-
 
 target figurativeConstant;
 

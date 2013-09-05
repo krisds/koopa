@@ -3981,13 +3981,10 @@ public class CobolGrammar extends KoopaGrammar {
                    token("COMMUNICATION"),
                    token("SECTION"),
                    token("."),
-                   optional(
-                       skipto(
-                           choice(
-                               paragraphStart(),
-                               sectionStart(),
-                               divisionStart()
-                           )
+                   star(
+                       choice(
+                           communicationDescriptionEntry(),
+                           recordDescriptionEntry()
                        )
                    )
                )
@@ -3995,6 +3992,350 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return communicationSectionParser;
+    }
+
+    // ========================================================
+    // communicationDescriptionEntry
+    // ........................................................
+
+    private Parser communicationDescriptionEntryParser = null;
+
+    public Parser communicationDescriptionEntry() {
+        if (communicationDescriptionEntryParser == null) {
+           FutureParser future = scoped("communicationDescriptionEntry");
+           communicationDescriptionEntryParser = future;
+           future.setParser(
+               choice(
+                   communicationDescriptionEntry_format1(),
+                   communicationDescriptionEntry_format2(),
+                   communicationDescriptionEntry_format3()
+               )
+           );
+        }
+
+        return communicationDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // communicationDescriptionEntry_format1
+    // ........................................................
+
+    private Parser communicationDescriptionEntry_format1Parser = null;
+
+    public Parser communicationDescriptionEntry_format1() {
+        if (communicationDescriptionEntry_format1Parser == null) {
+           FutureParser future = scoped("communicationDescriptionEntry_format1");
+           communicationDescriptionEntry_format1Parser = future;
+           future.setParser(
+               sequence(
+                   token("CD"),
+                   cdName(),
+                   optional(
+                       token("FOR")
+                   ),
+                   optional(
+                       token("INITIAL")
+                   ),
+                   token("INPUT"),
+                   choice(
+                       plus(
+                           dataDescName()
+                       ),
+                       permuted(
+                           sequence(
+                               optional(
+                                   token("SYMBOLIC")
+                               ),
+                               token("QUEUE"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               optional(
+                                   token("SYMBOLIC")
+                               ),
+                               token("SUB-QUEUE-1"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               optional(
+                                   token("SYMBOLIC")
+                               ),
+                               token("SUB-QUEUE-2"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               optional(
+                                   token("SYMBOLIC")
+                               ),
+                               token("SUB-QUEUE-3"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("MESSAGE"),
+                               token("DATE"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("MESSAGE"),
+                               token("TIME"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               optional(
+                                   token("SYMBOLIC")
+                               ),
+                               token("SOURCE"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("TEXT"),
+                               token("LENGTH"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("END"),
+                               token("KEY"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("STATUS"),
+                               token("KEY"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               optional(
+                                   token("MESSAGE")
+                               ),
+                               token("COUNT"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           )
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return communicationDescriptionEntry_format1Parser;
+    }
+
+    // ========================================================
+    // communicationDescriptionEntry_format2
+    // ........................................................
+
+    private Parser communicationDescriptionEntry_format2Parser = null;
+
+    public Parser communicationDescriptionEntry_format2() {
+        if (communicationDescriptionEntry_format2Parser == null) {
+           FutureParser future = scoped("communicationDescriptionEntry_format2");
+           communicationDescriptionEntry_format2Parser = future;
+           future.setParser(
+               sequence(
+                   token("CD"),
+                   cdName(),
+                   optional(
+                       token("FOR")
+                   ),
+                   token("OUTPUT"),
+                   optional(
+                       sequence(
+                           token("DESTINATION"),
+                           token("COUNT"),
+                           optional(
+                               token("IS")
+                           ),
+                           dataDescName()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("TEXT"),
+                           token("LENGTH"),
+                           optional(
+                               token("IS")
+                           ),
+                           dataDescName()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("STATUS"),
+                           token("KEY"),
+                           optional(
+                               token("IS")
+                           ),
+                           dataDescName()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("DESTINATION"),
+                           token("TABLE"),
+                           token("OCCURS"),
+                           integer(),
+                           optional(
+                               token("TIMES")
+                           ),
+                           optional(
+                               sequence(
+                                   token("INDEXED"),
+                                   optional(
+                                       token("BY")
+                                   ),
+                                   plus(
+                                       indexName()
+                                   )
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("ERROR"),
+                           token("KEY"),
+                           optional(
+                               token("IS")
+                           ),
+                           dataDescName()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("SYMBOLIC")
+                           ),
+                           token("DESTINATION"),
+                           optional(
+                               token("IS")
+                           ),
+                           dataDescName()
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return communicationDescriptionEntry_format2Parser;
+    }
+
+    // ========================================================
+    // communicationDescriptionEntry_format3
+    // ........................................................
+
+    private Parser communicationDescriptionEntry_format3Parser = null;
+
+    public Parser communicationDescriptionEntry_format3() {
+        if (communicationDescriptionEntry_format3Parser == null) {
+           FutureParser future = scoped("communicationDescriptionEntry_format3");
+           communicationDescriptionEntry_format3Parser = future;
+           future.setParser(
+               sequence(
+                   token("CD"),
+                   cdName(),
+                   optional(
+                       token("FOR")
+                   ),
+                   optional(
+                       token("INITIAL")
+                   ),
+                   token("I-O"),
+                   choice(
+                       plus(
+                           dataDescName()
+                       ),
+                       permuted(
+                           sequence(
+                               token("MESSAGE"),
+                               token("DATE"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("MESSAGE"),
+                               token("TIME"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               optional(
+                                   token("SYMBOLIC")
+                               ),
+                               token("TERMINAL"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("TEXT"),
+                               token("LENGTH"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("END"),
+                               token("KEY"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           ),
+                           sequence(
+                               token("STATUS"),
+                               token("KEY"),
+                               optional(
+                                   token("IS")
+                               ),
+                               dataDescName()
+                           )
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return communicationDescriptionEntry_format3Parser;
     }
 
     // ========================================================
@@ -4012,12 +4353,11 @@ public class CobolGrammar extends KoopaGrammar {
                    token("REPORT"),
                    token("SECTION"),
                    token("."),
-                   optional(
-                       skipto(
-                           choice(
-                               paragraphStart(),
-                               sectionStart(),
-                               divisionStart()
+                   star(
+                       sequence(
+                           reportDescriptionEntry(),
+                           plus(
+                               reportGroupDescriptionEntry()
                            )
                        )
                    )
@@ -4026,6 +4366,527 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return reportSectionParser;
+    }
+
+    // ========================================================
+    // reportDescriptionEntry
+    // ........................................................
+
+    private Parser reportDescriptionEntryParser = null;
+
+    public Parser reportDescriptionEntry() {
+        if (reportDescriptionEntryParser == null) {
+           FutureParser future = scoped("reportDescriptionEntry");
+           reportDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   token("RD"),
+                   reportName(),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           token("GLOBAL")
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("CODE"),
+                           choice(
+                               literal(),
+                               mnemonicName()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           choice(
+                               sequence(
+                                   token("CONTROL"),
+                                   optional(
+                                       token("IS")
+                                   )
+                               ),
+                               sequence(
+                                   token("CONTROLS"),
+                                   optional(
+                                       token("ARE")
+                                   )
+                               )
+                           ),
+                           choice(
+                               sequence(
+                                   token("FINAL"),
+                                   star(
+                                       dataName()
+                                   )
+                               ),
+                               plus(
+                                   dataName()
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("PAGE"),
+                           optional(
+                               choice(
+                                   token("LIMIT"),
+                                   token("LIMITS")
+                               )
+                           ),
+                           optional(
+                               choice(
+                                   token("IS"),
+                                   token("ARE")
+                               )
+                           ),
+                           integer(),
+                           optional(
+                               choice(
+                                   token("LINE"),
+                                   token("LINES")
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("HEADING"),
+                                   integer()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("FIRST"),
+                                   token("DETAIL"),
+                                   integer()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("LAST"),
+                                   token("DETAIL"),
+                                   integer()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("FOOTING"),
+                                   integer()
+                               )
+                           )
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return reportDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // reportGroupDescriptionEntry
+    // ........................................................
+
+    private Parser reportGroupDescriptionEntryParser = null;
+
+    public Parser reportGroupDescriptionEntry() {
+        if (reportGroupDescriptionEntryParser == null) {
+           FutureParser future = scoped("reportGroupDescriptionEntry");
+           reportGroupDescriptionEntryParser = future;
+           future.setParser(
+               choice(
+                   reportGroupDescriptionEntry_format1(),
+                   reportGroupDescriptionEntry_format2(),
+                   reportGroupDescriptionEntry_format3()
+               )
+           );
+        }
+
+        return reportGroupDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // reportGroupDescriptionEntry_format1
+    // ........................................................
+
+    private Parser reportGroupDescriptionEntry_format1Parser = null;
+
+    public Parser reportGroupDescriptionEntry_format1() {
+        if (reportGroupDescriptionEntry_format1Parser == null) {
+           FutureParser future = scoped("reportGroupDescriptionEntry_format1");
+           reportGroupDescriptionEntry_format1Parser = future;
+           future.setParser(
+               sequence(
+                   token("01"),
+                   optional(
+                       dataName()
+                   ),
+                   optional(
+                       sequence(
+                           token("LINE"),
+                           optional(
+                               token("NUMBER")
+                           ),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               sequence(
+                                   integer(),
+                                   optional(
+                                       sequence(
+                                           optional(
+                                               token("ON")
+                                           ),
+                                           token("NEXT"),
+                                           token("PAGE")
+                                       )
+                                   )
+                               ),
+                               sequence(
+                                   token("PLUS"),
+                                   integer()
+                               ),
+                               sequence(
+                                   token("NEXT"),
+                                   token("PAGE")
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NEXT"),
+                           token("GROUP"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               integer(),
+                               sequence(
+                                   token("PLUS"),
+                                   integer()
+                               ),
+                               sequence(
+                                   token("NEXT"),
+                                   token("PAGE")
+                               )
+                           )
+                       )
+                   ),
+                   token("TYPE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       choice(
+                           token("RH"),
+                           sequence(
+                               token("REPORT"),
+                               token("HEADING")
+                           )
+                       ),
+                       choice(
+                           token("PH"),
+                           sequence(
+                               token("PAGE"),
+                               token("HEADING")
+                           )
+                       ),
+                       sequence(
+                           choice(
+                               token("CH"),
+                               sequence(
+                                   token("CONTROL"),
+                                   token("HEADING")
+                               )
+                           ),
+                           choice(
+                               token("FINAL"),
+                               dataName()
+                           )
+                       ),
+                       choice(
+                           token("DE"),
+                           token("DETAIL")
+                       ),
+                       sequence(
+                           choice(
+                               token("CF"),
+                               sequence(
+                                   token("CONTROL"),
+                                   token("FOOTING")
+                               )
+                           ),
+                           choice(
+                               token("FINAL"),
+                               dataName()
+                           )
+                       ),
+                       choice(
+                           token("PF"),
+                           sequence(
+                               token("PAGE"),
+                               token("FOOTING")
+                           )
+                       ),
+                       choice(
+                           token("RF"),
+                           sequence(
+                               token("REPORT"),
+                               token("FOOTING")
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("USAGE"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("DISPLAY"),
+                               token("DISPLAY-1")
+                           )
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return reportGroupDescriptionEntry_format1Parser;
+    }
+
+    // ========================================================
+    // reportGroupDescriptionEntry_format2
+    // ........................................................
+
+    private Parser reportGroupDescriptionEntry_format2Parser = null;
+
+    public Parser reportGroupDescriptionEntry_format2() {
+        if (reportGroupDescriptionEntry_format2Parser == null) {
+           FutureParser future = scoped("reportGroupDescriptionEntry_format2");
+           reportGroupDescriptionEntry_format2Parser = future;
+           future.setParser(
+               sequence(
+                   levelNumber(),
+                   optional(
+                       dataName()
+                   ),
+                   optional(
+                       sequence(
+                           token("LINE"),
+                           optional(
+                               token("NUMBER")
+                           ),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               sequence(
+                                   integer(),
+                                   optional(
+                                       sequence(
+                                           optional(
+                                               token("ON")
+                                           ),
+                                           token("NEXT"),
+                                           token("PAGE")
+                                       )
+                                   )
+                               ),
+                               sequence(
+                                   token("PLUS"),
+                                   integer()
+                               ),
+                               sequence(
+                                   token("NEXT"),
+                                   token("PAGE")
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("USAGE"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("DISPLAY"),
+                               token("DISPLAY-1")
+                           )
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return reportGroupDescriptionEntry_format2Parser;
+    }
+
+    // ========================================================
+    // reportGroupDescriptionEntry_format3
+    // ........................................................
+
+    private Parser reportGroupDescriptionEntry_format3Parser = null;
+
+    public Parser reportGroupDescriptionEntry_format3() {
+        if (reportGroupDescriptionEntry_format3Parser == null) {
+           FutureParser future = scoped("reportGroupDescriptionEntry_format3");
+           reportGroupDescriptionEntry_format3Parser = future;
+           future.setParser(
+               sequence(
+                   levelNumber(),
+                   optional(
+                       dataName()
+                   ),
+                   permuted(
+                       picture(),
+                       sequence(
+                           token("USAGE"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("DISPLAY"),
+                               token("DISPLAY-1")
+                           )
+                       ),
+                       sequence(
+                           token("SIGN"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("LEADING"),
+                               token("TRAILING")
+                           ),
+                           token("SEPARATE"),
+                           optional(
+                               token("CHARACTER")
+                           )
+                       ),
+                       sequence(
+                           choice(
+                               token("JUSTIFIED"),
+                               token("JUST")
+                           ),
+                           optional(
+                               token("RIGHT")
+                           )
+                       ),
+                       sequence(
+                           token("BLANK"),
+                           optional(
+                               token("WHEN")
+                           ),
+                           zero()
+                       ),
+                       sequence(
+                           token("LINE"),
+                           optional(
+                               token("NUMBER")
+                           ),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               sequence(
+                                   integer(),
+                                   optional(
+                                       sequence(
+                                           optional(
+                                               token("ON")
+                                           ),
+                                           token("NEXT"),
+                                           token("PAGE")
+                                       )
+                                   )
+                               ),
+                               sequence(
+                                   token("PLUS"),
+                                   integer()
+                               ),
+                               sequence(
+                                   token("NEXT"),
+                                   token("PAGE")
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("COLUMN"),
+                           optional(
+                               token("NUMBER")
+                           ),
+                           optional(
+                               token("IS")
+                           ),
+                           integer()
+                       ),
+                       choice(
+                           sequence(
+                               token("SOURCE"),
+                               optional(
+                                   token("IS")
+                               ),
+                               identifier()
+                           ),
+                           sequence(
+                               token("VALUE"),
+                               optional(
+                                   token("IS")
+                               ),
+                               literal()
+                           ),
+                           sequence(
+                               sequence(
+                                   token("SUM"),
+                                   identifier(),
+                                   optional(
+                                       sequence(
+                                           token("UPON"),
+                                           plus(
+                                               dataName()
+                                           )
+                                       )
+                                   )
+                               ),
+                               optional(
+                                   sequence(
+                                       token("RESET"),
+                                       optional(
+                                           token("ON")
+                                       ),
+                                       choice(
+                                           token("FINAL"),
+                                           dataName()
+                                       )
+                                   )
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("GROUP"),
+                           optional(
+                               token("INDICATE")
+                           )
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return reportGroupDescriptionEntry_format3Parser;
     }
 
     // ========================================================
@@ -4057,6 +4918,35 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return screenSectionParser;
+    }
+
+    // ========================================================
+    // screenDescriptionEntry
+    // ........................................................
+
+    private Parser screenDescriptionEntryParser = null;
+
+    public Parser screenDescriptionEntry() {
+        if (screenDescriptionEntryParser == null) {
+           FutureParser future = scoped("screenDescriptionEntry");
+           screenDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   levelNumber(),
+                   optional(
+                       choice(
+                           token("FILLER"),
+                           screenName()
+                       )
+                   ),
+                   star(
+                       screenEntryPhrase()
+                   )
+               )
+           );
+        }
+
+        return screenDescriptionEntryParser;
     }
 
     // ========================================================
@@ -8157,6 +9047,7 @@ public class CobolGrammar extends KoopaGrammar {
                    autoPhrase(),
                    beepPhrase(),
                    blankPhrase(),
+                   blankWhenZero(),
                    blinkPhrase(),
                    capitalizationPhrase(),
                    controlPhrase(),
@@ -8172,6 +9063,7 @@ public class CobolGrammar extends KoopaGrammar {
                    lowPhrase(),
                    linePhrase(),
                    offPhrase(),
+                   picture(),
                    promptPhrase(),
                    requiredPhrase(),
                    reversePhrase(),
@@ -16541,14 +17433,32 @@ public class CobolGrammar extends KoopaGrammar {
            dataDescNameParser = future;
            future.setParser(
                choice(
-                   dataName(),
                    token("FILLER"),
-                   token("CURSOR")
+                   token("CURSOR"),
+                   dataName()
                )
            );
         }
 
         return dataDescNameParser;
+    }
+
+    // ========================================================
+    // screenName
+    // ........................................................
+
+    private Parser screenNameParser = null;
+
+    public Parser screenName() {
+        if (screenNameParser == null) {
+           FutureParser future = scoped("screenName");
+           screenNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return screenNameParser;
     }
 
     // ========================================================
@@ -17195,6 +18105,24 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return alphabetNameParser;
+    }
+
+    // ========================================================
+    // cdName
+    // ........................................................
+
+    private Parser cdNameParser = null;
+
+    public Parser cdName() {
+        if (cdNameParser == null) {
+           FutureParser future = scoped("cdName");
+           cdNameParser = future;
+           future.setParser(
+               cobolWord()
+           );
+        }
+
+        return cdNameParser;
     }
 
     // ========================================================

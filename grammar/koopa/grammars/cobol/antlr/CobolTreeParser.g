@@ -2149,7 +2149,195 @@ communicationSection
       ( 'COMMUNICATION'
         'SECTION'
         '.'
-        (water)?
+        ( ( communicationDescriptionEntry
+        | recordDescriptionEntry
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// communicationDescriptionEntry
+// ........................................................
+
+communicationDescriptionEntry
+  : ^(COMMUNICATION_DESCRIPTION_ENTRY
+      ( communicationDescriptionEntry_format1
+      | communicationDescriptionEntry_format2
+      | communicationDescriptionEntry_format3
+      )
+    )
+  ;
+
+// ========================================================
+// communicationDescriptionEntry_format1
+// ........................................................
+
+communicationDescriptionEntry_format1
+  : ^(COMMUNICATION_DESCRIPTION_ENTRY_FORMAT1
+      ( 'CD'
+        cdName
+        ( 'FOR' )?
+        ( 'INITIAL' )?
+        'INPUT'
+        ( ( dataDescName )+
+        | ( ( ( ( 'SYMBOLIC' )?
+          'QUEUE'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( ( 'SYMBOLIC' )?
+          'SUB-QUEUE-1'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( ( 'SYMBOLIC' )?
+          'SUB-QUEUE-2'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( ( 'SYMBOLIC' )?
+          'SUB-QUEUE-3'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'MESSAGE'
+          'DATE'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'MESSAGE'
+          'TIME'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( ( 'SYMBOLIC' )?
+          'SOURCE'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'TEXT'
+          'LENGTH'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'END'
+          'KEY'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'STATUS'
+          'KEY'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( ( 'MESSAGE' )?
+          'COUNT'
+          ( 'IS' )?
+          dataDescName
+        )
+        ) )*
+        )
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// communicationDescriptionEntry_format2
+// ........................................................
+
+communicationDescriptionEntry_format2
+  : ^(COMMUNICATION_DESCRIPTION_ENTRY_FORMAT2
+      ( 'CD'
+        cdName
+        ( 'FOR' )?
+        'OUTPUT'
+        ( ( 'DESTINATION'
+          'COUNT'
+          ( 'IS' )?
+          dataDescName
+        ) )?
+        ( ( 'TEXT'
+          'LENGTH'
+          ( 'IS' )?
+          dataDescName
+        ) )?
+        ( ( 'STATUS'
+          'KEY'
+          ( 'IS' )?
+          dataDescName
+        ) )?
+        ( ( 'DESTINATION'
+          'TABLE'
+          'OCCURS'
+          integer
+          ( 'TIMES' )?
+          ( ( 'INDEXED'
+            ( 'BY' )?
+            ( indexName )+
+          ) )?
+        ) )?
+        ( ( 'ERROR'
+          'KEY'
+          ( 'IS' )?
+          dataDescName
+        ) )?
+        ( ( ( 'SYMBOLIC' )?
+          'DESTINATION'
+          ( 'IS' )?
+          dataDescName
+        ) )?
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// communicationDescriptionEntry_format3
+// ........................................................
+
+communicationDescriptionEntry_format3
+  : ^(COMMUNICATION_DESCRIPTION_ENTRY_FORMAT3
+      ( 'CD'
+        cdName
+        ( 'FOR' )?
+        ( 'INITIAL' )?
+        'I-O'
+        ( ( dataDescName )+
+        | ( ( ( 'MESSAGE'
+          'DATE'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'MESSAGE'
+          'TIME'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( ( 'SYMBOLIC' )?
+          'TERMINAL'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'TEXT'
+          'LENGTH'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'END'
+          'KEY'
+          ( 'IS' )?
+          dataDescName
+        )
+        | ( 'STATUS'
+          'KEY'
+          ( 'IS' )?
+          dataDescName
+        )
+        ) )*
+        )
+        '.'
       )
     )
   ;
@@ -2163,7 +2351,296 @@ reportSection
       ( 'REPORT'
         'SECTION'
         '.'
-        (water)?
+        ( ( reportDescriptionEntry
+          ( reportGroupDescriptionEntry )+
+        ) )*
+      )
+    )
+  ;
+
+// ========================================================
+// reportDescriptionEntry
+// ........................................................
+
+reportDescriptionEntry
+  : ^(REPORT_DESCRIPTION_ENTRY
+      ( 'RD'
+        reportName
+        ( ( ( 'IS' )?
+          'GLOBAL'
+        ) )?
+        ( ( ( 'WITH' )?
+          'CODE'
+          ( literal
+          | mnemonicName
+          )
+        ) )?
+        ( ( ( ( 'CONTROL'
+          ( 'IS' )?
+        )
+        | ( 'CONTROLS'
+          ( 'ARE' )?
+        )
+        )
+          ( ( 'FINAL'
+            ( dataName )*
+          )
+          | ( dataName )+
+          )
+        ) )?
+        ( ( 'PAGE'
+          ( ( 'LIMIT'
+          | 'LIMITS'
+          ) )?
+          ( ( 'IS'
+          | 'ARE'
+          ) )?
+          integer
+          ( ( 'LINE'
+          | 'LINES'
+          ) )?
+          ( ( 'HEADING'
+            integer
+          ) )?
+          ( ( 'FIRST'
+            'DETAIL'
+            integer
+          ) )?
+          ( ( 'LAST'
+            'DETAIL'
+            integer
+          ) )?
+          ( ( 'FOOTING'
+            integer
+          ) )?
+        ) )?
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// reportGroupDescriptionEntry
+// ........................................................
+
+reportGroupDescriptionEntry
+  : ^(REPORT_GROUP_DESCRIPTION_ENTRY
+      ( reportGroupDescriptionEntry_format1
+      | reportGroupDescriptionEntry_format2
+      | reportGroupDescriptionEntry_format3
+      )
+    )
+  ;
+
+// ========================================================
+// reportGroupDescriptionEntry_format1
+// ........................................................
+
+reportGroupDescriptionEntry_format1
+  : ^(REPORT_GROUP_DESCRIPTION_ENTRY_FORMAT1
+      ( '01'
+        ( dataName )?
+        ( ( 'LINE'
+          ( 'NUMBER' )?
+          ( 'IS' )?
+          ( ( integer
+            ( ( ( 'ON' )?
+              'NEXT'
+              'PAGE'
+            ) )?
+          )
+          | ( 'PLUS'
+            integer
+          )
+          | ( 'NEXT'
+            'PAGE'
+          )
+          )
+        ) )?
+        ( ( 'NEXT'
+          'GROUP'
+          ( 'IS' )?
+          ( integer
+          | ( 'PLUS'
+            integer
+          )
+          | ( 'NEXT'
+            'PAGE'
+          )
+          )
+        ) )?
+        'TYPE'
+        ( 'IS' )?
+        ( ( 'RH'
+        | ( 'REPORT'
+          'HEADING'
+        )
+        )
+        | ( 'PH'
+        | ( 'PAGE'
+          'HEADING'
+        )
+        )
+        | ( ( 'CH'
+        | ( 'CONTROL'
+          'HEADING'
+        )
+        )
+          ( 'FINAL'
+          | dataName
+          )
+        )
+        | ( 'DE'
+        | 'DETAIL'
+        )
+        | ( ( 'CF'
+        | ( 'CONTROL'
+          'FOOTING'
+        )
+        )
+          ( 'FINAL'
+          | dataName
+          )
+        )
+        | ( 'PF'
+        | ( 'PAGE'
+          'FOOTING'
+        )
+        )
+        | ( 'RF'
+        | ( 'REPORT'
+          'FOOTING'
+        )
+        )
+        )
+        ( ( 'USAGE'
+          ( 'IS' )?
+          ( 'DISPLAY'
+          | 'DISPLAY-1'
+          )
+        ) )?
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// reportGroupDescriptionEntry_format2
+// ........................................................
+
+reportGroupDescriptionEntry_format2
+  : ^(REPORT_GROUP_DESCRIPTION_ENTRY_FORMAT2
+      ( levelNumber
+        ( dataName )?
+        ( ( 'LINE'
+          ( 'NUMBER' )?
+          ( 'IS' )?
+          ( ( integer
+            ( ( ( 'ON' )?
+              'NEXT'
+              'PAGE'
+            ) )?
+          )
+          | ( 'PLUS'
+            integer
+          )
+          | ( 'NEXT'
+            'PAGE'
+          )
+          )
+        ) )?
+        ( ( 'USAGE'
+          ( 'IS' )?
+          ( 'DISPLAY'
+          | 'DISPLAY-1'
+          )
+        ) )?
+        '.'
+      )
+    )
+  ;
+
+// ========================================================
+// reportGroupDescriptionEntry_format3
+// ........................................................
+
+reportGroupDescriptionEntry_format3
+  : ^(REPORT_GROUP_DESCRIPTION_ENTRY_FORMAT3
+      ( levelNumber
+        ( dataName )?
+        ( ( picture
+        | ( 'USAGE'
+          ( 'IS' )?
+          ( 'DISPLAY'
+          | 'DISPLAY-1'
+          )
+        )
+        | ( 'SIGN'
+          ( 'IS' )?
+          ( 'LEADING'
+          | 'TRAILING'
+          )
+          'SEPARATE'
+          ( 'CHARACTER' )?
+        )
+        | ( ( 'JUSTIFIED'
+        | 'JUST'
+        )
+          ( 'RIGHT' )?
+        )
+        | ( 'BLANK'
+          ( 'WHEN' )?
+          zero
+        )
+        | ( 'LINE'
+          ( 'NUMBER' )?
+          ( 'IS' )?
+          ( ( integer
+            ( ( ( 'ON' )?
+              'NEXT'
+              'PAGE'
+            ) )?
+          )
+          | ( 'PLUS'
+            integer
+          )
+          | ( 'NEXT'
+            'PAGE'
+          )
+          )
+        )
+        | ( 'COLUMN'
+          ( 'NUMBER' )?
+          ( 'IS' )?
+          integer
+        )
+        | ( ( 'SOURCE'
+          ( 'IS' )?
+          identifier
+        )
+        | ( 'VALUE'
+          ( 'IS' )?
+          literal
+        )
+        | ( ( 'SUM'
+          identifier
+          ( ( 'UPON'
+            ( dataName )+
+          ) )?
+        )
+          ( ( 'RESET'
+            ( 'ON' )?
+            ( 'FINAL'
+            | dataName
+            )
+          ) )?
+        )
+        )
+        | ( 'GROUP'
+          ( 'INDICATE' )?
+        )
+        ) )*
+        '.'
       )
     )
   ;
@@ -2178,6 +2655,21 @@ screenSection
         'SECTION'
         '.'
         (water)?
+      )
+    )
+  ;
+
+// ========================================================
+// screenDescriptionEntry
+// ........................................................
+
+screenDescriptionEntry
+  : ^(SCREEN_DESCRIPTION_ENTRY
+      ( levelNumber
+        ( ( 'FILLER'
+        | screenName
+        ) )?
+        ( screenEntryPhrase )*
       )
     )
   ;
@@ -4507,6 +4999,7 @@ screenEntryPhrase
       ( autoPhrase
       | beepPhrase
       | blankPhrase
+      | blankWhenZero
       | blinkPhrase
       | capitalizationPhrase
       | controlPhrase
@@ -4522,6 +5015,7 @@ screenEntryPhrase
       | lowPhrase
       | linePhrase
       | offPhrase
+      | picture
       | promptPhrase
       | requiredPhrase
       | reversePhrase
@@ -9323,10 +9817,20 @@ qualifiedDataName
 
 dataDescName
   : ^(DATA_DESC_NAME
-      ( dataName
-      | 'FILLER'
+      ( 'FILLER'
       | 'CURSOR'
+      | dataName
       )
+    )
+  ;
+
+// ========================================================
+// screenName
+// ........................................................
+
+screenName
+  : ^(SCREEN_NAME
+      cobolWord
     )
   ;
 
@@ -9706,6 +10210,16 @@ alphabetName
   ;
 
 // ========================================================
+// cdName
+// ........................................................
+
+cdName
+  : ^(CD_NAME
+      cobolWord
+    )
+  ;
+
+// ========================================================
 // reportName
 // ........................................................
 
@@ -10006,8 +10520,11 @@ token
   | 'CANCEL'
   | 'CASE-INSENSITIVE'
   | 'CASE-SENSITIVE'
+  | 'CD'
   | 'CENTURY-DATE'
   | 'CENTURY-DAY'
+  | 'CF'
+  | 'CH'
   | 'CHAIN'
   | 'CHAINING'
   | 'CHANGED'
@@ -10022,6 +10539,7 @@ token
   | 'CLASS-CONTROL'
   | 'CLASS-ID'
   | 'CLOSE'
+  | 'CODE'
   | 'CODE-SET'
   | 'COL'
   | 'COLLATING'
@@ -10059,6 +10577,7 @@ token
   | 'CONTENT'
   | 'CONTINUE'
   | 'CONTROL'
+  | 'CONTROLS'
   | 'CONVERT'
   | 'CONVERTING'
   | 'COPY'
@@ -10087,6 +10606,7 @@ token
   | 'DAY-OF-WEEK'
   | 'DAY-TO-YYYYDDD'
   | 'DBCS'
+  | 'DE'
   | 'DEBUGGING'
   | 'DECIMAL'
   | 'DECIMAL-POINT'
@@ -10101,9 +10621,12 @@ token
   | 'DELIMITER'
   | 'DEPENDING'
   | 'DESCENDING'
+  | 'DESTINATION'
+  | 'DETAIL'
   | 'DISABLE'
   | 'DISK'
   | 'DISPLAY'
+  | 'DISPLAY-1'
   | 'DISPLAY-OF'
   | 'DIVIDE'
   | 'DIVISION'
@@ -10219,8 +10742,10 @@ token
   | 'GOBACK'
   | 'GREATER'
   | 'GRID'
+  | 'GROUP'
   | 'GTEQ'
   | 'HANDLE'
+  | 'HEADING'
   | 'HIGH'
   | 'HIGH-VALUE'
   | 'HIGH-VALUES'
@@ -10240,6 +10765,7 @@ token
   | 'INCLUDE'
   | 'INDEX'
   | 'INDEXED'
+  | 'INDICATE'
   | 'INHERITS'
   | 'INITIAL'
   | 'INITIALIZE'
@@ -10286,6 +10812,8 @@ token
   | 'LENGTH-CHECK'
   | 'LESS'
   | 'LIKE'
+  | 'LIMIT'
+  | 'LIMITS'
   | 'LINAGE'
   | 'LINE'
   | 'LINES'
@@ -10379,6 +10907,8 @@ token
   | 'PARTIAL'
   | 'PASSWORD'
   | 'PERFORM'
+  | 'PF'
+  | 'PH'
   | 'PI'
   | 'PIC'
   | 'PICTURE'
@@ -10415,6 +10945,7 @@ token
   | 'RANDOM'
   | 'RANGE'
   | 'RBA'
+  | 'RD'
   | 'READ'
   | 'READING'
   | 'READNEXT'
@@ -10457,6 +10988,8 @@ token
   | 'REVERSED'
   | 'REWIND'
   | 'REWRITE'
+  | 'RF'
+  | 'RH'
   | 'RIDFLD'
   | 'RIGHT'
   | 'RIGHT-JUSTIFY'
@@ -10520,6 +11053,9 @@ token
   | 'STOP'
   | 'STORED-CHAR-LENGTH'
   | 'STRING'
+  | 'SUB-QUEUE-1'
+  | 'SUB-QUEUE-2'
+  | 'SUB-QUEUE-3'
   | 'SUBSTITUTE'
   | 'SUBSTITUTE-CASE'
   | 'SUBTRACT'
@@ -10551,14 +11087,17 @@ token
   | 'SYSPUNCH'
   | 'SYSTEM-INFO'
   | 'TAB'
+  | 'TABLE'
   | 'TALLYING'
   | 'TAN'
   | 'TD'
+  | 'TERMINAL'
   | 'TERMINAL-INFO'
   | 'TERMINATE'
   | 'TEST'
   | 'TEST-DATE-YYYYMMDD'
   | 'TEST-DAY-YYYYDDD'
+  | 'TEXT'
   | 'THAN'
   | 'THEN'
   | 'THREAD'
@@ -10585,6 +11124,7 @@ token
   | 'TRIMMED'
   | 'TRUE'
   | 'TS'
+  | 'TYPE'
   | 'TYPEDEF'
   | 'U'
   | 'UNCOMMITTED'

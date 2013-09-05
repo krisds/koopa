@@ -839,22 +839,154 @@ def linkageSection =
     | replaceStatement
     | execStatement [.]
     )*
-#    [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
 def communicationSection =
 	COMMUNICATION SECTION .
-    [--> (paragraphStart | sectionStart | divisionStart)]
+    ( communicationDescriptionEntry
+    | recordDescriptionEntry
+    )*
+end
+
+def communicationDescriptionEntry =
+    ( communicationDescriptionEntry_format1
+    | communicationDescriptionEntry_format2
+    | communicationDescriptionEntry_format3
+    )
+end
+
+def communicationDescriptionEntry_format1 =
+    CD cdName [FOR] [INITIAL] INPUT
+    ( (dataDescName)+
+    |  !( [SYMBOLIC] QUEUE      [IS] dataDescName
+       | [SYMBOLIC] SUB-QUEUE-1 [IS] dataDescName
+       | [SYMBOLIC] SUB-QUEUE-2 [IS] dataDescName
+       | [SYMBOLIC] SUB-QUEUE-3 [IS] dataDescName
+       | MESSAGE DATE           [IS] dataDescName
+       | MESSAGE TIME           [IS] dataDescName
+       | [SYMBOLIC] SOURCE      [IS] dataDescName
+       | TEXT LENGTH            [IS] dataDescName
+       | END KEY                [IS] dataDescName
+       | STATUS KEY             [IS] dataDescName
+       | [MESSAGE] COUNT        [IS] dataDescName
+       )
+    )
+    .
+end
+
+def communicationDescriptionEntry_format2 =
+    CD cdName [FOR] OUTPUT
+    [ DESTINATION COUNT         [IS] dataDescName ]
+    [ TEXT LENGTH               [IS] dataDescName ]
+    [ STATUS KEY                [IS] dataDescName ]
+    [ DESTINATION TABLE OCCURS integer [TIMES] [INDEXED [BY] (indexName)+] ]
+    [ ERROR KEY                 [IS] dataDescName ]
+    [ [SYMBOLIC] DESTINATION    [IS] dataDescName ]
+    .
+end
+
+def communicationDescriptionEntry_format3 =
+    CD cdName [FOR] [INITIAL] I-O
+    ( (dataDescName)+
+    | !( MESSAGE DATE           [IS] dataDescName
+       | MESSAGE TIME           [IS] dataDescName
+       | [SYMBOLIC] TERMINAL    [IS] dataDescName
+       | TEXT LENGTH            [IS] dataDescName
+       | END KEY                [IS] dataDescName
+       | STATUS KEY             [IS] dataDescName
+       )
+    )
+    .
 end
 
 def reportSection =
 	REPORT SECTION .
-    [--> (paragraphStart | sectionStart | divisionStart)]
+    ( reportDescriptionEntry (reportGroupDescriptionEntry)+ )*
+end
+
+def reportDescriptionEntry =
+    RD reportName [[IS] GLOBAL]
+    [ [WITH] CODE (literal | mnemonicName) ]
+    [ (CONTROL [IS] | CONTROLS [ARE]) (FINAL (dataName)* | (dataName)+) ]
+    [ PAGE [LIMIT | LIMITS] [IS | ARE] integer [LINE | LINES]
+        [ HEADING integer ]
+        [ FIRST DETAIL integer ]
+        [ LAST DETAIL integer ]
+        [ FOOTING integer ]
+    ]
+    .
+end
+
+def reportGroupDescriptionEntry =
+    ( reportGroupDescriptionEntry_format1
+    | reportGroupDescriptionEntry_format2
+    | reportGroupDescriptionEntry_format3
+    )
+end
+
+def reportGroupDescriptionEntry_format1 =
+    01 [dataName]
+    [ LINE [NUMBER] [IS] ( integer [[ON] NEXT PAGE]
+                         | PLUS integer
+                         | NEXT PAGE
+                         ) ]
+    [ NEXT GROUP [IS] ( integer
+                      | PLUS integer
+                      | NEXT PAGE
+                      ) ]
+    TYPE [IS] ( (RH | REPORT HEADING)
+              | (PH | PAGE HEADING)
+              | (CH | CONTROL HEADING) (FINAL | dataName)
+              | (DE | DETAIL)
+              | (CF | CONTROL FOOTING) (FINAL | dataName)
+              | (PF | PAGE FOOTING)
+              | (RF | REPORT FOOTING)
+              )
+    [ USAGE [IS] (DISPLAY | DISPLAY-1) ]
+    .
+end
+
+def reportGroupDescriptionEntry_format2 =
+    levelNumber [dataName]
+    [ LINE [NUMBER] [IS] ( integer [[ON] NEXT PAGE]
+                         | PLUS integer
+                         | NEXT PAGE
+                         ) ]
+    [ USAGE [IS] (DISPLAY | DISPLAY-1) ]
+    .
+end
+
+def reportGroupDescriptionEntry_format3 =
+    levelNumber [dataName]
+    !( picture
+     | USAGE [IS] (DISPLAY | DISPLAY-1)
+     | SIGN [IS] (LEADING | TRAILING) SEPARATE [CHARACTER]
+     | (JUSTIFIED | JUST) [RIGHT]
+     | BLANK [WHEN] zero
+     | LINE [NUMBER] [IS] ( integer [[ON] NEXT PAGE]
+                          | PLUS integer
+                          | NEXT PAGE
+                          )
+     | COLUMN [NUMBER] [IS] integer
+     | ( SOURCE [IS] identifier
+       | VALUE [IS] literal
+       | (SUM identifier [UPON (dataName)+])
+           [RESET [ON] (FINAL | dataName)]
+       )
+     | GROUP [INDICATE]
+     )
+    .
 end
 
 def screenSection =
 	SCREEN SECTION .
     [--> (paragraphStart | sectionStart | divisionStart)]
+#    ( screenDescriptionEntry )*
+end
+
+def screenDescriptionEntry =
+    levelNumber [FILLER | screenName]
+    (screenEntryPhrase)*
 end
 
 def fileDescriptionEntry =
@@ -1879,10 +2011,19 @@ def dtColPos =
 	(COL | COLUMN | POSITION | POS) [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
 end
 
+# TODO: Split screenEntryPhrase into:
+#       * screenEntryOption_Accept
+#       * screenEntryOption_Display
+#       * screenEntryOption_InputField (maybe)
+#       * screenEntryOption_OutputField ( maybe)
+#       * screenEntryOption_UpdateField (maybe)
+#       * screenEntryOption_LiteralField (maybe)
+
 def screenEntryPhrase =
     ( autoPhrase
     | beepPhrase
     | blankPhrase
+    | blankWhenZero
     | blinkPhrase
     | capitalizationPhrase
     | controlPhrase
@@ -1898,6 +2039,7 @@ def screenEntryPhrase =
     | lowPhrase
     | linePhrase
     | offPhrase
+    | picture
     | promptPhrase
     | requiredPhrase
     | reversePhrase
@@ -3839,7 +3981,11 @@ end
 
 # Data name on describe.
 def dataDescName =
-	(dataName | FILLER | CURSOR)
+	(FILLER | CURSOR | dataName)
+end
+
+def screenName =
+    cobolWord
 end
 
 # Section name.
@@ -4022,6 +4168,10 @@ def environmentName =
 end
 
 def alphabetName =
+    cobolWord
+end
+
+def cdName =
     cobolWord
 end
 

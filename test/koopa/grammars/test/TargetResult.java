@@ -78,7 +78,9 @@ public class TargetResult {
 			if (this.valid) {
 				messages.add("- This file used to parse. It no longer does.");
 			} else {
+				/*
 				messages.add("+ This file used to fail parsing. It is now valid.");
+				*/
 			}
 		}
 
@@ -90,8 +92,10 @@ public class TargetResult {
 						+ this.tokenCount + " to " + tokenCount + ".");
 
 			} else {
+				/*
 				messages.add("  Number of tokens went up from "
 						+ this.tokenCount + " to " + tokenCount + ".");
+				*/
 			}
 		}
 
@@ -102,15 +106,19 @@ public class TargetResult {
 						+ " to " + coverage + ".");
 
 			} else {
+				/*
 				messages.add("+ Coverage went up from " + this.coverage
 						+ " to " + coverage + ".");
+				*/
 			}
 		}
 
 		if (result.getErrorCount() != this.errorCount) {
 			if (result.getErrorCount() < this.errorCount) {
+				/*
 				messages.add("+ Error count went down from " + this.errorCount
 						+ " to " + result.getErrorCount() + ".");
+				*/
 
 			} else {
 				messages.add("- Error count went up from " + this.errorCount
@@ -122,9 +130,11 @@ public class TargetResult {
 
 		if (result.getWarningCount() != this.warningCount) {
 			if (result.getWarningCount() < this.warningCount) {
+				/*
 				messages.add("+ Warning count went down from "
 						+ this.warningCount + " to " + result.getWarningCount()
 						+ ".");
+				*/
 
 			} else {
 				messages.add("- Warning count went up from "

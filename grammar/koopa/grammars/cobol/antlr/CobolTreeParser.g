@@ -10247,10 +10247,34 @@ assignmentName
 
 literal
   : ^(LITERAL
+      ( literalValue
+        ( concatenatedLiteral )*
+      )
+    )
+  ;
+
+// ========================================================
+// literalValue
+// ........................................................
+
+literalValue
+  : ^(LITERAL_VALUE
       ( numericLiteral
       | alphanumericLiteral
       | figurativeConstant
       | bit
+      )
+    )
+  ;
+
+// ========================================================
+// concatenatedLiteral
+// ........................................................
+
+concatenatedLiteral
+  : ^(CONCATENATED_LITERAL
+      ( '&'
+        literalValue
       )
     )
   ;

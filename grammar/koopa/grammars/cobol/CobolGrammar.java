@@ -18175,6 +18175,29 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("literal");
            literalParser = future;
            future.setParser(
+               sequence(
+                   literalValue(),
+                   star(
+                       concatenatedLiteral()
+                   )
+               )
+           );
+        }
+
+        return literalParser;
+    }
+
+    // ========================================================
+    // literalValue
+    // ........................................................
+
+    private Parser literalValueParser = null;
+
+    public Parser literalValue() {
+        if (literalValueParser == null) {
+           FutureParser future = scoped("literalValue");
+           literalValueParser = future;
+           future.setParser(
                choice(
                    numericLiteral(),
                    alphanumericLiteral(),
@@ -18184,7 +18207,28 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return literalParser;
+        return literalValueParser;
+    }
+
+    // ========================================================
+    // concatenatedLiteral
+    // ........................................................
+
+    private Parser concatenatedLiteralParser = null;
+
+    public Parser concatenatedLiteral() {
+        if (concatenatedLiteralParser == null) {
+           FutureParser future = scoped("concatenatedLiteral");
+           concatenatedLiteralParser = future;
+           future.setParser(
+               sequence(
+                   token("&"),
+                   literalValue()
+               )
+           );
+        }
+
+        return concatenatedLiteralParser;
     }
 
     // ========================================================
@@ -18486,7 +18530,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("B-XOR");
         RESERVED_WORDS.add("BASED");
         RESERVED_WORDS.add("BEFORE");
-        RESERVED_WORDS.add("BEGINNING");
+        // RESERVED_WORDS.add("BEGINNING");
         RESERVED_WORDS.add("BINARY");
         RESERVED_WORDS.add("BINARY-CHAR");
         RESERVED_WORDS.add("BINARY-DOUBLE");
@@ -18621,7 +18665,7 @@ public class CobolGrammar extends KoopaGrammar {
         RESERVED_WORDS.add("END-SUBTRACT");
         RESERVED_WORDS.add("END-UNSTRING");
         RESERVED_WORDS.add("END-WRITE");
-        RESERVED_WORDS.add("ENDING");
+        // RESERVED_WORDS.add("ENDING");
         RESERVED_WORDS.add("ENTRY");
         RESERVED_WORDS.add("ENVIRONMENT");
         RESERVED_WORDS.add("EO");

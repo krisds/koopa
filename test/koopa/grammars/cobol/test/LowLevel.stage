@@ -64,6 +64,8 @@ target literal;
 +[ " 1 " ]
 +[ " 00 " ]
 
++[ "Hello " & " world." ]
+
 target figurativeConstant;
 
 +[ ZERO ]

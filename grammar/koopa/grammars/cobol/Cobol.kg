@@ -4185,6 +4185,10 @@ def assignmentName =
 end
 
 def literal =
+    literalValue (concatenatedLiteral)*
+end
+
+def literalValue =
     ( numericLiteral
     | alphanumericLiteral
 
@@ -4195,6 +4199,10 @@ def literal =
     # TODO Correct ?
     | bit
     )
+end
+
+def concatenatedLiteral =
+    '&' literalValue
 end
 
 def value =

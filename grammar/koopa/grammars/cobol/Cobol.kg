@@ -1220,7 +1220,7 @@ def space =
 end
 
 def justified =
-    (JUSTIFIED | JUST) [RIGHT]
+    [OUTPUT] (JUSTIFIED | JUST) [LEFT | RIGHT | CENTERED]
 end
 
 def occurs =
@@ -1438,7 +1438,9 @@ def statement =
     | computeStatement
     | deleteFileStatement   # *MF
     | deleteStatement
+    | disableStatement
     | divideStatement
+    | enableStatement
     | entryStatement
     | evaluateStatement
     | examineStatement      # *MF
@@ -1462,12 +1464,15 @@ def statement =
     | raiseStatement        # *.NET
     | readStatement
     | readyTraceStatement   # *OSVS *VSC2
+    | receiveStatement
     | releaseStatement
     | resetTraceStatement   # *OSVS *VSC2
     | returnStatement
     | rewriteStatement
     | rollbackStatement     # *MF
+    | purgeStatement
     | searchStatement
+    | sendStatement
     | serviceStatement      # *OSVS *VSC2
     | sortStatement
     | startStatement
@@ -1637,6 +1642,13 @@ def verb =
     
     | ALLOCATE
     | FREE
+
+    # Communication verbs:
+    | ENABLE
+    | DISABLE
+    | SEND
+    | RECEIVE
+    | PURGE
     
     # Verbs for statements implemented by Adrian
     | START
@@ -1647,13 +1659,6 @@ def verb =
     # Verbs for statements which remain to be implemented:
     | ALTER
     | CONTINUE
-    
-    # Following are verbs found in testsuite, not in documentation.
-    | ENABLE
-    | DISABLE
-    | SEND
-    | RECEIVE
-    | PURGE
     )
 end
 
@@ -1947,6 +1952,15 @@ end
 # MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF80C.html
 
 ## #############################################################################
+## DISABLE statement.
+## -----------------------------------------------------------------------------
+
+def disableStatement =
+    DISABLE (INPUT [TERMINAL] | I-O TERMINAL | OUTPUT)
+            cdName [WITH] KEY (literal | identifier)
+end
+
+## #############################################################################
 ## DISPLAY statement.
 ## -----------------------------------------------------------------------------
 
@@ -2025,6 +2039,7 @@ def screenEntryPhrase =
     | blankPhrase
     | blankWhenZero
     | blinkPhrase
+    | boldPhrase
     | capitalizationPhrase
     | controlPhrase
     | convertPhrase
@@ -2035,6 +2050,7 @@ def screenEntryPhrase =
     | fullPhrase
     | gridPhrase
     | justificationPhrase
+    | justified
     | highPhrase
     | lowPhrase
     | linePhrase
@@ -2046,6 +2062,7 @@ def screenEntryPhrase =
     | scrollPhrase
     | securePhrase
     | sizePhrase
+    | standardPhrase
     | foregroundPhrase
     | backgroundPhrase
     | timeoutPhrase
@@ -2073,7 +2090,11 @@ def blankPhrase =
 end
 
 def blinkPhrase =
-    BLINK
+    (BLINKING | BLINK)
+end
+
+def boldPhrase =
+    BOLD
 end
 
 def capitalizationPhrase =
@@ -2085,7 +2106,7 @@ def controlPhrase =
 end
 
 def convertPhrase =
-    CONVERT
+    (CONVERT | CONVERSION)
 end
 
 def cursorPhrase =
@@ -2140,7 +2161,7 @@ def requiredPhrase =
 end
 
 def reversePhrase =
-    ( REVERSE | REVERSED | REVERSE-VIDEO )
+    (REVERSE | REVERSED | REVERSE-VIDEO)
 end
 
 def scrollPhrase =
@@ -2154,6 +2175,10 @@ end
 
 def sizePhrase =
     SIZE [IS] (identifier | literal)
+end
+
+def standardPhrase =
+    STANDARD
 end
 
 def tabPhrase =
@@ -2211,6 +2236,15 @@ end
 def division_format3 =
     (identifier | literal)
     INTO (qualifiedDataName [ROUNDED])+
+end
+
+## #############################################################################
+## ENABLE statement.
+## -----------------------------------------------------------------------------
+
+def enableStatement =
+    ENABLE (INPUT [TERMINAL] | I-O TERMINAL | OUTPUT)
+            cdName [WITH] KEY (literal | identifier)
 end
 
 ## #############################################################################
@@ -2908,6 +2942,14 @@ def varying =
 end
 
 ## #############################################################################
+## PURGE statement.
+## -----------------------------------------------------------------------------
+
+def purgeStatement =
+    PURGE cdName
+end
+
+## #############################################################################
 ## RAISE statement.
 ## -----------------------------------------------------------------------------
 
@@ -2957,6 +2999,28 @@ end
 
 def readyTraceStatement =
     READY TRACE [.]
+end
+
+## #############################################################################
+## RECEIVE statement.
+## -----------------------------------------------------------------------------
+
+def receiveStatement =
+    RECEIVE 
+    ( dataName FROM ( THREAD dataName | LAST THREAD | ANY THREAD )
+      !( BEFORE [TIME] (numeric | identifier)
+       | [WITH] NO WAIT
+       | THREAD     [IN] dataName
+       | SIZE       [IN] (numeric | identifier)
+       | STATUS     [IN] (alphanumericLiteral | identifier)
+       | onException
+       | notOnException
+       )                                                                # *ACU
+    | cdName (MESSAGE | SEGMENT) [INTO] identifier
+             [NO DATA nestedStatements]
+             [WITH DATA nestedStatements]
+    )
+    [END-RECEIVE]
 end
 
 ## #############################################################################
@@ -3041,6 +3105,28 @@ end
 
 def notAtEnd =
     NOT [AT] END nestedStatements
+end
+
+## #############################################################################
+## SEND statement.
+## -----------------------------------------------------------------------------
+
+def sendStatement =
+    SEND
+    ( dataName TO ( LAST THREAD
+                  | ALL THREADS
+                  | ([THREAD] dataName)+
+                  )                                                     # *ACU
+    | cdName [FROM identifier]
+           [ [WITH] (ESI | EMI | EGI | identifier)
+             [(BEFORE | AFTER) [ADVANCING] ( PAGE
+                                           | (zero | integer | identifier) [LINE | LINES]
+                                           | mnemonicName
+                                           )
+             ]
+             [REPLACING [LINE]]
+           ]
+    )
 end
 
 ## #############################################################################
@@ -3600,6 +3686,7 @@ def endOfStatement =
     | END-MULTIPLY
     | END-PERFORM
     | END-READ
+    | END-RECEIVE
     | END-RETURN
     | END-REWRITE
     | END-SEARCH
@@ -4248,6 +4335,7 @@ def numeric =
     | decimal
     | booleanLiteral
     | hexadecimal
+    | zero
     | (LENGTH | BYTE-LENGTH) [OF] identifier
     )
 end

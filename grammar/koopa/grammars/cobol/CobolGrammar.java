@@ -6042,12 +6042,19 @@ public class CobolGrammar extends KoopaGrammar {
            justifiedParser = future;
            future.setParser(
                sequence(
+                   optional(
+                       token("OUTPUT")
+                   ),
                    choice(
                        token("JUSTIFIED"),
                        token("JUST")
                    ),
                    optional(
-                       token("RIGHT")
+                       choice(
+                           token("LEFT"),
+                           token("RIGHT"),
+                           token("CENTERED")
+                       )
                    )
                )
            );
@@ -7046,7 +7053,9 @@ public class CobolGrammar extends KoopaGrammar {
                    computeStatement(),
                    deleteFileStatement(),
                    deleteStatement(),
+                   disableStatement(),
                    divideStatement(),
+                   enableStatement(),
                    entryStatement(),
                    evaluateStatement(),
                    examineStatement(),
@@ -7070,12 +7079,15 @@ public class CobolGrammar extends KoopaGrammar {
                    raiseStatement(),
                    readStatement(),
                    readyTraceStatement(),
+                   receiveStatement(),
                    releaseStatement(),
                    resetTraceStatement(),
                    returnStatement(),
                    rewriteStatement(),
                    rollbackStatement(),
+                   purgeStatement(),
                    searchStatement(),
+                   sendStatement(),
                    serviceStatement(),
                    sortStatement(),
                    startStatement(),
@@ -7498,15 +7510,15 @@ public class CobolGrammar extends KoopaGrammar {
                    token("ACCEPT"),
                    token("ALLOCATE"),
                    token("FREE"),
-                   token("START"),
-                   token("USE"),
-                   token("ALTER"),
-                   token("CONTINUE"),
                    token("ENABLE"),
                    token("DISABLE"),
                    token("SEND"),
                    token("RECEIVE"),
-                   token("PURGE")
+                   token("PURGE"),
+                   token("START"),
+                   token("USE"),
+                   token("ALTER"),
+                   token("CONTINUE")
                )
            );
         }
@@ -8720,6 +8732,48 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // disableStatement
+    // ........................................................
+
+    private Parser disableStatementParser = null;
+
+    public Parser disableStatement() {
+        if (disableStatementParser == null) {
+           FutureParser future = scoped("disableStatement");
+           disableStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("DISABLE"),
+                   choice(
+                       sequence(
+                           token("INPUT"),
+                           optional(
+                               token("TERMINAL")
+                           )
+                       ),
+                       sequence(
+                           token("I-O"),
+                           token("TERMINAL")
+                       ),
+                       token("OUTPUT")
+                   ),
+                   cdName(),
+                   optional(
+                       token("WITH")
+                   ),
+                   token("KEY"),
+                   choice(
+                       literal(),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return disableStatementParser;
+    }
+
+    // ========================================================
     // displayStatement
     // ........................................................
 
@@ -9049,6 +9103,7 @@ public class CobolGrammar extends KoopaGrammar {
                    blankPhrase(),
                    blankWhenZero(),
                    blinkPhrase(),
+                   boldPhrase(),
                    capitalizationPhrase(),
                    controlPhrase(),
                    convertPhrase(),
@@ -9059,6 +9114,7 @@ public class CobolGrammar extends KoopaGrammar {
                    fullPhrase(),
                    gridPhrase(),
                    justificationPhrase(),
+                   justified(),
                    highPhrase(),
                    lowPhrase(),
                    linePhrase(),
@@ -9070,6 +9126,7 @@ public class CobolGrammar extends KoopaGrammar {
                    scrollPhrase(),
                    securePhrase(),
                    sizePhrase(),
+                   standardPhrase(),
                    foregroundPhrase(),
                    backgroundPhrase(),
                    timeoutPhrase(),
@@ -9193,11 +9250,32 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("blinkPhrase");
            blinkPhraseParser = future;
            future.setParser(
-               token("BLINK")
+               choice(
+                   token("BLINKING"),
+                   token("BLINK")
+               )
            );
         }
 
         return blinkPhraseParser;
+    }
+
+    // ========================================================
+    // boldPhrase
+    // ........................................................
+
+    private Parser boldPhraseParser = null;
+
+    public Parser boldPhrase() {
+        if (boldPhraseParser == null) {
+           FutureParser future = scoped("boldPhrase");
+           boldPhraseParser = future;
+           future.setParser(
+               token("BOLD")
+           );
+        }
+
+        return boldPhraseParser;
     }
 
     // ========================================================
@@ -9259,7 +9337,10 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("convertPhrase");
            convertPhraseParser = future;
            future.setParser(
-               token("CONVERT")
+               choice(
+                   token("CONVERT"),
+                   token("CONVERSION")
+               )
            );
         }
 
@@ -9653,6 +9734,24 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // standardPhrase
+    // ........................................................
+
+    private Parser standardPhraseParser = null;
+
+    public Parser standardPhrase() {
+        if (standardPhraseParser == null) {
+           FutureParser future = scoped("standardPhrase");
+           standardPhraseParser = future;
+           future.setParser(
+               token("STANDARD")
+           );
+        }
+
+        return standardPhraseParser;
+    }
+
+    // ========================================================
     // tabPhrase
     // ........................................................
 
@@ -9960,6 +10059,48 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return division_format3Parser;
+    }
+
+    // ========================================================
+    // enableStatement
+    // ........................................................
+
+    private Parser enableStatementParser = null;
+
+    public Parser enableStatement() {
+        if (enableStatementParser == null) {
+           FutureParser future = scoped("enableStatement");
+           enableStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("ENABLE"),
+                   choice(
+                       sequence(
+                           token("INPUT"),
+                           optional(
+                               token("TERMINAL")
+                           )
+                       ),
+                       sequence(
+                           token("I-O"),
+                           token("TERMINAL")
+                       ),
+                       token("OUTPUT")
+                   ),
+                   cdName(),
+                   optional(
+                       token("WITH")
+                   ),
+                   token("KEY"),
+                   choice(
+                       literal(),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return enableStatementParser;
     }
 
     // ========================================================
@@ -12851,6 +12992,27 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // purgeStatement
+    // ........................................................
+
+    private Parser purgeStatementParser = null;
+
+    public Parser purgeStatement() {
+        if (purgeStatementParser == null) {
+           FutureParser future = scoped("purgeStatement");
+           purgeStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("PURGE"),
+                   cdName()
+               )
+           );
+        }
+
+        return purgeStatementParser;
+    }
+
+    // ========================================================
     // raiseStatement
     // ........................................................
 
@@ -13068,6 +13230,122 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return readyTraceStatementParser;
+    }
+
+    // ========================================================
+    // receiveStatement
+    // ........................................................
+
+    private Parser receiveStatementParser = null;
+
+    public Parser receiveStatement() {
+        if (receiveStatementParser == null) {
+           FutureParser future = scoped("receiveStatement");
+           receiveStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("RECEIVE"),
+                   choice(
+                       sequence(
+                           dataName(),
+                           token("FROM"),
+                           choice(
+                               sequence(
+                                   token("THREAD"),
+                                   dataName()
+                               ),
+                               sequence(
+                                   token("LAST"),
+                                   token("THREAD")
+                               ),
+                               sequence(
+                                   token("ANY"),
+                                   token("THREAD")
+                               )
+                           ),
+                           permuted(
+                               sequence(
+                                   token("BEFORE"),
+                                   optional(
+                                       token("TIME")
+                                   ),
+                                   choice(
+                                       numeric(),
+                                       identifier()
+                                   )
+                               ),
+                               sequence(
+                                   optional(
+                                       token("WITH")
+                                   ),
+                                   token("NO"),
+                                   token("WAIT")
+                               ),
+                               sequence(
+                                   token("THREAD"),
+                                   optional(
+                                       token("IN")
+                                   ),
+                                   dataName()
+                               ),
+                               sequence(
+                                   token("SIZE"),
+                                   optional(
+                                       token("IN")
+                                   ),
+                                   choice(
+                                       numeric(),
+                                       identifier()
+                                   )
+                               ),
+                               sequence(
+                                   token("STATUS"),
+                                   optional(
+                                       token("IN")
+                                   ),
+                                   choice(
+                                       alphanumericLiteral(),
+                                       identifier()
+                                   )
+                               ),
+                               onException(),
+                               notOnException()
+                           )
+                       ),
+                       sequence(
+                           cdName(),
+                           choice(
+                               token("MESSAGE"),
+                               token("SEGMENT")
+                           ),
+                           optional(
+                               token("INTO")
+                           ),
+                           identifier(),
+                           optional(
+                               sequence(
+                                   token("NO"),
+                                   token("DATA"),
+                                   nestedStatements()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("WITH"),
+                                   token("DATA"),
+                                   nestedStatements()
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       token("END-RECEIVE")
+                   )
+               )
+           );
+        }
+
+        return receiveStatementParser;
     }
 
     // ========================================================
@@ -13346,6 +13624,108 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return notAtEndParser;
+    }
+
+    // ========================================================
+    // sendStatement
+    // ........................................................
+
+    private Parser sendStatementParser = null;
+
+    public Parser sendStatement() {
+        if (sendStatementParser == null) {
+           FutureParser future = scoped("sendStatement");
+           sendStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("SEND"),
+                   choice(
+                       sequence(
+                           dataName(),
+                           token("TO"),
+                           choice(
+                               sequence(
+                                   token("LAST"),
+                                   token("THREAD")
+                               ),
+                               sequence(
+                                   token("ALL"),
+                                   token("THREADS")
+                               ),
+                               plus(
+                                   sequence(
+                                       optional(
+                                           token("THREAD")
+                                       ),
+                                       dataName()
+                                   )
+                               )
+                           )
+                       ),
+                       sequence(
+                           cdName(),
+                           optional(
+                               sequence(
+                                   token("FROM"),
+                                   identifier()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   optional(
+                                       token("WITH")
+                                   ),
+                                   choice(
+                                       token("ESI"),
+                                       token("EMI"),
+                                       token("EGI"),
+                                       identifier()
+                                   ),
+                                   optional(
+                                       sequence(
+                                           choice(
+                                               token("BEFORE"),
+                                               token("AFTER")
+                                           ),
+                                           optional(
+                                               token("ADVANCING")
+                                           ),
+                                           choice(
+                                               token("PAGE"),
+                                               sequence(
+                                                   choice(
+                                                       zero(),
+                                                       integer(),
+                                                       identifier()
+                                                   ),
+                                                   optional(
+                                                       choice(
+                                                           token("LINE"),
+                                                           token("LINES")
+                                                       )
+                                                   )
+                                               ),
+                                               mnemonicName()
+                                           )
+                                       )
+                                   ),
+                                   optional(
+                                       sequence(
+                                           token("REPLACING"),
+                                           optional(
+                                               token("LINE")
+                                           )
+                                       )
+                                   )
+                               )
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return sendStatementParser;
     }
 
     // ========================================================
@@ -15673,6 +16053,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("END-MULTIPLY"),
                    token("END-PERFORM"),
                    token("END-READ"),
+                   token("END-RECEIVE"),
                    token("END-RETURN"),
                    token("END-REWRITE"),
                    token("END-SEARCH"),
@@ -18363,6 +18744,7 @@ public class CobolGrammar extends KoopaGrammar {
                    decimal(),
                    booleanLiteral(),
                    hexadecimal(),
+                   zero(),
                    sequence(
                        choice(
                            token("LENGTH"),

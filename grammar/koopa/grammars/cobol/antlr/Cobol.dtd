@@ -152,7 +152,7 @@
 <!ELEMENT threadLocalClause (t?,t)>
 <!ELEMENT zero (t)>
 <!ELEMENT space (t)>
-<!ELEMENT justified (t,t?)>
+<!ELEMENT justified (t?,t,t?)>
 <!ELEMENT occurs (t,(((integer,t)?,integer,t?,(t,t?,qualifiedDataName)?,(t,t?,t?,qualifiedDataName+)*,(t,t?,indexName+)*)|t)+)>
 <!ELEMENT picture (t,t?,pictureString)>
 <!ELEMENT sign ((t,t?)?,t,(t,t?)?)>
@@ -178,7 +178,7 @@
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>
 <!ELEMENT sentence (compilerStatement|(statement,(compilerStatement|statement|continuationOfStatement)*,t)|t)>
-<!ELEMENT statement (acceptStatement|addStatement|callStatement|chainStatement|cancelStatement|closeStatement|commitStatement|computeStatement|deleteFileStatement|deleteStatement|divideStatement|entryStatement|evaluateStatement|examineStatement|execStatement|exhibitStatement|exitStatement|generateStatement|gobackStatement|goToStatement|identifiedByStatement|ifStatement|initiateStatement|invokeStatement|mergeStatement|moveStatement|multiplyStatement|nextSentenceStatement|onStatement|openStatement|performStatement|raiseStatement|readStatement|readyTraceStatement|releaseStatement|resetTraceStatement|returnStatement|rewriteStatement|rollbackStatement|searchStatement|serviceStatement|sortStatement|startStatement|stopStatement|stringStatement|subtractStatement|suppressStatement|terminateStatement|transformStatement|unlockStatement|unstringStatement|waitStatement|writeStatement|xmlGenerateStatement|xmlParseStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
+<!ELEMENT statement (acceptStatement|addStatement|callStatement|chainStatement|cancelStatement|closeStatement|commitStatement|computeStatement|deleteFileStatement|deleteStatement|disableStatement|divideStatement|enableStatement|entryStatement|evaluateStatement|examineStatement|execStatement|exhibitStatement|exitStatement|generateStatement|gobackStatement|goToStatement|identifiedByStatement|ifStatement|initiateStatement|invokeStatement|mergeStatement|moveStatement|multiplyStatement|nextSentenceStatement|onStatement|openStatement|performStatement|raiseStatement|readStatement|readyTraceStatement|receiveStatement|releaseStatement|resetTraceStatement|returnStatement|rewriteStatement|rollbackStatement|purgeStatement|searchStatement|sendStatement|serviceStatement|sortStatement|startStatement|stopStatement|stringStatement|subtractStatement|suppressStatement|terminateStatement|transformStatement|unlockStatement|unstringStatement|waitStatement|writeStatement|xmlGenerateStatement|xmlParseStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
 <!ELEMENT subStatementMarker (t|(t,t)|t|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t,t?,t)|(t?,t)|(t?,t))>
 <!ELEMENT continuationOfStatement ((eventPhrase,statement)|endOfStatementMarker)>
 <!ELEMENT nestedStatements (statement+)>
@@ -216,6 +216,7 @@
 <!ELEMENT computeStatement (t,(qualifiedDataName,t?)+,t,arithmeticExpression,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
 <!ELEMENT deleteStatement (t,fileName,t?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT deleteFileStatement (t+,fileName+)>
+<!ELEMENT disableStatement (t,((t,t?)|(t,t)|t),cdName,t?,t,(literal|identifier))>
 <!ELEMENT displayStatement (t,(displayTerminalFormat|displayDeviceFormat),t?)>
 <!ELEMENT displayDeviceFormat ((identifier|literal)+,uponClause?,withNoAdvancing?,onException?,notOnException?)>
 <!ELEMENT uponClause (t,(t|environmentName|mnemonicName))>
@@ -225,12 +226,13 @@
 <!ELEMENT dtLineColPositioning (t?,((dtLinePos,dtColPos?)|(dtColPos,dtLinePos?)))>
 <!ELEMENT dtLinePos (t,t?,t?,t?,(identifier|literal))>
 <!ELEMENT dtColPos (t,t?,t?,t?,(identifier|literal))>
-<!ELEMENT screenEntryPhrase (autoPhrase|beepPhrase|blankPhrase|blankWhenZero|blinkPhrase|capitalizationPhrase|controlPhrase|convertPhrase|cursorPhrase|echoPhrase|erasePhrase|fillPhrase|fullPhrase|gridPhrase|justificationPhrase|highPhrase|lowPhrase|linePhrase|offPhrase|picture|promptPhrase|requiredPhrase|reversePhrase|scrollPhrase|securePhrase|sizePhrase|foregroundPhrase|backgroundPhrase|timeoutPhrase|trailingSignPhrase|tabPhrase|timePhrase|updatePhrase)>
+<!ELEMENT screenEntryPhrase (autoPhrase|beepPhrase|blankPhrase|blankWhenZero|blinkPhrase|boldPhrase|capitalizationPhrase|controlPhrase|convertPhrase|cursorPhrase|echoPhrase|erasePhrase|fillPhrase|fullPhrase|gridPhrase|justificationPhrase|justified|highPhrase|lowPhrase|linePhrase|offPhrase|picture|promptPhrase|requiredPhrase|reversePhrase|scrollPhrase|securePhrase|sizePhrase|standardPhrase|foregroundPhrase|backgroundPhrase|timeoutPhrase|trailingSignPhrase|tabPhrase|timePhrase|updatePhrase)>
 <!ELEMENT autoPhrase (t)>
 <!ELEMENT backgroundPhrase (t,t?,integer)>
 <!ELEMENT beepPhrase (t?,t)>
 <!ELEMENT blankPhrase (t,t)>
 <!ELEMENT blinkPhrase (t)>
+<!ELEMENT boldPhrase (t)>
 <!ELEMENT capitalizationPhrase (t)>
 <!ELEMENT controlPhrase (t,t?,(identifier_format2|literal))>
 <!ELEMENT convertPhrase (t)>
@@ -250,6 +252,7 @@
 <!ELEMENT scrollPhrase (t+,(t?,(integer|identifier),t)?)>
 <!ELEMENT securePhrase (t)>
 <!ELEMENT sizePhrase (t,t?,(identifier|literal))>
+<!ELEMENT standardPhrase (t)>
 <!ELEMENT tabPhrase (t)>
 <!ELEMENT timePhrase (t?,t,(identifier|literal))>
 <!ELEMENT timeoutPhrase (t+,(identifier|integer))>
@@ -261,6 +264,7 @@
 <!ELEMENT division_format1 ((identifier|literal),t,(identifier|literal),t,qualifiedDataName,t?,t,qualifiedDataName)>
 <!ELEMENT division_format2 ((identifier|literal),t,(identifier|literal),t,(qualifiedDataName,t?)+)>
 <!ELEMENT division_format3 ((identifier|literal),t,(qualifiedDataName,t?)+)>
+<!ELEMENT enableStatement (t,((t,t?)|(t,t)|t),cdName,t?,t,(literal|identifier))>
 <!ELEMENT entryStatement (t,literal,mnemonicName?,(t,((t?,t)?,(t|(dataName,(t,(t,t)?)?)))+,(t,(integer,t,integer)?)?)?,(t,dataName)?)>
 <!ELEMENT evaluateStatement (t,subject,(t,subject)*,when+,whenOther?,t?)>
 <!ELEMENT subject (condition|arithmeticExpression|identifier|literal)>
@@ -334,11 +338,13 @@
 <!ELEMENT testPosition (t?,t,t)>
 <!ELEMENT until (testPosition?,t,(condition|t))>
 <!ELEMENT varying (testPosition?,t,identifier,t,(literal|identifier),t,(literal|identifier),t,condition,(t,identifier,t,(literal|identifier),t,(literal|identifier),t,condition)*)>
+<!ELEMENT purgeStatement (t,cdName)>
 <!ELEMENT raiseStatement (t,identifier?)>
 <!ELEMENT readStatement (t,fileName,t?,t?,(t,identifier_format2)?,((t,t?,t)|(t,t)|(t?,((t?,t)|t))|retryPhrase)?,(t,t?,qualifiedDataName)?,(t?,t,nestedStatements)?,(t,t?,t,nestedStatements)?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT readWithClause (t?,(readLockClause|t))>
 <!ELEMENT readLockClause (t?,t)>
 <!ELEMENT readyTraceStatement (t+)>
+<!ELEMENT receiveStatement (t,((dataName,t,((t,dataName)|(t,t)|(t,t)),((t,t?,(numeric|identifier))|(t?,t,t)|(t,t?,dataName)|(t,t?,(numeric|identifier))|(t,t?,(alphanumericLiteral|identifier))|onException|notOnException)*)|(cdName,t,t?,identifier,(t+,nestedStatements)?,(t+,nestedStatements)?)),t?)>
 <!ELEMENT releaseStatement (t,recordName,(t,identifier)?)>
 <!ELEMENT resetTraceStatement (t+)>
 <!ELEMENT returnStatement (t,fileName,t?,(t,identifier)?,atEnd,notAtEnd?,t?)>
@@ -347,6 +353,7 @@
 <!ELEMENT searchStatement (t,((t,identifier)|(identifier,(t,(identifier|indexName))?)),atEnd?,(t,condition,(nestedStatements|(t,t)))+,t?)>
 <!ELEMENT atEnd (t?,t,nestedStatements)>
 <!ELEMENT notAtEnd (t,t?,t,nestedStatements)>
+<!ELEMENT sendStatement (t,((dataName,t,((t,t)|(t,t)|(t?,dataName)+))|(cdName,(t,identifier)?,(t?,(t|identifier),(t,t?,(t|((zero|integer|identifier),t?)|mnemonicName))?,(t,t?)?)?)))>
 <!ELEMENT serviceStatement (t,(t|(t,identifier)))>
 <!ELEMENT sortStatement ((t,fileName,(t,(t,t?,t?,qualifiedDataName+)+)+,(t?,t,(t,t)?)?,(t?,t,t?,alphabetName)?,((t+,procedureName,(t,procedureName)?)|(t,fileName+)),((t+,procedureName,(t,procedureName)?)|(t,fileName+)))|(t,dataName,(t,(t,t?,t?,qualifiedDataName+)+)+,(t?,t,(t,t)?)?,(t?,t,t?,alphabetName)?))>
 <!ELEMENT setStatement (t,(setFormatMonitorValue|setFormatDataPointerAssignment|setFormatProcedurePointerAssignment|setFormatSemaphoreValue|setFormat1|setFormat2|setFormat3),water?)>
@@ -494,7 +501,7 @@
 <!ELEMENT bit (t)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,(zero|space|t))|t)>
 <!ELEMENT numericLiteral (integerLiteral|decimal|booleanLiteral|hexadecimal|(t,t?,identifier))>
-<!ELEMENT numeric (integer|decimal|booleanLiteral|hexadecimal|(t,t?,identifier))>
+<!ELEMENT numeric (integer|decimal|booleanLiteral|hexadecimal|zero|(t,t?,identifier))>
 <!ELEMENT integer (integerLiteral|integerConstant)>
 <!ELEMENT constant (integerConstant|alphanumericConstant)>
 <!ELEMENT integerConstant (cobolWord)>

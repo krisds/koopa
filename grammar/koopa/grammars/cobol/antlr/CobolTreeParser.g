@@ -3290,10 +3290,14 @@ space
 
 justified
   : ^(JUSTIFIED
-      ( ( 'JUSTIFIED'
-      | 'JUST'
-      )
-        ( 'RIGHT' )?
+      ( ( 'OUTPUT' )?
+        ( 'JUSTIFIED'
+        | 'JUST'
+        )
+        ( ( 'LEFT'
+        | 'RIGHT'
+        | 'CENTERED'
+        ) )?
       )
     )
   ;
@@ -3846,7 +3850,9 @@ statement
       | computeStatement
       | deleteFileStatement
       | deleteStatement
+      | disableStatement
       | divideStatement
+      | enableStatement
       | entryStatement
       | evaluateStatement
       | examineStatement
@@ -3870,12 +3876,15 @@ statement
       | raiseStatement
       | readStatement
       | readyTraceStatement
+      | receiveStatement
       | releaseStatement
       | resetTraceStatement
       | returnStatement
       | rewriteStatement
       | rollbackStatement
+      | purgeStatement
       | searchStatement
+      | sendStatement
       | serviceStatement
       | sortStatement
       | startStatement
@@ -4144,15 +4153,15 @@ verb
       | 'ACCEPT'
       | 'ALLOCATE'
       | 'FREE'
-      | 'START'
-      | 'USE'
-      | 'ALTER'
-      | 'CONTINUE'
       | 'ENABLE'
       | 'DISABLE'
       | 'SEND'
       | 'RECEIVE'
       | 'PURGE'
+      | 'START'
+      | 'USE'
+      | 'ALTER'
+      | 'CONTINUE'
       )
     )
   ;
@@ -4823,6 +4832,31 @@ deleteFileStatement
   ;
 
 // ========================================================
+// disableStatement
+// ........................................................
+
+disableStatement
+  : ^(DISABLE_STATEMENT
+      ( 'DISABLE'
+        ( ( 'INPUT'
+          ( 'TERMINAL' )?
+        )
+        | ( 'I-O'
+          'TERMINAL'
+        )
+        | 'OUTPUT'
+        )
+        cdName
+        ( 'WITH' )?
+        'KEY'
+        ( literal
+        | identifier
+        )
+      )
+    )
+  ;
+
+// ========================================================
 // displayStatement
 // ........................................................
 
@@ -5001,6 +5035,7 @@ screenEntryPhrase
       | blankPhrase
       | blankWhenZero
       | blinkPhrase
+      | boldPhrase
       | capitalizationPhrase
       | controlPhrase
       | convertPhrase
@@ -5011,6 +5046,7 @@ screenEntryPhrase
       | fullPhrase
       | gridPhrase
       | justificationPhrase
+      | justified
       | highPhrase
       | lowPhrase
       | linePhrase
@@ -5022,6 +5058,7 @@ screenEntryPhrase
       | scrollPhrase
       | securePhrase
       | sizePhrase
+      | standardPhrase
       | foregroundPhrase
       | backgroundPhrase
       | timeoutPhrase
@@ -5094,7 +5131,19 @@ blankPhrase
 
 blinkPhrase
   : ^(BLINK_PHRASE
-      'BLINK'
+      ( 'BLINKING'
+      | 'BLINK'
+      )
+    )
+  ;
+
+// ========================================================
+// boldPhrase
+// ........................................................
+
+boldPhrase
+  : ^(BOLD_PHRASE
+      'BOLD'
     )
   ;
 
@@ -5131,7 +5180,9 @@ controlPhrase
 
 convertPhrase
   : ^(CONVERT_PHRASE
-      'CONVERT'
+      ( 'CONVERT'
+      | 'CONVERSION'
+      )
     )
   ;
 
@@ -5352,6 +5403,16 @@ sizePhrase
   ;
 
 // ========================================================
+// standardPhrase
+// ........................................................
+
+standardPhrase
+  : ^(STANDARD_PHRASE
+      'STANDARD'
+    )
+  ;
+
+// ========================================================
 // tabPhrase
 // ........................................................
 
@@ -5524,6 +5585,31 @@ division_format3
         ( ( qualifiedDataName
           ( 'ROUNDED' )?
         ) )+
+      )
+    )
+  ;
+
+// ========================================================
+// enableStatement
+// ........................................................
+
+enableStatement
+  : ^(ENABLE_STATEMENT
+      ( 'ENABLE'
+        ( ( 'INPUT'
+          ( 'TERMINAL' )?
+        )
+        | ( 'I-O'
+          'TERMINAL'
+        )
+        | 'OUTPUT'
+        )
+        cdName
+        ( 'WITH' )?
+        'KEY'
+        ( literal
+        | identifier
+        )
       )
     )
   ;
@@ -7210,6 +7296,18 @@ varying
   ;
 
 // ========================================================
+// purgeStatement
+// ........................................................
+
+purgeStatement
+  : ^(PURGE_STATEMENT
+      ( 'PURGE'
+        cdName
+      )
+    )
+  ;
+
+// ========================================================
 // raiseStatement
 // ........................................................
 
@@ -7320,6 +7418,76 @@ readyTraceStatement
       ( 'READY'
         'TRACE'
         ( '.' )?
+      )
+    )
+  ;
+
+// ========================================================
+// receiveStatement
+// ........................................................
+
+receiveStatement
+  : ^(RECEIVE_STATEMENT
+      ( 'RECEIVE'
+        ( ( dataName
+          'FROM'
+          ( ( 'THREAD'
+            dataName
+          )
+          | ( 'LAST'
+            'THREAD'
+          )
+          | ( 'ANY'
+            'THREAD'
+          )
+          )
+          ( ( ( 'BEFORE'
+            ( 'TIME' )?
+            ( numeric
+            | identifier
+            )
+          )
+          | ( ( 'WITH' )?
+            'NO'
+            'WAIT'
+          )
+          | ( 'THREAD'
+            ( 'IN' )?
+            dataName
+          )
+          | ( 'SIZE'
+            ( 'IN' )?
+            ( numeric
+            | identifier
+            )
+          )
+          | ( 'STATUS'
+            ( 'IN' )?
+            ( alphanumericLiteral
+            | identifier
+            )
+          )
+          | onException
+          | notOnException
+          ) )*
+        )
+        | ( cdName
+          ( 'MESSAGE'
+          | 'SEGMENT'
+          )
+          ( 'INTO' )?
+          identifier
+          ( ( 'NO'
+            'DATA'
+            nestedStatements
+          ) )?
+          ( ( 'WITH'
+            'DATA'
+            nestedStatements
+          ) )?
+        )
+        )
+        ( 'END-RECEIVE' )?
       )
     )
   ;
@@ -7468,6 +7636,62 @@ notAtEnd
         ( 'AT' )?
         'END'
         nestedStatements
+      )
+    )
+  ;
+
+// ========================================================
+// sendStatement
+// ........................................................
+
+sendStatement
+  : ^(SEND_STATEMENT
+      ( 'SEND'
+        ( ( dataName
+          'TO'
+          ( ( 'LAST'
+            'THREAD'
+          )
+          | ( 'ALL'
+            'THREADS'
+          )
+          | ( ( ( 'THREAD' )?
+            dataName
+          ) )+
+          )
+        )
+        | ( cdName
+          ( ( 'FROM'
+            identifier
+          ) )?
+          ( ( ( 'WITH' )?
+            ( 'ESI'
+            | 'EMI'
+            | 'EGI'
+            | identifier
+            )
+            ( ( ( 'BEFORE'
+            | 'AFTER'
+            )
+              ( 'ADVANCING' )?
+              ( 'PAGE'
+              | ( ( zero
+              | integer
+              | identifier
+              )
+                ( ( 'LINE'
+                | 'LINES'
+                ) )?
+              )
+              | mnemonicName
+              )
+            ) )?
+            ( ( 'REPLACING'
+              ( 'LINE' )?
+            ) )?
+          ) )?
+        )
+        )
       )
     )
   ;
@@ -8750,6 +8974,7 @@ endOfStatement
       | 'END-MULTIPLY'
       | 'END-PERFORM'
       | 'END-READ'
+      | 'END-RECEIVE'
       | 'END-RETURN'
       | 'END-REWRITE'
       | 'END-SEARCH'
@@ -10360,6 +10585,7 @@ numeric
       | decimal
       | booleanLiteral
       | hexadecimal
+      | zero
       | ( ( 'LENGTH'
       | 'BYTE-LENGTH'
       )
@@ -10521,7 +10747,9 @@ token
   | 'BIT'
   | 'BLANK'
   | 'BLINK'
+  | 'BLINKING'
   | 'BLOCK'
+  | 'BOLD'
   | 'BOOLEAN-OF-INTEGER'
   | 'BOTTOM'
   | 'BROWSING'
@@ -10545,6 +10773,7 @@ token
   | 'CASE-INSENSITIVE'
   | 'CASE-SENSITIVE'
   | 'CD'
+  | 'CENTERED'
   | 'CENTURY-DATE'
   | 'CENTURY-DAY'
   | 'CF'
@@ -10602,6 +10831,7 @@ token
   | 'CONTINUE'
   | 'CONTROL'
   | 'CONTROLS'
+  | 'CONVERSION'
   | 'CONVERT'
   | 'CONVERTING'
   | 'COPY'
@@ -10662,8 +10892,10 @@ token
   | 'EBCDIC'
   | 'ECHO'
   | 'EGCS'
+  | 'EGI'
   | 'EJECT'
   | 'ELSE'
+  | 'EMI'
   | 'EMPTY-CHECK'
   | 'ENABLE'
   | 'END'
@@ -10682,6 +10914,7 @@ token
   | 'END-OF-PAGE'
   | 'END-PERFORM'
   | 'END-READ'
+  | 'END-RECEIVE'
   | 'END-RETURN'
   | 'END-REWRITE'
   | 'END-SEARCH'
@@ -10707,6 +10940,7 @@ token
   | 'ERASE'
   | 'ERROR'
   | 'ESCAPE'
+  | 'ESI'
   | 'EVALUATE'
   | 'EVENT'
   | 'EVERY'
@@ -11037,6 +11271,7 @@ token
   | 'SECTION'
   | 'SECURE'
   | 'SECURITY'
+  | 'SEGMENT'
   | 'SELECT'
   | 'SELF'
   | 'SEMAPHORE-POINTER'
@@ -11128,6 +11363,7 @@ token
   | 'THREAD-LOCAL'
   | 'THREAD-LOCAL-STORAGE'
   | 'THREAD-POINTER'
+  | 'THREADS'
   | 'THROUGH'
   | 'THRU'
   | 'TIME'

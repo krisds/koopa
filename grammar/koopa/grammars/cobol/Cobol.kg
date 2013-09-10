@@ -4286,7 +4286,19 @@ def assignmentName =
 end
 
 def literal =
-    literalValue (concatenatedLiteral)*
+    # Ideally 'constant' would be an option of 'literalValue' and then the
+    # first option here would be sufficient. However, as Koopa does not
+    # maintain a symbol table or list of defined constants the definition of
+    # 'constant' is by necessity too liberal. To prevent this from carrying
+    # over I split up the definition of literal so that if it matches only a
+    # single token that token can not just be a constant.
+    #
+    # If/When this causes problems I would suggest looking at the option of
+    # a symbol table rather than making the grammar even more complex...
+     
+    ( literalValue (concatenatedLiteral)*
+    | constant (concatenatedLiteral)+
+    )
 end
 
 def literalValue =
@@ -4303,7 +4315,7 @@ def literalValue =
 end
 
 def concatenatedLiteral =
-    '&' literalValue
+    '&' (literalValue | constant)
 end
 
 def value =

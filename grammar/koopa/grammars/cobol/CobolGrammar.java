@@ -18609,10 +18609,18 @@ public class CobolGrammar extends KoopaGrammar {
            FutureParser future = scoped("literal");
            literalParser = future;
            future.setParser(
-               sequence(
-                   literalValue(),
-                   star(
-                       concatenatedLiteral()
+               choice(
+                   sequence(
+                       literalValue(),
+                       star(
+                           concatenatedLiteral()
+                       )
+                   ),
+                   sequence(
+                       constant(),
+                       plus(
+                           concatenatedLiteral()
+                       )
                    )
                )
            );
@@ -18657,7 +18665,10 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                sequence(
                    token("&"),
-                   literalValue()
+                   choice(
+                       literalValue(),
+                       constant()
+                   )
                )
            );
         }

@@ -496,9 +496,9 @@
 <!ELEMENT cdName (cobolWord)>
 <!ELEMENT reportName (cobolWord)>
 <!ELEMENT assignmentName (cobolWord|literal)>
-<!ELEMENT literal (literalValue,concatenatedLiteral*)>
+<!ELEMENT literal ((literalValue,concatenatedLiteral*)|(constant,concatenatedLiteral+))>
 <!ELEMENT literalValue (numericLiteral|alphanumericLiteral|figurativeConstant|bit)>
-<!ELEMENT concatenatedLiteral (t,literalValue)>
+<!ELEMENT concatenatedLiteral (t,(literalValue|constant))>
 <!ELEMENT value (literal|integerConstant|alphanumericConstant)>
 <!ELEMENT bit (t)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,(zero|space|t))|t)>

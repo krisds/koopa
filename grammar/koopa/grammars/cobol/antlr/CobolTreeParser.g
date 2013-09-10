@@ -10502,8 +10502,12 @@ assignmentName
 
 literal
   : ^(LITERAL
-      ( literalValue
+      ( ( literalValue
         ( concatenatedLiteral )*
+      )
+      | ( constant
+        ( concatenatedLiteral )+
+      )
       )
     )
   ;
@@ -10529,7 +10533,9 @@ literalValue
 concatenatedLiteral
   : ^(CONCATENATED_LITERAL
       ( '&'
-        literalValue
+        ( literalValue
+        | constant
+        )
       )
     )
   ;

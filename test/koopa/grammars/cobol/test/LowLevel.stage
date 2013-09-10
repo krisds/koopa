@@ -65,6 +65,8 @@ target literal;
 +[ " 00 " ]
 
 +[ "Hello " & " world." ]
++[ "Hello world." & CRLF ]
++[ "Hello world." & x"00" ]
 
 target figurativeConstant;
 

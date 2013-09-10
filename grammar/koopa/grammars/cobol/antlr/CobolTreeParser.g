@@ -3842,12 +3842,14 @@ statement
   : ^(STATEMENT
       ( acceptStatement
       | addStatement
+      | alterStatement
       | callStatement
       | chainStatement
       | cancelStatement
       | closeStatement
       | commitStatement
       | computeStatement
+      | continueStatement
       | deleteFileStatement
       | deleteStatement
       | disableStatement
@@ -4084,11 +4086,13 @@ endOfStatementMarker
 verb
   : ^(VERB
       ( 'ADD'
+      | 'ALTER'
       | 'CALL'
       | 'CANCEL'
       | 'CHAIN'
       | 'CLOSE'
       | 'COMMIT'
+      | 'CONTINUE'
       | 'DELETE'
       | 'DIVIDE'
       | 'EJECT'
@@ -4160,8 +4164,6 @@ verb
       | 'PURGE'
       | 'START'
       | 'USE'
-      | 'ALTER'
-      | 'CONTINUE'
       )
     )
   ;
@@ -4443,6 +4445,24 @@ allocateStatement
         ( ( 'RETURNING'
           qualifiedDataName
         ) )?
+      )
+    )
+  ;
+
+// ========================================================
+// alterStatement
+// ........................................................
+
+alterStatement
+  : ^(ALTER_STATEMENT
+      ( 'ALTER'
+        ( ( procedureName
+          'TO'
+          ( ( 'PROCEED'
+            'TO'
+          ) )?
+          procedureName
+        ) )+
       )
     )
   ;
@@ -4792,6 +4812,16 @@ computeStatement
         ) )?
         ( 'END-COMPUTE' )?
       )
+    )
+  ;
+
+// ========================================================
+// continueStatement
+// ........................................................
+
+continueStatement
+  : ^(CONTINUE_STATEMENT
+      'CONTINUE'
     )
   ;
 
@@ -11185,6 +11215,7 @@ token
   | 'PROCEDURE'
   | 'PROCEDURE-POINTER'
   | 'PROCEDURES'
+  | 'PROCEED'
   | 'PROCESSING'
   | 'PROGRAM'
   | 'PROGRAM-ID'

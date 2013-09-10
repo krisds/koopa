@@ -178,7 +178,7 @@
 <!ELEMENT section (sectionName,t,segmentNumber?,t,sentence*,paragraph*)>
 <!ELEMENT paragraph (paragraphName,t,sentence*)>
 <!ELEMENT sentence (compilerStatement|(statement,(compilerStatement|statement|continuationOfStatement)*,t)|t)>
-<!ELEMENT statement (acceptStatement|addStatement|callStatement|chainStatement|cancelStatement|closeStatement|commitStatement|computeStatement|deleteFileStatement|deleteStatement|disableStatement|divideStatement|enableStatement|entryStatement|evaluateStatement|examineStatement|execStatement|exhibitStatement|exitStatement|generateStatement|gobackStatement|goToStatement|identifiedByStatement|ifStatement|initiateStatement|invokeStatement|mergeStatement|moveStatement|multiplyStatement|nextSentenceStatement|onStatement|openStatement|performStatement|raiseStatement|readStatement|readyTraceStatement|receiveStatement|releaseStatement|resetTraceStatement|returnStatement|rewriteStatement|rollbackStatement|purgeStatement|searchStatement|sendStatement|serviceStatement|sortStatement|startStatement|stopStatement|stringStatement|subtractStatement|suppressStatement|terminateStatement|transformStatement|unlockStatement|unstringStatement|waitStatement|writeStatement|xmlGenerateStatement|xmlParseStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
+<!ELEMENT statement (acceptStatement|addStatement|alterStatement|callStatement|chainStatement|cancelStatement|closeStatement|commitStatement|computeStatement|continueStatement|deleteFileStatement|deleteStatement|disableStatement|divideStatement|enableStatement|entryStatement|evaluateStatement|examineStatement|execStatement|exhibitStatement|exitStatement|generateStatement|gobackStatement|goToStatement|identifiedByStatement|ifStatement|initiateStatement|invokeStatement|mergeStatement|moveStatement|multiplyStatement|nextSentenceStatement|onStatement|openStatement|performStatement|raiseStatement|readStatement|readyTraceStatement|receiveStatement|releaseStatement|resetTraceStatement|returnStatement|rewriteStatement|rollbackStatement|purgeStatement|searchStatement|sendStatement|serviceStatement|sortStatement|startStatement|stopStatement|stringStatement|subtractStatement|suppressStatement|terminateStatement|transformStatement|unlockStatement|unstringStatement|waitStatement|writeStatement|xmlGenerateStatement|xmlParseStatement|setStatement|initializeStatement|displayStatement|inspectStatement|allocateStatement|freeStatement|(verb,water?))>
 <!ELEMENT subStatementMarker (t|(t,t)|t|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t?,t)|(t,t?,t)|(t,t?,t)|(t?,t)|(t?,t))>
 <!ELEMENT continuationOfStatement ((eventPhrase,statement)|endOfStatementMarker)>
 <!ELEMENT nestedStatements (statement+)>
@@ -199,6 +199,7 @@
 <!ELEMENT addition_format2 ((identifier|literal)+,(t,(identifier|literal))?,t,(qualifiedDataName,t?)+)>
 <!ELEMENT addition_format3 ((identifier|literal)+,t,(identifier,t?)+)>
 <!ELEMENT allocateStatement (t,((arithmeticExpression,t)|qualifiedDataName),t?,(t,qualifiedDataName)?)>
+<!ELEMENT alterStatement (t,(procedureName,t,(t,t)?,procedureName)+)>
 <!ELEMENT callStatement (t,(t|(mnemonicName,(alphanumericLiteral|identifier))|((alphanumericLiteral|identifier),(t,(t|programName))?)),callUsing?,callGivingOrReturning?,(onOverflow|(onException,notOnException?)|notOnException)?,t?)>
 <!ELEMENT callUsing (t,(((t?,t)?,((t+,identifier)|t|identifier|literal))|(t?,t,((t+,identifier)|arithmeticExpression|identifier|literal))|(t?,t,((t+,identifier,(t,t?,((t+,identifier)|integer)?)?)|(integer,t,t?,((t+,identifier)|integer)?)|arithmeticExpression|identifier|literal)))+)>
 <!ELEMENT callGivingOrReturning (t,(t|(t,t))?,identifier)>
@@ -214,6 +215,7 @@
 <!ELEMENT closeStatement (t,(fileName,((t?,((t,t)|t))|(t,(t?,t)?)|(t?,t))?)+)>
 <!ELEMENT commitStatement (t)>
 <!ELEMENT computeStatement (t,(qualifiedDataName,t?)+,t,arithmeticExpression,(t+,nestedStatements)?,(t,t+,nestedStatements)?,t?)>
+<!ELEMENT continueStatement (t)>
 <!ELEMENT deleteStatement (t,fileName,t?,(t,t?,nestedStatements)?,(t+,nestedStatements)?,t?)>
 <!ELEMENT deleteFileStatement (t+,fileName+)>
 <!ELEMENT disableStatement (t,((t,t?)|(t,t)|t),cdName,t?,t,(literal|identifier))>

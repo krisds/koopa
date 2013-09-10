@@ -1430,12 +1430,14 @@ end
 def statement =
     ( acceptStatement
     | addStatement
+    | alterStatement
     | callStatement
     | chainStatement        # *MF
     | cancelStatement
     | closeStatement
     | commitStatement       # *MF
     | computeStatement
+    | continueStatement
     | deleteFileStatement   # *MF
     | deleteStatement
     | disableStatement
@@ -1582,11 +1584,13 @@ end
 
 def verb =
     ( ADD
+    | ALTER
     | CALL
     | CANCEL
     | CHAIN         # *MF
     | CLOSE
     | COMMIT        # *MF
+    | CONTINUE
     | DELETE
     | DIVIDE
     | EJECT
@@ -1653,12 +1657,6 @@ def verb =
     # Verbs for statements implemented by Adrian
     | START
     | USE
-    
-    # Verbs for statements which have a skeletal implementation:
-    
-    # Verbs for statements which remain to be implemented:
-    | ALTER
-    | CONTINUE
     )
 end
 
@@ -1787,6 +1785,13 @@ def allocateStatement =
     [ RETURNING qualifiedDataName ]
 end
 
+## #############################################################################
+## ACCEPT statement.
+## -----------------------------------------------------------------------------
+
+def alterStatement =
+    ALTER (procedureName TO [PROCEED TO] procedureName)+
+end
 
 ## #############################################################################
 ## CALL statement.
@@ -1927,6 +1932,15 @@ def computeStatement =
     [NOT [ON] SIZE ERROR nestedStatements]
     [END-COMPUTE]
 end
+
+## #############################################################################
+## CONTINUE statement.
+## -----------------------------------------------------------------------------
+
+def continueStatement =
+    CONTINUE
+end
+
 
 ## #############################################################################
 ## DELETE statement.

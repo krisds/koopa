@@ -7045,12 +7045,14 @@ public class CobolGrammar extends KoopaGrammar {
                choice(
                    acceptStatement(),
                    addStatement(),
+                   alterStatement(),
                    callStatement(),
                    chainStatement(),
                    cancelStatement(),
                    closeStatement(),
                    commitStatement(),
                    computeStatement(),
+                   continueStatement(),
                    deleteFileStatement(),
                    deleteStatement(),
                    disableStatement(),
@@ -7436,11 +7438,13 @@ public class CobolGrammar extends KoopaGrammar {
            future.setParser(
                choice(
                    token("ADD"),
+                   token("ALTER"),
                    token("CALL"),
                    token("CANCEL"),
                    token("CHAIN"),
                    token("CLOSE"),
                    token("COMMIT"),
+                   token("CONTINUE"),
                    token("DELETE"),
                    token("DIVIDE"),
                    token("EJECT"),
@@ -7516,9 +7520,7 @@ public class CobolGrammar extends KoopaGrammar {
                    token("RECEIVE"),
                    token("PURGE"),
                    token("START"),
-                   token("USE"),
-                   token("ALTER"),
-                   token("CONTINUE")
+                   token("USE")
                )
            );
         }
@@ -8019,6 +8021,39 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return allocateStatementParser;
+    }
+
+    // ========================================================
+    // alterStatement
+    // ........................................................
+
+    private Parser alterStatementParser = null;
+
+    public Parser alterStatement() {
+        if (alterStatementParser == null) {
+           FutureParser future = scoped("alterStatement");
+           alterStatementParser = future;
+           future.setParser(
+               sequence(
+                   token("ALTER"),
+                   plus(
+                       sequence(
+                           procedureName(),
+                           token("TO"),
+                           optional(
+                               sequence(
+                                   token("PROCEED"),
+                                   token("TO")
+                               )
+                           ),
+                           procedureName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return alterStatementParser;
     }
 
     // ========================================================
@@ -8659,6 +8694,24 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return computeStatementParser;
+    }
+
+    // ========================================================
+    // continueStatement
+    // ........................................................
+
+    private Parser continueStatementParser = null;
+
+    public Parser continueStatement() {
+        if (continueStatementParser == null) {
+           FutureParser future = scoped("continueStatement");
+           continueStatementParser = future;
+           future.setParser(
+               token("CONTINUE")
+           );
+        }
+
+        return continueStatementParser;
     }
 
     // ========================================================

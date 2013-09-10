@@ -1,0 +1,17 @@
+package koopa.grammars.cobol.test;
+grammar koopa.grammars.cobol.CobolGrammar;
+
+target alterStatement;
+
++[ ALTER PARA-59 TO PROCEED TO PARA-59C ]
+
++[ ALTER ALTER-A TO PROCEED TO ALTER-C
+         ALTER-D TO PROCEED TO ALTER-F
+         ALTER-F TO PROCEED TO ALTER-H ]
+
++[ ALTER ALTER-A-2 TO PROCEED TO ALTER-B-2
+         ALTER-TESTT-2 TO PROCEED TO ALTER-TESTT-2
+         ALTER-D-2 TO PROCEED TO ALTER-E-2 ]
+
++[ ALTER PARA-5A IN QUAL-SECTION-1 TO PROCEED TO PARA-5C OF QUAL-SECTION-2 ]
+

@@ -260,6 +260,9 @@ public class SourceView extends JPanel implements ParsingListener {
 		try {
 			JViewport viewport = scroll.getViewport();
 			Rectangle r = pane.modelToView(pane.getCaretPosition());
+			
+			if (r == null) return;
+			
 			int extentHeight = viewport.getExtentSize().height;
 			int viewHeight = viewport.getViewSize().height;
 			int y = Math.max(0, r.y - (extentHeight / 2));

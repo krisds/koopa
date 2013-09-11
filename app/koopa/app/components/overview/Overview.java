@@ -290,6 +290,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 
 	public void clearResults() {
 		results.clear();
+		parseDetails.setParseResults(null);
 		application.resultsWereCleared();
 	}
 

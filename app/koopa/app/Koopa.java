@@ -35,6 +35,8 @@ import javax.swing.event.ChangeListener;
 import koopa.app.actions.CloseFileAction;
 import koopa.app.actions.ExportASTToXMLAction;
 import koopa.app.actions.ExportBatchResultsToCSVAction;
+import koopa.app.actions.FindAction;
+import koopa.app.actions.FindAgainAction;
 import koopa.app.actions.GoToLineAction;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QueryUsingXPathAction;
@@ -100,6 +102,8 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 	private JMenu navigation = null;
 	private JMenuItem goToLine = null;
+	private JMenuItem find = null;
+	private JMenuItem findAgain = null;
 
 	private JMenu syntaxTree = null;
 	private JMenuItem saveXML = null;
@@ -238,6 +242,15 @@ public class Koopa extends JFrame implements Application, Configurable {
 		setAccelerators(goToLine, MODIFIER + " L");
 		navigation.add(goToLine);
 
+		final FindAction findAction = new FindAction(this, this);
+		find = new JMenuItem(findAction);
+		setAccelerators(find, MODIFIER + " F");
+		navigation.add(find);
+
+		findAgain = new JMenuItem(new FindAgainAction(this, this, findAction));
+		setAccelerators(findAgain, MODIFIER + " G");
+		navigation.add(findAgain);
+
 		bar.add(navigation);
 
 		// Parse results ------------------------------------------------------
@@ -245,17 +258,17 @@ public class Koopa extends JFrame implements Application, Configurable {
 		syntaxTree = new JMenu("Syntax tree");
 
 		showGrammar = new JMenuItem(new ShowGrammarAction(this));
-		setAccelerators(showGrammar, MODIFIER + " G");
+		// setAccelerators(showGrammar, MODIFIER + " G");
 		syntaxTree.add(showGrammar);
 
 		syntaxTree.addSeparator();
 
 		saveXML = new JMenuItem(new ExportASTToXMLAction(this, this));
-		setAccelerators(saveXML, MODIFIER + " E");
+		// setAccelerators(saveXML, MODIFIER + " E");
 		syntaxTree.add(saveXML);
 
 		queryUsingXath = new JMenuItem(new QueryUsingXPathAction(this, this));
-		setAccelerators(queryUsingXath, MODIFIER + " F");
+		setAccelerators(queryUsingXath, MODIFIER + " D");
 		syntaxTree.add(queryUsingXath);
 
 		bar.add(syntaxTree);
@@ -381,6 +394,8 @@ public class Koopa extends JFrame implements Application, Configurable {
 			// Navigation ...
 			navigation.setEnabled(false);
 			goToLine.setEnabled(false);
+			find.setEnabled(false);
+			findAgain.setEnabled(false);
 
 			// Syntax tree ...
 			saveXML.setEnabled(false);
@@ -413,6 +428,8 @@ public class Koopa extends JFrame implements Application, Configurable {
 			// Navigation ...
 			navigation.setEnabled(true);
 			goToLine.setEnabled(true);
+			find.setEnabled(true);
+			findAgain.setEnabled(true);
 
 			// Syntax tree ...
 			boolean hasSyntaxTree = detail.hasSyntaxTree();

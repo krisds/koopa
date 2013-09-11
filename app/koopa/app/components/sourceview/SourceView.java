@@ -260,9 +260,10 @@ public class SourceView extends JPanel implements ParsingListener {
 		try {
 			JViewport viewport = scroll.getViewport();
 			Rectangle r = pane.modelToView(pane.getCaretPosition());
-			
-			if (r == null) return;
-			
+
+			if (r == null)
+				return;
+
 			int extentHeight = viewport.getExtentSize().height;
 			int viewHeight = viewport.getViewSize().height;
 			int y = Math.max(0, r.y - (extentHeight / 2));
@@ -410,5 +411,28 @@ public class SourceView extends JPanel implements ParsingListener {
 
 	public int getNumberOfLines() {
 		return lineOffsets.size();
+	}
+
+	public boolean find(String search) {
+		String text = pane.getText();
+
+		if (text == null)
+			return false;
+
+		final int fromIndex = pane.getCaretPosition() + 1;
+		int index = text.indexOf(search, fromIndex);
+
+		boolean found = index >= 0;
+
+		if (!found && fromIndex > 0) {
+			// Wrap search...
+			index = text.indexOf(search);
+			found = index >= 0;
+		}
+
+		if (found)
+			scrollTo(index + 1);
+
+		return found;
 	}
 }

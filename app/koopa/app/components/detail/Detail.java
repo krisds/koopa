@@ -238,4 +238,8 @@ public class Detail extends JPanel implements Configurable {
 	public int getNumberOfLines() {
 		return pane.getNumberOfLines();
 	}
+
+	public boolean find(String search) {
+		return pane.find(search);
+	}
 }

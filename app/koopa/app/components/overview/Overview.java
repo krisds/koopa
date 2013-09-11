@@ -72,6 +72,8 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 
 	private void setupProgressBar() {
 		progress = new JProgressBar();
+		progress.setStringPainted(true);
+		progress.setString("no parsing in progress");
 		add(progress, BorderLayout.SOUTH);
 	}
 
@@ -82,7 +84,8 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		overviewTable.setModel(results);
 		overviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		overviewTable.setHighlighters(HighlighterFactory.createSimpleStriping());
+		overviewTable
+				.setHighlighters(HighlighterFactory.createSimpleStriping());
 
 		overviewTable.getColumnModel().getColumn(BatchResults.STATUS_COLUMN)
 				.setPreferredWidth(70);
@@ -90,7 +93,8 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.WARNINGS_COLUMN)
 				.setPreferredWidth(70);
-		overviewTable.getColumnModel().getColumn(BatchResults.TOKEN_COUNT_COLUMN)
+		overviewTable.getColumnModel()
+				.getColumn(BatchResults.TOKEN_COUNT_COLUMN)
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setPreferredWidth(70);
@@ -103,7 +107,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 				.setCellRenderer(new StatusRenderer());
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setCellRenderer(new DecimalFormattingRenderer("0.0"));
-		
+
 		JScrollPane overviewScroll = new JScrollPane(overviewTable);
 		overviewScroll.setBorder(null);
 
@@ -184,15 +188,39 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 			progress.setIndeterminate(false);
 
 			int count = 0;
+
+			int ok = 0;
+			int withWarning = 0;
+			int withError = 0;
+
 			for (File target : targets) {
-				parse(target);
+				ParseResults results = parse(target);
+
+				if (results.getErrorCount() > 0)
+					withError += 1;
+				else if (results.getWarningCount() > 0)
+					withWarning += 1;
+				else
+					ok += 1;
+
 				progress.setValue(++count);
+				progress.setString("Parsing: " + ok + " ok, " + withWarning
+						+ " with warnings, " + withError + " in error");
 
 				if (quitParsing) {
 					progress.setValue(0);
 					break;
 				}
 			}
+
+			if (quitParsing)
+				progress.setString("Parsing aborted: " + ok + " ok, "
+						+ withWarning + " with warnings, " + withError
+						+ " in error");
+			else
+				progress.setString("Parsing done: " + ok + " ok, "
+						+ withWarning + " with warnings, " + withError
+						+ " in error");
 
 		} finally {
 			parsing = false;
@@ -218,9 +246,11 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		}
 	}
 
-	private void parse(File file) {
+	private ParseResults parse(File file) {
 		try {
-			results.add(coordinator.parse(file));
+			final ParseResults parseResults = coordinator.parse(file);
+			results.add(parseResults);
+			return parseResults;
 
 		} catch (IOException e) {
 			ParseResults failed = new ParseResults(file);
@@ -228,6 +258,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 			failed.addError(null, e.getMessage());
 			results.add(failed);
 			e.printStackTrace();
+			return failed;
 		}
 	}
 

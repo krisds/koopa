@@ -3508,13 +3508,28 @@ valueClause
   ;
 
 // ========================================================
+// valueClause_start
+// ........................................................
+
+valueClause_start
+  : ^(VALUE_CLAUSE_START
+      ( ( 'VALUE'
+        ( 'IS' )?
+      )
+      | ( 'VALUES'
+        ( 'ARE' )?
+      )
+      )
+    )
+  ;
+
+// ========================================================
 // valueClause_format1
 // ........................................................
 
 valueClause_format1
   : ^(VALUE_CLAUSE_FORMAT1
-      ( 'VALUE'
-        ( 'IS' )?
+      ( valueClause_start
         ( literal
         | constant
         )
@@ -3528,13 +3543,7 @@ valueClause_format1
 
 valueClause_format2
   : ^(VALUE_CLAUSE_FORMAT2
-      ( ( ( 'VALUE'
-        ( 'IS' )?
-      )
-      | ( 'VALUES'
-        ( 'ARE' )?
-      )
-      )
+      ( valueClause_start
         ( ( ( literal )+
           'FROM'
           '('

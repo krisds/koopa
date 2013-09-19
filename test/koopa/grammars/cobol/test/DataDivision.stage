@@ -398,6 +398,8 @@ target valueClause;
 
 +[ VALUE "this is a constant" ]
 
++[ VALUES ARE "this is a constant" ]
+
 +[ VALUE IS NULL ]
 
 +[ VALUE NULL ]

@@ -160,8 +160,9 @@
 <!ELEMENT usage ((t,t?)?,usageClause)>
 <!ELEMENT usageClause (t|(t,t?)|(t,t?)|(t,t?)|(t,t?)|t|(t+,(((t,t)?,t)|((t,t)?,className,t?))?)|t|(t,(t?,programName)?)|t|typedefName|className)>
 <!ELEMENT valueClause (valueClause_format2|valueClause_format1)>
-<!ELEMENT valueClause_format1 (t,t?,(literal|constant))>
-<!ELEMENT valueClause_format2 (((t,t?)|(t,t?)),(literal+,t+,subscript+,t,(t+,subscript+,t)?)+)>
+<!ELEMENT valueClause_start ((t,t?)|(t,t?))>
+<!ELEMENT valueClause_format1 (valueClause_start,(literal|constant))>
+<!ELEMENT valueClause_format2 (valueClause_start,(literal+,t+,subscript+,t,(t+,subscript+,t)?)+)>
 <!ELEMENT valueIsOperand (t|(t,t?,dataName)|(t,t?,dataName)|arithmeticExpression|literal)>
 <!ELEMENT valueIsOperator (t)>
 <!ELEMENT based (t)>

@@ -6423,6 +6423,37 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
+    // valueClause_start
+    // ........................................................
+
+    private Parser valueClause_startParser = null;
+
+    public Parser valueClause_start() {
+        if (valueClause_startParser == null) {
+           FutureParser future = scoped("valueClause_start");
+           valueClause_startParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("VALUE"),
+                       optional(
+                           token("IS")
+                       )
+                   ),
+                   sequence(
+                       token("VALUES"),
+                       optional(
+                           token("ARE")
+                       )
+                   )
+               )
+           );
+        }
+
+        return valueClause_startParser;
+    }
+
+    // ========================================================
     // valueClause_format1
     // ........................................................
 
@@ -6434,10 +6465,7 @@ public class CobolGrammar extends KoopaGrammar {
            valueClause_format1Parser = future;
            future.setParser(
                sequence(
-                   token("VALUE"),
-                   optional(
-                       token("IS")
-                   ),
+                   valueClause_start(),
                    choice(
                        literal(),
                        constant()
@@ -6461,20 +6489,7 @@ public class CobolGrammar extends KoopaGrammar {
            valueClause_format2Parser = future;
            future.setParser(
                sequence(
-                   choice(
-                       sequence(
-                           token("VALUE"),
-                           optional(
-                               token("IS")
-                           )
-                       ),
-                       sequence(
-                           token("VALUES"),
-                           optional(
-                               token("ARE")
-                           )
-                       )
-                   ),
+                   valueClause_start(),
                    plus(
                        sequence(
                            plus(

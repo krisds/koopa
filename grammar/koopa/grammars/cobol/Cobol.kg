@@ -1311,12 +1311,16 @@ def valueClause =
     )
 end
 
+def valueClause_start =
+    ( VALUE [IS] | VALUES [ARE] )
+end
+
 def valueClause_format1 =
-    VALUE [IS] ( literal | constant )
+    valueClause_start ( literal | constant )
 end
 
 def valueClause_format2 =
-    ( VALUE [IS] | VALUES [ARE] )
+    valueClause_start
     ( (literal)+ FROM '(' (subscript)+ ')' [ TO '(' (subscript)+ ')' ] )+     # *ISO2002 *MF
 end
 

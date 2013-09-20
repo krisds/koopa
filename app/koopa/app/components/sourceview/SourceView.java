@@ -12,6 +12,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,6 +58,10 @@ public class SourceView extends JPanel implements ParsingListener {
 	private Token selectedToken = null;
 
 	private List<TokenSelectionListener> tokenSelectionListeners = new ArrayList<TokenSelectionListener>();
+
+	private String searchPattern = null;
+	private List<Integer> matchingStartPositions = null;
+	private List<Integer> matchingEndPositions = null;
 
 	public SourceView(ParsingCoordinator coordinator) {
 		setupComponents();
@@ -104,8 +111,9 @@ public class SourceView extends JPanel implements ParsingListener {
 
 		scroll.setBorder(null);
 
+		pane.moveCaretPosition(0);
 		pane.setCaretPosition(0);
-
+		
 		setLayout(new BorderLayout());
 		add(scroll, BorderLayout.CENTER);
 	}
@@ -255,11 +263,15 @@ public class SourceView extends JPanel implements ParsingListener {
 	}
 
 	private void centerLineWithCaretInScrollPane() {
+		centerPositionInScrollPane(pane.getCaretPosition());
+	}
+
+	private void centerPositionInScrollPane(int position) {
 		// Based on:
 		// http://forums.sun.com/thread.jspa?threadID=5358397&start=15&tstart=0
 		try {
 			JViewport viewport = scroll.getViewport();
-			Rectangle r = pane.modelToView(pane.getCaretPosition());
+			Rectangle r = pane.modelToView(position);
 
 			if (r == null)
 				return;
@@ -413,26 +425,47 @@ public class SourceView extends JPanel implements ParsingListener {
 		return lineOffsets.size();
 	}
 
-	public boolean find(String search) {
-		String text = pane.getText();
-
-		if (text == null)
-			return false;
-
+	public boolean find(String search) throws PatternSyntaxException {
 		final int fromIndex = pane.getCaretPosition() + 1;
-		int index = text.indexOf(search, fromIndex);
+		if (searchPattern == null || !searchPattern.equals(search)) {
+			searchPattern = search;
 
-		boolean found = index >= 0;
+			String text = pane.getText();
 
-		if (!found && fromIndex > 0) {
-			// Wrap search...
-			index = text.indexOf(search);
-			found = index >= 0;
+			if (text == null)
+				return false;
+
+			final Pattern p = Pattern.compile(searchPattern,
+					Pattern.CASE_INSENSITIVE);
+			Matcher m = p.matcher(text);
+
+			matchingStartPositions = new ArrayList<Integer>();
+			matchingEndPositions = new ArrayList<Integer>();
+
+			while (m.find()) {
+				matchingStartPositions.add(m.start());
+				matchingEndPositions.add(m.end());
+			}
 		}
 
-		if (found)
-			scrollTo(index + 1);
+		if (matchingStartPositions.isEmpty())
+			return false;
 
-		return found;
+		int startPosition = matchingStartPositions.get(0);
+		int endPosition = matchingEndPositions.get(0);
+
+		for (int i = 0; i < matchingStartPositions.size(); i++) {
+			if (matchingStartPositions.get(i) >= fromIndex) {
+				startPosition = matchingStartPositions.get(i);
+				endPosition = matchingEndPositions.get(i);
+				break;
+			}
+		}
+
+		// scrollTo(startPosition);
+		centerPositionInScrollPane(startPosition);
+		pane.select(startPosition, endPosition);
+
+		return true;
 	}
 }

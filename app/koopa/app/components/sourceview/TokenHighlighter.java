@@ -31,15 +31,12 @@ public class TokenHighlighter implements CaretListener {
 	private List<Object> hls = new ArrayList<Object>();
 
 	public void caretUpdate(CaretEvent e) {
-		final Token token = this.view.getTokenAt(e.getDot() + 1);
-
-		// System.out.println(token);
-
 		clear();
 
-		if (token == null) {
+		if (e.getDot() != e.getMark())
 			return;
-		}
+
+		final Token token = this.view.getTokenAt(e.getDot() + 1);
 
 		if (token != null) {
 			highlight(token, colorFor(token));

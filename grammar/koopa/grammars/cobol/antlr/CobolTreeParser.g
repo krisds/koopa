@@ -8024,7 +8024,7 @@ keyModifier
   : ^(KEY_MODIFIER
       ( 'KEY'
         ( 'IS' )?
-        ( generalRelationOp
+        ( relop
         | 'FIRST'
         | 'LAST'
         )
@@ -8061,7 +8061,7 @@ whileKeyModifier
         ( ( 'KEY'
           ( 'IS' )?
         ) )?
-        ( negationOp )?
+        ( 'NOT' )?
         'LIKE'
         ( likeMods )*
         ( identifier
@@ -9700,93 +9700,86 @@ atomicExpression
 
 condition
   : ^(CONDITION
-      ( ( primaryCondition
-      | ( ( negationOp )?
+      ( ( 'NOT' )?
+        ( conditionStart
+        | ( '('
+          condition
+          ')'
+        )
+        )
+        ( furtherCondition )*
+      )
+    )
+  ;
+
+// ========================================================
+// conditionStart
+// ........................................................
+
+conditionStart
+  : ^(CONDITION_START
+      ( 'TRUE'
+      | 'FALSE'
+      | operand
+      )
+    )
+  ;
+
+// ========================================================
+// furtherCondition
+// ........................................................
+
+furtherCondition
+  : ^(FURTHER_CONDITION
+      ( 'TRUE'
+      | 'FALSE'
+      | ( ( 'IS' )?
+        ( 'NOT' )?
+        'OMITTED'
+      )
+      | ( ( 'IS' )?
+        ( 'NOT' )?
+        classType
+      )
+      | ( ( 'IS' )?
+        ( 'NOT' )?
+        signType
+      )
+      | ( ( ( 'AND'
+      | 'OR'
+      ) )?
+        ( 'NOT' )?
+        ( relop )?
+        operand
+      )
+      | ( ( ( 'AND'
+      | 'OR'
+      ) )?
+        ( 'NOT' )?
+        ( relop )?
         '('
         condition
         ')'
       )
       )
-        ( ( conditionalRelationOP
-          ( primaryCondition
-          | ( ( negationOp )?
-            '('
-            condition
-            ')'
-          )
-          )
-        ) )*
-      )
     )
   ;
 
 // ========================================================
-// primaryCondition
+// classType
 // ........................................................
 
-primaryCondition
-  : ^(PRIMARY_CONDITION
-      ( ( negationOp )?
-        primaryCondDef
-      )
-    )
-  ;
-
-// ========================================================
-// primaryCondDef
-// ........................................................
-
-primaryCondDef
-  : ^(PRIMARY_COND_DEF
-      ( bit
-      | ( classPrimaryCondition
-        ( ( conditionalRelationOP
-          ( negationOp )?
-          classSecondaryCondition
-        ) )*
-      )
-      | signPrimaryCondition
-      | ( generalPrimaryCondition
-        ( ( conditionalRelationOP
-          ( negationOp )?
-          generalSecondaryCondition
-        ) )*
-      )
-      | ( monoElemPrimaryCondition
-        ( ( ( 'IS' )?
-          ( negationOp )?
-          monoElemPrimaryCondition
-        ) )*
-      )
-      )
-    )
-  ;
-
-// ========================================================
-// generalPrimaryCondition
-// ........................................................
-
-generalPrimaryCondition
-  : ^(GENERAL_PRIMARY_CONDITION
-      ( operand
-        generalRelationOp
-        operand
-      )
-    )
-  ;
-
-// ========================================================
-// signPrimaryCondition
-// ........................................................
-
-signPrimaryCondition
-  : ^(SIGN_PRIMARY_CONDITION
-      ( ( arithmeticExpression
-      | identifier
-      )
-        ( 'IS' )?
-        ( negationOp )?
-        signType
+classType
+  : ^(CLASS_TYPE
+      ( 'NUMERIC'
+      | 'ALPHABETIC'
+      | 'ALPHABETIC-LOWER'
+      | 'ALPHABETIC-UPPER'
+      | 'DBCS'
+      | 'KANJI'
+      | 'BOOLEAN'
+      | 'INFINITY'
+      | 'REPRESENTS-NOT-A-NUMBER'
       )
     )
   ;
@@ -9805,108 +9798,27 @@ signType
   ;
 
 // ========================================================
-// monoElemPrimaryCondition
+// relop
 // ........................................................
 
-monoElemPrimaryCondition
-  : ^(MONO_ELEM_PRIMARY_CONDITION
-      ( ( 'IS' )?
-        ( conditionName
-        | className
-        )
-      )
-    )
-  ;
-
-// ========================================================
-// classPrimaryCondition
-// ........................................................
-
-classPrimaryCondition
-  : ^(CLASS_PRIMARY_CONDITION
-      ( identifier
-        ( 'IS' )?
-        ( negationOp )?
-        classType
-      )
-    )
-  ;
-
-// ========================================================
-// classType
-// ........................................................
-
-classType
-  : ^(CLASS_TYPE
-      ( 'NUMERIC'
-      | 'ALPHABETIC'
-      | 'ALPHABETIC-LOWER'
-      | 'ALPHABETIC-UPPER'
-      | 'DBCS'
-      | 'KANJI'
-      )
-    )
-  ;
-
-// ========================================================
-// generalSecondaryCondition
-// ........................................................
-
-generalSecondaryCondition
-  : ^(GENERAL_SECONDARY_CONDITION
-      ( ( generalRelationOp )?
-        operand
-      )
-    )
-  ;
-
-// ========================================================
-// classSecondaryCondition
-// ........................................................
-
-classSecondaryCondition
-  : ^(CLASS_SECONDARY_CONDITION
-      ( ( 'IS' )?
-        ( negationOp )?
-        classType
-      )
-    )
-  ;
-
-// ========================================================
-// conditionalRelationOP
-// ........................................................
-
-conditionalRelationOP
-  : ^(CONDITIONAL_RELATION_O_P
-      ( 'AND'
-      | 'OR'
-      )
-    )
-  ;
-
-// ========================================================
-// generalRelationOp
-// ........................................................
-
-generalRelationOp
-  : ^(GENERAL_RELATION_OP
+relop
+  : ^(RELOP
       ( ( ( 'IS'
       | 'ARE'
       ) )?
-        ( ( ( negationOp )?
+        ( ( ( 'NOT' )?
           greaterOrEqualOp
         )
-        | ( ( negationOp )?
+        | ( ( 'NOT' )?
           lessOrEqualOp
         )
-        | ( ( negationOp )?
+        | ( ( 'NOT' )?
           greaterThanOp
         )
-        | ( ( negationOp )?
+        | ( ( 'NOT' )?
           lessThanOp
         )
-        | ( ( negationOp )?
+        | ( ( 'NOT' )?
           equalToOp
         )
         | exceedsOp
@@ -9914,16 +9826,6 @@ generalRelationOp
         | unequalToOp
         )
       )
-    )
-  ;
-
-// ========================================================
-// negationOp
-// ........................................................
-
-negationOp
-  : ^(NEGATION_OP
-      'NOT'
     )
   ;
 
@@ -10530,7 +10432,8 @@ literalValue
       ( numericLiteral
       | alphanumericLiteral
       | figurativeConstant
-      | bit
+      | 'TRUE'
+      | 'FALSE'
       )
     )
   ;
@@ -10558,18 +10461,6 @@ value
       ( literal
       | integerConstant
       | alphanumericConstant
-      )
-    )
-  ;
-
-// ========================================================
-// bit
-// ........................................................
-
-bit
-  : ^(BIT
-      ( 'TRUE'
-      | 'FALSE'
       )
     )
   ;
@@ -10795,6 +10686,7 @@ token
   | 'BLINKING'
   | 'BLOCK'
   | 'BOLD'
+  | 'BOOLEAN'
   | 'BOOLEAN-OF-INTEGER'
   | 'BOTTOM'
   | 'BROWSING'
@@ -11069,6 +10961,7 @@ token
   | 'INDEX'
   | 'INDEXED'
   | 'INDICATE'
+  | 'INFINITY'
   | 'INHERITS'
   | 'INITIAL'
   | 'INITIALIZE'
@@ -11281,6 +11174,7 @@ token
   | 'REPORTING'
   | 'REPORTS'
   | 'REPOSITORY'
+  | 'REPRESENTS-NOT-A-NUMBER'
   | 'REQUIRED'
   | 'RESERVE'
   | 'RESET'

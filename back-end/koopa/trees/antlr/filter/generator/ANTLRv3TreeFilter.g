@@ -363,7 +363,13 @@ range
 terminal
   : CHAR_LITERAL
 
-    -> {%{"[>CHAR_LITERAL<]"}}
+    { String val = $CHAR_LITERAL.text;
+      val = val.substring(1, val.length() - 1);
+    }
+
+    -> literal(
+       value = {val}
+    )
 
   |	TOKEN_REF
 

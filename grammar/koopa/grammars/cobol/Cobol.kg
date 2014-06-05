@@ -3271,7 +3271,7 @@ def startStatement =
 end
 
 def keyModifier =
-	KEY [IS] (generalRelationOp | FIRST | LAST) identifier (IN identifier)*
+	KEY [IS] (relop | FIRST | LAST) identifier (IN identifier)*
 end
 
 def sizeModifier =
@@ -3279,7 +3279,7 @@ def sizeModifier =
 end
 
 def whileKeyModifier =
-	WHILE [KEY [IS]] [negationOp] LIKE (likeMods)* (identifier | literal)
+	WHILE [KEY [IS]] [NOT] LIKE (likeMods)* (identifier | literal)
 end
 
 def likeMods =
@@ -3935,88 +3935,89 @@ end
 ## Conditions.
 ## -----------------------------------------------------------------------------
 
-# TODO Conditions
+# The parsing of conditions does not try to build correct parse trees; well,
+# "not correct" in the sense that you get something immediately usable for
+# analysis or intepretation/compilation.
+#
+# Here is an example of what I mean. Given following condition:
+#
+#     A < B AND C < D
+#
+# Ideally you want a parse tree which looks like this:
+#
+#     _   AND   _
+#   _ < _     _ < _
+#   A   B     C   D
+#
+# Instead what we do is something like:
+#
+#   A   ___    _____    ___
+#       < B    AND C    < D
+#
+# So you get a series of parts which make up the condition.
+#
+# Why do it this way ? Because without type information and lookup tables we
+# can only guess at the semantics of some identifiers. This makes the structure
+# of conditions a mess of ambiguity, and the grammar to match conditions
+# equally so.
+
 def condition =
-	( primaryCondition 
-	| [negationOp] '(' condition ')')
-	( conditionalRelationOP ( primaryCondition 
-	                        | [negationOp] '(' condition ')' ) 
-	)*
+	[NOT] (
+	  conditionStart
+	| '(' condition ')'
+	)
+	(furtherCondition)*
 end
 
-def primaryCondition =
-	[negationOp] primaryCondDef
+def conditionStart =
+	(
+	  TRUE
+	| FALSE
+	| operand
+	)
 end
 
-def primaryCondDef =
-	(bit
-	|classPrimaryCondition (conditionalRelationOP [negationOp] classSecondaryCondition )* 
-	|signPrimaryCondition
-	|generalPrimaryCondition ( conditionalRelationOP [negationOp] generalSecondaryCondition -(generalRelationOp | IS | [NOT] classType | signType) )*
-	# Imposible to detect the difference between classNames & 88 level booleans
-	# this must be handled by the backend
-	|monoElemPrimaryCondition ([IS] [negationOp] (monoElemPrimaryCondition) )* )
-end
-
-def generalPrimaryCondition = 
-	operand generalRelationOp operand
-end
-
-def signPrimaryCondition =
-	(arithmeticExpression | identifier)
-	[IS] [negationOp]
-	signType
-end
-
-def signType =
-	(POSITIVE | NEGATIVE | zero)
-end
-
-def monoElemPrimaryCondition =
-	[IS] (conditionName | className)
-end
-
-def classPrimaryCondition =
-	identifier [IS] [negationOp] 
-	classType
+def furtherCondition =
+	( TRUE
+	| FALSE
+	| [IS] [NOT] OMITTED
+	| [IS] [NOT] classType
+	| [IS] [NOT] signType
+	| [AND | OR] [NOT] [relop] operand
+	| [AND | OR] [NOT] [relop] '(' condition ')'
+	)
 end
 
 def classType =
-	(NUMERIC
-	|ALPHABETIC
-	|ALPHABETIC-LOWER
-	|ALPHABETIC-UPPER
-	|DBCS
-	|KANJI)
+	( NUMERIC
+	| ALPHABETIC
+	| ALPHABETIC-LOWER
+	| ALPHABETIC-UPPER
+	| DBCS
+	| KANJI
+	| BOOLEAN
+	| INFINITY
+	| REPRESENTS-NOT-A-NUMBER
+	)
 end
 
-def generalSecondaryCondition =
-	[generalRelationOp] operand
+def signType =
+	( POSITIVE
+	| NEGATIVE
+	| zero
+	)
 end
 
-def classSecondaryCondition =
-	[IS] [negationOp] 
-	classType
-end
-
-def conditionalRelationOP =
-	(AND | OR)
-end
-
-def generalRelationOp =
+def relop =
 	[IS | ARE]
-	( [negationOp] greaterOrEqualOp
-	| [negationOp] lessOrEqualOp
-	| [negationOp] greaterThanOp
-	| [negationOp] lessThanOp
-	| [negationOp] equalToOp
+	( [NOT] greaterOrEqualOp
+	| [NOT] lessOrEqualOp
+	| [NOT] greaterThanOp
+	| [NOT] lessThanOp
+	| [NOT] equalToOp
     | exceedsOp
     | equalsOp
 	| unequalToOp)
-end
-
-def negationOp =
-	NOT
 end
 
 def greaterThanOp =
@@ -4314,7 +4315,8 @@ def literalValue =
     | figurativeConstant
     
     # TODO Correct ?
-    | bit
+    | TRUE
+    | FALSE
     )
 end
 
@@ -4327,10 +4329,6 @@ def value =
 	| integerConstant
 	| alphanumericConstant
 	)
-end
-
-def bit =
-	(TRUE | FALSE)
 end
 
 # TODO [ALL] symbolic-character

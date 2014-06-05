@@ -14337,7 +14337,7 @@ public class CobolGrammar extends KoopaGrammar {
                        token("IS")
                    ),
                    choice(
-                       generalRelationOp(),
+                       relop(),
                        token("FIRST"),
                        token("LAST")
                    ),
@@ -14404,7 +14404,7 @@ public class CobolGrammar extends KoopaGrammar {
                        )
                    ),
                    optional(
-                       negationOp()
+                       token("NOT")
                    ),
                    token("LIKE"),
                    star(
@@ -17170,32 +17170,19 @@ public class CobolGrammar extends KoopaGrammar {
            conditionParser = future;
            future.setParser(
                sequence(
+                   optional(
+                       token("NOT")
+                   ),
                    choice(
-                       primaryCondition(),
+                       conditionStart(),
                        sequence(
-                           optional(
-                               negationOp()
-                           ),
                            token("("),
                            condition(),
                            token(")")
                        )
                    ),
                    star(
-                       sequence(
-                           conditionalRelationOP(),
-                           choice(
-                               primaryCondition(),
-                               sequence(
-                                   optional(
-                                       negationOp()
-                                   ),
-                                   token("("),
-                                   condition(),
-                                   token(")")
-                               )
-                           )
-                       )
+                       furtherCondition()
                    )
                )
            );
@@ -17205,150 +17192,133 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // primaryCondition
+    // conditionStart
     // ........................................................
 
-    private Parser primaryConditionParser = null;
+    private Parser conditionStartParser = null;
 
-    public Parser primaryCondition() {
-        if (primaryConditionParser == null) {
-           FutureParser future = scoped("primaryCondition");
-           primaryConditionParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       negationOp()
-                   ),
-                   primaryCondDef()
-               )
-           );
-        }
-
-        return primaryConditionParser;
-    }
-
-    // ========================================================
-    // primaryCondDef
-    // ........................................................
-
-    private Parser primaryCondDefParser = null;
-
-    public Parser primaryCondDef() {
-        if (primaryCondDefParser == null) {
-           FutureParser future = scoped("primaryCondDef");
-           primaryCondDefParser = future;
+    public Parser conditionStart() {
+        if (conditionStartParser == null) {
+           FutureParser future = scoped("conditionStart");
+           conditionStartParser = future;
            future.setParser(
                choice(
-                   bit(),
-                   sequence(
-                       classPrimaryCondition(),
-                       star(
-                           sequence(
-                               conditionalRelationOP(),
-                               optional(
-                                   negationOp()
-                               ),
-                               classSecondaryCondition()
-                           )
-                       )
-                   ),
-                   signPrimaryCondition(),
-                   sequence(
-                       generalPrimaryCondition(),
-                       star(
-                           sequence(
-                               conditionalRelationOP(),
-                               optional(
-                                   negationOp()
-                               ),
-                               generalSecondaryCondition(),
-                               not(
-                                   choice(
-                                       generalRelationOp(),
-                                       token("IS"),
-                                       sequence(
-                                           optional(
-                                               token("NOT")
-                                           ),
-                                           classType()
-                                       ),
-                                       signType()
-                                   )
-                               )
-                           )
-                       )
-                   ),
-                   sequence(
-                       monoElemPrimaryCondition(),
-                       star(
-                           sequence(
-                               optional(
-                                   token("IS")
-                               ),
-                               optional(
-                                   negationOp()
-                               ),
-                               monoElemPrimaryCondition()
-                           )
-                       )
-                   )
-               )
-           );
-        }
-
-        return primaryCondDefParser;
-    }
-
-    // ========================================================
-    // generalPrimaryCondition
-    // ........................................................
-
-    private Parser generalPrimaryConditionParser = null;
-
-    public Parser generalPrimaryCondition() {
-        if (generalPrimaryConditionParser == null) {
-           FutureParser future = scoped("generalPrimaryCondition");
-           generalPrimaryConditionParser = future;
-           future.setParser(
-               sequence(
-                   operand(),
-                   generalRelationOp(),
+                   token("TRUE"),
+                   token("FALSE"),
                    operand()
                )
            );
         }
 
-        return generalPrimaryConditionParser;
+        return conditionStartParser;
     }
 
     // ========================================================
-    // signPrimaryCondition
+    // furtherCondition
     // ........................................................
 
-    private Parser signPrimaryConditionParser = null;
+    private Parser furtherConditionParser = null;
 
-    public Parser signPrimaryCondition() {
-        if (signPrimaryConditionParser == null) {
-           FutureParser future = scoped("signPrimaryCondition");
-           signPrimaryConditionParser = future;
+    public Parser furtherCondition() {
+        if (furtherConditionParser == null) {
+           FutureParser future = scoped("furtherCondition");
+           furtherConditionParser = future;
            future.setParser(
-               sequence(
-                   choice(
-                       arithmeticExpression(),
-                       identifier()
+               choice(
+                   token("TRUE"),
+                   token("FALSE"),
+                   sequence(
+                       optional(
+                           token("IS")
+                       ),
+                       optional(
+                           token("NOT")
+                       ),
+                       token("OMITTED")
                    ),
-                   optional(
-                       token("IS")
+                   sequence(
+                       optional(
+                           token("IS")
+                       ),
+                       optional(
+                           token("NOT")
+                       ),
+                       classType()
                    ),
-                   optional(
-                       negationOp()
+                   sequence(
+                       optional(
+                           token("IS")
+                       ),
+                       optional(
+                           token("NOT")
+                       ),
+                       signType()
                    ),
-                   signType()
+                   sequence(
+                       optional(
+                           choice(
+                               token("AND"),
+                               token("OR")
+                           )
+                       ),
+                       optional(
+                           token("NOT")
+                       ),
+                       optional(
+                           relop()
+                       ),
+                       operand()
+                   ),
+                   sequence(
+                       optional(
+                           choice(
+                               token("AND"),
+                               token("OR")
+                           )
+                       ),
+                       optional(
+                           token("NOT")
+                       ),
+                       optional(
+                           relop()
+                       ),
+                       token("("),
+                       condition(),
+                       token(")")
+                   )
                )
            );
         }
 
-        return signPrimaryConditionParser;
+        return furtherConditionParser;
+    }
+
+    // ========================================================
+    // classType
+    // ........................................................
+
+    private Parser classTypeParser = null;
+
+    public Parser classType() {
+        if (classTypeParser == null) {
+           FutureParser future = scoped("classType");
+           classTypeParser = future;
+           future.setParser(
+               choice(
+                   token("NUMERIC"),
+                   token("ALPHABETIC"),
+                   token("ALPHABETIC-LOWER"),
+                   token("ALPHABETIC-UPPER"),
+                   token("DBCS"),
+                   token("KANJI"),
+                   token("BOOLEAN"),
+                   token("INFINITY"),
+                   token("REPRESENTS-NOT-A-NUMBER")
+               )
+           );
+        }
+
+        return classTypeParser;
     }
 
     // ========================================================
@@ -17374,163 +17344,15 @@ public class CobolGrammar extends KoopaGrammar {
     }
 
     // ========================================================
-    // monoElemPrimaryCondition
+    // relop
     // ........................................................
 
-    private Parser monoElemPrimaryConditionParser = null;
+    private Parser relopParser = null;
 
-    public Parser monoElemPrimaryCondition() {
-        if (monoElemPrimaryConditionParser == null) {
-           FutureParser future = scoped("monoElemPrimaryCondition");
-           monoElemPrimaryConditionParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("IS")
-                   ),
-                   choice(
-                       conditionName(),
-                       className()
-                   )
-               )
-           );
-        }
-
-        return monoElemPrimaryConditionParser;
-    }
-
-    // ========================================================
-    // classPrimaryCondition
-    // ........................................................
-
-    private Parser classPrimaryConditionParser = null;
-
-    public Parser classPrimaryCondition() {
-        if (classPrimaryConditionParser == null) {
-           FutureParser future = scoped("classPrimaryCondition");
-           classPrimaryConditionParser = future;
-           future.setParser(
-               sequence(
-                   identifier(),
-                   optional(
-                       token("IS")
-                   ),
-                   optional(
-                       negationOp()
-                   ),
-                   classType()
-               )
-           );
-        }
-
-        return classPrimaryConditionParser;
-    }
-
-    // ========================================================
-    // classType
-    // ........................................................
-
-    private Parser classTypeParser = null;
-
-    public Parser classType() {
-        if (classTypeParser == null) {
-           FutureParser future = scoped("classType");
-           classTypeParser = future;
-           future.setParser(
-               choice(
-                   token("NUMERIC"),
-                   token("ALPHABETIC"),
-                   token("ALPHABETIC-LOWER"),
-                   token("ALPHABETIC-UPPER"),
-                   token("DBCS"),
-                   token("KANJI")
-               )
-           );
-        }
-
-        return classTypeParser;
-    }
-
-    // ========================================================
-    // generalSecondaryCondition
-    // ........................................................
-
-    private Parser generalSecondaryConditionParser = null;
-
-    public Parser generalSecondaryCondition() {
-        if (generalSecondaryConditionParser == null) {
-           FutureParser future = scoped("generalSecondaryCondition");
-           generalSecondaryConditionParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       generalRelationOp()
-                   ),
-                   operand()
-               )
-           );
-        }
-
-        return generalSecondaryConditionParser;
-    }
-
-    // ========================================================
-    // classSecondaryCondition
-    // ........................................................
-
-    private Parser classSecondaryConditionParser = null;
-
-    public Parser classSecondaryCondition() {
-        if (classSecondaryConditionParser == null) {
-           FutureParser future = scoped("classSecondaryCondition");
-           classSecondaryConditionParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("IS")
-                   ),
-                   optional(
-                       negationOp()
-                   ),
-                   classType()
-               )
-           );
-        }
-
-        return classSecondaryConditionParser;
-    }
-
-    // ========================================================
-    // conditionalRelationOP
-    // ........................................................
-
-    private Parser conditionalRelationOPParser = null;
-
-    public Parser conditionalRelationOP() {
-        if (conditionalRelationOPParser == null) {
-           FutureParser future = scoped("conditionalRelationOP");
-           conditionalRelationOPParser = future;
-           future.setParser(
-               choice(
-                   token("AND"),
-                   token("OR")
-               )
-           );
-        }
-
-        return conditionalRelationOPParser;
-    }
-
-    // ========================================================
-    // generalRelationOp
-    // ........................................................
-
-    private Parser generalRelationOpParser = null;
-
-    public Parser generalRelationOp() {
-        if (generalRelationOpParser == null) {
-           FutureParser future = scoped("generalRelationOp");
-           generalRelationOpParser = future;
+    public Parser relop() {
+        if (relopParser == null) {
+           FutureParser future = scoped("relop");
+           relopParser = future;
            future.setParser(
                sequence(
                    optional(
@@ -17542,31 +17364,31 @@ public class CobolGrammar extends KoopaGrammar {
                    choice(
                        sequence(
                            optional(
-                               negationOp()
+                               token("NOT")
                            ),
                            greaterOrEqualOp()
                        ),
                        sequence(
                            optional(
-                               negationOp()
+                               token("NOT")
                            ),
                            lessOrEqualOp()
                        ),
                        sequence(
                            optional(
-                               negationOp()
+                               token("NOT")
                            ),
                            greaterThanOp()
                        ),
                        sequence(
                            optional(
-                               negationOp()
+                               token("NOT")
                            ),
                            lessThanOp()
                        ),
                        sequence(
                            optional(
-                               negationOp()
+                               token("NOT")
                            ),
                            equalToOp()
                        ),
@@ -17578,25 +17400,7 @@ public class CobolGrammar extends KoopaGrammar {
            );
         }
 
-        return generalRelationOpParser;
-    }
-
-    // ========================================================
-    // negationOp
-    // ........................................................
-
-    private Parser negationOpParser = null;
-
-    public Parser negationOp() {
-        if (negationOpParser == null) {
-           FutureParser future = scoped("negationOp");
-           negationOpParser = future;
-           future.setParser(
-               token("NOT")
-           );
-        }
-
-        return negationOpParser;
+        return relopParser;
     }
 
     // ========================================================
@@ -18659,7 +18463,8 @@ public class CobolGrammar extends KoopaGrammar {
                    numericLiteral(),
                    alphanumericLiteral(),
                    figurativeConstant(),
-                   bit()
+                   token("TRUE"),
+                   token("FALSE")
                )
            );
         }
@@ -18711,27 +18516,6 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return valueParser;
-    }
-
-    // ========================================================
-    // bit
-    // ........................................................
-
-    private Parser bitParser = null;
-
-    public Parser bit() {
-        if (bitParser == null) {
-           FutureParser future = scoped("bit");
-           bitParser = future;
-           future.setParser(
-               choice(
-                   token("TRUE"),
-                   token("FALSE")
-               )
-           );
-        }
-
-        return bitParser;
     }
 
     // ========================================================

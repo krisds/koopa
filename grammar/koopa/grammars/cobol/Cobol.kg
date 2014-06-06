@@ -1160,9 +1160,14 @@ end
 def dataDescriptionEntry_format3 =
     88 conditionName
     ( VALUE [IS] | VALUES [ARE] )
-    ( (-FALSE) literal [(THROUGH | THRU) literal] )+
+    ( (-FALSE) (cicsValue | literal) [(THROUGH | THRU) literal] )+
     [ whenSetToFalseClause ]
     .
+end
+
+# Cfr. a.o. http://ibmmainframes.com/post-55387.html
+def cicsValue =
+	(DFHVALUE | DFHRESP) '(' cobolWord ')'
 end
 
 # See https://sourceforge.net/p/open-cobol/manual/, page 5-15.

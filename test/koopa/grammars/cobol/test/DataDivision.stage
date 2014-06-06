@@ -513,6 +513,12 @@ target dataDescriptionEntry;
       FALSE 'A' . ]
 
 
+# Based on examples reported by Suman Saurabh.
++[ 88 foo VALUE DFHVALUE ( AAAA )
+                DFHVALUE ( BBBB ) . ]
++[ 88 foo VALUE DFHRESP  ( CCCC ) . ]
+
+
 +[ 05 BUFFER
       POINTER
       VALUE NULL . ]

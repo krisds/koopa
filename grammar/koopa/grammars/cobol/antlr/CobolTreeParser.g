@@ -3105,7 +3105,9 @@ dataDescriptionEntry_format3
           ( 'ARE' )?
         )
         )
-        ( ( literal
+        ( ( ( cicsValue
+        | literal
+        )
           ( ( ( 'THROUGH'
           | 'THRU'
           )
@@ -3114,6 +3116,22 @@ dataDescriptionEntry_format3
         ) )+
         ( whenSetToFalseClause )?
         '.'
+      )
+    )
+  ;
+
+// ========================================================
+// cicsValue
+// ........................................................
+
+cicsValue
+  : ^(CICS_VALUE
+      ( ( 'DFHVALUE'
+      | 'DFHRESP'
+      )
+        '('
+        cobolWord
+        ')'
       )
     )
   ;
@@ -10814,6 +10832,8 @@ token
   | 'DESCENDING'
   | 'DESTINATION'
   | 'DETAIL'
+  | 'DFHRESP'
+  | 'DFHVALUE'
   | 'DISABLE'
   | 'DISK'
   | 'DISPLAY'

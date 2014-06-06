@@ -5704,7 +5704,10 @@ public class CobolGrammar extends KoopaGrammar {
                            not(
                                token("FALSE")
                            ),
-                           literal(),
+                           choice(
+                               cicsValue(),
+                               literal()
+                           ),
                            optional(
                                sequence(
                                    choice(
@@ -5725,6 +5728,32 @@ public class CobolGrammar extends KoopaGrammar {
         }
 
         return dataDescriptionEntry_format3Parser;
+    }
+
+    // ========================================================
+    // cicsValue
+    // ........................................................
+
+    private Parser cicsValueParser = null;
+
+    public Parser cicsValue() {
+        if (cicsValueParser == null) {
+           FutureParser future = scoped("cicsValue");
+           cicsValueParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("DFHVALUE"),
+                       token("DFHRESP")
+                   ),
+                   token("("),
+                   cobolWord(),
+                   token(")")
+               )
+           );
+        }
+
+        return cicsValueParser;
     }
 
     // ========================================================

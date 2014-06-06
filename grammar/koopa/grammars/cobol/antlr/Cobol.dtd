@@ -140,7 +140,8 @@
 <!ELEMENT dataDescriptionEntry (constantDescriptionEntry|dataDescriptionEntry_format3|dataDescriptionEntry_format2|dataDescriptionEntry_format1)>
 <!ELEMENT dataDescriptionEntry_format1 (levelNumber,dataDescName?,(redefines|external|global|typedefClause|threadLocalClause|picture|occurs|dtLinePos|dtColPos|sign|valueClause|sync|justified|blankWhenZero|anyLengthClause|autoPhrase|backgroundPhrase|beepPhrase|blinkPhrase|controlPhrase|erasePhrase|fillPhrase|foregroundPhrase|fullPhrase|gridPhrase|highPhrase|lowPhrase|linePhrase|promptPhrase|requiredPhrase|reversePhrase|securePhrase|sizePhrase|propertyClause|(t,identifier)|(t,(identifier|literal),(t,identifier)?)|t|based|attributeClause|usage|literal)*,water?,t)>
 <!ELEMENT dataDescriptionEntry_format2 (t,dataName,t,qualifiedDataName,(t,qualifiedDataName)?,t)>
-<!ELEMENT dataDescriptionEntry_format3 (t,conditionName,((t,t?)|(t,t?)),(literal,(t,literal)?)+,whenSetToFalseClause?,t)>
+<!ELEMENT dataDescriptionEntry_format3 (t,conditionName,((t,t?)|(t,t?)),((cicsValue|literal),(t,literal)?)+,whenSetToFalseClause?,t)>
+<!ELEMENT cicsValue (t+,cobolWord,t)>
 <!ELEMENT whenSetToFalseClause (t?,t?,t?,t,t?,literal)>
 <!ELEMENT constantDescriptionEntry (((t,cobolWord,t,t?,valueIsOperand,(valueIsOperator,valueIsOperand)*)|(t,cobolWord,t,global?,((t?,identifier)|(t,cobolWord)))),t)>
 <!ELEMENT redefines (t,cobolWord)>

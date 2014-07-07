@@ -49,3 +49,11 @@ target stringStatement;
      OVERFLOW DISPLAY "Oops."
      NOT OVERFLOW DISPLAY "AOK."
    END-STRING ]
+
+# Example from Suman Saurabh:
++[ STRING
+      'ABCD001. CALL TO T456 FAILED. STATUS= '
+      T6O4-TRANS-STATUS ( 1 , 2 ) 
+      ' '  
+     DELIMITED BY SIZE INTO P122-TEXT
+   END-STRING ]

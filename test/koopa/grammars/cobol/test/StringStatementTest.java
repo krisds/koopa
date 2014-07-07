@@ -137,4 +137,13 @@ public class StringStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testStringStatement_15() {
+      Parser parser = grammar.stringStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " STRING\n      'ABCD001. CALL TO T456 FAILED. STATUS= '\n      T6O4-TRANS-STATUS ( 1 , 2 ) \n      ' '  \n     DELIMITED BY SIZE INTO P122-TEXT\n   END-STRING ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

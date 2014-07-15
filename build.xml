@@ -163,6 +163,9 @@
 
 			<formatter type="brief" usefile="no" />
 
+			<test name="koopa.tokens.test.TokensTest" />
+			<test name="koopa.tokens.test.ModifiedTokenTest" />
+			
 			<test name="koopa.tokenstreams.test.TokenStreamTests" />
 			<test name="koopa.tokenizers.test.TokenizerTests" />
 			<test name="koopa.parsers.test.KoopaGrammarTest" />

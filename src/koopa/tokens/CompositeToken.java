@@ -120,13 +120,13 @@ public class CompositeToken extends TokenBase implements Token {
 
 		if (endIndex <= token.getLength()) {
 			// Begin and end index both fall within one token.
-			return token.subtoken(beginIndex, endIndex);
+			return Tokens.subtoken(token, beginIndex, endIndex);
 		}
 
 		// So we will need at least two tokens now.
 
 		final CompositeToken subtoken = new CompositeToken();
-		subtoken.addToken(token.subtoken(beginIndex));
+		subtoken.addToken(Tokens.subtoken(token, beginIndex));
 
 		endIndex -= token.getLength();
 
@@ -143,12 +143,7 @@ public class CompositeToken extends TokenBase implements Token {
 			subtoken.addToken(token);
 		}
 
-		if (token == null) {
-			// End index must exceed the overall length...
-			return null;
-		}
-
-		subtoken.addToken(token.subtoken(0, endIndex));
+		subtoken.addToken(Tokens.subtoken(token, 0, endIndex));
 
 		// TODO Copy tags from subtokens ?
 

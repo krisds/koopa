@@ -7,6 +7,7 @@ import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokens.CompositeToken;
 import koopa.tokens.Token;
+import koopa.tokens.Tokens;
 
 import org.apache.log4j.Logger;
 
@@ -70,7 +71,7 @@ public class ContinuationWeldingTokenizer implements Tokenizer {
 
 			// Split of the starting quotation character if there is one.
 			if (token.hasTag(ContinuationsTag.LEADING_QUOTE)) {
-				final Token[] split = token.split(1);
+				final Token[] split = Tokens.split(token, 1);
 
 				final Token quotationMark = split[0];
 				quotationMark.removeTag(AreaTag.PROGRAM_TEXT_AREA);

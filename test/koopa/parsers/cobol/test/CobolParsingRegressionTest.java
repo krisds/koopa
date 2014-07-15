@@ -57,12 +57,16 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 			// We have previous test results, which we'll now compare...
 			final List<String> messages = target.getComparison(result);
 
-			assertFalse(messages != null && messages.size() > 0);
+			StringBuilder info = new StringBuilder();
 			if (messages != null && messages.size() > 0) {
 				for (String message : messages) {
-					System.out.println(message);
+					info.append(message);
+					info.append("  ");
 				}
 			}
+
+			assertFalse(info.toString(), messages != null
+					&& messages.size() > 0);
 		}
 	}
 }

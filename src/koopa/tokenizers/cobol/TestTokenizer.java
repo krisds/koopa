@@ -14,6 +14,9 @@ import koopa.tokens.TokenFilter;
 
 import org.apache.log4j.Logger;
 
+/**
+ * While used only in tests, this thing has grown beyond the simple tokenizer it originally was.
+ */
 public class TestTokenizer implements PushbackTokenizer {
 
 	private static final Logger LOGGER = Logger.getLogger("tokenising.test");

@@ -9,6 +9,7 @@ import koopa.tokenizers.cobol.tags.ContinuationsTag;
 import koopa.tokenizers.util.ThreadedTokenizerBase;
 import koopa.tokens.BasicToken;
 import koopa.tokens.Token;
+import koopa.tokens.Tokens;
 
 import org.apache.log4j.Logger;
 
@@ -265,8 +266,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 			return;
 		}
 
-		final Token[] splitContinuingLine = continuingLine
-				.split(startOfContinuingLine);
+		final Token[] splitContinuingLine = Tokens.split(continuingLine,
+				startOfContinuingLine);
 
 		final Token skippedStartOfContinuingLine = splitContinuingLine[0];
 		final Token correctedContinuingLine = splitContinuingLine[1];
@@ -288,8 +289,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		final String continuedText = continuedLine.getText();
 
 		final int endOfContinuedLine = lastNonBlank(continuedText) + 1;
-		final Token[] splitContinuedLine = continuedLine
-				.split(endOfContinuedLine);
+		final Token[] splitContinuedLine = Tokens.split(continuedLine,
+				endOfContinuedLine);
 
 		final Token correctedContinuedLine = splitContinuedLine[0];
 		final Token skippedEndOfContinuedLine = splitContinuedLine[1];
@@ -297,8 +298,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		final int startOfContinuingLine = firstNonBlank(continuingLine
 				.getText());
 
-		final Token[] splitContinuingLine = continuingLine
-				.split(startOfContinuingLine);
+		final Token[] splitContinuingLine = Tokens.split(continuingLine,
+				startOfContinuingLine);
 
 		final Token skippedStartOfContinuingLine = splitContinuingLine[0];
 		final Token correctedContinuingLine = splitContinuingLine[1];
@@ -326,8 +327,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 			final Token continuingLine, final int startOfContinuingLine) {
 		final Token correctedContinuedLine = continuedLine;
 
-		final Token[] splitContinuingLine = continuingLine
-				.split(startOfContinuingLine);
+		final Token[] splitContinuingLine = Tokens.split(continuingLine,
+				startOfContinuingLine);
 
 		final Token skippedStartOfContinuingLine = splitContinuingLine[0];
 		final Token correctedContinuingLine = splitContinuingLine[1];
@@ -356,8 +357,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		final String continuedText = continuedLine.getText();
 
 		final int endOfContinuedLine = lastNonBlank(continuedText) + 1;
-		final Token[] splitContinuedLine = continuedLine
-				.split(endOfContinuedLine);
+		final Token[] splitContinuedLine = Tokens.split(continuedLine,
+				endOfContinuedLine);
 
 		final Token correctedContinuedLine = splitContinuedLine[0];
 		final Token skippedEndOfContinuedLine = splitContinuedLine[1];
@@ -365,8 +366,8 @@ public class LineContinuationTokenizer extends ThreadedTokenizerBase implements
 		final int startOfContinuingLine = firstNonBlank(continuingLine
 				.getText());
 
-		final Token[] splitContinuingLine = continuingLine
-				.split(startOfContinuingLine);
+		final Token[] splitContinuingLine = Tokens.split(continuingLine,
+				startOfContinuingLine);
 
 		final Token skippedStartOfContinuingLine = splitContinuingLine[0];
 		final Token correctedContinuingLine = splitContinuingLine[1];

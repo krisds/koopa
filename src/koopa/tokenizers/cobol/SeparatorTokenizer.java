@@ -7,6 +7,7 @@ import koopa.tokenizers.cobol.tags.AreaTag;
 import koopa.tokenizers.cobol.tags.SyntacticTag;
 import koopa.tokenizers.util.ThreadedTokenizerBase;
 import koopa.tokens.Token;
+import koopa.tokens.Tokens;
 
 import org.apache.log4j.Logger;
 
@@ -97,13 +98,13 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			} else if (startsStringLiteral(c)) {
 				// STRING LITERAL.
 				position = stringLiteral(token, text, position, 0, length);
-            
-            } else if (startOfNullTerminatedString(text, length, position, c)) {
-                // NULL-TERMINATED STRING LITERAL: z"String"
+
+			} else if (startOfNullTerminatedString(text, length, position, c)) {
+				// NULL-TERMINATED STRING LITERAL: z"String"
 				position = stringLiteral(token, text, position, 1, length);
 
-            } else if (startOfNationalString(text, length, position, c)) {
-                // NATIONAL STRING LITERAL: n"String"
+			} else if (startOfNationalString(text, length, position, c)) {
+				// NATIONAL STRING LITERAL: n"String"
 				position = stringLiteral(token, text, position, 1, length);
 
 			} else if (isPseudoLiteralMarker(text, length, position, c)) {
@@ -113,21 +114,21 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			} else if (startOfBoolean(text, length, position, c)) {
 				// NUMERIC BOOLEAN LITERAL: b"01"
 				position = booleanLiteral(token, text, position, 1, length);
-			
+
 			} else if (startOfBooleanHexadecimal(text, length, position, c)) {
 				// NUMERIC BOOLEAN HEXADECIMAL LITERAL: bx"0A"
 				position = booleanLiteral(token, text, position, 2, length);
-				
+
 			} else if (startOfHexadecimal(text, length, position, c)) {
 				// NUMERIC HEXADECIMAL LITERAL: h"00"
 				position = hexadecimal(token, text, position, 1, length, false);
-				
+
 			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
 				// ALPHANUMERIC HEXADECIMAL LITERAL: x"00"
 				position = hexadecimal(token, text, position, 1, length, true);
-            
-            } else if (startOfNationalHexadecimal(text, length, position, c)) {
-                // NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL: nx"00"
+
+			} else if (startOfNationalHexadecimal(text, length, position, c)) {
+				// NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL: nx"00"
 				position = hexadecimal(token, text, position, 2, length, true);
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
@@ -178,22 +179,22 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		return (c == ',' || c == ';' || c == '.')
 				&& (position + 1 == length || text.charAt(position + 1) == ' ');
 	}
-    
-    private boolean startOfNullTerminatedString (final String text, final int length,
-			int position, final char c) {
-        return (c == 'z' || c == 'Z')
-        	    && position + 1 < length
-        	    && (text.charAt(position + 1) == '"' || text
-        				.charAt(position + 1) == '\'');
-    }
 
-    private boolean startOfNationalString (final String text, final int length,
+	private boolean startOfNullTerminatedString(final String text,
+			final int length, int position, final char c) {
+		return (c == 'z' || c == 'Z')
+				&& position + 1 < length
+				&& (text.charAt(position + 1) == '"' || text
+						.charAt(position + 1) == '\'');
+	}
+
+	private boolean startOfNationalString(final String text, final int length,
 			int position, final char c) {
-        return (c == 'n' || c == 'N')
-        	    && position + 1 < length
-        	    && (text.charAt(position + 1) == '"' || text
-        				.charAt(position + 1) == '\'');
-    }
+		return (c == 'n' || c == 'N')
+				&& position + 1 < length
+				&& (text.charAt(position + 1) == '"' || text
+						.charAt(position + 1) == '\'');
+	}
 
 	private boolean startOfBoolean(final String text, final int length,
 			int position, final char c) {
@@ -202,15 +203,17 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				&& (text.charAt(position + 1) == '"' || text
 						.charAt(position + 1) == '\'');
 	}
-    
-	private boolean startOfBooleanHexadecimal (final String text, final int length,
-			int position, final char c) {
+
+	private boolean startOfBooleanHexadecimal(final String text,
+			final int length, int position, final char c) {
 		return (c == 'b' || c == 'B')
 				&& position + 2 < length
-				&& (text.charAt(position + 1) == 'x' || text.charAt(position + 1) == 'X')
-				&& (text.charAt(position + 2) == '"' || text.charAt(position + 2) == '\'');
+				&& (text.charAt(position + 1) == 'x' || text
+						.charAt(position + 1) == 'X')
+				&& (text.charAt(position + 2) == '"' || text
+						.charAt(position + 2) == '\'');
 	}
-	
+
 	private boolean startOfHexadecimal(final String text, final int length,
 			int position, final char c) {
 		return (c == 'h' || c == 'H')
@@ -218,21 +221,23 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				&& (text.charAt(position + 1) == '"' || text
 						.charAt(position + 1) == '\'');
 	}
-	
-	private boolean startOfAlphanumericHexadecimal(final String text, final int length,
-			int position, final char c) {
+
+	private boolean startOfAlphanumericHexadecimal(final String text,
+			final int length, int position, final char c) {
 		return (c == 'x' || c == 'X')
 				&& position + 1 < length
 				&& (text.charAt(position + 1) == '"' || text
 						.charAt(position + 1) == '\'');
 	}
-	
-	private boolean startOfNationalHexadecimal (final String text, final int length,
-			int position, final char c) {
+
+	private boolean startOfNationalHexadecimal(final String text,
+			final int length, int position, final char c) {
 		return (c == 'n' || c == 'N')
 				&& position + 2 < length
-				&& (text.charAt(position + 1) == 'x' || text.charAt(position + 1) == 'X')
-				&& (text.charAt(position + 2) == '"' || text.charAt(position + 2) == '\'');
+				&& (text.charAt(position + 1) == 'x' || text
+						.charAt(position + 1) == 'X')
+				&& (text.charAt(position + 2) == '"' || text
+						.charAt(position + 2) == '\'');
 	}
 
 	private boolean startOfInlineComment(final String text, int position,
@@ -270,7 +275,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	private int separator(final Token token, final char c, final int start) {
-		final Token separator = token.subtoken(start, start + 1);
+		final Token separator = Tokens.subtoken(token, start, start + 1);
 		separator.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		separator.addTag(SyntacticTag.SEPARATOR);
 		if (LOGGER.isTraceEnabled()) {
@@ -288,7 +293,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			position += 1;
 		}
 
-		final Token separator = token.subtoken(start, position);
+		final Token separator = Tokens.subtoken(token, start, position);
 		separator.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		separator.addTag(SyntacticTag.SEPARATOR);
 		if (LOGGER.isTraceEnabled()) {
@@ -303,7 +308,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			final int start, final int prefixLength, final int length) {
 
 		final char quotationMark = text.charAt(start + prefixLength);
-		
+
 		int position = start + prefixLength + 1;
 		while (position < length) {
 			final char c = text.charAt(position);
@@ -315,7 +320,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			}
 
 			if (position + 1 == length) {
-				final Token stringliteral = token.subtoken(start);
+				final Token stringliteral = Tokens.subtoken(token, start);
 				stringliteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 				stringliteral.addTag(SyntacticTag.CHARACTER_STRING);
 				stringliteral.addTag(SyntacticTag.STRING_LITERAL);
@@ -335,7 +340,8 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			}
 
 			// Completed string literal.
-			final Token stringliteral = token.subtoken(start, position + 1);
+			final Token stringliteral = Tokens.subtoken(token, start,
+					position + 1);
 			stringliteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			stringliteral.addTag(SyntacticTag.CHARACTER_STRING);
 			stringliteral.addTag(SyntacticTag.STRING_LITERAL);
@@ -347,7 +353,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		}
 
 		// TODO Incomplete string literal. Throw error?
-		final Token stringliteral = token.subtoken(start);
+		final Token stringliteral = Tokens.subtoken(token, start);
 		stringliteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		stringliteral.addTag(SyntacticTag.CHARACTER_STRING);
 		stringliteral.addTag(SyntacticTag.STRING_LITERAL);
@@ -360,7 +366,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 	private int inlineComment(final Token token, final int start,
 			final int length) {
-		final Token comment = token.subtoken(start);
+		final Token comment = Tokens.subtoken(token, start);
 		comment.removeTag(AreaTag.PROGRAM_TEXT_AREA);
 		comment.addTag(AreaTag.COMMENT);
 		comment.addTag(SyntacticTag.CHARACTER_STRING);
@@ -372,7 +378,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 	}
 
 	private int pseudoLiteral(final Token token, final int start) {
-		final Token pseudoLiteral = token.subtoken(start, start + 2);
+		final Token pseudoLiteral = Tokens.subtoken(token, start, start + 2);
 		pseudoLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		pseudoLiteral.addTag(SyntacticTag.SEPARATOR);
 		if (LOGGER.isTraceEnabled()) {
@@ -381,14 +387,14 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		enqueue(pseudoLiteral);
 		return start + 2;
 	}
-	
+
 	private int booleanLiteral(final Token token, final String text,
 			final int start, final int prefixLength, final int length) {
-		
+
 		final char quotationMark = text.charAt(start + prefixLength);
 
 		int position = start + prefixLength + 2;
-		
+
 		while (position < length) {
 			final char c = text.charAt(position);
 			if (c != quotationMark) {
@@ -397,7 +403,8 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				continue;
 			}
 
-			final Token booleanLiteral = token.subtoken(start, position + 1);
+			final Token booleanLiteral = Tokens.subtoken(token, start,
+					position + 1);
 			booleanLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			booleanLiteral.addTag(SyntacticTag.CHARACTER_STRING);
 			booleanLiteral.addTag(SyntacticTag.BOOLEAN_LITERAL);
@@ -410,7 +417,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 		// TODO Incomplete hexadecimal. Throw error ?
 
-		final Token booleanLiteral = token.subtoken(start);
+		final Token booleanLiteral = Tokens.subtoken(token, start);
 		booleanLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		booleanLiteral.addTag(SyntacticTag.CHARACTER_STRING);
 		booleanLiteral.addTag(SyntacticTag.BOOLEAN_LITERAL);
@@ -426,7 +433,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			final boolean isAlphanumeric) {
 
 		final char quotationMark = text.charAt(start + prefixLength);
-		
+
 		int position = start + prefixLength + 2;
 		while (position < length) {
 			final char c = text.charAt(position);
@@ -435,10 +442,11 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				position += 1;
 				continue;
 			}
-			
+
 			// TODO Subtoken should include prefix.
 
-			final Token hexadecimal = token.subtoken(start, position + 1);
+			final Token hexadecimal = Tokens.subtoken(token, start,
+					position + 1);
 			hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
 			hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
@@ -454,7 +462,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 		// TODO Incomplete hexadecimal. Throw error ?
 
-		final Token hexadecimal = token.subtoken(start);
+		final Token hexadecimal = Tokens.subtoken(token, start);
 		hexadecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		hexadecimal.addTag(SyntacticTag.CHARACTER_STRING);
 		hexadecimal.addTag(SyntacticTag.HEXADECIMAL_LITERAL);
@@ -473,7 +481,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 
 		final int lengthOfNumber = tryNumericLiteral(text, start + 1, length);
 
-		final Token numericLiteral = token.subtoken(start, start + 1
+		final Token numericLiteral = Tokens.subtoken(token, start, start + 1
 				+ lengthOfNumber);
 		numericLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		numericLiteral.addTag(SyntacticTag.CHARACTER_STRING);
@@ -501,7 +509,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				continue;
 			}
 
-			final Token dotDecimal = token.subtoken(start, position);
+			final Token dotDecimal = Tokens.subtoken(token, start, position);
 			dotDecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			dotDecimal.addTag(SyntacticTag.CHARACTER_STRING);
 			dotDecimal.addTag(SyntacticTag.DECIMAL_LITERAL);
@@ -513,7 +521,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			return position;
 		}
 
-		final Token dotDecimal = token.subtoken(start);
+		final Token dotDecimal = Tokens.subtoken(token, start);
 		dotDecimal.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		dotDecimal.addTag(SyntacticTag.CHARACTER_STRING);
 		dotDecimal.addTag(SyntacticTag.DECIMAL_LITERAL);
@@ -531,7 +539,8 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		int match = tryCobolWord(text, start, length);
 		if (match > 0) {
 			// TODO Cobol word.
-			final Token cobolWord = token.subtoken(start, start + match);
+			final Token cobolWord = Tokens
+					.subtoken(token, start, start + match);
 			cobolWord.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			cobolWord.addTag(SyntacticTag.CHARACTER_STRING);
 			if (LOGGER.isTraceEnabled()) {
@@ -544,7 +553,8 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 		match = tryNumericLiteral(text, start, length);
 		if (match > 0) {
 			// TODO Cobol word.
-			final Token numericLiteral = token.subtoken(start, start + match);
+			final Token numericLiteral = Tokens.subtoken(token, start, start
+					+ match);
 			numericLiteral.addTag(AreaTag.PROGRAM_TEXT_AREA);
 			numericLiteral.addTag(SyntacticTag.CHARACTER_STRING);
 			numericLiteral
@@ -690,18 +700,18 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 				// STRING LITERAL.
 				break;
 
-            } else if (startOfNationalString(text, length, position, c)) {
-                // NATIONAL STRING.
-                break;
+			} else if (startOfNationalString(text, length, position, c)) {
+				// NATIONAL STRING.
+				break;
 
-            } else if (startOfNullTerminatedString(text, length, position, c)) {
-                // NULL-TERMINATED STRING
-                break;
+			} else if (startOfNullTerminatedString(text, length, position, c)) {
+				// NULL-TERMINATED STRING
+				break;
 
 			} else if (isPseudoLiteralMarker(text, length, position, c)) {
 				// PSEUDO LITERAL (marker)
 				break;
-			
+
 			} else if (startOfBoolean(text, length, position, c)) {
 				// BOOLEAN LITERAL
 				break;
@@ -713,10 +723,10 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
 				// ALPHANUMERIC HEXADECIMAL LITERAL.
 				break;
-				
-            } else if (startOfNationalHexadecimal(text, length, position, c)) {
-                // NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL.
-                break;
+
+			} else if (startOfNationalHexadecimal(text, length, position, c)) {
+				// NATIONAL ALPHANUMERIC HEXADECIMAL LITERAL.
+				break;
 
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.
@@ -736,7 +746,7 @@ public class SeparatorTokenizer extends ThreadedTokenizerBase implements
 			}
 		}
 
-		final Token separator = token.subtoken(start, position);
+		final Token separator = Tokens.subtoken(token, start, position);
 		separator.addTag(AreaTag.PROGRAM_TEXT_AREA);
 		separator.addTag(SyntacticTag.CHARACTER_STRING);
 		if (LOGGER.isTraceEnabled()) {

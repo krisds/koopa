@@ -1,7 +1,11 @@
 package koopa.tokens;
 
+/**
+ * Basic implementation of a {@linkplain Token}. This one keeps track of its own
+ * data.
+ */
 public class BasicToken extends TokenBase implements Token {
-	protected String text;
+	protected final String text;
 	protected Position start;
 	protected Position end;
 
@@ -12,70 +16,38 @@ public class BasicToken extends TokenBase implements Token {
 		this.end = end;
 	}
 
+	@Override
 	public String getText() {
 		return text;
 	}
 
+	@Override
 	public Position getStart() {
 		return start;
 	}
 
+	@Override
 	public Position getEnd() {
 		return end;
 	}
 
+	@Override
 	public int getLength() {
 		return text.length();
 	}
 
+	@Override
 	public String toString() {
 		return "[" + start + "|" + text + "|" + end + "]";
 	}
 
+	@Override
 	public void setEnd(Position end) {
 		this.end = end;
 	}
 
+	@Override
 	public void setStart(Position start) {
 		this.start = start;
-	}
-
-	public Token subtoken(int beginIndex) {
-		if (beginIndex == 0) {
-			return this;
-		}
-
-		final BasicToken token = new BasicToken(text.substring(beginIndex),
-				start.offsetBy(beginIndex), end);
-
-		token.addTags(getTags());
-
-		return token;
-	}
-
-	public Token subtoken(int beginIndex, int endIndex) {
-		if (beginIndex == 0 && endIndex == text.length()) {
-			return this;
-		}
-
-		final BasicToken token = new BasicToken(text.substring(beginIndex,
-				endIndex), start.offsetBy(beginIndex), start
-				.offsetBy(endIndex - 1));
-
-		token.addTags(getTags());
-
-		return token;
-	}
-
-	public Token[] split(int cutIndex) {
-		if (cutIndex <= 0) {
-			return new Token[] { null, this };
-		}
-
-		if (cutIndex >= text.length()) {
-			return new Token[] { this, null };
-		}
-
-		return new Token[] { subtoken(0, cutIndex), subtoken(cutIndex) };
 	}
 }

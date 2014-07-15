@@ -409,9 +409,11 @@ public abstract class KoopaGrammar {
 						trace(token + " =~ " + text + " : yes");
 					}
 
-					Assign assign = (Assign) scope().get("=");
-					if (assign != null) {
-						assign.apply(token);
+					if (!scope.isEmpty()) {
+						Assign assign = (Assign) scope().get("=");
+						if (assign != null) {
+							assign.apply(token);
+						}
 					}
 
 					return true;
@@ -421,6 +423,64 @@ public abstract class KoopaGrammar {
 						trace(token + " =~ " + text + " : no");
 					}
 
+					return false;
+				}
+			}
+		};
+	}
+
+	protected Parser any() {
+		return new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				final Token token = stream.nextToken();
+
+				if (token != null) {
+
+					if (LOGGER.isTraceEnabled())
+						trace(token + " != null : yes");
+
+					if (!scope.isEmpty()) {
+						Assign assign = (Assign) scope().get("=");
+						if (assign != null)
+							assign.apply(token);
+					}
+
+					return true;
+
+				} else {
+					if (LOGGER.isTraceEnabled())
+						trace(token + " != null : no");
+
+					return false;
+				}
+			}
+		};
+	}
+
+	protected Parser tagged(final Object tag) {
+		return new Parser() {
+			protected boolean accepts(TokenStream stream) {
+				final Token token = stream.nextToken();
+
+				if (token == null) {
+					if (LOGGER.isTraceEnabled())
+						trace(token + " has tag " + tag + " : no");
+
+					return false;
+				}
+
+				if (token.hasTag(tag)) {
+					if (LOGGER.isTraceEnabled())
+						trace(token + " has tag " + tag + " : yes");
+
+					stream.pushback(token);
+					return true;
+
+				} else {
+					if (LOGGER.isTraceEnabled())
+						trace(token + " has tag " + tag + " : no");
+
+					stream.pushback(token);
 					return false;
 				}
 			}

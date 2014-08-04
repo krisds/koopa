@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.tokenizers.cobol.TokenTracker;
-import koopa.tokens.Token;
+import koopa.core.data.Token;
+import koopa.core.targets.TokenTracker;
 import koopa.util.Tuple;
 
 import org.antlr.runtime.tree.CommonTree;

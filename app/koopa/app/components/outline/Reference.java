@@ -2,8 +2,8 @@ package koopa.app.components.outline;
 
 import javax.swing.Icon;
 
-import koopa.tokens.Position;
-import koopa.tokens.Token;
+import koopa.core.data.Data;
+import koopa.core.data.Position;
 import koopa.util.ANTLR;
 
 import org.antlr.runtime.tree.Tree;
@@ -23,7 +23,7 @@ public class Reference {
 		return tree;
 	}
 
-	public Token getToken() {
+	public Data getToken() {
 		return ANTLR.getToken(this.tree);
 	}
 

@@ -2,8 +2,9 @@ package koopa.trees.antlr.jaxen;
 
 import java.util.Iterator;
 
-import koopa.tokens.Token;
-import koopa.tokenstreams.Marker;
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
+import koopa.core.data.Token;
 import koopa.trees.antlr.CommonKoopaToken;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -342,9 +343,12 @@ public class KoopaNavigator extends DefaultNavigator {
 
 		final CommonTree tree = (CommonTree) foo;
 		final CommonKoopaToken token = (CommonKoopaToken) tree.getToken();
-		final Token koopa = token.getKoopaToken();
+		final Data koopa = token.getKoopaData();
 
-		return koopa.getText();
+		if (koopa instanceof Token)
+			return ((Token) koopa).getText();
+
+		return null;
 	}
 
 	public boolean isAttribute(Object foo) {
@@ -378,7 +382,7 @@ public class KoopaNavigator extends DefaultNavigator {
 		if (foo instanceof Tree) {
 			final CommonTree tree = (CommonTree) foo;
 			final CommonKoopaToken token = (CommonKoopaToken) tree.getToken();
-			final Token koopa = token.getKoopaToken();
+			final Data koopa = token.getKoopaData();
 
 			return koopa instanceof Marker;
 
@@ -404,9 +408,9 @@ public class KoopaNavigator extends DefaultNavigator {
 		if (foo instanceof Tree) {
 			final CommonTree tree = (CommonTree) foo;
 			final CommonKoopaToken token = (CommonKoopaToken) tree.getToken();
-			final Token koopa = token.getKoopaToken();
+			final Data koopa = token.getKoopaData();
 
-			return !(koopa instanceof Marker);
+			return (koopa instanceof Token);
 
 		} else {
 			return false;

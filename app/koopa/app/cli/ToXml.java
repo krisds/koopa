@@ -3,10 +3,10 @@ package koopa.app.cli;
 import java.io.File;
 import java.io.IOException;
 
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.CobolParser;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokens.Token;
 import koopa.trees.antlr.CommonTreeSerializer;
 import koopa.util.Tuple;
 

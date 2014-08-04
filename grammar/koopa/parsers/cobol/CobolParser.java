@@ -10,31 +10,27 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.sources.CompilerDirectives;
+import koopa.cobol.sources.ContinuationWelding;
+import koopa.cobol.sources.LineContinuations;
+import koopa.cobol.sources.LineSplitter;
+import koopa.cobol.sources.ProgramArea;
+import koopa.cobol.sources.PseudoLiterals;
+import koopa.cobol.sources.Separators;
+import koopa.cobol.sources.SourceFormat;
+import koopa.cobol.sources.SourceFormattingDirectives;
+import koopa.core.data.Data;
+import koopa.core.data.Token;
+import koopa.core.parsers.Parser;
+import koopa.core.sources.ChainableSource;
+import koopa.core.sources.Source;
+import koopa.core.targets.CompositeTarget;
+import koopa.core.targets.Target;
+import koopa.core.targets.TokenTracker;
 import koopa.grammars.cobol.CobolGrammar;
-import koopa.grammars.cobol.CobolVerifier;
 import koopa.parsers.ParseResults;
-import koopa.parsers.Parser;
 import koopa.parsers.ParserConfiguration;
 import koopa.parsers.cobol.preprocessing.PreprocessingTokenizer;
-import koopa.tokenizers.Tokenizer;
-import koopa.tokenizers.cobol.CompilerDirectivesTokenizer;
-import koopa.tokenizers.cobol.ContinuationWeldingTokenizer;
-import koopa.tokenizers.cobol.LineContinuationTokenizer;
-import koopa.tokenizers.cobol.LineSplittingTokenizer;
-import koopa.tokenizers.cobol.ProgramAreaTokenizer;
-import koopa.tokenizers.cobol.PseudoLiteralTokenizer;
-import koopa.tokenizers.cobol.SeparatorTokenizer;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokenizers.cobol.SourceFormattingDirectivesFilter;
-import koopa.tokenizers.cobol.TokenTrackerTokenizer;
-import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.SyntacticTag;
-import koopa.tokenizers.cobol.tags.TokenizerTag;
-import koopa.tokenizers.generic.FilteringTokenizer;
-import koopa.tokenizers.generic.IntermediateTokenizer;
-import koopa.tokens.Token;
-import koopa.tokens.TokenFilter;
-import koopa.tokenstreams.TokenSink;
 import koopa.trees.TreeBuildDirectingSink;
 import koopa.trees.antlr.ANTLRTokenTypesLoader;
 import koopa.trees.antlr.CommonTreeBuilder;
@@ -50,8 +46,8 @@ public class CobolParser implements ParserConfiguration {
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
 	private TokenTypes tokenTypes = null;
-	private List<IntermediateTokenizer> intermediateTokenizers = new LinkedList<IntermediateTokenizer>();
-	private List<TokenSink> tokenSinks = new LinkedList<TokenSink>();
+	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
+	private List<Target<Data>> tokenSinks = new LinkedList<Target<Data>>();
 	private List<CommonTreeProcessor> treeProcessors = null;
 
 	private boolean keepingTrackOfTokens = false;
@@ -72,20 +68,21 @@ public class CobolParser implements ParserConfiguration {
 		try {
 			reader = new FileReader(file);
 			return parse(file, reader);
-			
+
 		} finally {
-			if (reader != null) reader.close();
+			if (reader != null)
+				reader.close();
 		}
 	}
 
 	private ParseResults parse(File file, FileReader reader) throws IOException {
 		ParseResults results = new ParseResults(file);
-		
+
 		final boolean isCopybook = file.getName().toUpperCase()
 				.endsWith(".CPY");
-		
+
 		// Build the tokenisation stage.
-		Tokenizer tokenizer = getNewTokenizationStage(results, reader);
+		Source<Token> source = getNewTokenizationStage(results, reader);
 
 		// This object holds all grammar productions. It is not thread-safe,
 		// meaning that you can only ask it to parse one thing at a time.
@@ -102,23 +99,24 @@ public class CobolParser implements ParserConfiguration {
 
 		CommonTreeBuilder builder = null;
 
-		// This object does some extra verification on the output of the
-		// grammar.
-		CobolVerifier verifier = new CobolVerifier();
+		CompositeTarget<Data> ct = new CompositeTarget<Data>();
+
+		// Keep track of all tokens passing through here, if so requested.
+		if (this.keepingTrackOfTokens && results != null) {
+			final TokenTracker tokenTracker = new TokenTracker();
+			results.setTokenTracker(tokenTracker);
+			ct.addTarget(tokenTracker);
+		}
 
 		boolean accepts = false;
 		if (!buildTrees()) {
-			if (this.tokenSinks.size() > 0) {
-				TokenSink sink = verifier;
-				for (TokenSink next : this.tokenSinks) {
-					sink.setNextSink(next);
-					sink = next;
-				}
-			}
+			if (this.tokenSinks.size() > 0)
+				for (Target<Data> next : this.tokenSinks)
+					ct.addTarget(next);
 
 			// Here we ask the grammar if the tokens can be parsed as a
 			// compilation group.
-			accepts = parser.accepts(tokenizer, verifier);
+			accepts = parser.accepts(source, ct);
 
 		} else {
 			// These objects take care of building an ANTLR tree out of the
@@ -127,20 +125,18 @@ public class CobolParser implements ParserConfiguration {
 			TreeBuildDirectingSink treeBuilder = new TreeBuildDirectingSink(
 					builder, false);
 
-			verifier.setNextSink(treeBuilder);
+			ct.addTarget(treeBuilder);
 
 			if (this.tokenSinks.size() > 0) {
-				TokenSink sink = treeBuilder;
-				for (TokenSink next : this.tokenSinks) {
-					sink.setNextSink(next);
-					sink = next;
+				for (Target<Data> next : this.tokenSinks) {
+					ct.addTarget(next);
 				}
 			}
 
 			// Here we ask the grammar if the tokens can be parsed as a
 			// compilation group. In addition, we direct the parser to build an
 			// ast out of the parsed tokens.
-			accepts = parser.accepts(tokenizer, verifier);
+			accepts = parser.accepts(source, ct);
 		}
 
 		if (accepts) {
@@ -165,40 +161,24 @@ public class CobolParser implements ParserConfiguration {
 			}
 		}
 
-		if (verifier.hasWarnings()) {
-			LOGGER.info("There were warnings from the verifier:");
-
-			final List<Tuple<Token, String>> warnings = verifier.getWarnings();
-
-			for (Tuple<Token, String> warning : warnings) {
-				LOGGER.info("  " + warning.getFirst() + ": "
-						+ warning.getSecond());
-
-				results.addWarning(warning.getFirst(), warning.getSecond());
-			}
-		}
-
-		if (verifier.hasErrors()) {
-			LOGGER.info("There were errors from the verifier:");
-
-			final List<Tuple<Token, String>> errors = verifier.getErrors();
-
-			for (Tuple<Token, String> error : errors) {
-				LOGGER.info("  " + error.getFirst() + ": " + error.getSecond());
-
-				results.addError(error.getFirst(), error.getSecond());
-			}
-
-			results.setValidInput(false);
-			accepts = false;
-		}
-
 		// Here we check if the parser really consumed all input. If it didn't
 		// we show a glimpse of the next few tokens that should have been
 		// consumed.
 		if (accepts) {
-			Token t = tokenizer.nextToken();
-			if (t != null) {
+			while (true) {
+				// TODO This logic gets replicated a bit in other places (e.g.
+				// TestTokenizer)...
+				Token t = source.next();
+
+				if (t == null)
+					break;
+
+				if (!grammar.isProgramText(t))
+					continue;
+
+				if (grammar.isSeparator(t))
+					continue;
+
 				LOGGER.info("Not all input was consumed.");
 
 				results.setValidInput(false);
@@ -208,13 +188,14 @@ public class CobolParser implements ParserConfiguration {
 				do {
 					LOGGER.info("-> " + t);
 					count++;
-				} while (count < 5 && (t = tokenizer.nextToken()) != null);
+				} while (count < 5 && (t = source.next()) != null);
 
 				if (t != null) {
 					LOGGER.info("-> ...");
 				}
 
 				accepts = false;
+				break;
 			}
 		}
 
@@ -222,7 +203,7 @@ public class CobolParser implements ParserConfiguration {
 		// threads they hold get stopped. This is what we do here. The message
 		// will get passed along the chain of tokenizers, giving each a chance
 		// to stop running.
-		tokenizer.quit();
+		source.close();
 
 		// It is now safe to quit the method if we want/need to.
 		if (!accepts) {
@@ -283,44 +264,37 @@ public class CobolParser implements ParserConfiguration {
 		return results;
 	}
 
-	public Tokenizer getNewTokenizationStage(ParseResults results, Reader reader) {
+	public Source<Token> getNewTokenizationStage(ParseResults results,
+			Reader reader) {
 		// We will be building up our tokenization stage in several steps. Each
 		// step takes the preceding tokenizer, and extends its abilities.
-		Tokenizer tokenizer;
+		Source<Token> tokenizer;
 
 		// Split the input into lines.
-		tokenizer = new LineSplittingTokenizer(new BufferedReader(reader));
+		tokenizer = new LineSplitter(new BufferedReader(reader));
 		// Filter out some compiler directives.
-		tokenizer = new CompilerDirectivesTokenizer(tokenizer, format);
+		tokenizer = new CompilerDirectives(tokenizer, format);
 		// Split up the different areas of each line (depending on the format).
-		tokenizer = new ProgramAreaTokenizer(tokenizer, format);
+		tokenizer = new ProgramArea(tokenizer, format);
 		// Filter out some source formatting directives.
-		tokenizer = new SourceFormattingDirectivesFilter(tokenizer);
+		tokenizer = new SourceFormattingDirectives(tokenizer);
 
 		// In case of fixed format: take care of line continuations
 		if (this.format == SourceFormat.FIXED) {
-			tokenizer = new LineContinuationTokenizer(tokenizer);
-			tokenizer = new ContinuationWeldingTokenizer(tokenizer);
+			tokenizer = new LineContinuations(tokenizer);
+			tokenizer = new ContinuationWelding(tokenizer);
 		}
 
 		// Split up the lines into separators and non-separators.
-		tokenizer = new SeparatorTokenizer(tokenizer);
+		tokenizer = new Separators(tokenizer);
 		// Find (and mark) pseudo literals.
-		tokenizer = new PseudoLiteralTokenizer(tokenizer);
-
-		// Keep track of all tokens passing through here, if so requested.
-		if (this.keepingTrackOfTokens && results != null) {
-			final TokenTrackerTokenizer tokenTracker = new TokenTrackerTokenizer(
-					tokenizer);
-			results.setTokenTracker(tokenTracker.getTokenTracker());
-			tokenizer = tokenTracker;
-		}
+		tokenizer = new PseudoLiterals(tokenizer);
 
 		// This allows external tools to see all tokens before further
 		// processing. At the moment it is not guaranteed that all tokens will
 		// make it to the token sinks.
-		for (IntermediateTokenizer intermediate : this.intermediateTokenizers) {
-			intermediate.setPreviousTokenizer(tokenizer);
+		for (ChainableSource<Token> intermediate : this.intermediateTokenizers) {
+			intermediate.setSource(tokenizer);
 			tokenizer = intermediate;
 		}
 
@@ -328,7 +302,9 @@ public class CobolParser implements ParserConfiguration {
 		// area (comments are not considered part of this area). This leaves us
 		// with the pure code, which should be perfect for processing by a
 		// parser.
-		tokenizer = new FilteringTokenizer(tokenizer, AreaTag.PROGRAM_TEXT_AREA);
+		// TODO !!!!!!! Also move this into the grammar.
+		// tokenizer = new FilteringTokenizer(tokenizer,
+		// AreaTag.PROGRAM_TEXT_AREA);
 
 		// Here we filter out all pure whitespace separators. This leaves us
 		// with only the "structural" tokens which are of interest to a parser.
@@ -338,42 +314,46 @@ public class CobolParser implements ParserConfiguration {
 		// parsing. It would be nicer if we could recognize picture strings
 		// in the tokenizer stages, but I don't see how we can do that without
 		// some form of parsing...
-		tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
-			boolean lastWasWhitespace = true;
-			int lastLinenumber = -1;
-
-			public boolean accepts(Token token) {
-				final int currentLinenumber = token.getStart().getLinenumber();
-
-				// A change of line is seen as whitespace.
-				if (lastLinenumber != currentLinenumber) {
-					lastWasWhitespace = true;
-				}
-
-				if (!token.hasTag(SyntacticTag.SEPARATOR)) {
-					if (!lastWasWhitespace) {
-						token.addTag(TokenizerTag.CHAINED);
-					}
-					lastWasWhitespace = false;
-					lastLinenumber = currentLinenumber;
-					return true;
-				}
-
-				final String text = token.getText().trim();
-				if (text.equals("")) {
-					lastWasWhitespace = true;
-					lastLinenumber = currentLinenumber;
-					return false;
-				}
-
-				if (!lastWasWhitespace) {
-					token.addTag(TokenizerTag.CHAINED);
-				}
-				lastWasWhitespace = false;
-				lastLinenumber = currentLinenumber;
-				return !text.equals(",") && !text.equals(";");
-			}
-		});
+		//
+		// Update: don't really need this anymore, as it is now handled directly
+		// by the grammar.
+		// TODO !!!!!!! Move this into the grammar, then kill it.
+		// tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
+		// boolean lastWasWhitespace = true;
+		// int lastLinenumber = -1;
+		//
+		// public boolean accepts(Token token) {
+		// final int currentLinenumber = token.getStart().getLinenumber();
+		//
+		// // A change of line is seen as whitespace.
+		// if (lastLinenumber != currentLinenumber) {
+		// lastWasWhitespace = true;
+		// }
+		//
+		// if (!token.hasTag(SyntacticTag.SEPARATOR)) {
+		// if (!lastWasWhitespace) {
+		// token.addTag(TokenizerTag.CHAINED);
+		// }
+		// lastWasWhitespace = false;
+		// lastLinenumber = currentLinenumber;
+		// return true;
+		// }
+		//
+		// final String text = token.getText().trim();
+		// if (text.equals("")) {
+		// lastWasWhitespace = true;
+		// lastLinenumber = currentLinenumber;
+		// return false;
+		// }
+		//
+		// if (!lastWasWhitespace) {
+		// token.addTag(TokenizerTag.CHAINED);
+		// }
+		// lastWasWhitespace = false;
+		// lastLinenumber = currentLinenumber;
+		// return !text.equals(",") && !text.equals(";");
+		// }
+		// });
 
 		// EXPERIMENTAL: optional preprocessing stage.
 		// TODO Work on this stage.
@@ -388,7 +368,7 @@ public class CobolParser implements ParserConfiguration {
 	private TokenTypes getTokenTypes() {
 		if (tokenTypes == null) {
 			try {
-				tokenTypes = new ANTLRTokenTypesLoader()
+				tokenTypes = ANTLRTokenTypesLoader
 						.load("/koopa/grammars/cobol/antlr/Cobol.tokens");
 
 			} catch (IOException e) {
@@ -446,11 +426,11 @@ public class CobolParser implements ParserConfiguration {
 		this.treeProcessors.add(treeProcessor);
 	}
 
-	public void addTokenSink(TokenSink sink) {
+	public void addTokenSink(Target<Data> sink) {
 		this.tokenSinks.add(sink);
 	}
 
-	public void addIntermediateTokenizer(IntermediateTokenizer tokenizer) {
+	public void addIntermediateTokenizer(ChainableSource<Token> tokenizer) {
 		assert (tokenizer != null);
 		this.intermediateTokenizers.add(tokenizer);
 	}
@@ -488,7 +468,7 @@ public class CobolParser implements ParserConfiguration {
 	public void setCopybookPath(List<File> copybookPaths) {
 		this.copybookPaths = copybookPaths;
 	}
-	
+
 	// TODO Smarter lookup system, with variations in extensions.
 	public File lookup(final String textName, final String libraryName) {
 		if (this.copybookPaths == null)

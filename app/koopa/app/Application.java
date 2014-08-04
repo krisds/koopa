@@ -3,8 +3,8 @@ package koopa.app;
 import java.awt.Component;
 import java.io.File;
 
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokens.Token;
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
 import koopa.util.Tuple;
 
 import org.antlr.runtime.tree.CommonTree;

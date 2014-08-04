@@ -21,12 +21,12 @@ import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
+import koopa.core.sources.ChainableSource;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokenizers.generic.IntermediateTokenizer;
-import koopa.tokens.Token;
 import koopa.util.Tuple;
 
 // TODO Extract commonalities with Overview into a common superclass ?
@@ -73,9 +73,9 @@ public class Detail extends JPanel implements Configurable {
 		try {
 			Class<?> clazz = Class.forName(classname);
 			Object o = clazz.newInstance();
-			if (o instanceof IntermediateTokenizer) {
+			if (o instanceof ChainableSource<?>) {
 				this.coordinator
-						.addIntermediateTokenizer((IntermediateTokenizer) o);
+						.addIntermediateTokenizer((ChainableSource<Token>) o);
 			}
 
 		} catch (ClassNotFoundException e) {

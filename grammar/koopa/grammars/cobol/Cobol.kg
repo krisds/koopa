@@ -3860,7 +3860,7 @@ def argument =
 end
 
 def qualifier =
-    ((IN | OF) dataName)*
+    ((IN | OF) dataName)+
 end
 
 def subscript =
@@ -4087,7 +4087,7 @@ end
 
 # Full Qualified Data name with subscripts.
 def qualifiedDataName =
-	dataName qualifier ['(' (subscript)+ ')']
+	dataName [qualifier] ['(' (subscript)+ ')']
 end
 
 # Data name on describe.
@@ -4355,8 +4355,8 @@ def figurativeConstant =
 end
 
 def numericLiteral =
-    ( integerLiteral
-    | decimal
+    ( decimal
+    | integerLiteral
     | booleanLiteral
     | hexadecimal
     | (LENGTH | BYTE-LENGTH) [OF] identifier
@@ -4364,8 +4364,8 @@ def numericLiteral =
 end
 
 def numeric =
-    ( integer
-    | decimal
+    ( decimal
+    | integer
     | booleanLiteral
     | hexadecimal
     | zero
@@ -4402,3 +4402,25 @@ end
 def alphanumericConstant =
     cobolWord
 end
+
+# -----------------------------------------------------------------------------
+# Decimals
+#
+# Whether we're working on a decimal is something which can only be decided at
+# parsing time. But it does require some lexer info.
+#
+# TODO Allow ",2"; which is still tricky.
+def decimal =
+    ( intgr %noskip ( (',' | '.') uintgr )
+    | '.' %noskip uintgr
+    )
+end
+
+def intgr =
+    @INTEGER_LITERAL _
+end
+
+def uintgr =
+    @UNSIGNED @INTEGER_LITERAL _
+end
+

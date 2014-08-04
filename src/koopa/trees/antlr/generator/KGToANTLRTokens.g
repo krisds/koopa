@@ -22,7 +22,7 @@ options {
 @members {
   private Set<String> tokens = new HashSet<String>();
   private TokenTypes numbers = new TokenTypes();
-  private int count = 13;
+  private int count = 14;
 
   public void node(String text) {
     if (!tokens.contains(text)) {
@@ -47,6 +47,10 @@ options {
     
     if (!numbers.contains("WATER")) {
       numbers.put("WATER", 12, false);
+    }
+    
+    if (!numbers.contains("COMMENT")) {
+      numbers.put("COMMENT", 13, false);
     }
     
     return numbers;
@@ -86,6 +90,10 @@ body
   
   | ^(ACT NATIVE_CODE)
     
+  | TAG
+
+  | ANY
+
   | i=IDENTIFIER
     { String text = ((CommonTree) $i).getText();
       if (Character.isUpperCase(text.charAt(0))) {
@@ -141,4 +149,6 @@ body
     )
   
   | ^(NOT body)
+  
+  | ^(NOSKIP body)
   ;

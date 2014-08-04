@@ -1,10 +1,10 @@
 package koopa.parsers;
 
-import koopa.tokenizers.cobol.TokenTracker;
-import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.IslandTag;
-import koopa.tokenizers.cobol.tags.SyntacticTag;
-import koopa.tokens.Token;
+import koopa.cobol.data.tags.AreaTag;
+import koopa.cobol.data.tags.SyntacticTag;
+import koopa.core.data.Token;
+import koopa.core.data.tags.IslandTag;
+import koopa.core.targets.TokenTracker;
 
 public class Metrics {
 

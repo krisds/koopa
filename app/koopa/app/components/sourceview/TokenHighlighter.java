@@ -11,11 +11,10 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 
-import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.IslandTag;
-import koopa.tokenizers.cobol.tags.SyntacticTag;
-import koopa.tokens.CompositeToken;
-import koopa.tokens.Token;
+import koopa.cobol.data.tags.AreaTag;
+import koopa.cobol.data.tags.SyntacticTag;
+import koopa.core.data.Token;
+import koopa.core.data.tags.IslandTag;
 
 public class TokenHighlighter implements CaretListener {
 
@@ -61,16 +60,17 @@ public class TokenHighlighter implements CaretListener {
 	}
 
 	private void highlight(Token token, Color color) {
-		if (token instanceof CompositeToken) {
-			CompositeToken composite = (CompositeToken) token;
-			for (int i = 0; i < composite.size(); i++) {
-				highlight(composite.getToken(i), color);
-			}
-
-		} else {
+		// TODO Make sure this still works.
+		//if (token instanceof CompositeToken) {
+		//	CompositeToken composite = (CompositeToken) token;
+		//	for (int i = 0; i < composite.size(); i++) {
+		//		highlight(composite.getToken(i), color);
+		//	}
+		//
+		//} else {
 			set(token.getStart().getPositionInFile(), token.getEnd()
 					.getPositionInFile(), color);
-		}
+		//}
 	}
 
 	private void clear() {

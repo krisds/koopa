@@ -1,0 +1,185 @@
+123456* ANNOTATED SAMPLE                                                KOOPA
+<---->^<---------------------------------------------------------------><--->^
+SEQNR I COMMENT                                                         IDENT EOLN
+
+
+# Continued string literals. ##################################################
+#
+
+        DISPLAY "HELLO
+<---->^<------------->^
+SEQNR I CTD__/TEXT    EOLN
+
+      -         " WORLD".
+<---->^<-------><------->^
+SEQNR I SKIPPED  __CTD/LQ/TEXT EOLN
+
+
+# Continued string literals. ##################################################
+#
+
+        DISPLAY 'HELLO
+<---->^<------------->^
+SEQNR I CTD__/TEXT    EOLN
+
+      -         ' WORLD'.
+<---->^<-------><------->^
+SEQNR I SKIPPED  __CTD/LQ/TEXT  EOLN
+
+
+# Continued picture strings. ##################################################
+#
+
+       01 FIELD-37A PIC S9(
+<---->^<------------------>^
+SEQNR I CTD__/TEXT         EOLN
+
+      -                    6)V9(6).
+<---->^<------------------><------>^
+SEQNR I SKIPPED         __CTD/TEXT EOLN
+
+
+# Continued cobol words. ######################################################
+#
+
+       MOVE SPACEMAN-SPIFF TO THE-FIFTH-
+<---->^<------------------------------->^
+SEQNR I CTD__/TEXT                      EOLN
+
+      -     DIMENSION.
+<---->^<---><-------->^
+SEQNR I SKIPPED __CTD/TEXT EOLN
+
+
+       ACCEPT THE-ANSWER-TO-QUESTION-7
+<---->^<----------------------------->^
+SEQNR I CTD__/TEXT                    EOLN
+
+      -       -FROM-SUSIE-DERKINS.
+<---->^<-----><------------------>^
+SEQNR I SKIPPED __CTD/TEXT        EOLN
+
+
+       ADD 100 TO MONEY-SAVED-
+<---->^<--------------------->^
+SEQNR I CTD__/TEXT            EOLN
+
+      -           WHILE
+<---->^<---------><--->^
+SEQNR I SKIPPED  _CTD_/TEXT EOLN
+
+      -           -BUILDING-CHARACTER.
+<---->^<---------><------------------>^
+SEQNR I SKIPPED    __CTD/TEXT         EOLN
+
+
+# Intermediate comment lines. #################################################
+#
+
+       DISPLAY THE-FIFTH-
+<---->^<---------------->^
+SEQNR I CTD__/TEXT       EOLN
+
+      * This comment is here. Obviously.
+<---->^<------------------------------->^
+SEQNR I SKIPPED                         EOLN
+
+      -     DIMENSION.
+<---->^<---><-------->^
+SEQNR I SKIPPED __CTD/TEXT EOLN
+
+
+
+       DISPLAY THE-FIFTH-
+<---->^<---------------->^
+SEQNR I CTD__/TEXT       EOLN
+
+      *
+<---->^^
+SEQNR I EOLN
+
+      -     DIMENSION.
+<---->^<---><-------->^
+SEQNR I SKIPPED __CTD/TEXT EOLN
+
+
+# Continued decimals. #########################################################
+#
+
+       MOVE -
+<---->^<---->^
+SEQNR I CTD__/TEXT EOLN
+
+      -     100
+<---->^<---><->^
+SEQNR I SKIPPED  _CTD_/TEXT  EOLN
+
+      -     000
+<---->^<---><->^
+SEQNR I SKIPPED  _CTD_/TEXT  EOLN
+
+      -     000
+<---->^<---><->^
+SEQNR I SKIPPED  _CTD_/TEXT  EOLN
+
+      -     .
+<---->^<--->^^
+SEQNR I SKIPPED  _CTD_/TEXT  EOLN
+
+      -     000
+<---->^<---><->^
+SEQNR I SKIPPED  _CTD_/TEXT  EOLN
+
+      -     000 TO TWELVE-AND-SEVEN.
+<---->^<---><---------------------->^
+SEQNR I SKIPPED  __CTD/TEXT         EOLN
+
+
+# Continuations and quoted quotes. ############################################
+#
+
+       DISPLAY "I want to be introduced as ""Calvin, boy of destiny."" B
+<---->^<--------------------------------------------------------------->^
+SEQNR I CTD__/TEXT                                                      EOLN
+
+      -        "ut you have to say it right, pause a little after ""boy,
+<---->^<------><------------------------------------------------------->^
+SEQNR I SKIPPED  _CTD_/LQ/TEXT                                          EOLN
+
+      -        """ and say ""Destiny"" a bit slower and deeper for empha
+<---->^<------><------------------------------------------------------->^
+SEQNR I SKIPPED  _CTD_/LQ/TEXT                                          EOLN
+
+      -        "sis. Say it, ""Boy... Of Dessstiny,"" Like that!".
+<---->^<------><------------------------------------------------->^
+SEQNR I SKIPPED  __CTD/LQ/TEXT                                    EOLN
+
+      
+       MOVE    'thoroughly
+<---->^<----------------->^
+SEQNR I CTD__/TEXT        EOLN
+
+      -        ' useless 
+<---->^<------><-------->^
+SEQNR I SKIPPED _CTD_/LQ/TEXT EOLN
+
+      -        'information' TO CALVINS-COMMAND.
+<---->^<------><------------------------------->^
+SEQNR I SKIPPED __CTD/LQ/TEXT                   EOLN
+
+      
+# The quoted quote may also be continued in mid-quoting. Which means adding yet
+# another quote...
+
+       MOVE                                'Our class voted Calvin the '
+<---->^<--------------------------------------------------------------->^
+SEQNR I CTD__/TEXT                                                      EOLN
+
+      -                   ''Most likely to be seen on the news some day'
+<---->^<-----------------><-------------------------------------------->^
+SEQNR I SKIPPED            _CTD_/LQ/TEXT                                EOLN
+
+      -     ''.' TO SUSIE-QUOTE.
+<---->^<---><------------------>^
+SEQNR I SKIPPED __CTD/LQ/TEXT   EOLN
+

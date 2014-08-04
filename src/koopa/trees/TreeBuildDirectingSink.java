@@ -1,16 +1,14 @@
 package koopa.trees;
 
+import koopa.core.data.Data;
+import koopa.core.data.Token;
+import koopa.core.data.markers.End;
+import koopa.core.data.markers.InWater;
+import koopa.core.data.markers.OnLand;
+import koopa.core.data.markers.Start;
+import koopa.core.targets.Target;
 
-import java.util.List;
-
-import koopa.parsers.markers.DownMarker;
-import koopa.parsers.markers.LandMarker;
-import koopa.parsers.markers.UpMarker;
-import koopa.parsers.markers.WaterMarker;
-import koopa.tokens.Token;
-import koopa.tokenstreams.TokenSink;
-
-public class TreeBuildDirectingSink implements TokenSink {
+public class TreeBuildDirectingSink implements Target<Data> {
 
 	// TODO !!! If water/land markers can be nested in other water/land markers
 	// we should use a counting scheme rather than a simple boolean.
@@ -20,8 +18,6 @@ public class TreeBuildDirectingSink implements TokenSink {
 
 	private TreeBuilder builder = null;
 
-	private TokenSink nextSink = null;
-
 	public TreeBuildDirectingSink(TreeBuilder builder, boolean hideWater) {
 		assert (builder != null);
 
@@ -29,52 +25,37 @@ public class TreeBuildDirectingSink implements TokenSink {
 		this.hideWater = hideWater;
 	}
 
-	public void addAll(List<Token> tokens) {
-		for (Token token : tokens) {
-			if (this.inWater && token instanceof LandMarker) {
-				this.inWater = false;
+	@Override
+	public void push(Data data) {
+		if (this.inWater && data instanceof OnLand) {
+			this.inWater = false;
 
-				if (!this.hideWater) {
-					this.builder.land();
-				}
+			if (!this.hideWater)
+				this.builder.land();
 
-				continue;
+		} else if (!this.inWater && data instanceof InWater) {
+			this.inWater = true;
 
-			} else if (!this.inWater && token instanceof WaterMarker) {
-				this.inWater = true;
+			if (!this.hideWater)
+				this.builder.water((InWater) data);
 
-				if (!this.hideWater) {
-					this.builder.water((WaterMarker) token);
-				}
+		} else if (!this.hideWater || !this.inWater) {
+			assert (!(data instanceof InWater));
+			assert (!(data instanceof OnLand));
 
-				continue;
+			// if (this.inWater) {
+			// token.addTag(TreeTag.WATER);
+			// }
 
-			} else if (!this.hideWater || !this.inWater) {
-				assert (!(token instanceof WaterMarker));
-				assert (!(token instanceof LandMarker));
+			if (data instanceof Start) {
+				this.builder.down((Start) data);
 
-				if (this.inWater) {
-					token.addTag(TreeTag.WATER);
-				}
+			} else if (data instanceof End) {
+				this.builder.up((End) data);
 
-				if (token instanceof DownMarker) {
-					this.builder.down((DownMarker) token);
-
-				} else if (token instanceof UpMarker) {
-					this.builder.up((UpMarker) token);
-
-				} else {
-					this.builder.leaf(token);
-				}
+			} else if (data instanceof Token) {
+				this.builder.leaf((Token) data);
 			}
 		}
-
-		if (this.nextSink != null) {
-			this.nextSink.addAll(tokens);
-		}
-	}
-
-	public void setNextSink(TokenSink next) {
-		this.nextSink = next;
 	}
 }

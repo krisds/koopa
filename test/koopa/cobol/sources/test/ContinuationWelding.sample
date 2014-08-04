@@ -1,0 +1,16 @@
+123456* ANNOTATED SAMPLE                                                KOOPA
+<---->^<---------------------------------------------------------------><--->^
+SEQNR I COMMENT                                                         IDENT EOLN
+
+
+# Continued string literals. ##################################################
+#
+
+        DISPLAY "HELLO
+<---->^<-------------+^
+SEQNR I +5/TEXT       EOLN
+
+      -         " WORLD".
+<---->^<------->^+------>^
+SEQNR I SKIPPED LQ/COMMENT EOLN
+

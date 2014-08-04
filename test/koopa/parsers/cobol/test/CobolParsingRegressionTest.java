@@ -19,7 +19,7 @@ import org.junit.runner.RunWith;
 @RunWith(Files.class)
 public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
-	private File source = null;
+	private File file = null;
 
 	@Override
 	public abstract File[] getFiles();
@@ -32,8 +32,8 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 	}
 
 	@Override
-	public void setFile(File source) {
-		this.source = source;
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	@Test
@@ -43,9 +43,9 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		coordinator.setKeepingTrackOfTokens(true);
 
 		// Parse the file...
-		final ParseResults result = coordinator.parse(source);
+		final ParseResults result = coordinator.parse(file);
 
-		final TargetResult target = getTargetResult(source);
+		final TargetResult target = getTargetResult(file);
 
 		if (target == null) {
 			// Unknown test file. We will evaluate this on its overall

@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
+import koopa.core.sources.ChainableSource;
 import koopa.parsers.ParseResults;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokenizers.generic.IntermediateTokenizer;
 
 public class ParsingCoordinator {
-	private List<IntermediateTokenizer> intermediateTokenizers = new LinkedList<IntermediateTokenizer>();
+	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
 
 	private List<ParsingListener> parsingListeners = new LinkedList<ParsingListener>();
 
@@ -43,16 +44,15 @@ public class ParsingCoordinator {
 		parser.setFormat(this.format);
 		parser.setKeepingTrackOfTokens(keepingTrackOfTokens);
 
-		for (IntermediateTokenizer intermediateTokenizer : this.intermediateTokenizers) {
+		for (ChainableSource<Token> intermediateTokenizer : this.intermediateTokenizers) {
 			parser.addIntermediateTokenizer(intermediateTokenizer);
 		}
 
 		parser.setPreprocessing(this.preprocessing);
 		parser.setCopybookPath(this.copybookPaths);
-		
+
 		fireBeforeParsing(file, parser);
 
-		
 		parser.setBuildTrees(true);
 		ParseResults results = parser.parse(file);
 
@@ -73,7 +73,7 @@ public class ParsingCoordinator {
 		}
 	}
 
-	public void addIntermediateTokenizer(IntermediateTokenizer tokenizer) {
+	public void addIntermediateTokenizer(ChainableSource<Token> tokenizer) {
 		this.intermediateTokenizers.add(tokenizer);
 	}
 

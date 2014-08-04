@@ -2,7 +2,7 @@ cobolWord
 integer
 decimal
 hexadecimal
-alphanumeric
+alphanumericLiteral
 pictureString
 levelNumber
 pseudoLiteral

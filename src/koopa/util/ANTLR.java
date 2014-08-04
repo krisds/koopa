@@ -1,7 +1,8 @@
 package koopa.util;
 
-import koopa.tokens.Position;
-import koopa.tokens.Token;
+import koopa.core.data.Data;
+import koopa.core.data.Position;
+import koopa.core.data.Token;
 import koopa.trees.antlr.CommonKoopaToken;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -33,7 +34,7 @@ public class ANTLR {
 		}
 	}
 
-	public static Token getToken(Tree tree) {
+	public static Data getToken(Tree tree) {
 		if (!(tree instanceof CommonTree)) {
 			return null;
 		}
@@ -44,11 +45,14 @@ public class ANTLR {
 		}
 
 		final CommonKoopaToken koopa = (CommonKoopaToken) token;
-		return koopa.getKoopaToken();
+		return koopa.getKoopaData();
 	}
 
 	public static Position getStart(Tree root) {
-		final Position start = getToken(root).getStart();
+		final Data data = getToken(root);
+
+		final Position start = (data instanceof Token) ? ((Token) data)
+				.getStart() : null;
 
 		if (start != null) {
 			return start;
@@ -66,7 +70,10 @@ public class ANTLR {
 	}
 
 	public static Position getEnd(Tree root) {
-		final Position end = getToken(root).getEnd();
+		final Data data = getToken(root);
+
+		final Position end = (data instanceof Token) ? ((Token) data).getEnd()
+				: null;
 
 		if (end != null) {
 			return end;

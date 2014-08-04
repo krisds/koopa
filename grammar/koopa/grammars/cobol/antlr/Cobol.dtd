@@ -423,7 +423,7 @@
 <!ELEMENT identifier_format6 (t|((className,t)?,t))>
 <!ELEMENT dataAddressIdentifier (t,t?,identifier)>
 <!ELEMENT argument (arithmeticExpression|identifier|literal)>
-<!ELEMENT qualifier ((t,dataName)*)>
+<!ELEMENT qualifier ((t,dataName)+)>
 <!ELEMENT subscript (relativeSubscript|directSubscript)>
 <!ELEMENT directSubscript (t|identifier|integer)>
 <!ELEMENT relativeSubscript (identifier,t,integer)>
@@ -452,7 +452,7 @@
 <!ELEMENT lessOrEqualOp ((t,t+)|t)>
 <!ELEMENT programName (cobolWord|alphanumeric)>
 <!ELEMENT dataName (cobolWord)>
-<!ELEMENT qualifiedDataName (dataName,qualifier,(t,subscript+,t)?)>
+<!ELEMENT qualifiedDataName (dataName,qualifier?,(t,subscript+,t)?)>
 <!ELEMENT dataDescName (t|dataName)>
 <!ELEMENT screenName (cobolWord)>
 <!ELEMENT sectionName (cobolWord|integer)>
@@ -495,13 +495,16 @@
 <!ELEMENT concatenatedLiteral (t,(literalValue|constant))>
 <!ELEMENT value (literal|integerConstant|alphanumericConstant)>
 <!ELEMENT figurativeConstant ((t,literal)|(t?,(zero|space|t))|t)>
-<!ELEMENT numericLiteral (integerLiteral|decimal|booleanLiteral|hexadecimal|(t,t?,identifier))>
-<!ELEMENT numeric (integer|decimal|booleanLiteral|hexadecimal|zero|(t,t?,identifier))>
+<!ELEMENT numericLiteral (decimal|integerLiteral|booleanLiteral|hexadecimal|(t,t?,identifier))>
+<!ELEMENT numeric (decimal|integer|booleanLiteral|hexadecimal|zero|(t,t?,identifier))>
 <!ELEMENT integer (integerLiteral|integerConstant)>
 <!ELEMENT constant (integerConstant|alphanumericConstant)>
 <!ELEMENT integerConstant (cobolWord)>
 <!ELEMENT alphanumeric (alphanumericLiteral|alphanumericConstant)>
 <!ELEMENT alphanumericConstant (cobolWord)>
+<!ELEMENT decimal ((intgr,((t,uintgr)))|(t,uintgr))>
+<!ELEMENT intgr >
+<!ELEMENT uintgr >
 <!ELEMENT cobolWord (t)>
 <!ELEMENT integer (t)>
 <!ELEMENT decimal (t)>

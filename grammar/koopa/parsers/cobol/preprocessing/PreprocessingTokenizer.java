@@ -7,17 +7,17 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
+import koopa.core.data.Token;
+import koopa.core.data.markers.End;
+import koopa.core.data.markers.Start;
+import koopa.core.data.tags.IslandTag;
+import koopa.core.parsers.Parser;
+import koopa.core.sources.BasicSource;
+import koopa.core.sources.Source;
 import koopa.grammars.cobolPreprocessing.CobolPreprocessingGrammar;
-import koopa.parsers.Parser;
 import koopa.parsers.cobol.CobolParser;
-import koopa.parsers.markers.DownMarker;
-import koopa.parsers.markers.UpMarker;
-import koopa.tokenizers.PushbackTokenizer;
-import koopa.tokenizers.Tokenizer;
-import koopa.tokenizers.cobol.tags.IslandTag;
-import koopa.tokenizers.generic.BasicPushbackTokenizer;
-import koopa.tokens.Token;
-import koopa.tokenstreams.Marker;
 import koopa.trees.TreeBuildDirectingSink;
 import koopa.trees.antlr.ANTLRTokenTypesLoader;
 import koopa.trees.antlr.CommonTreeBuilder;
@@ -27,32 +27,28 @@ import koopa.trees.antlr.jaxen.Jaxen;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 
-public class PreprocessingTokenizer implements Tokenizer {
+public class PreprocessingTokenizer extends BasicSource<Token> implements
+		Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.preprocessing");
 
 	private CobolParser cobolParser = null;
 
-	private Tokenizer sourceTokenizer = null;
+	private Source<Token> sourceTokenizer = null;
 	private QueueingTokenSink sourceSink = null;
 
 	private Parser preprocessingParser = null;
 
-	private Tokenizer copybookTokenizer = null;
+	private Source<Token> copybookTokenizer = null;
 
-	private LinkedList<Token> unsupportedDirective = null;
+	private LinkedList<Data> unsupportedDirective = null;
 
-	public PreprocessingTokenizer(Tokenizer sourceTokenizer,
+	public PreprocessingTokenizer(Source<Token> sourceTokenizer,
 			CobolParser cobolParser) {
 		assert (sourceTokenizer != null);
 
-		if (sourceTokenizer instanceof PushbackTokenizer) {
-			this.sourceTokenizer = sourceTokenizer;
-		} else {
-			this.sourceTokenizer = new BasicPushbackTokenizer(sourceTokenizer);
-		}
-
+		this.sourceTokenizer = sourceTokenizer;
 		this.cobolParser = cobolParser;
 
 		// TODO Token tracking and this ? (Cfr.
@@ -60,8 +56,9 @@ public class PreprocessingTokenizer implements Tokenizer {
 		// TODO Token sinks and this ? (Cfr. CobolParser.intermediateTokenizers)
 	}
 
-	public Token nextToken() {
-		if (this.preprocessingParser == null) {
+	@Override
+	protected Token nxt1() {
+		if (preprocessingParser == null) {
 			// We pass the stream from out parent tokenizer through a
 			// specialized parser. The parser is also built on Koopa grammars,
 			// which means we can reuse the existing infrastructure. We also
@@ -71,91 +68,90 @@ public class PreprocessingTokenizer implements Tokenizer {
 			// The tokens coming out of the parser will be captured in a sink.
 			// The logic in this tokenizer then works on the results from that
 			// sink.
-			this.sourceSink = new QueueingTokenSink();
-			this.preprocessingParser = new CobolPreprocessingGrammar()
+			sourceSink = new QueueingTokenSink();
+			preprocessingParser = new CobolPreprocessingGrammar()
 					.preprocessing();
 
-			this.preprocessingParser.accepts(this.sourceTokenizer,
-					this.sourceSink);
+			boolean accepts = preprocessingParser.accepts(sourceTokenizer,
+					sourceSink);
+			LOGGER.trace(hashCode() + " PREPROCESSING GRAMMAR ACCEPTED ? "
+					+ accepts);
 		}
 
 		while (true) {
-			Token token = next();
+			Data data = nextOne();
 
-			if (token == null) {
+			if (data == null) {
 				// End of input.
-				LOGGER.trace(this.hashCode() + " END OF INPUT");
-				return token;
+				LOGGER.trace(hashCode() + " END OF INPUT");
+				return null;
 			}
 
-			if (token instanceof Marker) {
-				if (token instanceof DownMarker) {
-					DownMarker down = (DownMarker) token;
+			if (data instanceof Start) {
+				Start down = (Start) data;
 
-					if ("preprocessingDirective".equalsIgnoreCase(down
-							.getName())) {
+				if ("preprocessingDirective".equalsIgnoreCase(down.getName())) {
 
-						LinkedList<Token> directive = getPreprocessingDirective();
-						final CommonTree tree = getSyntaxTree(directive);
+					LOGGER.trace(hashCode() + " PreprocessingDirective " + data);
 
-						if (tree == null) {
-							LOGGER.debug("No syntax tree for directive: "
-									+ directive);
-							unsupportedDirective = directive;
-							continue;
+					LinkedList<Data> directive = getPreprocessingDirective();
+					final CommonTree tree = getSyntaxTree(directive);
 
-						} else if (!getTokenTypes().isNodeOfType(tree,
-								"copyStatement")) {
-							LOGGER.debug("Unsupported: " + tree);
-							unsupportedDirective = directive;
-							continue;
-						}
+					if (tree == null) {
+						LOGGER.debug("No syntax tree for directive: "
+								+ directive);
+						unsupportedDirective = directive;
+						continue;
 
-						LOGGER.debug("Processing a COPY statement");
+					} else if (!getTokenTypes().isNodeOfType(tree,
+							"copyStatement")) {
+						LOGGER.debug("Unsupported: " + tree);
+						unsupportedDirective = directive;
+						continue;
+					}
 
-						final String textName = getValue(tree,
-								"//textName//text()");
+					LOGGER.debug("Processing a COPY statement");
 
-						final String libraryName = getValue(tree,
-								"//libraryName//text()");
+					final String textName = getValue(tree, "//textName//text()");
 
-						// TODO In case of unsupported features: add tokens back
-						// to the original stream and bail out.
+					final String libraryName = getValue(tree,
+							"//libraryName//text()");
 
-						if (LOGGER.isDebugEnabled()) {
-							if (libraryName == null)
-								LOGGER.debug("Looking for copybook " + textName);
-							else
-								LOGGER.debug("Looking for copybook " + textName
-										+ " in library " + libraryName);
-						}
+					// TODO In case of unsupported features: add tokens back
+					// to the original stream and bail out.
 
-						File copybook = this.cobolParser.lookup(textName,
-								libraryName);
+					if (LOGGER.isDebugEnabled()) {
+						if (libraryName == null)
+							LOGGER.debug("Looking for copybook " + textName);
+						else
+							LOGGER.debug("Looking for copybook " + textName
+									+ " in library " + libraryName);
+					}
 
-						LOGGER.debug("Found copybook at " + copybook);
+					File copybook = cobolParser.lookup(textName, libraryName);
 
-						try {
-							// TODO Pass along ParseResults somehow ?
-							this.copybookTokenizer = this.cobolParser
-									.getNewTokenizationStage(null,
-											new FileReader(copybook));
+					LOGGER.debug("Found copybook at " + copybook);
 
-						} catch (FileNotFoundException e) {
-							LOGGER.error("Problem while reading copybook.", e);
-							unsupportedDirective = directive;
-						}
+					try {
+						// TODO Pass along ParseResults somehow ?
+						copybookTokenizer = cobolParser
+								.getNewTokenizationStage(null, new FileReader(
+										copybook));
+
+					} catch (FileNotFoundException e) {
+						LOGGER.error("Problem while reading copybook.", e);
+						unsupportedDirective = directive;
 					}
 				}
 
-			} else {
+			} else if (data instanceof Token) {
+				Token t = (Token) data;
 				// The preprocessing parser may have added some tags which can
 				// confuse the real parser. So we make sure to clean these up.
-				token.removeTag(IslandTag.WATER);
-				token.removeTag(IslandTag.LAND);
+				t = t.withoutTags(IslandTag.WATER, IslandTag.LAND);
 
-				LOGGER.trace(this.hashCode() + " -> " + token);
-				return token;
+				LOGGER.trace(hashCode() + " -> " + t);
+				return t;
 			}
 		}
 	}
@@ -170,18 +166,18 @@ public class PreprocessingTokenizer implements Tokenizer {
 			return ((CommonTree) values.get(0)).getText();
 	}
 
-	private LinkedList<Token> getPreprocessingDirective() {
-		Token token;
-		LinkedList<Token> directive = new LinkedList<Token>();
+	private LinkedList<Data> getPreprocessingDirective() {
+		Data token;
+		LinkedList<Data> directive = new LinkedList<Data>();
 
 		int depth = 0;
 		do {
-			token = next();
+			token = nextOne();
 			directive.add(token);
 
-			if (token instanceof DownMarker)
+			if (token instanceof Start)
 				depth += 1;
-			else if (token instanceof UpMarker)
+			else if (token instanceof End)
 				depth -= 1;
 
 		} while (token != null && depth > 0);
@@ -191,11 +187,14 @@ public class PreprocessingTokenizer implements Tokenizer {
 
 	// TODO Move this to a utility class; I'm sure this will come in handy
 	// again.
-	private CommonTree getSyntaxTree(List<Token> directive) {
+	private CommonTree getSyntaxTree(List<Data> directive) {
 		CommonTreeBuilder builder = new CommonTreeBuilder(getTokenTypes());
 		TreeBuildDirectingSink director = new TreeBuildDirectingSink(builder,
 				true);
-		director.addAll(directive);
+
+		for (Data token : directive) {
+			director.push(token);
+		}
 
 		final List<CommonTree> trees = builder.getTrees();
 		return trees == null || trees.size() != 1 ? null : trees.get(0);
@@ -212,46 +211,46 @@ public class PreprocessingTokenizer implements Tokenizer {
 	 * 
 	 * @return The next available token.
 	 */
-	private Token next() {
-		Token token = null;
+	private Data nextOne() {
+		Data token = null;
 
-		if (this.unsupportedDirective != null) {
-			while (this.unsupportedDirective.size() > 0) {
-				token = this.unsupportedDirective.removeFirst();
-				if (!(token instanceof Marker)) {
+		if (unsupportedDirective != null) {
+			while (unsupportedDirective.size() > 0) {
+				token = unsupportedDirective.removeFirst();
+				if (!(token instanceof Marker))
 					return token;
-				}
 			}
 
-			this.unsupportedDirective = null;
+			unsupportedDirective = null;
 		}
 
-		if (this.copybookTokenizer != null) {
-			token = this.copybookTokenizer.nextToken();
+		if (copybookTokenizer != null) {
+			token = copybookTokenizer.next();
 
 			if (token != null)
 				return token;
 
-			this.copybookTokenizer.quit();
-			this.copybookTokenizer = null;
+			copybookTokenizer.close();
+			copybookTokenizer = null;
 		}
 
-		if (this.sourceSink != null) {
-			token = this.sourceSink.nextToken();
+		if (sourceSink != null) {
+			token = sourceSink.next();
 
 			if (token != null)
 				return token;
 
-			this.sourceSink = null;
+			sourceSink = null;
 		}
 
-		token = this.sourceTokenizer.nextToken();
+		token = sourceTokenizer.next();
 
 		return token;
 	}
 
-	public void quit() {
-		this.sourceTokenizer.quit();
+	@Override
+	public void close() {
+		sourceTokenizer.close();
 	}
 
 	// TODO Make this part of the CobolPreprocessingGrammar as a static method.
@@ -260,7 +259,7 @@ public class PreprocessingTokenizer implements Tokenizer {
 	public static TokenTypes getTokenTypes() {
 		if (tokenTypes == null) {
 			try {
-				tokenTypes = new ANTLRTokenTypesLoader()
+				tokenTypes = ANTLRTokenTypesLoader
 						.load("/koopa/grammars/cobolPreprocessing/antlr/CobolPreprocessing.tokens");
 
 			} catch (IOException e) {
@@ -271,5 +270,4 @@ public class PreprocessingTokenizer implements Tokenizer {
 
 		return tokenTypes;
 	}
-
 }

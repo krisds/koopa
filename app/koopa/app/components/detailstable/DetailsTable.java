@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.ListSelectionModel;
 
 import koopa.app.batchit.ParseDetails;
-import koopa.tokens.Token;
+import koopa.core.data.Token;
 import koopa.util.Tuple;
 
 import org.jdesktop.swingx.JXTable;

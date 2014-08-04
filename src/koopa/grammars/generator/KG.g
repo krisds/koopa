@@ -82,6 +82,10 @@ part
     }
     -> ^(ACT NATIVE_CODE)
 
+  | TAG
+
+  | ANY
+
   | LITERAL
 
   | NUMBER
@@ -119,6 +123,10 @@ part
   
   | NOT part
     -> ^(NOT part)
+
+  | NOSKIP part
+  -> ^(NOSKIP part)
+
   ;
 
 more
@@ -130,6 +138,12 @@ more
 COMMENT : '#' (~('\n' | '\r'))* { $channel = HIDDEN; } ;
 
 NEWLINE : ( ('\r\n') => '\r\n' | '\r' | '\n' ) { $channel = HIDDEN; } ;
+
+NOSKIP : '%noskip' ;
+
+TAG : '@' LETTER ( LETTER | DIGIT | '-' | '_' )* ;
+
+ANY : '_' ;
 
 IDENTIFIER : LETTER ( LETTER | DIGIT | '-' | '_' )* ;
 

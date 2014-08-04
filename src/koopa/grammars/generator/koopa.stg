@@ -3,13 +3,19 @@ group CSS;
 koopa(name, date, package, imports, reserved, rule, support_code) ::= <<
 package $package$;
 
-import java.util.Set;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import koopa.parsers.Block;
-import koopa.parsers.KoopaGrammar;
-import koopa.parsers.Parser;
-import koopa.parsers.FutureParser;
+import koopa.core.data.Token;
+import koopa.core.grammars.Block;
+import koopa.core.grammars.KoopaGrammar;
+import koopa.core.parsers.Parser;
+import koopa.core.parsers.FutureParser;
+import koopa.core.parsers.ParseStream;
+
+import static koopa.core.grammars.Opt.NOSKIP;
 
 $if(imports)$
 $imports$
@@ -105,5 +111,14 @@ permuted(choice) ::= <<permuted(
 assign(name, value) ::= <<assign("$name$", $value$)>>
 
 not(body) ::= <<not(
+    $body$
+)>>
+
+
+tag(text) ::= <<tagged($text$)>>
+
+any() ::= <<any()>>
+
+opt(option,body) ::= <<opt($option$,
     $body$
 )>>

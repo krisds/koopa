@@ -4,9 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class ANTLRTokenTypesLoader {
+/**
+ * Class for loading an ANTLR tokens file.
+ */
+public final class ANTLRTokenTypesLoader {
 
-	public TokenTypes load(String filename) throws IOException {
+	private ANTLRTokenTypesLoader() {
+	}
+
+	/**
+	 * Load the specified tokens file, and return a {@linkplain TokenTypes}
+	 * object holding the equivalent information.
+	 */
+	public static TokenTypes load(String filename) throws IOException {
 		TokenTypes tt = new TokenTypes();
 
 		InputStreamReader ir = new InputStreamReader(
@@ -15,11 +25,11 @@ public class ANTLRTokenTypesLoader {
 
 		String line = br.readLine();
 		while (line != null) {
-			// System.err.println(line);
-
-			if (line.trim().length() == 0) {
+			if (line.trim().length() == 0)
 				continue;
-			}
+
+			// Every line is of the form "key=integer". If the key is quoted
+			// then it means it's a literal.
 
 			int pos = 0;
 			final int len = line.length();
@@ -31,13 +41,11 @@ public class ANTLRTokenTypesLoader {
 				while (pos < len) {
 					c = line.charAt(pos);
 
-					if (c == '\'') {
+					if (c == '\'')
 						break;
-					}
 
-					if (c == '\\') {
+					if (c == '\\')
 						pos++;
-					}
 
 					pos++;
 				}
@@ -52,9 +60,8 @@ public class ANTLRTokenTypesLoader {
 			while (pos < len) {
 				c = line.charAt(pos);
 
-				if (c == '=') {
+				if (c == '=')
 					break;
-				}
 
 				pos++;
 			}
@@ -66,7 +73,6 @@ public class ANTLRTokenTypesLoader {
 
 			String key = line.substring(0, pos).trim();
 			String value = line.substring(pos + 1).trim();
-
 			tt.put(key, Integer.parseInt(value), literal);
 
 			line = br.readLine();

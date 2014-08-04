@@ -4,9 +4,9 @@ import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 import koopa.app.Icons;
+import koopa.core.data.Position;
+import koopa.core.data.Token;
 import koopa.parsers.ParseResults;
-import koopa.tokens.Position;
-import koopa.tokens.Token;
 import koopa.util.Tuple;
 
 @SuppressWarnings("serial")

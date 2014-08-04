@@ -1,19 +1,19 @@
 package koopa.trees;
 
-import koopa.parsers.markers.DownMarker;
-import koopa.parsers.markers.UpMarker;
-import koopa.parsers.markers.WaterMarker;
-import koopa.tokens.Token;
+import koopa.core.data.Token;
+import koopa.core.data.markers.End;
+import koopa.core.data.markers.InWater;
+import koopa.core.data.markers.Start;
 
 public interface TreeBuilder {
 
-	void down(DownMarker token);
+	void down(Start token);
 
-	void up(UpMarker token);
+	void up(End token);
 
 	void leaf(Token token);
 
-	void water(WaterMarker token);
+	void water(InWater token);
 
 	void land();
 }

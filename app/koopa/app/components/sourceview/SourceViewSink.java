@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.parsers.markers.LandMarker;
-import koopa.parsers.markers.WaterMarker;
-import koopa.tokens.CompositeToken;
-import koopa.tokens.Token;
-import koopa.tokenstreams.Marker;
-import koopa.tokenstreams.TokenSink;
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
+import koopa.core.data.Token;
+import koopa.core.data.markers.InWater;
+import koopa.core.data.markers.OnLand;
+import koopa.core.targets.Target;
 
-
-public class SourceViewSink implements TokenSink {
+public class SourceViewSink implements Target<Data> {
 
 	// There is difference between these two which is of importance. The
 	// "tokens" list can have tokens which crosses line boundaries. The "lines"
@@ -22,58 +21,52 @@ public class SourceViewSink implements TokenSink {
 
 	private boolean inWater = false;
 
-	private TokenSink next = null;
-
 	public List<List<Token>> getLines() {
 		return lines;
 	}
 
-	public void addAll(List<Token> tokens) {
-		for (Token token : tokens) {
-			if (token instanceof Marker) {
-				if (token instanceof WaterMarker) {
-					this.inWater = true;
+	@Override
+	public void push(Data data) {
+		if (data instanceof Marker) {
+			if (data instanceof InWater) {
+				this.inWater = true;
 
-				} else if (token instanceof LandMarker) {
-					this.inWater = false;
-				}
+			} else if (data instanceof OnLand) {
+				this.inWater = false;
+			}
 
-			} else if (!this.inWater) {
+		}
+		if (data instanceof Token) {
+			Token token = (Token) data;
+
+			if (!this.inWater) {
 				registerToken(token);
 				this.tokens.add(token);
 			}
 		}
-
-		if (this.next != null) {
-			this.next.addAll(tokens);
-		}
 	}
 
 	private void registerToken(Token token) {
-		if (token instanceof CompositeToken) {
-			final CompositeToken composite = (CompositeToken) token;
-			final int size = composite.size();
-			for (int i = 0; i < size; i++) {
-				Token innerToken = composite.getToken(i);
-				registerToken(innerToken);
-			}
+		// if (token instanceof CompositeToken) {
+		// final CompositeToken composite = (CompositeToken) token;
+		// final int size = composite.size();
+		// for (int i = 0; i < size; i++) {
+		// Token innerToken = composite.getToken(i);
+		// registerToken(innerToken);
+		// }
+		//
+		// } else {
+		final int linenumber = token.getStart().getLinenumber();
 
+		List<Token> line = null;
+		if (linenumber < lines.size()) {
+			line = lines.get(linenumber);
 		} else {
-			final int linenumber = token.getStart().getLinenumber();
-
-			List<Token> line = null;
-			if (linenumber < lines.size()) {
-				line = lines.get(linenumber);
-			} else {
-				lines.add(line = new LinkedList<Token>());
-			}
-
-			line.add(token);
+			lines.add(line = new LinkedList<Token>());
 		}
-	}
 
-	public void setNextSink(TokenSink next) {
-		this.next = next;
+		line.add(token);
+		// }
 	}
 
 	public Token getTokenAt(int position) {

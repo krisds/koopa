@@ -9537,7 +9537,7 @@ qualifier
       | 'OF'
       )
         dataName
-      ) )*
+      ) )+
     )
   ;
 
@@ -9986,7 +9986,7 @@ dataName
 qualifiedDataName
   : ^(QUALIFIED_DATA_NAME
       ( dataName
-        qualifier
+        ( qualifier )?
         ( ( '('
           ( subscript )+
           ')'
@@ -10515,8 +10515,8 @@ figurativeConstant
 
 numericLiteral
   : ^(NUMERIC_LITERAL
-      ( integerLiteral
-      | decimal
+      ( decimal
+      | integerLiteral
       | booleanLiteral
       | hexadecimal
       | ( ( 'LENGTH'
@@ -10535,8 +10535,8 @@ numericLiteral
 
 numeric
   : ^(NUMERIC
-      ( integer
-      | decimal
+      ( decimal
+      | integer
       | booleanLiteral
       | hexadecimal
       | zero
@@ -10607,6 +10607,43 @@ alphanumericConstant
   ;
 
 // ========================================================
+// decimal
+// ........................................................
+
+decimal
+  : ^(DECIMAL
+      ( ( intgr
+        ( ( ( ','
+        | '.'
+        )
+          uintgr
+        )
+        )
+      )
+      | ( '.'
+        uintgr
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// intgr
+// ........................................................
+
+intgr
+  : INTGR
+  ;
+
+// ========================================================
+// uintgr
+// ........................................................
+
+uintgr
+  : UINTGR
+  ;
+
+// ========================================================
 
 water
   : ^(WATER token*)
@@ -10620,6 +10657,7 @@ token
   | '*'
   | '**'
   | '+'
+  | ','
   | '-'
   | '.'
   | '/'

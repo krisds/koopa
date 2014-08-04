@@ -1,6 +1,6 @@
 package koopa.app.listeners;
 
-import koopa.tokens.Token;
+import koopa.core.data.Token;
 
 public interface TokenSelectionListener {
 	void selectedToken(Token token);

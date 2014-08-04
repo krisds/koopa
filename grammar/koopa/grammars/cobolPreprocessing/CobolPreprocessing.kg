@@ -43,7 +43,7 @@ end
 
 def textName =
     ( cobolWord
-    | alphanumeric
+    | alphanumericLiteral
     )
 end
 
@@ -53,7 +53,7 @@ end
 
 def literal =
     ( numeric
-    | alphanumeric
+    | alphanumericLiteral
     )
 end
 
@@ -63,3 +63,25 @@ def numeric =
     | hexadecimal
     )
 end
+
+# -----------------------------------------------------------------------------
+# Decimals
+#
+# Whether we're working on a decimal is something which can only be decided at
+# parsing time. But it does require some lexer info.
+#
+# TODO Allow ",2"; which is still tricky.
+def decimal =
+    ( intgr %noskip ( (',' | '.') uintgr )
+    | '.' %noskip uintgr
+    )
+end
+
+def intgr =
+    @INTEGER_LITERAL _
+end
+
+def uintgr =
+    @UNSIGNED @INTEGER_LITERAL _
+end
+

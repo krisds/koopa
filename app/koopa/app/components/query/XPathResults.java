@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import koopa.tokens.Position;
-import koopa.tokens.Token;
-import koopa.tokenstreams.Marker;
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
+import koopa.core.data.Position;
 import koopa.trees.antlr.CommonKoopaToken;
 import koopa.trees.antlr.jaxen.ANTLRTreeAttribute;
 import koopa.util.ANTLR;
@@ -89,8 +89,8 @@ public class XPathResults extends AbstractTableModel {
 		for (Object value : results) {
 			if (value instanceof CommonTree) {
 				final CommonTree tree = (CommonTree) value;
-				final Token token = ((CommonKoopaToken) tree.getToken())
-						.getKoopaToken();
+				final Data token = ((CommonKoopaToken) tree.getToken())
+						.getKoopaData();
 
 				if (token instanceof Marker) {
 					this.types.add(XPathResultType.NODE);

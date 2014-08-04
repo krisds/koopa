@@ -159,6 +159,23 @@ public class GrammarView extends JPanel {
 		return identifierStyle;
 	}
 
+	private static Style tagStyle = null;
+
+	private static Style getTagStyle(StyledDocument document) {
+		if (tagStyle == null) {
+			Style style = tagStyle = document.addStyle("tag", null);
+
+			StyleConstants.setItalic(style, false);
+			StyleConstants.setBold(style, false);
+			StyleConstants.setFontFamily(style, "Courier");
+			StyleConstants.setFontSize(style, 14);
+			// StyleConstants.setBackground(style, Color.WHITE);
+			StyleConstants.setForeground(style, new Color(255, 102, 0));
+		}
+
+		return tagStyle;
+	}
+
 	private static Style nativeStyle = null;
 
 	private static Style getNativeStyle(StyledDocument document) {
@@ -323,9 +340,24 @@ public class GrammarView extends JPanel {
 					style = getKeywordStyle(document);
 					justSawDef = true;
 
-				} else if ("def".equals(token.getText())) {
+				} else if ("end".equals(token.getText())) {
 					style = getKeywordStyle(document);
 					justSawDef = false;
+
+				} else if (token.getType() == KGLexer.ANY
+						|| token.getType() == KGLexer.NOSKIP
+						|| token.getType() == KGLexer.SKIP_TO
+						|| token.getType() == KGLexer.OPEN_PAREN
+						|| token.getType() == KGLexer.CLOSE_PAREN
+						|| token.getType() == KGLexer.OPEN_BRACKET
+						|| token.getType() == KGLexer.CLOSE_BRACKET
+						|| token.getType() == KGLexer.BANG
+						|| token.getType() == KGLexer.CHOICE
+						|| token.getType() == KGLexer.STAR
+						|| token.getType() == KGLexer.PLUS
+						|| token.getType() == KGLexer.NOT
+						|| token.getType() == KGLexer.PIPE) {
+					style = getKeywordStyle(document);
 
 				} else if (token.getType() == KGLexer.IDENTIFIER) {
 					if (!token.getText().toUpperCase().equals(token.getText()))
@@ -340,6 +372,9 @@ public class GrammarView extends JPanel {
 				} else if (token.getType() == KGLexer.NATIVE_CODE) {
 					style = getNativeStyle(document);
 					justSawDef = false;
+
+				} else if (token.getType() == KGLexer.TAG) {
+					style = getTagStyle(document);
 
 				} else if (token.getType() == KGLexer.WHITESPACE) {
 					// Nop.

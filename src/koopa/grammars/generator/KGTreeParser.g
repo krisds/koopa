@@ -49,6 +49,10 @@ body
     
   | IDENTIFIER
   
+  | TAG
+
+  | ANY
+
   | LITERAL
   
   | NUMBER
@@ -78,4 +82,6 @@ body
     )
   
   | ^(NOT body)
+
+  | ^(NOSKIP body)
   ;

@@ -49,10 +49,10 @@ import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.misc.Tab;
 import koopa.app.components.overview.Overview;
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
 import koopa.parsers.Metrics;
 import koopa.parsers.ParseResults;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokens.Token;
 import koopa.util.Getter;
 import koopa.util.Tuple;
 

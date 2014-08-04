@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import koopa.tokens.Position;
+import koopa.core.data.Position;
 import koopa.util.ANTLR;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -43,7 +43,7 @@ public class CommonTreeSerializer {
 
 	public static void serialize(CommonTree tree, Writer writer)
 			throws IOException {
-		TokenTypes types = new ANTLRTokenTypesLoader()
+		TokenTypes types = ANTLRTokenTypesLoader
 				.load("/koopa/grammars/cobol/antlr/Cobol.tokens");
 
 		writer.append("<koopa>\n");
@@ -58,6 +58,12 @@ public class CommonTreeSerializer {
 			TokenTypes types) throws IOException {
 
 		final int type = tree.getType();
+
+		if (type == types.forType("COMMENT")) {
+			// TODO Should escape stuff where necessary.
+			writer.append(dent + "<!-- " + tree.getText() + " -->\n");
+			return;
+		}
 
 		if (types.isLiteral(type) || types.isToken(type)) {
 			// TODO Should escape stuff where necessary.

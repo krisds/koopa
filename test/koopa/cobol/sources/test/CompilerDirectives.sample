@@ -1,0 +1,39 @@
+123456* ANNOTATED SAMPLE                                                KOOPA
+<--------------------------------------------------------------------------->^
+_                                                                            EOLN
+
+$ SET SOURCEFORMAT "FREE"
+<----------------------->^
+COMPILER_DIRECTIVE       EOLN
+
+123456 >> source format is free
+<----------------------------->^
+COMPILER_DIRECTIVE             EOLN
+
+123456 >> source format free
+<-------------------------->^
+COMPILER_DIRECTIVE          EOLN
+
+123456 >> source is free
+<---------------------->^
+COMPILER_DIRECTIVE      EOLN
+
+123456 >> source free
+<------------------->^
+COMPILER_DIRECTIVE   EOLN
+
+123456 >> source format is fixed
+<------------------------------>^
+COMPILER_DIRECTIVE              EOLN
+
+123456 >> source format fixed
+<--------------------------->^
+COMPILER_DIRECTIVE           EOLN
+
+123456 >> source is fixed
+<----------------------->^
+COMPILER_DIRECTIVE       EOLN
+
+123456 >> source fixed
+<-------------------->^
+COMPILER_DIRECTIVE    EOLN

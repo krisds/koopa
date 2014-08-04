@@ -128,6 +128,20 @@ body [ List<String> bindings, List<String> unbindings ]
       unbind = {unbindings}
     )
     
+  | t=TAG
+
+	{ String name = ((CommonTree) $t).getText();
+      name = name.substring(1, name.length()); 
+	}
+
+    -> tag(
+      text = {name}
+    )
+
+  | ANY
+
+    -> any()
+  
   | l=LITERAL
   
     { String unquoted = ((CommonTree) $l).getText();
@@ -146,8 +160,10 @@ body [ List<String> bindings, List<String> unbindings ]
   
   | i=IDENTIFIER
   
-    { boolean isLowerCase = Character.isLowerCase(((CommonTree) i).getText().charAt(0)); }
-  
+    { String text = ((CommonTree) i).getText();
+ 	  boolean isLowerCase = Character.isLowerCase(text.charAt(0));
+    }
+
     -> {isLowerCase}? call(
       name = {i}
     )
@@ -242,6 +258,14 @@ body [ List<String> bindings, List<String> unbindings ]
   | ^(NOT b=body[bindings, unbindings])
   
     -> not(
+      body = {b}
+    )
+
+  | ^(NOSKIP b=body[bindings, unbindings])
+  
+	{ String option = "NOSKIP"; }
+    -> opt(
+      option = {option},
       body = {b}
     )
   ;

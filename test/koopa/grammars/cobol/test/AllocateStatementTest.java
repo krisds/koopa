@@ -1,9 +1,9 @@
 package koopa.grammars.cobol.test;
 
 import junit.framework.TestCase;
-import koopa.parsers.Parser;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokenizers.cobol.TestTokenizer;
+import koopa.cobol.sources.SourceFormat;
+import koopa.cobol.sources.test.TestTokenizer;
+import koopa.core.parsers.Parser;
 
 import org.junit.Test;
 

@@ -8,10 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import koopa.core.data.Token;
 import koopa.parsers.Metrics;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.ParsingCoordinator;
-import koopa.tokens.Token;
 import koopa.util.Tuple;
 import au.com.bytecode.opencsv.CSVWriter;
 

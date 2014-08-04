@@ -1,6 +1,6 @@
 package koopa.app.components.detailstable;
 
-import koopa.tokens.Token;
+import koopa.core.data.Token;
 import koopa.util.Tuple;
 
 public interface DetailsTableListener {

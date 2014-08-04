@@ -1,38 +1,32 @@
 package koopa.parsers.cobol.preprocessing;
 
 import java.util.LinkedList;
-import java.util.List;
 
-import koopa.tokens.Token;
-import koopa.tokenstreams.TokenSink;
+import koopa.core.data.Data;
+import koopa.core.targets.Target;
 
-public class QueueingTokenSink implements TokenSink {
+public class QueueingTokenSink implements Target<Data> {
 
-	private LinkedList<Token> tokens = null;
+	private LinkedList<Data> tokens = null;
 
 	public QueueingTokenSink() {
-		this.tokens = new LinkedList<Token>();
+		this.tokens = new LinkedList<Data>();
 	}
 
-	public void addAll(List<Token> tokens) {
-		// System.out.println("++++ " + tokens);
+
+	@Override
+	public void push(Data data) {
 		synchronized (this.tokens) {
-			this.tokens.addAll(tokens);
+			this.tokens.add(data);
 		}
 	}
-
-	public void setNextSink(TokenSink next) {
-		// System.out.println("SINK NXT " + next);
-		throw new UnsupportedOperationException();
-	}
-
-	public Token nextToken() {
+	public Data next() {
 		synchronized (this.tokens) {
 			if (this.tokens.isEmpty()) {
 				// System.out.println("---- EMPTY");
 				return null;
 			} else {
-				Token head = this.tokens.removeFirst();
+				Data head = this.tokens.removeFirst();
 				// System.out.println("---- " + head);
 				return head;
 			}

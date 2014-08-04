@@ -117,6 +117,18 @@ body returns [ int len, boolean optional ]
 
     -> {%{"::act::"}}
     
+  | ANY
+
+    { $body.len = 0; }
+
+    -> {%{"::any::"}}
+
+  | TAG
+
+    { $body.len = 0; }
+
+    -> {%{"::tag::"}}
+
   | i=IDENTIFIER
   
     { $body.len = 1; }
@@ -256,6 +268,23 @@ body returns [ int len, boolean optional ]
     }
   
     -> {%{""}}
+
+  | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
+    ^(NOSKIP 
+      (x=inner_body
+        { if ($x.len > 0) {
+            steps.add($x.st);
+            $body.len += $x.len;
+          }
+        }
+      )+
+    )
+    
+    -> {$body.len == 1}? {steps.get(0)}
+    -> {$body.len > 1}? sequence(
+         step={steps}
+       )
+    -> {%{"::noskip::"}}
 
   | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
     ^(PERMUTED 

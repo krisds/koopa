@@ -9,7 +9,7 @@
 	</target>
 
 
-	<!-- BOOTSTRAP -->
+	<!-- BOOTSTRAP/CORE -->
 
 	<target name="bootstrap" depends="bootstrap-generate,bootstrap-compile">
 	</target>
@@ -29,15 +29,6 @@
 		<copy file="src/koopa/grammars/generator/KG.tokens" tofile="src/koopa/trees/antlr/generator/KG.tokens" />
 		<antlr-gen2 grammar="src/koopa/trees/antlr/generator/KGToANTLRTokens.g" tokens="src/koopa/trees/antlr/generator/" />
 		<antlr-gen2 grammar="src/koopa/trees/antlr/generator/KGToANTLRTreeGrammar.g" tokens="src/koopa/trees/antlr/generator/" />
-
-		<echo>Generating the DTD generator...</echo>
-		<copy file="src/koopa/grammars/generator/KG.tokens" tofile="src/koopa/trees/antlr/dtd/KG.tokens" />
-		<antlr-gen2 grammar="src/koopa/trees/antlr/dtd/KGToDTDForSerializedANTLR.g" tokens="src/koopa/trees/antlr/dtd/" />
-
-		<echo>Generating the verifications generator...</echo>
-		<antlr-gen grammar="src/koopa/verifiers/generator/Scoring.g" />
-		<antlr-gen2 grammar="src/koopa/verifiers/generator/ScoringTreeParser.g" tokens="src/koopa/verifiers/generator/" />
-		<antlr-gen2 grammar="src/koopa/verifiers/generator/ScoringGenerator.g" tokens="src/koopa/verifiers/generator/" />
 	</target>
 
 	<target name="bootstrap-build">
@@ -75,10 +66,8 @@
 		<echo>Generating secondary classes...</echo>
 		<kg2antlr name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing.antlr" path="grammar/koopa/grammars/cobolPreprocessing/" output="grammar/koopa/grammars/cobolPreprocessing/antlr/" />
 		<!--
-		<generate-verifications name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
 		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
-		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
--->
+		-->
 		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
 		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
 		</delete>
@@ -92,7 +81,7 @@
 				</fileset>
 			</classpath>
 		</javac>
--->
+		-->
 	</target>
 
 	<target name="grammar-cobol" depends="update-kg-tokens, grammar-cobol-preprocessing">
@@ -100,12 +89,10 @@
 		<kgg name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
 
 		<echo>Generating secondary classes...</echo>
-		<generate-verifications name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
 		<kg2antlr name="Cobol" pack="koopa.grammars.cobol.antlr" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
 		<!--
 		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
 		-->
-		<kg2dtd name="Cobol" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
 
 		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
 		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
@@ -163,15 +150,15 @@
 
 			<formatter type="brief" usefile="no" />
 
-			<test name="koopa.tokens.test.TokensTest" />
-			<test name="koopa.tokens.test.ModifiedTokenTest" />
-			
-			<test name="koopa.tokenstreams.test.TokenStreamTests" />
-			<test name="koopa.tokenizers.test.TokenizerTests" />
-			<test name="koopa.parsers.test.KoopaGrammarTest" />
+			<test name="koopa.core.data.test.TokenTest" />
+			<test name="koopa.core.data.test.TokensTest" />
 
-			<test name="koopa.tokenizers.cobol.test.CompilerDirectivesTokenizerTest" />
-			<test name="koopa.tokenizers.cobol.test.TokenizerTest" />
+			<test name="koopa.core.parsers.test.ParseStreamTest" />
+			
+			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
+			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
+
+			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
 			<test name="koopa.grammars.cobol.test.CobolGrammarTests" />
 
 			<test name="koopa.parsers.cobol.test.Cobol85RegressionTest" />
@@ -351,27 +338,6 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="generate-verifications">
-		<attribute name="name" />
-		<attribute name="pack" />
-		<attribute name="path" />
-		<sequential>
-			<java classname="koopa.verifiers.generator.GenerateVerifications" fork="true">
-				<jvmarg value="-ea" />
-				<arg value="@{name}" />
-				<arg value="@{pack}" />
-				<arg value="@{path}" />
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
 	<macrodef name="kg2antlr">
 		<attribute name="name" />
 		<attribute name="pack" />
@@ -382,27 +348,6 @@
 				<jvmarg value="-ea" />
 				<arg value="@{name}" />
 				<arg value="@{pack}" />
-				<arg value="@{path}" />
-				<arg value="@{output}" />
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="kg2dtd">
-		<attribute name="name" />
-		<attribute name="path" />
-		<attribute name="output" />
-		<sequential>
-			<java classname="koopa.trees.antlr.dtd.KGToDTD" fork="true">
-				<jvmarg value="-ea" />
-				<arg value="@{name}" />
 				<arg value="@{path}" />
 				<arg value="@{output}" />
 				<classpath>

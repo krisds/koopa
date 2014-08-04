@@ -28,12 +28,12 @@ import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
+import koopa.core.sources.ChainableSource;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
-import koopa.tokenizers.cobol.SourceFormat;
-import koopa.tokenizers.generic.IntermediateTokenizer;
-import koopa.tokens.Token;
 import koopa.util.Tuple;
 
 import org.jdesktop.swingx.JXTable;
@@ -279,13 +279,14 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void installIntermediateTokenizer(String classname) {
 		try {
 			Class<?> clazz = Class.forName(classname);
 			Object o = clazz.newInstance();
-			if (o instanceof IntermediateTokenizer) {
-				coordinator.addIntermediateTokenizer((IntermediateTokenizer) o);
-			}
+			if (o instanceof ChainableSource<?>)
+				coordinator
+						.addIntermediateTokenizer((ChainableSource<Token>) o);
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

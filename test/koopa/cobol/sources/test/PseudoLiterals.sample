@@ -1,0 +1,8 @@
+123456* ANNOTATED SAMPLE                                                KOOPA
+<---->^<---------------------------------------------------------------><--->^
+SEQNR I COMMENT                                                         IDENT EOLN
+
+         == A Pseudo Literal ==
+<---->^<><-------------------->^
+SEQNR I : PSEUDO               EOLN
+

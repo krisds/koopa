@@ -97,7 +97,7 @@ copyOperandName
 textName
   : ^(TEXT_NAME
       ( cobolWord
-      | alphanumeric
+      | alphanumericLiteral
       )
     )
   ;
@@ -119,7 +119,7 @@ libraryName
 literal
   : ^(LITERAL
       ( numeric
-      | alphanumeric
+      | alphanumericLiteral
       )
     )
   ;
@@ -138,6 +138,43 @@ numeric
   ;
 
 // ========================================================
+// decimal
+// ........................................................
+
+decimal
+  : ^(DECIMAL
+      ( ( intgr
+        ( ( ( ','
+        | '.'
+        )
+          uintgr
+        )
+        )
+      )
+      | ( '.'
+        uintgr
+      )
+      )
+    )
+  ;
+
+// ========================================================
+// intgr
+// ........................................................
+
+intgr
+  : INTGR
+  ;
+
+// ========================================================
+// uintgr
+// ........................................................
+
+uintgr
+  : UINTGR
+  ;
+
+// ========================================================
 
 water
   : ^(WATER token*)
@@ -145,6 +182,7 @@ water
 
 token
   : TOKEN
+  | ','
   | '.'
   | 'BY'
   | 'COPY'
@@ -172,8 +210,8 @@ hexadecimal
   : ^(HEXADECIMAL token)
   ;
 
-alphanumeric
-  : ^(ALPHANUMERIC token)
+alphanumericLiteral
+  : ^(ALPHANUMERIC_LITERAL token)
   ;
 
 pictureString

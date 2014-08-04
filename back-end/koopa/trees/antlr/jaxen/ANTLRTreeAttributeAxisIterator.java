@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import koopa.tokens.Token;
+import koopa.core.data.Data;
+import koopa.core.data.Token;
 import koopa.trees.antlr.CommonKoopaToken;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -27,14 +28,16 @@ public class ANTLRTreeAttributeAxisIterator implements
 			final CommonTree commonTree = (CommonTree) tree;
 			final CommonKoopaToken token = (CommonKoopaToken) commonTree
 					.getToken();
-			final Token koopa = token.getKoopaToken();
+			final Data koopa = token.getKoopaData();
 
-			final Set<Object> tags = koopa.getTags();
-			if (tags != null) {
-				for (Object tag : tags) {
-					this.attributes.add(new ANTLRTreeAttribute(tree, "tag", tag
-							.toString()));
+			if (koopa instanceof Token) {
+				final Set<Object> tags = ((Token) koopa).getTags();
+				if (tags != null) {
+					for (Object tag : tags) {
+						this.attributes.add(new ANTLRTreeAttribute(tree, "tag",
+								tag.toString()));
 
+					}
 				}
 			}
 		}

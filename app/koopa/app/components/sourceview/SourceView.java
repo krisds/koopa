@@ -31,14 +31,15 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import koopa.app.listeners.TokenSelectionListener;
+import koopa.cobol.data.tags.AreaTag;
+import koopa.cobol.data.tags.SyntacticTag;
+import koopa.core.data.Token;
+import koopa.core.data.tags.IslandTag;
+import koopa.core.targets.TokenTracker;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.CobolParser;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
-import koopa.tokenizers.cobol.TokenTracker;
-import koopa.tokenizers.cobol.tags.AreaTag;
-import koopa.tokenizers.cobol.tags.SyntacticTag;
-import koopa.tokens.Token;
 
 @SuppressWarnings("serial")
 public class SourceView extends JPanel implements ParsingListener {
@@ -113,7 +114,7 @@ public class SourceView extends JPanel implements ParsingListener {
 
 		pane.moveCaretPosition(0);
 		pane.setCaretPosition(0);
-		
+
 		setLayout(new BorderLayout());
 		add(scroll, BorderLayout.CENTER);
 	}
@@ -363,7 +364,8 @@ public class SourceView extends JPanel implements ParsingListener {
 						// document.setCharacterAttributes(start, len,
 						// getStringStyle(document), false);
 
-					} else {
+					} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
+							&& token.hasTag(IslandTag.LAND)) {
 						document.setCharacterAttributes(start, len,
 								getLandStyle(document), false);
 					}

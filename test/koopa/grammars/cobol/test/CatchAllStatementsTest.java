@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
+import koopa.cobol.sources.test.TestTokenizer;
+import koopa.core.parsers.Parser;
 import koopa.grammars.cobol.CobolGrammar;
-import koopa.parsers.Parser;
-import koopa.tokenizers.cobol.TestTokenizer;
 
 import org.junit.Test;
 

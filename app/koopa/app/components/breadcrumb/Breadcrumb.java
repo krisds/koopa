@@ -17,13 +17,14 @@ import javax.swing.border.EtchedBorder;
 
 import koopa.app.Application;
 import koopa.app.listeners.TokenSelectionListener;
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
+import koopa.core.data.Position;
+import koopa.core.data.Token;
 import koopa.parsers.ParseResults;
 import koopa.parsers.cobol.CobolParser;
 import koopa.parsers.cobol.ParsingCoordinator;
 import koopa.parsers.cobol.ParsingListener;
-import koopa.tokens.Position;
-import koopa.tokens.Token;
-import koopa.tokenstreams.Marker;
 import koopa.util.ANTLR;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -150,7 +151,7 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		if (token == null)
 			return breadcrumb;
 
-		Token node = ANTLR.getToken(tree);
+		Data node = ANTLR.getToken(tree);
 
 		if (node == null)
 			return breadcrumb;

@@ -31,9 +31,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import koopa.app.listeners.TokenSelectionListener;
-import koopa.cobol.data.tags.AreaTag;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.IslandTag;
 import koopa.core.targets.TokenTracker;
 import koopa.parsers.ParseResults;

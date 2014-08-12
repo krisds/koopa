@@ -11,9 +11,9 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.IslandTag;
 
 public class TokenHighlighter implements CaretListener {

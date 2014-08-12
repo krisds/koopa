@@ -1,9 +1,9 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
 import static koopa.cobol.data.tags.SyntacticTag.PSEUDO_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.io.IOException;
 import java.util.ArrayList;

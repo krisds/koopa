@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 

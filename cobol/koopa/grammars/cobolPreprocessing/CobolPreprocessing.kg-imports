@@ -1,6 +1,6 @@
 import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
 
-import koopa.cobol.data.tags.AreaTag;
+import koopa.core.data.tags.AreaTag;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.tags.TokenizerTag;

@@ -1,7 +1,7 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.cobol.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
 
 import java.util.regex.Pattern;
 

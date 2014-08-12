@@ -3,7 +3,6 @@ package koopa.cobol.sources.test;
 import java.io.StringReader;
 import java.util.LinkedList;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
 import koopa.cobol.sources.LineContinuations;
@@ -14,6 +13,7 @@ import koopa.cobol.sources.Separators;
 import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 

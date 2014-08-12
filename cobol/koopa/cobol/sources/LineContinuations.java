@@ -1,14 +1,14 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.AreaTag.COMMENT;
-import static koopa.cobol.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.cobol.data.tags.AreaTag.END_OF_LINE;
-import static koopa.cobol.data.tags.AreaTag.INDICATOR_AREA;
-import static koopa.cobol.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
 import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.END_OF_LINE;
+import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.io.IOException;
 import java.util.LinkedList;

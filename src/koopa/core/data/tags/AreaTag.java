@@ -1,9 +1,10 @@
-package koopa.cobol.data.tags;
+package koopa.core.data.tags;
 
 /**
  * Every token which goes into the parser should have one (and only one) of
  * these tags.
  */
+// TODO Should separate out the Cobol specific stuff from here.
 public enum AreaTag {
 	SEQUENCE_NUMBER_AREA, INDICATOR_AREA, PROGRAM_TEXT_AREA, IDENTIFICATION_AREA, END_OF_LINE,
 

@@ -1,13 +1,5 @@
 package koopa.cobol.sources.test;
 
-import static koopa.cobol.data.tags.AreaTag.COMMENT;
-import static koopa.cobol.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.cobol.data.tags.AreaTag.END_OF_LINE;
-import static koopa.cobol.data.tags.AreaTag.IDENTIFICATION_AREA;
-import static koopa.cobol.data.tags.AreaTag.INDICATOR_AREA;
-import static koopa.cobol.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.cobol.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
-import static koopa.cobol.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
@@ -21,6 +13,14 @@ import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.cobol.data.tags.SyntacticTag.SIGNED;
 import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.END_OF_LINE;
+import static koopa.core.data.tags.AreaTag.IDENTIFICATION_AREA;
+import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
+import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;

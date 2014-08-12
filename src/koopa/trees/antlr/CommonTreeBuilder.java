@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.InWater;
 import koopa.core.data.markers.Start;
+import koopa.core.data.tags.AreaTag;
 import koopa.trees.TreeBuilder;
 
 import org.antlr.runtime.CommonToken;

@@ -61,15 +61,15 @@
 
 	<target name="grammar-cobol-preprocessing" depends="update-kg-tokens">
 		<echo>Generating the Cobol parser...</echo>
-		<kgg name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing" path="grammar/koopa/grammars/cobolPreprocessing/" />
+		<kgg name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing" path="cobol/koopa/grammars/cobolPreprocessing/" />
 
 		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing.antlr" path="grammar/koopa/grammars/cobolPreprocessing/" output="grammar/koopa/grammars/cobolPreprocessing/antlr/" />
+		<kg2antlr name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing.antlr" path="cobol/koopa/grammars/cobolPreprocessing/" output="cobol/koopa/grammars/cobolPreprocessing/antlr/" />
 		<!--
 		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
 		-->
 		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
-		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
+		<delete file="cobol/koopa/grammars/cobol/antlr/CobolTreeParser.java">
 		</delete>
 		<!--
 		<echo>Compiling Cobol parser...</echo>
@@ -86,20 +86,20 @@
 
 	<target name="grammar-cobol" depends="update-kg-tokens, grammar-cobol-preprocessing">
 		<echo>Generating the Cobol parser...</echo>
-		<kgg name="Cobol" pack="koopa.grammars.cobol" path="grammar/koopa/grammars/cobol/" />
+		<kgg name="Cobol" pack="koopa.grammars.cobol" path="cobol/koopa/grammars/cobol/" />
 
 		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="Cobol" pack="koopa.grammars.cobol.antlr" path="grammar/koopa/grammars/cobol/" output="grammar/koopa/grammars/cobol/antlr/" />
+		<kg2antlr name="Cobol" pack="koopa.grammars.cobol.antlr" path="cobol/koopa/grammars/cobol/" output="cobol/koopa/grammars/cobol/antlr/" />
 		<!--
 		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
 		-->
 
 		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
-		<delete file="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.java">
+		<delete file="cobol/koopa/grammars/cobol/antlr/CobolTreeParser.java">
 		</delete>
 
 		<echo>Compiling Cobol parser...</echo>
-		<javac srcdir="grammar/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="cobol/" destdir="build/" debug="on" source="1.5">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -112,7 +112,7 @@
 	<target name="grammar" depends="bootstrap, update-kg-tokens, grammar-cobol-preprocessing, grammar-cobol">
 		<echo>Copying additional grammar resources...</echo>
 		<copy todir="build/">
-			<fileset dir="grammar/" excludes="**/*.java,**/*.g" />
+			<fileset dir="cobol/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
 
@@ -203,7 +203,7 @@
 
 	<target name="applications" depends="bootstrap,grammar,back-end">
 		<echo>Copying the latest Cobol.tokens definition...</echo>
-		<synchronize-file file="grammar/koopa/grammars/cobol/antlr/Cobol.tokens" root="app/" />
+		<synchronize-file file="cobol/koopa/grammars/cobol/antlr/Cobol.tokens" root="app/" />
 
 		<echo>Generating the Cobol outline parser...</echo>
 		<antlr-gen2 grammar="app/koopa/app/components/outline/CobolOutlineTreeParser.g" tokens="app/koopa/app/components/outline/" />
@@ -234,7 +234,7 @@
 
 	<target name="sandbox" depends="bootstrap,grammar,back-end">
 		<echo>Copying the latest Cobol.tokens definition...</echo>
-		<synchronize-file file="grammar/koopa/grammars/cobol/antlr/Cobol.tokens" root="sandbox/" />
+		<synchronize-file file="cobol/koopa/grammars/cobol/antlr/Cobol.tokens" root="sandbox/" />
 
 		<echo>Generating the adaptive tree parser...</echo>
 		<antlr-gen2 grammar="sandbox/sandbox/treefilter/MyAdaptiveTreeParser.g" tokens="sandbox/sandbox/treefilter/" />

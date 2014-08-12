@@ -1,10 +1,10 @@
 package koopa.trees.antlr;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 
 import org.antlr.runtime.CommonToken;
 

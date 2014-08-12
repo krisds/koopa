@@ -2,9 +2,9 @@ package koopa.cobol.sources;
 
 import java.io.IOException;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 

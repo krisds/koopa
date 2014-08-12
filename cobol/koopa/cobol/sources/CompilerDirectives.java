@@ -1,8 +1,8 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.cobol.data.tags.AreaTag.INDICATOR_AREA;
-import static koopa.cobol.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
+import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
 
 import java.util.LinkedList;
 import java.util.regex.Matcher;

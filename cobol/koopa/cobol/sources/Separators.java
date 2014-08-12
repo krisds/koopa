@@ -1,7 +1,5 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.AreaTag.COMMENT;
-import static koopa.cobol.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.cobol.data.tags.SyntacticTag.BOOLEAN_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
 import static koopa.cobol.data.tags.SyntacticTag.DECIMAL_LITERAL;
@@ -11,13 +9,15 @@ import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.cobol.data.tags.SyntacticTag.SIGNED;
 import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.io.IOException;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 

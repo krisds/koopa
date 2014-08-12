@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.cobol.data.tags.AreaTag;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.ChainableSource;
 
 public class SourceViewIntermediateTokenizer extends ChainableSource<Token> {

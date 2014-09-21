@@ -3531,8 +3531,8 @@ end
 def xmlGenerateStatement =
     XML GENERATE identifier FROM identifier
     [COUNT [IN] identifier]
-    [[ON] EXCEPTION statement]
-    [NOT [ON] EXCEPTION statement]
+    [[ON] EXCEPTION nestedStatements]
+    [NOT [ON] EXCEPTION nestedStatements]
     [END-XML]
 end
 
@@ -3544,8 +3544,8 @@ def xmlParseStatement =
     XML PARSE identifier
     [PROCESSING PROCEDURE [IS] procedureName]
         [(THROUGH | THRU) procedureName]
-    [[ON] EXCEPTION statement]
-    [NOT [ON] EXCEPTION statement]
+    [[ON] EXCEPTION nestedStatements]
+    [NOT [ON] EXCEPTION nestedStatements]
     [END-XML]
 end
 

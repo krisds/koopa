@@ -15492,7 +15492,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("EXCEPTION"),
-                           statement()
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -15502,7 +15502,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("EXCEPTION"),
-                           statement()
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -15555,7 +15555,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("EXCEPTION"),
-                           statement()
+                           nestedStatements()
                        )
                    ),
                    optional(
@@ -15565,7 +15565,7 @@ public class CobolGrammar extends KoopaGrammar {
                                token("ON")
                            ),
                            token("EXCEPTION"),
-                           statement()
+                           nestedStatements()
                        )
                    ),
                    optional(

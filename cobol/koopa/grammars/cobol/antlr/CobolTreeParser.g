@@ -8643,12 +8643,12 @@ xmlGenerateStatement
         ) )?
         ( ( ( 'ON' )?
           'EXCEPTION'
-          statement
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'EXCEPTION'
-          statement
+          nestedStatements
         ) )?
         ( 'END-XML' )?
       )
@@ -8676,12 +8676,12 @@ xmlParseStatement
         ) )?
         ( ( ( 'ON' )?
           'EXCEPTION'
-          statement
+          nestedStatements
         ) )?
         ( ( 'NOT'
           ( 'ON' )?
           'EXCEPTION'
-          statement
+          nestedStatements
         ) )?
         ( 'END-XML' )?
       )

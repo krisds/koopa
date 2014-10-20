@@ -193,4 +193,22 @@ public class ComputeStatementTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE ADDRESS OF SOMETHING = A + B ");
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testComputeStatement_22() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE A = B * LENGTH OF C ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testComputeStatement_23() {
+      Parser parser = grammar.computeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMPUTE XYZ OF TEST-RESP =\n    PACKET-COUNT OF TEST-RESP *\n    LENGTH OF RESPONSE-RECORD OF TEST-RESP\n   END-COMPUTE ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

@@ -44,10 +44,9 @@ public class CommonTreeBuilder implements TreeBuilder {
 	public void leaf(Token token) {
 		// TODO registerPossibleStart(token);
 
-		if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA))
+		if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA) && !token.hasTag(AreaTag.COMMENT))
 			return;
-		if (token.hasTag(AreaTag.COMMENT))
-			return;
+
 		if (token.getText().trim().length() == 0)
 			return;
 

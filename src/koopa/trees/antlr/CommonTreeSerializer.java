@@ -11,8 +11,11 @@ import koopa.core.data.Position;
 import koopa.util.ANTLR;
 
 import org.antlr.runtime.tree.CommonTree;
+import org.apache.log4j.Logger;
 
 public class CommonTreeSerializer {
+
+	protected static final Logger LOGGER = Logger.getLogger("to_xml");
 
 	private static final boolean INCLUDE_POSITIONING;
 	static {
@@ -59,6 +62,8 @@ public class CommonTreeSerializer {
 
 		final int type = tree.getType();
 
+		LOGGER.trace(tree.getText());
+		
 		if (type == types.forType("COMMENT")) {
 			// TODO Should escape stuff where necessary.
 			writer.append(dent + "<!-- " + tree.getText() + " -->\n");

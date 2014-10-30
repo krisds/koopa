@@ -2,10 +2,11 @@ package koopa.trees.antlr;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 import koopa.core.data.Position;
 import koopa.util.ANTLR;
@@ -34,7 +35,12 @@ public class CommonTreeSerializer {
 	}
 
 	public static void serialize(CommonTree tree, File file) throws IOException {
-		Writer writer = new BufferedWriter(new FileWriter(file));
+		// UTF-8 is the default encoding for documents without prolog
+		// See http://www.w3.org/TR/REC-xml/#charencoding
+		// So it's necessary to add the XML declaration to ensure readability (if UTF-8 isn't used)
+		// Usually ISO-8859-1, Windows-1252, and ASCII is also recognized
+		// FileWriter uses default encoding, which might not be appropriate
+		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
 		serialize(tree, writer);
 	}
 
@@ -49,6 +55,8 @@ public class CommonTreeSerializer {
 		TokenTypes types = ANTLRTokenTypesLoader
 				.load("/koopa/grammars/cobol/antlr/Cobol.tokens");
 
+		writer.append("<?xml version='1.0' encoding='UTF-8'?>\n"); // XML prolog/declaration
+		
 		writer.append("<koopa>\n");
 		walk(writer, tree, "  ", types);
 		writer.append("</koopa>\n");
@@ -66,13 +74,17 @@ public class CommonTreeSerializer {
 		
 		if (type == types.forType("COMMENT")) {
 			// TODO Should escape stuff where necessary.
-			writer.append(dent + "<!-- " + tree.getText() + " -->\n");
+			// According to http://www.w3.org/TR/REC-xml/#dt-comment -- is not allowed
+			// Reading comments with double-hyphen will fail in compliant XML parsers
+			// For convenience '--' is replaced by '-_'. Otherwise, we'd have to throw an error
+			writer.append(dent + "<!-- " + tree.getText().replaceAll("--", "-_") + " -->\n");
 			return;
 		}
 
 		if (types.isLiteral(type) || types.isToken(type)) {
 			// TODO Should escape stuff where necessary.
-			writer.append(dent + "<t><![CDATA[" + tree.getText() + "]]></t>\n");
+			// A command like DISPLAY ']]>' would generate invalid XML without substitution
+			writer.append(dent + "<t><![CDATA[" + tree.getText().replaceAll("]]>", "]]]]><![CDATA[>") + "]]></t>\n");
 			return;
 		}
 

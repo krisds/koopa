@@ -1,6 +1,5 @@
 package koopa.trees.antlr.filter;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +10,11 @@ import org.antlr.runtime.TokenStream;
 import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeAdaptor;
 import org.antlr.runtime.tree.TreeNodeStream;
+import org.apache.log4j.Logger;
 
 public class FilteredTreeNodeStream implements TreeNodeStream {
 
-	private static final boolean DEBUG = false;
+	private static final Logger LOGGER = Logger.getLogger("ast.filteredstream");
 
 	private FilteringTokenizer tokenizer = null;
 
@@ -28,13 +28,15 @@ public class FilteredTreeNodeStream implements TreeNodeStream {
 		final boolean success = new BracketedFilter(f).filter(this.tokenizer);
 
 		if (success) {
-			this.tokens = new ArrayList<Tree>(this.tokenizer
-					.getConsumedTokens());
+			this.tokens = new ArrayList<Tree>(
+					this.tokenizer.getConsumedTokens());
 
-			if (DEBUG) {
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Filtered stream returned " + this.tokens.size()
+						+ " token(s).");
 				for (Tree t : this.tokens) {
-					System.out.println("--> " + t + "; line " + t.getLine()
-							+ ", char " + t.getCharPositionInLine());
+					LOGGER.trace(t + "; line " + t.getLine() + ", char "
+							+ t.getCharPositionInLine());
 				}
 			}
 

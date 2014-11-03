@@ -1,7 +1,0 @@
-package koopa.grammars.cobol.test;
-grammar koopa.grammars.cobol.CobolGrammar;
-
-target raiseStatement;
-
-+[ RAISE ]
-+[ RAISE foo ]

@@ -1,0 +1,11 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target cancelStatement;
+
++[ CANCEL MY-SUB-PROGRAM ]
++[ CANCEL "MY-SUB-PROGRAM" ]
+-[ CANCEL 42 ]
+-[ CANCEL 42.0 ]
+
++[ CANCEL MY-SUB-PROGRAM "MY-SUB-PROGRAM" "MY-OTHER-SUBPROGRAM" MY-OTHER-SUBPROGRAM ]

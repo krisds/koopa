@@ -4,7 +4,8 @@ Koopa is a Cobol parser (generator). It can handle source files in isolation (no
 
 ## Features
 
-* Cobol lexer and parser (generator)
+* Island parser generator
+* Cobol lexer and parser
 * Accepts free and fixed format Cobol
 * Covered by a Cobol 85 testsuite, and grammar unit testing
 * Cobol viewer with syntax highlighting, outline, quick navigation and XPath-based querying
@@ -49,13 +50,13 @@ Complex XPath query results should be presented in serialized form.
 
 ### Parser Generation
 
-Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.grammars.generator.KGG class, which needs three arguments:
+Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.core.grammars.generator.KGG class, which needs three arguments:
 
   1. The name of the grammar, without the ".kg" extension.
   2. The target java package the generated parser will be part of.
   3. The target folder to save the generated parser in.
 
-Koopa can also take these grammar files and translate them into an equivalent ANTLR tree grammar. These tree grammars may then be used (modified or not) in the backend. The generator is class koopa.trees.antlr.generator.KGToANTLR.
+Koopa can also take these grammar files and translate them into an equivalent ANTLR tree grammar. These tree grammars may then be used (modified or not) in the backend. The generator is class koopa.core.trees.antlr.generator.KGToANTLR.
 
 All of this is taken care of by the ANT build script. If you make modifications to the standard Cobol.kg or one of the tests all you need to do is rerun ANT and everything should be taken care of.
 
@@ -63,9 +64,9 @@ If you're using an IDE such as Eclipse you may need to refresh your workspace af
 
 ### Unit Tests
 
-Koopa has unit tests covering (parts of) the Koopa implementation. These can be found in koopa.parsers.test.
+Koopa has unit tests covering (parts of) the Koopa implementation. These can be found in koopa.cobol.parser.test.
 
-Koopa also has unit tests covering (part of) the generated Cobol parser. These reside in koopa.grammars.cobol.test. The unit tests are generated from the ".stage" files which reside in the same folder. Generation is handled by the koopa.grammars.test.generator.GenerateUnitTests class (also triggered by the build script).
+Koopa also has unit tests covering (part of) the generated Cobol parser. These reside in koopa.cobol.grammar.test. The unit tests are generated from the ".stage" files which reside in the same folder. Generation is handled by the koopa.core.grammars.test.generator.GenerateUnitTests class (also triggered by the build script).
 
 All unit tests can be triggered from ANT. Simply invoke "ant run-tests" on the command line.
 
@@ -81,7 +82,7 @@ There may be other warnings and errors. This is quite likely as expected. When i
 
 ### KG.tokens
 
-In koopa.trees.antlr.generator, KG.tokens is a copy of the file with the same name from koopa.grammars.generator. If the original ever changes this means that the KGToANTLR generator is broken. In that case you need to update its tokens file. Again, the ANT build script takes care of this for you.
+In koopa.core.trees.antlr.generator, KG.tokens is a copy of the file with the same name from koopa.core.grammars.generator. If the original ever changes this means that the KGToANTLR generator is broken. In that case you need to update its tokens file. Again, the ANT build script takes care of this for you.
 
 ## Further reading
 

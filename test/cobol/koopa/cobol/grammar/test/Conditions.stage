@@ -1,0 +1,211 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target condition;
+
++[ TRUE ]
++[ FALSE ]
+
++[ NOT TRUE ]
++[ NOT FALSE ]
+
++[ NOT ( TRUE ) ]
++[ NOT ( FALSE ) ]
+
+
+
++[ MY-ARG IS OMITTED ]
++[ MY-ARG IS NOT OMITTED ]
+
++[ MY-ARG OMITTED ]
++[ MY-ARG NOT OMITTED ]
+
++[ NOT ( MY-ARG IS OMITTED ) ]
++[ NOT ( MY-ARG IS NOT OMITTED ) ]
+
++[ NOT ( MY-ARG OMITTED ) ]
++[ NOT ( MY-ARG NOT OMITTED ) ]
+
+
+
++[ FOO IS NUMERIC ]
++[ FOO IS ALPHABETIC ]
++[ FOO IS ALPHABETIC-LOWER ]
++[ FOO IS ALPHABETIC-UPPER ]
++[ FOO IS DBCS ]
++[ FOO IS KANJI ]
++[ FOO IS BOOLEAN ]
++[ FOO IS INFINITY ]
++[ FOO IS REPRESENTS-NOT-A-NUMBER ]
+
++[ FOO IS NOT NUMERIC ]
++[ FOO IS NOT ALPHABETIC ]
++[ FOO IS NOT ALPHABETIC-LOWER ]
++[ FOO IS NOT ALPHABETIC-UPPER ]
++[ FOO IS NOT DBCS ]
++[ FOO IS NOT KANJI ]
++[ FOO IS NOT BOOLEAN ]
++[ FOO IS NOT INFINITY ]
++[ FOO IS NOT REPRESENTS-NOT-A-NUMBER ]
+
++[ FOO NUMERIC ]
++[ FOO ALPHABETIC ]
++[ FOO ALPHABETIC-LOWER ]
++[ FOO ALPHABETIC-UPPER ]
++[ FOO DBCS ]
++[ FOO KANJI ]
++[ FOO BOOLEAN ]
++[ FOO INFINITY ]
++[ FOO REPRESENTS-NOT-A-NUMBER ]
+
++[ FOO NOT NUMERIC ]
++[ FOO NOT ALPHABETIC ]
++[ FOO NOT ALPHABETIC-LOWER ]
++[ FOO NOT ALPHABETIC-UPPER ]
++[ FOO NOT DBCS ]
++[ FOO NOT KANJI ]
++[ FOO NOT BOOLEAN ]
++[ FOO NOT INFINITY ]
++[ FOO NOT REPRESENTS-NOT-A-NUMBER ]
+
+
++[ FOO IS POSITIVE ]
++[ FOO IS NEGATIVE ]
++[ FOO IS ZERO ]
+
++[ FOO IS NOT POSITIVE ]
++[ FOO IS NOT NEGATIVE ]
++[ FOO IS NOT ZERO ]
+
++[ FOO POSITIVE ]
++[ FOO NEGATIVE ]
++[ FOO ZERO ]
+
++[ FOO NOT POSITIVE ]
++[ FOO NOT NEGATIVE ]
++[ FOO NOT ZERO ]
+
++[ X + 1 IS POSITIVE ]
++[ X + 1 IS NEGATIVE ]
++[ X + 1 IS ZERO ]
+
++[ X + 1 IS NOT POSITIVE ]
++[ X + 1 IS NOT NEGATIVE ]
++[ X + 1 IS NOT ZERO ]
+
++[ X + 1 POSITIVE ]
++[ X + 1 NEGATIVE ]
++[ X + 1 ZERO ]
+
++[ X + 1 NOT POSITIVE ]
++[ X + 1 NOT NEGATIVE ]
++[ X + 1 NOT ZERO ]
+
++[ ZERO - A IS NEGATIVE ]
+
+
+
++[ 1 < 2 ]
+
++[ V-ARIABLE = 2 OR = 3 ]
+
++[ V-ARIABLE = 2 OR 3 ]
+
++[ 1 + (TWO * 3) EQUAL TO (TWO * 3) + 1 ] 
+
++[ B GREATER THAN C OR EQUAL TO A OR 42 OR C - 1 ]
+
++[ B GREATER THAN C OR EQUAL TO A OR 42 OR (C - 1) ]
+
++[ SMALLEST-VALU GREATER THAN SMALL-VALU AND IS NOT LESS THAN EVEN-SMALLER OR SMALLER-VALU ]
+      
++[ WRK-XN-00001 = "0" OR "1" OR "2" OR IF-TABLE OR "3"  ] 
+
+
++[ A = 1 ]
+
++[ A = 1 OR = 2 ]
++[ A = 1 OR   2 ]
+
++[ A = 1 OR = 2 OR = 3 ]
++[ A = 1 OR   2 OR = 3 ]
++[ A = 1 OR = 2 OR   3 ]
++[ A = 1 OR   2 OR   3 ]
+
++[ A = ( 1 ) OR 2 OR 3 ]
++[ A = 1 OR ( 2 ) OR 3 ]
++[ A = 1 OR 2 OR ( 3 ) ]
+
++[ A = ( 1 OR 2 ) OR 3 ]
++[ A = 1 OR ( 2 OR 3 ) ]
+
++[ A = ( 1 OR 2 OR 3 ) ]
+
++[ A = 1 OR NOT 2 ]
+
++[ A = 1 OR NOT 2 OR NOT 3 ]
+
++[ A = 1 OR     2 OR NOT 3 ]
++[ A = 1 OR NOT 2 OR     3 ]
+
+
+
+
+
++[ 1 < 2 OR 2 > 1 ]
+
++[ 1 < 2 AND 2 > 1 AND V-ARIABLE = 0 ]
+
++[ ( V-ARIABLE = 2 OR = 3 ) ]
+
++[ V-ARIABLE NOT = 3 AND ( V-ARIABLE = 2 OR = 3 ) ]
+
++[ ( V-ARIABLE = 2 OR = 3 ) AND V-ARIABLE NOT = 3 ]
+
+
+# Errors in NC211
++[ ((NAUGHT EQUAL TO ONE) OR (NOT ((UNO = ONE) OR (TWO = DOS)))) ]
+
++[ NOT TWO > THREE AND NOT (ON-WRK-SWITCH-1 AND F OR CLASS-1 ALPHABETIC) OR TWO = THREE AND SIGN-1 ZERO ]
+
++[ NOT TWO > THREE AND NOT (ON-WRK-SWITCH-1 AND F OR CLASS-1 ALPHABETIC) ]
+
++[ NOT TWO > THREE AND NOT (ON-WRK-SWITCH-1 AND F) OR TWO = THREE AND SIGN-1 ZERO ]
+
++[ NOT TWO > THREE OR TWO = THREE AND SIGN-1 ZERO ]
+
++[ NOT TWO > THREE OR TWO = THREE AND SIGN-1 NUMERIC ]
+
++[ SIGN-1 ZERO AND NOT TWO > THREE OR TWO = THREE ]
+
+# Errors in other codes
+
++[ PARA-FINIC-IVA IS NUMERIC AND PARA-FINIC-IVA NOT = ZEROES AND PARA-FINIC-IVA > W-FECHAH AND PARA-REGANT-IVA IS NUMERIC AND PARA-REGANT-IVA NOT = ZEROES ]
+
+# Issue #15:
+
++[ 1 >= 2 ]
++[ 1 NOT >= 2 ]
+
++[ foo IS GREATER THAN bar ]
++[ foo ARE GREATER THAN bar ]
++[ foo IS NOT GREATER THAN bar ]
++[ foo ARE NOT GREATER THAN bar ]
+
++[ foo EXCEEDS bar ]
++[ foo EQUALS bar ]
++[ foo IS UNEQUAL TO bar ]
++[ foo IS <> bar ]
+
+
+# Reported by Suman Saurabh:
++[ SQLCODE = (1 OR 2 OR 3) ]
++[ SQLCODE =  1 OR 2 OR 3  ]
+
+
+
+
++[ Operator = "+" ]
+
+
+

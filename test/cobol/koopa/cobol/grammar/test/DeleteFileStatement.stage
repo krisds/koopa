@@ -1,0 +1,8 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target deleteFileStatement;
+
+-[ DELETE FILE ]
++[ DELETE FILE "foo" ]
++[ DELETE FILE "foo" "bar" baz ]

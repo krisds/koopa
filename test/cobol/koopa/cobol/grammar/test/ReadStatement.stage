@@ -1,0 +1,206 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target readStatement;
+
++[ READ MY-FILE # . ]
+
++[ READ MY-FILE
+   END-READ ]
+
++[ READ MY-FILE
+     WITH NO LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     NO LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     WITH LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     NEXT RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     PREVIOUS RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     NEXT
+   END-READ ]
+
++[ READ MY-FILE
+     PREVIOUS
+   END-READ ]
+
++[ READ MY-FILE
+     RECORD
+   END-READ ]
+
++[ READ MY-FILE
+     INTO MY-VALUE
+   END-READ ]
+
++[ READ MY-FILE
+     KEY IS MY-KEY
+   END-READ ]
+
++[ READ MY-FILE
+     KEY MY-KEY
+   END-READ ]
+
++[ READ MY-FILE 
+   AT END
+      DISPLAY "Nothing more to see here." ]
+
++[ READ MY-FILE 
+   END
+      DISPLAY "Nothing more to see here." ]
+
++[ READ MY-FILE 
+   NOT AT END
+      DISPLAY "Look at that..." ]
+
++[ READ MY-FILE 
+   NOT END
+      DISPLAY "Look at that..." ]
+
++[ READ MY-FILE 
+   INVALID KEY
+      DISPLAY "Oops." ]
+
++[ READ MY-FILE 
+   INVALID
+      DISPLAY "Oops." ]
+
++[ READ MY-FILE 
+   NOT INVALID KEY
+      DISPLAY "A-OK." ]
+
++[ READ MY-FILE 
+   NOT INVALID
+      DISPLAY "A-OK." ]
+
++[ READ MY-FILE 
+   AT END
+      DISPLAY "Nothing more to see here." 
+   END-READ ]
+
++[ READ MY-FILE 
+   END
+      DISPLAY "Nothing more to see here." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT AT END
+      DISPLAY "Look at that..." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT END
+      DISPLAY "Look at that..." 
+   END-READ ]
+
++[ READ MY-FILE 
+   INVALID KEY
+      DISPLAY "Oops." 
+   END-READ ]
+
++[ READ MY-FILE 
+   INVALID
+      DISPLAY "Oops." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT INVALID KEY
+      DISPLAY "A-OK." 
+   END-READ ]
+
++[ READ MY-FILE 
+   NOT INVALID
+      DISPLAY "A-OK." 
+   END-READ ]
+
+   
++[ READ MY-FILE
+     ADVANCING ON LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     ADVANCING LOCK
+   END-READ ]
+
++[ READ MY-FILE
+     IGNORING LOCK
+   END-READ ]
+ 
+ 
++[ READ MY-FILE 
+     RETRY N TIMES
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY 3 TIMES
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY FOR N SECONDS
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY FOR 3 SECONDS
+   END-READ ]
+
++[ READ MY-FILE 
+     RETRY FOREVER
+   END-READ ]
+ 
+ 
+ 
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ READ MY-FILE
+     KEY IS FUNCTION FN ( X )
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS EXCEPTION-OBJECT
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS NULL
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS SELF
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS SUPER
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS MY-CLASS-NAME OF SUPER
+   END-READ ]
+-[ READ MY-FILE
+     KEY IS ADDRESS OF SOMETHING
+   END-READ ]
+   
+   
++[ READ foo
+    END DISPLAY "Done."
+    NOT END DISPLAY "Wait."
+   END-READ ]
+
++[ READ foo
+    NEXT RECORD INTO bar
+    AT END DISPLAY "Done."
+    NOT AT END DISPLAY "Wait."
+   END-READ ]
+
++[ READ stock-file WITH KEPT LOCK ]
+
++[ READ stock-file WITH WAIT ]
++[ READ stock-file WAIT ]

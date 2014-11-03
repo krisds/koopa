@@ -1,0 +1,148 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target addition_format1;
+
++[ CORRESPONDING A TO B ]
++[ CORR A TO B ]
+
++[ CORRESPONDING A TO B ROUNDED ]
++[ CORR A TO B ROUNDED ]
+
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ CORRESPONDING FUNCTION FN ( X ) TO B ]
+-[ CORRESPONDING A TO FUNCTION FN ( X ) ]
+
+-[ CORRESPONDING EXCEPTION-OBJECT TO B ]
+-[ CORRESPONDING A TO EXCEPTION-OBJECT ]
+
+-[ CORRESPONDING NULL TO B ]
+-[ CORRESPONDING A TO NULL ]
+
+-[ CORRESPONDING SELF TO B ]
+-[ CORRESPONDING A TO SELF ]
+
+-[ CORRESPONDING SUPER TO B ]
+-[ CORRESPONDING A TO SUPER ]
+
+-[ CORRESPONDING MY-CLASS-NAME OF SUPER TO B ]
+-[ CORRESPONDING A TO MY-CLASS-NAME OF SUPER ]
+
+-[ CORRESPONDING ADDRESS OF SOMETHING TO B ]
+-[ CORRESPONDING A TO ADDRESS OF SOMETHING ]
+
+
+
+target addition_format2;
+
++[ A TO B GIVING C ]
++[ A TO B GIVING C ROUNDED ]
+
++[ A B TO C GIVING D E ]
++[ A B TO C GIVING D ROUNDED E ROUNDED ]
+
++[ A B GIVING C ]
++[ A B GIVING C ROUNDED ]
+
++[ A B C GIVING D E ]
++[ A B C GIVING D ROUNDED E ROUNDED ]
+
++[ ZERO TO B GIVING C ]
++[ A TO ZERO GIVING C ]
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ A TO B GIVING FUNCTION FN ( X ) ]
+-[ A TO B GIVING EXCEPTION-OBJECT ]
+-[ A TO B GIVING NULL ]
+-[ A TO B GIVING SELF ]
+-[ A TO B GIVING SUPER ]
+-[ A TO B GIVING MY-CLASS-NAME OF SUPER ]
+-[ A TO B GIVING ADDRESS OF SOMETHING ]
+
+
+
+target addition_format3;
+
++[ A TO B ]
++[ A TO B ROUNDED ]
+
++[ A B TO C D ]
++[ A B TO C ROUNDED D ROUNDED ]
+
++[ A ZERO TO C D ]
+
+
+
+target addStatement;
+
++[ ADD A TO B ]
+
++[ ADD A TO B GIVING C ]
+
++[ ADD A TO B
+     ON SIZE ERROR
+        DISPLAY "OOPS" ]
+
++[ ADD A TO B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS" ]
+
++[ ADD A TO B
+     SIZE ERROR
+        DISPLAY "OOPS" ]
+
++[ ADD A TO B GIVING C
+     SIZE ERROR
+        DISPLAY "OOPS" ]
+
++[ ADD A TO B
+     NOT ON SIZE ERROR
+        DISPLAY "AOK" ]
+
++[ ADD A TO B GIVING C
+     NOT ON SIZE ERROR
+        DISPLAY "AOK" ]
+
++[ ADD A TO B
+     NOT SIZE ERROR
+        DISPLAY "AOK" ]
+
++[ ADD A TO B GIVING C
+     NOT SIZE ERROR
+        DISPLAY "AOK" ]
+
++[ ADD A TO B
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK" ]
+
++[ ADD A TO B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK" ]
+
++[ ADD A TO B
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK"
+   END-ADD ]
+
++[ ADD A TO B GIVING C
+     ON SIZE ERROR
+        DISPLAY "OOPS"
+     NOT ON SIZE ERROR
+        DISPLAY "AOK"
+   END-ADD ]
+
++[ ADD A TO B
+   END-ADD ]
+
++[ ADD A TO B GIVING C
+   END-ADD ]
+

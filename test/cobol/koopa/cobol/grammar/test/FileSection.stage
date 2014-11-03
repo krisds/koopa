@@ -1,0 +1,20 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target fileSection;
+
++{
+       FILE SECTION.
+
+       FD  FPM203S1
+           BLOCK CONTAINS 0 RECORDS
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD.
+       01  REG-SALIDA                     PIC X(200).
+
+       FD  FGRERROR
+           BLOCK CONTAINS 0 RECORDS
+           RECORDING MODE IS F
+           LABEL RECORDS ARE STANDARD.
+       01  REG-FGRERROR                     PIC X(402).
+}

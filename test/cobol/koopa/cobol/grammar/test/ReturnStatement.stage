@@ -1,0 +1,72 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target returnStatement;
+
+-[ RETURN ]
+
+-[ RETURN MY-FILE ]
+
++[ RETURN MY-FILE
+     AT END DISPLAY "At end." ]
+
++[ RETURN MY-FILE
+     AT END DISPLAY "At end."
+   END-RETURN ]
+
++[ RETURN MY-FILE RECORD
+     AT END DISPLAY "At end." ]
+
++[ RETURN MY-FILE RECORD
+     AT END DISPLAY "At end."
+   END-RETURN ]
+
++[ RETURN MY-FILE INTO MY-FIELD
+     AT END DISPLAY "At end." ]
+
++[ RETURN MY-FILE INTO MY-FIELD
+     AT END DISPLAY "At end."
+   END-RETURN ]
+
++[ RETURN MY-FILE RECORD INTO MY-FIELD
+     AT END DISPLAY "At end." ]
+
++[ RETURN MY-FILE RECORD INTO MY-FIELD
+     AT END DISPLAY "At end."
+   END-RETURN ]
+
++[ RETURN MY-FILE
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end." ]
+
++[ RETURN MY-FILE
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end."
+   END-RETURN ]
+
++[ RETURN MY-FILE RECORD
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end." ]
+
++[ RETURN MY-FILE RECORD
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end."
+   END-RETURN ]
+
++[ RETURN MY-FILE INTO MY-FIELD
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end." ]
+
++[ RETURN MY-FILE INTO MY-FIELD
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end."
+   END-RETURN ]
+
++[ RETURN MY-FILE RECORD INTO MY-FIELD
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end." ]
+
++[ RETURN MY-FILE RECORD INTO MY-FIELD
+     AT END DISPLAY "At end."
+     NOT AT END DISPLAY "Not at end."
+   END-RETURN ]

@@ -5,39 +5,46 @@
 		<delete dir="build/" />
 	</target>
 
-	<target name="build" depends="bootstrap,back-end,grammar,tests,applications,sandbox">
+	<target name="build" depends="core,core-tests,cobol,cobol-tests,apps,examples">
 	</target>
 
-
-	<!-- BOOTSTRAP/CORE -->
-
-	<target name="bootstrap" depends="bootstrap-generate,bootstrap-compile">
+	<target name="run-tests" depends="run-core-tests,run-cobol-tests,run-cobol-regression-tests">
 	</target>
 
-	<target name="bootstrap-generate">
+	<!-- CORE / ISLAND PARSER GENERATOR -->
+
+	<target name="core" depends="core-generate,core-compile">
+	</target>
+
+	<target name="core-generate">
 		<echo>Generating the Koopa grammar generator...</echo>
-		<antlr-gen grammar="src/koopa/grammars/generator/KG.g" />
-		<antlr-gen2 grammar="src/koopa/grammars/generator/KGTreeParser.g" tokens="src/koopa/grammars/generator/" />
-		<antlr-gen2 grammar="src/koopa/grammars/generator/KGGenerator.g" tokens="src/koopa/grammars/generator/" />
+		<antlr-gen grammar="src/core/koopa/core/grammars/generator/KG.g" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGTreeParser.g" tokens="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGGenerator.g" tokens="src/core/koopa/core/grammars/generator/" />
 
 		<echo>Generating the Koopa test generator...</echo>
-		<antlr-gen grammar="src/koopa/grammars/test/generator/Stage.g" />
-		<antlr-gen2 grammar="src/koopa/grammars/test/generator/StageTreeParser.g" tokens="src/koopa/grammars/test/generator/" />
-		<antlr-gen2 grammar="src/koopa/grammars/test/generator/StageGenerator.g" tokens="src/koopa/grammars/test/generator/" />
+		<antlr-gen grammar="src/core/koopa/core/grammars/test/generator/Stage.g" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageTreeParser.g" tokens="src/core/koopa/core/grammars/test/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageGenerator.g" tokens="src/core/koopa/core/grammars/test/generator/" />
 
 		<echo>Generating the ANTLR tree parser generator...</echo>
-		<copy file="src/koopa/grammars/generator/KG.tokens" tofile="src/koopa/trees/antlr/generator/KG.tokens" />
-		<antlr-gen2 grammar="src/koopa/trees/antlr/generator/KGToANTLRTokens.g" tokens="src/koopa/trees/antlr/generator/" />
-		<antlr-gen2 grammar="src/koopa/trees/antlr/generator/KGToANTLRTreeGrammar.g" tokens="src/koopa/trees/antlr/generator/" />
+		<copy file="src/core/koopa/core/grammars/generator/KG.tokens" tofile="src/core/koopa/core/trees/antlr/generator/KG.tokens" />
+		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g" tokens="src/core/koopa/core/trees/antlr/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g" tokens="src/core/koopa/core/trees/antlr/generator/" />
+
+		<echo>Generating the ANTLR tree filter generator...</echo>
+		<antlr-gen grammar="src/core/koopa/core/trees/antlr/filter/generator/ANTLRv3.g" />
+		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/filter/generator/ANTLRv3Tree.g" tokens="src/core/koopa/core/trees/antlr/filter/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/filter/generator/ANTLRv3TreeFilter.g" tokens="src/core/koopa/core/trees/antlr/filter/generator/" />
 	</target>
 
-	<target name="bootstrap-build">
+	<target name="core-build">
 		<mkdir dir="build/" />
 	</target>
 
-	<target name="bootstrap-compile" depends="bootstrap-build,revision-number">
+	<target name="core-compile" depends="core-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
-		<javac srcdir="src/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -47,84 +54,18 @@
 
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
-			<fileset dir="src/" excludes="**/*.java,**/*.g" />
+			<fileset dir="src/core/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
 
+	<!-- CORE TESTS -->
 
-	<!-- GRAMMAR COMPILATION -->
-
-	<target name="update-kg-tokens" depends="bootstrap">
-		<echo>Copying the latest KG.tokens definition...</echo>
-		<synchronize-file file="src/koopa/grammars/generator/KG.tokens" root="grammar/" />
-	</target>
-
-	<target name="grammar-cobol-preprocessing" depends="update-kg-tokens">
-		<echo>Generating the Cobol parser...</echo>
-		<kgg name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing" path="cobol/koopa/grammars/cobolPreprocessing/" />
-
-		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="CobolPreprocessing" pack="koopa.grammars.cobolPreprocessing.antlr" path="cobol/koopa/grammars/cobolPreprocessing/" output="cobol/koopa/grammars/cobolPreprocessing/antlr/" />
-		<!--
-		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
-		-->
-		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
-		<delete file="cobol/koopa/grammars/cobol/antlr/CobolTreeParser.java">
-		</delete>
-		<!--
-		<echo>Compiling Cobol parser...</echo>
-		<javac srcdir="grammar/" destdir="build/" debug="on" source="1.5">
-			<classpath>
-				<fileset dir="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
-		-->
-	</target>
-
-	<target name="grammar-cobol" depends="update-kg-tokens, grammar-cobol-preprocessing">
-		<echo>Generating the Cobol parser...</echo>
-		<kgg name="Cobol" pack="koopa.grammars.cobol" path="cobol/koopa/grammars/cobol/" />
-
-		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="Cobol" pack="koopa.grammars.cobol.antlr" path="cobol/koopa/grammars/cobol/" output="cobol/koopa/grammars/cobol/antlr/" />
-		<!--
-		<antlr-gen2 grammar="grammar/koopa/grammars/cobol/antlr/CobolTreeParser.g" tokens="grammar/koopa/grammars/cobol/antlr/" />
-		-->
-
-		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
-		<delete file="cobol/koopa/grammars/cobol/antlr/CobolTreeParser.java">
-		</delete>
-
-		<echo>Compiling Cobol parser...</echo>
-		<javac srcdir="cobol/" destdir="build/" debug="on" source="1.5">
-			<classpath>
-				<fileset dir="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="grammar" depends="bootstrap, update-kg-tokens, grammar-cobol-preprocessing, grammar-cobol">
-		<echo>Copying additional grammar resources...</echo>
-		<copy todir="build/">
-			<fileset dir="cobol/" excludes="**/*.java,**/*.g" />
-		</copy>
-	</target>
-
-
-	<!-- UNIT TESTS -->
-
-	<target name="tests" depends="bootstrap,grammar">
+	<target name="core-tests" depends="core">
 		<echo>Generating unit tests...</echo>
-		<generate-unit-test path="test/koopa/grammars/cobol/test/" />
+		<generate-unit-test path="test/core/koopa/cobol/grammar/test/core/" />
 
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -135,11 +76,11 @@
 
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
-			<fileset dir="test/" excludes="**/*.java,**/*.g" />
+			<fileset dir="test/core/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
 
-	<target name="run-tests">
+	<target name="run-core-tests">
 		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
 			<classpath>
 				<pathelement location="build/" />
@@ -154,38 +95,67 @@
 			<test name="koopa.core.data.test.TokensTest" />
 
 			<test name="koopa.core.parsers.test.ParseStreamTest" />
-			
+
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
-
-			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
-			<test name="koopa.grammars.cobol.test.CobolGrammarTests" />
-
-			<test name="koopa.parsers.cobol.test.Cobol85RegressionTest" />
 		</junit>
 	</target>
 
-	<target name="run-regression-test">
-		<regression-test folder="testsuite/cobol85/" results="testsuite/cobol85-results.csv" targets="testsuite/cobol85.csv" />
+	<!-- COBOL PARSER -->
+
+	<target name="cobol-update-kg-tokens" depends="core">
+		<echo>Copying the latest KG.tokens definition...</echo>
+		<synchronize-file file="src/core/koopa/core/grammars/generator/KG.tokens" root="src/cobol/" />
 	</target>
 
+	<target name="cobol-preprocessing" depends="cobol-update-kg-tokens">
+		<echo>Generating the Cobol Preprocessing parser...</echo>
+		<kgg name="CobolPreprocessing" pack="koopa.cobol.grammar.preprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
 
-	<!-- BACK END -->
-
-	<target name="back-end" depends="bootstrap,back-end-generate,back-end-compile">
+		<echo>Generating secondary classes...</echo>
+		<kg2antlr name="CobolPreprocessing" pack="koopa.cobol.grammar.preprocessing.antlr" path="src/cobol/koopa/cobol/grammar/preprocessing/" output="src/cobol/koopa/cobol/grammar/preprocessing/antlr/" />
 	</target>
 
-	<target name="back-end-generate">
-		<echo>Generating the ANTLR tree filter generator...</echo>
-		<antlr-gen grammar="back-end/koopa/trees/antlr/filter/generator/ANTLRv3.g" />
-		<antlr-gen2 grammar="back-end/koopa/trees/antlr/filter/generator/ANTLRv3Tree.g" tokens="back-end/koopa/trees/antlr/filter/generator/" />
-		<antlr-gen2 grammar="back-end/koopa/trees/antlr/filter/generator/ANTLRv3TreeFilter.g" tokens="back-end/koopa/trees/antlr/filter/generator/" />
-	</target>
+	<target name="cobol" depends="cobol-update-kg-tokens, cobol-preprocessing">
+		<echo>Generating the Cobol parser...</echo>
+		<kgg name="Cobol" pack="koopa.cobol.grammar" path="src/cobol/koopa/cobol/grammar/" />
 
-	<target name="back-end-compile">
-		<echo>Compiling back end...</echo>
-		<javac srcdir="back-end/" destdir="build/" debug="on" source="1.5">
+		<echo>Generating secondary classes...</echo>
+		<kg2antlr name="Cobol" pack="koopa.cobol.grammar.antlr" path="src/cobol/koopa/cobol/grammar/" output="src/cobol/koopa/cobol/grammar/antlr/" />
+		<!--
+			<antlr-gen2 grammar="grammar/koopa/cobol/grammar/antlr/CobolTreeParser.g" tokens="grammar/koopa/cobol/grammar/antlr/" />
+		-->
+
+		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
+		<delete file="cobol/koopa/cobol/grammar/antlr/CobolTreeParser.java">
+		</delete>
+
+		<echo>Compiling Cobol parser...</echo>
+		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5">
 			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<echo>Copying additional grammar resources...</echo>
+		<copy todir="build/">
+			<fileset dir="src/cobol/" excludes="**/*.java,**/*.g" />
+		</copy>
+	</target>
+
+	<!-- COBOL PARSER TESTS -->
+
+	<target name="cobol-tests" depends="core,core-tests,cobol">
+		<echo>Generating unit tests...</echo>
+		<generate-unit-test path="test/cobol/koopa/cobol/grammar/test/" />
+
+		<echo>Compiling unit tests...</echo>
+		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5">
+			<classpath>
+				<fileset dir="build/" />
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
@@ -194,28 +164,58 @@
 
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
-			<fileset dir="back-end/" excludes="**/*.java,**/*.g" />
+			<fileset dir="test/cobol/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
 
+	<target name="run-cobol-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<classpath>
+				<pathelement location="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
+			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
+		</junit>
+	</target>
+
+	<target name="run-cobol-regression-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<classpath>
+				<pathelement location="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.cobol.parser.test.Cobol85RegressionTest" />
+		</junit>
+	</target>
 
 	<!-- APPLICATIONS -->
 
-	<target name="applications" depends="bootstrap,grammar,back-end">
+	<target name="apps" depends="core,cobol">
 		<echo>Copying the latest Cobol.tokens definition...</echo>
-		<synchronize-file file="cobol/koopa/grammars/cobol/antlr/Cobol.tokens" root="app/" />
+		<synchronize-file file="src/cobol/koopa/cobol/grammar/antlr/Cobol.tokens" root="src/apps/" />
 
 		<echo>Generating the Cobol outline parser...</echo>
-		<antlr-gen2 grammar="app/koopa/app/components/outline/CobolOutlineTreeParser.g" tokens="app/koopa/app/components/outline/" />
+		<antlr-gen2 grammar="src/apps/koopa/app/components/outline/CobolOutlineTreeParser.g" tokens="src/apps/koopa/app/components/outline/" />
 
 		<echo>Generating the cyclometic complexity parser...</echo>
-		<antlr-gen2 grammar="app/koopa/processing/cyclomp/CyclomaticComplexityTreeParser.g" tokens="app/koopa/processing/cyclomp/" />
+		<antlr-gen2 grammar="src/apps/koopa/app/cc/CyclomaticComplexityTreeParser.g" tokens="src/apps/koopa/app/cc/" />
 
 		<echo>Generating tree filters...</echo>
-		<generate-tree-filters root="app/" />
+		<generate-tree-filters root="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
-		<javac srcdir="app/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -225,28 +225,34 @@
 
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
-			<fileset dir="app/" excludes="**/*.java,**/*.g" />
+			<fileset dir="src/apps/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
 
+	<!-- EXAMPLES -->
 
-	<!-- SANDBOX -->
-
-	<target name="sandbox" depends="bootstrap,grammar,back-end">
+	<target name="examples" depends="core,cobol">
 		<echo>Copying the latest Cobol.tokens definition...</echo>
-		<synchronize-file file="cobol/koopa/grammars/cobol/antlr/Cobol.tokens" root="sandbox/" />
+		<synchronize-file file="src/cobol/koopa/cobol/grammar/antlr/Cobol.tokens" root="examples/" />
 
-		<echo>Generating the adaptive tree parser...</echo>
-		<antlr-gen2 grammar="sandbox/sandbox/treefilter/MyAdaptiveTreeParser.g" tokens="sandbox/sandbox/treefilter/" />
+		<echo>Generating the basic tree parser...</echo>
+		<antlr-gen2 grammar="examples/treefilters/koopa/examples/treefilter/MyAdaptiveTreeParser.g" tokens="examples/treefilters/koopa/examples/treefilter/" />
 
-		<echo>Generating the cyclometic complexity parser...</echo>
-		<antlr-gen2 grammar="sandbox/sandbox/treefilter/skipped/SkippedTreeParser.g" tokens="sandbox/sandbox/treefilter/skipped/" />
+		<echo>Generating the skipping tree parser...</echo>
+		<antlr-gen2 grammar="examples/treefilters/koopa/examples/treefilter/skipped/SkippedTreeParser.g" tokens="examples/treefilters/koopa/examples/treefilter/skipped/" />
 
 		<echo>Generating tree filters...</echo>
-		<generate-tree-filters root="sandbox/" />
+		<generate-tree-filters root="examples/treefilters/" />
 
-		<echo>Compiling processing classes...</echo>
-		<javac srcdir="sandbox/" destdir="build/" debug="on" source="1.5">
+		<echo>Compiling example classes...</echo>
+		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5">
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<javac srcdir="examples/treefilters/" destdir="build/" debug="on" source="1.5">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -256,9 +262,12 @@
 
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
-			<fileset dir="sandbox/" excludes="**/*.java,**/*.g" />
+			<fileset dir="examples/jaxen/" excludes="**/*.java,**/*.g" />
+			<fileset dir="examples/treefilters/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
+
+	<!-- PACKAGE -->
 
 	<target name="jar">
 		<jar destfile="koopa.jar" filesetmanifest="mergewithoutmain">
@@ -278,13 +287,13 @@
 
 	<!-- SVN -->
 
-	<target name="revision-number" depends="bootstrap-build">
-		<!-- find out revision number of HEAD, need svn.exe installed on local machine -->
+	<target name="revision-number" depends="core-build">
+		<!-- Find out revision number of HEAD. Needs svn installed on local machine. -->
 		<exec executable="svnversion" outputproperty="revision" failonerror="false" failifexecutionfails="false">
 		</exec>
 
-		<property name="revision" value="unknown"/>
-		
+		<property name="revision" value="unknown" />
+
 		<echo file="build/REVISION" message="${revision}" />
 	</target>
 
@@ -322,7 +331,7 @@
 		<attribute name="pack" />
 		<attribute name="path" />
 		<sequential>
-			<java classname="koopa.grammars.generator.KGG" fork="true">
+			<java classname="koopa.core.grammars.generator.KGG" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{name}" />
 				<arg value="@{pack}" />
@@ -344,7 +353,7 @@
 		<attribute name="path" />
 		<attribute name="output" />
 		<sequential>
-			<java classname="koopa.trees.antlr.generator.KGToANTLR" fork="true">
+			<java classname="koopa.core.trees.antlr.generator.KGToANTLR" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{name}" />
 				<arg value="@{pack}" />
@@ -364,7 +373,7 @@
 	<macrodef name="generate-unit-test">
 		<attribute name="path" />
 		<sequential>
-			<java classname="koopa.grammars.test.generator.GenerateUnitTests" fork="true">
+			<java classname="koopa.core.grammars.test.generator.GenerateUnitTests" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{path}" />
 				<classpath>
@@ -382,7 +391,7 @@
 		<attribute name="file" />
 		<attribute name="root" />
 		<sequential>
-			<java classname="koopa.util.ANTSynchronize" fork="true">
+			<java classname="koopa.core.util.ANTSynchronize" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{file}" />
 				<arg value="@{root}" />
@@ -400,7 +409,7 @@
 	<macrodef name="generate-tree-filters">
 		<attribute name="root" />
 		<sequential>
-			<java classname="koopa.trees.antlr.filter.generator.GenerateANTLRv3TreeFilters" fork="true">
+			<java classname="koopa.core.trees.antlr.filter.generator.GenerateANTLRv3TreeFilters" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{root}" />
 				<classpath>
@@ -410,26 +419,6 @@
 					</fileset>
 					<pathelement path="${java.class.path}" />
 				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="regression-test">
-		<attribute name="targets" />
-		<attribute name="results" />
-		<attribute name="folder" />
-		<sequential>
-			<java classname="koopa.grammars.test.RegressionTest" fork="true">
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-				<arg value="@{targets}" />
-				<arg value="@{results}" />
-				<arg value="@{folder}" />
 			</java>
 		</sequential>
 	</macrodef>

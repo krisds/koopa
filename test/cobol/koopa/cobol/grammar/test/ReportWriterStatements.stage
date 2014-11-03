@@ -1,0 +1,29 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target generateStatement;
+
+-[ GENERATE ]
++[ GENERATE foo ]
+
+target initiateStatement;
+
+-[ INITIATE ]
++[ INITIATE foo ]
++[ INITIATE foo bar ]
+
+target suppressStatement;
+
++[ SUPPRESS ]
++[ SUPPRESS PRINTING ]
+
+target terminateStatement;
+
+-[ TERMINATE ]
++[ TERMINATE foo ]
++[ TERMINATE foo bar ]
+
+target useStatement;
+
++[ USE BEFORE REPORTING foo . ]
++[ USE GLOBAL BEFORE REPORTING foo . ]

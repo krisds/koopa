@@ -1,0 +1,46 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+
+target freeStatement;
+
++[ FREE ADDRESS OF A ]
++[ FREE ADDRESS A ]
++[ FREE A ]
+
++[ FREE
+   ADDRESS OF A
+   ADDRESS OF B ]
+
++[ FREE 
+   ADDRESS A
+   ADDRESS B ]
+
++[ FREE
+   A
+   B ]
+
++[ FREE
+   ADDRESS OF A
+   ADDRESS B
+   C ]
+
++[ FREE
+   A
+   ADDRESS OF B
+   ADDRESS C ]
+   
++[ FREE
+   ADDRESS A
+   B
+   ADDRESS OF C ]
+
+   
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ FREE ADDRESS OF FUNCTION FN ( X ) ]
+-[ FREE ADDRESS OF EXCEPTION-OBJECT ]
+-[ FREE ADDRESS OF NULL ]
+-[ FREE ADDRESS OF SELF ]
+-[ FREE ADDRESS OF SUPER ]
+-[ FREE ADDRESS OF MY-CLASS-NAME OF SUPER ]
+-[ FREE ADDRESS OF ADDRESS OF SOMETHING ]

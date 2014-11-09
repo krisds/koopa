@@ -12,6 +12,7 @@ import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 
 import koopa.cobol.data.tags.SyntacticTag;
+import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.IslandTag;
@@ -37,46 +38,33 @@ public class TokenHighlighter implements CaretListener {
 
 		final Token token = this.view.getTokenAt(e.getDot() + 1);
 
-		if (token != null) {
+		if (token != null)
 			highlight(token, colorFor(token));
-		}
 	}
 
 	private Color colorFor(Token token) {
-		if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
+		if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA))
 			return Color.YELLOW;
-		}
 
-		if (token.hasTag(IslandTag.WATER)) {
+		if (token.hasTag(IslandTag.WATER))
 			return Color.YELLOW;
-		}
 
 		if (token.hasTag(SyntacticTag.SEPARATOR)
-				&& token.getText().trim().length() == 0) {
+				&& token.getText().trim().length() == 0)
 			return Color.YELLOW;
-		}
 
 		return Color.ORANGE;
 	}
 
 	private void highlight(Token token, Color color) {
-		// TODO Make sure this still works.
-		//if (token instanceof CompositeToken) {
-		//	CompositeToken composite = (CompositeToken) token;
-		//	for (int i = 0; i < composite.size(); i++) {
-		//		highlight(composite.getToken(i), color);
-		//	}
-		//
-		//} else {
-			set(token.getStart().getPositionInFile(), token.getEnd()
+		for (Range range : token.getRanges())
+			set(range.getStart().getPositionInFile(), range.getEnd()
 					.getPositionInFile(), color);
-		//}
 	}
 
 	private void clear() {
-		for (Object hl : this.hls) {
+		for (Object hl : this.hls)
 			this.highlighter.removeHighlight(hl);
-		}
 
 		this.hls.clear();
 	}

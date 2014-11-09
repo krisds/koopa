@@ -83,10 +83,13 @@ public class ApplicationSupport {
 
 		if (chooser == null)
 			chooser = new JFileChooser();
+
+		if (start == null)
+			start = new File(".");
 		
 		chooser.setCurrentDirectory(start.isDirectory() ? start : start
 				.getParentFile());
-		
+
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setAcceptAllFileFilterUsed(false);
 		if (filter != null) {

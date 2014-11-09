@@ -33,13 +33,13 @@ import java.util.Map;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
 import koopa.cobol.sources.LineContinuations;
-import koopa.cobol.sources.LineSplitter;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.PseudoLiterals;
 import koopa.cobol.sources.Separators;
 import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
+import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.AnnotatedSourceSample;
 import koopa.core.sources.test.TokenValidator;
@@ -95,8 +95,6 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		Source<Token> source = null;
 
 		source = new LineSplitter(sample.getReader());
-		if (file.getName().startsWith("LineSplitter"))
-			return source;
 
 		// TODO Get source format from file name as well, somehow.
 		source = new CompilerDirectives(source, format);

@@ -98,6 +98,8 @@
 
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
+			
+			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
 		</junit>
 	</target>
 

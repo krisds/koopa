@@ -37,6 +37,7 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.CobolParser;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.parser.cobol.ParsingListener;
+import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.IslandTag;
@@ -129,7 +130,7 @@ public class SourceView extends JPanel implements ParsingListener {
 			StyleConstants.setBold(style, false);
 			StyleConstants.setFontFamily(style, "Courier");
 			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBackground(style, new Color(192,238,250));
+			StyleConstants.setBackground(style, new Color(192, 238, 250));
 			StyleConstants.setForeground(style, Color.GRAY);
 		}
 
@@ -334,13 +335,10 @@ public class SourceView extends JPanel implements ParsingListener {
 			final List<List<Token>> lines = sink.getLines();
 			for (List<Token> line : lines) {
 				for (Token token : line) {
-					final int start = token.getStart().getPositionInFile() - 1;
-					final int end = token.getEnd().getPositionInFile();
-					final int len = end - start;
 
+					final Style style;
 					if (token.hasTag(SyntacticTag.STRING_LITERAL)) {
-						document.setCharacterAttributes(start, len,
-								getStringStyle(document), false);
+						style = getStringStyle(document);
 
 						// } else if
 						// (token.hasTag(SyntacticTag.DECIMAL_LITERAL)) {
@@ -359,8 +357,17 @@ public class SourceView extends JPanel implements ParsingListener {
 
 					} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
 							&& token.hasTag(IslandTag.LAND)) {
-						document.setCharacterAttributes(start, len,
-								getLandStyle(document), false);
+						style = getLandStyle(document);
+
+					} else {
+						continue;
+					}
+
+					for (Range range: token.getRanges()) {
+						final int start = range.getStart().getPositionInFile() - 1;
+						final int end = range.getEnd().getPositionInFile();
+						final int len = end - start;
+						document.setCharacterAttributes(start, len, style, false);
 					}
 				}
 			}

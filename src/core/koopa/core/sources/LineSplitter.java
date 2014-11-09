@@ -1,4 +1,4 @@
-package koopa.cobol.sources;
+package koopa.core.sources;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,8 +7,6 @@ import java.io.Reader;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.sources.BasicSource;
-import koopa.core.sources.Source;
 
 /**
  * This class takes a {@link Reader} and spits out tokens. The tokens are either

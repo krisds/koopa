@@ -11,35 +11,50 @@ import org.antlr.runtime.tree.CommonTree;
  * This class stores the information from an ANTLR tokens file in a queryable
  * form.
  */
-public class TokenTypes {
+public class ANTLRTokens {
 	private Map<String, Integer> types = null;
 	private Set<Integer> literals = null;
 
+	private Map<Integer, String> values = null;
+	private int maxValue = -1;
+
 	/**
 	 * While you can instantiate this class directly if you must, you should
-	 * probably be making use of {@linkplain ANTLRTokenTypesLoader#load(String)}
-	 * instead.
+	 * probably be making use of
+	 * {@linkplain ANTLRTokensLoader#loadResource(String)} instead.
 	 */
-	public TokenTypes() {
-		this.types = new HashMap<String, Integer>();
-		this.literals = new HashSet<Integer>();
+	public ANTLRTokens() {
+		types = new HashMap<String, Integer>();
+		literals = new HashSet<Integer>();
+		values = new HashMap<Integer, String>();
 	}
 
 	/**
-	 * Use this method to get the right information into here.
+	 * Use this method to put the right information into here.
 	 */
 	public void put(String key, int value, boolean literal) {
-		this.types.put(key, value);
-		if (literal) {
-			this.literals.add(value);
-		}
+		// System.out.println(" + " + key + " = " + value + " / " + maxValue);
+
+		assert (!types.containsKey(key)) : "Already have: " + key + ". Was: "
+				+ types.get(key) + ". Given: " + value + ".";
+		assert (!values.containsKey(value)) : "Conflict on " + value
+				+ ". Had: " + values.get(value) + ". Given: " + key + ".";
+
+		types.put(key, value);
+		if (literal)
+			literals.add(value);
+
+		values.put(value, key);
+		maxValue = Math.max(maxValue, value);
 	}
 
 	/**
 	 * Returns the integer value associated with the given node name.
 	 */
 	public int forNode(String name) {
-		Integer type = this.types.get(ANTLRNaming.forNode(name));
+		String antlrName = ANTLRNaming.forNode(name);
+		assert (types.containsKey(antlrName)) : "Expected to know: " + name;
+		Integer type = types.get(antlrName);
 		return type.intValue();
 	}
 
@@ -50,7 +65,8 @@ public class TokenTypes {
 	 * this version assumes the client has passed the correct ANTLR name.
 	 */
 	public int forType(String name) {
-		return this.types.get(name).intValue();
+		assert (types.containsKey(name)) : "Expected to know: " + name;
+		return types.get(name).intValue();
 	}
 
 	/**
@@ -59,43 +75,41 @@ public class TokenTypes {
 	 * instead.
 	 */
 	public int forLiteral(String text) {
-		Integer type = this.types.get(ANTLRNaming.forLiteral(text));
+		Integer type = types.get(ANTLRNaming.forLiteral(text));
 
 		if (type == null) {
 			// TODO I'm assuming that all literals are in uppercase. This is
 			// required by the GG file format, so it should be a safe
 			// assumption. Still, I wouldn't mind taking another look at this
 			// and see if there isn't a more robust solution.
-			type = this.types.get(ANTLRNaming.forLiteral(text.toUpperCase()));
+			type = types.get(ANTLRNaming.forLiteral(text.toUpperCase()));
 		}
 
-		if (type != null) {
+		if (type != null)
 			return type.intValue();
-
-		} else {
+		else
 			return forType("TOKEN");
-		}
 	}
 
 	/**
 	 * Do we know this type ?
 	 */
 	public boolean contains(String type) {
-		return this.types.containsKey(type);
+		return types.containsKey(type);
 	}
 
 	/**
 	 * Is a specific ANTLR integer value used for a literal ?
 	 */
 	public boolean isLiteral(int value) {
-		return this.literals.contains(value);
+		return literals.contains(value);
 	}
 
 	/**
 	 * Is a specific ANTLR integer value used for a token ?
 	 */
 	public boolean isToken(int value) {
-		return this.types.get("TOKEN").intValue() == value;
+		return types.get("TOKEN").intValue() == value;
 	}
 
 	/**
@@ -105,13 +119,17 @@ public class TokenTypes {
 		return forNode(type) == node.getType();
 	}
 
+	public int getMaxValue() {
+		return maxValue;
+	}
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 
-		for (Object key : this.types.keySet()) {
+		for (Object key : types.keySet()) {
 			buffer.append(key);
 			buffer.append("=");
-			buffer.append(this.types.get(key));
+			buffer.append(types.get(key));
 			buffer.append("\n");
 		}
 

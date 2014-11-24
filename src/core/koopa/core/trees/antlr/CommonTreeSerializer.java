@@ -52,8 +52,8 @@ public class CommonTreeSerializer {
 
 	public static void serialize(CommonTree tree, Writer writer)
 			throws IOException {
-		TokenTypes types = ANTLRTokenTypesLoader
-				.load("/koopa/cobol/grammar/antlr/Cobol.tokens");
+		ANTLRTokens types = ANTLRTokensLoader
+				.loadResource("/koopa/cobol/grammar/antlr/Cobol.tokens");
 
 		writer.append("<?xml version='1.0' encoding='UTF-8'?>\n"); // XML prolog/declaration
 		
@@ -66,7 +66,7 @@ public class CommonTreeSerializer {
 	}
 
 	private static void walk(Writer writer, CommonTree tree, String dent,
-			TokenTypes types) throws IOException {
+			ANTLRTokens types) throws IOException {
 
 		final int type = tree.getType();
 

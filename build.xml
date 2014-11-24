@@ -112,25 +112,25 @@
 
 	<target name="cobol-preprocessing" depends="cobol-update-kg-tokens">
 		<echo>Generating the Cobol Preprocessing parser...</echo>
-		<kgg name="CobolPreprocessing" pack="koopa.cobol.grammar.preprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
+		<kgg name="CobolPreprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
 
 		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="CobolPreprocessing" pack="koopa.cobol.grammar.preprocessing.antlr" path="src/cobol/koopa/cobol/grammar/preprocessing/" output="src/cobol/koopa/cobol/grammar/preprocessing/antlr/" />
+		<kg2antlr name="CobolPreprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
 	</target>
 
 	<target name="cobol" depends="cobol-update-kg-tokens, cobol-preprocessing">
+		<echo>Copying the latest CobolPreprocessing.tokens definition...</echo>
+		<synchronize-file file="src/cobol/koopa/cobol/grammar/preprocessing/antlr/CobolPreprocessing.tokens" root="src/cobol/" />
+		
 		<echo>Generating the Cobol parser...</echo>
-		<kgg name="Cobol" pack="koopa.cobol.grammar" path="src/cobol/koopa/cobol/grammar/" />
+		<kgg name="Cobol" path="src/cobol/koopa/cobol/grammar/" />
 
 		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="Cobol" pack="koopa.cobol.grammar.antlr" path="src/cobol/koopa/cobol/grammar/" output="src/cobol/koopa/cobol/grammar/antlr/" />
-		<!--
-			<antlr-gen2 grammar="grammar/koopa/cobol/grammar/antlr/CobolTreeParser.g" tokens="grammar/koopa/cobol/grammar/antlr/" />
+		<kg2antlr name="Cobol" path="src/cobol/koopa/cobol/grammar/" />
+		
+		<!-- TODO The generated CobolTreeParser fails to compile, because the static initialization code exceeds 64K (or something). 
+		<antlr-gen2 grammar="src/cobol/koopa/cobol/grammar/antlr/CobolTreeParser.g" tokens="src/cobol/koopa/cobol/grammar/antlr/" />
 		-->
-
-		<!-- TODO This file fails to compile in ANT, but compiles correctly in my Eclipse... -->
-		<delete file="cobol/koopa/cobol/grammar/antlr/CobolTreeParser.java">
-		</delete>
 
 		<echo>Compiling Cobol parser...</echo>
 		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5">
@@ -330,13 +330,11 @@
 
 	<macrodef name="kgg">
 		<attribute name="name" />
-		<attribute name="pack" />
 		<attribute name="path" />
 		<sequential>
 			<java classname="koopa.core.grammars.generator.KGG" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{name}" />
-				<arg value="@{pack}" />
 				<arg value="@{path}" />
 				<classpath>
 					<pathelement path="build/" />
@@ -351,16 +349,12 @@
 
 	<macrodef name="kg2antlr">
 		<attribute name="name" />
-		<attribute name="pack" />
 		<attribute name="path" />
-		<attribute name="output" />
 		<sequential>
 			<java classname="koopa.core.trees.antlr.generator.KGToANTLR" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{name}" />
-				<arg value="@{pack}" />
 				<arg value="@{path}" />
-				<arg value="@{output}" />
 				<classpath>
 					<pathelement path="build/" />
 					<fileset dir="lib">

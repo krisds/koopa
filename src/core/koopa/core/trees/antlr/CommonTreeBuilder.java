@@ -19,9 +19,9 @@ public class CommonTreeBuilder implements TreeBuilder {
 	private Stack<CommonTree> treeparts = new Stack<CommonTree>();
 	private List<CommonTree> trees = new LinkedList<CommonTree>();
 
-	private TokenTypes types = null;
+	private ANTLRTokens types = null;
 
-	public CommonTreeBuilder(TokenTypes types) {
+	public CommonTreeBuilder(ANTLRTokens types) {
 		assert (types != null);
 		this.types = types;
 	}

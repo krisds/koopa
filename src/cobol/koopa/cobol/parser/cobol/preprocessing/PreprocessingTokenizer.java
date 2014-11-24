@@ -19,9 +19,9 @@ import koopa.core.parsers.Parser;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.antlr.ANTLRTokenTypesLoader;
+import koopa.core.trees.antlr.ANTLRTokensLoader;
 import koopa.core.trees.antlr.CommonTreeBuilder;
-import koopa.core.trees.antlr.TokenTypes;
+import koopa.core.trees.antlr.ANTLRTokens;
 import koopa.core.trees.antlr.jaxen.Jaxen;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -254,13 +254,13 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 	}
 
 	// TODO Make this part of the CobolPreprocessingGrammar as a static method.
-	private static TokenTypes tokenTypes = null;
+	private static ANTLRTokens tokenTypes = null;
 
-	public static TokenTypes getTokenTypes() {
+	public static ANTLRTokens getTokenTypes() {
 		if (tokenTypes == null) {
 			try {
-				tokenTypes = ANTLRTokenTypesLoader
-						.load("/koopa/grammars/cobolPreprocessing/antlr/CobolPreprocessing.tokens");
+				tokenTypes = ANTLRTokensLoader
+						.loadResource("/koopa/cobol/grammar/preprocessing/antlr/CobolPreprocessing.tokens");
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -32,10 +32,10 @@ import koopa.core.targets.CompositeTarget;
 import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
 import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.antlr.ANTLRTokenTypesLoader;
+import koopa.core.trees.antlr.ANTLRTokensLoader;
 import koopa.core.trees.antlr.CommonTreeBuilder;
 import koopa.core.trees.antlr.CommonTreeProcessor;
-import koopa.core.trees.antlr.TokenTypes;
+import koopa.core.trees.antlr.ANTLRTokens;
 import koopa.core.util.Tuple;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -45,7 +45,7 @@ public class CobolParser implements ParserConfiguration {
 
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
-	private TokenTypes tokenTypes = null;
+	private ANTLRTokens tokenTypes = null;
 	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
 	private List<Target<Data>> tokenSinks = new LinkedList<Target<Data>>();
 	private List<CommonTreeProcessor> treeProcessors = null;
@@ -365,11 +365,11 @@ public class CobolParser implements ParserConfiguration {
 	}
 
 	// TODO Make this part of the CobolGrammar as a static method.
-	private TokenTypes getTokenTypes() {
+	private ANTLRTokens getTokenTypes() {
 		if (tokenTypes == null) {
 			try {
-				tokenTypes = ANTLRTokenTypesLoader
-						.load("/koopa/cobol/grammar/antlr/Cobol.tokens");
+				tokenTypes = ANTLRTokensLoader
+						.loadResource("/koopa/cobol/grammar/antlr/Cobol.tokens");
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

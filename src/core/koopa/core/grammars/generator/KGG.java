@@ -1,18 +1,15 @@
 package koopa.core.grammars.generator;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.Properties;
 
-import koopa.core.grammars.generator.KGLexer;
-import koopa.core.grammars.generator.KGParser;
-import koopa.core.util.ASTFrame;
+import koopa.core.util.Util;
 
-import org.antlr.runtime.ANTLRReaderStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
@@ -21,19 +18,16 @@ import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 
 public class KGG {
 
-	private static final boolean SHOW_AST = false;
-
 	public static void main(String[] args) throws IOException,
 			RecognitionException {
 
 		String name = args[0];
-		String pack = args[1];
-		String path = args[2];
+		String path = args[1];
 
 		if (!path.endsWith("/"))
 			path += "/";
 
-		String code = generate(name, pack, path);
+		String code = generate(name, path);
 
 		try {
 			System.out.println("Generating " + path + name + "Grammar.java");
@@ -49,31 +43,51 @@ public class KGG {
 		}
 	}
 
-	public static String generate(String name, String pack, String path)
-			throws IOException, RecognitionException {
+	public static String generate(String name, String path) throws IOException,
+			RecognitionException {
 
-		if (!path.endsWith("/"))
-			path += "/";
-
-		Reader reader = new FileReader(path + name + ".kg");
-
-		KGLexer lexer = new KGLexer(new ANTLRReaderStream(reader));
-
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-		KGParser parser = new KGParser(tokens);
-
-		KGParser.koopa_return koopa = parser.koopa();
-
-		CommonTree ast = (CommonTree) koopa.getTree();
-		if (SHOW_AST) {
-			new ASTFrame("KG", ast).setVisible(true);
-		}
+		CommonTree ast = KGUtil.getKoopaAST(new File(path, name + ".kg"));
 
 		// The following is for testing purposes.
 		// CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
 		// KGTreeParser treeParser = new KGTreeParser(nodes);
 		// treeParser.koopa();
+
+		// Each grammar should have an associated properties file containing
+		// some extra info needed for creating a valid Java class. We don't make
+		// this part of the actual grammar file because we want to keep any
+		// native stuff out of there.
+		Properties meta = new Properties();
+		meta.load(new FileInputStream(new File(path, name + ".properties")));
+
+		// One of the things the properties file should define are all the
+		// required imports. We collect them here into actual valid Java import
+		// statements.
+		StringBuilder imports = new StringBuilder();
+		for (String key : meta.stringPropertyNames()) {
+			if (key.startsWith("import.")) {
+				String importName = key.substring("import.".length());
+				String packageName = meta.getProperty(key);
+
+				imports.append("import ");
+				imports.append(packageName);
+				imports.append(".");
+				imports.append(importName);
+				imports.append(";\n");
+
+			} else if (key.startsWith("static.")) {
+				String importName = key.substring("static.".length());
+				String packageName = meta.getProperty(key);
+
+				imports.append("import static ");
+				imports.append(packageName);
+				imports.append(".");
+				imports.append(importName);
+				imports.append(";\n");
+			}
+		}
+
+		// We can then throw everything to the StringTemplate processor.
 
 		Reader templatesIn = new InputStreamReader(
 				KGG.class
@@ -87,44 +101,9 @@ public class KGG {
 		KGGenerator walker = new KGGenerator(nodes);
 		walker.setTemplateLib(templates);
 
-		String formatted = walker.koopa(name, pack,
-				contents(path + name + ".kg-imports"),
-				contents(path + name + ".kg-usercode")).toString();
-
-		// System.out.println(formatted);
+		String formatted = walker.koopa(meta, imports.toString(),
+				Util.contents(path + name + ".natives")).toString();
 
 		return formatted;
-	}
-
-	private static String contents(String filename) {
-		if (filename == null) {
-			return null;
-		}
-
-		FileReader fileReader = null;
-		try {
-			fileReader = new FileReader(filename);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			StringBuffer buffer = new StringBuffer();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				buffer.append(line);
-				buffer.append('\n');
-			}
-			return buffer.toString();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-
-		} finally {
-			try {
-				if (fileReader != null)
-					fileReader.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }

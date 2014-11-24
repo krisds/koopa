@@ -1,3 +1,5 @@
+grammar CobolPreprocessing.
+
 ## #############################################################################
 ## Top level definitions.
 ## -----------------------------------------------------------------------------
@@ -33,7 +35,7 @@ def copyReplacementInstruction =
 end
 
 def copyOperandName =
-	(pseudoLiteral | literal | cobolWord)
+	([LEADING | TRAILING] pseudoLiteral | literal | cobolWord)
 end
 
 
@@ -58,7 +60,7 @@ def literal =
 end
 
 def numeric =
-    ( integer
+    ( integerLiteral
     | decimal
     | hexadecimal
     )

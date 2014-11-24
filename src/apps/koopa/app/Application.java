@@ -3,7 +3,7 @@ package koopa.app;
 import java.awt.Component;
 import java.io.File;
 
-import koopa.cobol.sources.SourceFormat;
+import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.util.Tuple;
 
@@ -13,9 +13,10 @@ public interface Application {
 
 	void openFile(File file);
 
-	void openFile(File file, SourceFormat format);
+	void openFile(File file, ParsingCoordinator parsingCoordinator);
 
-	void openFile(File file, SourceFormat format, Tuple<Token, String> detail);
+	void openFile(File file, ParsingCoordinator parsingCoordinator,
+			Tuple<Token, String> detail);
 
 	void reloadFile();
 

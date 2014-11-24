@@ -86,7 +86,7 @@ public class ApplicationSupport {
 
 		if (start == null)
 			start = new File(".");
-		
+
 		chooser.setCurrentDirectory(start.isDirectory() ? start : start
 				.getParentFile());
 
@@ -98,6 +98,53 @@ public class ApplicationSupport {
 
 		int returnVal = openFile ? chooser.showOpenDialog(parent) : chooser
 				.showSaveDialog(parent);
+
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File selectedFile = chooser.getSelectedFile();
+
+			try {
+				preferences.put(key, selectedFile.getCanonicalPath());
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return selectedFile;
+
+		} else
+			return null;
+	}
+
+	public static File askUserForFolder(String key, Component parent) {
+
+		File start = null;
+		try {
+			if (Arrays.asList(preferences.keys()).contains(key)) {
+				String lastUsedFileName = preferences.get(key, null);
+
+				File lastUsed = new File(lastUsedFileName);
+
+				if (lastUsed.exists())
+					start = lastUsed;
+			}
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+			start = null;
+		}
+
+		if (chooser == null)
+			chooser = new JFileChooser();
+
+		if (start == null)
+			start = new File(".");
+
+		chooser.setCurrentDirectory(start.isDirectory() ? start : start
+				.getParentFile());
+
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		int returnVal = chooser.showOpenDialog(parent);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();

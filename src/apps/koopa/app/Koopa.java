@@ -45,6 +45,7 @@ import koopa.app.actions.ReloadFileAction;
 import koopa.app.actions.ShowGrammarAction;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
+import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.misc.Tab;
@@ -52,6 +53,7 @@ import koopa.app.components.overview.Overview;
 import koopa.app.util.Getter;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
+import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.util.Tuple;
@@ -97,8 +99,13 @@ public class Koopa extends JFrame implements Application, Configurable {
 	private JMenuItem saveCSV = null;
 
 	private JMenu parserSettings = null;
+	private JMenu sourceFormat = null;
 	private JRadioButtonMenuItem fixedFormat = null;
 	private JRadioButtonMenuItem freeFormat = null;
+	private JMenu preprocessing = null;
+	private JRadioButtonMenuItem preprocessingEnabled = null;
+	private JRadioButtonMenuItem preprocessingDisabled = null;
+	private JMenuItem copybookPath = null;
 
 	private JMenu navigation = null;
 	private JMenuItem goToLine = null;
@@ -189,19 +196,25 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		parserSettings = new JMenu("Parser settings");
 
+		sourceFormat = new JMenu("Source format");
+		parserSettings.add(sourceFormat);
+
 		final ButtonGroup group = new ButtonGroup();
 
 		fixedFormat = new JRadioButtonMenuItem();
 
-		AbstractAction selectFixedFormat = new AbstractAction("Fixed format") {
+		AbstractAction selectFixedFormat = new AbstractAction("Fixed") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
+				// TODO Use a common interface for these.
 				Component view = getView();
 				if (view == overview) {
-					overview.setSourceFormat(SourceFormat.FIXED);
+					overview.getParsingCoordinator().setFormat(
+							SourceFormat.FIXED);
 				} else {
-					((Detail) view).setSourceFormat(SourceFormat.FIXED);
+					((Detail) view).getParsingCoordinator().setFormat(
+							SourceFormat.FIXED);
 				}
 			}
 		};
@@ -210,19 +223,22 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		fixedFormat.setSelected(true);
 		group.add(fixedFormat);
-		parserSettings.add(fixedFormat);
+		sourceFormat.add(fixedFormat);
 
 		freeFormat = new JRadioButtonMenuItem();
 
-		AbstractAction selectFreeFormat = new AbstractAction("Free format") {
+		AbstractAction selectFreeFormat = new AbstractAction("Free") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
+				// TODO Use a common interface for these.
 				Component view = getView();
 				if (view == overview) {
-					overview.setSourceFormat(SourceFormat.FREE);
+					overview.getParsingCoordinator().setFormat(
+							SourceFormat.FREE);
 				} else {
-					((Detail) view).setSourceFormat(SourceFormat.FREE);
+					((Detail) view).getParsingCoordinator().setFormat(
+							SourceFormat.FREE);
 				}
 			}
 		};
@@ -230,7 +246,75 @@ public class Koopa extends JFrame implements Application, Configurable {
 		freeFormat.setAction(selectFreeFormat);
 
 		group.add(freeFormat);
-		parserSettings.add(freeFormat);
+		sourceFormat.add(freeFormat);
+
+		preprocessing = new JMenu("Preprocessing (ALPHA!)");
+		parserSettings.add(preprocessing);
+
+		final ButtonGroup preprocessingGroup = new ButtonGroup();
+		preprocessingEnabled = new JRadioButtonMenuItem();
+		preprocessingDisabled = new JRadioButtonMenuItem("Disabled");
+		preprocessingGroup.add(preprocessingEnabled);
+		preprocessingGroup.add(preprocessingDisabled);
+
+		AbstractAction enablePreprocessing = new AbstractAction("Enabled") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				Component view = getView();
+				if (view == overview)
+					overview.getParsingCoordinator().setPreprocessing(true);
+				else
+					((Detail) view).getParsingCoordinator().setPreprocessing(
+							true);
+
+			}
+		};
+
+		AbstractAction disablePreprocessing = new AbstractAction("Disabled") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				Component view = getView();
+				if (view == overview)
+					overview.getParsingCoordinator().setPreprocessing(false);
+				else
+					((Detail) view).getParsingCoordinator().setPreprocessing(
+							false);
+			}
+		};
+
+		preprocessingEnabled.setAction(enablePreprocessing);
+		preprocessingDisabled.setAction(disablePreprocessing);
+
+		preprocessing.add(preprocessingEnabled);
+		preprocessing.add(preprocessingDisabled);
+		preprocessingDisabled.setSelected(true);
+
+		preprocessing.addSeparator();
+
+		copybookPath = new JMenuItem();
+
+		AbstractAction setCopybookPath = new AbstractAction(
+				"Copybook Paths...") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				ParsingCoordinator coordinator = null;
+
+				Component view = getView();
+				if (view == overview)
+					coordinator = overview.getParsingCoordinator();
+				else
+					coordinator = ((Detail) view).getParsingCoordinator();
+				CopybookPathsSelector selector = new CopybookPathsSelector(
+						Koopa.this, coordinator);
+				selector.setVisible(true);
+			}
+		};
+		copybookPath.setAction(setCopybookPath);
+
+		preprocessing.add(copybookPath);
 
 		bar.add(parserSettings);
 
@@ -382,7 +466,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 			// Parse settings ...
 			parserSettings.setEnabled(!isParsing);
-			switch (overview.getSourceFormat()) {
+			switch (overview.getParsingCoordinator().getFormat()) {
 			case FIXED:
 				fixedFormat.setSelected(true);
 				break;
@@ -390,6 +474,11 @@ public class Koopa extends JFrame implements Application, Configurable {
 				freeFormat.setSelected(true);
 				break;
 			}
+
+			if (overview.getParsingCoordinator().isPreprocessing())
+				preprocessingEnabled.setSelected(true);
+			else
+				preprocessingEnabled.setSelected(false);
 
 			// Navigation ...
 			navigation.setEnabled(false);
@@ -416,7 +505,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 			saveCSV.setEnabled(false);
 
 			// Parse settings ...
-			switch (detail.getSourceFormat()) {
+			switch (detail.getParsingCoordinator().getFormat()) {
 			case FIXED:
 				fixedFormat.setSelected(true);
 				break;
@@ -424,6 +513,11 @@ public class Koopa extends JFrame implements Application, Configurable {
 				freeFormat.setSelected(true);
 				break;
 			}
+
+			if (detail.getParsingCoordinator().isPreprocessing())
+				preprocessingEnabled.setSelected(true);
+			else
+				preprocessingEnabled.setSelected(false);
 
 			// Navigation ...
 			navigation.setEnabled(true);
@@ -443,21 +537,21 @@ public class Koopa extends JFrame implements Application, Configurable {
 		Component view = getView();
 
 		if (overview == view) {
-			openFile(file, overview.getSourceFormat(), null);
+			openFile(file, overview.getParsingCoordinator(), null);
 
 		} else {
 			Detail detail = (Detail) view;
-			openFile(file, detail.getSourceFormat(), null);
+			openFile(file, detail.getParsingCoordinator(), null);
 		}
 	}
 
 	@Override
-	public void openFile(File file, SourceFormat format) {
-		openFile(file, format, null);
+	public void openFile(File file, ParsingCoordinator parsingCoordinator) {
+		openFile(file, parsingCoordinator, null);
 	}
 
 	@Override
-	public void openFile(File file, SourceFormat format,
+	public void openFile(File file, ParsingCoordinator parsingCoordinator,
 			Tuple<Token, String> selectedToken) {
 
 		if (file.isDirectory()) {
@@ -468,7 +562,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		// TODO Check if there already exists a tab for the given file. In that
 		// case do a reload instead.
 
-		final Detail detail = new Detail(this, file, format);
+		final Detail detail = new Detail(this, file, parsingCoordinator);
 		overview.addParseResults(detail.getParseResults());
 
 		String title = getTitleForDetail(detail);

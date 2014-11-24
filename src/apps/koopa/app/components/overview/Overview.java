@@ -31,7 +31,6 @@ import koopa.app.components.misc.StatusRenderer;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.parser.cobol.ParsingListener;
-import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainableSource;
 import koopa.core.util.Tuple;
@@ -119,7 +118,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 				final int selected = overviewTable
 						.convertRowIndexToModel(overviewTable.getSelectedRow());
 				final File file = results.getResults(selected).getFile();
-				application.openFile(file, coordinator.getFormat(), detail);
+				application.openFile(file, coordinator, detail);
 			}
 		});
 
@@ -158,7 +157,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 								.convertRowIndexToModel(row);
 						final File file = results.getResults(selected)
 								.getFile();
-						application.openFile(file, coordinator.getFormat());
+						application.openFile(file, coordinator);
 					}
 				}
 			}
@@ -330,15 +329,11 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		return results;
 	}
 
-	public SourceFormat getSourceFormat() {
-		return coordinator.getFormat();
-	}
-
-	public void setSourceFormat(SourceFormat format) {
-		coordinator.setFormat(format);
-	}
-
 	public void quitParsing() {
 		quitParsing = true;
+	}
+
+	public ParsingCoordinator getParsingCoordinator() {
+		return coordinator;
 	}
 }

@@ -1,3 +1,5 @@
+grammar Cobol extends CobolPreprocessing.
+
 ## Micro Focus COBOL Language Reference
 ## http://documentation.microfocus.com/help/index.jsp?nav=%2F3_9_4_1
 
@@ -3583,22 +3585,7 @@ def compilerDisplayStatement =
     '\u0024' DISPLAY ( VCS '=' literal | textName )
 end
 
-def copyStatement =
-    COPY textName [ (OF | IN) libraryName ]
-    [SUPPRESS]
-    [copyReplacingPhrase]
-    .
-end
-
-def copyReplacingPhrase =
-	REPLACING
-	(copyReplacementInstruction)+
-end
-
-def copyReplacementInstruction =
-	copyOperandName BY copyOperandName
-end
-
+# This overrides the CobolPreprocessing definition.
 def copyOperandName =
 	([LEADING | TRAILING] pseudoLiteral | verb | literal | identifier | cobolWord)
 end
@@ -3612,13 +3599,6 @@ def replaceStatement =
     ) [.]
 end
 
-def pseudoText =
-    cobolWord
-end
-
-def partialWord =
-    cobolWord
-end
 
 ## #############################################################################
 ## Source formatting directives.
@@ -4224,16 +4204,6 @@ def computerName =
 end
 
 def functionName =
-    cobolWord
-end
-
-def textName =
-    ( cobolWord
-    | alphanumeric
-    )
-end
-
-def libraryName =
     cobolWord
 end
 

@@ -20,6 +20,7 @@ public class TokenTracker implements Target<Data> {
 		return tokens;
 	}
 
+	// TODO This logic breaks when applying preprocessing !
 	public Token getTokenAt(int position) {
 		final int size = tokens.size();
 

@@ -15,7 +15,19 @@ options {
 }
 
 koopa
-  : ^(GRAMMAR rule*)
+  : ^(GRAMMAR meta rule*)
+  ;
+
+meta
+  : ^(META named extending?)
+  ;
+
+named
+  : ^(NAMED IDENTIFIER)
+  ;
+
+extending
+  : ^(EXTENDING IDENTIFIER)
   ;
 
 rule

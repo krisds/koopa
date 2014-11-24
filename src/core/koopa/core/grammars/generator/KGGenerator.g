@@ -15,6 +15,7 @@ options {
   import java.util.Date;
   import java.util.Set;
   import java.util.HashSet;
+  import java.util.Properties;
 
   import koopa.core.util.Tuple;
 }
@@ -22,19 +23,43 @@ options {
 @members {
 }
 
-koopa [String name, String pack, String pack, String imports, String supportCode]
+koopa [Properties p, String imports, String supportCode]
   : ^(GRAMMAR
+      meta[p]
       (r+=rule)*
     )
     
     -> koopa(
-      name = {name},
+      name = {p.getProperty("named")},
+      extending = {p.getProperty("extending")},
       date = {new Date()},
-      package = {pack},
+      package = {p.getProperty("package")},
       imports = {imports},
       rule = {$r},
       support_code = {supportCode}
     )
+  ;
+
+meta [ Properties meta ]
+  : ^(META n=named (e=extending)?)
+    
+    { meta.setProperty("named", $n.name);
+    
+      if (e != null) meta.setProperty("extending", $e.name);
+      else meta.setProperty("extending", "Koopa");
+    }
+  ;
+
+named returns [String name = null]
+  : ^(NAMED i=IDENTIFIER)
+  
+    { $named.name = ((CommonTree) $i).getText(); }
+  ;
+
+extending returns [String name = null]
+  : ^(EXTENDING i=IDENTIFIER)
+  
+    { $extending.name = ((CommonTree) $i).getText(); }
   ;
 
 rule

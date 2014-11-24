@@ -42,6 +42,7 @@ options {
 
 koopa [String name, String pack, String usercode]
   : ^(GRAMMAR
+      meta
       (r+=rule)*
     )
   
@@ -53,6 +54,18 @@ koopa [String name, String pack, String usercode]
       literal={antlrifiedLiterals()},
       usercode={usercode}
     )
+  ;
+
+meta
+  : ^(META named extending?)
+  ;
+
+named
+  : ^(NAMED IDENTIFIER)
+  ;
+
+extending
+  : ^(EXTENDING IDENTIFIER)
   ;
 
 rule

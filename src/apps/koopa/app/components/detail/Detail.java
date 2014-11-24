@@ -24,7 +24,6 @@ import koopa.app.components.sourceview.SourceView;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.parser.cobol.ParsingListener;
-import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainableSource;
 import koopa.core.util.Tuple;
@@ -44,11 +43,10 @@ public class Detail extends JPanel implements Configurable {
 	private Breadcrumb breadcrumb = null;
 	private boolean parsing = false;
 
-	public Detail(Application application, File file, SourceFormat format) {
+	public Detail(Application application, File file,
+			ParsingCoordinator parsingCoordinator) {
 		this.application = application;
-		this.coordinator = new ParsingCoordinator();
-		this.coordinator.setKeepingTrackOfTokens(true);
-		this.coordinator.setFormat(format);
+		this.coordinator = new ParsingCoordinator(parsingCoordinator);
 
 		// TODO Can do this better, I think.
 		ApplicationSupport
@@ -69,6 +67,7 @@ public class Detail extends JPanel implements Configurable {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void installIntermediateTokenizer(String classname) {
 		try {
 			Class<?> clazz = Class.forName(classname);
@@ -94,9 +93,8 @@ public class Detail extends JPanel implements Configurable {
 		try {
 			Class<?> clazz = Class.forName(classname);
 			Object o = clazz.newInstance();
-			if (o instanceof ParsingListener) {
+			if (o instanceof ParsingListener)
 				this.coordinator.addParsingListener((ParsingListener) o);
-			}
 
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -119,9 +117,8 @@ public class Detail extends JPanel implements Configurable {
 			public void valueChanged(TreeSelectionEvent e) {
 				final DefaultMutableTreeNode node = outline.getSelected();
 
-				if (node == null) {
+				if (node == null)
 					return;
-				}
 
 				if (!node.isRoot()) {
 					final Reference ref = (Reference) node.getUserObject();
@@ -194,21 +191,18 @@ public class Detail extends JPanel implements Configurable {
 	}
 
 	public void scrollTo(int position) {
-		if (pane != null) {
+		if (pane != null)
 			pane.scrollTo(position);
-		}
 	}
 
 	public void scrollToLine(int line) {
-		if (pane != null) {
+		if (pane != null)
 			pane.scrollToLine(line);
-		}
 	}
 
 	public void selectDetail(Tuple<Token, String> detail) {
-		if (detail != null) {
+		if (detail != null)
 			detailsTable.selectDetail(detail);
-		}
 	}
 
 	public ParseResults getParseResults() {
@@ -217,14 +211,6 @@ public class Detail extends JPanel implements Configurable {
 
 	public boolean isParsing() {
 		return parsing;
-	}
-
-	public SourceFormat getSourceFormat() {
-		return coordinator.getFormat();
-	}
-
-	public void setSourceFormat(SourceFormat format) {
-		coordinator.setFormat(format);
 	}
 
 	public boolean hasSyntaxTree() {
@@ -241,5 +227,9 @@ public class Detail extends JPanel implements Configurable {
 
 	public boolean find(String search) {
 		return pane.find(search);
+	}
+
+	public ParsingCoordinator getParsingCoordinator() {
+		return coordinator;
 	}
 }

@@ -11,54 +11,80 @@ options {
   package koopa.core.trees.antlr.generator;
   
   import koopa.core.trees.antlr.ANTLRNaming;
-  import koopa.core.trees.antlr.TokenTypes;
+  import koopa.core.trees.antlr.ANTLRTokensLoader;
+  import koopa.core.trees.antlr.ANTLRTokens;
   
   import java.util.Set;
   import java.util.HashSet;
   import java.util.Map;
   import java.util.HashMap;
+  
+  import java.io.File;
+  import java.io.IOException;
 }
 
 @members {
-  private Set<String> tokens = new HashSet<String>();
-  private TokenTypes numbers = new TokenTypes();
+  private ANTLRTokens numbers = new ANTLRTokens();
   private int count = 14;
+  private File path = null;
 
   public void node(String text) {
-    if (!tokens.contains(text)) {
-      // System.out.println("node " + text + "=" + count);
-      tokens.add(text);
-      numbers.put(ANTLRNaming.forNode(text), count++, false);
-    }
+    text = ANTLRNaming.forNode(text);
+    if (!numbers.contains(text))
+      numbers.put(text, count++, false);
   }
 
   public void token(String text) {
-    if (!tokens.contains(text)) {
-      // System.out.println("token " + text + "=" + count);
-      tokens.add(text);
-      numbers.put(ANTLRNaming.forLiteral(text), count++, true);
-    }
+    text = ANTLRNaming.forLiteral(text);
+    if (!numbers.contains(text))
+      numbers.put(text, count++, true);
   }
   
-  public TokenTypes getTokenTypes() {
-    if (!numbers.contains("TOKEN")) {
+  public ANTLRTokens getTokenTypes() {
+    if (!numbers.contains("TOKEN"))
       numbers.put("TOKEN", 11, false);
-    }
     
-    if (!numbers.contains("WATER")) {
+    if (!numbers.contains("WATER"))
       numbers.put("WATER", 12, false);
-    }
     
-    if (!numbers.contains("COMMENT")) {
+    if (!numbers.contains("COMMENT"))
       numbers.put("COMMENT", 13, false);
-    }
     
     return numbers;
+  }
+  
+  public void setPath(File path) {
+  	this.path = path;
+  }
+  
+  private void loadTokensForBaseGrammar(String name) {
+    try {
+	  System.out.println("Loading tokens for base grammar: " + name);
+      ANTLRTokensLoader.loadFile(new File(path, name + ".tokens"), numbers);
+	  count = numbers.getMaxValue() + 1;
+	  
+	} catch (IOException e) {
+	  e.printStackTrace();
+	}
   }
 }
 
 koopa
-  : ^(GRAMMAR rule*)
+  : ^(GRAMMAR meta rule*)
+  ;
+
+meta
+  : ^(META named extending?)
+  ;
+
+named
+  : ^(NAMED IDENTIFIER)
+  ;
+
+extending
+  : ^(EXTENDING i=IDENTIFIER)
+  
+    { loadTokensForBaseGrammar( ((CommonTree) $i).getText() ); }
   ;
 
 rule

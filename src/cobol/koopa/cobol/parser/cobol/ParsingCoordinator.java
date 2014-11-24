@@ -26,6 +26,21 @@ public class ParsingCoordinator {
 	/** EXPERIMENTAL */
 	private List<File> copybookPaths = new ArrayList<File>();
 
+	public ParsingCoordinator() {
+	}
+
+	/**
+	 * Creates a new coordinator which is a (partial) copy of the given one. In
+	 * particular the new coordinator will use the same format, and
+	 * preprocessing configuration as the given coordinator.
+	 */
+	public ParsingCoordinator(ParsingCoordinator parsingCoordinator) {
+		this.keepingTrackOfTokens = parsingCoordinator.keepingTrackOfTokens;
+		this.format = parsingCoordinator.format;
+		this.preprocessing = parsingCoordinator.preprocessing;
+		this.copybookPaths.addAll(parsingCoordinator.copybookPaths);
+	}
+
 	public SourceFormat getFormat() {
 		return format;
 	}
@@ -101,5 +116,15 @@ public class ParsingCoordinator {
 			return;
 
 		this.copybookPaths.add(path);
+	}
+
+	/** EXPERIMENTAL ! */
+	public List<File> getCopybookPaths() {
+		return new ArrayList<File>(copybookPaths);
+	}
+
+	/** EXPERIMENTAL ! */
+	public void removeCopybookPath(File path) {
+		copybookPaths.remove(path);
 	}
 }

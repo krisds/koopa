@@ -7,6 +7,9 @@ options {
 
 tokens {
   GRAMMAR;
+  META;
+  NAMED;
+  EXTENDING;
   RULE;
   BODY;
   RETURNS;
@@ -35,9 +38,21 @@ tokens {
 }
 
 koopa
-  : rule* EOF
+  : meta
   
-    -> ^(GRAMMAR rule*)
+    rule* EOF
+  
+    -> ^(GRAMMAR meta rule*)
+  ;
+
+meta
+  : 'grammar' n=IDENTIFIER
+    ('extends' s=IDENTIFIER)?
+    DOT
+    
+    -> { s == null }? ^(META ^(NAMED $n))
+    
+    -> ^(META ^(NAMED $n) ^(EXTENDING $s))
   ;
 
 rule

@@ -8,11 +8,13 @@ import koopa.core.trees.antlr.CommonKoopaToken;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 
-public class ANTLR {
+public final class ANTLR {
+	private ANTLR() {
+	}
+
 	public static String getText(Tree node) {
-		if (node == null) {
+		if (node == null)
 			return null;
-		}
 
 		StringBuilder builder = new StringBuilder();
 
@@ -25,9 +27,8 @@ public class ANTLR {
 		final int count = node.getChildCount();
 
 		if (count > 0) {
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++)
 				gather(node.getChild(i), builder);
-			}
 
 		} else {
 			builder.append(node.getText());
@@ -35,14 +36,12 @@ public class ANTLR {
 	}
 
 	public static Data getToken(Tree tree) {
-		if (!(tree instanceof CommonTree)) {
+		if (!(tree instanceof CommonTree))
 			return null;
-		}
 
 		final org.antlr.runtime.Token token = ((CommonTree) tree).getToken();
-		if (!(token instanceof CommonKoopaToken)) {
+		if (!(token instanceof CommonKoopaToken))
 			return null;
-		}
 
 		final CommonKoopaToken koopa = (CommonKoopaToken) token;
 		return koopa.getKoopaData();
@@ -54,16 +53,14 @@ public class ANTLR {
 		final Position start = (data instanceof Token) ? ((Token) data)
 				.getStart() : null;
 
-		if (start != null) {
+		if (start != null)
 			return start;
-		}
 
 		for (int i = 0; i < root.getChildCount(); i++) {
 			Position position = getStart(root.getChild(i));
 
-			if (position != null) {
+			if (position != null)
 				return position;
-			}
 		}
 
 		return null;
@@ -75,16 +72,14 @@ public class ANTLR {
 		final Position end = (data instanceof Token) ? ((Token) data).getEnd()
 				: null;
 
-		if (end != null) {
+		if (end != null)
 			return end;
-		}
 
 		for (int i = root.getChildCount() - 1; i >= 0; i--) {
 			Position position = getEnd(root.getChild(i));
 
-			if (position != null) {
+			if (position != null)
 				return position;
-			}
 		}
 
 		return null;

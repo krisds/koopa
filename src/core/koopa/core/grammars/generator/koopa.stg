@@ -1,6 +1,6 @@
 group CSS;
 
-koopa(name, date, package, imports, reserved, rule, support_code) ::= <<
+koopa(name, extending, date, package, imports, reserved, rule, support_code) ::= <<
 package $package$;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ $if(imports)$
 $imports$
 
 $endif$
-public class $name$Grammar extends KoopaGrammar {
+public class $name$Grammar extends $extending$Grammar {
     public $name$Grammar() {
     }
     

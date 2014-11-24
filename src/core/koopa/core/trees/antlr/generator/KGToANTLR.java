@@ -1,20 +1,18 @@
 package koopa.core.trees.antlr.generator;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-import koopa.core.grammars.generator.KGLexer;
-import koopa.core.grammars.generator.KGParser;
-import koopa.core.trees.antlr.TokenTypes;
-import koopa.core.util.ASTFrame;
+import koopa.core.grammars.generator.KGUtil;
+import koopa.core.trees.antlr.ANTLRTokens;
 
-import org.antlr.runtime.ANTLRReaderStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
@@ -23,81 +21,82 @@ import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 
 public class KGToANTLR {
 
-	private static final boolean SHOW_AST = false;
-
 	public static void main(String[] args) throws IOException,
 			RecognitionException {
 
 		String name = args[0];
-		String pack = args[1];
-		String path = args[2];
-		String outputPath = args[3];
+		String path = args[1];
 
-		if (!path.endsWith("/"))
-			path += "/";
+		File outputPath = new File(path, "antlr/");
 
-		if (!outputPath.endsWith("/"))
-			outputPath += "/";
+		// Each grammar should have an associated properties file containing
+		// some extra info needed for creating a valid Java class. We don't make
+		// this part of the actual grammar file because we want to keep any
+		// native stuff out of there.
+		Properties meta = new Properties();
+		meta.load(new FileInputStream(new File(path, name + ".properties")));
 
-		CommonTree ast = getKoopaAST(path + name + ".kg");
+		List<String> extraTokens = new ArrayList<String>();
+		StringBuilder treeParsers = new StringBuilder();
+
+		for (String key : meta.stringPropertyNames()) {
+			if (!key.startsWith("antlr."))
+				continue;
+
+			String token = key.substring("antlr.".length());
+			String rule = meta.getProperty(key);
+
+			extraTokens.add(token);
+
+			treeParsers.append(token);
+			treeParsers.append(" : ");
+			treeParsers.append(rule);
+			treeParsers.append(" ;\n\n");
+		}
+
+		String pack = meta.getProperty("package") + ".antlr";
+
+		CommonTree ast = KGUtil.getKoopaAST(new File(path, name + ".kg"));
+
+		// TODO How to inherit the (partial) tree parsers ?? Do they still get
+		// compiled ??
 
 		if (ast != null) {
 			// TODO Split up these two targets into two separate applications.
-			// E.g. for
-			// the preprocessor we're interested in the tokens but not in the
-			// tree parser.
-			generateTokens(ast, contents(path + name + ".antlr-tokens"),
-					outputPath + name + ".tokens");
-			generateTreeParser(ast, name, pack, contents(path + name
-					+ ".antlr-rules"), outputPath + name + "TreeParser.g");
+			// E.g. for the preprocessor we're interested in the tokens but not
+			// in the tree parser.
+			generateTokens(ast, extraTokens, new File(path), new File(
+					outputPath, name + ".tokens"));
+			generateTreeParser(ast, name, pack, treeParsers.toString(),
+					new File(outputPath, name + "TreeParser.g"));
 		}
 	}
 
-	private static CommonTree getKoopaAST(String filename)
-			throws FileNotFoundException, IOException, RecognitionException {
-		System.out.println("Reading " + filename);
-		Reader reader = new FileReader(filename);
-
-		KGLexer lexer = new KGLexer(new ANTLRReaderStream(reader));
-
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-		KGParser parser = new KGParser(tokens);
-
-		KGParser.koopa_return koopa = parser.koopa();
-
-		CommonTree ast = (CommonTree) koopa.getTree();
-		if (SHOW_AST) {
-			new ASTFrame("KG", ast).setVisible(true);
-		}
-		return ast;
-	}
-
-	public static void generateTokens(CommonTree ast, String extraTokens,
-			String filename) throws IOException, RecognitionException {
+	public static void generateTokens(CommonTree ast, List<String> extraTokens,
+			File path, File file) throws IOException, RecognitionException {
 
 		CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
 		KGToANTLRTokens toTokens = new KGToANTLRTokens(nodes);
+		toTokens.setPath(path);
 		toTokens.koopa();
 
-		for (String extraToken : extraTokens.split("\n")) {
+		for (String extraToken : extraTokens) {
 			String trimmed = extraToken.trim();
-			if (trimmed != null && trimmed.length() > 0) {
+			if (trimmed.length() > 0)
 				toTokens.node(trimmed);
-			}
 		}
 
-		TokenTypes types = toTokens.getTokenTypes();
+		ANTLRTokens types = toTokens.getTokenTypes();
 		// System.out.println(types);
 
-		System.out.println("Generating " + filename);
-		FileWriter writer = new FileWriter(filename);
+		System.out.println("Generating " + file);
+		FileWriter writer = new FileWriter(file);
 		writer.append(types.toString());
 		writer.close();
 	}
 
 	public static void generateTreeParser(CommonTree ast, String name,
-			String pack, String usercode, String filename)
+			String pack, String usercode, File file)
 			throws RecognitionException, IOException {
 		Reader templatesIn = new InputStreamReader(
 				KGToANTLR.class
@@ -111,45 +110,10 @@ public class KGToANTLR {
 
 		String grammar = walker.koopa(name, pack, usercode).toString();
 
-		System.out.println("Generating " + filename);
+		System.out.println("Generating " + file);
 		// System.out.println(grammar);
-		FileWriter writer = new FileWriter(filename);
+		FileWriter writer = new FileWriter(file);
 		writer.append(grammar);
 		writer.close();
 	}
-
-	private static String contents(String filename) {
-		if (filename == null) {
-			return null;
-		}
-
-		System.out.println("Reading " + filename);
-
-		FileReader fileReader = null;
-		BufferedReader bufferedReader = null;
-		try {
-			fileReader = new FileReader(filename);
-			bufferedReader = new BufferedReader(fileReader);
-			StringBuffer buffer = new StringBuffer();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				buffer.append(line);
-				buffer.append('\n');
-			}
-			return buffer.toString();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-			
-		} finally {
-			if (bufferedReader != null) {
-				try {
-					bufferedReader.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
-
 }

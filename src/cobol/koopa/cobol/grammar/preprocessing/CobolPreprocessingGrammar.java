@@ -15,11 +15,10 @@ import koopa.core.parsers.ParseStream;
 import static koopa.core.grammars.Opt.NOSKIP;
 
 import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
-
-import koopa.core.data.tags.AreaTag;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.tags.TokenizerTag;
+import koopa.core.data.tags.AreaTag;
+import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
 
 public class CobolPreprocessingGrammar extends KoopaGrammar {
     public CobolPreprocessingGrammar() {
@@ -167,7 +166,15 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
            copyOperandNameParser = future;
            future.setParser(
                choice(
-                   pseudoLiteral(),
+                   sequence(
+                       optional(
+                           choice(
+                               token("LEADING"),
+                               token("TRAILING")
+                           )
+                       ),
+                       pseudoLiteral()
+                   ),
                    literal(),
                    cobolWord()
                )
@@ -249,7 +256,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
            numericParser = future;
            future.setParser(
                choice(
-                   integer(),
+                   integerLiteral(),
                    decimal(),
                    hexadecimal()
                )
@@ -343,13 +350,11 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
     // Code provided by the user.
     // --------------------------------------------------------
 
-        // Note: If you add/remove parsers in the kg-usercode file you will need to
-        // update the antlr-tokens and antlr-rules files as well!
-
         // ============================================================================
         // Reserved keywords. Based on the list found in Fujitsu Siemens, document
         // U41112-J-Z125-3-76 (p. 67 and on).
         //
+        // TODO Make things work without this list.
         // ----------------------------------------------------------------------------
 
         public static final Set<String> RESERVED_WORDS = new HashSet<String>();
@@ -390,7 +395,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("B-XOR");
             RESERVED_WORDS.add("BASED");
             RESERVED_WORDS.add("BEFORE");
-            RESERVED_WORDS.add("BEGINNING");
+            // RESERVED_WORDS.add("BEGINNING");
             RESERVED_WORDS.add("BINARY");
             RESERVED_WORDS.add("BINARY-CHAR");
             RESERVED_WORDS.add("BINARY-DOUBLE");
@@ -408,6 +413,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("CBL-CTR");
             RESERVED_WORDS.add("CF");
             RESERVED_WORDS.add("CH");
+            RESERVED_WORDS.add("CHAINING");
             RESERVED_WORDS.add("CHARACTER");
             RESERVED_WORDS.add("CHARACTERS");
             RESERVED_WORDS.add("CHECKING");
@@ -455,7 +461,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("CRT");
             RESERVED_WORDS.add("CURRENCY");
             // RESERVED_WORDS.add("CURRENT");
-            RESERVED_WORDS.add("CURSOR");
+            // RESERVED_WORDS.add("CURSOR");
             RESERVED_WORDS.add("DATA");
             RESERVED_WORDS.add("DATA-POINTER");
             // RESERVED_WORDS.add("DATABASE-EXCEPTION");
@@ -524,7 +530,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("END-SUBTRACT");
             RESERVED_WORDS.add("END-UNSTRING");
             RESERVED_WORDS.add("END-WRITE");
-            RESERVED_WORDS.add("ENDING");
+            // RESERVED_WORDS.add("ENDING");
             RESERVED_WORDS.add("ENTRY");
             RESERVED_WORDS.add("ENVIRONMENT");
             RESERVED_WORDS.add("EO");
@@ -533,9 +539,9 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("EOP");
             RESERVED_WORDS.add("EQUAL");
             RESERVED_WORDS.add("EQUAL");
-            RESERVED_WORDS.add("ERASE");
+            // RESERVED_WORDS.add("ERASE");
             RESERVED_WORDS.add("ERROR");
-            RESERVED_WORDS.add("ESCAPE");
+            // RESERVED_WORDS.add("ESCAPE");
             RESERVED_WORDS.add("EVALUATE");
             RESERVED_WORDS.add("EVERY");
             RESERVED_WORDS.add("EXCEPTION");
@@ -819,7 +825,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("TIMES");
             RESERVED_WORDS.add("TO");
             RESERVED_WORDS.add("TOP");
-            RESERVED_WORDS.add("TRAILING");
+            // RESERVED_WORDS.add("TRAILING");
             // RESERVED_WORDS.add("TRUE");
             RESERVED_WORDS.add("TRY");
             RESERVED_WORDS.add("TYPE");
@@ -857,6 +863,27 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("ZEROS");
         }
 
+        private static final int DEFAULT_MAX_COBOL_WORD_LENGTH = 31;
+        private static final int MAX_COBOL_WORD_LENGTH;
+
+        static {
+        	String maxCobolWordLengthSetting = System.getProperty("koopa.maxCobolWordLength", "" + DEFAULT_MAX_COBOL_WORD_LENGTH);
+        	
+        	int maxCobolWordLengthValue;
+        	try {
+        		maxCobolWordLengthValue = Integer.parseInt(maxCobolWordLengthSetting);
+        		
+        	} catch(NumberFormatException e) {
+        		System.err.println("Warning: value for koopa.maxCobolWordLength is not a number: " + maxCobolWordLengthSetting);
+        		maxCobolWordLengthValue = DEFAULT_MAX_COBOL_WORD_LENGTH;
+        	}
+        	
+        	if (maxCobolWordLengthValue == 0)
+        	    maxCobolWordLengthValue = DEFAULT_MAX_COBOL_WORD_LENGTH;
+        	
+        	MAX_COBOL_WORD_LENGTH = maxCobolWordLengthValue;
+        }
+
 
         // ============================================================================
         // Program text and separators
@@ -876,20 +903,20 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
     	public boolean isSeparator(Token token) {
     		return token.hasTag(SyntacticTag.SEPARATOR) && isSeparator(token.getText());
     	}
-    	
-    	
-        // ============================================================================
-        // cobolWord
-        // ............................................................................
 
-        private Parser cobolWordParser = null;
 
-        public Parser cobolWord() {
-        	if (cobolWordParser == null) {
-        	    FutureParser future = scoped("cobolWord");
-        	    cobolWordParser = future;
-        	    future.setParser(new Parser() {
-        			public boolean accepts(ParseStream stream) {
+    	// ============================================================================
+    	// cobolWord
+    	// ............................................................................
+
+    	private Parser cobolWordParser = null;
+
+    	public Parser cobolWord() {
+    		if (cobolWordParser == null) {
+    			FutureParser future = scoped("cobolWord");
+    			cobolWordParser = future;
+    			future.setParser(new Parser() {
+    				public boolean accepts(ParseStream stream) {
     					skipSeparators(stream);
 
     					Token token = stream.forward();
@@ -905,86 +932,88 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
 
     					} else
     						return false;
-        	        }
-        	
-        	        private boolean isCobolWord(String text) {
-        	            /*
-        	             * A word consists of 1-31 characters from the following set:
-        	             * A-Z, a-z, 0-9, - (hyphen). No distinction is made between
-        	             * uppercase and lowercase letters. A word may neither begin nor
-        	             * end with a hyphen, must not contain space characters, and
-        	             * must contain at least one letter.
-        	             * 
-        	             * Description from: Fujitsu Siemens, document
-        	             * U41112-J-Z125-3-76.
-        	             *
-        	             * -------------------------------------------------------------
-        	             * Except where specific rules apply, the hyphen (-) and the
-        	             * underline (_) are treated as the same character in a user-
-        	             * defined word. The underline (_), however, can begin or end a
-        	             * user-defined word, and the hyphen (-) cannot.
-        	             *
-        	             * Description from: HP COBOL Reference Manual
-        	             * http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html
-        	             */
-        	            final int len = text.length();
-        	            if (len < 1 || len > 31)
-        	                return false;
-        	
-        	            if (text.charAt(0) == '-')
-        	                return false;
-        	
-        	            if (text.charAt(len - 1) == '-')
-        	                return false;
-        	
-        	            boolean hasALetter = false;
-        	            for (int i = 0; i < len; i++) {
-        	                final char c = text.charAt(i);
-        	
-        	                if (c >= 'A' && c <= 'Z') {
-        	                    hasALetter = true;
-        	                    continue;
-        	                }
-        	
-        	                if (c >= 'a' && c <= 'z') {
-        	                    hasALetter = true;
-        	                    continue;
-        	                }
-        	
-        	                if (c >= '0' && c <= '9') {
-        	                    continue;
-        	                }
-        	
-        	                if (c == '-') {
-        	                    continue;
-        	                }
-        	
-        	                if (c == '_') {
-        	                    continue;
-        	                }
-        	
-        	                return false;
-        	            }
-        	
-        	            return hasALetter;
-        	        }
-        	    });
-        	}
-            return cobolWordParser;
-        }
+    				}
 
-        // ============================================================================
-        // integer
-        // ............................................................................
+    				private boolean isCobolWord(String text) {
+    					/*
+    					 * A word consists of 1-31 characters from the following
+    					 * set: A-Z, a-z, 0-9, - (hyphen). No distinction is made
+    					 * between uppercase and lowercase letters. A word may
+    					 * neither begin nor end with a hyphen, must not contain
+    					 * space characters, and must contain at least one letter.
+    					 * 
+    					 * Description from: Fujitsu Siemens, document
+    					 * U41112-J-Z125-3-76.
+    					 * 
+    					 * ----------------------------------------------------------
+    					 * --- Except where specific rules apply, the hyphen (-) and
+    					 * the underline (_) are treated as the same character in a
+    					 * user- defined word. The underline (_), however, can begin
+    					 * or end a user-defined word, and the hyphen (-) cannot.
+    					 * 
+    					 * Description from: HP COBOL Reference Manual
+    					 * http://h71000.
+    					 * www7.hp.com/doc/82final/6296/6296pro_002.html
+    					 */
+    					final int len = text.length();
+    					if (len < 1
+    							|| (MAX_COBOL_WORD_LENGTH > 0 && len > MAX_COBOL_WORD_LENGTH))
+    						return false;
 
-        private Parser integerParser = null;
+    					if (text.charAt(0) == '-')
+    						return false;
 
-        public Parser integer() {
-        	if (integerParser == null) {
-        	    FutureParser future = scoped("integer");
-        	    integerParser = future;
-        	    future.setParser(new Parser() {
-        			public boolean accepts(ParseStream stream) {
+    					if (text.charAt(len - 1) == '-')
+    						return false;
+
+    					boolean hasALetter = false;
+    					for (int i = 0; i < len; i++) {
+    						final char c = text.charAt(i);
+
+    						if (c >= 'A' && c <= 'Z') {
+    							hasALetter = true;
+    							continue;
+    						}
+
+    						if (c >= 'a' && c <= 'z') {
+    							hasALetter = true;
+    							continue;
+    						}
+
+    						if (c >= '0' && c <= '9') {
+    							continue;
+    						}
+
+    						if (c == '-') {
+    							continue;
+    						}
+
+    						if (c == '_') {
+    							continue;
+    						}
+
+    						return false;
+    					}
+
+    					return hasALetter;
+    				}
+    			});
+    		}
+    		return cobolWordParser;
+    	}
+
+    	// ============================================================================
+    	// integerLiteral
+    	// ............................................................................
+
+    	private Parser integerLiteralParser = null;
+
+    	public Parser integerLiteral() {
+    		if (integerLiteralParser == null) {
+    			FutureParser future = scoped("integerLiteral");
+    			integerLiteralParser = future;
+    			future.setParser(new Parser() {
+    				public boolean accepts(ParseStream stream) {
     					skipSeparators(stream);
 
     					Token token = stream.forward();
@@ -1001,12 +1030,45 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
 
     					} else
     						return false;
-        			}
-        		});
-        	}
-        	return integerParser;
-        }
+    				}
+    			});
+    		}
+    		return integerLiteralParser;
+    	}
 
+    	// ============================================================================
+    	// booleanLiteral
+    	// ............................................................................
+
+    	private Parser booleanLiteralParser = null;
+
+    	public Parser booleanLiteral() {
+    		if (booleanLiteralParser == null) {
+    			FutureParser future = scoped("booleanLiteral");
+    			booleanLiteralParser = future;
+    			future.setParser(new Parser() {
+    				public boolean accepts(ParseStream stream) {
+    					skipSeparators(stream);
+
+    					Token token = stream.forward();
+
+    					if (token != null
+    							&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
+    						if (token.hasTag(SyntacticTag.BOOLEAN_LITERAL)) {
+
+    							returnToken(token);
+    							return true;
+
+    						} else
+    							return false;
+
+    					} else
+    						return false;
+    				}
+    			});
+    		}
+    		return booleanLiteralParser;
+    	}
 
     	// ============================================================================
     	// hexadecimal
@@ -1075,6 +1137,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
     		}
     		return alphanumericLiteralParser;
     	}
+
 
     	// ============================================================================
     	// pseudo literal

@@ -21,10 +21,7 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 
 	private static FileFilter filter = new FileFilter() {
 		public boolean accept(File f) {
-			if (!f.isFile())
-				return false;
-			final String name = f.getName().toUpperCase();
-			return name.endsWith(".XML");
+			return f.isDirectory() || f.isFile() && f.getName().toUpperCase().endsWith(".XML");
 		}
 
 		public String getDescription() {

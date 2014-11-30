@@ -1,5 +1,7 @@
 package koopa.cobol.sources;
 
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+
 import java.io.IOException;
 
 import koopa.core.data.Position;
@@ -47,8 +49,17 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 				return;
 			}
 
-			if (token.hasTag(AreaTag.END_OF_LINE)
-					|| token.hasTag(AreaTag.COMMENT)
+			if (token.hasTag(AreaTag.END_OF_LINE)) {
+
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("End of line: " + token);
+				}
+
+				enqueue(token.withTags(PROGRAM_TEXT_AREA));
+				continue;
+			}
+
+			if (token.hasTag(AreaTag.COMMENT)
 					|| token.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
 
 				if (LOGGER.isTraceEnabled()) {

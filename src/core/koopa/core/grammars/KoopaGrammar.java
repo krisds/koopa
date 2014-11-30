@@ -534,6 +534,8 @@ public abstract class KoopaGrammar {
 				case NOSKIP:
 					prv = noskip;
 					noskip = true;
+					if (LOGGER.isTraceEnabled())
+						trace("%noskip: " + noskip);
 					break;
 				}
 
@@ -542,6 +544,8 @@ public abstract class KoopaGrammar {
 				switch (opt) {
 				case NOSKIP:
 					noskip = prv;
+					if (LOGGER.isTraceEnabled())
+						trace("%noskip: " + noskip);
 					break;
 				}
 

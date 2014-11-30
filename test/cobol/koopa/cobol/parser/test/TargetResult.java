@@ -1,16 +1,23 @@
 package koopa.cobol.parser.test;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import au.com.bytecode.opencsv.CSVReader;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
+import koopa.core.data.Token;
+import koopa.core.util.Tuple;
+import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 public class TargetResult {
 
@@ -187,4 +194,76 @@ public class TargetResult {
 		}
 	}
 
+	public static void saveToFile(Map<String, ParseResults> results,
+			File targetFile) throws IOException {
+
+		final FileWriter fw = new FileWriter(targetFile);
+		final BufferedWriter bw = new BufferedWriter(fw);
+		final CSVWriter writer = new CSVWriter(bw);
+
+		try {
+			// Write out the header for the CSV.
+			writeResultsHeader(writer);
+
+			Set<String> keys = results.keySet();
+			List<String> sortedKeys = new ArrayList<String>(keys);
+			Collections.sort(sortedKeys);
+
+			for (String key : sortedKeys)
+				writeNextResult(writer, key, results.get(key));
+
+		} finally {
+			if (writer != null)
+				writer.close();
+		}
+	}
+
+	private static void writeResultsHeader(final CSVWriter writer)
+			throws IOException {
+		final String[] header = new String[] { "File", "Valid",
+				"Number of tokens", "Coverage", "Number of errors", "Errors",
+				"Number of warnings", "Warnings" };
+		writer.writeNext(header);
+		writer.flush();
+	}
+
+	private static void writeNextResult(CSVWriter writer, String name,
+			ParseResults results) throws IOException {
+		final String[] entries = new String[8];
+		final boolean valid = results.isValidInput();
+		final float coverage = Metrics.getCoverage(results);
+		final int tokenCount = Metrics.getSignificantTokenCount(results);
+
+		final int errorCount = results.getErrorCount();
+		String errors = "";
+		for (int i = 0; i < errorCount; i++) {
+			if (i > 0) {
+				errors += "\n";
+			}
+			final Tuple<Token, String> error = results.getError(i);
+			errors += error.getFirst() + " " + error.getSecond();
+		}
+
+		final int warningCount = results.getWarningCount();
+		String warnings = "";
+		for (int i = 0; i < warningCount; i++) {
+			if (i > 0) {
+				warnings += "\n";
+			}
+			final Tuple<Token, String> warning = results.getWarning(i);
+			warnings += warning.getFirst() + " " + warning.getSecond();
+		}
+
+		// TODO Output results.
+		entries[0] = name;
+		entries[1] = "" + valid;
+		entries[2] = "" + tokenCount;
+		entries[3] = "" + coverage;
+		entries[4] = "" + errorCount;
+		entries[5] = "" + errors;
+		entries[6] = "" + warningCount;
+		entries[7] = "" + warnings;
+		writer.writeNext(entries);
+		writer.flush();
+	}
 }

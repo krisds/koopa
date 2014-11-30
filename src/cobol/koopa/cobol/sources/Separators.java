@@ -10,6 +10,8 @@ import static koopa.cobol.data.tags.SyntacticTag.SIGNED;
 import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
 import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.END_OF_LINE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.io.IOException;
@@ -17,7 +19,6 @@ import java.io.IOException;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 
@@ -43,10 +44,12 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 
 			if (token == null) {
 				break;
+			} else if (token.hasTag(END_OF_LINE)) {
+				enqueue(token.withTags(SEPARATOR));
 
-			} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-					&& !token.hasTag(AreaTag.COMMENT)
-					&& !token.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
+			} else if (token.hasTag(PROGRAM_TEXT_AREA)
+					&& !token.hasTag(COMMENT)
+					&& !token.hasTag(COMPILER_DIRECTIVE)) {
 				separate(token);
 
 			} else {
@@ -66,36 +69,32 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 
 			// NOTE. The following cases are repeated in the 'other' method. If
 			// you update these cases then also update that method!
-/*
-			if (isSeparatorFollowedBySpace(text, length, position, c)) {
-				// SEPARATOR.
-
-				// Based on following definition:
-				// "Commas and semicolons can only be used as separators when
-				// they are immediately followed by a space."
-				// "A period can only be used as a separator when immediately
-				// followed by a space."
-				//
-				// Source: fujcob2k-cob2_bs.pdf, section 2.4.2 (p. 55)
-				// Also confirmed in the Yellow Books by Ebbinkhuijsen.
-				//
-				// Note: I consider end-of-line as a space here, so that periods
-				// may be the last character in the line.
-
-				// I choose to split the separator into two parts. The first
-				// part is the comma, semicolon or dot. The second part is the
-				// following sequence of spaces. I do this so that punctuation
-				// remains separate, which I hope will make further processing
-				// easier.
-
-				position = separator(token, c, position);
-
-				if (position < length) {
-					position = whitespace(token, text, position, length);
-				}
-
-			} else 
-*/				
+			/*
+			 * if (isSeparatorFollowedBySpace(text, length, position, c)) { //
+			 * SEPARATOR.
+			 * 
+			 * // Based on following definition: // "Commas and semicolons can
+			 * only be used as separators when // they are immediately followed
+			 * by a space." // "A period can only be used as a separator when
+			 * immediately // followed by a space." // // Source:
+			 * fujcob2k-cob2_bs.pdf, section 2.4.2 (p. 55) // Also confirmed in
+			 * the Yellow Books by Ebbinkhuijsen. // // Note: I consider
+			 * end-of-line as a space here, so that periods // may be the last
+			 * character in the line.
+			 * 
+			 * // I choose to split the separator into two parts. The first //
+			 * part is the comma, semicolon or dot. The second part is the //
+			 * following sequence of spaces. I do this so that punctuation //
+			 * remains separate, which I hope will make further processing //
+			 * easier.
+			 * 
+			 * position = separator(token, c, position);
+			 * 
+			 * if (position < length) { position = whitespace(token, text,
+			 * position, length); }
+			 * 
+			 * } else
+			 */
 			if (isSeparator(c)) {
 				// SEPARATOR.
 				position = separator(token, c, position);
@@ -147,11 +146,11 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.
 				position = signedNumber(token, text, position, length);
-/*
-			} else if (startsDotDecimal(text, length, position, c)) {
-				// UNSIGNED DECIMAL LITERAL.
-				position = dotDecimal(token, text, position, length);
-*/
+				/*
+				 * } else if (startsDotDecimal(text, length, position, c)) { //
+				 * UNSIGNED DECIMAL LITERAL. position = dotDecimal(token, text,
+				 * position, length);
+				 */
 			} else if (isLetterOrDigit(c)) {
 				// UNSIGNED NUMERIC LITERAL or COBOL WORD.
 				position = cobolWordOrNumber(token, text, position, length);
@@ -184,7 +183,8 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 	}
 
 	private boolean isSeparator(final char c) {
-		return c == '(' || c == ')' || c == ':' || c == ',' || c == ';' || c == '.';
+		return c == '(' || c == ')' || c == ':' || c == ',' || c == ';'
+				|| c == '.';
 	}
 
 	private boolean isSeparatorFollowedBySpace(final String text,
@@ -505,39 +505,6 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 		return start + 1 + lengthOfNumber;
 	}
 
-	private int dotDecimal(final Token token, final String text,
-			final int start, final int length) {
-
-		int position = start + 1;
-		while (position < length) {
-			final char c = text.charAt(position);
-
-			if (isDigit(c)) {
-				position += 1;
-				continue;
-			}
-
-			final Token dotDecimal = Tokens.subtoken(token, start, position)
-					.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING,
-							DECIMAL_LITERAL, UNSIGNED);
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Dot decimal: " + dotDecimal);
-
-			enqueue(dotDecimal);
-			return position;
-		}
-
-		final Token dotDecimal = Tokens.subtoken(token, start).withTags(
-				PROGRAM_TEXT_AREA, CHARACTER_STRING, DECIMAL_LITERAL, UNSIGNED);
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Dot decimal: " + dotDecimal);
-
-		enqueue(dotDecimal);
-		return length;
-	}
-
 	private int cobolWordOrNumber(final Token token, final String text,
 			final int start, final int length) {
 
@@ -627,7 +594,6 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 	private int tryNumericLiteral(final String text, final int start,
 			final int length) {
 
-		boolean seenDecimalPoint = false;
 		int lastDigit = start - 1;
 
 		int position = start;
@@ -638,17 +604,6 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 				position += 1;
 				continue;
 			}
-/*
-			if (c == '.' || c == ',') {
-				if (seenDecimalPoint) {
-					break;
-				}
-
-				seenDecimalPoint = true;
-				position += 1;
-				continue;
-			}
-*/
 			// Not a valid character for a number.
 			break;
 		}

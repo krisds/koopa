@@ -1,28 +1,28 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN
+SEQNR I COMMENT                                                         IDENT EOLN/TEXT
 
        SKIP1
 <---->^<--->^
-SEQNR I FORMATTING EOLN
+SEQNR I FORMATTING EOLN/TEXT
 
        SKIP2
 <---->^<--->^
-SEQNR I FORMATTING EOLN
+SEQNR I FORMATTING EOLN/TEXT
 
        SKIP3
 <---->^<--->^
-SEQNR I FORMATTING EOLN
+SEQNR I FORMATTING EOLN/TEXT
 
        EJECT
 <---->^<--->^
-SEQNR I FORMATTING EOLN
+SEQNR I FORMATTING EOLN/TEXT
 
        IDENTIFICATION DIVISION.
 <---->^<---------------------->^
-SEQNR I TEXT                   EOLN
+SEQNR I TEXT                   EOLN/TEXT
 
        PROGRAM-ID. FOO.
 <---->^<-------------->^
-SEQNR I TEXT           EOLN
+SEQNR I TEXT           EOLN/TEXT
 

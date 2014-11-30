@@ -1,33 +1,33 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN
+SEQNR I COMMENT                                                         IDENT EOLN/TEXT
 
 123456*789A123456789B123456789C123456789D123456789E123456789F123456789G1
 <---->^<--------------------------------------------------------------->^
-SEQNR I COMMENT                                                         EOLN
+SEQNR I COMMENT                                                         EOLN/TEXT
 
        IDENTIFICATION DIVISION.
 <---->^<---------------------->^
-SEQNR I TEXT                   EOLN
+SEQNR I TEXT                   EOLN/TEXT
 
        PROGRAM-ID. FOO.
 <---->^<-------------->^
-SEQNR I TEXT           EOLN
+SEQNR I TEXT           EOLN/TEXT
 
        PROCEDURE DIVISION.
 <---->^<----------------->^
-SEQNR I TEXT              EOLN
+SEQNR I TEXT              EOLN/TEXT
 
 123456*Hello world.
 <---->^<---------->^
-SEQNR I COMMENT    EOLN
+SEQNR I COMMENT    EOLN/TEXT
 
        DISPLAY FOO
 <---->^<--------->^
-SEQNR I TEXT      EOLN
+SEQNR I TEXT      EOLN/TEXT
 
        .
 <---->^^^
-SEQNR I TEXT EOLN
+SEQNR I TEXT EOLN/TEXT
 
 

@@ -5,13 +5,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,6 +22,10 @@ import org.junit.runner.RunWith;
 public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 	private File file = null;
+
+	// TODO Get this done more cleanly.
+	private static final boolean STORE_RESULTS = false;
+	private static Map<String, ParseResults> actualResults = new HashMap<String, ParseResults>();
 
 	@Override
 	public abstract File[] getFiles();
@@ -43,6 +50,8 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 		// Parse the file...
 		final ParseResults result = coordinator.parse(file);
+		if (STORE_RESULTS)
+			actualResults.put(file.getName(), result);
 
 		final TargetResult target = getTargetResult(file);
 
@@ -67,5 +76,14 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 			assertFalse(info.toString(), messages != null
 					&& messages.size() > 0);
 		}
+	}
+
+	@AfterClass
+	public static void saveResults() throws IOException {
+		// TODO This triggers after every test! We need to massage "Files"
+		// instead, I think.
+		if (STORE_RESULTS)
+			TargetResult.saveToFile(actualResults, new File(
+					"actual_results.csv"));
 	}
 }

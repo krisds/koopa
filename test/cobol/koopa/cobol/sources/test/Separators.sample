@@ -3,11 +3,11 @@
 
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN
+SEQNR I COMMENT                                                         IDENT EOLN/TEXT
 
            *> Stop bashing COBOL.
 <---->^<--><-------------------->^
-SEQNR I :   COMMENT               EOLN
+SEQNR I :   COMMENT               EOLN/TEXT
 
 
 # Basic character strings. #################################################### 
@@ -15,11 +15,11 @@ SEQNR I :   COMMENT               EOLN
 
        IDENTIFICATION DIVISION.
 <---->^<------------>^<------>^^
-SEQNR I CS           : CS     :EOLN
+SEQNR I CS           : CS     :EOLN/TEXT
 
        PROGRAM-ID. FOO.
 <---->^<-------->^^<->^^
-SEQNR I CS       :: CS:EOLN
+SEQNR I CS       :: CS:EOLN/TEXT
 
 
 # Basic string literals. ######################################################
@@ -27,11 +27,11 @@ SEQNR I CS       :: CS:EOLN
 
        DISPLAY "Plain old Cobol String.".
 <---->^<----->^<----------------------->^^
-SEQNR I CS    : STRING                  :EOLN
+SEQNR I CS    : STRING                  :EOLN/TEXT
 
        DISPLAY 'Plain old Cobol String.'.
 <---->^<----->^<----------------------->^^
-SEQNR I CS    : STRING                  :EOLN
+SEQNR I CS    : STRING                  :EOLN/TEXT
 
 
 # Null terminated string literals. ############################################
@@ -39,19 +39,19 @@ SEQNR I CS    : STRING                  :EOLN
 
        DISPLAY z"Null terminated String.".
 <---->^<----->^<------------------------>^^
-SEQNR I CS    : STRING                   :EOLN
+SEQNR I CS    : STRING                   :EOLN/TEXT
 
        DISPLAY z'Null terminated String.'.
 <---->^<----->^<------------------------>^^
-SEQNR I CS    : STRING                   :EOLN
+SEQNR I CS    : STRING                   :EOLN/TEXT
 
        DISPLAY Z"Null terminated String".
 <---->^<----->^<----------------------->^^
-SEQNR I CS    : STRING                  :EOLN
+SEQNR I CS    : STRING                  :EOLN/TEXT
 
        DISPLAY Z'Null terminated String'.
 <---->^<----->^<----------------------->^^
-SEQNR I CS    : STRING                  :EOLN
+SEQNR I CS    : STRING                  :EOLN/TEXT
 
 
 # National string literals. ###################################################
@@ -59,19 +59,19 @@ SEQNR I CS    : STRING                  :EOLN
 
        DISPLAY n"National String.".
 <---->^<----->^<----------------->^^
-SEQNR I CS    : STRING            :EOLN
+SEQNR I CS    : STRING            :EOLN/TEXT
 
        DISPLAY n'National String.'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : STRING            :EOLN
+SEQNR I CS    : STRING            :EOLN/TEXT
 
        DISPLAY N"National String.".
 <---->^<----->^<----------------->^^
-SEQNR I CS    : STRING            :EOLN
+SEQNR I CS    : STRING            :EOLN/TEXT
 
        DISPLAY N'National String.'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : STRING            :EOLN
+SEQNR I CS    : STRING            :EOLN/TEXT
 
 
 # Boolean literals. ###########################################################
@@ -79,19 +79,19 @@ SEQNR I CS    : STRING            :EOLN
 
        DISPLAY B"01".
 <---->^<----->^<--->^^
-SEQNR I CS    : BOOL:EOLN
+SEQNR I CS    : BOOL:EOLN/TEXT
 
        DISPLAY B'01'.
 <---->^<----->^<--->^^
-SEQNR I CS    : BOOL:EOLN
+SEQNR I CS    : BOOL:EOLN/TEXT
 
        DISPLAY b"01".
 <---->^<----->^<--->^^
-SEQNR I CS    : BOOL:EOLN
+SEQNR I CS    : BOOL:EOLN/TEXT
 
        DISPLAY b'01'.
 <---->^<----->^<--->^^
-SEQNR I CS    : BOOL:EOLN
+SEQNR I CS    : BOOL:EOLN/TEXT
 
 
 # Boolean hexadecimal literals. ###############################################
@@ -99,19 +99,19 @@ SEQNR I CS    : BOOL:EOLN
 
        DISPLAY BX"0123456789ABCDEF".
 <---->^<----->^<------------------>^^
-SEQNR I CS    : BOOL               :EOLN
+SEQNR I CS    : BOOL               :EOLN/TEXT
 
        DISPLAY BX'0123456789ABCDEF'.
 <---->^<----->^<------------------>^^
-SEQNR I CS    : BOOL               :EOLN
+SEQNR I CS    : BOOL               :EOLN/TEXT
 
        DISPLAY bx'0123456789ABCDEF'.
 <---->^<----->^<------------------>^^
-SEQNR I CS    : BOOL               :EOLN
+SEQNR I CS    : BOOL               :EOLN/TEXT
 
        DISPLAY bx'0123456789ABCDEF'.
 <---->^<----->^<------------------>^^
-SEQNR I CS    : BOOL               :EOLN
+SEQNR I CS    : BOOL               :EOLN/TEXT
 
 
 # Numeric hexadecimal literals. ###############################################
@@ -119,19 +119,19 @@ SEQNR I CS    : BOOL               :EOLN
 
        DISPLAY H"0123456789ABCDEF".
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
        DISPLAY H'0123456789ABCDEF'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
        DISPLAY h'0123456789ABCDEF'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
        DISPLAY h'0123456789ABCDEF'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
 
 # Alphanumeric hexadecimal literals. ##########################################
@@ -139,19 +139,19 @@ SEQNR I CS    : HEX               :EOLN
 
        DISPLAY X"0123456789ABCDEF".
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
        DISPLAY X'0123456789ABCDEF'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
        DISPLAY x'0123456789ABCDEF'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
        DISPLAY x'0123456789ABCDEF'.
 <---->^<----->^<----------------->^^
-SEQNR I CS    : HEX               :EOLN
+SEQNR I CS    : HEX               :EOLN/TEXT
 
 
 # National hexadecimal literals. ##############################################
@@ -159,19 +159,19 @@ SEQNR I CS    : HEX               :EOLN
 
        DISPLAY NX"0123456789ABCDEF".
 <---->^<----->^<------------------>^^
-SEQNR I CS    : HEX                :EOLN
+SEQNR I CS    : HEX                :EOLN/TEXT
 
        DISPLAY NX'0123456789ABCDEF'.
 <---->^<----->^<------------------>^^
-SEQNR I CS    : HEX                :EOLN
+SEQNR I CS    : HEX                :EOLN/TEXT
 
        DISPLAY nx'0123456789ABCDEF'.
 <---->^<----->^<------------------>^^
-SEQNR I CS    : HEX                :EOLN
+SEQNR I CS    : HEX                :EOLN/TEXT
 
        DISPLAY nx'0123456789ABCDEF'.
 <---->^<----->^<------------------>^^
-SEQNR I CS    : HEX                :EOLN
+SEQNR I CS    : HEX                :EOLN/TEXT
 
 
 # Integer literals. ###########################################################
@@ -179,15 +179,15 @@ SEQNR I CS    : HEX                :EOLN
 
        DISPLAY 1234567890.
 <---->^<----->^<-------->^^
-SEQNR I CS    : UINT     :EOLN
+SEQNR I CS    : UINT     :EOLN/TEXT
 
        DISPLAY +1234567890.
 <---->^<----->^<--------->^^
-SEQNR I CS    : SINT      :EOLN
+SEQNR I CS    : SINT      :EOLN/TEXT
 
        DISPLAY -1234567890.
 <---->^<----->^<--------->^^
-SEQNR I CS    : SINT      :EOLN
+SEQNR I CS    : SINT      :EOLN/TEXT
 
 
 # Decimal literals. ###########################################################
@@ -195,27 +195,27 @@ SEQNR I CS    : SINT      :EOLN
 
        DISPLAY 3.14159265359.
 <---->^<----->^^^<--------->^^
-SEQNR I CS    :UINT:UINT    :EOLN
+SEQNR I CS    :UINT:UINT    :EOLN/TEXT
 
        DISPLAY 3,14159265359.
 <---->^<----->^^^<--------->^^
-SEQNR I CS    :UINT:UINT    :EOLN
+SEQNR I CS    :UINT:UINT    :EOLN/TEXT
 
        DISPLAY +3.14159265359.
 <---->^<----->^<>^<--------->^^
-SEQNR I CS    :SINT:UINT     :EOLN
+SEQNR I CS    :SINT:UINT     :EOLN/TEXT
 
        DISPLAY +3,14159265359.
 <---->^<----->^<>^<--------->^^
-SEQNR I CS    :SINT:UINT     :EOLN
+SEQNR I CS    :SINT:UINT     :EOLN/TEXT
 
        DISPLAY -3.14159265359.
 <---->^<----->^<>^<--------->^^
-SEQNR I CS    :SINT:UINT     :EOLN
+SEQNR I CS    :SINT:UINT     :EOLN/TEXT
 
        DISPLAY -3,14159265359.
 <---->^<----->^<>^<--------->^^
-SEQNR I CS    :SINT:UINT     :EOLN
+SEQNR I CS    :SINT:UINT     :EOLN/TEXT
 
 
 # If you're wondering why I'm splitting up decimals into parts, rather than
@@ -223,7 +223,7 @@ SEQNR I CS    :SINT:UINT     :EOLN
 
        DISPLAY FOO (1,2).
 <---->^<----->^<->^^^^^^^^
-SEQNR I CS    :CS ::UINT:UINT::EOLN
+SEQNR I CS    :CS ::UINT:UINT::EOLN/TEXT
 
 # There is no way for the lexer to know whether the "1,2" in this example is
 # meant to be a decimal value, or whether it is just a list of two indexes. We

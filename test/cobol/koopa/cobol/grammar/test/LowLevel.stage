@@ -23,7 +23,6 @@ target integerLiteral;
 -[ DEF ]
 
 
-
 target decimal;
 
 -[ 1 ]
@@ -34,6 +33,12 @@ target decimal;
 -[ "ABC" ]
 -[ DEF ]
 
+# Bug found by Marc Dzaebel. The '.' and '01' were being merged into a decimal,
+# because the newline after the '.' was not seen by the parser.
+-[ .
+01 ]
+
+
 target booleanLiteral;
 
 +[ b"0001" ]
@@ -41,6 +46,7 @@ target booleanLiteral;
 
 +[ bx"A" ]
 +[ BX"A" ]
+
 
 target hexadecimal;
 
@@ -51,6 +57,7 @@ target hexadecimal;
 +[ nx"00" ]
 +[ NX"00" ]
 
+
 target alphanumericLiteral;
 
 -[ 1 ]
@@ -59,6 +66,7 @@ target alphanumericLiteral;
 -[ DEF ]
 +[ "THIS ISN""T WRONG" ]
 +[ 'THIS ISN''T WRONG EITHER' ]
+
 
 target literal;
 
@@ -70,6 +78,7 @@ target literal;
 +[ "Hello " & " world." ]
 +[ "Hello world." & CRLF ]
 +[ "Hello world." & x"00" ]
+
 
 target figurativeConstant;
 

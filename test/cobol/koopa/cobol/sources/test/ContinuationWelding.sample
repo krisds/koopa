@@ -8,7 +8,7 @@ SEQNR I COMMENT                                                         IDENT EO
 
         DISPLAY "HELLO
 <---->^<-------------+^
-SEQNR I +5/TEXT       EOLN
+SEQNR I +5/TEXT       EOLN/SKIPPED/COMMENT
 
       -         " WORLD".
 <---->^<------->^+------>^

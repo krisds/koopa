@@ -123,8 +123,9 @@ public class LineContinuations extends ThreadedSource<Token> implements
 			// TODO ERROR.
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("ERROR while handling continuation: continuingLine == null"
-						+ " || !continuingLine.hasTag(AreaTag.PROGRAM_TEXT_AREA)"
-						+ " || || continuingLine.hasTag(AreaTag.COMMENT)");
+						+ " || !continuingLine.hasTag(PROGRAM_TEXT_AREA)"
+						+ " || continuingLine.hasTag.(COMMENT)"
+						+ " || continuingLine.hasTag.(COMPILER_DIRECTIVE)");
 
 			return;
 		}
@@ -398,7 +399,7 @@ public class LineContinuations extends ThreadedSource<Token> implements
 
 		while (last != null && last.getStart().getLinenumber() >= lineNumber) {
 
-			if (last.hasTag(PROGRAM_TEXT_AREA))
+			if (last.hasTag(PROGRAM_TEXT_AREA) && !last.hasTag(END_OF_LINE))
 				return last;
 
 			// Keep track of skipped tokens in the order in which they appear in

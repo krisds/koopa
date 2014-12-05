@@ -14,7 +14,6 @@ import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,18 +22,30 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 	private File file = null;
 
-	// TODO Get this done more cleanly.
-	private static final boolean STORE_RESULTS = false;
-	private static Map<String, ParseResults> actualResults = new HashMap<String, ParseResults>();
+	// TODO This static stuff is not ideal yet. Why does Java not allow
+	// overriding of class methods ?
+	private static File targetResultsFile = null;
+	private static File actualResultsFile = null;
+	private static Map<String, TargetResult> targetResults = null;
+	private static Map<String, ParseResults> actualResults = null;
+
+	public CobolParsingRegressionTest() throws IOException {
+		targetResultsFile = getTargetResultsFile();
+		actualResultsFile = getActualResultsFile();
+	}
 
 	@Override
 	public abstract File[] getFiles();
 
-	public TargetResult getTargetResult(File source) {
+	protected File getTargetResultsFile() {
 		return null;
 	}
 
-	public void configure(ParsingCoordinator coordinator) {
+	protected File getActualResultsFile() {
+		return null;
+	}
+
+	protected void configure(ParsingCoordinator coordinator) {
 	}
 
 	@Override
@@ -48,12 +59,11 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		configure(coordinator);
 		coordinator.setKeepingTrackOfTokens(true);
 
+		final TargetResult target = getTargetResult(file);
+
 		// Parse the file...
 		final ParseResults result = coordinator.parse(file);
-		if (STORE_RESULTS)
-			actualResults.put(file.getName(), result);
-
-		final TargetResult target = getTargetResult(file);
+		addActualResult(result);
 
 		if (target == null) {
 			// Unknown test file. We will evaluate this on its overall
@@ -78,12 +88,37 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		}
 	}
 
-	@AfterClass
-	public static void saveResults() throws IOException {
-		// TODO This triggers after every test! We need to massage "Files"
-		// instead, I think.
-		if (STORE_RESULTS)
-			TargetResult.saveToFile(actualResults, new File(
-					"actual_results.csv"));
+	private TargetResult getTargetResult(File source) {
+		if (targetResults != null)
+			return targetResults.get(source.getName());
+		else
+			return null;
 	}
+
+	private void addActualResult(ParseResults result) {
+		if (actualResults != null)
+			actualResults.put(result.getFile().getName(), result);
+	}
+
+	public static void testRunStarted() throws IOException {
+		if (targetResultsFile != null && targetResultsFile.exists())
+			targetResults = TargetResult.loadFromFile(targetResultsFile);
+		else
+			targetResults = null;
+
+		if (actualResultsFile != null)
+			actualResults = new HashMap<String, ParseResults>();
+		else
+			actualResults = null;
+	}
+
+	public static void testRunFinished() {
+		try {
+			if (actualResultsFile != null)
+				TargetResult.saveToFile(actualResults, actualResultsFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

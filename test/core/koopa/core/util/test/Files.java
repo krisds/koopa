@@ -1,10 +1,12 @@
 package koopa.core.util.test;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
@@ -13,32 +15,56 @@ import org.junit.runners.model.Statement;
 
 public class Files extends Suite {
 
+	private Class<?> clazz = null;
+
 	public Files(Class<?> clazz) throws InitializationError {
 		super(clazz, getRunners(clazz));
+		this.clazz = clazz;
+
+		assert (FileBasedTest.class.isAssignableFrom(this.clazz));
 	}
 
 	private static List<Runner> getRunners(Class<?> clazz)
 			throws InitializationError {
-		List<Runner> runners = new ArrayList<Runner>();
-
 		try {
-			Object o = clazz.newInstance();
-			if (o instanceof FileBasedTest) {
-				FileBasedTest provider = (FileBasedTest) o;
+			List<Runner> runners = new ArrayList<Runner>();
 
-				File[] sources = provider.getFiles();
-				for (File source : sources) {
-					runners.add(new FileRunner(clazz, source));
-				}
-			}
+			FileBasedTest provider = (FileBasedTest) clazz.newInstance();
+
+			File[] sources = provider.getFiles();
+			for (File source : sources)
+				runners.add(new FileRunner(clazz, source));
+
+			return runners;
 
 		} catch (InstantiationException e) {
-			e.printStackTrace();
+			throw new InitializationError(e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new InitializationError(e);
+		}
+	}
+
+	@Override
+	public void run(RunNotifier notifier) {
+		try {
+			Files.this.clazz.getMethod("testRunStarted").invoke(null);
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (InvocationTargetException e) {
+		} catch (SecurityException e) {
 		}
 
-		return runners;
+		super.run(notifier);
+
+		try {
+			Files.this.clazz.getMethod("testRunFinished").invoke(null);
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalAccessException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (InvocationTargetException e) {
+		} catch (SecurityException e) {
+		}
 	}
 
 	public static class FileRunner extends BlockJUnit4ClassRunner {

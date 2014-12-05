@@ -5,7 +5,7 @@
 		<delete dir="build/" />
 	</target>
 
-	<target name="build" depends="core,core-tests,cobol,cobol-tests,apps,examples">
+	<target name="build" depends="clean,core,core-tests,cobol,cobol-tests,apps,examples">
 	</target>
 
 	<target name="run-tests" depends="run-core-tests,run-cobol-tests,run-cobol-regression-tests">
@@ -198,6 +198,7 @@
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.cobol.parser.test.Cobol85RegressionTest" />
+			<test name="koopa.cobol.parser.test.Cobol85PreprocessingTest" />
 		</junit>
 	</target>
 

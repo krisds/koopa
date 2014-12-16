@@ -1,4 +1,4 @@
-tree grammar KGGenerator;
+tree grammar TreeGrammarGenerator;
 
 options {
   tokenVocab = KG;
@@ -8,11 +8,12 @@ options {
 }
 
 @header {
-  package koopa.core.grammars.generator;
+  package koopa.core.treegrammars.generator;
   
+  import java.util.Collections;
+  import java.util.Date;
   import java.util.List;
   import java.util.LinkedList;
-  import java.util.Date;
   import java.util.Set;
   import java.util.HashSet;
   import java.util.Properties;
@@ -23,22 +24,22 @@ options {
 @members {
 }
 
-koopa [Properties p, String imports, String supportCode]
+koopa [Properties p, String imports]
   : ^(GRAMMAR
       meta[p]
       (r+=rule)*
     )
-    
-    -> koopa(
+  
+    -> treegrammar(
       name = {p.getProperty("named")},
       extending = {p.getProperty("extending")},
       date = {new Date()},
       package = {p.getProperty("package")},
-      imports = {imports},
-      rule = {$r},
-      support_code = {supportCode}
+      imports={imports},
+      rule={$r}
     )
   ;
+
 
 meta [ Properties meta ]
   : ^(META n=named (e=extending)?)
@@ -46,7 +47,7 @@ meta [ Properties meta ]
     { meta.setProperty("named", $n.name);
     
       if (e != null) meta.setProperty("extending", $e.name);
-      else meta.setProperty("extending", "Koopa");
+      else meta.setProperty("extending", "Tree");
     }
   ;
 
@@ -61,6 +62,7 @@ extending returns [String name = null]
   
     { $extending.name = ((CommonTree) $i).getText(); }
   ;
+
 
 rule
   : { List<String> bindings = null;
@@ -87,9 +89,9 @@ rule
           }
         }
       )?
-
+      
       (r=returning)?
-
+      
       b=body[bindings, unbindings]
       { if (r != null) {
           List<StringTemplate> steps = new LinkedList<StringTemplate>();
@@ -106,9 +108,9 @@ rule
     )
     
     -> rule(
-         name = {n},
-         body = {bod}
-       )
+      name={$n},
+      body = {bod}
+    )
   ;
 
 returning
@@ -134,7 +136,7 @@ declaration returns [Tuple<String, String> tuple = null]
 
 body [ List<String> bindings, List<String> unbindings ]
   : { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
-    ^(SEQUENCE
+    ^(SEQUENCE 
       (b=body[bindings, unbindings]
         { steps.add(b.st); }
       )+
@@ -148,40 +150,16 @@ body [ List<String> bindings, List<String> unbindings ]
   
     -> apply(
       bind = {bindings},
-      native_code = {n},
-      unbind = {unbindings}
+      unbind = {unbindings},
+      native_code = {n}
     )
     
-  | t=TAG
-
-	{ String name = ((CommonTree) $t).getText();
-      name = name.substring(1, name.length()); 
-	}
-
-    -> tag(
-      text = {name}
-    )
-
   | ANY
 
     -> any()
-  
-  | l=LITERAL
-  
-    { String unquoted = ((CommonTree) $l).getText();
-      unquoted = unquoted.substring(1, unquoted.length() - 1); 
-    }
-  
-    -> token(
-      text = {unquoted}
-    )
-  
-  | n=NUMBER
 
-    -> token(
-      text = {n}
-    )
-  
+  | TAG
+
   | i=IDENTIFIER
   
     { String text = ((CommonTree) i).getText();
@@ -196,13 +174,17 @@ body [ List<String> bindings, List<String> unbindings ]
       text = {i}
     )
   
-  | d=DOT
+  | l=LITERAL
+
+  | n=NUMBER
   
+  | d=DOT
+    
     -> token(
       text = {d}
     )
-  
-  | ^(ASSIGN l=IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT))
+    
+  | ^(ASSIGN l=IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT | a=ANY))
     { StringTemplate body = null;
       if (i != null) {
         String text = ((CommonTree) i).getText();
@@ -221,10 +203,13 @@ body [ List<String> bindings, List<String> unbindings ]
           text={n}
         );
       
-      } else {
+      } else if (d != null) {
         body = %token(
           text={"."}
         );
+      
+      } else {
+        body = %any();
       }
     }
   
@@ -244,52 +229,29 @@ body [ List<String> bindings, List<String> unbindings ]
     -> plus(
       body = {b}
     )
-  
-  | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
-    ^(CHOICE
-      (b=body[bindings, unbindings]
-        { steps.add(b.st); }
+    
+  | ^(CHOICE
+      (body[bindings, unbindings]
       )+
     )
     
-    -> choice(
-      step = {steps}
+  | ^(OPTIONAL
+      body[bindings, unbindings]
+    )
+    
+  | ^(SKIP_TO
+      body[bindings, unbindings]
     )
   
-  | ^(OPTIONAL b=body[bindings, unbindings])
-  
-    -> optional(
-      body = {b}
-    )
-  
-  | ^(SKIP_TO b=body[bindings, unbindings])
+  | ^(NOT body[bindings, unbindings])
 
-    -> skipto(
-      body = {b}
-    )
-  
-  | { List<StringTemplate> choices = new LinkedList<StringTemplate>(); }
-    ^(PERMUTED
-      (b=body[bindings, unbindings]
-        { choices.add(b.st); }
+  | ^(NOSKIP 
+      (body[bindings, unbindings]
       )+
     )
-
-    -> permuted(
-      choice = {choices}
-    )
-
-  | ^(NOT b=body[bindings, unbindings])
-  
-    -> not(
-      body = {b}
-    )
-
-  | ^(NOSKIP b=body[bindings, unbindings])
-  
-	{ String option = "NOSKIP"; }
-    -> opt(
-      option = {option},
-      body = {b}
+    
+  | ^(PERMUTED 
+      (body[bindings, unbindings]
+      )+
     )
   ;

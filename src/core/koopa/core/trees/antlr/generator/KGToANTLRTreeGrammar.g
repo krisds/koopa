@@ -185,7 +185,7 @@ body returns [ int len, boolean optional ]
     
     -> {%{"'.'"}}
     
-  | ^(ASSIGN IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT))
+  | ^(ASSIGN IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT | a=ANY))
   
     { $body.len = 1; }
     
@@ -202,7 +202,7 @@ body returns [ int len, boolean optional ]
         text = ((CommonTree) $n).getText();
         literal(text);
         
-      } else {
+      } else if ($d != null) {
         literal(".");
       }
     }

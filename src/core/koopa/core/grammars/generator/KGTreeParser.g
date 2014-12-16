@@ -71,7 +71,7 @@ body
   
   | DOT
   
-  | ^(ASSIGN IDENTIFIER (IDENTIFIER | NUMBER | DOT))
+  | ^(ASSIGN IDENTIFIER (IDENTIFIER | NUMBER | DOT | ANY))
   
   | ^(STAR body)
   

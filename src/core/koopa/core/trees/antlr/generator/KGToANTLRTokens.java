@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g 2014-11-24 20:28:06
+// $ANTLR 3.1.1 src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g 2014-12-15 22:16:42
 
   package koopa.core.trees.antlr.generator;
   
@@ -507,15 +507,16 @@ public class KGToANTLRTokens extends TreeParser {
 
 
     // $ANTLR start "body"
-    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:112:1: body : ( ^( SEQUENCE ( body )+ ) | ^( ACT NATIVE_CODE ) | TAG | ANY | i= IDENTIFIER | l= LITERAL | n= NUMBER | DOT | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) | ^( STAR body ) | ^( PLUS body ) | ^( CHOICE ( body )+ ) | ^( OPTIONAL body ) | ^( SKIP_TO body ) | ^( PERMUTED ( body )+ ) | ^( NOT body ) | ^( NOSKIP body ) );
+    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:112:1: body : ( ^( SEQUENCE ( body )+ ) | ^( ACT NATIVE_CODE ) | TAG | ANY | i= IDENTIFIER | l= LITERAL | n= NUMBER | DOT | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) | ^( STAR body ) | ^( PLUS body ) | ^( CHOICE ( body )+ ) | ^( OPTIONAL body ) | ^( SKIP_TO body ) | ^( PERMUTED ( body )+ ) | ^( NOT body ) | ^( NOSKIP body ) );
     public final void body() throws RecognitionException {
         CommonTree i=null;
         CommonTree l=null;
         CommonTree n=null;
         CommonTree d=null;
+        CommonTree a=null;
 
         try {
-            // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:113:3: ( ^( SEQUENCE ( body )+ ) | ^( ACT NATIVE_CODE ) | TAG | ANY | i= IDENTIFIER | l= LITERAL | n= NUMBER | DOT | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) | ^( STAR body ) | ^( PLUS body ) | ^( CHOICE ( body )+ ) | ^( OPTIONAL body ) | ^( SKIP_TO body ) | ^( PERMUTED ( body )+ ) | ^( NOT body ) | ^( NOSKIP body ) )
+            // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:113:3: ( ^( SEQUENCE ( body )+ ) | ^( ACT NATIVE_CODE ) | TAG | ANY | i= IDENTIFIER | l= LITERAL | n= NUMBER | DOT | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) | ^( STAR body ) | ^( PLUS body ) | ^( CHOICE ( body )+ ) | ^( OPTIONAL body ) | ^( SKIP_TO body ) | ^( PERMUTED ( body )+ ) | ^( NOT body ) | ^( NOSKIP body ) )
             int alt10=17;
             switch ( input.LA(1) ) {
             case SEQUENCE:
@@ -722,14 +723,14 @@ public class KGToANTLRTokens extends TreeParser {
                     }
                     break;
                 case 9 :
-                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:142:5: ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) )
+                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:142:5: ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) )
                     {
                     match(input,ASSIGN,FOLLOW_ASSIGN_in_body393); 
 
                     match(input, Token.DOWN, null); 
                     match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body395); 
-                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:142:25: (i= IDENTIFIER | n= NUMBER | d= DOT )
-                    int alt7=3;
+                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:142:25: (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY )
+                    int alt7=4;
                     switch ( input.LA(1) ) {
                     case IDENTIFIER:
                         {
@@ -744,6 +745,11 @@ public class KGToANTLRTokens extends TreeParser {
                     case DOT:
                         {
                         alt7=3;
+                        }
+                        break;
+                    case ANY:
+                        {
+                        alt7=4;
                         }
                         break;
                     default:
@@ -775,6 +781,13 @@ public class KGToANTLRTokens extends TreeParser {
 
                             }
                             break;
+                        case 4 :
+                            // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:142:60: a= ANY
+                            {
+                            a=(CommonTree)match(input,ANY,FOLLOW_ANY_in_body418); 
+
+                            }
+                            break;
 
                     }
 
@@ -789,7 +802,7 @@ public class KGToANTLRTokens extends TreeParser {
                           } else if (n != null) {
                             token(((CommonTree) n).getText());
 
-                          } else {
+                          } else if (d != null) {
                             token(".");
                           }
                         
@@ -799,10 +812,10 @@ public class KGToANTLRTokens extends TreeParser {
                 case 10 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:157:5: ^( STAR body )
                     {
-                    match(input,STAR,FOLLOW_STAR_in_body430); 
+                    match(input,STAR,FOLLOW_STAR_in_body436); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body432);
+                    pushFollow(FOLLOW_body_in_body438);
                     body();
 
                     state._fsp--;
@@ -815,10 +828,10 @@ public class KGToANTLRTokens extends TreeParser {
                 case 11 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:159:5: ^( PLUS body )
                     {
-                    match(input,PLUS,FOLLOW_PLUS_in_body443); 
+                    match(input,PLUS,FOLLOW_PLUS_in_body449); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body445);
+                    pushFollow(FOLLOW_body_in_body451);
                     body();
 
                     state._fsp--;
@@ -831,7 +844,7 @@ public class KGToANTLRTokens extends TreeParser {
                 case 12 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:161:5: ^( CHOICE ( body )+ )
                     {
-                    match(input,CHOICE,FOLLOW_CHOICE_in_body456); 
+                    match(input,CHOICE,FOLLOW_CHOICE_in_body462); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:162:7: ( body )+
@@ -850,7 +863,7 @@ public class KGToANTLRTokens extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:162:7: body
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body464);
+                    	    pushFollow(FOLLOW_body_in_body470);
                     	    body();
 
                     	    state._fsp--;
@@ -876,10 +889,10 @@ public class KGToANTLRTokens extends TreeParser {
                 case 13 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:165:5: ^( OPTIONAL body )
                     {
-                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body483); 
+                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body489); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body491);
+                    pushFollow(FOLLOW_body_in_body497);
                     body();
 
                     state._fsp--;
@@ -892,10 +905,10 @@ public class KGToANTLRTokens extends TreeParser {
                 case 14 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:169:5: ^( SKIP_TO body )
                     {
-                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body507); 
+                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body513); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body515);
+                    pushFollow(FOLLOW_body_in_body521);
                     body();
 
                     state._fsp--;
@@ -908,7 +921,7 @@ public class KGToANTLRTokens extends TreeParser {
                 case 15 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:173:5: ^( PERMUTED ( body )+ )
                     {
-                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body531); 
+                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body537); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:174:7: ( body )+
@@ -927,7 +940,7 @@ public class KGToANTLRTokens extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:174:7: body
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body540);
+                    	    pushFollow(FOLLOW_body_in_body546);
                     	    body();
 
                     	    state._fsp--;
@@ -953,10 +966,10 @@ public class KGToANTLRTokens extends TreeParser {
                 case 16 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:177:5: ^( NOT body )
                     {
-                    match(input,NOT,FOLLOW_NOT_in_body557); 
+                    match(input,NOT,FOLLOW_NOT_in_body563); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body559);
+                    pushFollow(FOLLOW_body_in_body565);
                     body();
 
                     state._fsp--;
@@ -969,10 +982,10 @@ public class KGToANTLRTokens extends TreeParser {
                 case 17 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g:179:5: ^( NOSKIP body )
                     {
-                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body570); 
+                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body576); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body572);
+                    pushFollow(FOLLOW_body_in_body578);
                     body();
 
                     state._fsp--;
@@ -1033,25 +1046,26 @@ public class KGToANTLRTokens extends TreeParser {
     public static final BitSet FOLLOW_NUMBER_in_body362 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_DOT_in_body377 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ASSIGN_in_body393 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body395 = new BitSet(new long[]{0x0000000020180000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body395 = new BitSet(new long[]{0x0000000028180000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_body400 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NUMBER_in_body406 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_DOT_in_body412 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_STAR_in_body430 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body432 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_PLUS_in_body443 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body445 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_CHOICE_in_body456 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body464 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_OPTIONAL_in_body483 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body491 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_SKIP_TO_in_body507 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body515 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_PERMUTED_in_body531 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body540 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_NOT_in_body557 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body559 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOSKIP_in_body570 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body572 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_ANY_in_body418 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_STAR_in_body436 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body438 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_PLUS_in_body449 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body451 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_CHOICE_in_body462 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body470 = new BitSet(new long[]{0x00000034FC1EFC08L});
+    public static final BitSet FOLLOW_OPTIONAL_in_body489 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body497 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_SKIP_TO_in_body513 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body521 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_PERMUTED_in_body537 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body546 = new BitSet(new long[]{0x00000034FC1EFC08L});
+    public static final BitSet FOLLOW_NOT_in_body563 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body565 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOSKIP_in_body576 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body578 = new BitSet(new long[]{0x0000000000000008L});
 
 }

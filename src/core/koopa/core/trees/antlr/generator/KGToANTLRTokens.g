@@ -139,7 +139,7 @@ body
   | DOT
     { token("."); }
   
-  | ^(ASSIGN IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT))
+  | ^(ASSIGN IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT | a=ANY))
     { if (i != null) {
         String text = ((CommonTree) $i).getText();
         if (Character.isUpperCase(text.charAt(0))) {
@@ -149,7 +149,7 @@ body
       } else if (n != null) {
         token(((CommonTree) $n).getText());
 
-      } else {
+      } else if (d != null) {
         token(".");
       }
     }

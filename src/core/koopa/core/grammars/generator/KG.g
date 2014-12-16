@@ -106,7 +106,7 @@ part
   | NUMBER
   
   | a=IDENTIFIER 
-    (e=EQUALS (b=IDENTIFIER | b=NUMBER | b=DOT))?
+    (e=EQUALS (b=IDENTIFIER | b=NUMBER | b=DOT | b=ANY))?
     
     -> { e != null }? ^(ASSIGN $a $b)
     -> IDENTIFIER

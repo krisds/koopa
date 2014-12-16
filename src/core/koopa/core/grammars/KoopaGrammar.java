@@ -34,6 +34,7 @@ public abstract class KoopaGrammar {
 
 	// The dictionary will have to get pushed and popped as we enter/leave
 	// certain parsers. Otherwise, recursion will screw up the lexical scopes.
+	// TODO Refactor this to make use of ParsingContext.
 	final Stack<Map<String, Object>> scope = new Stack<Map<String, Object>>();
 
 	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();

@@ -1,0 +1,58 @@
+# A construed analysis for the purpose of showcasing partial tree parsers
+# support.
+#
+# This grammar is a partial reflection of the more complete Cobol grammar. It
+# focuses on the matching of the basic structure of a Cobol program, and on
+# extracting the names tied to this structure. These names then get processed
+# by some utility code in the CobolStructureBase class so we can extract some
+# statistics about the frequencies of "words" as they appear in the actual
+# names.
+#
+# The key points to take from this example are:
+# * It's just another Koopa grammar, albeit one which gets turned into a 
+#   different kind of parsers. But any valid Koopa grammar basically also
+#   defines its own tree parser.
+# * The names of grammar rules here match the names of the grammar rule nodes
+#   in the parse tree.
+
+grammar CobolStructure extends CobolStructureBase.
+
+def compilationGroup =
+    compilationUnit
+    { reportWordFrequencies(); }
+end
+
+def compilationUnit =
+    programName
+    
+	(section)*
+	(paragraph)*
+end
+
+def section (String name) =
+    name=sectionName
+    
+    { process("SECTION", name); }
+    
+    (paragraph)*
+end
+
+def paragraph (Tree tree) =
+    tree=paragraphName
+    
+    { process("PARAGRAPH", tree.getProgramText()); }
+end
+
+def programName (Tree tree) =
+	tree=_
+	{ process("PROGRAM", tree.getProgramText()); }
+end
+
+def sectionName (Tree tree, String name) returns name =
+	tree=_
+	{ name = tree.getProgramText(); }
+end
+
+def paragraphName =
+	_
+end

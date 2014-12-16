@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g 2014-11-24 20:28:07
+// $ANTLR 3.1.1 src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g 2014-12-15 22:16:43
 
   package koopa.core.trees.antlr.generator;
   
@@ -600,7 +600,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
     };
 
     // $ANTLR start "body"
-    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:104:1: body returns [ int len, boolean optional ] : ( ^( SEQUENCE (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::seq::\"}} | ^( ACT NATIVE_CODE ) -> {%{\"::act::\"}} | ANY -> {%{\"::any::\"}} | TAG -> {%{\"::tag::\"}} | i= IDENTIFIER -> {isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {%{text}} | l= LITERAL -> {%{ANTLRNaming.forLiteral(text)}} | n= NUMBER -> {%{ANTLRNaming.forLiteral(text)}} | DOT -> {%{\"'.'\"}} | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) -> {i != null && isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {i != null}? {%{text}} -> {%{ANTLRNaming.forLiteral(text)}} | ^( STAR b= inner_body ) -> {$body.len > 0}? star(body=b) -> {%{\"::star::\"}} | ^( PLUS b= inner_body ) -> {$body.len > 0}? plus(body=b) -> {%{\"::plus::\"}} | ^( CHOICE (x= inner_body )+ ) -> {$body.len > 0}? choice(step=steps) -> {%{\"::choice::\"}} | ^( OPTIONAL b= inner_body ) -> {$body.len > 0 && !$b.optional}? opt(body=b) -> {$body.len > 0 && $b.optional}? {$b.st} -> {%{\"::optional::\"}} | ^( SKIP_TO body ) -> water() | ^( NOT body ) -> {%{\"\"}} | ^( NOSKIP (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::noskip::\"}} | ^( PERMUTED (x= inner_body )+ ) -> {$body.len > 0}? star(body=y) -> {%{\"::permuted::\"}});
+    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:104:1: body returns [ int len, boolean optional ] : ( ^( SEQUENCE (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::seq::\"}} | ^( ACT NATIVE_CODE ) -> {%{\"::act::\"}} | ANY -> {%{\"::any::\"}} | TAG -> {%{\"::tag::\"}} | i= IDENTIFIER -> {isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {%{text}} | l= LITERAL -> {%{ANTLRNaming.forLiteral(text)}} | n= NUMBER -> {%{ANTLRNaming.forLiteral(text)}} | DOT -> {%{\"'.'\"}} | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) -> {i != null && isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {i != null}? {%{text}} -> {%{ANTLRNaming.forLiteral(text)}} | ^( STAR b= inner_body ) -> {$body.len > 0}? star(body=b) -> {%{\"::star::\"}} | ^( PLUS b= inner_body ) -> {$body.len > 0}? plus(body=b) -> {%{\"::plus::\"}} | ^( CHOICE (x= inner_body )+ ) -> {$body.len > 0}? choice(step=steps) -> {%{\"::choice::\"}} | ^( OPTIONAL b= inner_body ) -> {$body.len > 0 && !$b.optional}? opt(body=b) -> {$body.len > 0 && $b.optional}? {$b.st} -> {%{\"::optional::\"}} | ^( SKIP_TO body ) -> water() | ^( NOT body ) -> {%{\"\"}} | ^( NOSKIP (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::noskip::\"}} | ^( PERMUTED (x= inner_body )+ ) -> {$body.len > 0}? star(body=y) -> {%{\"::permuted::\"}});
     public final KGToANTLRTreeGrammar.body_return body() throws RecognitionException {
         KGToANTLRTreeGrammar.body_return retval = new KGToANTLRTreeGrammar.body_return();
         retval.start = input.LT(1);
@@ -609,6 +609,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
         CommonTree l=null;
         CommonTree n=null;
         CommonTree d=null;
+        CommonTree a=null;
         KGToANTLRTreeGrammar.inner_body_return x = null;
 
         KGToANTLRTreeGrammar.inner_body_return b = null;
@@ -619,7 +620,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
             retval.optional = false;
           
         try {
-            // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:109:3: ( ^( SEQUENCE (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::seq::\"}} | ^( ACT NATIVE_CODE ) -> {%{\"::act::\"}} | ANY -> {%{\"::any::\"}} | TAG -> {%{\"::tag::\"}} | i= IDENTIFIER -> {isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {%{text}} | l= LITERAL -> {%{ANTLRNaming.forLiteral(text)}} | n= NUMBER -> {%{ANTLRNaming.forLiteral(text)}} | DOT -> {%{\"'.'\"}} | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) -> {i != null && isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {i != null}? {%{text}} -> {%{ANTLRNaming.forLiteral(text)}} | ^( STAR b= inner_body ) -> {$body.len > 0}? star(body=b) -> {%{\"::star::\"}} | ^( PLUS b= inner_body ) -> {$body.len > 0}? plus(body=b) -> {%{\"::plus::\"}} | ^( CHOICE (x= inner_body )+ ) -> {$body.len > 0}? choice(step=steps) -> {%{\"::choice::\"}} | ^( OPTIONAL b= inner_body ) -> {$body.len > 0 && !$b.optional}? opt(body=b) -> {$body.len > 0 && $b.optional}? {$b.st} -> {%{\"::optional::\"}} | ^( SKIP_TO body ) -> water() | ^( NOT body ) -> {%{\"\"}} | ^( NOSKIP (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::noskip::\"}} | ^( PERMUTED (x= inner_body )+ ) -> {$body.len > 0}? star(body=y) -> {%{\"::permuted::\"}})
+            // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:109:3: ( ^( SEQUENCE (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::seq::\"}} | ^( ACT NATIVE_CODE ) -> {%{\"::act::\"}} | ANY -> {%{\"::any::\"}} | TAG -> {%{\"::tag::\"}} | i= IDENTIFIER -> {isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {%{text}} | l= LITERAL -> {%{ANTLRNaming.forLiteral(text)}} | n= NUMBER -> {%{ANTLRNaming.forLiteral(text)}} | DOT -> {%{\"'.'\"}} | ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) -> {i != null && isLiteral}? {%{ANTLRNaming.forLiteral(text)}} -> {i != null}? {%{text}} -> {%{ANTLRNaming.forLiteral(text)}} | ^( STAR b= inner_body ) -> {$body.len > 0}? star(body=b) -> {%{\"::star::\"}} | ^( PLUS b= inner_body ) -> {$body.len > 0}? plus(body=b) -> {%{\"::plus::\"}} | ^( CHOICE (x= inner_body )+ ) -> {$body.len > 0}? choice(step=steps) -> {%{\"::choice::\"}} | ^( OPTIONAL b= inner_body ) -> {$body.len > 0 && !$b.optional}? opt(body=b) -> {$body.len > 0 && $b.optional}? {$b.st} -> {%{\"::optional::\"}} | ^( SKIP_TO body ) -> water() | ^( NOT body ) -> {%{\"\"}} | ^( NOSKIP (x= inner_body )+ ) -> {$body.len == 1}? {steps.get(0)} -> {$body.len > 1}? sequence(step=steps) -> {%{\"::noskip::\"}} | ^( PERMUTED (x= inner_body )+ ) -> {$body.len > 0}? star(body=y) -> {%{\"::permuted::\"}})
             int alt11=17;
             switch ( input.LA(1) ) {
             case SEQUENCE:
@@ -919,14 +920,14 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     }
                     break;
                 case 9 :
-                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:188:5: ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) )
+                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:188:5: ^( ASSIGN IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) )
                     {
                     match(input,ASSIGN,FOLLOW_ASSIGN_in_body845); 
 
                     match(input, Token.DOWN, null); 
                     match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body847); 
-                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:188:25: (i= IDENTIFIER | n= NUMBER | d= DOT )
-                    int alt7=3;
+                    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:188:25: (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY )
+                    int alt7=4;
                     switch ( input.LA(1) ) {
                     case IDENTIFIER:
                         {
@@ -941,6 +942,11 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     case DOT:
                         {
                         alt7=3;
+                        }
+                        break;
+                    case ANY:
+                        {
+                        alt7=4;
                         }
                         break;
                     default:
@@ -972,6 +978,13 @@ public class KGToANTLRTreeGrammar extends TreeParser {
 
                             }
                             break;
+                        case 4 :
+                            // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:188:60: a= ANY
+                            {
+                            a=(CommonTree)match(input,ANY,FOLLOW_ANY_in_body870); 
+
+                            }
+                            break;
 
                     }
 
@@ -991,7 +1004,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                             text = ((CommonTree) n).getText();
                             literal(text);
                             
-                          } else {
+                          } else if (d != null) {
                             literal(".");
                           }
                         
@@ -1017,10 +1030,10 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                 case 10 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:214:5: ^( STAR b= inner_body )
                     {
-                    match(input,STAR,FOLLOW_STAR_in_body931); 
+                    match(input,STAR,FOLLOW_STAR_in_body937); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_inner_body_in_body935);
+                    pushFollow(FOLLOW_inner_body_in_body941);
                     b=inner_body();
 
                     state._fsp--;
@@ -1049,10 +1062,10 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                 case 11 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:225:5: ^( PLUS b= inner_body )
                     {
-                    match(input,PLUS,FOLLOW_PLUS_in_body1001); 
+                    match(input,PLUS,FOLLOW_PLUS_in_body1007); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_inner_body_in_body1005);
+                    pushFollow(FOLLOW_inner_body_in_body1011);
                     b=inner_body();
 
                     state._fsp--;
@@ -1080,7 +1093,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:234:5: ^( CHOICE (x= inner_body )+ )
                     {
                      List<StringTemplate> steps = new LinkedList<StringTemplate>(); 
-                    match(input,CHOICE,FOLLOW_CHOICE_in_body1077); 
+                    match(input,CHOICE,FOLLOW_CHOICE_in_body1083); 
 
                      retval.optional = true; 
 
@@ -1101,7 +1114,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:237:8: x= inner_body
                     	    {
-                    	    pushFollow(FOLLOW_inner_body_in_body1096);
+                    	    pushFollow(FOLLOW_inner_body_in_body1102);
                     	    x=inner_body();
 
                     	    state._fsp--;
@@ -1146,10 +1159,10 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                 case 13 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:252:5: ^( OPTIONAL b= inner_body )
                     {
-                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1179); 
+                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1185); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_inner_body_in_body1189);
+                    pushFollow(FOLLOW_inner_body_in_body1195);
                     b=inner_body();
 
                     state._fsp--;
@@ -1182,10 +1195,10 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                 case 14 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:267:5: ^( SKIP_TO body )
                     {
-                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1278); 
+                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1284); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1286);
+                    pushFollow(FOLLOW_body_in_body1292);
                     body();
 
                     state._fsp--;
@@ -1209,10 +1222,10 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                 case 15 :
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:277:5: ^( NOT body )
                     {
-                    match(input,NOT,FOLLOW_NOT_in_body1326); 
+                    match(input,NOT,FOLLOW_NOT_in_body1332); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1328);
+                    pushFollow(FOLLOW_body_in_body1334);
                     body();
 
                     state._fsp--;
@@ -1237,7 +1250,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:285:5: ^( NOSKIP (x= inner_body )+ )
                     {
                      List<StringTemplate> steps = new LinkedList<StringTemplate>(); 
-                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1361); 
+                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1367); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:287:7: (x= inner_body )+
@@ -1256,7 +1269,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:287:8: x= inner_body
                     	    {
-                    	    pushFollow(FOLLOW_inner_body_in_body1373);
+                    	    pushFollow(FOLLOW_inner_body_in_body1379);
                     	    x=inner_body();
 
                     	    state._fsp--;
@@ -1305,7 +1318,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:302:5: ^( PERMUTED (x= inner_body )+ )
                     {
                      List<StringTemplate> steps = new LinkedList<StringTemplate>(); 
-                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1468); 
+                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1474); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:304:7: (x= inner_body )+
@@ -1324,7 +1337,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:304:8: x= inner_body
                     	    {
-                    	    pushFollow(FOLLOW_inner_body_in_body1480);
+                    	    pushFollow(FOLLOW_inner_body_in_body1486);
                     	    x=inner_body();
 
                     	    state._fsp--;
@@ -1404,7 +1417,7 @@ public class KGToANTLRTreeGrammar extends TreeParser {
             // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:327:3: ( body -> {$body.st})
             // src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g:327:5: body
             {
-            pushFollow(FOLLOW_body_in_inner_body1575);
+            pushFollow(FOLLOW_body_in_inner_body1581);
             body1=body();
 
             state._fsp--;
@@ -1472,26 +1485,27 @@ public class KGToANTLRTreeGrammar extends TreeParser {
     public static final BitSet FOLLOW_NUMBER_in_body760 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_DOT_in_body800 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ASSIGN_in_body845 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body847 = new BitSet(new long[]{0x0000000020180000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body847 = new BitSet(new long[]{0x0000000028180000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_body852 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NUMBER_in_body858 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_DOT_in_body864 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_STAR_in_body931 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_inner_body_in_body935 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_PLUS_in_body1001 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_inner_body_in_body1005 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_CHOICE_in_body1077 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_inner_body_in_body1096 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_OPTIONAL_in_body1179 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_inner_body_in_body1189 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_SKIP_TO_in_body1278 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1286 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOT_in_body1326 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1328 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOSKIP_in_body1361 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_inner_body_in_body1373 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_PERMUTED_in_body1468 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_inner_body_in_body1480 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_body_in_inner_body1575 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ANY_in_body870 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_STAR_in_body937 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_inner_body_in_body941 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_PLUS_in_body1007 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_inner_body_in_body1011 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_CHOICE_in_body1083 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_inner_body_in_body1102 = new BitSet(new long[]{0x00000034FC1EFC08L});
+    public static final BitSet FOLLOW_OPTIONAL_in_body1185 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_inner_body_in_body1195 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_SKIP_TO_in_body1284 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1292 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOT_in_body1332 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1334 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOSKIP_in_body1367 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_inner_body_in_body1379 = new BitSet(new long[]{0x00000034FC1EFC08L});
+    public static final BitSet FOLLOW_PERMUTED_in_body1474 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_inner_body_in_body1486 = new BitSet(new long[]{0x00000034FC1EFC08L});
+    public static final BitSet FOLLOW_body_in_inner_body1581 = new BitSet(new long[]{0x0000000000000002L});
 
 }

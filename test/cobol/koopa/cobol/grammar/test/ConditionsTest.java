@@ -1141,7 +1141,25 @@ public class ConditionsTest extends TestCase {
     public void testCondition_126() {
       Parser parser = grammar.condition();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " Operator = \"+\" ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " x = (1) ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCondition_127() {
+      Parser parser = grammar.condition();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " x = 1 or 2 ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCondition_128() {
+      Parser parser = grammar.condition();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " x = (1 or 2) ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

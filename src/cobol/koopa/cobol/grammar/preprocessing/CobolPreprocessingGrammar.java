@@ -754,7 +754,7 @@ public class CobolPreprocessingGrammar extends KoopaGrammar {
             RESERVED_WORDS.add("RF");
             RESERVED_WORDS.add("RH");
             RESERVED_WORDS.add("RIGHT");
-            RESERVED_WORDS.add("ROLLBACK");
+            // RESERVED_WORDS.add("ROLLBACK");
             RESERVED_WORDS.add("ROUNDED");
             RESERVED_WORDS.add("RUN");
             RESERVED_WORDS.add("SAME");

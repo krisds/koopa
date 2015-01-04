@@ -9707,6 +9707,7 @@ furtherCondition
       | ( ( ( 'AND'
       | 'OR'
       ) )?
+        ( 'IS' )?
         ( 'NOT' )?
         ( relop )?
         operand
@@ -9714,6 +9715,7 @@ furtherCondition
       | ( ( ( 'AND'
       | 'OR'
       ) )?
+        ( 'IS' )?
         ( 'NOT' )?
         ( relop )?
         '('

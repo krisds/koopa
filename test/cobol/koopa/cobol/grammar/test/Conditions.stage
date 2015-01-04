@@ -207,9 +207,8 @@ target condition;
 +[ x = (1) ]
 +[ x = 1 or 2 ]
 +[ x = (1 or 2) ]
-
-Can you help here?
-
++[ MYSTRING NOT SPECIAL-CHAR ]
++[ MYSTRING IS NOT SPECIAL-CHAR ]
 
 +[ Operator = "+" ]
 

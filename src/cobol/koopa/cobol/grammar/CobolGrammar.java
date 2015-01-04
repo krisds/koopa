@@ -17179,6 +17179,9 @@ public class CobolGrammar extends CobolPreprocessingGrammar {
                            )
                        ),
                        optional(
+                           token("IS")
+                       ),
+                       optional(
                            token("NOT")
                        ),
                        optional(
@@ -17192,6 +17195,9 @@ public class CobolGrammar extends CobolPreprocessingGrammar {
                                token("AND"),
                                token("OR")
                            )
+                       ),
+                       optional(
+                           token("IS")
                        ),
                        optional(
                            token("NOT")

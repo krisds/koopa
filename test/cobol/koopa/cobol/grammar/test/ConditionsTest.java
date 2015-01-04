@@ -1163,4 +1163,31 @@ public class ConditionsTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testCondition_129() {
+      Parser parser = grammar.condition();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MYSTRING NOT SPECIAL-CHAR ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCondition_130() {
+      Parser parser = grammar.condition();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " MYSTRING IS NOT SPECIAL-CHAR ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCondition_131() {
+      Parser parser = grammar.condition();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " Operator = \"+\" ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

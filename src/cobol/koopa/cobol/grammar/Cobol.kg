@@ -3968,8 +3968,8 @@ def furtherCondition =
 	| [IS] [NOT] OMITTED
 	| [IS] [NOT] classType
 	| [IS] [NOT] signType
-	| [AND | OR] [NOT] [relop] operand
-	| [AND | OR] [NOT] [relop] '(' condition ')'
+	| [AND | OR] [IS] [NOT] [relop] operand
+	| [AND | OR] [IS] [NOT] [relop] '(' condition ')'
 	)
 end
 

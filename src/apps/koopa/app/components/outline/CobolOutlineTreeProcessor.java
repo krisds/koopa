@@ -5,13 +5,11 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import koopa.core.treeparsers.TreeParser;
+import koopa.core.treeparsers.TreeStream;
 import koopa.core.trees.antlr.CommonTreeProcessor;
-import koopa.core.trees.antlr.filter.Filter;
-import koopa.core.trees.antlr.filter.FilteredTreeNodeStream;
 
-import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
-
 
 public class CobolOutlineTreeProcessor implements CommonTreeProcessor {
 	private List<DefaultMutableTreeNode> trees = null;
@@ -20,34 +18,18 @@ public class CobolOutlineTreeProcessor implements CommonTreeProcessor {
 		final boolean isCopybook = file.getName().toUpperCase()
 				.endsWith(".CPY");
 
-		Filter filter = null;
-		if (isCopybook) {
-			filter = new CobolOutlineTreeParserFilter().copybook();
-		} else {
-			filter = new CobolOutlineTreeParserFilter().compilationGroup();
-		}
+		TreeStream stream = new TreeStream(tree);
+		CobolOutlineTreeGrammar grammar = new CobolOutlineTreeGrammar();
 
-		FilteredTreeNodeStream filteredStream = new FilteredTreeNodeStream(
-				tree, filter);
-		CobolOutlineTreeParser parser = new CobolOutlineTreeParser(
-				filteredStream);
+		TreeParser parser = isCopybook ? grammar.copybook() : grammar.compilationGroup();
 
-		try {
-			if (isCopybook) {
-				parser.copybook();
-			} else {
-				parser.compilationGroup();
-			}
+		boolean accepts = parser.accepts(stream);
 
-			this.trees = parser.getTrees();
+		// TODO Slightly weird that I have to use grammar rather than parser
+		// here...
+		this.trees = grammar.getTrees();
 
-			return parser.getNumberOfSyntaxErrors() == 0;
-
-		} catch (RecognitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		return accepts;
 	}
 
 	public boolean hasTrees() {

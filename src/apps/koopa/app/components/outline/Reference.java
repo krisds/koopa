@@ -4,9 +4,7 @@ import javax.swing.Icon;
 
 import koopa.core.data.Data;
 import koopa.core.data.Position;
-import koopa.core.util.ANTLR;
-
-import org.antlr.runtime.tree.Tree;
+import koopa.core.treeparsers.Tree;
 
 public class Reference {
 	private Tree tree = null;
@@ -24,11 +22,11 @@ public class Reference {
 	}
 
 	public Data getToken() {
-		return ANTLR.getToken(this.tree);
+		return tree.getData();
 	}
 
 	public int getPositionInFile() {
-		final Position start = ANTLR.getStart(this.tree);
+		final Position start = tree.getStart();
 		return start != null ? start.getPositionInFile() : -1;
 	}
 

@@ -21,13 +21,16 @@ public class ParsingContextTest {
 		ParsingContext scope = new ParsingContext();
 		Assert.assertEquals(1, scope.getDepth());
 
-		scope.enter("one");
+		scope.enter("one", 1);
+		Assert.assertEquals(1, scope.getReference());
 		Assert.assertEquals(2, scope.getDepth());
 
-		scope.enter("two");
+		scope.enter("two", 2);
+		Assert.assertEquals(2, scope.getReference());
 		Assert.assertEquals(3, scope.getDepth());
 
-		scope.enter("three");
+		scope.enter("three", 3);
+		Assert.assertEquals(3, scope.getReference());
 		Assert.assertEquals(4, scope.getDepth());
 
 		scope.leave("three");
@@ -46,7 +49,7 @@ public class ParsingContextTest {
 
 		scope.setLValueReceiver("program name");
 
-		scope.enter("identification division");
+		scope.enter("identification division", null);
 		scope.set("name", "Cobol");
 		scope.setReturnValueFrom("name");
 		scope.leave("identification division");

@@ -213,7 +213,7 @@
 		<synchronize-file file="src/cobol/koopa/cobol/grammar/antlr/Cobol.tokens" root="src/apps/" />
 
 		<echo>Generating the Cobol outline parser...</echo>
-		<antlr-gen2 grammar="src/apps/koopa/app/components/outline/CobolOutlineTreeParser.g" tokens="src/apps/koopa/app/components/outline/" />
+		<generate-tree-parser name="CobolOutline" path="src/apps/koopa/app/components/outline/" />
 
 		<echo>Generating the cyclometic complexity parser...</echo>
 		<antlr-gen2 grammar="src/apps/koopa/app/cc/CyclomaticComplexityTreeParser.g" tokens="src/apps/koopa/app/cc/" />

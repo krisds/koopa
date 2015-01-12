@@ -14,7 +14,7 @@ public class ParsingContext {
 	final Stack<Frame> callStack = new Stack<Frame>();
 
 	public ParsingContext() {
-		callStack.push(new Frame(null));
+		callStack.push(new Frame(null, null));
 	}
 
 	private class Frame {
@@ -23,9 +23,11 @@ public class ParsingContext {
 
 		public Object returnValue = null;
 		public String lvalue = null;
+		public Object reference = null;
 
-		public Frame(String name) {
+		public Frame(String name, Object reference) {
 			this.name = name;
+			this.reference = reference;
 			this.values = new HashMap<String, Object>();
 		}
 
@@ -44,8 +46,8 @@ public class ParsingContext {
 		}
 	}
 
-	public void enter(String name) {
-		callStack.push(new Frame(name));
+	public void enter(String name, Object reference) {
+		callStack.push(new Frame(name, reference));
 	}
 
 	public void leave(String name) {
@@ -82,6 +84,10 @@ public class ParsingContext {
 
 	public void set(String key, Object value) {
 		callStack.peek().set(key, value);
+	}
+
+	public Object getReference() {
+		return callStack.peek().reference;
 	}
 
 	public int getDepth() {

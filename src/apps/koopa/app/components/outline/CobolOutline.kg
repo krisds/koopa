@@ -1,0 +1,69 @@
+grammar CobolOutline extends CobolOutlineBase.
+
+def compilationGroup =
+    compilationUnit
+end
+
+def copybook =
+  (paragraph)*
+end
+
+
+def compilationUnit (Tree name) =
+    name=programName
+
+    { push(new Reference(getCurrentTree(), name.getProgramText(), PROGRAM_ICON)); }
+    
+    [declaratives]
+	(section)*
+	(paragraph)*
+
+    { pop(); }
+end
+
+def declaratives =
+    { push(new Reference(getCurrentTree(), "DECLARATIVES", DECLARATIVES_ICON)); }
+    
+    (declarativeSection)*
+
+    { pop(); }
+end
+
+def declarativeSection (Tree name) =
+    name=sectionName
+
+    { push(new Reference(getCurrentTree(), name.getProgramText(), SECTION_ICON)); }
+
+    (paragraph)*
+
+    { pop(); }
+end
+
+def section (Tree name) =
+    name=sectionName
+
+    { push(new Reference(getCurrentTree(), name.getProgramText(), SECTION_ICON)); }
+    
+    (paragraph)*
+
+    { pop(); }
+end
+
+def paragraph (Tree name) =
+    name=paragraphName
+    
+    { push(new Reference(getCurrentTree(), name.getProgramText(), PARAGRAPH_ICON));
+      pop(); }
+end
+
+def programName =
+	_
+end
+
+def sectionName =
+	_
+end
+
+def paragraphName =
+	_
+end

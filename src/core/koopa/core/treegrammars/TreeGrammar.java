@@ -8,6 +8,7 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.grammars.Block;
 import koopa.core.treeparsers.FutureTreeParser;
+import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
 
@@ -20,6 +21,10 @@ public class TreeGrammar {
 
 	protected final ParsingContext scope = new ParsingContext();
 
+	protected Tree getCurrentTree() {
+		return (Tree) scope.getReference();
+	}
+	
 	public TreeParser token(final String text) {
 		return new TreeParser() {
 			public boolean accepts(TreeStream stream) {
@@ -70,10 +75,11 @@ public class TreeGrammar {
 
 						TreeStream substream = stream.forSubtree();
 
-						scope.enter(name);
+						Tree subTree = stream.getTree();
+						scope.enter(name, subTree);
 						// By default a grammar rule returns the root of the
 						// subtree matching it.
-						scope.setReturnValue(stream.getTree());
+						scope.setReturnValue(subTree);
 
 						final boolean accepts = parser.accepts(substream);
 

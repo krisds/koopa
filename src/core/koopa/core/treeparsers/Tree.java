@@ -1,9 +1,11 @@
 package koopa.core.treeparsers;
 
 import koopa.core.data.Data;
+import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.trees.antlr.CommonKoopaToken;
+import koopa.core.util.ANTLR;
 
 import org.antlr.runtime.tree.CommonTree;
 
@@ -39,5 +41,13 @@ public class Tree {
 					&& ((Token) data).hasTag(AreaTag.PROGRAM_TEXT_AREA))
 				builder.append(node.getText());
 		}
+	}
+
+	public Data getData() {
+		return ((CommonKoopaToken) tree.getToken()).getKoopaData();
+	}
+
+	public Position getStart() {
+		return ANTLR.getStart(tree);
 	}
 }

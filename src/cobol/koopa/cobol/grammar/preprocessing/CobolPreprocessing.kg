@@ -1,4 +1,4 @@
-grammar CobolPreprocessing.
+grammar CobolPreprocessing extends CobolPreprocessingBase.
 
 ## #############################################################################
 ## Top level definitions.

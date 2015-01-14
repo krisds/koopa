@@ -123,6 +123,33 @@ public class ParseStream {
 	}
 
 	/**
+	 * This is for tracing purposes. Gives up to five tokens worth of text.
+	 */
+	public String peekMore() {
+		Level level = LOGGER.getLevel();
+		LOGGER.setLevel(Level.FATAL);
+
+		bookmark();
+
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 0; i < 5; i++) {
+			Token t = forward();
+			if (t == null)
+				break;
+		
+			builder.append("[");
+			builder.append(t.getText());
+			builder.append("]");
+		}
+
+		rewind();
+
+		LOGGER.setLevel(level);
+		return builder.toString();
+	}
+
+	/**
 	 * Bookmark the current position in the stream. This will impact the
 	 * behaviour of {@linkplain ParseStream#rewind()} and
 	 * {@linkplain ParseStream#commit()}.

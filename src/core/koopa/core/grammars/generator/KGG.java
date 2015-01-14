@@ -101,8 +101,12 @@ public class KGG {
 		KGGenerator walker = new KGGenerator(nodes);
 		walker.setTemplateLib(templates);
 
-		String formatted = walker.koopa(meta, imports.toString(),
-				Util.contents(path + name + ".natives")).toString();
+		String natives = null;
+		if ((new File(path + name + ".natives")).exists())
+			natives = Util.contents(path + name + ".natives");
+
+		String formatted = walker.koopa(meta, imports.toString(), natives)
+				.toString();
 
 		return formatted;
 	}

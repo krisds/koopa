@@ -59,6 +59,12 @@ options {
   
   private void loadTokensForBaseGrammar(String name) {
     try {
+      File tokensFile = new File(path, name + ".tokens");
+      if (!tokensFile.exists()) {
+        System.out.println("Found no tokens for base grammar!");
+        return;
+      }
+      
 	  System.out.println("Loading tokens for base grammar: " + name);
       ANTLRTokensLoader.loadFile(new File(path, name + ".tokens"), numbers);
 	  count = numbers.getMaxValue() + 1;

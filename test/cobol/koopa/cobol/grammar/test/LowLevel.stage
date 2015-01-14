@@ -11,6 +11,13 @@ target cobolWord;
 +[ ABCDEFGHIJKLMNOPQRSTUVWXYZ78901 ]
 -[ ABCDEFGHIJKLMNOPQRSTUVWXYZ789012 ]
 
+# By Rob Stapper; confirmed by Simon Sobisch.
++[ 00-00 ]
+# But I'm disallowing numbers as legal cobol words for now:
+-[ 00 ]
+
+
+
 # TODO Test rejection of all keywords.
 
 

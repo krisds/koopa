@@ -75,19 +75,19 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testIntegerLiteral_8() {
-      Parser parser = grammar.integerLiteral();
+    public void testCobolWord_8() {
+      Parser parser = grammar.cobolWord();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 00-00 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testIntegerLiteral_9() {
-      Parser parser = grammar.integerLiteral();
+    public void testCobolWord_9() {
+      Parser parser = grammar.cobolWord();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 00 ");
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -95,12 +95,29 @@ public class LowLevelTest extends TestCase {
     public void testIntegerLiteral_10() {
       Parser parser = grammar.integerLiteral();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIntegerLiteral_11() {
+      Parser parser = grammar.integerLiteral();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIntegerLiteral_12() {
+      Parser parser = grammar.integerLiteral();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"ABC\" ");
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testIntegerLiteral_11() {
+    public void testIntegerLiteral_13() {
       Parser parser = grammar.integerLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DEF ");
@@ -108,7 +125,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testDecimal_12() {
+    public void testDecimal_14() {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 ");
@@ -116,28 +133,10 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testDecimal_13() {
-      Parser parser = grammar.decimal();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDecimal_14() {
-      Parser parser = grammar.decimal();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0.2 ");
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
     public void testDecimal_15() {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0,2 ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -146,7 +145,7 @@ public class LowLevelTest extends TestCase {
     public void testDecimal_16() {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " .2 ");
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0.2 ");
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -155,12 +154,30 @@ public class LowLevelTest extends TestCase {
     public void testDecimal_17() {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 0,2 ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDecimal_18() {
+      Parser parser = grammar.decimal();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " .2 ");
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testDecimal_19() {
+      Parser parser = grammar.decimal();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"ABC\" ");
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDecimal_18() {
+    public void testDecimal_20() {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DEF ");
@@ -168,7 +185,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testDecimal_19() {
+    public void testDecimal_21() {
       Parser parser = grammar.decimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " .\n01 ");
@@ -176,7 +193,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testBooleanLiteral_20() {
+    public void testBooleanLiteral_22() {
       Parser parser = grammar.booleanLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " b\"0001\" ");
@@ -185,7 +202,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testBooleanLiteral_21() {
+    public void testBooleanLiteral_23() {
       Parser parser = grammar.booleanLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " B\"0010\" ");
@@ -194,7 +211,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testBooleanLiteral_22() {
+    public void testBooleanLiteral_24() {
       Parser parser = grammar.booleanLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " bx\"A\" ");
@@ -203,7 +220,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testBooleanLiteral_23() {
+    public void testBooleanLiteral_25() {
       Parser parser = grammar.booleanLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " BX\"A\" ");
@@ -212,7 +229,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testHexadecimal_24() {
+    public void testHexadecimal_26() {
       Parser parser = grammar.hexadecimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " h\"00\" ");
@@ -221,7 +238,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testHexadecimal_25() {
+    public void testHexadecimal_27() {
       Parser parser = grammar.hexadecimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " H\"00\" ");
@@ -230,7 +247,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testHexadecimal_26() {
+    public void testHexadecimal_28() {
       Parser parser = grammar.hexadecimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " x\"00\" ");
@@ -239,7 +256,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testHexadecimal_27() {
+    public void testHexadecimal_29() {
       Parser parser = grammar.hexadecimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " X\"00\" ");
@@ -248,7 +265,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testHexadecimal_28() {
+    public void testHexadecimal_30() {
       Parser parser = grammar.hexadecimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " nx\"00\" ");
@@ -257,7 +274,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testHexadecimal_29() {
+    public void testHexadecimal_31() {
       Parser parser = grammar.hexadecimal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " NX\"00\" ");
@@ -266,7 +283,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testAlphanumericLiteral_30() {
+    public void testAlphanumericLiteral_32() {
       Parser parser = grammar.alphanumericLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 1 ");
@@ -274,7 +291,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testAlphanumericLiteral_31() {
+    public void testAlphanumericLiteral_33() {
       Parser parser = grammar.alphanumericLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 2.0 ");
@@ -282,7 +299,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testAlphanumericLiteral_32() {
+    public void testAlphanumericLiteral_34() {
       Parser parser = grammar.alphanumericLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"ABC\" ");
@@ -291,7 +308,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testAlphanumericLiteral_33() {
+    public void testAlphanumericLiteral_35() {
       Parser parser = grammar.alphanumericLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " DEF ");
@@ -299,7 +316,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testAlphanumericLiteral_34() {
+    public void testAlphanumericLiteral_36() {
       Parser parser = grammar.alphanumericLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"THIS ISN\"\"T WRONG\" ");
@@ -308,7 +325,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testAlphanumericLiteral_35() {
+    public void testAlphanumericLiteral_37() {
       Parser parser = grammar.alphanumericLiteral();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 'THIS ISN''T WRONG EITHER' ");
@@ -317,7 +334,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_36() {
+    public void testLiteral_38() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"this is a literal\" ");
@@ -326,7 +343,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_37() {
+    public void testLiteral_39() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \" 0 \" ");
@@ -335,7 +352,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_38() {
+    public void testLiteral_40() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \" 1 \" ");
@@ -344,7 +361,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_39() {
+    public void testLiteral_41() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \" 00 \" ");
@@ -353,7 +370,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_40() {
+    public void testLiteral_42() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"Hello \" & \" world.\" ");
@@ -362,7 +379,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_41() {
+    public void testLiteral_43() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"Hello world.\" & CRLF ");
@@ -371,7 +388,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testLiteral_42() {
+    public void testLiteral_44() {
       Parser parser = grammar.literal();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"Hello world.\" & x\"00\" ");
@@ -380,7 +397,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_43() {
+    public void testFigurativeConstant_45() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ZERO ");
@@ -389,7 +406,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_44() {
+    public void testFigurativeConstant_46() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL ZERO ");
@@ -398,7 +415,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_45() {
+    public void testFigurativeConstant_47() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ZEROS ");
@@ -407,7 +424,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_46() {
+    public void testFigurativeConstant_48() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL ZEROS ");
@@ -416,7 +433,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_47() {
+    public void testFigurativeConstant_49() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ZEROES ");
@@ -425,7 +442,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_48() {
+    public void testFigurativeConstant_50() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL ZEROES ");
@@ -434,7 +451,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_49() {
+    public void testFigurativeConstant_51() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SPACE ");
@@ -443,7 +460,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_50() {
+    public void testFigurativeConstant_52() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL SPACE ");
@@ -452,7 +469,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_51() {
+    public void testFigurativeConstant_53() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " SPACES ");
@@ -461,7 +478,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_52() {
+    public void testFigurativeConstant_54() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL SPACES ");
@@ -470,7 +487,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_53() {
+    public void testFigurativeConstant_55() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " HIGH-VALUE ");
@@ -479,7 +496,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_54() {
+    public void testFigurativeConstant_56() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL HIGH-VALUE ");
@@ -488,7 +505,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_55() {
+    public void testFigurativeConstant_57() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " HIGH-VALUES ");
@@ -497,7 +514,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_56() {
+    public void testFigurativeConstant_58() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL HIGH-VALUES ");
@@ -506,7 +523,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_57() {
+    public void testFigurativeConstant_59() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LOW-VALUE ");
@@ -515,7 +532,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_58() {
+    public void testFigurativeConstant_60() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL LOW-VALUE ");
@@ -524,7 +541,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_59() {
+    public void testFigurativeConstant_61() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " LOW-VALUES ");
@@ -533,7 +550,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_60() {
+    public void testFigurativeConstant_62() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL LOW-VALUES ");
@@ -542,7 +559,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_61() {
+    public void testFigurativeConstant_63() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " QUOTE ");
@@ -551,7 +568,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_62() {
+    public void testFigurativeConstant_64() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL QUOTE ");
@@ -560,7 +577,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_63() {
+    public void testFigurativeConstant_65() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " QUOTES ");
@@ -569,7 +586,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_64() {
+    public void testFigurativeConstant_66() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL QUOTES ");
@@ -578,7 +595,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_65() {
+    public void testFigurativeConstant_67() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL \"A\" ");
@@ -587,7 +604,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_66() {
+    public void testFigurativeConstant_68() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " \"A\" ");
@@ -595,7 +612,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_67() {
+    public void testFigurativeConstant_69() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL 42 ");
@@ -604,7 +621,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_68() {
+    public void testFigurativeConstant_70() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42 ");
@@ -612,7 +629,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_69() {
+    public void testFigurativeConstant_71() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ALL 42.10 ");
@@ -621,7 +638,7 @@ public class LowLevelTest extends TestCase {
     }
 
     @Test
-    public void testFigurativeConstant_70() {
+    public void testFigurativeConstant_72() {
       Parser parser = grammar.figurativeConstant();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " 42.10 ");

@@ -98,7 +98,7 @@ public abstract class KoopaGrammar {
 				Token peek = stream.peek();
 
 				if (LOGGER.isTraceEnabled())
-					push(name + " ? " + peek + "...");
+					push(name + " ? " + stream.peekMore() + "...");
 
 				if (failures.has(stream.peek())) {
 					if (LOGGER.isTraceEnabled())
@@ -137,8 +137,8 @@ public abstract class KoopaGrammar {
 				scope.pop();
 
 				if (LOGGER.isTraceEnabled())
-					pop(name + (accepts ? ": yes " : ": no ") + peek + " // "
-							+ stream.peek() + "...");
+					pop(name + (accepts ? ": yes " : ": no ") + peek + " - up to "
+							+ stream.peekMore() + "...");
 
 				return accepts;
 			}

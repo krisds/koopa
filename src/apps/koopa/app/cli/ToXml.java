@@ -3,8 +3,8 @@ package koopa.app.cli;
 import java.io.File;
 import java.io.IOException;
 
+import koopa.app.ApplicationSupport;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.cobol.CobolParser;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
@@ -16,53 +16,96 @@ import org.antlr.runtime.tree.CommonTree;
 public class ToXml {
 
 	private static final int BAD_USAGE = -1;
-	private static final int FILE_DOES_NOT_EXIST = -2;
-	private static final int IOEXCEPTION = -3;
+	private static final int SOURCE_DOES_NOT_EXIST = -2;
 
-	private static final int INPUT_IS_INVALID = 1;
-	private static final int INPUT_IS_VALID = 0;
+	private static final int IOEXCEPTION = -10;
 
 	public static void main(String[] args) {
-		if (args == null || args.length < 2 || args.length > 3) {
-			System.out
-					.println("Usage: ToXml [--free-format] <cobol-input-file> <xml-output-file>");
-			System.exit(BAD_USAGE);
-		}
 
 		SourceFormat format = SourceFormat.FIXED;
-		String inputFilename = args[0];
-		String outputFilename = args[1];
+		File source = null;
+		File target = null;
 
-		if (args.length == 3) {
-			String option = args[0];
-			if (option.equals("--free-format")) {
-				format = SourceFormat.FREE;
+		for (int i = 0; i < args.length; i++) {
+			String option = args[i];
+
+			if (option.startsWith("--")) {
+				if (option.equals("--free-format")) {
+					format = SourceFormat.FREE;
+
+				} else {
+					System.out.println("Unknown option: " + option);
+					System.exit(BAD_USAGE);
+				}
+
+			} else if (source == null) {
+				source = new File(option);
+
+				if (!source.exists()) {
+					System.out.println("Source path does not exist: " + source);
+					System.exit(SOURCE_DOES_NOT_EXIST);
+				}
+
+			} else if (target == null) {
+				target = new File(option);
 
 			} else {
-				System.out.println("Unknown option: " + option);
+				System.out
+						.println("Usage: ToXml [--free-format] <source-path> <target-path>");
 				System.exit(BAD_USAGE);
 			}
-
-			inputFilename = args[1];
-			outputFilename = args[2];
 		}
 
-		final File cobolFile = new File(inputFilename);
-		if (!cobolFile.exists()) {
-			System.out.println("Input file does not exist: " + cobolFile);
-			System.exit(FILE_DOES_NOT_EXIST);
-		}
+		ToXml toXml = new ToXml(format);
+		toXml.process(source, target);
+	}
 
-		ParsingCoordinator coordinator = new ParsingCoordinator();
+	private final ParsingCoordinator coordinator;
+
+	public ToXml(SourceFormat format) {
+		this.coordinator = new ParsingCoordinator();
 		coordinator.setFormat(format);
+	}
+
+	private void process(File source, File target) {
+		if (source.isFile()) {
+			toXml(source, target);
+
+		} else if (source.isDirectory()) {
+			File[] files = source.listFiles(ApplicationSupport
+					.getFilenameFilter(false));
+
+			for (File fileInFolder : files) {
+				System.out.println(fileInFolder.getPath());
+				process(fileInFolder, new File(target, fileInFolder.getName()));
+			}
+		}
+	}
+
+	private void toXml(File source, File target) {
+		System.out.println("Processing " + source);
+
+		String targetPath = target.getPath();
+		int dot = targetPath.lastIndexOf('.');
+		if (dot < 0)
+			targetPath = targetPath + ".xml";
+		else
+			targetPath = targetPath.substring(0, dot) + ".xml";
+
+		target = new File(targetPath);
+		System.out.println("Writing XML to " + target);
+
+		File targetFolder = target.getParentFile();
+		if (targetFolder != null && !targetFolder.exists())
+			targetFolder.mkdirs();
 
 		ParseResults results = null;
 
 		try {
-			results = coordinator.parse(cobolFile);
+			results = coordinator.parse(source);
 
 		} catch (IOException e) {
-			System.out.println("IOException while reading " + cobolFile);
+			System.out.println("IOException while reading " + source);
 			System.exit(IOEXCEPTION);
 		}
 
@@ -83,21 +126,19 @@ public class ToXml {
 		}
 
 		if (!results.isValidInput()) {
-			System.out.println("Could not parse " + cobolFile);
-			System.exit(INPUT_IS_INVALID);
+			System.out.println("Could not parse " + source);
+			return;
 		}
 
 		final CommonTree ast = results.getTree();
 
-		final File xmlFile = new File(outputFilename);
 		try {
-			CommonTreeSerializer.serialize(ast, xmlFile);
+			CommonTreeSerializer.serialize(ast, target);
 
 		} catch (IOException e) {
-			System.out.println("IOException while writing " + xmlFile);
+			System.out.println("IOException while writing " + target);
+			System.out.println(e.getMessage());
 			System.exit(IOEXCEPTION);
 		}
-
-		System.exit(INPUT_IS_VALID);
 	}
 }

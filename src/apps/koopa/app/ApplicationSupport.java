@@ -248,8 +248,15 @@ public class ApplicationSupport {
 	}
 
 	public static FilenameFilter getFilenameFilter() {
+		return getFilenameFilter(true);
+	}
+
+	public static FilenameFilter getFilenameFilter(final boolean filesOnly) {
 		return new FilenameFilter() {
 			public boolean accept(File dir, String name) {
+				if (!filesOnly && dir.isDirectory())
+					return true;
+
 				return isCobolFileName(name);
 			}
 		};

@@ -626,6 +626,9 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 						parts.add(token);
 					}
 
+					if (parts.isEmpty())
+						return false;
+
 					Token cobolWord = new Token(parts, CHARACTER_STRING,
 							PROGRAM_TEXT_AREA);
 

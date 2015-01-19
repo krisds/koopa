@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.CobolParser;
+import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.trees.antlr.CommonTreeSerializer;
@@ -24,7 +25,7 @@ public class ToXml {
 	public static void main(String[] args) {
 		if (args == null || args.length < 2 || args.length > 3) {
 			System.out
-					.println("Usage: GetASTAsXML [--free-format] <cobol-input-file> <xml-output-file>");
+					.println("Usage: ToXml [--free-format] <cobol-input-file> <xml-output-file>");
 			System.exit(BAD_USAGE);
 		}
 
@@ -52,14 +53,13 @@ public class ToXml {
 			System.exit(FILE_DOES_NOT_EXIST);
 		}
 
-		final CobolParser parser = new CobolParser();
-		parser.setFormat(format);
-		parser.setBuildTrees(true);
+		ParsingCoordinator coordinator = new ParsingCoordinator();
+		coordinator.setFormat(format);
 
 		ParseResults results = null;
 
 		try {
-			results = parser.parse(cobolFile);
+			results = coordinator.parse(cobolFile);
 
 		} catch (IOException e) {
 			System.out.println("IOException while reading " + cobolFile);

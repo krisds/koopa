@@ -3,7 +3,6 @@ package koopa.cobol.parser.cobol.preprocessing;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,9 +18,8 @@ import koopa.core.parsers.Parser;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.antlr.ANTLRTokensLoader;
+import koopa.core.trees.antlr.CommonKoopaToken;
 import koopa.core.trees.antlr.CommonTreeBuilder;
-import koopa.core.trees.antlr.ANTLRTokens;
 import koopa.core.trees.antlr.jaxen.Jaxen;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -103,8 +101,18 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 						unsupportedDirective = directive;
 						continue;
 
-					} else if (!getTokenTypes().isNodeOfType(tree,
-							"copyStatement")) {
+					}
+					
+					CommonKoopaToken token = (CommonKoopaToken) tree.getToken();
+					Data data2 = token.getKoopaData();
+					if (!(data2 instanceof Start)) {
+						LOGGER.debug("Unsupported: " + tree);
+						unsupportedDirective = directive;
+						continue;
+					}
+					
+					Start start = (Start) data2;
+					if (!"copyStatement".equals(start.getName())) {
 						LOGGER.debug("Unsupported: " + tree);
 						unsupportedDirective = directive;
 						continue;
@@ -188,7 +196,7 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 	// TODO Move this to a utility class; I'm sure this will come in handy
 	// again.
 	private CommonTree getSyntaxTree(List<Data> directive) {
-		CommonTreeBuilder builder = new CommonTreeBuilder(getTokenTypes());
+		CommonTreeBuilder builder = new CommonTreeBuilder();
 		TreeBuildDirectingSink director = new TreeBuildDirectingSink(builder,
 				true);
 
@@ -251,23 +259,5 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 	@Override
 	public void close() {
 		sourceTokenizer.close();
-	}
-
-	// TODO Make this part of the CobolPreprocessingGrammar as a static method.
-	private static ANTLRTokens tokenTypes = null;
-
-	public static ANTLRTokens getTokenTypes() {
-		if (tokenTypes == null) {
-			try {
-				tokenTypes = ANTLRTokensLoader
-						.loadResource("/koopa/cobol/grammar/preprocessing/antlr/CobolPreprocessing.tokens");
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return tokenTypes;
 	}
 }

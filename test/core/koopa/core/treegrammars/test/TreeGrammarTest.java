@@ -14,7 +14,6 @@ import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
 import koopa.core.trees.antlr.ANTLRNaming;
-import koopa.core.trees.antlr.ANTLRTokens;
 import koopa.core.trees.antlr.CommonKoopaToken;
 
 import org.antlr.runtime.CommonToken;
@@ -25,9 +24,6 @@ import org.junit.Test;
 public class TreeGrammarTest {
 
 	private static TreeGrammar G = new TreeGrammar();
-
-	private static ANTLRTokens tokens = new ANTLRTokens();
-	private static int count = 20;
 
 	@Test
 	public void canMatchSingleToken() {
@@ -247,7 +243,7 @@ public class TreeGrammarTest {
 
 		Start start = Start.on(name);
 
-		CommonToken antlrToken = new CommonKoopaToken(start, tokens);
+		CommonToken antlrToken = new CommonKoopaToken(start);
 		CommonTree antlrTree = new CommonTree(antlrToken);
 
 		for (Object part : parts) {
@@ -269,7 +265,7 @@ public class TreeGrammarTest {
 		Position start = new Position(0, 0, 0);
 		Token token = new Token(text, start, start.offsetBy(text.length()));
 
-		CommonToken antlrToken = new CommonKoopaToken(token, tokens);
+		CommonToken antlrToken = new CommonKoopaToken(token);
 		CommonTree antlrTree = new CommonTree(antlrToken);
 
 		return antlrTree;
@@ -277,14 +273,10 @@ public class TreeGrammarTest {
 
 	private void ensureNode(String name) {
 		name = ANTLRNaming.forNode(name);
-		if (!tokens.contains(name))
-			tokens.put(name, count++, false);
 	}
 
 	private void ensureToken(String text) {
 		text = ANTLRNaming.forLiteral(text);
-		if (!tokens.contains(text))
-			tokens.put(text, count++, true);
 	}
 
 	private void shouldAccept(TreeParser parser, CommonTree tree) {

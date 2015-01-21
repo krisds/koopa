@@ -30,16 +30,6 @@
 		<antlr-gen grammar="src/core/koopa/core/grammars/test/generator/Stage.g" />
 		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageTreeParser.g" tokens="src/core/koopa/core/grammars/test/generator/" />
 		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageGenerator.g" tokens="src/core/koopa/core/grammars/test/generator/" />
-
-		<echo>Generating the ANTLR tree parser generator...</echo>
-		<copy file="src/core/koopa/core/grammars/generator/KG.tokens" tofile="src/core/koopa/core/trees/antlr/generator/KG.tokens" />
-		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/generator/KGToANTLRTokens.g" tokens="src/core/koopa/core/trees/antlr/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/generator/KGToANTLRTreeGrammar.g" tokens="src/core/koopa/core/trees/antlr/generator/" />
-
-		<echo>Generating the ANTLR tree filter generator...</echo>
-		<antlr-gen grammar="src/core/koopa/core/trees/antlr/filter/generator/ANTLRv3.g" />
-		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/filter/generator/ANTLRv3Tree.g" tokens="src/core/koopa/core/trees/antlr/filter/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/trees/antlr/filter/generator/ANTLRv3TreeFilter.g" tokens="src/core/koopa/core/trees/antlr/filter/generator/" />
 	</target>
 
 	<target name="core-build">
@@ -109,32 +99,14 @@
 
 	<!-- COBOL PARSER -->
 
-	<target name="cobol-update-kg-tokens" depends="core">
-		<echo>Copying the latest KG.tokens definition...</echo>
-		<synchronize-file file="src/core/koopa/core/grammars/generator/KG.tokens" root="src/cobol/" />
-	</target>
-
-	<target name="cobol-preprocessing" depends="cobol-update-kg-tokens">
+	<target name="cobol-preprocessing" depends="core">
 		<echo>Generating the Cobol Preprocessing parser...</echo>
 		<kgg name="CobolPreprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
-
-		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="CobolPreprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
 	</target>
 
-	<target name="cobol" depends="cobol-update-kg-tokens, cobol-preprocessing">
-		<echo>Copying the latest CobolPreprocessing.tokens definition...</echo>
-		<synchronize-file file="src/cobol/koopa/cobol/grammar/preprocessing/antlr/CobolPreprocessing.tokens" root="src/cobol/" />
-		
+	<target name="cobol" depends="cobol-preprocessing">
 		<echo>Generating the Cobol parser...</echo>
 		<kgg name="Cobol" path="src/cobol/koopa/cobol/grammar/" />
-
-		<echo>Generating secondary classes...</echo>
-		<kg2antlr name="Cobol" path="src/cobol/koopa/cobol/grammar/" />
-		
-		<!-- TODO The generated CobolTreeParser fails to compile, because the static initialization code exceeds 64K (or something). 
-		<antlr-gen2 grammar="src/cobol/koopa/cobol/grammar/antlr/CobolTreeParser.g" tokens="src/cobol/koopa/cobol/grammar/antlr/" />
-		-->
 
 		<echo>Compiling Cobol parser...</echo>
 		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5">
@@ -209,17 +181,8 @@
 	<!-- APPLICATIONS -->
 
 	<target name="apps" depends="core,cobol">
-		<echo>Copying the latest Cobol.tokens definition...</echo>
-		<synchronize-file file="src/cobol/koopa/cobol/grammar/antlr/Cobol.tokens" root="src/apps/" />
-
 		<echo>Generating the Cobol outline parser...</echo>
 		<generate-tree-parser name="CobolOutline" path="src/apps/koopa/app/components/outline/" />
-
-		<echo>Generating the cyclometic complexity parser...</echo>
-		<antlr-gen2 grammar="src/apps/koopa/app/cc/CyclomaticComplexityTreeParser.g" tokens="src/apps/koopa/app/cc/" />
-
-		<echo>Generating tree filters...</echo>
-		<generate-tree-filters root="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
 		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5">
@@ -239,31 +202,11 @@
 	<!-- EXAMPLES -->
 
 	<target name="examples" depends="core,cobol">
-		<echo>Copying the latest Cobol.tokens definition...</echo>
-		<synchronize-file file="src/cobol/koopa/cobol/grammar/antlr/Cobol.tokens" root="examples/" />
-
-		<echo>Generating the basic tree parser...</echo>
-		<antlr-gen2 grammar="examples/treefilters/koopa/examples/treefilter/MyAdaptiveTreeParser.g" tokens="examples/treefilters/koopa/examples/treefilter/" />
-
-		<echo>Generating the skipping tree parser...</echo>
-		<antlr-gen2 grammar="examples/treefilters/koopa/examples/treefilter/skipped/SkippedTreeParser.g" tokens="examples/treefilters/koopa/examples/treefilter/skipped/" />
-
-		<echo>Generating tree filters...</echo>
-		<generate-tree-filters root="examples/treefilters/" />
-
 		<echo>Generating CobolStructure tree parser...</echo>
 		<generate-tree-parser name="CobolStructure" path="examples/treegrammars/koopa/examples/treegrammars/" />
-
 		
 		<echo>Compiling example classes...</echo>
 		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5">
-			<classpath>
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
-		<javac srcdir="examples/treefilters/" destdir="build/" debug="on" source="1.5">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -281,7 +224,6 @@
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
 			<fileset dir="examples/jaxen/" excludes="**/*.java,**/*.g" />
-			<fileset dir="examples/treefilters/" excludes="**/*.java,**/*.g" />
 			<fileset dir="examples/treegrammars/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
@@ -364,25 +306,6 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="kg2antlr">
-		<attribute name="name" />
-		<attribute name="path" />
-		<sequential>
-			<java classname="koopa.core.trees.antlr.generator.KGToANTLR" fork="true">
-				<jvmarg value="-ea" />
-				<arg value="@{name}" />
-				<arg value="@{path}" />
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
 	<macrodef name="generate-unit-test">
 		<attribute name="path" />
 		<sequential>
@@ -407,23 +330,6 @@
 			<java classname="koopa.core.util.ANTSynchronize" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{file}" />
-				<arg value="@{root}" />
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="generate-tree-filters">
-		<attribute name="root" />
-		<sequential>
-			<java classname="koopa.core.trees.antlr.filter.generator.GenerateANTLRv3TreeFilters" fork="true">
-				<jvmarg value="-ea" />
 				<arg value="@{root}" />
 				<classpath>
 					<pathelement path="build/" />

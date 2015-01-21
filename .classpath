@@ -14,7 +14,6 @@
 	<classpathentry kind="src" path="src/cobol"/>
 	<classpathentry kind="src" path="test/cobol"/>
 	<classpathentry kind="src" path="examples/jaxen"/>
-	<classpathentry kind="src" path="examples/treefilters"/>
 	<classpathentry kind="src" path="src/apps"/>
 	<classpathentry kind="src" path="examples/treegrammars"/>
 	<classpathentry kind="output" path="build"/>

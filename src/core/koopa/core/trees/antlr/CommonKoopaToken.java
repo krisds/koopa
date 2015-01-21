@@ -4,7 +4,6 @@ import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.data.tags.AreaTag;
 
 import org.antlr.runtime.CommonToken;
 
@@ -21,25 +20,21 @@ import org.antlr.runtime.CommonToken;
 public class CommonKoopaToken extends CommonToken {
 	private Data data = null;
 
-	public CommonKoopaToken(final Data data, final ANTLRTokens types) {
+	public CommonKoopaToken(final Data data) {
 		super(1);
 
 		this.data = data;
+
+		setType(42);
 
 		if (data instanceof Marker) {
 			final Marker marker = (Marker) data;
 			final String name = marker.getName();
 
-			setType(types.forNode(name));
 			setText(name);
 
 		} else if (data instanceof Token) {
 			Token token = (Token) data;
-
-			if (token.hasTag(AreaTag.COMMENT))
-				setType(types.forType("COMMENT"));
-			else
-				setType(types.forLiteral(token.getText()));
 
 			setText(token.getText());
 

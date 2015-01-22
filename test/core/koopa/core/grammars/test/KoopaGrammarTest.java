@@ -224,5 +224,24 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldReject(parser, input("Cobol"));
 	}
 
+	@Test
+	public void testCanMatchWithLimit() {
+		Parser unlimited = G.sequence(G.skipto(G.token("COBOL")),
+				G.token("COBOL"));
+		Parser limited = G.limited(unlimited, G.token("."));
+
+		shouldAccept(unlimited, input("COBOL"));
+		shouldAccept(limited, input("COBOL"));
+
+		shouldAccept(unlimited, input("FLOWMATIC", "COBOL"));
+		shouldAccept(limited, input("FLOWMATIC", "COBOL"));
+
+		shouldAccept(unlimited, input("PL/I", "FLOWMATIC", "COBOL"));
+		shouldAccept(limited, input("PL/I", "FLOWMATIC", "COBOL"));
+
+		shouldAccept(unlimited, input("PL/I", "FLOWMATIC", ".", "COBOL"));
+		shouldReject(limited, input("PL/I", "FLOWMATIC", ".", "COBOL"));
+	}
+
 	// TODO Add some recursive tests.
 }

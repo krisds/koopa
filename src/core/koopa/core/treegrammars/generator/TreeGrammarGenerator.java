@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2014-12-15 22:16:37
+// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-01-22 21:19:51
 
   package koopa.core.treegrammars.generator;
   
@@ -23,11 +23,12 @@ import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
 public class TreeGrammarGenerator extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
     };
     public static final int SKIP_TO=34;
     public static final int STAR=30;
-    public static final int LETTER=41;
+    public static final int LIMIT=38;
+    public static final int LETTER=43;
     public static final int EQUALS=23;
     public static final int NOT=36;
     public static final int NOSKIP=37;
@@ -39,34 +40,35 @@ public class TreeGrammarGenerator extends TreeParser {
     public static final int COMMA=24;
     public static final int EXTENDING=7;
     public static final int IDENTIFIER=19;
+    public static final int PIPE=40;
     public static final int PLUS=31;
-    public static final int PIPE=38;
     public static final int BODY=9;
     public static final int CLOSE_PAREN=22;
-    public static final int DIGIT=42;
-    public static final int COMMENT=39;
+    public static final int DIGIT=44;
+    public static final int COMMENT=41;
     public static final int DOT=20;
+    public static final int T__50=50;
     public static final int CHOICE=12;
     public static final int GRAMMAR=4;
     public static final int RETURNS=10;
+    public static final int BY=39;
     public static final int ACT=14;
     public static final int LOCALS=17;
     public static final int T__46=46;
     public static final int T__47=47;
     public static final int RULE=8;
-    public static final int T__44=44;
-    public static final int T__45=45;
     public static final int T__48=48;
+    public static final int T__49=49;
     public static final int NUMBER=29;
-    public static final int WHITESPACE=43;
+    public static final int WHITESPACE=45;
     public static final int OPEN_PAREN=21;
     public static final int LITERAL=28;
     public static final int BANG=35;
-    public static final int OPTIONAL=13;
     public static final int TAG=26;
+    public static final int OPTIONAL=13;
     public static final int SEQUENCE=11;
     public static final int ANY=27;
-    public static final int NEWLINE=40;
+    public static final int NEWLINE=42;
     public static final int NAMED=6;
     public static final int ASSIGN=15;
     public static final int PERMUTED=18;

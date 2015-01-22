@@ -96,4 +96,6 @@ body
   | ^(NOT body)
 
   | ^(NOSKIP body)
+  
+  | ^(LIMIT body body)
   ;

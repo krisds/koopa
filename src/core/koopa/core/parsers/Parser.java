@@ -21,7 +21,7 @@ public abstract class Parser {
 		assert (tokenizer != null);
 		assert (sink != null);
 
-		ParseStream stream = new ParseStream(tokenizer, new WaterTagger(sink));
+		ParseStream stream = new BasicParseStream(tokenizer, new WaterTagger(sink));
 		boolean accepted = accepts(stream);
 		stream.commit();
 		return accepted;

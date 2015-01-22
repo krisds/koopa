@@ -292,4 +292,11 @@ body [ List<String> bindings, List<String> unbindings ]
       option = {option},
       body = {b}
     )
+  
+  | ^(LIMIT b_t=body[bindings, unbindings] b_l=body[bindings, unbindings])
+  
+    -> limit(
+      target = {b_t},
+      limiter = {b_l}
+    )
   ;

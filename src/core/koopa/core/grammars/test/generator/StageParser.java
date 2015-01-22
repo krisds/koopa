@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/Stage.g 2014-11-24 20:28:03
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/Stage.g 2015-01-22 21:19:53
 
   package koopa.core.grammars.test.generator;
 
@@ -140,7 +140,7 @@ public class StageParser extends Parser {
 
 
             // AST REWRITE
-            // elements: grammarDeclaration, packageDeclaration, testsForGrammarRule
+            // elements: testsForGrammarRule, packageDeclaration, grammarDeclaration
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -431,7 +431,7 @@ public class StageParser extends Parser {
 
 
             // AST REWRITE
-            // elements: IDENTIFIER, testcase
+            // elements: testcase, IDENTIFIER
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -587,7 +587,7 @@ public class StageParser extends Parser {
 
 
             // AST REWRITE
-            // elements: d, t
+            // elements: t, d
             // token labels: d, t
             // rule labels: retval
             // token list labels: 

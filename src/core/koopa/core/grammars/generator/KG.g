@@ -142,6 +142,9 @@ part
   | NOSKIP part
   -> ^(NOSKIP part)
 
+  | LIMIT part BY part
+  -> ^(LIMIT part part)
+
   ;
 
 more
@@ -155,6 +158,10 @@ COMMENT : '#' (~('\n' | '\r'))* { $channel = HIDDEN; } ;
 NEWLINE : ( ('\r\n') => '\r\n' | '\r' | '\n' ) { $channel = HIDDEN; } ;
 
 NOSKIP : '%noskip' ;
+
+LIMIT : '%limit' ;
+
+BY : '%by' ;
 
 TAG : '@' LETTER ( LETTER | DIGIT | '-' | '_' )* ;
 

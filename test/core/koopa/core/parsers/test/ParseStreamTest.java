@@ -3,6 +3,7 @@ package koopa.core.parsers.test;
 import junit.framework.TestCase;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
+import koopa.core.parsers.BasicParseStream;
 import koopa.core.parsers.ParseStream;
 import koopa.core.sources.test.HardcodedSource;
 import koopa.core.targets.ListTarget;
@@ -22,7 +23,7 @@ public class ParseStreamTest extends TestCase {
 		HardcodedSource source = HardcodedSource.from(WORDS);
 		ListTarget target = new ListTarget();
 
-		ParseStream stream = new ParseStream(source, target);
+		ParseStream stream = new BasicParseStream(source, target);
 
 		// We just step through all words, until there are no more.
 		for (int i = 0; i < WORDS.length; i++)
@@ -43,7 +44,7 @@ public class ParseStreamTest extends TestCase {
 		HardcodedSource source = HardcodedSource.from(WORDS);
 		ListTarget target = new ListTarget();
 
-		ParseStream stream = new ParseStream(source, target);
+		ParseStream stream = new BasicParseStream(source, target);
 
 		// Each loop we step through all words and rewind all of them. But
 		// before the next loop we push one token to the target, so each
@@ -76,7 +77,7 @@ public class ParseStreamTest extends TestCase {
 		HardcodedSource source = HardcodedSource.from(WORDS);
 		ListTarget target = new ListTarget();
 
-		ParseStream stream = new ParseStream(source, target);
+		ParseStream stream = new BasicParseStream(source, target);
 
 		// Each loop we step through all words and rewind all of them. But
 		// before the next loop we push one token to the target, so each

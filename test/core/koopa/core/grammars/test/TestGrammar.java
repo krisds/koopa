@@ -114,4 +114,9 @@ public class TestGrammar extends KoopaGrammar {
 	protected Parser opt(Opt opt, Parser parser) {
 		return super.opt(opt, parser);
 	}
+
+	@Override
+	protected Parser limited(Parser target, Parser limiter) {
+		return super.limited(target, limiter);
+	}
 }

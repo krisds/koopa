@@ -13,6 +13,7 @@ import koopa.core.data.markers.InWater;
 import koopa.core.data.markers.OnLand;
 import koopa.core.data.markers.Start;
 import koopa.core.parsers.FutureParser;
+import koopa.core.parsers.LimitedParseStream;
 import koopa.core.parsers.ParseStream;
 import koopa.core.parsers.Parser;
 import koopa.core.util.Tuple;
@@ -137,8 +138,8 @@ public abstract class KoopaGrammar {
 				scope.pop();
 
 				if (LOGGER.isTraceEnabled())
-					pop(name + (accepts ? ": yes " : ": no ") + peek + " - up to "
-							+ stream.peekMore() + "...");
+					pop(name + (accepts ? ": yes " : ": no ") + peek
+							+ " - up to " + stream.peekMore() + "...");
 
 				return accepts;
 			}
@@ -551,6 +552,14 @@ public abstract class KoopaGrammar {
 				}
 
 				return accepts;
+			}
+		};
+	}
+
+	protected Parser limited(final Parser target, final Parser limiter) {
+		return new Parser() {
+			public boolean accepts(ParseStream stream) {
+				return target.accepts(new LimitedParseStream(stream, limiter));
 			}
 		};
 	}

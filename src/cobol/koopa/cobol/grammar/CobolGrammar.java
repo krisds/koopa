@@ -10574,7 +10574,10 @@ public class CobolGrammar extends CobolPreprocessingGrammar {
                        token("EXECUTE")
                    ),
                    token("SQL"),
-                   sqlStatement(),
+                   limited(
+                       sqlStatement(),
+                       token("END-EXEC")
+                   ),
                    optional(
                        skipto(
                            token("END-EXEC")
@@ -10795,7 +10798,10 @@ public class CobolGrammar extends CobolPreprocessingGrammar {
                        token("EXECUTE")
                    ),
                    token("CICS"),
-                   cicsStatement(),
+                   limited(
+                       cicsStatement(),
+                       token("END-EXEC")
+                   ),
                    optional(
                        skipto(
                            token("END-EXEC")

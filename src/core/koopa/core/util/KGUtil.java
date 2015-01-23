@@ -1,12 +1,12 @@
-package koopa.core.grammars.generator;
+package koopa.core.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import koopa.core.util.ASTFrame;
+import koopa.core.grammars.generator.KGLexer;
+import koopa.core.grammars.generator.KGParser;
 
 import org.antlr.runtime.ANTLRReaderStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -20,10 +20,10 @@ public final class KGUtil {
 
 	private static final boolean SHOW_AST = false;
 
-	public static CommonTree getKoopaAST(File file)
-			throws FileNotFoundException, IOException, RecognitionException {
+	public static CommonTree getKoopaAST(File file) throws IOException,
+			RecognitionException {
 
-		System.out.println("Reading " + file);
+		// System.out.println("Reading " + file);
 		Reader reader = new FileReader(file);
 
 		KGLexer lexer = new KGLexer(new ANTLRReaderStream(reader));
@@ -39,5 +39,19 @@ public final class KGUtil {
 			new ASTFrame("KG", ast).setVisible(true);
 
 		return ast;
+	}
+
+	public static boolean isTreeGrammar(CommonTree ast) {
+		if (ast.getChildCount() < 1)
+			return false;
+
+		CommonTree meta = (CommonTree) ast.getChild(0);
+		if (!"META".equalsIgnoreCase(meta.getText()))
+			return false;
+		if (meta.getChildCount() < 1)
+			return false;
+
+		CommonTree tree = (CommonTree) meta.getChild(0);
+		return "TREE".equalsIgnoreCase(tree.getText());
 	}
 }

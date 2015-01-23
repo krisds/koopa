@@ -1,4 +1,4 @@
-grammar CobolOutline extends CobolOutlineBase.
+tree grammar CobolOutline extends CobolOutlineBase.
 
 def compilationGroup =
     compilationUnit

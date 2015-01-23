@@ -8,6 +8,7 @@ options {
 tokens {
   GRAMMAR;
   META;
+  TREE;
   NAMED;
   EXTENDING;
   RULE;
@@ -46,13 +47,14 @@ koopa
   ;
 
 meta
-  : 'grammar' n=IDENTIFIER
+  : (t='tree')? 'grammar' n=IDENTIFIER
     ('extends' s=IDENTIFIER)?
     DOT
     
-    -> { s == null }? ^(META ^(NAMED $n))
-    
-    -> ^(META ^(NAMED $n) ^(EXTENDING $s))
+    -> { t == null && s == null }? ^(META ^(NAMED $n))
+    -> { t == null && s != null }? ^(META ^(NAMED $n) ^(EXTENDING $s))
+    -> { t != null && s == null }? ^(META TREE ^(NAMED $n))
+    -> ^(META TREE ^(NAMED $n) ^(EXTENDING $s))
   ;
 
 rule

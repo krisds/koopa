@@ -42,7 +42,7 @@ koopa [Properties p, String imports]
 
 
 meta [ Properties meta ]
-  : ^(META n=named (e=extending)?)
+  : ^(META TREE n=named (e=extending)?)
     
     { meta.setProperty("named", $n.name);
     

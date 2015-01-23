@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KGGenerator.g 2015-01-22 21:19:50
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KGGenerator.g 2015-01-23 09:22:08
 
   package koopa.core.grammars.generator;
   
@@ -22,56 +22,58 @@ import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
 public class KGGenerator extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "TREE", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'tree'", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
     };
-    public static final int SKIP_TO=34;
-    public static final int STAR=30;
-    public static final int LIMIT=38;
-    public static final int LETTER=43;
-    public static final int EQUALS=23;
-    public static final int NOT=36;
-    public static final int NOSKIP=37;
+    public static final int SKIP_TO=35;
+    public static final int STAR=31;
+    public static final int LIMIT=39;
+    public static final int LETTER=44;
+    public static final int EQUALS=24;
+    public static final int NOT=37;
+    public static final int NOSKIP=38;
     public static final int EOF=-1;
-    public static final int DECLARATION=16;
+    public static final int DECLARATION=17;
     public static final int META=5;
-    public static final int OPEN_BRACKET=32;
-    public static final int NATIVE_CODE=25;
-    public static final int COMMA=24;
-    public static final int EXTENDING=7;
-    public static final int IDENTIFIER=19;
-    public static final int PIPE=40;
-    public static final int PLUS=31;
-    public static final int BODY=9;
-    public static final int CLOSE_PAREN=22;
-    public static final int DIGIT=44;
-    public static final int COMMENT=41;
-    public static final int DOT=20;
+    public static final int OPEN_BRACKET=33;
+    public static final int NATIVE_CODE=26;
+    public static final int T__51=51;
+    public static final int T__52=52;
+    public static final int TREE=6;
+    public static final int EXTENDING=8;
+    public static final int COMMA=25;
+    public static final int IDENTIFIER=20;
+    public static final int PIPE=41;
+    public static final int PLUS=32;
+    public static final int BODY=10;
+    public static final int CLOSE_PAREN=23;
+    public static final int DIGIT=45;
+    public static final int COMMENT=42;
+    public static final int DOT=21;
     public static final int T__50=50;
-    public static final int CHOICE=12;
     public static final int GRAMMAR=4;
-    public static final int RETURNS=10;
-    public static final int BY=39;
-    public static final int ACT=14;
-    public static final int LOCALS=17;
-    public static final int T__46=46;
+    public static final int CHOICE=13;
+    public static final int RETURNS=11;
+    public static final int BY=40;
+    public static final int ACT=15;
+    public static final int LOCALS=18;
     public static final int T__47=47;
-    public static final int RULE=8;
+    public static final int RULE=9;
     public static final int T__48=48;
     public static final int T__49=49;
-    public static final int NUMBER=29;
-    public static final int WHITESPACE=45;
-    public static final int OPEN_PAREN=21;
-    public static final int LITERAL=28;
-    public static final int BANG=35;
-    public static final int TAG=26;
-    public static final int OPTIONAL=13;
-    public static final int SEQUENCE=11;
-    public static final int ANY=27;
-    public static final int NEWLINE=42;
-    public static final int NAMED=6;
-    public static final int ASSIGN=15;
-    public static final int PERMUTED=18;
-    public static final int CLOSE_BRACKET=33;
+    public static final int NUMBER=30;
+    public static final int WHITESPACE=46;
+    public static final int OPEN_PAREN=22;
+    public static final int LITERAL=29;
+    public static final int BANG=36;
+    public static final int TAG=27;
+    public static final int OPTIONAL=14;
+    public static final int SEQUENCE=12;
+    public static final int ANY=28;
+    public static final int NEWLINE=43;
+    public static final int NAMED=7;
+    public static final int ASSIGN=16;
+    public static final int PERMUTED=19;
+    public static final int CLOSE_BRACKET=34;
 
     // delegates
     // delegators
@@ -1358,29 +1360,29 @@ public class KGGenerator extends TreeParser {
  
 
     public static final BitSet FOLLOW_GRAMMAR_in_koopa68 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_meta_in_koopa76 = new BitSet(new long[]{0x0000000000000108L});
-    public static final BitSet FOLLOW_rule_in_koopa88 = new BitSet(new long[]{0x0000000000000108L});
+    public static final BitSet FOLLOW_meta_in_koopa76 = new BitSet(new long[]{0x0000000000000208L});
+    public static final BitSet FOLLOW_rule_in_koopa88 = new BitSet(new long[]{0x0000000000000208L});
     public static final BitSet FOLLOW_META_in_meta222 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_named_in_meta226 = new BitSet(new long[]{0x0000000000000088L});
+    public static final BitSet FOLLOW_named_in_meta226 = new BitSet(new long[]{0x0000000000000108L});
     public static final BitSet FOLLOW_extending_in_meta231 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NAMED_in_named263 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_named267 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_EXTENDING_in_extending295 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_extending299 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RULE_in_rule329 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_rule333 = new BitSet(new long[]{0x00000074FC1EFC00L});
-    public static final BitSet FOLLOW_locals_in_rule345 = new BitSet(new long[]{0x00000074FC1EFC00L});
-    public static final BitSet FOLLOW_returning_in_rule376 = new BitSet(new long[]{0x00000074FC1EFC00L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_rule333 = new BitSet(new long[]{0x000000E9F83DF800L});
+    public static final BitSet FOLLOW_locals_in_rule345 = new BitSet(new long[]{0x000000E9F83DF800L});
+    public static final BitSet FOLLOW_returning_in_rule376 = new BitSet(new long[]{0x000000E9F83DF800L});
     public static final BitSet FOLLOW_body_in_rule389 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RETURNS_in_returning472 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_returning476 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_LOCALS_in_locals525 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_declaration_in_locals536 = new BitSet(new long[]{0x0000000000010008L});
+    public static final BitSet FOLLOW_declaration_in_locals536 = new BitSet(new long[]{0x0000000000020008L});
     public static final BitSet FOLLOW_DECLARATION_in_declaration579 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_declaration583 = new BitSet(new long[]{0x0000000000080000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_declaration583 = new BitSet(new long[]{0x0000000000100000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_declaration587 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_SEQUENCE_in_body616 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body627 = new BitSet(new long[]{0x00000074FC1EFC08L});
+    public static final BitSet FOLLOW_body_in_body627 = new BitSet(new long[]{0x000000E9F83DF808L});
     public static final BitSet FOLLOW_ACT_in_body695 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_NATIVE_CODE_in_body699 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_TAG_in_body769 = new BitSet(new long[]{0x0000000000000002L});
@@ -1390,7 +1392,7 @@ public class KGGenerator extends TreeParser {
     public static final BitSet FOLLOW_IDENTIFIER_in_body919 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_DOT_in_body1001 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ASSIGN_in_body1041 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body1045 = new BitSet(new long[]{0x0000000020180000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body1045 = new BitSet(new long[]{0x0000000040300000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_body1050 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NUMBER_in_body1056 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_DOT_in_body1062 = new BitSet(new long[]{0x0000000000000008L});
@@ -1399,19 +1401,19 @@ public class KGGenerator extends TreeParser {
     public static final BitSet FOLLOW_PLUS_in_body1169 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1173 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_CHOICE_in_body1221 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1232 = new BitSet(new long[]{0x00000074FC1EFC08L});
+    public static final BitSet FOLLOW_body_in_body1232 = new BitSet(new long[]{0x000000E9F83DF808L});
     public static final BitSet FOLLOW_OPTIONAL_in_body1300 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1304 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_SKIP_TO_in_body1346 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1350 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_PERMUTED_in_body1396 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1407 = new BitSet(new long[]{0x00000074FC1EFC08L});
+    public static final BitSet FOLLOW_body_in_body1407 = new BitSet(new long[]{0x000000E9F83DF808L});
     public static final BitSet FOLLOW_NOT_in_body1469 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1473 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NOSKIP_in_body1513 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1517 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_LIMIT_in_body1575 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1579 = new BitSet(new long[]{0x00000074FC1EFC00L});
+    public static final BitSet FOLLOW_body_in_body1579 = new BitSet(new long[]{0x000000E9F83DF800L});
     public static final BitSet FOLLOW_body_in_body1584 = new BitSet(new long[]{0x0000000000000008L});
 
 }

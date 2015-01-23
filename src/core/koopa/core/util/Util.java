@@ -1,6 +1,7 @@
 package koopa.core.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -8,13 +9,13 @@ public final class Util {
 	private Util() {
 	}
 
-	public static String contents(String filename) {
-		if (filename == null)
+	public static String contents(File file) {
+		if (file == null)
 			return null;
 
 		FileReader fileReader = null;
 		try {
-			fileReader = new FileReader(filename);
+			fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 			StringBuffer buffer = new StringBuffer();

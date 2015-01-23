@@ -19,7 +19,7 @@ koopa
   ;
 
 meta
-  : ^(META named extending?)
+  : ^(META TREE? named extending?)
   ;
 
 named

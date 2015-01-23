@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Properties;
 
-import koopa.core.grammars.generator.KGUtil;
+import koopa.core.KGG;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
@@ -18,20 +18,47 @@ import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 
 public class KGToTreeGrammar {
 
-	public static void main(String[] args) throws IOException,
-			RecognitionException {
+	public static void main(String[] args) {
+		KGG.main(args);
+	}
 
-		String name = args[0];
-		String path = args[1];
+	public static void translate(File grammarFile, CommonTree ast) {
+		try {
+			String code = generate(grammarFile, ast);
 
-		File outputPath = new File(path, name + "TreeGrammar.java");
+			File path = grammarFile.getParentFile();
+			File java = new File(path, grammarFile.getName().replace(".kg",
+					"TreeGrammar.java"));
+
+			System.out.println("Generating " + java);
+			FileWriter writer = new FileWriter(java);
+			writer.append(code);
+			writer.close();
+			System.out.println("Generation complete.");
+
+		} catch (IOException e) {
+			System.out.println("Generation failed.");
+			e.printStackTrace();
+
+		} catch (RecognitionException e) {
+			System.out.println("Generation failed.");
+			e.printStackTrace();
+		}
+	}
+
+	private static String generate(File grammarFile, CommonTree ast)
+			throws RecognitionException, IOException {
+		File path = grammarFile.getParentFile();
 
 		// Each grammar should have an associated properties file containing
 		// some extra info needed for creating a valid Java class. We don't make
 		// this part of the actual grammar file because we want to keep any
 		// native stuff out of there.
 		Properties meta = new Properties();
-		meta.load(new FileInputStream(new File(path, name + ".properties")));
+
+		File propertiesFile = new File(path, grammarFile.getName().replace(
+				".kg", ".properties"));
+		meta.load(new FileInputStream(propertiesFile));
 
 		// One of the things the properties file should define are all the
 		// required imports. We collect them here into actual valid Java import
@@ -60,14 +87,11 @@ public class KGToTreeGrammar {
 			}
 		}
 
-		CommonTree ast = KGUtil.getKoopaAST(new File(path, name + ".kg"));
-
-		if (ast != null)
-			generateTreeParser(ast, meta, imports.toString(), outputPath);
+		return generateTreeParser(ast, meta, imports.toString());
 	}
 
-	public static void generateTreeParser(CommonTree ast, Properties meta,
-			String imports, File file) throws RecognitionException, IOException {
+	private static String generateTreeParser(CommonTree ast, Properties meta,
+			String imports) throws RecognitionException, IOException {
 
 		Reader templatesIn = new InputStreamReader(
 				KGToTreeGrammar.class
@@ -80,11 +104,6 @@ public class KGToTreeGrammar {
 		walker.setTemplateLib(templates);
 
 		String grammar = walker.koopa(meta, imports).toString();
-
-		System.out.println("Generating " + file);
-		// System.out.println(grammar);
-		FileWriter writer = new FileWriter(file);
-		writer.append(grammar);
-		writer.close();
+		return grammar;
 	}
 }

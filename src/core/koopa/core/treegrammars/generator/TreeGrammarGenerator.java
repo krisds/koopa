@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-01-22 21:19:51
+// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-01-23 09:22:09
 
   package koopa.core.treegrammars.generator;
   
@@ -23,56 +23,58 @@ import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
 public class TreeGrammarGenerator extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "TREE", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'tree'", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
     };
-    public static final int SKIP_TO=34;
-    public static final int STAR=30;
-    public static final int LIMIT=38;
-    public static final int LETTER=43;
-    public static final int EQUALS=23;
-    public static final int NOT=36;
-    public static final int NOSKIP=37;
+    public static final int SKIP_TO=35;
+    public static final int STAR=31;
+    public static final int LIMIT=39;
+    public static final int LETTER=44;
+    public static final int EQUALS=24;
+    public static final int NOT=37;
+    public static final int NOSKIP=38;
     public static final int EOF=-1;
-    public static final int DECLARATION=16;
+    public static final int DECLARATION=17;
     public static final int META=5;
-    public static final int OPEN_BRACKET=32;
-    public static final int NATIVE_CODE=25;
-    public static final int COMMA=24;
-    public static final int EXTENDING=7;
-    public static final int IDENTIFIER=19;
-    public static final int PIPE=40;
-    public static final int PLUS=31;
-    public static final int BODY=9;
-    public static final int CLOSE_PAREN=22;
-    public static final int DIGIT=44;
-    public static final int COMMENT=41;
-    public static final int DOT=20;
+    public static final int OPEN_BRACKET=33;
+    public static final int NATIVE_CODE=26;
+    public static final int T__51=51;
+    public static final int T__52=52;
+    public static final int TREE=6;
+    public static final int EXTENDING=8;
+    public static final int COMMA=25;
+    public static final int IDENTIFIER=20;
+    public static final int PIPE=41;
+    public static final int PLUS=32;
+    public static final int BODY=10;
+    public static final int CLOSE_PAREN=23;
+    public static final int DIGIT=45;
+    public static final int COMMENT=42;
+    public static final int DOT=21;
     public static final int T__50=50;
-    public static final int CHOICE=12;
     public static final int GRAMMAR=4;
-    public static final int RETURNS=10;
-    public static final int BY=39;
-    public static final int ACT=14;
-    public static final int LOCALS=17;
-    public static final int T__46=46;
+    public static final int CHOICE=13;
+    public static final int RETURNS=11;
+    public static final int BY=40;
+    public static final int ACT=15;
+    public static final int LOCALS=18;
     public static final int T__47=47;
-    public static final int RULE=8;
+    public static final int RULE=9;
     public static final int T__48=48;
     public static final int T__49=49;
-    public static final int NUMBER=29;
-    public static final int WHITESPACE=45;
-    public static final int OPEN_PAREN=21;
-    public static final int LITERAL=28;
-    public static final int BANG=35;
-    public static final int TAG=26;
-    public static final int OPTIONAL=13;
-    public static final int SEQUENCE=11;
-    public static final int ANY=27;
-    public static final int NEWLINE=42;
-    public static final int NAMED=6;
-    public static final int ASSIGN=15;
-    public static final int PERMUTED=18;
-    public static final int CLOSE_BRACKET=33;
+    public static final int NUMBER=30;
+    public static final int WHITESPACE=46;
+    public static final int OPEN_PAREN=22;
+    public static final int LITERAL=29;
+    public static final int BANG=36;
+    public static final int TAG=27;
+    public static final int OPTIONAL=14;
+    public static final int SEQUENCE=12;
+    public static final int ANY=28;
+    public static final int NEWLINE=43;
+    public static final int NAMED=7;
+    public static final int ASSIGN=16;
+    public static final int PERMUTED=19;
+    public static final int CLOSE_BRACKET=34;
 
     // delegates
     // delegators
@@ -205,7 +207,7 @@ public class TreeGrammarGenerator extends TreeParser {
     };
 
     // $ANTLR start "meta"
-    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:44:1: meta[ Properties meta ] : ^( META n= named (e= extending )? ) ;
+    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:44:1: meta[ Properties meta ] : ^( META TREE n= named (e= extending )? ) ;
     public final TreeGrammarGenerator.meta_return meta(Properties meta) throws RecognitionException {
         TreeGrammarGenerator.meta_return retval = new TreeGrammarGenerator.meta_return();
         retval.start = input.LT(1);
@@ -216,18 +218,19 @@ public class TreeGrammarGenerator extends TreeParser {
 
 
         try {
-            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:3: ( ^( META n= named (e= extending )? ) )
-            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:5: ^( META n= named (e= extending )? )
+            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:3: ( ^( META TREE n= named (e= extending )? ) )
+            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:5: ^( META TREE n= named (e= extending )? )
             {
             match(input,META,FOLLOW_META_in_meta204); 
 
             match(input, Token.DOWN, null); 
-            pushFollow(FOLLOW_named_in_meta208);
+            match(input,TREE,FOLLOW_TREE_in_meta206); 
+            pushFollow(FOLLOW_named_in_meta210);
             n=named();
 
             state._fsp--;
 
-            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:20: (e= extending )?
+            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:25: (e= extending )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -236,9 +239,9 @@ public class TreeGrammarGenerator extends TreeParser {
             }
             switch (alt2) {
                 case 1 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:21: e= extending
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:45:26: e= extending
                     {
-                    pushFollow(FOLLOW_extending_in_meta213);
+                    pushFollow(FOLLOW_extending_in_meta215);
                     e=extending();
 
                     state._fsp--;
@@ -289,10 +292,10 @@ public class TreeGrammarGenerator extends TreeParser {
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:55:3: ( ^( NAMED i= IDENTIFIER ) )
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:55:5: ^( NAMED i= IDENTIFIER )
             {
-            match(input,NAMED,FOLLOW_NAMED_in_named245); 
+            match(input,NAMED,FOLLOW_NAMED_in_named247); 
 
             match(input, Token.DOWN, null); 
-            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_named249); 
+            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_named251); 
 
             match(input, Token.UP, null); 
              retval.name = ((CommonTree) i).getText(); 
@@ -329,10 +332,10 @@ public class TreeGrammarGenerator extends TreeParser {
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:61:3: ( ^( EXTENDING i= IDENTIFIER ) )
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:61:5: ^( EXTENDING i= IDENTIFIER )
             {
-            match(input,EXTENDING,FOLLOW_EXTENDING_in_extending277); 
+            match(input,EXTENDING,FOLLOW_EXTENDING_in_extending279); 
 
             match(input, Token.DOWN, null); 
-            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_extending281); 
+            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_extending283); 
 
             match(input, Token.UP, null); 
              retval.name = ((CommonTree) i).getText(); 
@@ -378,10 +381,10 @@ public class TreeGrammarGenerator extends TreeParser {
                   List<String> unbindings = null;
                   StringTemplate bod = null;
                 
-            match(input,RULE,FOLLOW_RULE_in_rule312); 
+            match(input,RULE,FOLLOW_RULE_in_rule314); 
 
             match(input, Token.DOWN, null); 
-            n=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_rule316); 
+            n=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_rule318); 
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:73:7: (l= locals )?
             int alt3=2;
             int LA3_0 = input.LA(1);
@@ -393,7 +396,7 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 1 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:73:8: l= locals
                     {
-                    pushFollow(FOLLOW_locals_in_rule328);
+                    pushFollow(FOLLOW_locals_in_rule330);
                     l=locals();
 
                     state._fsp--;
@@ -429,7 +432,7 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 1 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:93:8: r= returning
                     {
-                    pushFollow(FOLLOW_returning_in_rule365);
+                    pushFollow(FOLLOW_returning_in_rule367);
                     r=returning();
 
                     state._fsp--;
@@ -440,7 +443,7 @@ public class TreeGrammarGenerator extends TreeParser {
 
             }
 
-            pushFollow(FOLLOW_body_in_rule384);
+            pushFollow(FOLLOW_body_in_rule386);
             b=body(bindings, unbindings);
 
             state._fsp--;
@@ -499,10 +502,10 @@ public class TreeGrammarGenerator extends TreeParser {
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:117:3: ( ^( RETURNS i= IDENTIFIER ) -> returning(name=((CommonTree) $i).getText()))
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:117:5: ^( RETURNS i= IDENTIFIER )
             {
-            match(input,RETURNS,FOLLOW_RETURNS_in_returning456); 
+            match(input,RETURNS,FOLLOW_RETURNS_in_returning458); 
 
             match(input, Token.DOWN, null); 
-            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_returning460); 
+            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_returning462); 
 
             match(input, Token.UP, null); 
 
@@ -548,7 +551,7 @@ public class TreeGrammarGenerator extends TreeParser {
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:125:3: ( ^( LOCALS (d= declaration )+ ) )
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:125:5: ^( LOCALS (d= declaration )+ )
             {
-            match(input,LOCALS,FOLLOW_LOCALS_in_locals509); 
+            match(input,LOCALS,FOLLOW_LOCALS_in_locals511); 
 
             match(input, Token.DOWN, null); 
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:126:7: (d= declaration )+
@@ -567,7 +570,7 @@ public class TreeGrammarGenerator extends TreeParser {
             	case 1 :
             	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:126:8: d= declaration
             	    {
-            	    pushFollow(FOLLOW_declaration_in_locals520);
+            	    pushFollow(FOLLOW_declaration_in_locals522);
             	    d=declaration();
 
             	    state._fsp--;
@@ -622,11 +625,11 @@ public class TreeGrammarGenerator extends TreeParser {
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:133:3: ( ^( DECLARATION a= IDENTIFIER b= IDENTIFIER ) )
             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:133:5: ^( DECLARATION a= IDENTIFIER b= IDENTIFIER )
             {
-            match(input,DECLARATION,FOLLOW_DECLARATION_in_declaration563); 
+            match(input,DECLARATION,FOLLOW_DECLARATION_in_declaration565); 
 
             match(input, Token.DOWN, null); 
-            a=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_declaration567); 
-            b=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_declaration571); 
+            a=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_declaration569); 
+            b=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_declaration573); 
 
             match(input, Token.UP, null); 
              retval.tuple = new Tuple<String, String>(((CommonTree) a).getText(), ((CommonTree) b).getText()); 
@@ -765,7 +768,7 @@ public class TreeGrammarGenerator extends TreeParser {
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:138:5: ^( SEQUENCE (b= body[bindings, unbindings] )+ )
                     {
                      List<StringTemplate> steps = new LinkedList<StringTemplate>(); 
-                    match(input,SEQUENCE,FOLLOW_SEQUENCE_in_body600); 
+                    match(input,SEQUENCE,FOLLOW_SEQUENCE_in_body602); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:140:7: (b= body[bindings, unbindings] )+
@@ -784,7 +787,7 @@ public class TreeGrammarGenerator extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:140:8: b= body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body612);
+                    	    pushFollow(FOLLOW_body_in_body614);
                     	    b=body(bindings, unbindings);
 
                     	    state._fsp--;
@@ -820,10 +823,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 2 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:149:5: ^( ACT n= NATIVE_CODE )
                     {
-                    match(input,ACT,FOLLOW_ACT_in_body680); 
+                    match(input,ACT,FOLLOW_ACT_in_body682); 
 
                     match(input, Token.DOWN, null); 
-                    n=(CommonTree)match(input,NATIVE_CODE,FOLLOW_NATIVE_CODE_in_body684); 
+                    n=(CommonTree)match(input,NATIVE_CODE,FOLLOW_NATIVE_CODE_in_body686); 
 
                     match(input, Token.UP, null); 
 
@@ -841,7 +844,7 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 3 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:157:5: ANY
                     {
-                    match(input,ANY,FOLLOW_ANY_in_body752); 
+                    match(input,ANY,FOLLOW_ANY_in_body754); 
 
 
                     // TEMPLATE REWRITE
@@ -856,14 +859,14 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 4 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:161:5: TAG
                     {
-                    match(input,TAG,FOLLOW_TAG_in_body770); 
+                    match(input,TAG,FOLLOW_TAG_in_body772); 
 
                     }
                     break;
                 case 5 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:163:5: i= IDENTIFIER
                     {
-                    i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body779); 
+                    i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body781); 
                      String text = ((CommonTree) i).getText();
                      	  boolean isLowerCase = Character.isLowerCase(text.charAt(0));
                         
@@ -887,21 +890,21 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 6 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:177:5: l= LITERAL
                     {
-                    l=(CommonTree)match(input,LITERAL,FOLLOW_LITERAL_in_body861); 
+                    l=(CommonTree)match(input,LITERAL,FOLLOW_LITERAL_in_body863); 
 
                     }
                     break;
                 case 7 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:179:5: n= NUMBER
                     {
-                    n=(CommonTree)match(input,NUMBER,FOLLOW_NUMBER_in_body870); 
+                    n=(CommonTree)match(input,NUMBER,FOLLOW_NUMBER_in_body872); 
 
                     }
                     break;
                 case 8 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:181:5: d= DOT
                     {
-                    d=(CommonTree)match(input,DOT,FOLLOW_DOT_in_body881); 
+                    d=(CommonTree)match(input,DOT,FOLLOW_DOT_in_body883); 
 
 
                     // TEMPLATE REWRITE
@@ -917,10 +920,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 9 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:187:5: ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) )
                     {
-                    match(input,ASSIGN,FOLLOW_ASSIGN_in_body925); 
+                    match(input,ASSIGN,FOLLOW_ASSIGN_in_body927); 
 
                     match(input, Token.DOWN, null); 
-                    l=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body929); 
+                    l=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body931); 
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:187:27: (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY )
                     int alt7=4;
                     switch ( input.LA(1) ) {
@@ -955,28 +958,28 @@ public class TreeGrammarGenerator extends TreeParser {
                         case 1 :
                             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:187:28: i= IDENTIFIER
                             {
-                            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body934); 
+                            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_body936); 
 
                             }
                             break;
                         case 2 :
                             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:187:43: n= NUMBER
                             {
-                            n=(CommonTree)match(input,NUMBER,FOLLOW_NUMBER_in_body940); 
+                            n=(CommonTree)match(input,NUMBER,FOLLOW_NUMBER_in_body942); 
 
                             }
                             break;
                         case 3 :
                             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:187:54: d= DOT
                             {
-                            d=(CommonTree)match(input,DOT,FOLLOW_DOT_in_body946); 
+                            d=(CommonTree)match(input,DOT,FOLLOW_DOT_in_body948); 
 
                             }
                             break;
                         case 4 :
                             // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:187:62: a= ANY
                             {
-                            a=(CommonTree)match(input,ANY,FOLLOW_ANY_in_body952); 
+                            a=(CommonTree)match(input,ANY,FOLLOW_ANY_in_body954); 
 
                             }
                             break;
@@ -1023,10 +1026,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 10 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:221:5: ^( STAR b= body[bindings, unbindings] )
                     {
-                    match(input,STAR,FOLLOW_STAR_in_body1013); 
+                    match(input,STAR,FOLLOW_STAR_in_body1015); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1017);
+                    pushFollow(FOLLOW_body_in_body1019);
                     b=body(bindings, unbindings);
 
                     state._fsp--;
@@ -1048,10 +1051,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 11 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:227:5: ^( PLUS b= body[bindings, unbindings] )
                     {
-                    match(input,PLUS,FOLLOW_PLUS_in_body1059); 
+                    match(input,PLUS,FOLLOW_PLUS_in_body1061); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1063);
+                    pushFollow(FOLLOW_body_in_body1065);
                     b=body(bindings, unbindings);
 
                     state._fsp--;
@@ -1073,7 +1076,7 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 12 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:233:5: ^( CHOICE ( body[bindings, unbindings] )+ )
                     {
-                    match(input,CHOICE,FOLLOW_CHOICE_in_body1107); 
+                    match(input,CHOICE,FOLLOW_CHOICE_in_body1109); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:234:7: ( body[bindings, unbindings] )+
@@ -1092,7 +1095,7 @@ public class TreeGrammarGenerator extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:234:8: body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1116);
+                    	    pushFollow(FOLLOW_body_in_body1118);
                     	    body(bindings, unbindings);
 
                     	    state._fsp--;
@@ -1118,10 +1121,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 13 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:238:5: ^( OPTIONAL body[bindings, unbindings] )
                     {
-                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1144); 
+                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1146); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1152);
+                    pushFollow(FOLLOW_body_in_body1154);
                     body(bindings, unbindings);
 
                     state._fsp--;
@@ -1134,10 +1137,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 14 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:242:5: ^( SKIP_TO body[bindings, unbindings] )
                     {
-                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1171); 
+                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1173); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1179);
+                    pushFollow(FOLLOW_body_in_body1181);
                     body(bindings, unbindings);
 
                     state._fsp--;
@@ -1150,10 +1153,10 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 15 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:246:5: ^( NOT body[bindings, unbindings] )
                     {
-                    match(input,NOT,FOLLOW_NOT_in_body1196); 
+                    match(input,NOT,FOLLOW_NOT_in_body1198); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1198);
+                    pushFollow(FOLLOW_body_in_body1200);
                     body(bindings, unbindings);
 
                     state._fsp--;
@@ -1166,7 +1169,7 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 16 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:248:5: ^( NOSKIP ( body[bindings, unbindings] )+ )
                     {
-                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1208); 
+                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1210); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:249:7: ( body[bindings, unbindings] )+
@@ -1185,7 +1188,7 @@ public class TreeGrammarGenerator extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:249:8: body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1218);
+                    	    pushFollow(FOLLOW_body_in_body1220);
                     	    body(bindings, unbindings);
 
                     	    state._fsp--;
@@ -1211,7 +1214,7 @@ public class TreeGrammarGenerator extends TreeParser {
                 case 17 :
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:253:5: ^( PERMUTED ( body[bindings, unbindings] )+ )
                     {
-                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1246); 
+                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1248); 
 
                     match(input, Token.DOWN, null); 
                     // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:254:7: ( body[bindings, unbindings] )+
@@ -1230,7 +1233,7 @@ public class TreeGrammarGenerator extends TreeParser {
                     	case 1 :
                     	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:254:8: body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1256);
+                    	    pushFollow(FOLLOW_body_in_body1258);
                     	    body(bindings, unbindings);
 
                     	    state._fsp--;
@@ -1272,58 +1275,59 @@ public class TreeGrammarGenerator extends TreeParser {
  
 
     public static final BitSet FOLLOW_GRAMMAR_in_koopa68 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_meta_in_koopa76 = new BitSet(new long[]{0x0000000000000108L});
-    public static final BitSet FOLLOW_rule_in_koopa88 = new BitSet(new long[]{0x0000000000000108L});
+    public static final BitSet FOLLOW_meta_in_koopa76 = new BitSet(new long[]{0x0000000000000208L});
+    public static final BitSet FOLLOW_rule_in_koopa88 = new BitSet(new long[]{0x0000000000000208L});
     public static final BitSet FOLLOW_META_in_meta204 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_named_in_meta208 = new BitSet(new long[]{0x0000000000000088L});
-    public static final BitSet FOLLOW_extending_in_meta213 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NAMED_in_named245 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_named249 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_EXTENDING_in_extending277 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_extending281 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_RULE_in_rule312 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_rule316 = new BitSet(new long[]{0x00000034FC1EFC00L});
-    public static final BitSet FOLLOW_locals_in_rule328 = new BitSet(new long[]{0x00000034FC1EFC00L});
-    public static final BitSet FOLLOW_returning_in_rule365 = new BitSet(new long[]{0x00000034FC1EFC00L});
-    public static final BitSet FOLLOW_body_in_rule384 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_RETURNS_in_returning456 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_returning460 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_LOCALS_in_locals509 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_declaration_in_locals520 = new BitSet(new long[]{0x0000000000010008L});
-    public static final BitSet FOLLOW_DECLARATION_in_declaration563 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_declaration567 = new BitSet(new long[]{0x0000000000080000L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_declaration571 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_SEQUENCE_in_body600 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body612 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_ACT_in_body680 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_NATIVE_CODE_in_body684 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_ANY_in_body752 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_TAG_in_body770 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body779 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_LITERAL_in_body861 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_NUMBER_in_body870 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_DOT_in_body881 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ASSIGN_in_body925 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body929 = new BitSet(new long[]{0x0000000028180000L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body934 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NUMBER_in_body940 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_DOT_in_body946 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_ANY_in_body952 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_STAR_in_body1013 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1017 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_PLUS_in_body1059 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1063 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_CHOICE_in_body1107 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1116 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_OPTIONAL_in_body1144 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1152 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_SKIP_TO_in_body1171 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1179 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOT_in_body1196 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1198 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOSKIP_in_body1208 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1218 = new BitSet(new long[]{0x00000034FC1EFC08L});
-    public static final BitSet FOLLOW_PERMUTED_in_body1246 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1256 = new BitSet(new long[]{0x00000034FC1EFC08L});
+    public static final BitSet FOLLOW_TREE_in_meta206 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_named_in_meta210 = new BitSet(new long[]{0x0000000000000108L});
+    public static final BitSet FOLLOW_extending_in_meta215 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NAMED_in_named247 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_named251 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_EXTENDING_in_extending279 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_extending283 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_RULE_in_rule314 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_rule318 = new BitSet(new long[]{0x00000069F83DF800L});
+    public static final BitSet FOLLOW_locals_in_rule330 = new BitSet(new long[]{0x00000069F83DF800L});
+    public static final BitSet FOLLOW_returning_in_rule367 = new BitSet(new long[]{0x00000069F83DF800L});
+    public static final BitSet FOLLOW_body_in_rule386 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_RETURNS_in_returning458 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_returning462 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_LOCALS_in_locals511 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_declaration_in_locals522 = new BitSet(new long[]{0x0000000000020008L});
+    public static final BitSet FOLLOW_DECLARATION_in_declaration565 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_declaration569 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_declaration573 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_SEQUENCE_in_body602 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body614 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_ACT_in_body682 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_NATIVE_CODE_in_body686 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_ANY_in_body754 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_TAG_in_body772 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body781 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_LITERAL_in_body863 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_NUMBER_in_body872 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_DOT_in_body883 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ASSIGN_in_body927 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body931 = new BitSet(new long[]{0x0000000050300000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body936 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NUMBER_in_body942 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_DOT_in_body948 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_ANY_in_body954 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_STAR_in_body1015 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1019 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_PLUS_in_body1061 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1065 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_CHOICE_in_body1109 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1118 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_OPTIONAL_in_body1146 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1154 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_SKIP_TO_in_body1173 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1181 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOT_in_body1198 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1200 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOSKIP_in_body1210 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1220 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_PERMUTED_in_body1248 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1258 = new BitSet(new long[]{0x00000069F83DF808L});
 
 }

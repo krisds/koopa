@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Properties;
 
+import koopa.core.KGG;
 import koopa.core.util.Util;
 
 import org.antlr.runtime.RecognitionException;
@@ -16,37 +17,16 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.stringtemplate.StringTemplateGroup;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 
-public class KGG {
+public class KGToGrammar {
 
-	public static void main(String[] args) throws IOException,
-			RecognitionException {
-
-		String name = args[0];
-		String path = args[1];
-
-		if (!path.endsWith("/"))
-			path += "/";
-
-		String code = generate(name, path);
-
-		try {
-			System.out.println("Generating " + path + name + "Grammar.java");
-			FileWriter writer = new FileWriter(path + name + "Grammar.java");
-			writer.append(code);
-			writer.close();
-			System.out.println("Generation complete.");
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Generation failed.");
-			e.printStackTrace();
-		}
+	public static void main(String[] args) {
+		KGG.main(args);
 	}
 
-	public static String generate(String name, String path) throws IOException,
-			RecognitionException {
+	public static String generate(File grammarFile, CommonTree ast)
+			throws IOException, RecognitionException {
 
-		CommonTree ast = KGUtil.getKoopaAST(new File(path, name + ".kg"));
+		File path = grammarFile.getParentFile();
 
 		// The following is for testing purposes.
 		// CommonTreeNodeStream nodes = new CommonTreeNodeStream(ast);
@@ -58,7 +38,10 @@ public class KGG {
 		// this part of the actual grammar file because we want to keep any
 		// native stuff out of there.
 		Properties meta = new Properties();
-		meta.load(new FileInputStream(new File(path, name + ".properties")));
+
+		File propertiesFile = new File(path, grammarFile.getName().replace(
+				".kg", ".properties"));
+		meta.load(new FileInputStream(propertiesFile));
 
 		// One of the things the properties file should define are all the
 		// required imports. We collect them here into actual valid Java import
@@ -87,10 +70,19 @@ public class KGG {
 			}
 		}
 
-		// We can then throw everything to the StringTemplate processor.
+		// The grammar may need some native code to support it. One way of
+		// doing that is by defining a ".natives" file which contains some
+		// extra code to be injected in the final grammar.
+		File nativesFile = new File(path, grammarFile.getName().replace(".kg",
+				".natives"));
 
+		String natives = null;
+		if (nativesFile.exists())
+			natives = Util.contents(nativesFile);
+
+		// We can then throw everything to the StringTemplate processor.
 		Reader templatesIn = new InputStreamReader(
-				KGG.class
+				KGToGrammar.class
 						.getResourceAsStream("/koopa/core/grammars/generator/koopa.stg"));
 		StringTemplateGroup templates = new StringTemplateGroup(templatesIn,
 				DefaultTemplateLexer.class);
@@ -101,13 +93,33 @@ public class KGG {
 		KGGenerator walker = new KGGenerator(nodes);
 		walker.setTemplateLib(templates);
 
-		String natives = null;
-		if ((new File(path + name + ".natives")).exists())
-			natives = Util.contents(path + name + ".natives");
-
 		String formatted = walker.koopa(meta, imports.toString(), natives)
 				.toString();
 
 		return formatted;
+	}
+
+	public static void translate(File grammarFile, CommonTree ast) {
+		try {
+			String code = generate(grammarFile, ast);
+
+			File path = grammarFile.getParentFile();
+			File java = new File(path, grammarFile.getName().replace(".kg",
+					"Grammar.java"));
+
+			System.out.println("Generating " + java);
+			FileWriter writer = new FileWriter(java);
+			writer.append(code);
+			writer.close();
+			System.out.println("Generation complete.");
+
+		} catch (IOException e) {
+			System.out.println("Generation failed.");
+			e.printStackTrace();
+
+		} catch (RecognitionException e) {
+			System.out.println("Generation failed.");
+			e.printStackTrace();
+		}
 	}
 }

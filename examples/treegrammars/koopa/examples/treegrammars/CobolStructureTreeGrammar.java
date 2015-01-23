@@ -105,12 +105,12 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	       paragraphParser = future;
 	       future.setParser(
 	           sequence(
-	               assign("tree", paragraphName()),
+	               assign("t", paragraphName()),
 	               apply(new Block() {
 	                   public void apply() {
-	                       Tree tree = (Tree) scope.get("tree");
-	                       { process("PARAGRAPH", tree.getProgramText()); }
-	                       scope.set("tree", tree);
+	                       Tree t = (Tree) scope.get("t");
+	                       { process("PARAGRAPH", t.getProgramText()); }
+	                       scope.set("t", t);
 	                   }
 	               })
 	           )
@@ -132,12 +132,12 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	       programNameParser = future;
 	       future.setParser(
 	           sequence(
-	               assign("tree", any()),
+	               assign("t", any()),
 	               apply(new Block() {
 	                   public void apply() {
-	                       Tree tree = (Tree) scope.get("tree");
-	                       { process("PROGRAM", tree.getProgramText()); }
-	                       scope.set("tree", tree);
+	                       Tree t = (Tree) scope.get("t");
+	                       { process("PROGRAM", t.getProgramText()); }
+	                       scope.set("t", t);
 	                   }
 	               })
 	           )
@@ -160,13 +160,13 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	       future.setParser(
 	           sequence(
 	               sequence(
-	                   assign("tree", any()),
+	                   assign("t", any()),
 	                   apply(new Block() {
 	                       public void apply() {
-	                           Tree tree = (Tree) scope.get("tree");
+	                           Tree t = (Tree) scope.get("t");
 	                           String name = (String) scope.get("name");
-	                           { name = tree.getProgramText(); }
-	                           scope.set("tree", tree);
+	                           { name = t.getProgramText(); }
+	                           scope.set("t", t);
 	                           scope.set("name", name);
 	                       }
 	                   })

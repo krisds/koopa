@@ -182,7 +182,7 @@
 
 	<target name="apps" depends="core,cobol">
 		<echo>Generating the Cobol outline parser...</echo>
-		<generate-tree-parser name="CobolOutline" path="src/apps/koopa/app/components/outline/" />
+		<kgg name="CobolOutline" path="src/apps/koopa/app/components/outline/" />
 
 		<echo>Compiling processing classes...</echo>
 		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5">
@@ -203,7 +203,7 @@
 
 	<target name="examples" depends="core,cobol">
 		<echo>Generating CobolStructure tree parser...</echo>
-		<generate-tree-parser name="CobolStructure" path="examples/treegrammars/koopa/examples/treegrammars/" />
+		<kgg name="CobolStructure" path="examples/treegrammars/koopa/examples/treegrammars/" />
 		
 		<echo>Compiling example classes...</echo>
 		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5">
@@ -291,7 +291,7 @@
 		<attribute name="name" />
 		<attribute name="path" />
 		<sequential>
-			<java classname="koopa.core.grammars.generator.KGG" fork="true">
+			<java classname="koopa.core.KGG" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{name}" />
 				<arg value="@{path}" />
@@ -331,25 +331,6 @@
 				<jvmarg value="-ea" />
 				<arg value="@{file}" />
 				<arg value="@{root}" />
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="generate-tree-parser">
-		<attribute name="name" />
-		<attribute name="path" />
-		<sequential>
-			<java classname="koopa.core.treegrammars.generator.KGToTreeGrammar" fork="true">
-				<jvmarg value="-ea" />
-				<arg value="@{name}" />
-				<arg value="@{path}" />
 				<classpath>
 					<pathelement path="build/" />
 					<fileset dir="lib">

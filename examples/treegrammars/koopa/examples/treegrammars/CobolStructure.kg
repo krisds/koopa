@@ -15,7 +15,7 @@
 # * The names of grammar rules here match the names of the grammar rule nodes
 #   in the parse tree.
 
-grammar CobolStructure extends CobolStructureBase.
+tree grammar CobolStructure extends CobolStructureBase.
 
 def compilationGroup =
     compilationUnit
@@ -37,20 +37,20 @@ def section (String name) =
     (paragraph)*
 end
 
-def paragraph (Tree tree) =
-    tree=paragraphName
+def paragraph (Tree t) =
+    t=paragraphName
     
-    { process("PARAGRAPH", tree.getProgramText()); }
+    { process("PARAGRAPH", t.getProgramText()); }
 end
 
-def programName (Tree tree) =
-	tree=_
-	{ process("PROGRAM", tree.getProgramText()); }
+def programName (Tree t) =
+	t=_
+	{ process("PROGRAM", t.getProgramText()); }
 end
 
-def sectionName (Tree tree, String name) returns name =
-	tree=_
-	{ name = tree.getProgramText(); }
+def sectionName (Tree t, String name) returns name =
+	t=_
+	{ name = t.getProgramText(); }
 end
 
 def paragraphName =

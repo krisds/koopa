@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/StageGenerator.g 2015-01-23 09:22:13
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/StageGenerator.g 2015-01-23 17:26:10
 
   package koopa.core.grammars.test.generator;
   
@@ -17,29 +17,30 @@ import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
 public class StageGenerator extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "STAGE", "GRAMMAR", "PACKAGE", "TARGET", "TEST", "IDENTIFIER", "SEMI", "ACCEPT", "REJECT", "FREE_DATA", "FIXED_DATA", "COMMENT", "NEWLINE", "WHITESPACE", "NAME", "LETTER", "NUMBER", "'grammar'", "'package'", "'target'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "STAGE", "PACKAGE", "GRAMMAR", "TOKENIZER", "TARGET", "TEST", "IDENTIFIER", "SEMI", "ACCEPT", "REJECT", "DATA", "COMMENT", "NEWLINE", "WHITESPACE", "NAME", "LETTER", "NUMBER", "'grammar'", "'package'", "'tokenizer'", "'target'"
     };
-    public static final int PACKAGE=6;
-    public static final int T__23=23;
+    public static final int PACKAGE=5;
+    public static final int T__24=24;
     public static final int LETTER=19;
+    public static final int T__23=23;
     public static final int STAGE=4;
     public static final int T__22=22;
     public static final int T__21=21;
     public static final int NUMBER=20;
     public static final int WHITESPACE=17;
-    public static final int TARGET=7;
+    public static final int TARGET=8;
     public static final int EOF=-1;
-    public static final int SEMI=10;
-    public static final int ACCEPT=11;
+    public static final int SEMI=11;
+    public static final int ACCEPT=12;
     public static final int NAME=18;
     public static final int NEWLINE=16;
-    public static final int FIXED_DATA=14;
-    public static final int REJECT=12;
-    public static final int IDENTIFIER=9;
-    public static final int TEST=8;
-    public static final int FREE_DATA=13;
+    public static final int REJECT=13;
+    public static final int IDENTIFIER=10;
+    public static final int TOKENIZER=7;
+    public static final int TEST=9;
     public static final int COMMENT=15;
-    public static final int GRAMMAR=5;
+    public static final int DATA=14;
+    public static final int GRAMMAR=6;
 
     // delegates
     // delegators
@@ -90,7 +91,7 @@ public class StageGenerator extends TreeParser {
     };
 
     // $ANTLR start "stage"
-    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:23:1: stage[String name] : ^( STAGE p= pack g= grammah (t= testsForGrammarRule )* ) -> stage(name=namedate=new Date()package=pgrammah=gtest=tests);
+    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:23:1: stage[String name] : ^( STAGE p= pack g= grammah tok= tokenizer (t= testsForGrammarRule )* ) -> stage(name=namedate=new Date()package=pgrammah=gtokenizer=toktest=tests);
     public final StageGenerator.stage_return stage(String name) throws RecognitionException {
         StageGenerator.stage_return retval = new StageGenerator.stage_return();
         retval.start = input.LT(1);
@@ -99,12 +100,14 @@ public class StageGenerator extends TreeParser {
 
         StageGenerator.grammah_return g = null;
 
+        StageGenerator.tokenizer_return tok = null;
+
         StageGenerator.testsForGrammarRule_return t = null;
 
 
         try {
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:24:3: ( ^( STAGE p= pack g= grammah (t= testsForGrammarRule )* ) -> stage(name=namedate=new Date()package=pgrammah=gtest=tests))
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:24:5: ^( STAGE p= pack g= grammah (t= testsForGrammarRule )* )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:24:3: ( ^( STAGE p= pack g= grammah tok= tokenizer (t= testsForGrammarRule )* ) -> stage(name=namedate=new Date()package=pgrammah=gtokenizer=toktest=tests))
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:24:5: ^( STAGE p= pack g= grammah tok= tokenizer (t= testsForGrammarRule )* )
             {
              List<StringTemplate> tests = new LinkedList<StringTemplate>(); 
             match(input,STAGE,FOLLOW_STAGE_in_stage77); 
@@ -117,6 +120,11 @@ public class StageGenerator extends TreeParser {
 
             pushFollow(FOLLOW_grammah_in_stage85);
             g=grammah();
+
+            state._fsp--;
+
+            pushFollow(FOLLOW_tokenizer_in_stage89);
+            tok=tokenizer();
 
             state._fsp--;
 
@@ -135,7 +143,7 @@ public class StageGenerator extends TreeParser {
             	case 1 :
             	    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:27:8: t= testsForGrammarRule
             	    {
-            	    pushFollow(FOLLOW_testsForGrammarRule_in_stage97);
+            	    pushFollow(FOLLOW_testsForGrammarRule_in_stage100);
             	    t=testsForGrammarRule();
 
             	    state._fsp--;
@@ -155,10 +163,10 @@ public class StageGenerator extends TreeParser {
 
 
             // TEMPLATE REWRITE
-            // 32:5: -> stage(name=namedate=new Date()package=pgrammah=gtest=tests)
+            // 32:5: -> stage(name=namedate=new Date()package=pgrammah=gtokenizer=toktest=tests)
             {
                 retval.st = templateLib.getInstanceOf("stage",
-              new STAttrMap().put("name", name).put("date", new Date()).put("package", p).put("grammah", g).put("test", tests));
+              new STAttrMap().put("name", name).put("date", new Date()).put("package", p).put("grammah", g).put("tokenizer", tok).put("test", tests));
             }
 
 
@@ -182,7 +190,7 @@ public class StageGenerator extends TreeParser {
     };
 
     // $ANTLR start "pack"
-    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:41:1: pack : ^( PACKAGE IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}};
+    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:42:1: pack : ^( PACKAGE IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}};
     public final StageGenerator.pack_return pack() throws RecognitionException {
         StageGenerator.pack_return retval = new StageGenerator.pack_return();
         retval.start = input.LT(1);
@@ -190,19 +198,19 @@ public class StageGenerator extends TreeParser {
         CommonTree IDENTIFIER1=null;
 
         try {
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:42:3: ( ^( PACKAGE IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}})
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:42:5: ^( PACKAGE IDENTIFIER )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:43:3: ( ^( PACKAGE IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}})
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:43:5: ^( PACKAGE IDENTIFIER )
             {
-            match(input,PACKAGE,FOLLOW_PACKAGE_in_pack220); 
+            match(input,PACKAGE,FOLLOW_PACKAGE_in_pack236); 
 
             match(input, Token.DOWN, null); 
-            IDENTIFIER1=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_pack222); 
+            IDENTIFIER1=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_pack238); 
 
             match(input, Token.UP, null); 
 
 
             // TEMPLATE REWRITE
-            // 44:5: -> {%{((CommonTree) $IDENTIFIER).getText()}}
+            // 45:5: -> {%{((CommonTree) $IDENTIFIER).getText()}}
             {
                 retval.st = new StringTemplate(templateLib,((CommonTree) IDENTIFIER1).getText());
             }
@@ -228,7 +236,7 @@ public class StageGenerator extends TreeParser {
     };
 
     // $ANTLR start "grammah"
-    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:47:1: grammah : ^( GRAMMAR IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}};
+    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:48:1: grammah : ^( GRAMMAR IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}};
     public final StageGenerator.grammah_return grammah() throws RecognitionException {
         StageGenerator.grammah_return retval = new StageGenerator.grammah_return();
         retval.start = input.LT(1);
@@ -236,19 +244,19 @@ public class StageGenerator extends TreeParser {
         CommonTree IDENTIFIER2=null;
 
         try {
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:48:3: ( ^( GRAMMAR IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}})
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:48:5: ^( GRAMMAR IDENTIFIER )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:49:3: ( ^( GRAMMAR IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}})
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:49:5: ^( GRAMMAR IDENTIFIER )
             {
-            match(input,GRAMMAR,FOLLOW_GRAMMAR_in_grammah248); 
+            match(input,GRAMMAR,FOLLOW_GRAMMAR_in_grammah264); 
 
             match(input, Token.DOWN, null); 
-            IDENTIFIER2=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_grammah250); 
+            IDENTIFIER2=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_grammah266); 
 
             match(input, Token.UP, null); 
 
 
             // TEMPLATE REWRITE
-            // 50:5: -> {%{((CommonTree) $IDENTIFIER).getText()}}
+            // 51:5: -> {%{((CommonTree) $IDENTIFIER).getText()}}
             {
                 retval.st = new StringTemplate(templateLib,((CommonTree) IDENTIFIER2).getText());
             }
@@ -267,6 +275,52 @@ public class StageGenerator extends TreeParser {
     }
     // $ANTLR end "grammah"
 
+    public static class tokenizer_return extends TreeRuleReturnScope {
+        public StringTemplate st;
+        public Object getTemplate() { return st; }
+        public String toString() { return st==null?null:st.toString(); }
+    };
+
+    // $ANTLR start "tokenizer"
+    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:54:1: tokenizer : ^( TOKENIZER IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}};
+    public final StageGenerator.tokenizer_return tokenizer() throws RecognitionException {
+        StageGenerator.tokenizer_return retval = new StageGenerator.tokenizer_return();
+        retval.start = input.LT(1);
+
+        CommonTree IDENTIFIER3=null;
+
+        try {
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:55:3: ( ^( TOKENIZER IDENTIFIER ) -> {%{((CommonTree) $IDENTIFIER).getText()}})
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:55:5: ^( TOKENIZER IDENTIFIER )
+            {
+            match(input,TOKENIZER,FOLLOW_TOKENIZER_in_tokenizer294); 
+
+            match(input, Token.DOWN, null); 
+            IDENTIFIER3=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_tokenizer296); 
+
+            match(input, Token.UP, null); 
+
+
+            // TEMPLATE REWRITE
+            // 57:5: -> {%{((CommonTree) $IDENTIFIER).getText()}}
+            {
+                retval.st = new StringTemplate(templateLib,((CommonTree) IDENTIFIER3).getText());
+            }
+
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "tokenizer"
+
     public static class testsForGrammarRule_return extends TreeRuleReturnScope {
         public List<StringTemplate> tests = new LinkedList<StringTemplate>();
         public StringTemplate st;
@@ -275,7 +329,7 @@ public class StageGenerator extends TreeParser {
     };
 
     // $ANTLR start "testsForGrammarRule"
-    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:53:1: testsForGrammarRule returns [List<StringTemplate> tests = new LinkedList<StringTemplate>()] : ^( TARGET i= IDENTIFIER (t= test[((CommonTree) $i).getText()] )* ) ;
+    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:60:1: testsForGrammarRule returns [List<StringTemplate> tests = new LinkedList<StringTemplate>()] : ^( TARGET i= IDENTIFIER (t= test[((CommonTree) $i).getText()] )* ) ;
     public final StageGenerator.testsForGrammarRule_return testsForGrammarRule() throws RecognitionException {
         StageGenerator.testsForGrammarRule_return retval = new StageGenerator.testsForGrammarRule_return();
         retval.start = input.LT(1);
@@ -285,14 +339,14 @@ public class StageGenerator extends TreeParser {
 
 
         try {
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:54:3: ( ^( TARGET i= IDENTIFIER (t= test[((CommonTree) $i).getText()] )* ) )
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:54:5: ^( TARGET i= IDENTIFIER (t= test[((CommonTree) $i).getText()] )* )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:61:3: ( ^( TARGET i= IDENTIFIER (t= test[((CommonTree) $i).getText()] )* ) )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:61:5: ^( TARGET i= IDENTIFIER (t= test[((CommonTree) $i).getText()] )* )
             {
-            match(input,TARGET,FOLLOW_TARGET_in_testsForGrammarRule280); 
+            match(input,TARGET,FOLLOW_TARGET_in_testsForGrammarRule326); 
 
             match(input, Token.DOWN, null); 
-            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_testsForGrammarRule284); 
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:55:8: (t= test[((CommonTree) $i).getText()] )*
+            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_testsForGrammarRule330); 
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:62:8: (t= test[((CommonTree) $i).getText()] )*
             loop2:
             do {
                 int alt2=2;
@@ -305,9 +359,9 @@ public class StageGenerator extends TreeParser {
 
                 switch (alt2) {
             	case 1 :
-            	    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:55:10: t= test[((CommonTree) $i).getText()]
+            	    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:62:10: t= test[((CommonTree) $i).getText()]
             	    {
-            	    pushFollow(FOLLOW_test_in_testsForGrammarRule297);
+            	    pushFollow(FOLLOW_test_in_testsForGrammarRule343);
             	    t=test(((CommonTree) i).getText());
 
             	    state._fsp--;
@@ -345,26 +399,24 @@ public class StageGenerator extends TreeParser {
     };
 
     // $ANTLR start "test"
-    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:61:1: test[String target] : ^( TEST ( ACCEPT | REJECT ) ( FREE_DATA | FIXED_DATA ) ) -> {accept}? accept(name=namenumber=++counttarget=targettoken=dataformat=free) -> reject(name=namenumber=++counttarget=targettoken=dataformat=free);
+    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:68:1: test[String target] : ^( TEST ( ACCEPT | REJECT ) DATA ) -> {accept}? accept(name=namenumber=++counttarget=targettoken=data) -> reject(name=namenumber=++counttarget=targettoken=data);
     public final StageGenerator.test_return test(String target) throws RecognitionException {
         StageGenerator.test_return retval = new StageGenerator.test_return();
         retval.start = input.LT(1);
 
-        CommonTree FREE_DATA3=null;
-        CommonTree FIXED_DATA4=null;
+        CommonTree DATA4=null;
 
         try {
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:62:3: ( ^( TEST ( ACCEPT | REJECT ) ( FREE_DATA | FIXED_DATA ) ) -> {accept}? accept(name=namenumber=++counttarget=targettoken=dataformat=free) -> reject(name=namenumber=++counttarget=targettoken=dataformat=free))
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:62:5: ^( TEST ( ACCEPT | REJECT ) ( FREE_DATA | FIXED_DATA ) )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:69:3: ( ^( TEST ( ACCEPT | REJECT ) DATA ) -> {accept}? accept(name=namenumber=++counttarget=targettoken=data) -> reject(name=namenumber=++counttarget=targettoken=data))
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:69:5: ^( TEST ( ACCEPT | REJECT ) DATA )
             {
-            match(input,TEST,FOLLOW_TEST_in_test343); 
+            match(input,TEST,FOLLOW_TEST_in_test389); 
 
              boolean accept = true;
-                    boolean free = true;
                     String data = ""; 
 
             match(input, Token.DOWN, null); 
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:67:7: ( ACCEPT | REJECT )
+            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:73:7: ( ACCEPT | REJECT )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -382,16 +434,16 @@ public class StageGenerator extends TreeParser {
             }
             switch (alt3) {
                 case 1 :
-                    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:67:9: ACCEPT
+                    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:73:9: ACCEPT
                     {
-                    match(input,ACCEPT,FOLLOW_ACCEPT_in_test368); 
+                    match(input,ACCEPT,FOLLOW_ACCEPT_in_test414); 
 
                     }
                     break;
                 case 2 :
-                    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:68:9: REJECT
+                    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:74:9: REJECT
                     {
-                    match(input,REJECT,FOLLOW_REJECT_in_test378); 
+                    match(input,REJECT,FOLLOW_REJECT_in_test424); 
                      accept = false; 
 
                     }
@@ -399,50 +451,14 @@ public class StageGenerator extends TreeParser {
 
             }
 
-            // src/core/koopa/core/grammars/test/generator/StageGenerator.g:71:7: ( FREE_DATA | FIXED_DATA )
-            int alt4=2;
-            int LA4_0 = input.LA(1);
-
-            if ( (LA4_0==FREE_DATA) ) {
-                alt4=1;
-            }
-            else if ( (LA4_0==FIXED_DATA) ) {
-                alt4=2;
-            }
-            else {
-                NoViableAltException nvae =
-                    new NoViableAltException("", 4, 0, input);
-
-                throw nvae;
-            }
-            switch (alt4) {
-                case 1 :
-                    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:71:9: FREE_DATA
-                    {
-                    FREE_DATA3=(CommonTree)match(input,FREE_DATA,FOLLOW_FREE_DATA_in_test405); 
-                     data = ((CommonTree) FREE_DATA3).getText(); 
-
-                    }
-                    break;
-                case 2 :
-                    // src/core/koopa/core/grammars/test/generator/StageGenerator.g:74:9: FIXED_DATA
-                    {
-                    FIXED_DATA4=(CommonTree)match(input,FIXED_DATA,FOLLOW_FIXED_DATA_in_test432); 
-                     data = ((CommonTree) FIXED_DATA4).getText();
-                              free = false;
-                            
-
-                    }
-                    break;
-
-            }
-
+            DATA4=(CommonTree)match(input,DATA,FOLLOW_DATA_in_test449); 
+             data = ((CommonTree) DATA4).getText(); 
 
             match(input, Token.UP, null); 
              String name = target.substring(1);
                   name = Character.toUpperCase(target.charAt(0)) + name;
                 
-             data = data.substring(1, data.length() - 1);
+                  data = data.substring(1, data.length() - 1);
                   // data = data.replaceAll("\u2022", "\\\\u2022");
                   data = data.replaceAll("\n", "\\\\n");
                   data = data.replaceAll("\"", "\\\\\"");
@@ -450,15 +466,15 @@ public class StageGenerator extends TreeParser {
 
 
             // TEMPLATE REWRITE
-            // 91:5: -> {accept}? accept(name=namenumber=++counttarget=targettoken=dataformat=free)
+            // 89:5: -> {accept}? accept(name=namenumber=++counttarget=targettoken=data)
             if (accept) {
                 retval.st = templateLib.getInstanceOf("accept",
-              new STAttrMap().put("name", name).put("number", ++count).put("target", target).put("token", data).put("format", free));
+              new STAttrMap().put("name", name).put("number", ++count).put("target", target).put("token", data));
             }
-            else // 99:5: -> reject(name=namenumber=++counttarget=targettoken=dataformat=free)
+            else // 96:5: -> reject(name=namenumber=++counttarget=targettoken=data)
             {
                 retval.st = templateLib.getInstanceOf("reject",
-              new STAttrMap().put("name", name).put("number", ++count).put("target", target).put("token", data).put("format", free));
+              new STAttrMap().put("name", name).put("number", ++count).put("target", target).put("token", data));
             }
 
 
@@ -481,20 +497,22 @@ public class StageGenerator extends TreeParser {
  
 
     public static final BitSet FOLLOW_STAGE_in_stage77 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_pack_in_stage81 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_grammah_in_stage85 = new BitSet(new long[]{0x0000000000000088L});
-    public static final BitSet FOLLOW_testsForGrammarRule_in_stage97 = new BitSet(new long[]{0x0000000000000088L});
-    public static final BitSet FOLLOW_PACKAGE_in_pack220 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_pack222 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_GRAMMAR_in_grammah248 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_grammah250 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_TARGET_in_testsForGrammarRule280 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_testsForGrammarRule284 = new BitSet(new long[]{0x0000000000000108L});
-    public static final BitSet FOLLOW_test_in_testsForGrammarRule297 = new BitSet(new long[]{0x0000000000000108L});
-    public static final BitSet FOLLOW_TEST_in_test343 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_ACCEPT_in_test368 = new BitSet(new long[]{0x0000000000006000L});
-    public static final BitSet FOLLOW_REJECT_in_test378 = new BitSet(new long[]{0x0000000000006000L});
-    public static final BitSet FOLLOW_FREE_DATA_in_test405 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_FIXED_DATA_in_test432 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_pack_in_stage81 = new BitSet(new long[]{0x0000000000000040L});
+    public static final BitSet FOLLOW_grammah_in_stage85 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_tokenizer_in_stage89 = new BitSet(new long[]{0x0000000000000108L});
+    public static final BitSet FOLLOW_testsForGrammarRule_in_stage100 = new BitSet(new long[]{0x0000000000000108L});
+    public static final BitSet FOLLOW_PACKAGE_in_pack236 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_pack238 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_GRAMMAR_in_grammah264 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_grammah266 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_TOKENIZER_in_tokenizer294 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_tokenizer296 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_TARGET_in_testsForGrammarRule326 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_testsForGrammarRule330 = new BitSet(new long[]{0x0000000000000208L});
+    public static final BitSet FOLLOW_test_in_testsForGrammarRule343 = new BitSet(new long[]{0x0000000000000208L});
+    public static final BitSet FOLLOW_TEST_in_test389 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_ACCEPT_in_test414 = new BitSet(new long[]{0x0000000000004000L});
+    public static final BitSet FOLLOW_REJECT_in_test424 = new BitSet(new long[]{0x0000000000004000L});
+    public static final BitSet FOLLOW_DATA_in_test449 = new BitSet(new long[]{0x0000000000000008L});
 
 }

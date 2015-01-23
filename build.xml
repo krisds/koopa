@@ -38,7 +38,7 @@
 
 	<target name="core-compile" depends="core-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
-		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -59,7 +59,7 @@
 		<generate-unit-test path="test/core/koopa/cobol/grammar/test/core/" />
 
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -99,17 +99,12 @@
 
 	<!-- COBOL PARSER -->
 
-	<target name="cobol-preprocessing" depends="core">
-		<echo>Generating the Cobol Preprocessing parser...</echo>
-		<kgg name="CobolPreprocessing" path="src/cobol/koopa/cobol/grammar/preprocessing/" />
-	</target>
-
-	<target name="cobol" depends="cobol-preprocessing">
-		<echo>Generating the Cobol parser...</echo>
-		<kgg name="Cobol" path="src/cobol/koopa/cobol/grammar/" />
+	<target name="cobol" depends="core">
+		<echo>Generating the parsers...</echo>
+		<kgg path="src/cobol/" />
 
 		<echo>Compiling Cobol parser...</echo>
-		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -131,7 +126,7 @@
 		<generate-unit-test path="test/cobol/koopa/cobol/grammar/test/" />
 
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -181,11 +176,11 @@
 	<!-- APPLICATIONS -->
 
 	<target name="apps" depends="core,cobol">
-		<echo>Generating the Cobol outline parser...</echo>
-		<kgg name="CobolOutline" path="src/apps/koopa/app/components/outline/" />
+		<echo>Generating the parsers...</echo>
+		<kgg path="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
-		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -202,18 +197,18 @@
 	<!-- EXAMPLES -->
 
 	<target name="examples" depends="core,cobol">
-		<echo>Generating CobolStructure tree parser...</echo>
-		<kgg name="CobolStructure" path="examples/treegrammars/koopa/examples/treegrammars/" />
+		<echo>Generating the parsers...</echo>
+		<kgg path="examples/" />
 		
 		<echo>Compiling example classes...</echo>
-		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5">
+		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -288,12 +283,10 @@
 	</macrodef>
 
 	<macrodef name="kgg">
-		<attribute name="name" />
 		<attribute name="path" />
 		<sequential>
 			<java classname="koopa.core.KGG" fork="true">
 				<jvmarg value="-ea" />
-				<arg value="@{name}" />
 				<arg value="@{path}" />
 				<classpath>
 					<pathelement path="build/" />

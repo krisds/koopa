@@ -1,9 +1,10 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.test.TestTokenizer;
 import koopa.core.parsers.Parser;
+import koopa.core.data.Token;
+import koopa.core.sources.Source;
+import koopa.core.sources.test.TestTokenizer;
 
 import org.junit.Test;
 
@@ -12,11 +13,15 @@ public class CancelStatementTest extends TestCase {
 
   private static koopa.cobol.grammar.CobolGrammar grammar = new koopa.cobol.grammar.CobolGrammar();
 
+  private Source<Token> getTokenizer(String input) {
+    return koopa.cobol.sources.test.CobolTestSource.forSample(input);
+  }
+
     @Test
     public void testCancelStatement_1() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL MY-SUB-PROGRAM ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CANCEL MY-SUB-PROGRAM "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +30,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_2() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL \"MY-SUB-PROGRAM\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CANCEL \"MY-SUB-PROGRAM\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +39,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_3() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL 42 ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CANCEL 42 "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -42,7 +47,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_4() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL 42.0 ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CANCEL 42.0 "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -50,7 +55,7 @@ public class CancelStatementTest extends TestCase {
     public void testCancelStatement_5() {
       Parser parser = grammar.cancelStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CANCEL MY-SUB-PROGRAM \"MY-SUB-PROGRAM\" \"MY-OTHER-SUBPROGRAM\" MY-OTHER-SUBPROGRAM ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CANCEL MY-SUB-PROGRAM \"MY-SUB-PROGRAM\" \"MY-OTHER-SUBPROGRAM\" MY-OTHER-SUBPROGRAM "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

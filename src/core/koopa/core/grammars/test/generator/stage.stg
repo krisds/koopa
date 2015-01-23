@@ -1,12 +1,13 @@
 group CSS;
 
-stage(name, date, package, grammah, test) ::= <<
+stage(name, date, package, grammah, tokenizer, test) ::= <<
 package $package$;
 
 import junit.framework.TestCase;
-import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.test.TestTokenizer;
 import koopa.core.parsers.Parser;
+import koopa.core.data.Token;
+import koopa.core.sources.Source;
+import koopa.core.sources.test.TestTokenizer;
 
 import org.junit.Test;
 
@@ -15,27 +16,31 @@ public class $name$Test extends TestCase {
 
   private static $grammah$ grammar = new $grammah$();
 
+  private Source<Token> getTokenizer(String input) {
+    return $tokenizer$.forSample(input);
+  }
+
   $test; separator="\n\n"$
 }
 >>
 
-accept(name, number, target, token, format) ::= <<
+accept(name, number, target, token) ::= <<
   @Test
   public void test$name$_$number$() {
     Parser parser = grammar.$target$();
     assertNotNull(parser);
-    TestTokenizer tokenizer = new TestTokenizer($if(format)$SourceFormat.FREE$else$SourceFormat.FIXED$endif$, "$token$");
+    TestTokenizer tokenizer = new TestTokenizer(getTokenizer("$token$"));
     assertTrue(parser.accepts(tokenizer));
     assertTrue(tokenizer.isWhereExpected());
   }
 >>
 
-reject(name, number, target, token, format) ::= <<
+reject(name, number, target, token) ::= <<
   @Test
   public void test$name$_$number$() {
     Parser parser = grammar.$target$();
     assertNotNull(parser);
-    TestTokenizer tokenizer = new TestTokenizer($if(format)$SourceFormat.FREE$else$SourceFormat.FIXED$endif$, "$token$");
+    TestTokenizer tokenizer = new TestTokenizer(getTokenizer("$token$"));
     assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
   }
 >>

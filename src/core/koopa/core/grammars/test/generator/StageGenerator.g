@@ -23,7 +23,7 @@ options {
 stage [String name]
   : { List<StringTemplate> tests = new LinkedList<StringTemplate>(); }
   
-    ^(STAGE p=pack g=grammah 
+    ^(STAGE p=pack g=grammah tok=tokenizer
       (t=testsForGrammarRule
         {tests.addAll($t.tests);}
       )*
@@ -34,6 +34,7 @@ stage [String name]
       date = {new Date()},
       package = {p},
       grammah = {g},
+      tokenizer = {tok},
       test = {tests}
     )
   ;
@@ -49,6 +50,12 @@ grammah
   
     -> {%{((CommonTree) $IDENTIFIER).getText()}}
   ;
+  
+tokenizer
+  : ^(TOKENIZER IDENTIFIER)
+  
+    -> {%{((CommonTree) $IDENTIFIER).getText()}}
+  ;
 
 testsForGrammarRule returns [List<StringTemplate> tests = new LinkedList<StringTemplate>()]
   : ^(TARGET i=IDENTIFIER
@@ -61,28 +68,19 @@ testsForGrammarRule returns [List<StringTemplate> tests = new LinkedList<StringT
 test [String target]
   : ^(TEST
       { boolean accept = true;
-        boolean free = true;
         String data = ""; }
       
       ( ACCEPT
       | REJECT { accept = false; }
       )
       
-      ( FREE_DATA
-        { data = ((CommonTree) $FREE_DATA).getText(); }
-      
-      | FIXED_DATA
-        { data = ((CommonTree) $FIXED_DATA).getText();
-          free = false;
-        }
-      )
+      DATA { data = ((CommonTree) $DATA).getText(); }
     )
     
     { String name = target.substring(1);
       name = Character.toUpperCase(target.charAt(0)) + name;
-    }
     
-    { data = data.substring(1, data.length() - 1);
+      data = data.substring(1, data.length() - 1);
       // data = data.replaceAll("\u2022", "\\\\u2022");
       data = data.replaceAll("\n", "\\\\n");
       data = data.replaceAll("\"", "\\\\\"");
@@ -92,15 +90,13 @@ test [String target]
       name = {name},
       number = {++count},
       target = {target},
-      token = {data},
-      format = {free}
+      token = {data}
     )
     
     -> reject(
       name = {name},
       number = {++count},
       target = {target},
-      token = {data},
-      format = {free}
+      token = {data}
     )
   ;

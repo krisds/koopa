@@ -50,10 +50,10 @@ Complex XPath query results should be presented in serialized form.
 
 ### Parser Generation
 
-Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.core.KGG class, which needs two arguments:
+Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.core.KGG class. You can pass it one of the following:
 
-  1. The name of the grammar, without the ".kg" extension.
-  2. The target java package the generated parser will be part of.
+  1. A path to a specific .kg file, which it will then translate.
+  2. A path to a folder, which will then be searched for .kg files, all of which will get translated.
 
 All of this is taken care of by the ANT build script. If you make modifications to the standard Cobol.kg or one of the tests all you need to do is rerun ANT and everything should be taken care of.
 

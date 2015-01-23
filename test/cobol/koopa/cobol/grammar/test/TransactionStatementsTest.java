@@ -1,9 +1,10 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.test.TestTokenizer;
 import koopa.core.parsers.Parser;
+import koopa.core.data.Token;
+import koopa.core.sources.Source;
+import koopa.core.sources.test.TestTokenizer;
 
 import org.junit.Test;
 
@@ -12,11 +13,15 @@ public class TransactionStatementsTest extends TestCase {
 
   private static koopa.cobol.grammar.CobolGrammar grammar = new koopa.cobol.grammar.CobolGrammar();
 
+  private Source<Token> getTokenizer(String input) {
+    return koopa.cobol.sources.test.CobolTestSource.forSample(input);
+  }
+
     @Test
     public void testCommitStatement_1() {
       Parser parser = grammar.commitStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " COMMIT ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMIT "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +30,7 @@ public class TransactionStatementsTest extends TestCase {
     public void testRollbackStatement_2() {
       Parser parser = grammar.rollbackStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ROLLBACK ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROLLBACK "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

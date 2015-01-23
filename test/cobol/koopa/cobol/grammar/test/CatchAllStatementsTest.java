@@ -5,8 +5,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import koopa.cobol.grammar.CobolGrammar;
-import koopa.cobol.sources.test.TestTokenizer;
+import koopa.cobol.sources.test.CobolTestSource;
 import koopa.core.parsers.Parser;
+import koopa.core.sources.test.TestTokenizer;
 
 import org.junit.Test;
 
@@ -64,7 +65,8 @@ public class CatchAllStatementsTest extends TestCase {
 			Parser parser = grammar.statement();
 			assertNotNull(parser);
 			// TODO Get rid of ".".
-			TestTokenizer tokenizer = new TestTokenizer(verb + ".");
+			TestTokenizer tokenizer = new TestTokenizer(
+					CobolTestSource.forSample(verb + "."));
 			assertTrue(verb, parser.accepts(tokenizer));
 			// TODO assertNull(tokenizer.nextToken());
 		}
@@ -76,8 +78,10 @@ public class CatchAllStatementsTest extends TestCase {
 			Parser parser = grammar.statement();
 			assertNotNull(parser);
 			// TODO Get rid of ".".
-			TestTokenizer tokenizer = new TestTokenizer(verb
-					+ " Thank you Mario but our Princess is in another castle .");
+			TestTokenizer tokenizer = new TestTokenizer(
+					CobolTestSource
+							.forSample(verb
+									+ " Thank you Mario but our Princess is in another castle ."));
 			assertTrue(verb, parser.accepts(tokenizer));
 			// TODO assertNull(tokenizer.nextToken());
 		}

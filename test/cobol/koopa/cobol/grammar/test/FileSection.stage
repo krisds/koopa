@@ -1,9 +1,10 @@
 package koopa.cobol.grammar.test;
 grammar koopa.cobol.grammar.CobolGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
 
 target fileSection;
 
-+{
++[
        FILE SECTION.
 
        FD  FPM203S1
@@ -17,4 +18,4 @@ target fileSection;
            RECORDING MODE IS F
            LABEL RECORDS ARE STANDARD.
        01  REG-FGRERROR                     PIC X(402).
-}
+]

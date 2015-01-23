@@ -1,9 +1,10 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.test.TestTokenizer;
 import koopa.core.parsers.Parser;
+import koopa.core.data.Token;
+import koopa.core.sources.Source;
+import koopa.core.sources.test.TestTokenizer;
 
 import org.junit.Test;
 
@@ -12,11 +13,15 @@ public class AddStatementTest extends TestCase {
 
   private static koopa.cobol.grammar.CobolGrammar grammar = new koopa.cobol.grammar.CobolGrammar();
 
+  private Source<Token> getTokenizer(String input) {
+    return koopa.cobol.sources.test.CobolTestSource.forSample(input);
+  }
+
     @Test
     public void testAddition_format1_1() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO B "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -25,7 +30,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_2() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORR A TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORR A TO B "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -34,7 +39,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_3() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO B ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO B ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -43,7 +48,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_4() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORR A TO B ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORR A TO B ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -52,7 +57,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_5() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING FUNCTION FN ( X ) TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING FUNCTION FN ( X ) TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -60,7 +65,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_6() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO FUNCTION FN ( X ) ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -68,7 +73,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_7() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING EXCEPTION-OBJECT TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING EXCEPTION-OBJECT TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -76,7 +81,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_8() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO EXCEPTION-OBJECT ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -84,7 +89,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_9() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING NULL TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING NULL TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -92,7 +97,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_10() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO NULL ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO NULL "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -100,7 +105,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_11() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING SELF TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING SELF TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -108,7 +113,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_12() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO SELF ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO SELF "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -116,7 +121,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_13() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING SUPER TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING SUPER TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -124,7 +129,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_14() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO SUPER ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO SUPER "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -132,7 +137,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_15() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING MY-CLASS-NAME OF SUPER TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING MY-CLASS-NAME OF SUPER TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -140,7 +145,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_16() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO MY-CLASS-NAME OF SUPER ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -148,7 +153,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_17() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING ADDRESS OF SOMETHING TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING ADDRESS OF SOMETHING TO B "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -156,7 +161,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format1_18() {
       Parser parser = grammar.addition_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " CORRESPONDING A TO ADDRESS OF SOMETHING ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -164,7 +169,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_19() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING C ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING C "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -173,7 +178,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_20() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING C ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING C ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -182,7 +187,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_21() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B TO C GIVING D E ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C GIVING D E "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -191,7 +196,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_22() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B TO C GIVING D ROUNDED E ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C GIVING D ROUNDED E ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -200,7 +205,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_23() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B GIVING C ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B GIVING C "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -209,7 +214,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_24() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B GIVING C ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B GIVING C ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -218,7 +223,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_25() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B C GIVING D E ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B C GIVING D E "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -227,7 +232,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_26() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B C GIVING D ROUNDED E ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B C GIVING D ROUNDED E ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -236,7 +241,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_27() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ZERO TO B GIVING C ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO TO B GIVING C "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -245,7 +250,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_28() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO ZERO GIVING C ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO ZERO GIVING C "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -254,7 +259,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_29() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING FUNCTION FN ( X ) ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -262,7 +267,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_30() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING EXCEPTION-OBJECT ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -270,7 +275,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_31() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING NULL ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING NULL "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -278,7 +283,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_32() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING SELF ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING SELF "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -286,7 +291,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_33() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING SUPER ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING SUPER "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -294,7 +299,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_34() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING MY-CLASS-NAME OF SUPER ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -302,7 +307,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format2_35() {
       Parser parser = grammar.addition_format2();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B GIVING ADDRESS OF SOMETHING ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -310,7 +315,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format3_36() {
       Parser parser = grammar.addition_format3();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -319,7 +324,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format3_37() {
       Parser parser = grammar.addition_format3();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A TO B ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -328,7 +333,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format3_38() {
       Parser parser = grammar.addition_format3();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B TO C D ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C D "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -337,7 +342,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format3_39() {
       Parser parser = grammar.addition_format3();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A B TO C ROUNDED D ROUNDED ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -346,7 +351,7 @@ public class AddStatementTest extends TestCase {
     public void testAddition_format3_40() {
       Parser parser = grammar.addition_format3();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " A ZERO TO C D ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A ZERO TO C D "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -355,7 +360,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_41() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -364,7 +369,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_42() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -373,7 +378,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_43() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n     ON SIZE ERROR\n        DISPLAY \"OOPS\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n     ON SIZE ERROR\n        DISPLAY \"OOPS\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -382,7 +387,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_44() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n     ON SIZE ERROR\n        DISPLAY \"OOPS\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n     ON SIZE ERROR\n        DISPLAY \"OOPS\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -391,7 +396,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_45() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n     SIZE ERROR\n        DISPLAY \"OOPS\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n     SIZE ERROR\n        DISPLAY \"OOPS\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -400,7 +405,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_46() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n     SIZE ERROR\n        DISPLAY \"OOPS\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n     SIZE ERROR\n        DISPLAY \"OOPS\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -409,7 +414,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_47() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -418,7 +423,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_48() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -427,7 +432,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_49() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n     NOT SIZE ERROR\n        DISPLAY \"AOK\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n     NOT SIZE ERROR\n        DISPLAY \"AOK\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -436,7 +441,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_50() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n     NOT SIZE ERROR\n        DISPLAY \"AOK\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n     NOT SIZE ERROR\n        DISPLAY \"AOK\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -445,7 +450,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_51() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -454,7 +459,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_52() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -463,7 +468,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_53() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\"\n   END-ADD ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\"\n   END-ADD "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -472,7 +477,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_54() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\"\n   END-ADD ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n     ON SIZE ERROR\n        DISPLAY \"OOPS\"\n     NOT ON SIZE ERROR\n        DISPLAY \"AOK\"\n   END-ADD "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -481,7 +486,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_55() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B\n   END-ADD ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B\n   END-ADD "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -490,7 +495,7 @@ public class AddStatementTest extends TestCase {
     public void testAddStatement_56() {
       Parser parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(SourceFormat.FREE, " ADD A TO B GIVING C\n   END-ADD ");
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C\n   END-ADD "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

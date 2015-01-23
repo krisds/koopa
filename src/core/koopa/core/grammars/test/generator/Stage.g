@@ -7,8 +7,9 @@ options {
 
 tokens {
   STAGE;
-  GRAMMAR;
   PACKAGE;
+  GRAMMAR;
+  TOKENIZER;
   TARGET;
   TEST;
 }
@@ -24,10 +25,11 @@ tokens {
 stage
   : packageDeclaration
     grammarDeclaration
+    tokenizerDeclaration
     testsForGrammarRule*
     EOF
 
-    -> ^(STAGE packageDeclaration grammarDeclaration testsForGrammarRule*)
+    -> ^(STAGE packageDeclaration grammarDeclaration tokenizerDeclaration testsForGrammarRule*)
   ;
 
 grammarDeclaration
@@ -42,6 +44,12 @@ packageDeclaration
     -> ^(PACKAGE IDENTIFIER)
   ;
 
+tokenizerDeclaration
+  : 'tokenizer' IDENTIFIER SEMI
+
+    -> ^(TOKENIZER IDENTIFIER)
+  ;
+
 testsForGrammarRule
   : 'target' IDENTIFIER SEMI
     testcase*
@@ -50,7 +58,7 @@ testsForGrammarRule
   ;
 
 testcase
-  : (t=ACCEPT | t=REJECT) (d=FREE_DATA | d=FIXED_DATA)
+  : (t=ACCEPT | t=REJECT) d=DATA
 
     -> ^(TEST $t $d)
   ;
@@ -66,8 +74,7 @@ SEMI : ';' ;
 ACCEPT : '+' ;
 REJECT : '-' ;
 
-FREE_DATA : '[' (~('[' | ']'))* ']' ;
-FIXED_DATA : '{' (~('{' | '}'))* '}' ;
+DATA : '[' (~('[' | ']'))* ']' ;
 
 IDENTIFIER : NAME ('.' NAME)* ;
 

@@ -1,20 +1,10 @@
-package koopa.cobol.sources.test;
+package koopa.core.sources.test;
 
-import java.io.StringReader;
 import java.util.LinkedList;
 
-import koopa.cobol.sources.CompilerDirectives;
-import koopa.cobol.sources.ContinuationWelding;
-import koopa.cobol.sources.LineContinuations;
-import koopa.cobol.sources.ProgramArea;
-import koopa.cobol.sources.PseudoLiterals;
-import koopa.cobol.sources.Separators;
-import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.BasicSource;
-import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 
 import org.apache.log4j.Logger;
@@ -35,26 +25,7 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 	private Token marker;
 	private LinkedList<Token> tokensSinceMarker = new LinkedList<Token>();
 
-	public TestTokenizer(String data) {
-		this(SourceFormat.FREE, data);
-	}
-
-	public TestTokenizer(SourceFormat format, String data) {
-		// The tokenizers in this sequence should generate the expected tokens.
-		// TODO Reuse setup from CobolParser somehow ?
-		Source<Token> source = new LineSplitter(new StringReader(data));
-		source = new CompilerDirectives(source, format);
-		source = new ProgramArea(source, format);
-		source = new SourceFormattingDirectives(source);
-
-		if (format == SourceFormat.FIXED) {
-			source = new LineContinuations(source);
-			source = new ContinuationWelding(source);
-		}
-
-		source = new Separators(source);
-		source = new PseudoLiterals(source);
-
+	public TestTokenizer(Source<Token> source) {
 		this.source = source;
 	}
 

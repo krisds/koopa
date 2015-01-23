@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/Stage.g 2015-01-23 09:22:11
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/Stage.g 2015-01-23 17:26:08
 
   package koopa.core.grammars.test.generator;
 
@@ -10,27 +10,28 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 public class StageLexer extends Lexer {
-    public static final int PACKAGE=6;
-    public static final int T__23=23;
+    public static final int PACKAGE=5;
+    public static final int T__24=24;
     public static final int LETTER=19;
+    public static final int T__23=23;
     public static final int STAGE=4;
     public static final int T__22=22;
     public static final int T__21=21;
     public static final int NUMBER=20;
     public static final int WHITESPACE=17;
-    public static final int TARGET=7;
+    public static final int TARGET=8;
     public static final int EOF=-1;
-    public static final int SEMI=10;
-    public static final int ACCEPT=11;
+    public static final int SEMI=11;
+    public static final int ACCEPT=12;
     public static final int NAME=18;
     public static final int NEWLINE=16;
-    public static final int FIXED_DATA=14;
-    public static final int REJECT=12;
-    public static final int IDENTIFIER=9;
-    public static final int TEST=8;
-    public static final int FREE_DATA=13;
+    public static final int REJECT=13;
+    public static final int IDENTIFIER=10;
+    public static final int TOKENIZER=7;
+    public static final int TEST=9;
     public static final int COMMENT=15;
-    public static final int GRAMMAR=5;
+    public static final int DATA=14;
+    public static final int GRAMMAR=6;
 
     // delegates
     // delegators
@@ -92,10 +93,10 @@ public class StageLexer extends Lexer {
         try {
             int _type = T__23;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:9:7: ( 'target' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:9:9: 'target'
+            // src/core/koopa/core/grammars/test/generator/Stage.g:9:7: ( 'tokenizer' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:9:9: 'tokenizer'
             {
-            match("target"); if (state.failed) return ;
+            match("tokenizer"); if (state.failed) return ;
 
 
             }
@@ -108,16 +109,37 @@ public class StageLexer extends Lexer {
     }
     // $ANTLR end "T__23"
 
+    // $ANTLR start "T__24"
+    public final void mT__24() throws RecognitionException {
+        try {
+            int _type = T__24;
+            int _channel = DEFAULT_TOKEN_CHANNEL;
+            // src/core/koopa/core/grammars/test/generator/Stage.g:10:7: ( 'target' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:10:9: 'target'
+            {
+            match("target"); if (state.failed) return ;
+
+
+            }
+
+            state.type = _type;
+            state.channel = _channel;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end "T__24"
+
     // $ANTLR start "COMMENT"
     public final void mCOMMENT() throws RecognitionException {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:58:9: ( '#' (~ ( '\\n' | '\\r' ) )* )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:58:11: '#' (~ ( '\\n' | '\\r' ) )*
+            // src/core/koopa/core/grammars/test/generator/Stage.g:66:9: ( '#' (~ ( '\\n' | '\\r' ) )* )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:66:11: '#' (~ ( '\\n' | '\\r' ) )*
             {
             match('#'); if (state.failed) return ;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:58:15: (~ ( '\\n' | '\\r' ) )*
+            // src/core/koopa/core/grammars/test/generator/Stage.g:66:15: (~ ( '\\n' | '\\r' ) )*
             loop1:
             do {
                 int alt1=2;
@@ -130,7 +152,7 @@ public class StageLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // src/core/koopa/core/grammars/test/generator/Stage.g:58:16: ~ ( '\\n' | '\\r' )
+            	    // src/core/koopa/core/grammars/test/generator/Stage.g:66:16: ~ ( '\\n' | '\\r' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -170,10 +192,10 @@ public class StageLexer extends Lexer {
         try {
             int _type = NEWLINE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:60:9: ( ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' ) )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:60:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:68:9: ( ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' ) )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:68:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
             {
-            // src/core/koopa/core/grammars/test/generator/Stage.g:60:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:68:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
             int alt2=3;
             int LA2_0 = input.LA(1);
 
@@ -198,7 +220,7 @@ public class StageLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // src/core/koopa/core/grammars/test/generator/Stage.g:60:13: ( '\\r\\n' )=> '\\r\\n'
+                    // src/core/koopa/core/grammars/test/generator/Stage.g:68:13: ( '\\r\\n' )=> '\\r\\n'
                     {
                     match("\r\n"); if (state.failed) return ;
 
@@ -206,14 +228,14 @@ public class StageLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // src/core/koopa/core/grammars/test/generator/Stage.g:60:34: '\\r'
+                    // src/core/koopa/core/grammars/test/generator/Stage.g:68:34: '\\r'
                     {
                     match('\r'); if (state.failed) return ;
 
                     }
                     break;
                 case 3 :
-                    // src/core/koopa/core/grammars/test/generator/Stage.g:60:41: '\\n'
+                    // src/core/koopa/core/grammars/test/generator/Stage.g:68:41: '\\n'
                     {
                     match('\n'); if (state.failed) return ;
 
@@ -241,10 +263,10 @@ public class StageLexer extends Lexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:62:12: ( ( ' ' | '\\t' )+ )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:62:14: ( ' ' | '\\t' )+
+            // src/core/koopa/core/grammars/test/generator/Stage.g:70:12: ( ( ' ' | '\\t' )+ )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:70:14: ( ' ' | '\\t' )+
             {
-            // src/core/koopa/core/grammars/test/generator/Stage.g:62:14: ( ' ' | '\\t' )+
+            // src/core/koopa/core/grammars/test/generator/Stage.g:70:14: ( ' ' | '\\t' )+
             int cnt3=0;
             loop3:
             do {
@@ -303,8 +325,8 @@ public class StageLexer extends Lexer {
         try {
             int _type = SEMI;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:64:6: ( ';' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:64:8: ';'
+            // src/core/koopa/core/grammars/test/generator/Stage.g:72:6: ( ';' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:72:8: ';'
             {
             match(';'); if (state.failed) return ;
 
@@ -323,8 +345,8 @@ public class StageLexer extends Lexer {
         try {
             int _type = ACCEPT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:66:8: ( '+' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:66:10: '+'
+            // src/core/koopa/core/grammars/test/generator/Stage.g:74:8: ( '+' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:74:10: '+'
             {
             match('+'); if (state.failed) return ;
 
@@ -343,8 +365,8 @@ public class StageLexer extends Lexer {
         try {
             int _type = REJECT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:67:8: ( '-' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:67:10: '-'
+            // src/core/koopa/core/grammars/test/generator/Stage.g:75:8: ( '-' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:75:10: '-'
             {
             match('-'); if (state.failed) return ;
 
@@ -358,16 +380,16 @@ public class StageLexer extends Lexer {
     }
     // $ANTLR end "REJECT"
 
-    // $ANTLR start "FREE_DATA"
-    public final void mFREE_DATA() throws RecognitionException {
+    // $ANTLR start "DATA"
+    public final void mDATA() throws RecognitionException {
         try {
-            int _type = FREE_DATA;
+            int _type = DATA;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:69:11: ( '[' (~ ( '[' | ']' ) )* ']' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:69:13: '[' (~ ( '[' | ']' ) )* ']'
+            // src/core/koopa/core/grammars/test/generator/Stage.g:77:6: ( '[' (~ ( '[' | ']' ) )* ']' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:77:8: '[' (~ ( '[' | ']' ) )* ']'
             {
             match('['); if (state.failed) return ;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:69:17: (~ ( '[' | ']' ) )*
+            // src/core/koopa/core/grammars/test/generator/Stage.g:77:12: (~ ( '[' | ']' ) )*
             loop4:
             do {
                 int alt4=2;
@@ -380,7 +402,7 @@ public class StageLexer extends Lexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // src/core/koopa/core/grammars/test/generator/Stage.g:69:18: ~ ( '[' | ']' )
+            	    // src/core/koopa/core/grammars/test/generator/Stage.g:77:13: ~ ( '[' | ']' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='Z')||input.LA(1)=='\\'||(input.LA(1)>='^' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -411,86 +433,31 @@ public class StageLexer extends Lexer {
         finally {
         }
     }
-    // $ANTLR end "FREE_DATA"
-
-    // $ANTLR start "FIXED_DATA"
-    public final void mFIXED_DATA() throws RecognitionException {
-        try {
-            int _type = FIXED_DATA;
-            int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:70:12: ( '{' (~ ( '{' | '}' ) )* '}' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:70:14: '{' (~ ( '{' | '}' ) )* '}'
-            {
-            match('{'); if (state.failed) return ;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:70:18: (~ ( '{' | '}' ) )*
-            loop5:
-            do {
-                int alt5=2;
-                int LA5_0 = input.LA(1);
-
-                if ( ((LA5_0>='\u0000' && LA5_0<='z')||LA5_0=='|'||(LA5_0>='~' && LA5_0<='\uFFFF')) ) {
-                    alt5=1;
-                }
-
-
-                switch (alt5) {
-            	case 1 :
-            	    // src/core/koopa/core/grammars/test/generator/Stage.g:70:19: ~ ( '{' | '}' )
-            	    {
-            	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='z')||input.LA(1)=='|'||(input.LA(1)>='~' && input.LA(1)<='\uFFFF') ) {
-            	        input.consume();
-            	    state.failed=false;
-            	    }
-            	    else {
-            	        if (state.backtracking>0) {state.failed=true; return ;}
-            	        MismatchedSetException mse = new MismatchedSetException(null,input);
-            	        recover(mse);
-            	        throw mse;}
-
-
-            	    }
-            	    break;
-
-            	default :
-            	    break loop5;
-                }
-            } while (true);
-
-            match('}'); if (state.failed) return ;
-
-            }
-
-            state.type = _type;
-            state.channel = _channel;
-        }
-        finally {
-        }
-    }
-    // $ANTLR end "FIXED_DATA"
+    // $ANTLR end "DATA"
 
     // $ANTLR start "IDENTIFIER"
     public final void mIDENTIFIER() throws RecognitionException {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:72:12: ( NAME ( '.' NAME )* )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:72:14: NAME ( '.' NAME )*
+            // src/core/koopa/core/grammars/test/generator/Stage.g:79:12: ( NAME ( '.' NAME )* )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:79:14: NAME ( '.' NAME )*
             {
             mNAME(); if (state.failed) return ;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:72:19: ( '.' NAME )*
-            loop6:
+            // src/core/koopa/core/grammars/test/generator/Stage.g:79:19: ( '.' NAME )*
+            loop5:
             do {
-                int alt6=2;
-                int LA6_0 = input.LA(1);
+                int alt5=2;
+                int LA5_0 = input.LA(1);
 
-                if ( (LA6_0=='.') ) {
-                    alt6=1;
+                if ( (LA5_0=='.') ) {
+                    alt5=1;
                 }
 
 
-                switch (alt6) {
+                switch (alt5) {
             	case 1 :
-            	    // src/core/koopa/core/grammars/test/generator/Stage.g:72:20: '.' NAME
+            	    // src/core/koopa/core/grammars/test/generator/Stage.g:79:20: '.' NAME
             	    {
             	    match('.'); if (state.failed) return ;
             	    mNAME(); if (state.failed) return ;
@@ -499,7 +466,7 @@ public class StageLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop6;
+            	    break loop5;
                 }
             } while (true);
 
@@ -517,22 +484,22 @@ public class StageLexer extends Lexer {
     // $ANTLR start "NAME"
     public final void mNAME() throws RecognitionException {
         try {
-            // src/core/koopa/core/grammars/test/generator/Stage.g:74:15: ( LETTER ( '_' | LETTER | NUMBER )* )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:74:17: LETTER ( '_' | LETTER | NUMBER )*
+            // src/core/koopa/core/grammars/test/generator/Stage.g:81:15: ( LETTER ( '_' | LETTER | NUMBER )* )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:81:17: LETTER ( '_' | LETTER | NUMBER )*
             {
             mLETTER(); if (state.failed) return ;
-            // src/core/koopa/core/grammars/test/generator/Stage.g:74:24: ( '_' | LETTER | NUMBER )*
-            loop7:
+            // src/core/koopa/core/grammars/test/generator/Stage.g:81:24: ( '_' | LETTER | NUMBER )*
+            loop6:
             do {
-                int alt7=2;
-                int LA7_0 = input.LA(1);
+                int alt6=2;
+                int LA6_0 = input.LA(1);
 
-                if ( ((LA7_0>='0' && LA7_0<='9')||(LA7_0>='A' && LA7_0<='Z')||LA7_0=='_'||(LA7_0>='a' && LA7_0<='z')) ) {
-                    alt7=1;
+                if ( ((LA6_0>='0' && LA6_0<='9')||(LA6_0>='A' && LA6_0<='Z')||LA6_0=='_'||(LA6_0>='a' && LA6_0<='z')) ) {
+                    alt6=1;
                 }
 
 
-                switch (alt7) {
+                switch (alt6) {
             	case 1 :
             	    // src/core/koopa/core/grammars/test/generator/Stage.g:
             	    {
@@ -551,7 +518,7 @@ public class StageLexer extends Lexer {
             	    break;
 
             	default :
-            	    break loop7;
+            	    break loop6;
                 }
             } while (true);
 
@@ -567,7 +534,7 @@ public class StageLexer extends Lexer {
     // $ANTLR start "LETTER"
     public final void mLETTER() throws RecognitionException {
         try {
-            // src/core/koopa/core/grammars/test/generator/Stage.g:75:17: ( 'A' .. 'Z' | 'a' .. 'z' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:82:17: ( 'A' .. 'Z' | 'a' .. 'z' )
             // src/core/koopa/core/grammars/test/generator/Stage.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -592,8 +559,8 @@ public class StageLexer extends Lexer {
     // $ANTLR start "NUMBER"
     public final void mNUMBER() throws RecognitionException {
         try {
-            // src/core/koopa/core/grammars/test/generator/Stage.g:76:17: ( '0' .. '9' )
-            // src/core/koopa/core/grammars/test/generator/Stage.g:76:19: '0' .. '9'
+            // src/core/koopa/core/grammars/test/generator/Stage.g:83:17: ( '0' .. '9' )
+            // src/core/koopa/core/grammars/test/generator/Stage.g:83:19: '0' .. '9'
             {
             matchRange('0','9'); if (state.failed) return ;
 
@@ -606,10 +573,10 @@ public class StageLexer extends Lexer {
     // $ANTLR end "NUMBER"
 
     public void mTokens() throws RecognitionException {
-        // src/core/koopa/core/grammars/test/generator/Stage.g:1:8: ( T__21 | T__22 | T__23 | COMMENT | NEWLINE | WHITESPACE | SEMI | ACCEPT | REJECT | FREE_DATA | FIXED_DATA | IDENTIFIER )
-        int alt8=12;
-        alt8 = dfa8.predict(input);
-        switch (alt8) {
+        // src/core/koopa/core/grammars/test/generator/Stage.g:1:8: ( T__21 | T__22 | T__23 | T__24 | COMMENT | NEWLINE | WHITESPACE | SEMI | ACCEPT | REJECT | DATA | IDENTIFIER )
+        int alt7=12;
+        alt7 = dfa7.predict(input);
+        switch (alt7) {
             case 1 :
                 // src/core/koopa/core/grammars/test/generator/Stage.g:1:10: T__21
                 {
@@ -632,63 +599,63 @@ public class StageLexer extends Lexer {
                 }
                 break;
             case 4 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:28: COMMENT
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:28: T__24
+                {
+                mT__24(); if (state.failed) return ;
+
+                }
+                break;
+            case 5 :
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:34: COMMENT
                 {
                 mCOMMENT(); if (state.failed) return ;
 
                 }
                 break;
-            case 5 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:36: NEWLINE
+            case 6 :
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:42: NEWLINE
                 {
                 mNEWLINE(); if (state.failed) return ;
 
                 }
                 break;
-            case 6 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:44: WHITESPACE
+            case 7 :
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:50: WHITESPACE
                 {
                 mWHITESPACE(); if (state.failed) return ;
 
                 }
                 break;
-            case 7 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:55: SEMI
+            case 8 :
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:61: SEMI
                 {
                 mSEMI(); if (state.failed) return ;
 
                 }
                 break;
-            case 8 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:60: ACCEPT
+            case 9 :
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:66: ACCEPT
                 {
                 mACCEPT(); if (state.failed) return ;
 
                 }
                 break;
-            case 9 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:67: REJECT
+            case 10 :
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:73: REJECT
                 {
                 mREJECT(); if (state.failed) return ;
 
                 }
                 break;
-            case 10 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:74: FREE_DATA
-                {
-                mFREE_DATA(); if (state.failed) return ;
-
-                }
-                break;
             case 11 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:84: FIXED_DATA
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:80: DATA
                 {
-                mFIXED_DATA(); if (state.failed) return ;
+                mDATA(); if (state.failed) return ;
 
                 }
                 break;
             case 12 :
-                // src/core/koopa/core/grammars/test/generator/Stage.g:1:95: IDENTIFIER
+                // src/core/koopa/core/grammars/test/generator/Stage.g:1:85: IDENTIFIER
                 {
                 mIDENTIFIER(); if (state.failed) return ;
 
@@ -701,8 +668,8 @@ public class StageLexer extends Lexer {
 
     // $ANTLR start synpred1_Stage
     public final void synpred1_Stage_fragment() throws RecognitionException {   
-        // src/core/koopa/core/grammars/test/generator/Stage.g:60:13: ( '\\r\\n' )
-        // src/core/koopa/core/grammars/test/generator/Stage.g:60:14: '\\r\\n'
+        // src/core/koopa/core/grammars/test/generator/Stage.g:68:13: ( '\\r\\n' )
+        // src/core/koopa/core/grammars/test/generator/Stage.g:68:14: '\\r\\n'
         {
         match("\r\n"); if (state.failed) return ;
 
@@ -727,30 +694,32 @@ public class StageLexer extends Lexer {
     }
 
 
-    protected DFA8 dfa8 = new DFA8(this);
-    static final String DFA8_eotS =
-        "\1\uffff\3\14\11\uffff\16\14\1\36\1\37\1\40\3\uffff";
-    static final String DFA8_eofS =
-        "\41\uffff";
-    static final String DFA8_minS =
-        "\1\11\1\162\2\141\11\uffff\1\141\1\143\1\162\1\155\1\153\1\147\1"+
-        "\155\1\141\1\145\1\141\1\147\1\164\1\162\1\145\3\56\3\uffff";
-    static final String DFA8_maxS =
-        "\1\173\1\162\2\141\11\uffff\1\141\1\143\1\162\1\155\1\153\1\147"+
-        "\1\155\1\141\1\145\1\141\1\147\1\164\1\162\1\145\3\172\3\uffff";
-    static final String DFA8_acceptS =
-        "\4\uffff\1\4\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\21\uffff\1\3\1"+
-        "\1\1\2";
-    static final String DFA8_specialS =
-        "\41\uffff}>";
-    static final String[] DFA8_transitionS = {
+    protected DFA7 dfa7 = new DFA7(this);
+    static final String DFA7_eotS =
+        "\1\uffff\3\13\10\uffff\23\13\1\43\1\44\1\45\1\13\3\uffff\1\13\1"+
+        "\50\1\uffff";
+    static final String DFA7_eofS =
+        "\51\uffff";
+    static final String DFA7_minS =
+        "\1\11\1\162\2\141\10\uffff\1\141\1\143\1\153\1\162\1\155\1\153\1"+
+        "\145\1\147\1\155\1\141\1\156\1\145\1\141\1\147\1\151\1\164\1\162"+
+        "\1\145\1\172\3\56\1\145\3\uffff\1\162\1\56\1\uffff";
+    static final String DFA7_maxS =
+        "\1\172\1\162\1\141\1\157\10\uffff\1\141\1\143\1\153\1\162\1\155"+
+        "\1\153\1\145\1\147\1\155\1\141\1\156\1\145\1\141\1\147\1\151\1\164"+
+        "\1\162\1\145\4\172\1\145\3\uffff\1\162\1\172\1\uffff";
+    static final String DFA7_acceptS =
+        "\4\uffff\1\5\1\6\1\7\1\10\1\11\1\12\1\13\1\14\27\uffff\1\4\1\1\1"+
+        "\2\2\uffff\1\3";
+    static final String DFA7_specialS =
+        "\51\uffff}>";
+    static final String[] DFA7_transitionS = {
             "\1\6\1\5\2\uffff\1\5\22\uffff\1\6\2\uffff\1\4\7\uffff\1\10\1"+
-            "\uffff\1\11\15\uffff\1\7\5\uffff\32\14\1\12\5\uffff\6\14\1\1"+
-            "\10\14\1\2\3\14\1\3\6\14\1\13",
+            "\uffff\1\11\15\uffff\1\7\5\uffff\32\13\1\12\5\uffff\6\13\1\1"+
+            "\10\13\1\2\3\13\1\3\6\13",
+            "\1\14",
             "\1\15",
-            "\1\16",
-            "\1\17",
-            "",
+            "\1\17\15\uffff\1\16",
             "",
             "",
             "",
@@ -773,45 +742,54 @@ public class StageLexer extends Lexer {
             "\1\33",
             "\1\34",
             "\1\35",
-            "\1\14\1\uffff\12\14\7\uffff\32\14\4\uffff\1\14\1\uffff\32\14",
-            "\1\14\1\uffff\12\14\7\uffff\32\14\4\uffff\1\14\1\uffff\32\14",
-            "\1\14\1\uffff\12\14\7\uffff\32\14\4\uffff\1\14\1\uffff\32\14",
+            "\1\36",
+            "\1\37",
+            "\1\40",
+            "\1\41",
+            "\1\42",
+            "\1\13\1\uffff\12\13\7\uffff\32\13\4\uffff\1\13\1\uffff\32\13",
+            "\1\13\1\uffff\12\13\7\uffff\32\13\4\uffff\1\13\1\uffff\32\13",
+            "\1\13\1\uffff\12\13\7\uffff\32\13\4\uffff\1\13\1\uffff\32\13",
+            "\1\46",
             "",
             "",
+            "",
+            "\1\47",
+            "\1\13\1\uffff\12\13\7\uffff\32\13\4\uffff\1\13\1\uffff\32\13",
             ""
     };
 
-    static final short[] DFA8_eot = DFA.unpackEncodedString(DFA8_eotS);
-    static final short[] DFA8_eof = DFA.unpackEncodedString(DFA8_eofS);
-    static final char[] DFA8_min = DFA.unpackEncodedStringToUnsignedChars(DFA8_minS);
-    static final char[] DFA8_max = DFA.unpackEncodedStringToUnsignedChars(DFA8_maxS);
-    static final short[] DFA8_accept = DFA.unpackEncodedString(DFA8_acceptS);
-    static final short[] DFA8_special = DFA.unpackEncodedString(DFA8_specialS);
-    static final short[][] DFA8_transition;
+    static final short[] DFA7_eot = DFA.unpackEncodedString(DFA7_eotS);
+    static final short[] DFA7_eof = DFA.unpackEncodedString(DFA7_eofS);
+    static final char[] DFA7_min = DFA.unpackEncodedStringToUnsignedChars(DFA7_minS);
+    static final char[] DFA7_max = DFA.unpackEncodedStringToUnsignedChars(DFA7_maxS);
+    static final short[] DFA7_accept = DFA.unpackEncodedString(DFA7_acceptS);
+    static final short[] DFA7_special = DFA.unpackEncodedString(DFA7_specialS);
+    static final short[][] DFA7_transition;
 
     static {
-        int numStates = DFA8_transitionS.length;
-        DFA8_transition = new short[numStates][];
+        int numStates = DFA7_transitionS.length;
+        DFA7_transition = new short[numStates][];
         for (int i=0; i<numStates; i++) {
-            DFA8_transition[i] = DFA.unpackEncodedString(DFA8_transitionS[i]);
+            DFA7_transition[i] = DFA.unpackEncodedString(DFA7_transitionS[i]);
         }
     }
 
-    class DFA8 extends DFA {
+    class DFA7 extends DFA {
 
-        public DFA8(BaseRecognizer recognizer) {
+        public DFA7(BaseRecognizer recognizer) {
             this.recognizer = recognizer;
-            this.decisionNumber = 8;
-            this.eot = DFA8_eot;
-            this.eof = DFA8_eof;
-            this.min = DFA8_min;
-            this.max = DFA8_max;
-            this.accept = DFA8_accept;
-            this.special = DFA8_special;
-            this.transition = DFA8_transition;
+            this.decisionNumber = 7;
+            this.eot = DFA7_eot;
+            this.eof = DFA7_eof;
+            this.min = DFA7_min;
+            this.max = DFA7_max;
+            this.accept = DFA7_accept;
+            this.special = DFA7_special;
+            this.transition = DFA7_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T__21 | T__22 | T__23 | COMMENT | NEWLINE | WHITESPACE | SEMI | ACCEPT | REJECT | FREE_DATA | FIXED_DATA | IDENTIFIER );";
+            return "1:1: Tokens : ( T__21 | T__22 | T__23 | T__24 | COMMENT | NEWLINE | WHITESPACE | SEMI | ACCEPT | REJECT | DATA | IDENTIFIER );";
         }
     }
  

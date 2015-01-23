@@ -12,7 +12,7 @@ options {
 }
 
 stage
-  : ^(STAGE pack grammah testsForGrammarRule*)
+  : ^(STAGE pack grammah tokenizer testsForGrammarRule*)
   ;
   
 pack
@@ -23,10 +23,14 @@ grammah
   : ^(GRAMMAR IDENTIFIER)
   ;
 
+tokenizer
+  : ^(TOKENIZER IDENTIFIER)
+  ;
+
 testsForGrammarRule
   : ^(TARGET IDENTIFIER test*)
   ;
   
 test
-  : ^(TEST (ACCEPT | REJECT) (FREE_DATA | FIXED_DATA))
+  : ^(TEST (ACCEPT | REJECT) DATA)
   ;

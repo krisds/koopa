@@ -14,19 +14,36 @@ public class KGG {
 
 	public static void main(String[] args) {
 
-		File path = new File(args[1]);
-
-		if (!path.exists() || !path.isDirectory()) {
-			System.err.println("Not a folder: " + args[1]);
+		File file = new File(args[0]);
+		if (!file.exists()) {
+			System.err.println("Not found: " + file);
 			System.exit(-1);
 		}
 
-		File file = new File(path, args[0] + ".kg");
-		if (!file.exists() || !file.isFile()) {
-			System.err.println("Not a file: " + args[1]);
+		if (file.isFile()) {
+			translate(file);
+			
+		} else if (file.isDirectory()) {
+			translateAllIn(file);
+			
+		} else {
+			System.err.println("Not a file or folder: " + file);
 			System.exit(-1);
 		}
+	}
 
+	private static void translateAllIn(File folder) {
+		File[] files = folder.listFiles();
+		
+		for (File file : files) {
+			if (file.isFile() && file.getName().endsWith(".kg"))
+				translate(file);
+			else if (file.isDirectory())
+				translateAllIn(file);
+		}
+	}
+
+	public static void translate(File file) {
 		try {
 			System.out.println("Reading " + file + "...");
 			CommonTree ast = KGUtil.getKoopaAST(file);

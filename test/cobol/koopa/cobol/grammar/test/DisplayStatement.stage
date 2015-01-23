@@ -1,5 +1,6 @@
 package koopa.cobol.grammar.test;
 grammar koopa.cobol.grammar.CobolGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
 
 target displayStatement;
 
@@ -11,7 +12,7 @@ target displayStatement;
 +[ DISPLAY foo bar baz END-DISPLAY ]
 
 # Test of comma-separated identifiers.
-+{       DISPLAY A, B }
++[ DISPLAY A, B ]
 
 +[ DISPLAY foo UPON CRT ]
 +[ DISPLAY foo UPON bar ]

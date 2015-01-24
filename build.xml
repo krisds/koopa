@@ -56,7 +56,7 @@
 
 	<target name="core-tests" depends="core">
 		<echo>Generating unit tests...</echo>
-		<generate-unit-test path="test/core/koopa/cobol/grammar/test/core/" />
+		<generate-unit-test path="test/core/" />
 
 		<echo>Compiling unit tests...</echo>
 		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
@@ -100,10 +100,10 @@
 	<!-- COBOL PARSER -->
 
 	<target name="cobol" depends="core">
-		<echo>Generating the parsers...</echo>
+		<echo>Generating parsers...</echo>
 		<kgg path="src/cobol/" />
 
-		<echo>Compiling Cobol parser...</echo>
+		<echo>Compiling parsers...</echo>
 		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
@@ -123,7 +123,7 @@
 
 	<target name="cobol-tests" depends="core,core-tests,cobol">
 		<echo>Generating unit tests...</echo>
-		<generate-unit-test path="test/cobol/koopa/cobol/grammar/test/" />
+		<generate-unit-test path="test/cobol/" />
 
 		<echo>Compiling unit tests...</echo>
 		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
@@ -154,6 +154,7 @@
 
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
+			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
 		</junit>
 	</target>
 

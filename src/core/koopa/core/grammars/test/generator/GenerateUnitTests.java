@@ -38,13 +38,12 @@ public class GenerateUnitTests {
 		} else if (file.isDirectory()) {
 			File[] files = file.listFiles(new FilenameFilter() {
 				public boolean accept(File dir, String name) {
-					return name.endsWith(".stage");
+					return dir.isDirectory() || name.endsWith(".stage");
 				}
 			});
 
-			for (File stage : files) {
+			for (File stage : files)
 				process(stage);
-			}
 
 		} else if (file.getName().endsWith(".stage")) {
 			try {

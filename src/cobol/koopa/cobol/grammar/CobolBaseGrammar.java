@@ -1,3 +1,18 @@
+package koopa.cobol.grammar;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import koopa.cobol.data.tags.SyntacticTag;
+import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
+import koopa.cobol.sql.grammar.SQLGrammar;
+import koopa.core.data.Token;
+import koopa.core.parsers.FutureParser;
+import koopa.core.parsers.ParseStream;
+import koopa.core.parsers.Parser;
+
+public class CobolBaseGrammar extends CobolPreprocessingGrammar {
+
 	// ============================================================================
 	// pictureString
 	// ............................................................................
@@ -26,12 +41,13 @@
 							stream.rewind(token);
 							break;
 						}
-						
-						if (isSeparator(token) && token.getText().trim().length() == 0) {
+
+						if (isSeparator(token)
+								&& token.getText().trim().length() == 0) {
 							stream.rewind(token);
 							break;
 						}
-						
+
 						picture.add(token);
 						numberOfTokens += 1;
 					}
@@ -41,12 +57,12 @@
 					}
 
 					final Token lastToken = picture.get(numberOfTokens - 1);
-   					if (lastToken.hasTag(SyntacticTag.SEPARATOR)
-   							&& lastToken.getText().equals(".")) {
+					if (lastToken.hasTag(SyntacticTag.SEPARATOR)
+							&& lastToken.getText().equals(".")) {
 						picture.remove(numberOfTokens - 1);
 						stream.rewind(lastToken);
 					}
-					
+
 					returnToken(new Token(picture));
 					return true;
 				}
@@ -118,3 +134,17 @@
 		return levelNumberParser;
 	}
 
+	// ============================================================================
+	// sqlStatement
+	// ............................................................................
+
+	private SQLGrammar sqlGrammar = null;
+
+	// TODO This is a poor man's version of grammar composition...
+	public Parser sqlStatement() {
+		if (sqlGrammar == null)
+			sqlGrammar = new SQLGrammar();
+
+		return sqlGrammar.sqlStatement();
+	}
+}

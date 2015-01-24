@@ -1,0 +1,77 @@
+grammar SQL extends SQLBase.
+
+def sqlStatement =
+   ( includeStatement
+   | declareSessionStatement
+   | declareCursorStatement
+   | selectStatement
+   | insertStatement
+   | updateStatement
+   | deleteStatement
+   | openStatement
+   )
+end
+
+def includeStatement =
+   INCLUDE textName
+end
+
+def declareSessionStatement =
+   DECLARE SESSION . name
+   TABLE (_)*
+end
+
+def declareCursorStatement =
+   DECLARE name CURSOR
+   [--> FOR] FOR selectStatement
+   (_)*
+end
+
+def selectStatement =
+   SELECT
+   [--> FROM] FROM [schemaName '.'] tableName   
+end
+
+def insertStatement =
+   INSERT INTO [schemaName '.'] tableName
+end
+
+def updateStatement =
+   UPDATE [schemaName '.'] tableName
+end
+
+def deleteStatement = 
+   DELETE FROM [schemaName '.'] tableName
+end
+
+def openStatement =
+   OPEN name
+end
+
+# -----------------------------------------------------------------------------
+
+def textName =
+    ( delimitedIdentifier
+    | identifier
+    )
+end
+
+def name =
+    identifier
+end
+
+def schemaName =
+    identifier
+end
+
+def tableName =
+    identifier
+end
+
+def delimitedIdentifier =
+	@CHARACTER_STRING @STRING_LITERAL _
+end
+
+def identifier =
+    _
+end

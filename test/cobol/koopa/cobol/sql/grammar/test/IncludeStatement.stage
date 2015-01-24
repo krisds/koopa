@@ -1,0 +1,9 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target includeStatement;
+
+# Example by Suman Saurabh.
++[ INCLUDE SQLCA ]
+

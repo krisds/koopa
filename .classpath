@@ -16,7 +16,5 @@
 	<classpathentry kind="src" path="examples/jaxen"/>
 	<classpathentry kind="src" path="src/apps"/>
 	<classpathentry kind="src" path="examples/treegrammars"/>
-	<classpathentry kind="src" path="src/sql"/>
-	<classpathentry kind="src" path="test/sql"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

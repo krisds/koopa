@@ -1,0 +1,13 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target declareSessionStatement;
+
+# Example by Suman Saurabh.
++[ DECLARE SESSION.AB05 TABLE                      
+     (  PPPPPPP_CODE       CHAR(10)                        
+       ,RRRRRRR_DESC       CHAR(40)                        
+       ,IIPACT_CONDITION   CHAR(01)                        
+       ,VVVVVV_ID          CHAR(03)                        
+       ,CARR_ID            CHAR(04)) ]

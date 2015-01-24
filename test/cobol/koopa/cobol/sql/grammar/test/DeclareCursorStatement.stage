@@ -1,0 +1,15 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target declareCursorStatement;
+
+# Example by Suman Saurabh.
++[ DECLARE AB05 CURSOR WITH RETURN FOR                 
+   SELECT                                                       
+      PPPPPPP_CODE                                            
+     ,RRRRRRR_DESC                                            
+     ,IIPACT_CONDITION                                        
+     ,VVVVVV_ID                                               
+     ,CARR_ID                                              
+   FROM SESSION.AB05 ]

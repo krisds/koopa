@@ -1,4 +1,4 @@
-grammar Cobol extends CobolPreprocessing.
+grammar Cobol extends CobolBase.
 
 ## Micro Focus COBOL Language Reference
 ## http://documentation.microfocus.com/help/index.jsp?nav=%2F3_9_4_1
@@ -2370,46 +2370,13 @@ def execStatement =
 end
 
 # EXEC SQL support. ------------------------------------------------------------
+# This is supported by a separate grammar.
 
 def execSQLStatement =
    (EXEC | EXECUTE) SQL 
      %limit sqlStatement %by END-EXEC 
      [--> END-EXEC]
    END-EXEC
-end
-
-def sqlStatement =
-   ( sqlInclude
-   | sqlSelect
-   | sqlInsert
-   | sqlUpdate
-   | sqlDelete
-   )
-end
-
-def sqlInclude =
-   INCLUDE textName
-end
-
-def sqlSelect =
-   ( SELECT | DECLARE [--> SELECT] SELECT)
-   [--> FROM] FROM [identifier '.'] tableName    
-end
-
-def sqlInsert =
-   INSERT INTO [identifier '.'] tableName
-end
-
-def sqlUpdate =
-   UPDATE [identifier '.'] tableName
-end
-
-def sqlDelete = 
-   DELETE FROM [identifier '.'] tableName
-end
-
-def tableName =
-    cobolWord
 end
 
 # EXEC CICS support. -----------------------------------------------------------

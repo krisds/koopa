@@ -122,12 +122,12 @@ public abstract class KoopaGrammar {
 				scope.push(newScope);
 
 				stream.bookmark();
-				stream.insert(Start.on(name));
+				stream.insert(Start.on(getNamespace(), name));
 
 				boolean accepts = parser.accepts(stream);
 
 				if (accepts) {
-					stream.insert(End.on(name));
+					stream.insert(End.on(getNamespace(), name));
 					stream.commit();
 
 				} else {
@@ -641,4 +641,11 @@ public abstract class KoopaGrammar {
 			return;
 		}
 	}
+
+	/**
+	 * What is this grammar's namespace ? This will help separate grammar rules
+	 * with matching names from different grammars, which is of importance when
+	 * composing grammars.
+	 */
+	protected abstract String getNamespace();
 }

@@ -241,7 +241,7 @@ public class TreeGrammarTest {
 	private CommonTree tree(String name, Object... parts) {
 		ensureNode(name);
 
-		Start start = Start.on(name);
+		Start start = Start.on("test", name);
 
 		CommonToken antlrToken = new CommonKoopaToken(start);
 		CommonTree antlrTree = new CommonTree(antlrToken);

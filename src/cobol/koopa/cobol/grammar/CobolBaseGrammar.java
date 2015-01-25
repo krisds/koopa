@@ -13,6 +13,11 @@ import koopa.core.parsers.Parser;
 
 public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
+	@Override
+	protected String getNamespace() {
+		return "cobol";
+	}
+	
 	// ============================================================================
 	// pictureString
 	// ............................................................................

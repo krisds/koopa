@@ -17,6 +17,12 @@ import koopa.core.parsers.ParseStream;
 import koopa.core.parsers.Parser;
 
 public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
+	
+	@Override
+	protected String getNamespace() {
+		return "cobol-pp";
+	}
+	
 	// ============================================================================
 	// Reserved keywords. Based on the list found in Fujitsu Siemens, document
 	// U41112-J-Z125-3-76 (p. 67 and on).

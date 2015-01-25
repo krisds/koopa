@@ -16,18 +16,28 @@ public final class End extends Marker {
 
 	private static Map<String, End> markers = new HashMap<String, End>();
 
+	private final String namespace;
 	private final String name;
 
-	private End(String name) {
+	private End(String namespace, String name) {
+		assert (namespace != null);
 		assert (name != null);
+
+		this.namespace = namespace;
 		this.name = name;
 	}
 
-	public static End on(String name) {
-		if (!markers.containsKey(name))
-			markers.put(name, new End(name));
+	public static End on(String namespace, String name) {
+		String key = namespace + ":" + name;
 
-		return markers.get(name);
+		if (!markers.containsKey(key))
+			markers.put(key, new End(namespace, name));
+
+		return markers.get(key);
+	}
+
+	public String getNamspace() {
+		return this.namespace;
 	}
 
 	@Override
@@ -36,6 +46,6 @@ public final class End extends Marker {
 	}
 
 	public String toString() {
-		return "</" + name + ">";
+		return "</" + namespace + ":" + name + ">";
 	}
 }

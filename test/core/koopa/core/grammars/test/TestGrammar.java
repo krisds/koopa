@@ -26,6 +26,11 @@ public class TestGrammar extends KoopaGrammar {
 	// ========================================================================
 
 	@Override
+	protected String getNamespace() {
+		return "test";
+	}
+
+	@Override
 	protected boolean isSeparator(String text) {
 		return separators.contains(text);
 	}

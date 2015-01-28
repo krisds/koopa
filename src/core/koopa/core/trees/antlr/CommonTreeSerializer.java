@@ -2,13 +2,17 @@ package koopa.core.trees.antlr;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 
+import koopa.core.data.Data;
 import koopa.core.data.Position;
+import koopa.core.data.Token;
+import koopa.core.data.markers.Start;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.util.ANTLR;
 
 import org.antlr.runtime.tree.CommonTree;
@@ -37,10 +41,12 @@ public class CommonTreeSerializer {
 	public static void serialize(CommonTree tree, File file) throws IOException {
 		// UTF-8 is the default encoding for documents without prolog
 		// See http://www.w3.org/TR/REC-xml/#charencoding
-		// So it's necessary to add the XML declaration to ensure readability (if UTF-8 isn't used)
+		// So it's necessary to add the XML declaration to ensure readability
+		// (if UTF-8 isn't used)
 		// Usually ISO-8859-1, Windows-1252, and ASCII is also recognized
 		// FileWriter uses default encoding, which might not be appropriate
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
+		Writer writer = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(file), "UTF-8"));
 		serialize(tree, writer);
 	}
 
@@ -52,57 +58,66 @@ public class CommonTreeSerializer {
 
 	public static void serialize(CommonTree tree, Writer writer)
 			throws IOException {
-		ANTLRTokens types = ANTLRTokensLoader
-				.loadResource("/koopa/cobol/grammar/antlr/Cobol.tokens");
+		// XML prolog/declaration
+		writer.append("<?xml version='1.0' encoding='UTF-8'?>\n");
 
-		writer.append("<?xml version='1.0' encoding='UTF-8'?>\n"); // XML prolog/declaration
-		
 		writer.append("<koopa>\n");
-		walk(writer, tree, "  ", types);
+		walk(writer, tree, "  ");
 		writer.append("</koopa>\n");
 
 		writer.flush();
 		writer.close();
 	}
 
-	private static void walk(Writer writer, CommonTree tree, String dent,
-			ANTLRTokens types) throws IOException {
+	private static void walk(Writer writer, CommonTree tree, String dent)
+			throws IOException {
 
-		final int type = tree.getType();
+		Data data = ((CommonKoopaToken) tree.getToken()).getKoopaData();
 
 		LOGGER.trace(tree.getText());
-		
-		if (type == types.forType("COMMENT")) {
-			// TODO Should escape stuff where necessary.
-			// According to http://www.w3.org/TR/REC-xml/#dt-comment -- is not allowed
-			// Reading comments with double-hyphen will fail in compliant XML parsers
-			// For convenience '--' is replaced by '-_'. Otherwise, we'd have to throw an error
-			writer.append(dent + "<!-- " + tree.getText().replaceAll("--", "-_") + " -->\n");
-			return;
-		}
 
-		if (types.isLiteral(type) || types.isToken(type)) {
-			// TODO Should escape stuff where necessary.
-			// A command like DISPLAY ']]>' would generate invalid XML without substitution
-			writer.append(dent + "<t><![CDATA[" + tree.getText().replaceAll("]]>", "]]]]><![CDATA[>") + "]]></t>\n");
-			return;
-		}
+		if (data instanceof Start) {
+			Start start = (Start) data;
 
-		if (tree.getChildCount() == 0) {
-			writer.append(dent + "<" + tree.getText());
-			writePositions(writer, tree);
-			writer.append(" />\n");
+			if (tree.getChildCount() == 0) {
+				writer.append(dent + "<" + start.getName());
+				writePositions(writer, tree);
+				writer.append(" />\n");
 
-		} else {
-			writer.append(dent + "<" + tree.getText());
-			writePositions(writer, tree);
-			writer.append(">\n");
+			} else {
+				writer.append(dent + "<" + start.getName());
+				writePositions(writer, tree);
+				writer.append(">\n");
 
-			for (Object child : tree.getChildren()) {
-				walk(writer, (CommonTree) child, dent + "  ", types);
+				for (Object child : tree.getChildren()) {
+					walk(writer, (CommonTree) child, dent + "  ");
+				}
+
+				writer.append(dent + "</" + start.getName() + ">\n");
 			}
 
-			writer.append(dent + "</" + tree.getText() + ">\n");
+		} else if (data instanceof Token) {
+			Token token = (Token) data;
+
+			if (token.hasTag(AreaTag.COMMENT)) {
+				// TODO Should escape stuff where necessary.
+				// According to http://www.w3.org/TR/REC-xml/#dt-comment -- is
+				// not allowed Reading comments with double-hyphen will fail in
+				// compliant XML parsers. For convenience '--' is replaced by
+				// '-_'. Otherwise, we'd have to throw an error.
+				writer.append(dent + "<!-- "
+						+ tree.getText().replaceAll("--", "-_") + " -->\n");
+				return;
+
+			} else {
+				// TODO Should escape stuff where necessary.
+				// A command like DISPLAY ']]>' would generate invalid XML
+				// without substitution
+				writer.append(dent + "<t><![CDATA["
+						+ tree.getText().replaceAll("]]>", "]]]]><![CDATA[>")
+						+ "]]></t>\n");
+				return;
+			}
 		}
 	}
 

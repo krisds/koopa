@@ -124,4 +124,9 @@ public class TestGrammar extends KoopaGrammar {
 	protected Parser limited(Parser target, Parser limiter) {
 		return super.limited(target, limiter);
 	}
+
+	@Override
+	protected Parser dispatched(String[] keys, Parser[] parsers) {
+		return super.dispatched(keys, parsers);
+	}
 }

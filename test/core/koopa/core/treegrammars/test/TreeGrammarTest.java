@@ -13,7 +13,6 @@ import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
-import koopa.core.trees.antlr.ANTLRNaming;
 import koopa.core.trees.antlr.CommonKoopaToken;
 
 import org.antlr.runtime.CommonToken;
@@ -239,8 +238,6 @@ public class TreeGrammarTest {
 	// ------------------------------------------------------------------------
 
 	private CommonTree tree(String name, Object... parts) {
-		ensureNode(name);
-
 		Start start = Start.on("test", name);
 
 		CommonToken antlrToken = new CommonKoopaToken(start);
@@ -260,8 +257,6 @@ public class TreeGrammarTest {
 	}
 
 	private CommonTree token(String text) {
-		ensureToken(text);
-
 		Position start = new Position(0, 0, 0);
 		Token token = new Token(text, start, start.offsetBy(text.length()));
 
@@ -269,14 +264,6 @@ public class TreeGrammarTest {
 		CommonTree antlrTree = new CommonTree(antlrToken);
 
 		return antlrTree;
-	}
-
-	private void ensureNode(String name) {
-		name = ANTLRNaming.forNode(name);
-	}
-
-	private void ensureToken(String text) {
-		text = ANTLRNaming.forLiteral(text);
 	}
 
 	private void shouldAccept(TreeParser parser, CommonTree tree) {

@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-01-24 17:18:19
+// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-01-30 08:37:15
 
   package koopa.core.treegrammars.generator;
   
@@ -23,58 +23,62 @@ import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
 public class TreeGrammarGenerator extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "TREE", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'tree'", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "TREE", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "DISPATCHED", "CASE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "DOLLAR", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "ARROW", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'tree'", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
     };
-    public static final int SKIP_TO=35;
-    public static final int STAR=31;
-    public static final int LIMIT=39;
-    public static final int LETTER=44;
-    public static final int EQUALS=24;
-    public static final int NOT=37;
-    public static final int NOSKIP=38;
+    public static final int DOLLAR=39;
+    public static final int SKIP_TO=37;
+    public static final int STAR=33;
+    public static final int DISPATCHED=14;
+    public static final int LIMIT=42;
+    public static final int LETTER=48;
+    public static final int CASE=15;
+    public static final int EQUALS=26;
+    public static final int NOT=40;
+    public static final int NOSKIP=41;
     public static final int EOF=-1;
-    public static final int DECLARATION=17;
+    public static final int DECLARATION=19;
     public static final int META=5;
-    public static final int OPEN_BRACKET=33;
-    public static final int NATIVE_CODE=26;
+    public static final int T__55=55;
+    public static final int OPEN_BRACKET=35;
+    public static final int T__56=56;
     public static final int T__51=51;
+    public static final int NATIVE_CODE=28;
     public static final int T__52=52;
+    public static final int T__53=53;
     public static final int TREE=6;
+    public static final int T__54=54;
     public static final int EXTENDING=8;
-    public static final int COMMA=25;
-    public static final int IDENTIFIER=20;
-    public static final int PIPE=41;
-    public static final int PLUS=32;
+    public static final int COMMA=27;
+    public static final int IDENTIFIER=22;
+    public static final int PIPE=44;
+    public static final int PLUS=34;
     public static final int BODY=10;
-    public static final int CLOSE_PAREN=23;
-    public static final int DIGIT=45;
-    public static final int COMMENT=42;
-    public static final int DOT=21;
-    public static final int T__50=50;
+    public static final int CLOSE_PAREN=25;
+    public static final int DIGIT=49;
+    public static final int COMMENT=46;
+    public static final int DOT=23;
     public static final int GRAMMAR=4;
     public static final int CHOICE=13;
     public static final int RETURNS=11;
-    public static final int BY=40;
-    public static final int ACT=15;
-    public static final int LOCALS=18;
-    public static final int T__47=47;
+    public static final int BY=43;
+    public static final int ACT=17;
+    public static final int LOCALS=20;
     public static final int RULE=9;
-    public static final int T__48=48;
-    public static final int T__49=49;
-    public static final int NUMBER=30;
-    public static final int WHITESPACE=46;
-    public static final int OPEN_PAREN=22;
-    public static final int LITERAL=29;
-    public static final int BANG=36;
-    public static final int TAG=27;
-    public static final int OPTIONAL=14;
+    public static final int NUMBER=32;
+    public static final int OPEN_PAREN=24;
+    public static final int WHITESPACE=50;
+    public static final int LITERAL=31;
+    public static final int BANG=38;
+    public static final int TAG=29;
+    public static final int OPTIONAL=16;
     public static final int SEQUENCE=12;
-    public static final int ANY=28;
-    public static final int NEWLINE=43;
+    public static final int ANY=30;
+    public static final int NEWLINE=47;
     public static final int NAMED=7;
-    public static final int ASSIGN=16;
-    public static final int PERMUTED=19;
-    public static final int CLOSE_BRACKET=34;
+    public static final int ASSIGN=18;
+    public static final int ARROW=45;
+    public static final int PERMUTED=21;
+    public static final int CLOSE_BRACKET=36;
 
     // delegates
     // delegators
@@ -778,7 +782,7 @@ public class TreeGrammarGenerator extends TreeParser {
                         int alt6=2;
                         int LA6_0 = input.LA(1);
 
-                        if ( ((LA6_0>=SEQUENCE && LA6_0<=ASSIGN)||(LA6_0>=PERMUTED && LA6_0<=DOT)||(LA6_0>=TAG && LA6_0<=PLUS)||LA6_0==SKIP_TO||(LA6_0>=NOT && LA6_0<=NOSKIP)) ) {
+                        if ( ((LA6_0>=SEQUENCE && LA6_0<=CHOICE)||(LA6_0>=OPTIONAL && LA6_0<=ASSIGN)||(LA6_0>=PERMUTED && LA6_0<=DOT)||(LA6_0>=TAG && LA6_0<=PLUS)||LA6_0==SKIP_TO||(LA6_0>=NOT && LA6_0<=NOSKIP)) ) {
                             alt6=1;
                         }
 
@@ -1086,7 +1090,7 @@ public class TreeGrammarGenerator extends TreeParser {
                         int alt8=2;
                         int LA8_0 = input.LA(1);
 
-                        if ( ((LA8_0>=SEQUENCE && LA8_0<=ASSIGN)||(LA8_0>=PERMUTED && LA8_0<=DOT)||(LA8_0>=TAG && LA8_0<=PLUS)||LA8_0==SKIP_TO||(LA8_0>=NOT && LA8_0<=NOSKIP)) ) {
+                        if ( ((LA8_0>=SEQUENCE && LA8_0<=CHOICE)||(LA8_0>=OPTIONAL && LA8_0<=ASSIGN)||(LA8_0>=PERMUTED && LA8_0<=DOT)||(LA8_0>=TAG && LA8_0<=PLUS)||LA8_0==SKIP_TO||(LA8_0>=NOT && LA8_0<=NOSKIP)) ) {
                             alt8=1;
                         }
 
@@ -1179,7 +1183,7 @@ public class TreeGrammarGenerator extends TreeParser {
                         int alt9=2;
                         int LA9_0 = input.LA(1);
 
-                        if ( ((LA9_0>=SEQUENCE && LA9_0<=ASSIGN)||(LA9_0>=PERMUTED && LA9_0<=DOT)||(LA9_0>=TAG && LA9_0<=PLUS)||LA9_0==SKIP_TO||(LA9_0>=NOT && LA9_0<=NOSKIP)) ) {
+                        if ( ((LA9_0>=SEQUENCE && LA9_0<=CHOICE)||(LA9_0>=OPTIONAL && LA9_0<=ASSIGN)||(LA9_0>=PERMUTED && LA9_0<=DOT)||(LA9_0>=TAG && LA9_0<=PLUS)||LA9_0==SKIP_TO||(LA9_0>=NOT && LA9_0<=NOSKIP)) ) {
                             alt9=1;
                         }
 
@@ -1224,7 +1228,7 @@ public class TreeGrammarGenerator extends TreeParser {
                         int alt10=2;
                         int LA10_0 = input.LA(1);
 
-                        if ( ((LA10_0>=SEQUENCE && LA10_0<=ASSIGN)||(LA10_0>=PERMUTED && LA10_0<=DOT)||(LA10_0>=TAG && LA10_0<=PLUS)||LA10_0==SKIP_TO||(LA10_0>=NOT && LA10_0<=NOSKIP)) ) {
+                        if ( ((LA10_0>=SEQUENCE && LA10_0<=CHOICE)||(LA10_0>=OPTIONAL && LA10_0<=ASSIGN)||(LA10_0>=PERMUTED && LA10_0<=DOT)||(LA10_0>=TAG && LA10_0<=PLUS)||LA10_0==SKIP_TO||(LA10_0>=NOT && LA10_0<=NOSKIP)) ) {
                             alt10=1;
                         }
 
@@ -1286,19 +1290,19 @@ public class TreeGrammarGenerator extends TreeParser {
     public static final BitSet FOLLOW_EXTENDING_in_extending279 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_extending283 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RULE_in_rule314 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_rule318 = new BitSet(new long[]{0x00000069F83DF800L});
-    public static final BitSet FOLLOW_locals_in_rule330 = new BitSet(new long[]{0x00000069F83DF800L});
-    public static final BitSet FOLLOW_returning_in_rule367 = new BitSet(new long[]{0x00000069F83DF800L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_rule318 = new BitSet(new long[]{0x00000327E0F73800L});
+    public static final BitSet FOLLOW_locals_in_rule330 = new BitSet(new long[]{0x00000327E0F73800L});
+    public static final BitSet FOLLOW_returning_in_rule367 = new BitSet(new long[]{0x00000327E0F73800L});
     public static final BitSet FOLLOW_body_in_rule386 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RETURNS_in_returning458 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_returning462 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_LOCALS_in_locals511 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_declaration_in_locals522 = new BitSet(new long[]{0x0000000000020008L});
+    public static final BitSet FOLLOW_declaration_in_locals522 = new BitSet(new long[]{0x0000000000080008L});
     public static final BitSet FOLLOW_DECLARATION_in_declaration565 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_declaration569 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_declaration569 = new BitSet(new long[]{0x0000000000400000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_declaration573 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_SEQUENCE_in_body602 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body614 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_body_in_body614 = new BitSet(new long[]{0x00000327E0F73808L});
     public static final BitSet FOLLOW_ACT_in_body682 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_NATIVE_CODE_in_body686 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_ANY_in_body754 = new BitSet(new long[]{0x0000000000000002L});
@@ -1308,7 +1312,7 @@ public class TreeGrammarGenerator extends TreeParser {
     public static final BitSet FOLLOW_NUMBER_in_body872 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_DOT_in_body883 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ASSIGN_in_body927 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body931 = new BitSet(new long[]{0x0000000050300000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body931 = new BitSet(new long[]{0x0000000140C00000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_body936 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NUMBER_in_body942 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_DOT_in_body948 = new BitSet(new long[]{0x0000000000000008L});
@@ -1318,7 +1322,7 @@ public class TreeGrammarGenerator extends TreeParser {
     public static final BitSet FOLLOW_PLUS_in_body1061 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1065 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_CHOICE_in_body1109 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1118 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_body_in_body1118 = new BitSet(new long[]{0x00000327E0F73808L});
     public static final BitSet FOLLOW_OPTIONAL_in_body1146 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1154 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_SKIP_TO_in_body1173 = new BitSet(new long[]{0x0000000000000004L});
@@ -1326,8 +1330,8 @@ public class TreeGrammarGenerator extends TreeParser {
     public static final BitSet FOLLOW_NOT_in_body1198 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1200 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NOSKIP_in_body1210 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1220 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_body_in_body1220 = new BitSet(new long[]{0x00000327E0F73808L});
     public static final BitSet FOLLOW_PERMUTED_in_body1248 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1258 = new BitSet(new long[]{0x00000069F83DF808L});
+    public static final BitSet FOLLOW_body_in_body1258 = new BitSet(new long[]{0x00000327E0F73808L});
 
 }

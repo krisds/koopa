@@ -243,5 +243,20 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldReject(limited, input("PL/I", "FLOWMATIC", ".", "COBOL"));
 	}
 
+	@Test
+	public void testCanMatchWithDispatch() {
+		Parser parser = G.dispatched(
+				new String[] { "ADD", "SUBTRACT", "MULTIPLY", "DIVIDE" },
+				new Parser[] { G.sequence(G.token("ADD"), G.token("ONE")),
+						G.sequence(G.token("SUBTRACT"), G.token("TWO")),
+						G.sequence(G.token("MULTIPLY"), G.token("THIS")),
+						G.sequence(G.token("DIVIDE"), G.token("THAT")), });
+
+		shouldAccept(parser, input("ADD", "ONE"));
+		shouldAccept(parser, input("SUBTRACT", "TWO"));
+		shouldAccept(parser, input("multiply", "this"));
+		shouldAccept(parser, input("divide", "that"));
+	}
+
 	// TODO Add some recursive tests.
 }

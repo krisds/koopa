@@ -256,6 +256,20 @@ body [ List<String> bindings, List<String> unbindings ]
       step = {steps}
     )
   
+  | { List<String> keys = new ArrayList<String>();
+      List<StringTemplate> rules = new ArrayList<StringTemplate>();
+    }
+    ^(DISPATCHED
+      (c=caze
+        { keys.add(c.key); rules.add(c.body); }
+      )+
+    )
+    
+    -> dispatched(
+      keys = {keys},
+      rules = {rules}
+    )
+  
   | ^(OPTIONAL b=body[bindings, unbindings])
   
     -> optional(
@@ -299,4 +313,12 @@ body [ List<String> bindings, List<String> unbindings ]
       target = {b_t},
       limiter = {b_l}
     )
+  ;
+
+caze returns [ String key, StringTemplate body ]
+  : ^(CASE i=IDENTIFIER b=body[null, null])
+  
+    { $key = ((CommonTree) i).getText();
+      $body = b.st;
+    }
   ;

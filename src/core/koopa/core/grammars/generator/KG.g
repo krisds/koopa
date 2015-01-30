@@ -16,6 +16,8 @@ tokens {
   RETURNS;
   SEQUENCE;
   CHOICE;
+  DISPATCHED;
+  CASE;
   OPTIONAL;
   ACT;
   ASSIGN;
@@ -138,6 +140,11 @@ part
     -> { m == null }? ^(OPTIONAL sequence)
     -> ^(PERMUTED sequence more*)
   
+  | DOLLAR OPEN_PAREN dispatch m+=more_dispatch* CLOSE_PAREN
+    
+    -> { m == null }? ^(DISPATCHED dispatch)
+    -> ^(DISPATCHED dispatch more_dispatch*)
+  
   | NOT part
     -> ^(NOT part)
 
@@ -155,6 +162,19 @@ more
     -> sequence
   ;
   
+dispatch
+  : IDENTIFIER ARROW sequence
+  
+    -> ^(CASE IDENTIFIER sequence)
+  ;
+  
+more_dispatch
+  : PIPE dispatch
+  
+    -> dispatch
+  ;
+
+
 COMMENT : '#' (~('\n' | '\r'))* { $channel = HIDDEN; } ;
 
 NEWLINE : ( ('\r\n') => '\r\n' | '\r' | '\n' ) { $channel = HIDDEN; } ;
@@ -164,6 +184,8 @@ NOSKIP : '%noskip' ;
 LIMIT : '%limit' ;
 
 BY : '%by' ;
+
+ARROW : '=>' ;
 
 TAG : '@' LETTER ( LETTER | DIGIT | '-' | '_' )* ;
 
@@ -204,6 +226,8 @@ PIPE : '|' ;
 COMMA : ',' ;
 
 BANG : '!' ;
+
+DOLLAR : '$' ;
 
 NOT : '-' ;
 

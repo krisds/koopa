@@ -564,6 +564,39 @@ public abstract class KoopaGrammar {
 		};
 	}
 
+	protected Parser dispatched(final String[] keys, final Parser[] parsers) {
+		assert (keys.length == parsers.length);
+
+		final Map<String, Parser> lookupTable = new HashMap<String, Parser>();
+		for (int i = 0; i < keys.length; i++)
+			lookupTable.put(keys[i].toUpperCase(), parsers[i]);
+
+		return new Parser() {
+			public boolean accepts(ParseStream stream) {
+				skipSeparators(stream);
+
+				Token peek = stream.peek();
+				if (peek == null) {
+					if (LOGGER.isTraceEnabled())
+						trace("dispatch: null");
+					return false;
+				}
+
+				String text = peek.getText().toUpperCase();
+				if (!lookupTable.containsKey(text)) {
+					if (LOGGER.isTraceEnabled())
+						trace("dispatch: " + text + " - not found");
+					return false;
+				}
+
+				if (LOGGER.isTraceEnabled())
+					trace("dispatch: " + text);
+				Parser parser = lookupTable.get(text);
+				return parser.accepts(stream);
+			}
+		};
+	}
+
 	protected void returnToken(Token token) {
 		Assign assign = (Assign) scope().get("return");
 		if (assign != null)

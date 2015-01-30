@@ -127,3 +127,12 @@ limit(target, limiter) ::= <<limited(
     $target$,
     $limiter$
 )>>
+
+dispatched(keys, rules) ::= <<dispatched(
+    new String[]{
+      "$keys; separator="\",\n\""$"
+    },
+    new Parser[]{
+      $rules; separator=",\n"$
+    }
+)>>

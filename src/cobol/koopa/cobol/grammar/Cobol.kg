@@ -1439,75 +1439,79 @@ def sentence =
 end
 
 def statement =
-    ( acceptStatement
-    | addStatement
-    | alterStatement
-    | callStatement
-    | chainStatement        # *MF
-    | cancelStatement
-    | closeStatement
-    | commitStatement       # *MF
-    | computeStatement
-    | continueStatement
-    | deleteFileStatement   # *MF
-    | deleteStatement
-    | disableStatement
-    | divideStatement
-    | enableStatement
-    | entryStatement
-    | evaluateStatement
-    | examineStatement      # *MF
-    | execStatement
-    | exhibitStatement      # *MF
-    | exitStatement
-    | generateStatement
-    | gobackStatement
-    | goToStatement
-    | identifiedByStatement # *MF
-    | ifStatement
-    | initiateStatement
-    | invokeStatement       # *ISO2002 *MF
-    | mergeStatement
-    | moveStatement
-    | multiplyStatement
-    | nextSentenceStatement # *MF
-    | onStatement           # *OSVS
-    | openStatement
-    | performStatement
-    | raiseStatement        # *.NET
-    | readStatement
-    | readyTraceStatement   # *OSVS *VSC2
-    | receiveStatement
-    | releaseStatement
-    | resetTraceStatement   # *OSVS *VSC2
-    | returnStatement
-    | rewriteStatement
-    | rollbackStatement     # *MF
-    | purgeStatement
-    | searchStatement
-    | sendStatement
-    | serviceStatement      # *OSVS *VSC2
-    | sortStatement
-    | startStatement
-    | stopStatement
-    | stringStatement
-    | subtractStatement
-    | suppressStatement
-    | terminateStatement
-    | transformStatement    # *MF
-    | unlockStatement       # *MF
-    | unstringStatement
-    | waitStatement         # *MF
-    | writeStatement
-    | xmlGenerateStatement  # *MF
-    | xmlParseStatement     # *MF
-    | setStatement
-    | initializeStatement
-    | displayStatement
-    | inspectStatement
+    (
+     $( ACCEPT     => acceptStatement
+      | ADD        => addStatement
+      | ALTER      => alterStatement
+      | CALL       => callStatement
+      | CHAIN      => chainStatement        # *MF
+      | CANCEL     => cancelStatement
+      | CLOSE      => closeStatement
+      | COMMIT     => commitStatement       # *MF
+      | COMPUTE    => computeStatement
+      | CONTINUE   => continueStatement
+      | DELETE     =>
+    	  ( deleteFileStatement   # *MF
+    	  | deleteStatement )
+      | DISABLE    => disableStatement
+      | DISPLAY    => displayStatement
+      | DIVIDE     => divideStatement
+      | ENABLE     => enableStatement
+      | ENTRY      => entryStatement
+      | EVALUATE   => evaluateStatement
+      | EXAMINE    => examineStatement      # *MF
+      | EXEC       => execStatement
+      | EXHIBIT    => exhibitStatement      # *MF
+      | EXIT       => exitStatement
+      | GENERATE   => generateStatement
+      | GOBACK     => gobackStatement
+      | GO         => goToStatement
+      | IDENTIFIED => identifiedByStatement # *MF
+      | IF         => ifStatement
+      | INITIATE   => initiateStatement
+      | INVOKE     => invokeStatement       # *ISO2002 *MF
+      | MERGE      => mergeStatement
+      | MOVE       => moveStatement
+      | MULTIPLY   => multiplyStatement
+      | NEXT       => nextSentenceStatement # *MF
+      | ON         => onStatement           # *OSVS
+      | OPEN       => openStatement
+      | PERFORM    => performStatement
+      | RAISE      => raiseStatement        # *.NET
+      | READ       => readStatement
+      | READY      => readyTraceStatement   # *OSVS *VSC2
+      | RECEIVE    => receiveStatement
+      | RELEASE    => releaseStatement
+      | RESET      => resetTraceStatement   # *OSVS *VSC2
+      | RETURN     => returnStatement
+      | REWRITE    => rewriteStatement
+      | ROLLBACK   => rollbackStatement     # *MF
+      | PURGE      => purgeStatement
+      | SEARCH     => searchStatement
+      | SEND       => sendStatement
+      | SERVICE    => serviceStatement      # *OSVS *VSC2
+      | SORT       => sortStatement
+      | START      => startStatement
+      | STOP       => stopStatement
+      | STRING     => stringStatement
+      | SUBTRACT   => subtractStatement
+      | SUPPRESS   => suppressStatement
+      | TERMINATE  => terminateStatement
+      | TRANSFORM  => transformStatement    # *MF
+      | UNLOCK     => unlockStatement       # *MF
+      | UNSTRING   => unstringStatement
+      | WAIT       => waitStatement         # *MF
+      | WRITE      => writeStatement
+      | XML        => 
+          ( xmlGenerateStatement  # *MF
+          | xmlParseStatement )   # *MF
+      | SET        => setStatement
+      | INITIALIZE => initializeStatement
+      | INSPECT    => inspectStatement
     
-    | allocateStatement
-    | freeStatement
+      | ALLOCATE   => allocateStatement
+      | FREE       => freeStatement
+      )
     
     | verb
       [--> ( . | endOfStatement | verb | subStatementMarker)]

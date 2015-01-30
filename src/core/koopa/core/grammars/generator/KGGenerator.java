@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KGGenerator.g 2015-01-23 17:26:05
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KGGenerator.g 2015-01-30 08:37:14
 
   package koopa.core.grammars.generator;
   
@@ -22,58 +22,62 @@ import org.antlr.stringtemplate.language.*;
 import java.util.HashMap;
 public class KGGenerator extends TreeParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "TREE", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'tree'", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "GRAMMAR", "META", "TREE", "NAMED", "EXTENDING", "RULE", "BODY", "RETURNS", "SEQUENCE", "CHOICE", "DISPATCHED", "CASE", "OPTIONAL", "ACT", "ASSIGN", "DECLARATION", "LOCALS", "PERMUTED", "IDENTIFIER", "DOT", "OPEN_PAREN", "CLOSE_PAREN", "EQUALS", "COMMA", "NATIVE_CODE", "TAG", "ANY", "LITERAL", "NUMBER", "STAR", "PLUS", "OPEN_BRACKET", "CLOSE_BRACKET", "SKIP_TO", "BANG", "DOLLAR", "NOT", "NOSKIP", "LIMIT", "BY", "PIPE", "ARROW", "COMMENT", "NEWLINE", "LETTER", "DIGIT", "WHITESPACE", "'tree'", "'grammar'", "'extends'", "'def'", "'returns'", "'end'"
     };
-    public static final int SKIP_TO=35;
-    public static final int STAR=31;
-    public static final int LIMIT=39;
-    public static final int LETTER=44;
-    public static final int EQUALS=24;
-    public static final int NOT=37;
-    public static final int NOSKIP=38;
+    public static final int DOLLAR=39;
+    public static final int SKIP_TO=37;
+    public static final int STAR=33;
+    public static final int DISPATCHED=14;
+    public static final int LIMIT=42;
+    public static final int LETTER=48;
+    public static final int CASE=15;
+    public static final int EQUALS=26;
+    public static final int NOT=40;
+    public static final int NOSKIP=41;
     public static final int EOF=-1;
-    public static final int DECLARATION=17;
+    public static final int DECLARATION=19;
     public static final int META=5;
-    public static final int OPEN_BRACKET=33;
-    public static final int NATIVE_CODE=26;
+    public static final int T__55=55;
+    public static final int OPEN_BRACKET=35;
+    public static final int T__56=56;
     public static final int T__51=51;
+    public static final int NATIVE_CODE=28;
     public static final int T__52=52;
+    public static final int T__53=53;
     public static final int TREE=6;
+    public static final int T__54=54;
     public static final int EXTENDING=8;
-    public static final int COMMA=25;
-    public static final int IDENTIFIER=20;
-    public static final int PIPE=41;
-    public static final int PLUS=32;
+    public static final int COMMA=27;
+    public static final int IDENTIFIER=22;
+    public static final int PIPE=44;
+    public static final int PLUS=34;
     public static final int BODY=10;
-    public static final int CLOSE_PAREN=23;
-    public static final int DIGIT=45;
-    public static final int COMMENT=42;
-    public static final int DOT=21;
-    public static final int T__50=50;
+    public static final int CLOSE_PAREN=25;
+    public static final int DIGIT=49;
+    public static final int COMMENT=46;
+    public static final int DOT=23;
     public static final int GRAMMAR=4;
     public static final int CHOICE=13;
     public static final int RETURNS=11;
-    public static final int BY=40;
-    public static final int ACT=15;
-    public static final int LOCALS=18;
-    public static final int T__47=47;
+    public static final int BY=43;
+    public static final int ACT=17;
+    public static final int LOCALS=20;
     public static final int RULE=9;
-    public static final int T__48=48;
-    public static final int T__49=49;
-    public static final int NUMBER=30;
-    public static final int WHITESPACE=46;
-    public static final int OPEN_PAREN=22;
-    public static final int LITERAL=29;
-    public static final int BANG=36;
-    public static final int TAG=27;
-    public static final int OPTIONAL=14;
+    public static final int NUMBER=32;
+    public static final int OPEN_PAREN=24;
+    public static final int WHITESPACE=50;
+    public static final int LITERAL=31;
+    public static final int BANG=38;
+    public static final int TAG=29;
+    public static final int OPTIONAL=16;
     public static final int SEQUENCE=12;
-    public static final int ANY=28;
-    public static final int NEWLINE=43;
+    public static final int ANY=30;
+    public static final int NEWLINE=47;
     public static final int NAMED=7;
-    public static final int ASSIGN=16;
-    public static final int PERMUTED=19;
-    public static final int CLOSE_BRACKET=34;
+    public static final int ASSIGN=18;
+    public static final int ARROW=45;
+    public static final int PERMUTED=21;
+    public static final int CLOSE_BRACKET=36;
 
     // delegates
     // delegators
@@ -652,7 +656,7 @@ public class KGGenerator extends TreeParser {
     };
 
     // $ANTLR start "body"
-    // src/core/koopa/core/grammars/generator/KGGenerator.g:135:1: body[ List<String> bindings, List<String> unbindings ] : ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings) | t= TAG -> tag(text=name) | ANY -> any() | l= LITERAL -> token(text=unquoted) | n= NUMBER -> token(text=n) | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps) | ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b) | ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b) | ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices) | ^( NOT b= body[bindings, unbindings] ) -> not(body=b) | ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b) | ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l));
+    // src/core/koopa/core/grammars/generator/KGGenerator.g:135:1: body[ List<String> bindings, List<String> unbindings ] : ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings) | t= TAG -> tag(text=name) | ANY -> any() | l= LITERAL -> token(text=unquoted) | n= NUMBER -> token(text=n) | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps) | ^( DISPATCHED (c= caze )+ ) -> dispatched(keys=keysrules=rules) | ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b) | ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b) | ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices) | ^( NOT b= body[bindings, unbindings] ) -> not(body=b) | ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b) | ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l));
     public final KGGenerator.body_return body(List<String> bindings, List<String> unbindings) throws RecognitionException {
         KGGenerator.body_return retval = new KGGenerator.body_return();
         retval.start = input.LT(1);
@@ -664,113 +668,120 @@ public class KGGenerator extends TreeParser {
         CommonTree d=null;
         KGGenerator.body_return b = null;
 
+        KGGenerator.caze_return c = null;
+
         KGGenerator.body_return b_t = null;
 
         KGGenerator.body_return b_l = null;
 
 
         try {
-            // src/core/koopa/core/grammars/generator/KGGenerator.g:136:3: ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings) | t= TAG -> tag(text=name) | ANY -> any() | l= LITERAL -> token(text=unquoted) | n= NUMBER -> token(text=n) | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps) | ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b) | ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b) | ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices) | ^( NOT b= body[bindings, unbindings] ) -> not(body=b) | ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b) | ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l))
-            int alt10=18;
+            // src/core/koopa/core/grammars/generator/KGGenerator.g:136:3: ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings) | t= TAG -> tag(text=name) | ANY -> any() | l= LITERAL -> token(text=unquoted) | n= NUMBER -> token(text=n) | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps) | ^( DISPATCHED (c= caze )+ ) -> dispatched(keys=keysrules=rules) | ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b) | ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b) | ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices) | ^( NOT b= body[bindings, unbindings] ) -> not(body=b) | ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b) | ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l))
+            int alt11=19;
             switch ( input.LA(1) ) {
             case SEQUENCE:
                 {
-                alt10=1;
+                alt11=1;
                 }
                 break;
             case ACT:
                 {
-                alt10=2;
+                alt11=2;
                 }
                 break;
             case TAG:
                 {
-                alt10=3;
+                alt11=3;
                 }
                 break;
             case ANY:
                 {
-                alt10=4;
+                alt11=4;
                 }
                 break;
             case LITERAL:
                 {
-                alt10=5;
+                alt11=5;
                 }
                 break;
             case NUMBER:
                 {
-                alt10=6;
+                alt11=6;
                 }
                 break;
             case IDENTIFIER:
                 {
-                alt10=7;
+                alt11=7;
                 }
                 break;
             case DOT:
                 {
-                alt10=8;
+                alt11=8;
                 }
                 break;
             case ASSIGN:
                 {
-                alt10=9;
+                alt11=9;
                 }
                 break;
             case STAR:
                 {
-                alt10=10;
+                alt11=10;
                 }
                 break;
             case PLUS:
                 {
-                alt10=11;
+                alt11=11;
                 }
                 break;
             case CHOICE:
                 {
-                alt10=12;
+                alt11=12;
+                }
+                break;
+            case DISPATCHED:
+                {
+                alt11=13;
                 }
                 break;
             case OPTIONAL:
                 {
-                alt10=13;
+                alt11=14;
                 }
                 break;
             case SKIP_TO:
                 {
-                alt10=14;
+                alt11=15;
                 }
                 break;
             case PERMUTED:
                 {
-                alt10=15;
+                alt11=16;
                 }
                 break;
             case NOT:
                 {
-                alt10=16;
+                alt11=17;
                 }
                 break;
             case NOSKIP:
                 {
-                alt10=17;
+                alt11=18;
                 }
                 break;
             case LIMIT:
                 {
-                alt10=18;
+                alt11=19;
                 }
                 break;
             default:
                 NoViableAltException nvae =
-                    new NoViableAltException("", 10, 0, input);
+                    new NoViableAltException("", 11, 0, input);
 
                 throw nvae;
             }
 
-            switch (alt10) {
+            switch (alt11) {
                 case 1 :
                     // src/core/koopa/core/grammars/generator/KGGenerator.g:136:5: ^( SEQUENCE (b= body[bindings, unbindings] )+ )
                     {
@@ -785,7 +796,7 @@ public class KGGenerator extends TreeParser {
                         int alt6=2;
                         int LA6_0 = input.LA(1);
 
-                        if ( ((LA6_0>=SEQUENCE && LA6_0<=ASSIGN)||(LA6_0>=PERMUTED && LA6_0<=DOT)||(LA6_0>=TAG && LA6_0<=PLUS)||LA6_0==SKIP_TO||(LA6_0>=NOT && LA6_0<=LIMIT)) ) {
+                        if ( ((LA6_0>=SEQUENCE && LA6_0<=DISPATCHED)||(LA6_0>=OPTIONAL && LA6_0<=ASSIGN)||(LA6_0>=PERMUTED && LA6_0<=DOT)||(LA6_0>=TAG && LA6_0<=PLUS)||LA6_0==SKIP_TO||(LA6_0>=NOT && LA6_0<=LIMIT)) ) {
                             alt6=1;
                         }
 
@@ -1112,7 +1123,7 @@ public class KGGenerator extends TreeParser {
                         int alt8=2;
                         int LA8_0 = input.LA(1);
 
-                        if ( ((LA8_0>=SEQUENCE && LA8_0<=ASSIGN)||(LA8_0>=PERMUTED && LA8_0<=DOT)||(LA8_0>=TAG && LA8_0<=PLUS)||LA8_0==SKIP_TO||(LA8_0>=NOT && LA8_0<=LIMIT)) ) {
+                        if ( ((LA8_0>=SEQUENCE && LA8_0<=DISPATCHED)||(LA8_0>=OPTIONAL && LA8_0<=ASSIGN)||(LA8_0>=PERMUTED && LA8_0<=DOT)||(LA8_0>=TAG && LA8_0<=PLUS)||LA8_0==SKIP_TO||(LA8_0>=NOT && LA8_0<=LIMIT)) ) {
                             alt8=1;
                         }
 
@@ -1155,84 +1166,36 @@ public class KGGenerator extends TreeParser {
                     }
                     break;
                 case 13 :
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:259:5: ^( OPTIONAL b= body[bindings, unbindings] )
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:259:5: ^( DISPATCHED (c= caze )+ )
                     {
-                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1300); 
+                     List<String> keys = new ArrayList<String>();
+                          List<StringTemplate> rules = new ArrayList<StringTemplate>();
+                        
+                    match(input,DISPATCHED,FOLLOW_DISPATCHED_in_body1306); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1304);
-                    b=body(bindings, unbindings);
-
-                    state._fsp--;
-
-
-                    match(input, Token.UP, null); 
-
-
-                    // TEMPLATE REWRITE
-                    // 261:5: -> optional(body=b)
-                    {
-                        retval.st = templateLib.getInstanceOf("optional",
-                      new STAttrMap().put("body", b));
-                    }
-
-
-                    }
-                    break;
-                case 14 :
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:265:5: ^( SKIP_TO b= body[bindings, unbindings] )
-                    {
-                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1346); 
-
-                    match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1350);
-                    b=body(bindings, unbindings);
-
-                    state._fsp--;
-
-
-                    match(input, Token.UP, null); 
-
-
-                    // TEMPLATE REWRITE
-                    // 267:5: -> skipto(body=b)
-                    {
-                        retval.st = templateLib.getInstanceOf("skipto",
-                      new STAttrMap().put("body", b));
-                    }
-
-
-                    }
-                    break;
-                case 15 :
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:271:5: ^( PERMUTED (b= body[bindings, unbindings] )+ )
-                    {
-                     List<StringTemplate> choices = new LinkedList<StringTemplate>(); 
-                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1396); 
-
-                    match(input, Token.DOWN, null); 
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:273:7: (b= body[bindings, unbindings] )+
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:263:7: (c= caze )+
                     int cnt9=0;
                     loop9:
                     do {
                         int alt9=2;
                         int LA9_0 = input.LA(1);
 
-                        if ( ((LA9_0>=SEQUENCE && LA9_0<=ASSIGN)||(LA9_0>=PERMUTED && LA9_0<=DOT)||(LA9_0>=TAG && LA9_0<=PLUS)||LA9_0==SKIP_TO||(LA9_0>=NOT && LA9_0<=LIMIT)) ) {
+                        if ( (LA9_0==CASE) ) {
                             alt9=1;
                         }
 
 
                         switch (alt9) {
                     	case 1 :
-                    	    // src/core/koopa/core/grammars/generator/KGGenerator.g:273:8: b= body[bindings, unbindings]
+                    	    // src/core/koopa/core/grammars/generator/KGGenerator.g:263:8: c= caze
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1407);
-                    	    b=body(bindings, unbindings);
+                    	    pushFollow(FOLLOW_caze_in_body1317);
+                    	    c=caze();
 
                     	    state._fsp--;
 
-                    	     choices.add(b.st); 
+                    	     keys.add(c.key); rules.add(c.body); 
 
                     	    }
                     	    break;
@@ -1251,22 +1214,22 @@ public class KGGenerator extends TreeParser {
 
 
                     // TEMPLATE REWRITE
-                    // 278:5: -> permuted(choice=choices)
+                    // 268:5: -> dispatched(keys=keysrules=rules)
                     {
-                        retval.st = templateLib.getInstanceOf("permuted",
-                      new STAttrMap().put("choice", choices));
+                        retval.st = templateLib.getInstanceOf("dispatched",
+                      new STAttrMap().put("keys", keys).put("rules", rules));
                     }
 
 
                     }
                     break;
-                case 16 :
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:282:5: ^( NOT b= body[bindings, unbindings] )
+                case 14 :
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:273:5: ^( OPTIONAL b= body[bindings, unbindings] )
                     {
-                    match(input,NOT,FOLLOW_NOT_in_body1469); 
+                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1397); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1473);
+                    pushFollow(FOLLOW_body_in_body1401);
                     b=body(bindings, unbindings);
 
                     state._fsp--;
@@ -1276,7 +1239,113 @@ public class KGGenerator extends TreeParser {
 
 
                     // TEMPLATE REWRITE
-                    // 284:5: -> not(body=b)
+                    // 275:5: -> optional(body=b)
+                    {
+                        retval.st = templateLib.getInstanceOf("optional",
+                      new STAttrMap().put("body", b));
+                    }
+
+
+                    }
+                    break;
+                case 15 :
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:279:5: ^( SKIP_TO b= body[bindings, unbindings] )
+                    {
+                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1443); 
+
+                    match(input, Token.DOWN, null); 
+                    pushFollow(FOLLOW_body_in_body1447);
+                    b=body(bindings, unbindings);
+
+                    state._fsp--;
+
+
+                    match(input, Token.UP, null); 
+
+
+                    // TEMPLATE REWRITE
+                    // 281:5: -> skipto(body=b)
+                    {
+                        retval.st = templateLib.getInstanceOf("skipto",
+                      new STAttrMap().put("body", b));
+                    }
+
+
+                    }
+                    break;
+                case 16 :
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:285:5: ^( PERMUTED (b= body[bindings, unbindings] )+ )
+                    {
+                     List<StringTemplate> choices = new LinkedList<StringTemplate>(); 
+                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1493); 
+
+                    match(input, Token.DOWN, null); 
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:287:7: (b= body[bindings, unbindings] )+
+                    int cnt10=0;
+                    loop10:
+                    do {
+                        int alt10=2;
+                        int LA10_0 = input.LA(1);
+
+                        if ( ((LA10_0>=SEQUENCE && LA10_0<=DISPATCHED)||(LA10_0>=OPTIONAL && LA10_0<=ASSIGN)||(LA10_0>=PERMUTED && LA10_0<=DOT)||(LA10_0>=TAG && LA10_0<=PLUS)||LA10_0==SKIP_TO||(LA10_0>=NOT && LA10_0<=LIMIT)) ) {
+                            alt10=1;
+                        }
+
+
+                        switch (alt10) {
+                    	case 1 :
+                    	    // src/core/koopa/core/grammars/generator/KGGenerator.g:287:8: b= body[bindings, unbindings]
+                    	    {
+                    	    pushFollow(FOLLOW_body_in_body1504);
+                    	    b=body(bindings, unbindings);
+
+                    	    state._fsp--;
+
+                    	     choices.add(b.st); 
+
+                    	    }
+                    	    break;
+
+                    	default :
+                    	    if ( cnt10 >= 1 ) break loop10;
+                                EarlyExitException eee =
+                                    new EarlyExitException(10, input);
+                                throw eee;
+                        }
+                        cnt10++;
+                    } while (true);
+
+
+                    match(input, Token.UP, null); 
+
+
+                    // TEMPLATE REWRITE
+                    // 292:5: -> permuted(choice=choices)
+                    {
+                        retval.st = templateLib.getInstanceOf("permuted",
+                      new STAttrMap().put("choice", choices));
+                    }
+
+
+                    }
+                    break;
+                case 17 :
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:296:5: ^( NOT b= body[bindings, unbindings] )
+                    {
+                    match(input,NOT,FOLLOW_NOT_in_body1566); 
+
+                    match(input, Token.DOWN, null); 
+                    pushFollow(FOLLOW_body_in_body1570);
+                    b=body(bindings, unbindings);
+
+                    state._fsp--;
+
+
+                    match(input, Token.UP, null); 
+
+
+                    // TEMPLATE REWRITE
+                    // 298:5: -> not(body=b)
                     {
                         retval.st = templateLib.getInstanceOf("not",
                       new STAttrMap().put("body", b));
@@ -1285,13 +1354,13 @@ public class KGGenerator extends TreeParser {
 
                     }
                     break;
-                case 17 :
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:288:5: ^( NOSKIP b= body[bindings, unbindings] )
+                case 18 :
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:302:5: ^( NOSKIP b= body[bindings, unbindings] )
                     {
-                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1513); 
+                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1610); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1517);
+                    pushFollow(FOLLOW_body_in_body1614);
                     b=body(bindings, unbindings);
 
                     state._fsp--;
@@ -1302,7 +1371,7 @@ public class KGGenerator extends TreeParser {
 
 
                     // TEMPLATE REWRITE
-                    // 291:5: -> opt(option=optionbody=b)
+                    // 305:5: -> opt(option=optionbody=b)
                     {
                         retval.st = templateLib.getInstanceOf("opt",
                       new STAttrMap().put("option", option).put("body", b));
@@ -1311,18 +1380,18 @@ public class KGGenerator extends TreeParser {
 
                     }
                     break;
-                case 18 :
-                    // src/core/koopa/core/grammars/generator/KGGenerator.g:296:5: ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] )
+                case 19 :
+                    // src/core/koopa/core/grammars/generator/KGGenerator.g:310:5: ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] )
                     {
-                    match(input,LIMIT,FOLLOW_LIMIT_in_body1575); 
+                    match(input,LIMIT,FOLLOW_LIMIT_in_body1672); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1579);
+                    pushFollow(FOLLOW_body_in_body1676);
                     b_t=body(bindings, unbindings);
 
                     state._fsp--;
 
-                    pushFollow(FOLLOW_body_in_body1584);
+                    pushFollow(FOLLOW_body_in_body1681);
                     b_l=body(bindings, unbindings);
 
                     state._fsp--;
@@ -1332,7 +1401,7 @@ public class KGGenerator extends TreeParser {
 
 
                     // TEMPLATE REWRITE
-                    // 298:5: -> limit(target=b_tlimiter=b_l)
+                    // 312:5: -> limit(target=b_tlimiter=b_l)
                     {
                         retval.st = templateLib.getInstanceOf("limit",
                       new STAttrMap().put("target", b_t).put("limiter", b_l));
@@ -1354,6 +1423,56 @@ public class KGGenerator extends TreeParser {
     }
     // $ANTLR end "body"
 
+    public static class caze_return extends TreeRuleReturnScope {
+        public String key;
+        public StringTemplate body;
+        public StringTemplate st;
+        public Object getTemplate() { return st; }
+        public String toString() { return st==null?null:st.toString(); }
+    };
+
+    // $ANTLR start "caze"
+    // src/core/koopa/core/grammars/generator/KGGenerator.g:318:1: caze returns [ String key, StringTemplate body ] : ^( CASE i= IDENTIFIER b= body[null, null] ) ;
+    public final KGGenerator.caze_return caze() throws RecognitionException {
+        KGGenerator.caze_return retval = new KGGenerator.caze_return();
+        retval.start = input.LT(1);
+
+        CommonTree i=null;
+        KGGenerator.body_return b = null;
+
+
+        try {
+            // src/core/koopa/core/grammars/generator/KGGenerator.g:319:3: ( ^( CASE i= IDENTIFIER b= body[null, null] ) )
+            // src/core/koopa/core/grammars/generator/KGGenerator.g:319:5: ^( CASE i= IDENTIFIER b= body[null, null] )
+            {
+            match(input,CASE,FOLLOW_CASE_in_caze1744); 
+
+            match(input, Token.DOWN, null); 
+            i=(CommonTree)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_caze1748); 
+            pushFollow(FOLLOW_body_in_caze1752);
+            b=body(null, null);
+
+            state._fsp--;
+
+
+            match(input, Token.UP, null); 
+             retval.key = ((CommonTree) i).getText();
+                  retval.body = b.st;
+                
+
+            }
+
+        }
+        catch (RecognitionException re) {
+            reportError(re);
+            recover(input,re);
+        }
+        finally {
+        }
+        return retval;
+    }
+    // $ANTLR end "caze"
+
     // Delegated rules
 
 
@@ -1370,19 +1489,19 @@ public class KGGenerator extends TreeParser {
     public static final BitSet FOLLOW_EXTENDING_in_extending295 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_extending299 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RULE_in_rule329 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_rule333 = new BitSet(new long[]{0x000000E9F83DF800L});
-    public static final BitSet FOLLOW_locals_in_rule345 = new BitSet(new long[]{0x000000E9F83DF800L});
-    public static final BitSet FOLLOW_returning_in_rule376 = new BitSet(new long[]{0x000000E9F83DF800L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_rule333 = new BitSet(new long[]{0x00000727E0F77800L});
+    public static final BitSet FOLLOW_locals_in_rule345 = new BitSet(new long[]{0x00000727E0F77800L});
+    public static final BitSet FOLLOW_returning_in_rule376 = new BitSet(new long[]{0x00000727E0F77800L});
     public static final BitSet FOLLOW_body_in_rule389 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_RETURNS_in_returning472 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_IDENTIFIER_in_returning476 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_LOCALS_in_locals525 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_declaration_in_locals536 = new BitSet(new long[]{0x0000000000020008L});
+    public static final BitSet FOLLOW_declaration_in_locals536 = new BitSet(new long[]{0x0000000000080008L});
     public static final BitSet FOLLOW_DECLARATION_in_declaration579 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_declaration583 = new BitSet(new long[]{0x0000000000100000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_declaration583 = new BitSet(new long[]{0x0000000000400000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_declaration587 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_SEQUENCE_in_body616 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body627 = new BitSet(new long[]{0x000000E9F83DF808L});
+    public static final BitSet FOLLOW_body_in_body627 = new BitSet(new long[]{0x00000727E0F77808L});
     public static final BitSet FOLLOW_ACT_in_body695 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_NATIVE_CODE_in_body699 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_TAG_in_body769 = new BitSet(new long[]{0x0000000000000002L});
@@ -1392,7 +1511,7 @@ public class KGGenerator extends TreeParser {
     public static final BitSet FOLLOW_IDENTIFIER_in_body919 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_DOT_in_body1001 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ASSIGN_in_body1041 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_body1045 = new BitSet(new long[]{0x0000000040300000L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_body1045 = new BitSet(new long[]{0x0000000100C00000L});
     public static final BitSet FOLLOW_IDENTIFIER_in_body1050 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_NUMBER_in_body1056 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_DOT_in_body1062 = new BitSet(new long[]{0x0000000000000008L});
@@ -1401,19 +1520,24 @@ public class KGGenerator extends TreeParser {
     public static final BitSet FOLLOW_PLUS_in_body1169 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1173 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_CHOICE_in_body1221 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1232 = new BitSet(new long[]{0x000000E9F83DF808L});
-    public static final BitSet FOLLOW_OPTIONAL_in_body1300 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1304 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_SKIP_TO_in_body1346 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1350 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_PERMUTED_in_body1396 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1407 = new BitSet(new long[]{0x000000E9F83DF808L});
-    public static final BitSet FOLLOW_NOT_in_body1469 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1473 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOSKIP_in_body1513 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1517 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_LIMIT_in_body1575 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1579 = new BitSet(new long[]{0x000000E9F83DF800L});
-    public static final BitSet FOLLOW_body_in_body1584 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_body_in_body1232 = new BitSet(new long[]{0x00000727E0F77808L});
+    public static final BitSet FOLLOW_DISPATCHED_in_body1306 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_caze_in_body1317 = new BitSet(new long[]{0x0000000000008008L});
+    public static final BitSet FOLLOW_OPTIONAL_in_body1397 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1401 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_SKIP_TO_in_body1443 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1447 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_PERMUTED_in_body1493 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1504 = new BitSet(new long[]{0x00000727E0F77808L});
+    public static final BitSet FOLLOW_NOT_in_body1566 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1570 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOSKIP_in_body1610 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1614 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_LIMIT_in_body1672 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1676 = new BitSet(new long[]{0x00000727E0F77800L});
+    public static final BitSet FOLLOW_body_in_body1681 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_CASE_in_caze1744 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_caze1748 = new BitSet(new long[]{0x00000727E0F77800L});
+    public static final BitSet FOLLOW_body_in_caze1752 = new BitSet(new long[]{0x0000000000000008L});
 
 }

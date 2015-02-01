@@ -1,18 +1,19 @@
-package koopa.core.trees.antlr.jaxen;
+package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
 
-import org.antlr.runtime.tree.Tree;
+import koopa.core.treeparsers.Tree;
 
-public class ANTLRTreeChildAxisIterator implements Iterator<Tree> {
+public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 
 	private final Tree parent;
 	private final int count;
-	private int index = 0;
+	private int index;
 
-	public ANTLRTreeChildAxisIterator(Tree parent) {
-		this.parent = parent;
+	public FollowingSibilingAxisIterator(Tree child) {
+		this.parent = child.getParent();
 		this.count = (parent != null) ? parent.getChildCount() : -1;
+		this.index = child.getChildIndex();
 	}
 
 	public boolean hasNext() {

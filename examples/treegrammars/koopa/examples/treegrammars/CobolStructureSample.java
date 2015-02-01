@@ -8,10 +8,10 @@ import java.util.List;
 
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.CobolParser;
+import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -79,14 +79,13 @@ public class CobolStructureSample {
 				+ " of those were accepted by the tree parser.");
 
 		if (!erroneous.isEmpty()) {
-			System.out
-					.println("Following files had problems:");
+			System.out.println("Following files had problems:");
 			for (File file : erroneous)
 				System.out.println("  " + file);
 		}
 	}
 
-	private static boolean acceptedByCobolStructureTreeParser(CommonTree tree) {
+	private static boolean acceptedByCobolStructureTreeParser(Tree tree) {
 		// System.out.println(tree.toStringTree());
 
 		TreeStream stream = new TreeStream(tree);

@@ -56,9 +56,9 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
+import koopa.core.treeparsers.Tree;
 import koopa.core.util.Tuple;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.PropertyConfigurator;
 
 public class Koopa extends JFrame implements Application, Configurable {
@@ -295,8 +295,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		copybookPath = new JMenuItem();
 
-		AbstractAction setCopybookPath = new AbstractAction(
-				"Copybook Paths...") {
+		AbstractAction setCopybookPath = new AbstractAction("Copybook Paths...") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
@@ -655,7 +654,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 	}
 
 	@Override
-	public CommonTree getSyntaxTree() {
+	public Tree getSyntaxTree() {
 		final Component view = getView();
 		if (view == overview)
 			return null;

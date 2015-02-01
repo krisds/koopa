@@ -3,9 +3,7 @@ package koopa.core.treeparsers;
 import java.util.LinkedList;
 
 import koopa.core.data.Data;
-import koopa.core.trees.antlr.CommonKoopaToken;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 
 public class TreeStream {
@@ -14,24 +12,24 @@ public class TreeStream {
 
 	private TreeStream parentStream;
 
-	private final CommonTree tree;
+	private final Tree tree;
 
-	private CommonTree last;
-	private CommonTree node;
+	private Tree last;
+	private Tree node;
 
-	private final LinkedList<CommonTree> bookmarks;
+	private final LinkedList<Tree> bookmarks;
 
-	public TreeStream(CommonTree tree) {
+	public TreeStream(Tree tree) {
 		this(null, tree);
 	}
 
-	public TreeStream(TreeStream parentStream, CommonTree tree) {
+	public TreeStream(TreeStream parentStream, Tree tree) {
 		this.parentStream = parentStream;
 
 		this.tree = tree;
 		this.node = tree;
 
-		this.bookmarks = new LinkedList<CommonTree>();
+		this.bookmarks = new LinkedList<Tree>();
 	}
 
 	/**
@@ -59,8 +57,7 @@ public class TreeStream {
 		if (node == null)
 			return null;
 
-		CommonKoopaToken wrapper = (CommonKoopaToken) node.getToken();
-		Data datum = wrapper.getKoopaData();
+		Data datum = node.getData();
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("[" + tree + "] Next data: " + datum);
@@ -92,7 +89,7 @@ public class TreeStream {
 	private boolean stepToFirstChild() {
 		if (node.getChildCount() > 0) {
 			// The node has child nodes. => Move to the first child.
-			node = (CommonTree) node.getChild(0);
+			node = (Tree) node.getChild(0);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("[" + tree + "] Stepped to first child: " + node);
@@ -104,7 +101,7 @@ public class TreeStream {
 	}
 
 	private boolean canStepOut() {
-		CommonTree parent = (CommonTree) node.getParent();
+		Tree parent = (Tree) node.getParent();
 		if (parent == null) {
 			// The node has no children and no parent. => We're done.
 			node = null;
@@ -119,11 +116,11 @@ public class TreeStream {
 	}
 
 	private boolean stepToNextSibling() {
-		CommonTree parent = (CommonTree) node.getParent();
+		Tree parent = (Tree) node.getParent();
 
 		if (node.getChildIndex() + 1 < parent.getChildCount()) {
 			// The node has more siblings. => Move to the next sibling.
-			node = (CommonTree) parent.getChild(node.getChildIndex() + 1);
+			node = (Tree) parent.getChild(node.getChildIndex() + 1);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("[" + tree + "] Stepped to next sibling: " + node);
@@ -135,18 +132,18 @@ public class TreeStream {
 	}
 
 	private boolean stepToNextAncestralSibling() {
-		CommonTree parent = (CommonTree) node.getParent();
+		Tree parent = (Tree) node.getParent();
 
 		// The node has no more siblings. So we try to find the first ancestor
 		// node which does.
 		do {
 			node = parent;
-			parent = (CommonTree) node.getParent();
+			parent = (Tree) node.getParent();
 
 			if (parent != null
 					&& node.getChildIndex() + 1 < parent.getChildCount()) {
 				// This ancestor has more siblings. => Move to the next sibling.
-				node = (CommonTree) parent.getChild(node.getChildIndex() + 1);
+				node = (Tree) parent.getChild(node.getChildIndex() + 1);
 
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("[" + tree
@@ -253,6 +250,6 @@ public class TreeStream {
 	}
 
 	public Tree getTree() {
-		return new Tree(last);
+		return last;
 	}
 }

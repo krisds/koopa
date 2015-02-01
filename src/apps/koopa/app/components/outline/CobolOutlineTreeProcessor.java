@@ -5,23 +5,23 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
-import koopa.core.trees.antlr.CommonTreeProcessor;
+import koopa.core.trees.TreeProcessor;
 
-import org.antlr.runtime.tree.CommonTree;
-
-public class CobolOutlineTreeProcessor implements CommonTreeProcessor {
+public class CobolOutlineTreeProcessor implements TreeProcessor {
 	private List<DefaultMutableTreeNode> trees = null;
 
-	public boolean processes(CommonTree tree, File file) {
+	public boolean processes(Tree tree, File file) {
 		final boolean isCopybook = file.getName().toUpperCase()
 				.endsWith(".CPY");
 
 		TreeStream stream = new TreeStream(tree);
 		CobolOutlineTreeGrammar grammar = new CobolOutlineTreeGrammar();
 
-		TreeParser parser = isCopybook ? grammar.copybook() : grammar.compilationGroup();
+		TreeParser parser = isCopybook ? grammar.copybook() : grammar
+				.compilationGroup();
 
 		boolean accepts = parser.accepts(stream);
 

@@ -31,12 +31,12 @@ import koopa.core.sources.Source;
 import koopa.core.targets.CompositeTarget;
 import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.antlr.CommonTreeBuilder;
-import koopa.core.trees.antlr.CommonTreeProcessor;
+import koopa.core.trees.TreeProcessor;
 import koopa.core.util.Tuple;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 
 public class CobolParser implements ParserConfiguration {
@@ -45,7 +45,7 @@ public class CobolParser implements ParserConfiguration {
 
 	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
 	private List<Target<Data>> tokenSinks = new LinkedList<Target<Data>>();
-	private List<CommonTreeProcessor> treeProcessors = null;
+	private List<TreeProcessor> treeProcessors = null;
 
 	private boolean keepingTrackOfTokens = false;
 
@@ -94,7 +94,7 @@ public class CobolParser implements ParserConfiguration {
 			parser = grammar.compilationGroup();
 		}
 
-		CommonTreeBuilder builder = null;
+		KoopaTreeBuilder builder = null;
 
 		CompositeTarget<Data> ct = new CompositeTarget<Data>();
 
@@ -118,7 +118,7 @@ public class CobolParser implements ParserConfiguration {
 		} else {
 			// These objects take care of building an ANTLR tree out of the
 			// results from the grammar.
-			builder = new CommonTreeBuilder();
+			builder = new KoopaTreeBuilder();
 			TreeBuildDirectingSink treeBuilder = new TreeBuildDirectingSink(
 					builder, false);
 
@@ -210,7 +210,7 @@ public class CobolParser implements ParserConfiguration {
 		// If we built trees during parsing, here is where we allow further
 		// processing of those trees.
 		if (builder != null) {
-			for (CommonTree tree : builder.getTrees()) {
+			for (Tree tree : builder.getTrees()) {
 				// ------------------------------------------------------------
 				// This used to validate the tree against the full Cobol
 				// grammar. In short, this made sure that the tree conforms to
@@ -237,7 +237,7 @@ public class CobolParser implements ParserConfiguration {
 				results.setTree(tree);
 
 				// We then allow all tree processors to have a go at the tree.
-				for (CommonTreeProcessor processor : getCommonTreeProcessors()) {
+				for (TreeProcessor processor : getTreeProcessors()) {
 					if (processor.processes(tree, file)) {
 						LOGGER.info("Adaptive match ("
 								+ processor.getClass().getSimpleName()
@@ -391,17 +391,17 @@ public class CobolParser implements ParserConfiguration {
 				|| (this.treeProcessors != null && this.treeProcessors.size() > 0);
 	}
 
-	private List<CommonTreeProcessor> getCommonTreeProcessors() {
+	private List<TreeProcessor> getTreeProcessors() {
 		if (this.treeProcessors == null) {
-			this.treeProcessors = new ArrayList<CommonTreeProcessor>();
+			this.treeProcessors = new ArrayList<TreeProcessor>();
 		}
 
 		return this.treeProcessors;
 	}
 
-	public void addCommonTreeProcessor(CommonTreeProcessor treeProcessor) {
+	public void addTreeProcessor(TreeProcessor treeProcessor) {
 		if (this.treeProcessors == null) {
-			this.treeProcessors = new ArrayList<CommonTreeProcessor>();
+			this.treeProcessors = new ArrayList<TreeProcessor>();
 		}
 
 		this.treeProcessors.add(treeProcessor);

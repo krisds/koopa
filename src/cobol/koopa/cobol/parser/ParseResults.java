@@ -6,9 +6,8 @@ import java.util.List;
 
 import koopa.core.data.Token;
 import koopa.core.targets.TokenTracker;
+import koopa.core.treeparsers.Tree;
 import koopa.core.util.Tuple;
-
-import org.antlr.runtime.tree.CommonTree;
 
 public class ParseResults {
 
@@ -22,7 +21,7 @@ public class ParseResults {
 
 	private List<Tuple<Token, String>> errors = new LinkedList<Tuple<Token, String>>();
 
-	private CommonTree tree = null;
+	private Tree tree = null;
 
 	public ParseResults(File file) {
 		this.file = file;
@@ -77,11 +76,11 @@ public class ParseResults {
 		this.tokenTracker = tokenTracker;
 	}
 
-	public void setTree(CommonTree tree) {
+	public void setTree(Tree tree) {
 		this.tree = tree;
 	}
 
-	public CommonTree getTree() {
+	public Tree getTree() {
 		return this.tree;
 	}
 

@@ -1,14 +1,14 @@
-package koopa.core.trees.antlr.jaxen;
+package koopa.core.trees.jaxen;
 
-import org.antlr.runtime.tree.Tree;
+import koopa.core.treeparsers.Tree;
 
-public class ANTLRTreeAttribute {
+public class TreeAttribute {
 
 	private final Tree tree;
 	private final String name;
 	private final String value;
 
-	public ANTLRTreeAttribute(Tree tree, String name, String value) {
+	public TreeAttribute(Tree tree, String name, String value) {
 		this.tree = tree;
 		this.name = name;
 		this.value = value;

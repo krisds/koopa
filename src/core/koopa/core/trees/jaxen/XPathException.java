@@ -1,8 +1,8 @@
-package koopa.core.trees.antlr.jaxen;
+package koopa.core.trees.jaxen;
 
 public class XPathException extends RuntimeException {
 
-	private static final long serialVersionUID = -605746686805907069L;
+	private static final long serialVersionUID = 1L;
 
 	public XPathException(String message) {
 		super(message);

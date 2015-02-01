@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KG.g 2015-01-30 08:37:11
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KG.g 2015-02-01 13:53:39
 
   package koopa.core.grammars.generator;
 
@@ -310,7 +310,7 @@ public class KGParser extends Parser {
 
 
             // AST REWRITE
-            // elements: n, n, n, n, s, s
+            // elements: n, s, s, n, n, n
             // token labels: s, n
             // rule labels: retval
             // token list labels: 
@@ -567,7 +567,7 @@ public class KGParser extends Parser {
 
 
             // AST REWRITE
-            // elements: sequence, i, i, r, locals, sequence, locals, i, sequence, sequence, r, i
+            // elements: r, sequence, sequence, i, i, r, i, sequence, i, locals, locals, sequence
             // token labels: r, i
             // rule labels: retval
             // token list labels: 
@@ -1377,7 +1377,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: b, a, IDENTIFIER
+                    // elements: a, b, IDENTIFIER
                     // token labels: b, a
                     // rule labels: retval
                     // token list labels: 
@@ -1506,7 +1506,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: sequence, more, r, sequence, r, more, sequence, sequence
+                    // elements: more, sequence, more, r, sequence, sequence, sequence, r
                     // token labels: r
                     // rule labels: retval
                     // token list labels: 
@@ -1667,7 +1667,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: sequence, sequence, more, r, sequence, sequence, r, more
+                    // elements: r, sequence, sequence, r, more, more, sequence, sequence
                     // token labels: r
                     // rule labels: retval
                     // token list labels: 
@@ -1800,7 +1800,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: part, SKIP_TO
+                    // elements: SKIP_TO, part
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -1979,7 +1979,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: more_dispatch, dispatch, dispatch
+                    // elements: dispatch, more_dispatch, dispatch
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -2080,7 +2080,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: part, NOSKIP
+                    // elements: NOSKIP, part
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -2130,7 +2130,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: part, part, LIMIT
+                    // elements: part, LIMIT, part
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 

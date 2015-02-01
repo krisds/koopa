@@ -23,10 +23,10 @@ import koopa.app.Application;
 import koopa.app.ApplicationListener;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.overview.Overview;
-import koopa.core.trees.antlr.jaxen.Jaxen;
-import koopa.core.trees.antlr.jaxen.XPathException;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.jaxen.Jaxen;
+import koopa.core.trees.jaxen.XPathException;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
@@ -86,7 +86,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 				}
 
 				try {
-					CommonTree tree = application.getSyntaxTree();
+					Tree tree = application.getSyntaxTree();
 
 					final List<?> matches = Jaxen.evaluate(tree, theQuery);
 

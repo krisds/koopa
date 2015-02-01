@@ -1,4 +1,4 @@
-package koopa.core.trees.antlr.jaxen;
+package koopa.core.trees.jaxen;
 
 import org.jaxen.BaseXPath;
 import org.jaxen.JaxenException;

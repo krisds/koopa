@@ -5,9 +5,8 @@ import java.io.File;
 
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.core.data.Token;
+import koopa.core.treeparsers.Tree;
 import koopa.core.util.Tuple;
-
-import org.antlr.runtime.tree.CommonTree;
 
 public interface Application {
 
@@ -32,7 +31,7 @@ public interface Application {
 
 	void addApplicationListener(ApplicationListener listener);
 
-	CommonTree getSyntaxTree();
+	Tree getSyntaxTree();
 
 	// TODO Set up a View type.
 	Component getView();

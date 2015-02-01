@@ -17,12 +17,11 @@ import koopa.core.data.tags.IslandTag;
 import koopa.core.parsers.Parser;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.antlr.CommonKoopaToken;
-import koopa.core.trees.antlr.CommonTreeBuilder;
-import koopa.core.trees.antlr.jaxen.Jaxen;
+import koopa.core.trees.jaxen.Jaxen;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 
 public class PreprocessingTokenizer extends BasicSource<Token> implements
@@ -93,7 +92,7 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 					LOGGER.trace(hashCode() + " PreprocessingDirective " + data);
 
 					LinkedList<Data> directive = getPreprocessingDirective();
-					final CommonTree tree = getSyntaxTree(directive);
+					final Tree tree = getSyntaxTree(directive);
 
 					if (tree == null) {
 						LOGGER.debug("No syntax tree for directive: "
@@ -102,15 +101,14 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 						continue;
 
 					}
-					
-					CommonKoopaToken token = (CommonKoopaToken) tree.getToken();
-					Data data2 = token.getKoopaData();
+
+					Data data2 = tree.getData();
 					if (!(data2 instanceof Start)) {
 						LOGGER.debug("Unsupported: " + tree);
 						unsupportedDirective = directive;
 						continue;
 					}
-					
+
 					Start start = (Start) data2;
 					if (!"copyStatement".equals(start.getName())) {
 						LOGGER.debug("Unsupported: " + tree);
@@ -166,12 +164,12 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 
 	// TODO Move this to a utility class; I'm sure this will come in handy
 	// again.
-	private String getValue(CommonTree tree, String xpath) {
+	private String getValue(Tree tree, String xpath) {
 		final List<?> values = Jaxen.evaluate(tree, xpath);
 		if (values == null || values.size() != 1)
 			return null;
 		else
-			return ((CommonTree) values.get(0)).getText();
+			return ((Tree) values.get(0)).getText();
 	}
 
 	private LinkedList<Data> getPreprocessingDirective() {
@@ -195,16 +193,15 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 
 	// TODO Move this to a utility class; I'm sure this will come in handy
 	// again.
-	private CommonTree getSyntaxTree(List<Data> directive) {
-		CommonTreeBuilder builder = new CommonTreeBuilder();
+	private Tree getSyntaxTree(List<Data> directive) {
+		KoopaTreeBuilder builder = new KoopaTreeBuilder();
 		TreeBuildDirectingSink director = new TreeBuildDirectingSink(builder,
 				true);
 
-		for (Data token : directive) {
+		for (Data token : directive)
 			director.push(token);
-		}
 
-		final List<CommonTree> trees = builder.getTrees();
+		final List<Tree> trees = builder.getTrees();
 		return trees == null || trees.size() != 1 ? null : trees.get(0);
 	}
 

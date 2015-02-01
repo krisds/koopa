@@ -94,6 +94,9 @@
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
 			
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
+
+			<test name="koopa.core.trees.test.XMLSerializerTest" />
+			<test name="koopa.core.trees.jaxen.test.JaxenTest" />
 		</junit>
 	</target>
 
@@ -306,25 +309,6 @@
 			<java classname="koopa.core.grammars.test.generator.GenerateUnitTests" fork="true">
 				<jvmarg value="-ea" />
 				<arg value="@{path}" />
-				<classpath>
-					<pathelement path="build/" />
-					<fileset dir="lib">
-						<include name="*.jar" />
-					</fileset>
-					<pathelement path="${java.class.path}" />
-				</classpath>
-			</java>
-		</sequential>
-	</macrodef>
-
-	<macrodef name="synchronize-file">
-		<attribute name="file" />
-		<attribute name="root" />
-		<sequential>
-			<java classname="koopa.core.util.ANTSynchronize" fork="true">
-				<jvmarg value="-ea" />
-				<arg value="@{file}" />
-				<arg value="@{root}" />
 				<classpath>
 					<pathelement path="build/" />
 					<fileset dir="lib">

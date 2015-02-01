@@ -1,15 +1,15 @@
-package koopa.core.trees.antlr.jaxen;
+package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
 
-import org.antlr.runtime.tree.Tree;
+import koopa.core.treeparsers.Tree;
 
-public class ANTLRTreeDescendantOrSelfAxisIterator implements Iterator<Tree> {
+public class DescendantOrSelfAxisIterator implements Iterator<Tree> {
 
 	private final Tree root;
 	private Tree next;
 
-	public ANTLRTreeDescendantOrSelfAxisIterator(Tree root) {
+	public DescendantOrSelfAxisIterator(Tree root) {
 		this.root = root;
 		this.next = root;
 	}
@@ -27,9 +27,8 @@ public class ANTLRTreeDescendantOrSelfAxisIterator implements Iterator<Tree> {
 	}
 
 	private void moveOn() {
-		if (this.next == null) {
+		if (this.next == null)
 			return;
-		}
 
 		if (this.next.getChildCount() > 0) {
 			this.next = this.next.getChild(0);

@@ -5,6 +5,9 @@ import java.util.List;
 
 import koopa.core.data.Position;
 import koopa.core.data.Range;
+import koopa.core.data.Token;
+import koopa.core.data.markers.Start;
+import koopa.core.treeparsers.Tree;
 
 public final class Util {
 	public static List<Range> asListOfRanges(int... positions) {
@@ -19,4 +22,32 @@ public final class Util {
 
 		return ranges;
 	}
+
+	public static Tree tree(String name, Object... parts) {
+		Start start = Start.on("test", name);
+
+		Tree tree = new Tree(start);
+
+		for (Object part : parts) {
+			if (part instanceof Tree)
+				tree.addChild((Tree) part);
+			else if (part instanceof String)
+				tree.addChild(token((String) part));
+			else
+				throw new IllegalArgumentException(
+						"This is neither a Tree or a String: " + part);
+		}
+
+		return tree;
+	}
+
+	public static Tree token(String text) {
+		Position start = new Position(0, 0, 0);
+		Token token = new Token(text, start, start.offsetBy(text.length()));
+
+		Tree tree = new Tree(token);
+
+		return tree;
+	}
+
 }

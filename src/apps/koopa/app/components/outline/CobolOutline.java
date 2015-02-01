@@ -67,7 +67,7 @@ public class CobolOutline extends JPanel implements ParsingListener {
 		model.nodeStructureChanged(this.root);
 
 		this.outliner = new CobolOutlineTreeProcessor();
-		config.addCommonTreeProcessor(this.outliner);
+		config.addTreeProcessor(this.outliner);
 	}
 
 	public void afterParsing(File file, ParseResults results) {

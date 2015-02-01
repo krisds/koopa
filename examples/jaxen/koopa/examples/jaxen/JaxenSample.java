@@ -3,11 +3,10 @@ package koopa.examples.jaxen;
 import java.io.File;
 import java.io.IOException;
 
-import org.antlr.runtime.tree.CommonTree;
-
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
-import koopa.core.trees.antlr.jaxen.Jaxen;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.jaxen.Jaxen;
 
 public class JaxenSample {
 
@@ -24,7 +23,7 @@ public class JaxenSample {
 		System.out.println("  " + result.getErrorCount() + " error(s).");
 		System.out.println("  " + result.getWarningCount() + " warning(s).");
 
-		CommonTree tree = result.getTree();
+		Tree tree = result.getTree();
 
 		jax(tree, "/compilationUnit");
 		jax(tree, "//compilationUnit");
@@ -56,7 +55,7 @@ public class JaxenSample {
 		jax(tree, "//node()[@tag=\"WATER\"]");
 	}
 
-	private static void jax(CommonTree tree, String expr) {
+	private static void jax(Tree tree, String expr) {
 		System.out.println("xpath:" + expr + " => "
 				+ Jaxen.evaluate(tree, expr));
 	}

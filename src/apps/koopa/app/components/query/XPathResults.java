@@ -9,11 +9,8 @@ import javax.swing.table.AbstractTableModel;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
-import koopa.core.trees.antlr.CommonKoopaToken;
-import koopa.core.trees.antlr.jaxen.ANTLRTreeAttribute;
-import koopa.core.util.ANTLR;
-
-import org.antlr.runtime.tree.CommonTree;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.jaxen.TreeAttribute;
 
 @SuppressWarnings("serial")
 public class XPathResults extends AbstractTableModel {
@@ -87,21 +84,19 @@ public class XPathResults extends AbstractTableModel {
 		this.positions = new ArrayList<Position>(results.size());
 
 		for (Object value : results) {
-			if (value instanceof CommonTree) {
-				final CommonTree tree = (CommonTree) value;
-				final Data token = ((CommonKoopaToken) tree.getToken())
-						.getKoopaData();
+			if (value instanceof Tree) {
+				final Tree tree = (Tree) value;
+				final Data token = tree.getData();
 
-				if (token instanceof Marker) {
+				if (token instanceof Marker)
 					this.types.add(XPathResultType.NODE);
 
-				} else {
+				else
 					this.types.add(XPathResultType.TOKEN);
-				}
 
-				this.positions.add(ANTLR.getStart(tree));
+				this.positions.add(tree.getStart());
 
-			} else if (value instanceof ANTLRTreeAttribute) {
+			} else if (value instanceof TreeAttribute) {
 				this.types.add(XPathResultType.ATTRIBUTE);
 				this.positions.add(null);
 

@@ -1,22 +1,19 @@
 package koopa.core.treegrammars.test;
 
+import static koopa.core.util.test.Util.token;
+import static koopa.core.util.test.Util.tree;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import koopa.core.data.Position;
-import koopa.core.data.Token;
-import koopa.core.data.markers.Start;
 import koopa.core.grammars.Block;
 import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.FutureTreeParser;
+import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
-import koopa.core.trees.antlr.CommonKoopaToken;
 
-import org.antlr.runtime.CommonToken;
-import org.antlr.runtime.tree.CommonTree;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +23,7 @@ public class TreeGrammarTest {
 
 	@Test
 	public void canMatchSingleToken() {
-		CommonTree tree = token("Cobol");
+		Tree tree = token("Cobol");
 
 		shouldAccept(G.token("COBOL"), tree);
 		shouldAccept(G.token("cobol"), tree);
@@ -35,7 +32,7 @@ public class TreeGrammarTest {
 
 	@Test
 	public void willSkipToMatchSingleToken() {
-		CommonTree tree = tree("quote", "One", "accurate", "measurement", "is",
+		Tree tree = tree("quote", "One", "accurate", "measurement", "is",
 				"worth", "a", "thousand", "expert", "opinions", ".");
 
 		shouldAccept(G.token("one"), tree);
@@ -72,7 +69,7 @@ public class TreeGrammarTest {
 
 	@Test
 	public void canMatchASequence() {
-		CommonTree tree = tree("quote", "One", "accurate", "measurement", "is",
+		Tree tree = tree("quote", "One", "accurate", "measurement", "is",
 				"worth", "a", "thousand", "expert", "opinions", ".");
 
 		shouldAccept(
@@ -86,7 +83,7 @@ public class TreeGrammarTest {
 
 	@Test
 	public void scopingSkipsSubtreeAfterASuccessfulMatch() {
-		CommonTree tree = tree("quote", "One", "accurate", "measurement", "is",
+		Tree tree = tree("quote", "One", "accurate", "measurement", "is",
 				"worth", "a", "thousand", "expert", "opinions", ".");
 
 		FutureTreeParser one = G.scoped("quote");
@@ -115,7 +112,7 @@ public class TreeGrammarTest {
 
 	@Test
 	public void canMatchChoice() {
-		CommonTree tree = tree("quote", "One", "accurate", "measurement", "is",
+		Tree tree = tree("quote", "One", "accurate", "measurement", "is",
 				"worth", "a", "thousand", "expert", "opinions", ".");
 
 		shouldAccept(G.choice(G.token("one"), G.token("Flowmatic")), tree);
@@ -167,7 +164,7 @@ public class TreeGrammarTest {
 
 	@Test
 	public void canMatchNegation() {
-		CommonTree tree = tree("quote", "One", "accurate", "measurement", "is",
+		Tree tree = tree("quote", "One", "accurate", "measurement", "is",
 				"worth", "a", "thousand", "expert", "opinions", ".");
 
 		shouldReject(G.not(G.token("one")), tree);
@@ -235,43 +232,12 @@ public class TreeGrammarTest {
 		assertEquals(3, list.size());
 	}
 
-	// ------------------------------------------------------------------------
-
-	private CommonTree tree(String name, Object... parts) {
-		Start start = Start.on("test", name);
-
-		CommonToken antlrToken = new CommonKoopaToken(start);
-		CommonTree antlrTree = new CommonTree(antlrToken);
-
-		for (Object part : parts) {
-			if (part instanceof CommonTree)
-				antlrTree.addChild((CommonTree) part);
-			else if (part instanceof String)
-				antlrTree.addChild(token((String) part));
-			else
-				throw new IllegalArgumentException(
-						"This is neither a CommonTree or a String: " + part);
-		}
-
-		return antlrTree;
-	}
-
-	private CommonTree token(String text) {
-		Position start = new Position(0, 0, 0);
-		Token token = new Token(text, start, start.offsetBy(text.length()));
-
-		CommonToken antlrToken = new CommonKoopaToken(token);
-		CommonTree antlrTree = new CommonTree(antlrToken);
-
-		return antlrTree;
-	}
-
-	private void shouldAccept(TreeParser parser, CommonTree tree) {
+	private void shouldAccept(TreeParser parser, Tree tree) {
 		TreeStream stream = new TreeStream(tree);
 		Assert.assertTrue(parser.accepts(stream));
 	}
 
-	private void shouldReject(TreeParser parser, CommonTree tree) {
+	private void shouldReject(TreeParser parser, Tree tree) {
 		TreeStream stream = new TreeStream(tree);
 		Assert.assertFalse(parser.accepts(stream));
 	}

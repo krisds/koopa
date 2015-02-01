@@ -8,10 +8,9 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
-import koopa.core.trees.antlr.CommonTreeSerializer;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.XMLSerializer;
 import koopa.core.util.Tuple;
-
-import org.antlr.runtime.tree.CommonTree;
 
 public class ToXml {
 
@@ -130,10 +129,10 @@ public class ToXml {
 			return;
 		}
 
-		final CommonTree ast = results.getTree();
+		final Tree ast = results.getTree();
 
 		try {
-			CommonTreeSerializer.serialize(ast, target);
+			XMLSerializer.serialize(ast, target);
 
 		} catch (IOException e) {
 			System.out.println("IOException while writing " + target);

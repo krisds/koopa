@@ -1,4 +1,4 @@
-package koopa.core.trees.antlr;
+package koopa.core.trees;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,12 +13,11 @@ import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.util.ANTLR;
+import koopa.core.treeparsers.Tree;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.apache.log4j.Logger;
 
-public class CommonTreeSerializer {
+public class XMLSerializer {
 
 	protected static final Logger LOGGER = Logger.getLogger("to_xml");
 
@@ -38,7 +37,7 @@ public class CommonTreeSerializer {
 		INCLUDE_POSITIONING = includePositioning;
 	}
 
-	public static void serialize(CommonTree tree, File file) throws IOException {
+	public static void serialize(Tree tree, File file) throws IOException {
 		// UTF-8 is the default encoding for documents without prolog
 		// See http://www.w3.org/TR/REC-xml/#charencoding
 		// So it's necessary to add the XML declaration to ensure readability
@@ -50,29 +49,29 @@ public class CommonTreeSerializer {
 		serialize(tree, writer);
 	}
 
-	public static String serialize(CommonTree tree) throws IOException {
+	public static String serialize(Tree tree) throws IOException {
 		StringWriter writer = new StringWriter();
 		serialize(tree, writer);
 		return writer.toString();
 	}
 
-	public static void serialize(CommonTree tree, Writer writer)
-			throws IOException {
+	public static void serialize(Tree tree, Writer writer) throws IOException {
 		// XML prolog/declaration
 		writer.append("<?xml version='1.0' encoding='UTF-8'?>\n");
 
 		writer.append("<koopa>\n");
-		walk(writer, tree, "  ");
+		if (tree != null)
+			walk(writer, tree, "  ");
 		writer.append("</koopa>\n");
 
 		writer.flush();
 		writer.close();
 	}
 
-	private static void walk(Writer writer, CommonTree tree, String dent)
+	private static void walk(Writer writer, Tree tree, String dent)
 			throws IOException {
 
-		Data data = ((CommonKoopaToken) tree.getToken()).getKoopaData();
+		Data data = tree.getData();
 
 		LOGGER.trace(tree.getText());
 
@@ -89,9 +88,8 @@ public class CommonTreeSerializer {
 				writePositions(writer, tree);
 				writer.append(">\n");
 
-				for (Object child : tree.getChildren()) {
-					walk(writer, (CommonTree) child, dent + "  ");
-				}
+				for (Tree child : tree.getChildren())
+					walk(writer, child, dent + "  ");
 
 				writer.append(dent + "</" + start.getName() + ">\n");
 			}
@@ -121,15 +119,14 @@ public class CommonTreeSerializer {
 		}
 	}
 
-	private static void writePositions(Writer writer, CommonTree tree)
+	private static void writePositions(Writer writer, Tree tree)
 			throws IOException {
 
-		if (!INCLUDE_POSITIONING) {
+		if (!INCLUDE_POSITIONING)
 			return;
-		}
 
-		final Position start = ANTLR.getStart(tree);
-		final Position end = ANTLR.getEnd(tree);
+		final Position start = tree.getStart();
+		final Position end = tree.getEnd();
 
 		if (start != null) {
 			writer.append(" from=\"" + start.getPositionInFile() + "\"");

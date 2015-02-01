@@ -10,8 +10,8 @@ import javax.swing.table.AbstractTableModel;
 import koopa.app.ApplicationSupport;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
-import koopa.core.trees.antlr.jaxen.Jaxen;
-import koopa.core.trees.antlr.jaxen.XPathException;
+import koopa.core.trees.jaxen.Jaxen;
+import koopa.core.trees.jaxen.XPathException;
 
 @SuppressWarnings("serial")
 public class BatchResults extends AbstractTableModel {
@@ -23,7 +23,7 @@ public class BatchResults extends AbstractTableModel {
 	public static final int FILE_COLUMN = 5;
 	public static final int PATH_COLUMN = 6;
 	public static final int CUSTOM_COLUMN = 7;
-	
+
 	private static List<String> customKeys;
 
 	private List<File> files = new ArrayList<File>();
@@ -36,19 +36,18 @@ public class BatchResults extends AbstractTableModel {
 		OK, WARNING, ERROR
 	}
 
-	public BatchResults () {
+	public BatchResults() {
 		super();
-		
+
 		customKeys = ApplicationSupport.getCustomColumnKeys();
-		
+
 		// Create value lists:
 		for (String key : customKeys) {
 			this.custom.put(key, new ArrayList<Object>());
 		}
 	}
-	
-	public int getColumnCount()
-	{
+
+	public int getColumnCount() {
 		return 7 + customKeys.size();
 	}
 
@@ -83,7 +82,7 @@ public class BatchResults extends AbstractTableModel {
 				String key = customKeys.get(customColumnIndex);
 				return ApplicationSupport.getCustomColumnProperty(key, "title");
 			}
-			
+
 			return "<Unknown>";
 		}
 	}
@@ -124,10 +123,10 @@ public class BatchResults extends AbstractTableModel {
 
 		case TOKEN_COUNT_COLUMN:
 			return this.tokenCount.get(rowIndex);
-			
+
 		default:
 			// Get values from each custom report column key:
-			
+
 			int customColumnIndex = columnIndex - CUSTOM_COLUMN;
 
 			if (customColumnIndex < customKeys.size()) {
@@ -136,40 +135,40 @@ public class BatchResults extends AbstractTableModel {
 					return this.custom.get(key).get(rowIndex);
 				}
 			}
-			
+
 			return false;
 		}
 	}
-	
-	private void add (ParseResults results, String customColumnKey, int index) {
-		
-		String customXPathQuery = ApplicationSupport.getCustomColumnProperty(customColumnKey, "xpath", null);
-		
+
+	private void add(ParseResults results, String customColumnKey, int index) {
+
+		String customXPathQuery = ApplicationSupport.getCustomColumnProperty(
+				customColumnKey, "xpath", null);
+
 		Object value = null;
-		
+
 		if (customXPathQuery != null) {
 			try {
-				List<?> matches = Jaxen.evaluate(results.getTree(), customXPathQuery);
-				
+				List<?> matches = Jaxen.evaluate(results.getTree(),
+						customXPathQuery);
+
 				if (matches != null) {
 					if (matches.size() > 1) {
 						value = matches.toString();
-					} else if (matches.size() == 1) {					
+					} else if (matches.size() == 1) {
 						value = matches.get(0).toString();
 					}
 				}
-			}
-			catch (NullPointerException e) {
+			} catch (NullPointerException e) {
 				// Ignore
-			}
-			catch (XPathException e) {
+			} catch (XPathException e) {
 				value = e.getMessage();
 			}
 		}
-		
+
 		if (index >= 0) {
 			this.custom.get(customColumnKey).set(index, value);
-			
+
 		} else {
 			this.custom.get(customColumnKey).add(value);
 		}
@@ -177,19 +176,19 @@ public class BatchResults extends AbstractTableModel {
 
 	public void add(ParseResults results) {
 		final File file = results.getFile();
-		
+
 		int index = this.files.indexOf(file);
-		
+
 		if (index >= 0) {
 			this.parseResults.set(index, results);
 			this.coverage.set(index, Metrics.getCoverage(results));
-			this.tokenCount.set(index, Metrics
-					.getSignificantTokenCount(results));
-			
+			this.tokenCount.set(index,
+					Metrics.getSignificantTokenCount(results));
+
 			for (String key : customKeys) {
 				this.add(results, key, index);
 			}
-			
+
 			fireTableRowsUpdated(index, index);
 
 		} else {
@@ -202,7 +201,7 @@ public class BatchResults extends AbstractTableModel {
 			for (String key : customKeys) {
 				this.add(results, key, index);
 			}
-			
+
 			index = files.size() - 1;
 			fireTableRowsInserted(index, index);
 		}
@@ -223,7 +222,7 @@ public class BatchResults extends AbstractTableModel {
 		this.parseResults.clear();
 		this.tokenCount.clear();
 		this.coverage.clear();
-		
+
 		// Clear custom column values:
 		for (String key : customKeys) {
 			this.custom.get(key).clear();

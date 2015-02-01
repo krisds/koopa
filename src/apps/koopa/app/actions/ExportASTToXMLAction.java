@@ -12,16 +12,16 @@ import javax.swing.filechooser.FileFilter;
 
 import koopa.app.Application;
 import koopa.app.ApplicationSupport;
-import koopa.core.trees.antlr.CommonTreeSerializer;
-
-import org.antlr.runtime.tree.CommonTree;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.XMLSerializer;
 
 @SuppressWarnings("serial")
 public class ExportASTToXMLAction extends AbstractAction implements Action {
 
 	private static FileFilter filter = new FileFilter() {
 		public boolean accept(File f) {
-			return f.isDirectory() || f.isFile() && f.getName().toUpperCase().endsWith(".XML");
+			return f.isDirectory() || f.isFile()
+					&& f.getName().toUpperCase().endsWith(".XML");
 		}
 
 		public String getDescription() {
@@ -41,7 +41,7 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 	public void actionPerformed(ActionEvent ae) {
 		new Thread(new Runnable() {
 			public void run() {
-				final CommonTree tree = application.getSyntaxTree();
+				final Tree tree = application.getSyntaxTree();
 				File file = ApplicationSupport.askUserForFile(false,
 						"last-folder", filter, parent);
 
@@ -50,7 +50,7 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 				}
 
 				try {
-					CommonTreeSerializer.serialize(tree, file);
+					XMLSerializer.serialize(tree, file);
 					JOptionPane.showMessageDialog(parent,
 							"AST has been exported.", "Export",
 							JOptionPane.INFORMATION_MESSAGE);

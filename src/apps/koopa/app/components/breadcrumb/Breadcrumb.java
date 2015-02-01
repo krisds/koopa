@@ -25,9 +25,7 @@ import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.util.ANTLR;
-
-import org.antlr.runtime.tree.CommonTree;
+import koopa.core.treeparsers.Tree;
 
 // TODO Style this a bit better.
 @SuppressWarnings("serial")
@@ -37,7 +35,7 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 	private static final Font FONT = new Font("Courier", Font.PLAIN, 10);
 
 	private Application application = null;
-	private CommonTree parseTree = null;
+	private Tree parseTree = null;
 
 	private int index = 0;
 	private List<JLabel> labels = new ArrayList<JLabel>();
@@ -145,13 +143,12 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		return label;
 	}
 
-	private List<String> find(Token token, CommonTree tree,
-			List<String> breadcrumb) {
+	private List<String> find(Token token, Tree tree, List<String> breadcrumb) {
 
 		if (token == null)
 			return breadcrumb;
 
-		Data node = ANTLR.getToken(tree);
+		Data node = tree.getData();
 
 		if (node == null)
 			return breadcrumb;
@@ -164,10 +161,10 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 
 		// TODO Binary search instead.
 		for (int i = 0; i < tree.getChildCount(); i++) {
-			CommonTree child = (CommonTree) tree.getChild(i);
+			Tree child = tree.getChild(i);
 
-			Position start = ANTLR.getStart(child);
-			Position end = ANTLR.getEnd(child);
+			Position start = child.getStart();
+			Position end = child.getEnd();
 
 			if (token.getStart().getPositionInFile() >= start
 					.getPositionInFile()

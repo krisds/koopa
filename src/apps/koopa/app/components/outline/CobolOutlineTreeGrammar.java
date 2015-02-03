@@ -70,6 +70,9 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	                       scope.set("name", name);
 	                   }
 	               }),
+	               optional(
+	                   declaratives()
+	               ),
 	               star(
 	                   section()
 	               ),

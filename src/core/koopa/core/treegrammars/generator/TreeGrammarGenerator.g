@@ -230,11 +230,17 @@ body [ List<String> bindings, List<String> unbindings ]
       body = {b}
     )
     
-  | ^(CHOICE
-      (body[bindings, unbindings]
+  | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
+    ^(CHOICE
+      (b=body[bindings, unbindings]
+        { steps.add(b.st); }
       )+
     )
     
+    -> choice(
+      step = {steps}
+    )
+  
   | ^(OPTIONAL
       b=body[bindings, unbindings]
     )

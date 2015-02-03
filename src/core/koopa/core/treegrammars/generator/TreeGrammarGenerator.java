@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-02-03 15:37:15
+// $ANTLR 3.1.1 src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g 2015-02-03 16:11:28
 
   package koopa.core.treegrammars.generator;
   
@@ -658,7 +658,7 @@ public class TreeGrammarGenerator extends TreeParser {
     };
 
     // $ANTLR start "body"
-    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:137:1: body[ List<String> bindings, List<String> unbindings ] : ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsunbind=unbindingsnative_code=n) | ANY -> any() | TAG | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | l= LITERAL | n= NUMBER | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE ( body[bindings, unbindings] )+ ) | ^( OPTIONAL b= body[bindings, unbindings] ) -> opt(body=b) | ^( SKIP_TO body[bindings, unbindings] ) | ^( NOT body[bindings, unbindings] ) | ^( NOSKIP ( body[bindings, unbindings] )+ ) | ^( PERMUTED ( body[bindings, unbindings] )+ ) );
+    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:137:1: body[ List<String> bindings, List<String> unbindings ] : ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsunbind=unbindingsnative_code=n) | ANY -> any() | TAG | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | l= LITERAL | n= NUMBER | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps) | ^( OPTIONAL b= body[bindings, unbindings] ) -> opt(body=b) | ^( SKIP_TO body[bindings, unbindings] ) | ^( NOT body[bindings, unbindings] ) | ^( NOSKIP ( body[bindings, unbindings] )+ ) | ^( PERMUTED ( body[bindings, unbindings] )+ ) );
     public final TreeGrammarGenerator.body_return body(List<String> bindings, List<String> unbindings) throws RecognitionException {
         TreeGrammarGenerator.body_return retval = new TreeGrammarGenerator.body_return();
         retval.start = input.LT(1);
@@ -672,7 +672,7 @@ public class TreeGrammarGenerator extends TreeParser {
 
 
         try {
-            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:138:3: ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsunbind=unbindingsnative_code=n) | ANY -> any() | TAG | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | l= LITERAL | n= NUMBER | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE ( body[bindings, unbindings] )+ ) | ^( OPTIONAL b= body[bindings, unbindings] ) -> opt(body=b) | ^( SKIP_TO body[bindings, unbindings] ) | ^( NOT body[bindings, unbindings] ) | ^( NOSKIP ( body[bindings, unbindings] )+ ) | ^( PERMUTED ( body[bindings, unbindings] )+ ) )
+            // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:138:3: ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps) | ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsunbind=unbindingsnative_code=n) | ANY -> any() | TAG | i= IDENTIFIER -> {isLowerCase}? call(name=i) -> token(text=i) | l= LITERAL | n= NUMBER | d= DOT -> token(text=d) | ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER | n= NUMBER | d= DOT | a= ANY ) ) -> assign(name=lvalue=body) | ^( STAR b= body[bindings, unbindings] ) -> star(body=b) | ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b) | ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps) | ^( OPTIONAL b= body[bindings, unbindings] ) -> opt(body=b) | ^( SKIP_TO body[bindings, unbindings] ) | ^( NOT body[bindings, unbindings] ) | ^( NOSKIP ( body[bindings, unbindings] )+ ) | ^( PERMUTED ( body[bindings, unbindings] )+ ) )
             int alt11=17;
             switch ( input.LA(1) ) {
             case SEQUENCE:
@@ -1078,12 +1078,13 @@ public class TreeGrammarGenerator extends TreeParser {
                     }
                     break;
                 case 12 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:233:5: ^( CHOICE ( body[bindings, unbindings] )+ )
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:233:5: ^( CHOICE (b= body[bindings, unbindings] )+ )
                     {
-                    match(input,CHOICE,FOLLOW_CHOICE_in_body1109); 
+                     List<StringTemplate> steps = new LinkedList<StringTemplate>(); 
+                    match(input,CHOICE,FOLLOW_CHOICE_in_body1115); 
 
                     match(input, Token.DOWN, null); 
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:234:7: ( body[bindings, unbindings] )+
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:235:7: (b= body[bindings, unbindings] )+
                     int cnt8=0;
                     loop8:
                     do {
@@ -1097,13 +1098,14 @@ public class TreeGrammarGenerator extends TreeParser {
 
                         switch (alt8) {
                     	case 1 :
-                    	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:234:8: body[bindings, unbindings]
+                    	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:235:8: b= body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1118);
-                    	    body(bindings, unbindings);
+                    	    pushFollow(FOLLOW_body_in_body1126);
+                    	    b=body(bindings, unbindings);
 
                     	    state._fsp--;
 
+                    	     steps.add(b.st); 
 
                     	    }
                     	    break;
@@ -1120,15 +1122,24 @@ public class TreeGrammarGenerator extends TreeParser {
 
                     match(input, Token.UP, null); 
 
+
+                    // TEMPLATE REWRITE
+                    // 240:5: -> choice(step=steps)
+                    {
+                        retval.st = templateLib.getInstanceOf("choice",
+                      new STAttrMap().put("step", steps));
+                    }
+
+
                     }
                     break;
                 case 13 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:238:5: ^( OPTIONAL b= body[bindings, unbindings] )
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:244:5: ^( OPTIONAL b= body[bindings, unbindings] )
                     {
-                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1146); 
+                    match(input,OPTIONAL,FOLLOW_OPTIONAL_in_body1194); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1156);
+                    pushFollow(FOLLOW_body_in_body1204);
                     b=body(bindings, unbindings);
 
                     state._fsp--;
@@ -1138,7 +1149,7 @@ public class TreeGrammarGenerator extends TreeParser {
 
 
                     // TEMPLATE REWRITE
-                    // 242:5: -> opt(body=b)
+                    // 248:5: -> opt(body=b)
                     {
                         retval.st = templateLib.getInstanceOf("opt",
                       new STAttrMap().put("body", b));
@@ -1148,12 +1159,12 @@ public class TreeGrammarGenerator extends TreeParser {
                     }
                     break;
                 case 14 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:246:5: ^( SKIP_TO body[bindings, unbindings] )
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:252:5: ^( SKIP_TO body[bindings, unbindings] )
                     {
-                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1207); 
+                    match(input,SKIP_TO,FOLLOW_SKIP_TO_in_body1255); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1215);
+                    pushFollow(FOLLOW_body_in_body1263);
                     body(bindings, unbindings);
 
                     state._fsp--;
@@ -1164,12 +1175,12 @@ public class TreeGrammarGenerator extends TreeParser {
                     }
                     break;
                 case 15 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:250:5: ^( NOT body[bindings, unbindings] )
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:256:5: ^( NOT body[bindings, unbindings] )
                     {
-                    match(input,NOT,FOLLOW_NOT_in_body1232); 
+                    match(input,NOT,FOLLOW_NOT_in_body1280); 
 
                     match(input, Token.DOWN, null); 
-                    pushFollow(FOLLOW_body_in_body1234);
+                    pushFollow(FOLLOW_body_in_body1282);
                     body(bindings, unbindings);
 
                     state._fsp--;
@@ -1180,12 +1191,12 @@ public class TreeGrammarGenerator extends TreeParser {
                     }
                     break;
                 case 16 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:252:5: ^( NOSKIP ( body[bindings, unbindings] )+ )
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:258:5: ^( NOSKIP ( body[bindings, unbindings] )+ )
                     {
-                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1244); 
+                    match(input,NOSKIP,FOLLOW_NOSKIP_in_body1292); 
 
                     match(input, Token.DOWN, null); 
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:253:7: ( body[bindings, unbindings] )+
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:259:7: ( body[bindings, unbindings] )+
                     int cnt9=0;
                     loop9:
                     do {
@@ -1199,9 +1210,9 @@ public class TreeGrammarGenerator extends TreeParser {
 
                         switch (alt9) {
                     	case 1 :
-                    	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:253:8: body[bindings, unbindings]
+                    	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:259:8: body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1254);
+                    	    pushFollow(FOLLOW_body_in_body1302);
                     	    body(bindings, unbindings);
 
                     	    state._fsp--;
@@ -1225,12 +1236,12 @@ public class TreeGrammarGenerator extends TreeParser {
                     }
                     break;
                 case 17 :
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:257:5: ^( PERMUTED ( body[bindings, unbindings] )+ )
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:263:5: ^( PERMUTED ( body[bindings, unbindings] )+ )
                     {
-                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1282); 
+                    match(input,PERMUTED,FOLLOW_PERMUTED_in_body1330); 
 
                     match(input, Token.DOWN, null); 
-                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:258:7: ( body[bindings, unbindings] )+
+                    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:264:7: ( body[bindings, unbindings] )+
                     int cnt10=0;
                     loop10:
                     do {
@@ -1244,9 +1255,9 @@ public class TreeGrammarGenerator extends TreeParser {
 
                         switch (alt10) {
                     	case 1 :
-                    	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:258:8: body[bindings, unbindings]
+                    	    // src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g:264:8: body[bindings, unbindings]
                     	    {
-                    	    pushFollow(FOLLOW_body_in_body1292);
+                    	    pushFollow(FOLLOW_body_in_body1340);
                     	    body(bindings, unbindings);
 
                     	    state._fsp--;
@@ -1330,17 +1341,17 @@ public class TreeGrammarGenerator extends TreeParser {
     public static final BitSet FOLLOW_body_in_body1019 = new BitSet(new long[]{0x0000000000000008L});
     public static final BitSet FOLLOW_PLUS_in_body1061 = new BitSet(new long[]{0x0000000000000004L});
     public static final BitSet FOLLOW_body_in_body1065 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_CHOICE_in_body1109 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1118 = new BitSet(new long[]{0x00000327E0F73808L});
-    public static final BitSet FOLLOW_OPTIONAL_in_body1146 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1156 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_SKIP_TO_in_body1207 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1215 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOT_in_body1232 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1234 = new BitSet(new long[]{0x0000000000000008L});
-    public static final BitSet FOLLOW_NOSKIP_in_body1244 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1254 = new BitSet(new long[]{0x00000327E0F73808L});
-    public static final BitSet FOLLOW_PERMUTED_in_body1282 = new BitSet(new long[]{0x0000000000000004L});
-    public static final BitSet FOLLOW_body_in_body1292 = new BitSet(new long[]{0x00000327E0F73808L});
+    public static final BitSet FOLLOW_CHOICE_in_body1115 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1126 = new BitSet(new long[]{0x00000327E0F73808L});
+    public static final BitSet FOLLOW_OPTIONAL_in_body1194 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1204 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_SKIP_TO_in_body1255 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1263 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOT_in_body1280 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1282 = new BitSet(new long[]{0x0000000000000008L});
+    public static final BitSet FOLLOW_NOSKIP_in_body1292 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1302 = new BitSet(new long[]{0x00000327E0F73808L});
+    public static final BitSet FOLLOW_PERMUTED_in_body1330 = new BitSet(new long[]{0x0000000000000004L});
+    public static final BitSet FOLLOW_body_in_body1340 = new BitSet(new long[]{0x00000327E0F73808L});
 
 }

@@ -236,7 +236,7 @@ body [ List<String> bindings, List<String> unbindings ]
     )
     
   | ^(OPTIONAL
-      body[bindings, unbindings]
+      b=body[bindings, unbindings]
     )
     
     -> opt(

@@ -239,6 +239,10 @@ body [ List<String> bindings, List<String> unbindings ]
       body[bindings, unbindings]
     )
     
+    -> opt(
+      body = {b}
+    )
+    
   | ^(SKIP_TO
       body[bindings, unbindings]
     )

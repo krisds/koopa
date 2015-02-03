@@ -171,13 +171,26 @@ public class ApplicationSupport {
 	private static synchronized Properties getProperties() {
 		if (properties == null) {
 
+			FileInputStream stream = null;
 			properties = new Properties();
 			try {
-				properties.load(new FileInputStream(PROPERTIES_FILE));
+				stream = new FileInputStream(PROPERTIES_FILE);
+				properties.load(stream);
+
 			} catch (FileNotFoundException e) {
-				// Ignore.
+				LOGGER.info("Could not find default properties.");
+
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("IOException while reading default properties.", e);
+
+			} finally {
+				try {
+					if (stream != null)
+						stream.close();
+				} catch (IOException e) {
+					LOGGER.error(
+							"IOException while closing default properties.", e);
+				}
 			}
 		}
 
@@ -204,12 +217,15 @@ public class ApplicationSupport {
 	}
 
 	public static void configureFromProperties(String filename, Configurable app) {
+		FileInputStream stream = null;
+
 		try {
 			LOGGER.info("Loading configuration options from \"" + filename
 					+ "\".");
 
 			Properties properties = new Properties();
-			properties.load(new FileInputStream(new File(filename)));
+			stream = new FileInputStream(new File(filename));
+			properties.load(stream);
 
 			for (Object key : properties.keySet()) {
 				final String name = (String) key;
@@ -225,6 +241,15 @@ public class ApplicationSupport {
 
 		} catch (IOException e) {
 			LOGGER.error("IOException while reading \"" + filename + "\".", e);
+
+		} finally {
+			try {
+				if (stream != null)
+					stream.close();
+			} catch (IOException e) {
+				LOGGER.error("IOException while closing \"" + filename + "\".",
+						e);
+			}
 		}
 	}
 
@@ -290,15 +315,16 @@ public class ApplicationSupport {
 	}
 
 	public static String getRevision() {
-		InputStream in = null;
+		BufferedReader b = null;
 		try {
-			in = ApplicationSupport.class.getResourceAsStream("/REVISION");
+			InputStream in = ApplicationSupport.class
+					.getResourceAsStream("/REVISION");
 
 			if (in == null)
 				return "unkown";
 
 			InputStreamReader r = new InputStreamReader(in);
-			BufferedReader b = new BufferedReader(r);
+			b = new BufferedReader(r);
 
 			String revision = b.readLine();
 
@@ -316,11 +342,11 @@ public class ApplicationSupport {
 			return "unkown";
 
 		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e) {
-				}
+			try {
+				if (b != null)
+					b.close();
+			} catch (IOException e) {
+			}
 		}
 	}
 }

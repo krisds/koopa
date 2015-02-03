@@ -142,6 +142,16 @@ public class TreeGrammarTest {
 	}
 
 	@Test
+	public void canMatchOptional() {
+		final TreeParser quotes = G.sequence(G.optional(G.scoped("quote")),
+				G.scoped("author"));
+
+		shouldAccept(quotes, tree("quotes", tree("quote"), tree("author")));
+		shouldAccept(quotes, tree("quotes", tree("author")));
+		shouldReject(quotes, tree("quotes", tree("quote")));
+	}
+
+	@Test
 	public void canMatchRepitition() {
 		final TreeParser quotes = G.plus(G.scoped("quote"));
 

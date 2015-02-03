@@ -52,7 +52,7 @@ public class ParsingContext {
 
 	public void leave(String name) {
 		Frame callee = callStack.pop();
-		assert (callee.name == name);
+		assert ((callee.name == null && name == null) || (name != null && callee.name == name));
 
 		Frame caller = callStack.peek();
 		caller.set(caller.lvalue, callee.returnValue);

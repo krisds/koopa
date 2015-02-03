@@ -22,7 +22,7 @@ public class $name$TreeGrammar extends $extending$Grammar {
 >>
 
 
-rule(name) ::= <<
+rule(name, body) ::= <<
 // ========================================================
 // $name$
 // ........................................................
@@ -56,6 +56,10 @@ star(body) ::= <<star(
 )>>
 
 plus(body) ::= <<plus(
+    $body$
+)>>
+
+optional(body) ::= <<optional(
     $body$
 )>>
 

@@ -59,7 +59,7 @@ plus(body) ::= <<plus(
     $body$
 )>>
 
-optional(body) ::= <<optional(
+opt(body) ::= <<optional(
     $body$
 )>>
 

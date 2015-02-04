@@ -2,6 +2,8 @@ package koopa.app.cli;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import koopa.app.ApplicationSupport;
 import koopa.cobol.parser.ParseResults;
@@ -22,6 +24,9 @@ public class ToXml {
 	public static void main(String[] args) {
 
 		SourceFormat format = SourceFormat.FIXED;
+		boolean preprocess = false;
+		List<String> copybookPaths = new LinkedList<String>();
+
 		File source = null;
 		File target = null;
 
@@ -31,6 +36,25 @@ public class ToXml {
 			if (option.startsWith("--")) {
 				if (option.equals("--free-format")) {
 					format = SourceFormat.FREE;
+
+				} else if (option.equals("--preprocess")) {
+					preprocess = true;
+
+				} else {
+					System.out.println("Unknown option: " + option);
+					System.exit(BAD_USAGE);
+				}
+
+			} else if (option.startsWith("-")) {
+				if (option.equals("-I")) {
+
+					i += 1;
+					if (i >= args.length) {
+						System.out.println("Missing copybook path definition.");
+						System.exit(BAD_USAGE);
+					}
+
+					copybookPaths.add(args[i]);
 
 				} else {
 					System.out.println("Unknown option: " + option);
@@ -49,21 +73,27 @@ public class ToXml {
 				target = new File(option);
 
 			} else {
-				System.out
-						.println("Usage: ToXml [--free-format] <source-path> <target-path>");
+				System.out.println("Usage: ToXml [--free-format] "
+						+ "[--preprocess -I <copyboopath>] "
+						+ "<source-path> <target-path>");
 				System.exit(BAD_USAGE);
 			}
 		}
 
-		ToXml toXml = new ToXml(format);
+		ToXml toXml = new ToXml(format, preprocess, copybookPaths);
 		toXml.process(source, target);
 	}
 
 	private final ParsingCoordinator coordinator;
 
-	public ToXml(SourceFormat format) {
+	public ToXml(SourceFormat format, boolean preprocessing,
+			List<String> copybookPaths) {
 		this.coordinator = new ParsingCoordinator();
 		coordinator.setFormat(format);
+		coordinator.setPreprocessing(preprocessing);
+
+		for (String path : copybookPaths)
+			coordinator.addCopybookPath(new File(path));
 	}
 
 	private void process(File source, File target) {

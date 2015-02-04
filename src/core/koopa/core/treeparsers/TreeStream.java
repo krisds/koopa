@@ -10,14 +10,25 @@ public class TreeStream {
 
 	protected static final Logger LOGGER = Logger.getLogger("treestream");
 
+	private final class Bookmark {
+		public final Tree current;
+		public final boolean started;
+
+		public Bookmark(Tree tree, boolean started) {
+			this.current = tree;
+			this.started = started;
+		}
+	}
+
 	private TreeStream parentStream;
 
 	private final Tree tree;
+	private Tree current;
+	private boolean started = false;
 
-	private Tree last;
-	private Tree node;
+	private final LinkedList<Bookmark> bookmarks;
 
-	private final LinkedList<Tree> bookmarks;
+	private boolean skip = false;
 
 	public TreeStream(Tree tree) {
 		this(null, tree);
@@ -27,9 +38,9 @@ public class TreeStream {
 		this.parentStream = parentStream;
 
 		this.tree = tree;
-		this.node = tree;
+		this.current = null;
 
-		this.bookmarks = new LinkedList<Tree>();
+		this.bookmarks = new LinkedList<Bookmark>();
 	}
 
 	/**
@@ -52,27 +63,35 @@ public class TreeStream {
 	 * Get the next {@linkplain Data} in the tree.
 	 */
 	public Data forward() {
-		last = node;
+		step();
 
-		if (node == null)
+		if (started && current == null)
 			return null;
 
-		Data datum = node.getData();
+		Data datum = current.getData();
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("[" + tree + "] Next data: " + datum);
-
-		step();
 
 		return datum;
 	}
 
 	private void step() {
-		if (node == null)
+		if (!started) {
+			current = tree;
+			started = true;
+			return;
+		}
+
+		if (current == null)
 			return;
 
-		if (stepToFirstChild())
-			return;
+		if (!skip) {
+			if (stepToFirstChild())
+				return;
+		}
+		
+		skip = false;
 
 		if (!canStepOut())
 			return;
@@ -87,12 +106,13 @@ public class TreeStream {
 	}
 
 	private boolean stepToFirstChild() {
-		if (node.getChildCount() > 0) {
+		if (current.getChildCount() > 0) {
 			// The node has child nodes. => Move to the first child.
-			node = (Tree) node.getChild(0);
+			current = (Tree) current.getChild(0);
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("[" + tree + "] Stepped to first child: " + node);
+				LOGGER.trace("[" + tree + "] Stepped to first child: "
+						+ current);
 
 			return true;
 		}
@@ -101,10 +121,10 @@ public class TreeStream {
 	}
 
 	private boolean canStepOut() {
-		Tree parent = (Tree) node.getParent();
+		Tree parent = (Tree) current.getParent();
 		if (parent == null) {
 			// The node has no children and no parent. => We're done.
-			node = null;
+			current = null;
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("[" + tree + "] There was only one node.");
@@ -116,14 +136,15 @@ public class TreeStream {
 	}
 
 	private boolean stepToNextSibling() {
-		Tree parent = (Tree) node.getParent();
+		Tree parent = (Tree) current.getParent();
 
-		if (node.getChildIndex() + 1 < parent.getChildCount()) {
+		if (current.getChildIndex() + 1 < parent.getChildCount()) {
 			// The node has more siblings. => Move to the next sibling.
-			node = (Tree) parent.getChild(node.getChildIndex() + 1);
+			current = (Tree) parent.getChild(current.getChildIndex() + 1);
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("[" + tree + "] Stepped to next sibling: " + node);
+				LOGGER.trace("[" + tree + "] Stepped to next sibling: "
+						+ current);
 
 			return true;
 		}
@@ -132,22 +153,23 @@ public class TreeStream {
 	}
 
 	private boolean stepToNextAncestralSibling() {
-		Tree parent = (Tree) node.getParent();
+		Tree parent = (Tree) current.getParent();
 
 		// The node has no more siblings. So we try to find the first ancestor
 		// node which does.
 		while (parent != null && parent != tree) {
-			node = parent;
-			parent = (Tree) node.getParent();
+			current = parent;
+			parent = (Tree) current.getParent();
 
 			if (parent != null
-					&& node.getChildIndex() + 1 < parent.getChildCount()) {
+					&& current.getChildIndex() + 1 < parent.getChildCount()) {
 				// This ancestor has more siblings. => Move to the next sibling.
-				node = (Tree) parent.getChild(node.getChildIndex() + 1);
+				current = (Tree) parent.getChild(current.getChildIndex() + 1);
 
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("[" + tree
-							+ "] Stepped to next sibling of ancestor: " + node);
+							+ "] Stepped to next sibling of ancestor: "
+							+ current);
 
 				return true;
 			}
@@ -157,7 +179,7 @@ public class TreeStream {
 	}
 
 	private void stepToEnd() {
-		node = null;
+		current = null;
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("[" + tree + "] No more nodes.");
@@ -168,10 +190,10 @@ public class TreeStream {
 	 * current node.
 	 */
 	public TreeStream forSubtree() {
-		if (last == null)
+		if (current == null)
 			return null;
 
-		final TreeStream subStream = new TreeStream(this, last);
+		final TreeStream subStream = new TreeStream(this, current);
 		// We step because we don't want the root to get matched again.
 		subStream.step();
 		return subStream;
@@ -183,17 +205,20 @@ public class TreeStream {
 	 * {@linkplain TreeStream#commit()}.
 	 */
 	public void bookmark() {
-		bookmarks.add(node);
+		bookmarks.add(new Bookmark(current, started));
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Bookmarking: " + node);
+			LOGGER.trace("[" + tree + "] Bookmarking: " + current);
 	}
 
 	/**
 	 * Moves the stream back towards the last bookmark, or to the last commit.
 	 */
 	public void rewind() {
-		node = bookmarks.removeLast();
+		Bookmark bookmark = bookmarks.removeLast();
+
+		current = bookmark.current;
+		started = bookmark.started;
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("[" + tree + "] Rewinding.");
@@ -230,26 +255,14 @@ public class TreeStream {
 		assert (this.parentStream != null);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Committing subtree.");
+			LOGGER.trace("[" + tree + "] Committing subtree on ["
+					+ parentStream.tree + "]");
 
-		if (parentStream.node == null)
-			return;
-
-		if (!parentStream.canStepOut())
-			return;
-
-		if (parentStream.stepToNextSibling())
-			return;
-
-		if (parentStream.stepToNextAncestralSibling())
-			return;
-
-		parentStream.stepToEnd();
-
+		parentStream.skip = true;
 		parentStream = null;
 	}
 
 	public Tree getTree() {
-		return last;
+		return current;
 	}
 }

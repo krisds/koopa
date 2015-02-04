@@ -105,9 +105,9 @@ public class TreeGrammarTest {
 				G.sequence(one, thousand),
 				tree("Hopper",
 						tree,
-						tree("quote", "One", "accurate", "measurement", "is",
-								"worth", "a", "thousand", "expert", "opinions",
-								".")));
+						tree("quote", "A", "thousand", "expert", "opinions",
+								"are", "not", "worth", "one", "accurate",
+								"measurement", ".")));
 	}
 
 	@Test
@@ -149,6 +149,13 @@ public class TreeGrammarTest {
 		shouldAccept(quotes, tree("quotes", tree("quote"), tree("author")));
 		shouldAccept(quotes, tree("quotes", tree("author")));
 		shouldReject(quotes, tree("quotes", tree("quote")));
+	}
+
+	@Test
+	public void canMatchEmptyTree() {
+		final TreeParser empty = G.scoped("empty");
+
+		shouldAccept(empty, tree("empty"));
 	}
 
 	@Test

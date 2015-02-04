@@ -242,6 +242,67 @@ public class TreeGrammarTest {
 		assertEquals(3, list.size());
 	}
 
+	@Test
+	public void willUseScopeCorrectly() {
+		final int[] count = new int[] { 0 };
+
+		FutureTreeParser list = G.scoped("list");
+
+		TreeParser cobolCounter = G.star(G.sequence(G.token("Cobol"),
+				G.apply(new Block() {
+					public void apply() {
+						// System.out.println("FOUND ONE");
+						count[0]++;
+					}
+				})));
+
+		list.setParser(cobolCounter);
+
+		TreeParser lists = G.star(list);
+
+		count[0] = 0;
+		shouldAccept(lists, null);
+		assertEquals(0, count[0]);
+
+		count[0] = 0;
+		shouldAccept(lists, token("Cobol"));
+		assertEquals(0, count[0]);
+
+		count[0] = 0;
+		shouldAccept(lists, tree("list", "Cobol"));
+		assertEquals(1, count[0]);
+
+		count[0] = 0;
+		shouldAccept(lists, tree("list", "PL/I"));
+		assertEquals(0, count[0]);
+
+		count[0] = 0;
+		shouldAccept(lists, tree("list", "PL/I", "Cobol", "FlowMatic", "Cobol"));
+		assertEquals(2, count[0]);
+
+		count[0] = 0;
+		shouldAccept(
+				lists,
+				tree("inventory",
+						tree("list", "PL/I", "Cobol", "FlowMatic", "Cobol")));
+		assertEquals(2, count[0]);
+
+		count[0] = 0;
+		shouldAccept(
+				lists,
+				tree("inventory", tree("list", "PL/I", "Cobol"), "FlowMatic",
+						"Cobol"));
+		assertEquals(1, count[0]);
+
+		count[0] = 0;
+		shouldAccept(
+				lists,
+				tree("inventory", tree("list", "PL/I", "Cobol"), "FlowMatic",
+						"Cobol", tree("list", "PL/I", "Cobol"), "FlowMatic",
+						"Cobol"));
+		assertEquals(2, count[0]);
+	}
+
 	private void shouldAccept(TreeParser parser, Tree tree) {
 		TreeStream stream = new TreeStream(tree);
 		Assert.assertTrue(parser.accepts(stream));

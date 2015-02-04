@@ -24,7 +24,7 @@ public class TreeGrammar {
 	protected Tree getCurrentTree() {
 		return (Tree) scope.getReference();
 	}
-	
+
 	public TreeParser token(final String text) {
 		return new TreeParser() {
 			public boolean accepts(TreeStream stream) {
@@ -62,18 +62,23 @@ public class TreeGrammar {
 
 					if (start == null) {
 						if (LOGGER.isTraceEnabled())
-							trace("<" + name + "> is <END OF (SUB)TREE> : no");
+							trace("SCOPED <" + name + "> at end of stream");
 						return false;
 					}
 
 					if (name.equalsIgnoreCase(start.getName())) {
-						if (LOGGER.isTraceEnabled())
-							push("<" + name + "> is " + start + " : ...");
+						if (parser == null) {
+							if (LOGGER.isTraceEnabled())
+								push("SCOPED <" + name
+										+ "> : yes (unconditional)");
 
-						if (parser == null)
 							return true;
+						}
 
 						TreeStream substream = stream.forSubtree();
+						if (LOGGER.isTraceEnabled())
+							push("SCOPED <" + name + "> scoping to " + start
+									+ " : ...");
 
 						Tree subTree = stream.getTree();
 						scope.enter(name, subTree);
@@ -84,7 +89,8 @@ public class TreeGrammar {
 						final boolean accepts = parser.accepts(substream);
 
 						if (LOGGER.isTraceEnabled())
-							pop("<" + name + "> is " + start + " : "
+							pop("SCOPED <" + name + "> accepts "
+									+ start.getName() + " : "
 									+ (accepts ? "yes" : "no"));
 
 						if (accepts)
@@ -98,7 +104,8 @@ public class TreeGrammar {
 					}
 
 					if (LOGGER.isTraceEnabled())
-						trace("<" + name + "> is " + start + " : no; skipping");
+						trace("SCOPED <" + name + "> matches " + start
+								+ " : no; skipping");
 				}
 			}
 		};

@@ -136,7 +136,7 @@ public class TreeStream {
 
 		// The node has no more siblings. So we try to find the first ancestor
 		// node which does.
-		do {
+		while (parent != null && parent != tree) {
 			node = parent;
 			parent = (Tree) node.getParent();
 
@@ -151,7 +151,7 @@ public class TreeStream {
 
 				return true;
 			}
-		} while (parent != null && parent != tree);
+		}
 
 		return false;
 	}

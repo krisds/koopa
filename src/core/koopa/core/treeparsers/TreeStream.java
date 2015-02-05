@@ -1,6 +1,6 @@
 package koopa.core.treeparsers;
 
-import java.util.LinkedList;
+import java.util.Stack;
 
 import koopa.core.data.Data;
 
@@ -13,10 +13,12 @@ public class TreeStream {
 	private final class Bookmark {
 		public final Tree current;
 		public final boolean started;
+		public final boolean skipping;
 
-		public Bookmark(Tree tree, boolean started) {
+		public Bookmark(Tree tree, boolean started, boolean skipping) {
 			this.current = tree;
 			this.started = started;
+			this.skipping = skipping;
 		}
 	}
 
@@ -26,7 +28,7 @@ public class TreeStream {
 	private Tree current;
 	private boolean started = false;
 
-	private final LinkedList<Bookmark> bookmarks;
+	private final Stack<Bookmark> bookmarks;
 
 	private boolean skip = false;
 
@@ -40,7 +42,10 @@ public class TreeStream {
 		this.tree = tree;
 		this.current = null;
 
-		this.bookmarks = new LinkedList<Bookmark>();
+		this.bookmarks = new Stack<Bookmark>();
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(trace("NEW"));
 	}
 
 	/**
@@ -71,7 +76,7 @@ public class TreeStream {
 		Data datum = current.getData();
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Next data: " + datum);
+			LOGGER.trace(trace(" -> " + datum));
 
 		return datum;
 	}
@@ -80,17 +85,24 @@ public class TreeStream {
 		if (!started) {
 			current = tree;
 			started = true;
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(trace("started"));
+
 			return;
 		}
 
 		if (current == null)
 			return;
 
+		if (skip && LOGGER.isTraceEnabled())
+			LOGGER.trace(trace("asked to skip to subtree"));
+
 		if (!skip) {
 			if (stepToFirstChild())
 				return;
 		}
-		
+
 		skip = false;
 
 		if (!canStepOut())
@@ -111,8 +123,7 @@ public class TreeStream {
 			current = (Tree) current.getChild(0);
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("[" + tree + "] Stepped to first child: "
-						+ current);
+				LOGGER.trace(trace("stepped to first child"));
 
 			return true;
 		}
@@ -125,12 +136,11 @@ public class TreeStream {
 		if (parent == null) {
 			// The node has no children and no parent. => We're done.
 			current = null;
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("[" + tree + "] There was only one node.");
-
 			return false;
 		}
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(trace("stepped out"));
 
 		return true;
 	}
@@ -143,8 +153,7 @@ public class TreeStream {
 			current = (Tree) parent.getChild(current.getChildIndex() + 1);
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("[" + tree + "] Stepped to next sibling: "
-						+ current);
+				LOGGER.trace(trace("stepped to next sibling"));
 
 			return true;
 		}
@@ -167,9 +176,7 @@ public class TreeStream {
 				current = (Tree) parent.getChild(current.getChildIndex() + 1);
 
 				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("[" + tree
-							+ "] Stepped to next sibling of ancestor: "
-							+ current);
+					LOGGER.trace(trace("stepped to next sibling of ancestor"));
 
 				return true;
 			}
@@ -182,7 +189,7 @@ public class TreeStream {
 		current = null;
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] No more nodes.");
+			LOGGER.trace(trace("stepped to end"));
 	}
 
 	/**
@@ -205,23 +212,24 @@ public class TreeStream {
 	 * {@linkplain TreeStream#commit()}.
 	 */
 	public void bookmark() {
-		bookmarks.add(new Bookmark(current, started));
+		bookmarks.push(new Bookmark(current, started, skip));
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Bookmarking: " + current);
+			LOGGER.trace(trace("bookmarked"));
 	}
 
 	/**
 	 * Moves the stream back towards the last bookmark, or to the last commit.
 	 */
 	public void rewind() {
-		Bookmark bookmark = bookmarks.removeLast();
+		Bookmark bookmark = bookmarks.pop();
 
 		current = bookmark.current;
 		started = bookmark.started;
+		skip = bookmark.skipping;
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Rewinding.");
+			LOGGER.trace(trace("rewound"));
 	}
 
 	/**
@@ -229,10 +237,10 @@ public class TreeStream {
 	 * rewind beyond this point again.
 	 */
 	public void commit() {
-		bookmarks.removeLast();
+		bookmarks.pop();
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Committing.");
+			LOGGER.trace(trace("committed"));
 	}
 
 	/**
@@ -242,10 +250,10 @@ public class TreeStream {
 	public void rewindSubtree() {
 		assert (this.parentStream != null);
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Rewinding subtree.");
-
 		this.parentStream = null;
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(trace("rewound subtree"));
 	}
 
 	/**
@@ -255,7 +263,7 @@ public class TreeStream {
 		assert (this.parentStream != null);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("[" + tree + "] Committing subtree on ["
+			LOGGER.trace("[" + tree + "] committing subtree on ["
 					+ parentStream.tree + "]");
 
 		parentStream.skip = true;
@@ -264,5 +272,18 @@ public class TreeStream {
 
 	public Tree getTree() {
 		return current;
+	}
+
+	private String trace(String msg) {
+		String label;
+		if (parentStream == null)
+			label = "[" + tree + "] ";
+		else
+			label = "[" + parentStream.tree + "//" + tree + "] ";
+
+		return label + msg + " - " + (started ? "started" : "pending")
+				+ (skip ? " skipping " : " ") + current + " // "
+				+ bookmarks.size() + "."
+				+ (bookmarks.isEmpty() ? "" : bookmarks.peek().current);
 	}
 }

@@ -17542,10 +17542,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("sectionName");
            sectionNameParser = future;
            future.setParser(
-               choice(
-                   cobolWord(),
-                   integer()
-               )
+               name()
            );
         }
 
@@ -17563,10 +17560,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("paragraphName");
            paragraphNameParser = future;
            future.setParser(
-               choice(
-                   cobolWord(),
-                   integer()
-               )
+               name()
            );
         }
 
@@ -17585,17 +17579,14 @@ public class CobolGrammar extends CobolBaseGrammar {
            procedureNameParser = future;
            future.setParser(
                sequence(
-                   choice(
-                       cobolWord(),
-                       integer()
-                   ),
+                   name(),
                    optional(
                        sequence(
                            choice(
                                token("IN"),
                                token("OF")
                            ),
-                           cobolWord()
+                           sectionName()
                        )
                    )
                )
@@ -17603,6 +17594,27 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return procedureNameParser;
+    }
+
+    // ========================================================
+    // name
+    // ........................................................
+
+    private Parser nameParser = null;
+
+    public Parser name() {
+        if (nameParser == null) {
+           FutureParser future = scoped("name");
+           nameParser = future;
+           future.setParser(
+               choice(
+                   cobolWord(),
+                   integer()
+               )
+           );
+        }
+
+        return nameParser;
     }
 
     // ========================================================

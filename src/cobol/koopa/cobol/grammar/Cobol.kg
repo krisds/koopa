@@ -4052,24 +4052,26 @@ end
 
 # Section name.
 def sectionName =
-	( cobolWord
-	| integer
-	)
+	name
 end
 
 # Paragraph name.
 def paragraphName =
+	name
+end
+
+# "A procedure-name is a word used to refer to a paragraph or section in the 
+# source element in which it occurs. It consists of a paragraph-name (that may 
+# be qualified) or a section-name."
+# -- ISO/IEC 1989:20xx FCD 1.0 (E); section 14.4
+def procedureName =
+    name [ ( IN | OF ) sectionName	]
+end
+
+def name =
 	( cobolWord
 	| integer
 	)
-end
-
-# Procedure name.
-def procedureName =
-    ( cobolWord
-    | integer
-    )
-    [ ( IN | OF ) cobolWord ]
 end
 
 # Segment number.

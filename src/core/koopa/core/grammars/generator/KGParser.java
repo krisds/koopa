@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KG.g 2015-02-01 13:53:39
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KG.g
 
   package koopa.core.grammars.generator;
 
@@ -169,7 +169,7 @@ public class KGParser extends Parser {
 
 
             // AST REWRITE
-            // elements: meta, rule
+            // elements: rule, meta
             // token labels: 
             // rule labels: retval
             // token list labels: 
@@ -310,7 +310,7 @@ public class KGParser extends Parser {
 
 
             // AST REWRITE
-            // elements: n, s, s, n, n, n
+            // elements: s, n, n, s, n, n
             // token labels: s, n
             // rule labels: retval
             // token list labels: 
@@ -567,7 +567,7 @@ public class KGParser extends Parser {
 
 
             // AST REWRITE
-            // elements: r, sequence, sequence, i, i, r, i, sequence, i, locals, locals, sequence
+            // elements: i, locals, sequence, sequence, sequence, i, r, r, i, i, sequence, locals
             // token labels: r, i
             // rule labels: retval
             // token list labels: 
@@ -1377,7 +1377,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: a, b, IDENTIFIER
+                    // elements: a, IDENTIFIER, b
                     // token labels: b, a
                     // rule labels: retval
                     // token list labels: 
@@ -1506,7 +1506,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: more, sequence, more, r, sequence, sequence, sequence, r
+                    // elements: r, sequence, sequence, more, sequence, r, more, sequence
                     // token labels: r
                     // rule labels: retval
                     // token list labels: 
@@ -1667,7 +1667,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: r, sequence, sequence, r, more, more, sequence, sequence
+                    // elements: r, more, more, r, sequence, sequence, sequence, sequence
                     // token labels: r
                     // rule labels: retval
                     // token list labels: 
@@ -1800,7 +1800,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: SKIP_TO, part
+                    // elements: part, SKIP_TO
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -1979,7 +1979,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: dispatch, more_dispatch, dispatch
+                    // elements: more_dispatch, dispatch, dispatch
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -2039,7 +2039,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: part, NOT
+                    // elements: NOT, part
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -2080,7 +2080,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: NOSKIP, part
+                    // elements: part, NOSKIP
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -2130,7 +2130,7 @@ public class KGParser extends Parser {
 
 
                     // AST REWRITE
-                    // elements: part, LIMIT, part
+                    // elements: LIMIT, part, part
                     // token labels: 
                     // rule labels: retval
                     // token list labels: 
@@ -2291,7 +2291,7 @@ public class KGParser extends Parser {
 
 
             // AST REWRITE
-            // elements: sequence, IDENTIFIER
+            // elements: IDENTIFIER, sequence
             // token labels: 
             // rule labels: retval
             // token list labels: 

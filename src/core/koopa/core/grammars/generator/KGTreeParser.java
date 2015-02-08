@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KGTreeParser.g 2015-02-01 13:53:40
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/generator/KGTreeParser.g
 
   package koopa.core.grammars.generator;
 

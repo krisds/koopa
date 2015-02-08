@@ -50,6 +50,9 @@
 		<copy todir="build/">
 			<fileset dir="src/core/" excludes="**/*.java,**/*.g" />
 		</copy>
+
+		<echo>Suppressing date and time info in ANTLR generated files...</echo>
+		<suppress-antlr-header path="src/core/" />
 	</target>
 
 	<!-- CORE TESTS -->
@@ -92,7 +95,7 @@
 
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
-			
+
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
 
 			<test name="koopa.core.trees.test.XMLSerializerTest" />
@@ -203,7 +206,7 @@
 	<target name="examples" depends="core,cobol">
 		<echo>Generating the parsers...</echo>
 		<kgg path="examples/" />
-		
+
 		<echo>Compiling example classes...</echo>
 		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
 			<classpath>
@@ -282,6 +285,23 @@
 				<arg value="-lib" />
 				<arg value="@{tokens}" />
 				<arg value="@{grammar}" />
+			</java>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="suppress-antlr-header">
+		<attribute name="path" />
+		<sequential>
+			<java classname="koopa.core.util.SuppressANTLRGeneratedHeaders" fork="true">
+				<jvmarg value="-ea" />
+				<arg value="@{path}" />
+				<classpath>
+					<pathelement path="build/" />
+					<fileset dir="lib">
+						<include name="*.jar" />
+					</fileset>
+					<pathelement path="${java.class.path}" />
+				</classpath>
 			</java>
 		</sequential>
 	</macrodef>

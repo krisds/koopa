@@ -1,4 +1,4 @@
-// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/StageTreeParser.g 2015-02-01 13:53:45
+// $ANTLR 3.1.1 src/core/koopa/core/grammars/test/generator/StageTreeParser.g
 
   package koopa.core.grammars.test.generator;
 

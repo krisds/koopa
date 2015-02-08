@@ -3505,6 +3505,8 @@ end
 def xmlGenerateStatement =
     XML GENERATE identifier FROM identifier
     [COUNT [IN] identifier]
+    [WITH ENCODING cobolWord]
+    [WITH XML-DECLARATION]
     [[ON] EXCEPTION nestedStatements]
     [NOT [ON] EXCEPTION nestedStatements]
     [END-XML]

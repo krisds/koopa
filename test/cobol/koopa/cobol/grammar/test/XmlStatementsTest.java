@@ -90,10 +90,10 @@ public class XmlStatementsTest extends TestCase {
     }
 
     @Test
-    public void testXmlParseStatement_9() {
-      Parser parser = grammar.xmlParseStatement();
+    public void testXmlGenerateStatement_9() {
+      Parser parser = grammar.xmlGenerateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML GENERATE FWP05-DES-DATOS FROM mensaje\n     COUNT IN W-CONTADOR\n     WITH ENCODING W-ENCODING\n     WITH XML-DECLARATION "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -102,7 +102,7 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_10() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -111,7 +111,7 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_11() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar\n   END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo END-XML "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -120,7 +120,7 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_12() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar THROUGH baz\n   END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar\n   END-XML "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -129,7 +129,7 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_13() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar THRU baz\n   END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar THROUGH baz\n   END-XML "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -138,7 +138,7 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_14() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     ON EXCEPTION PERFORM p1\n   END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar THRU baz\n   END-XML "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -147,7 +147,7 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_15() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     ON EXCEPTION PERFORM p1\n     NOT ON EXCEPTION PERFORM p2\n   END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     ON EXCEPTION PERFORM p1\n   END-XML "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -156,13 +156,22 @@ public class XmlStatementsTest extends TestCase {
     public void testXmlParseStatement_16() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     NOT ON EXCEPTION PERFORM p2\n   END-XML "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     ON EXCEPTION PERFORM p1\n     NOT ON EXCEPTION PERFORM p2\n   END-XML "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testXmlParseStatement_17() {
+      Parser parser = grammar.xmlParseStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     NOT ON EXCEPTION PERFORM p2\n   END-XML "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testXmlParseStatement_18() {
       Parser parser = grammar.xmlParseStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XML PARSE foo\n     PROCESSING PROCEDURE IS bar THROUGH baz\n     ON EXCEPTION PERFORM p1\n     NOT ON EXCEPTION PERFORM p2\n   END-XML "));

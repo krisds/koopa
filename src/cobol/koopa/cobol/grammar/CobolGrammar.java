@@ -15393,6 +15393,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    optional(
                        sequence(
+                           token("WITH"),
+                           token("ENCODING"),
+                           cobolWord()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("WITH"),
+                           token("XML-DECLARATION")
+                       )
+                   ),
+                   optional(
+                       sequence(
                            optional(
                                token("ON")
                            ),

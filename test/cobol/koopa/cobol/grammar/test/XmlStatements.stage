@@ -35,6 +35,15 @@ target xmlGenerateStatement;
      NOT ON EXCEPTION PERFORM p2
    END-XML ]
 
+   
+# Issue #52; by Inaki GE.
++[ XML GENERATE FWP05-DES-DATOS FROM mensaje
+     COUNT IN W-CONTADOR
+     WITH ENCODING W-ENCODING
+     WITH XML-DECLARATION ]
+
+
+
 target xmlParseStatement;
 
 +[ XML PARSE foo ]
@@ -71,4 +80,3 @@ target xmlParseStatement;
      ON EXCEPTION PERFORM p1
      NOT ON EXCEPTION PERFORM p2
    END-XML ]
-   

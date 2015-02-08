@@ -1928,8 +1928,9 @@ end
 ## COMMIT statement.
 ## -----------------------------------------------------------------------------
 
+# Seen in PERCobol Language Reference Manual.
 def commitStatement =
-    COMMIT
+    COMMIT [TRANSACTION]
 end
 
 # MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF808.html
@@ -2884,7 +2885,7 @@ def performStatement =
         | until
         | varying
         ]
-        ( nestedStatements END-PERFORM | statement | END-PERFORM )
+        ( nestedStatements END-PERFORM | statement -THRU -THROUGH | END-PERFORM )
         
     | # Perform procedureName
         procedureName [(THROUGH | THRU) procedureName]

@@ -102,7 +102,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		RESERVED_WORDS.add("COLUMN");
 		RESERVED_WORDS.add("COLUMNS");
 		RESERVED_WORDS.add("COMMA");
-		RESERVED_WORDS.add("COMMIT");
+		// RESERVED_WORDS.add("COMMIT");
 		RESERVED_WORDS.add("COMMON");
 		RESERVED_WORDS.add("COMMUNICATION");
 		RESERVED_WORDS.add("COMP");

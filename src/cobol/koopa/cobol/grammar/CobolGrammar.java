@@ -8758,7 +8758,12 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("commitStatement");
            commitStatementParser = future;
            future.setParser(
-               token("COMMIT")
+               sequence(
+                   token("COMMIT"),
+                   optional(
+                       token("TRANSACTION")
+                   )
+               )
            );
         }
 
@@ -12815,7 +12820,15 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    nestedStatements(),
                                    token("END-PERFORM")
                                ),
-                               statement(),
+                               sequence(
+                                   statement(),
+                                   not(
+                                       token("THRU")
+                                   ),
+                                   not(
+                                       token("THROUGH")
+                                   )
+                               ),
                                token("END-PERFORM")
                            )
                        ),

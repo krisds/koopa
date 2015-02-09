@@ -15393,15 +15393,51 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    optional(
                        sequence(
-                           token("WITH"),
+                           optional(
+                               token("WITH")
+                           ),
                            token("ENCODING"),
                            cobolWord()
                        )
                    ),
                    optional(
                        sequence(
-                           token("WITH"),
+                           optional(
+                               token("WITH")
+                           ),
                            token("XML-DECLARATION")
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("ATTRIBUTES")
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("NAMESPACE"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               identifier(),
+                               literal()
+                           ),
+                           optional(
+                               sequence(
+                                   token("NAMESPACE-PREFIX"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   choice(
+                                       identifier(),
+                                       literal()
+                                   )
+                               )
+                           )
                        )
                    ),
                    optional(

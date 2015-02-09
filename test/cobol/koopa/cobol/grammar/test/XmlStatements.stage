@@ -17,6 +17,44 @@ target xmlGenerateStatement;
    END-XML ]
    
 +[ XML GENERATE foo FROM bar
+     WITH ENCODING SOME-ENCODING
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     ENCODING SOME-ENCODING
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     WITH XML-DECLARATION
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     XML-DECLARATION
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     WITH ATTRIBUTES
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     ATTRIBUTES
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     NAMESPACE IS NS
+     NAMESPACE-PREFIX IS NP
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     NAMESPACE NS
+     NAMESPACE-PREFIX NP
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
+     NAMESPACE IS NS
+   END-XML ]
+   
++[ XML GENERATE foo FROM bar
      ON EXCEPTION PERFORM p1
    END-XML ]
 

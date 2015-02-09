@@ -3502,11 +3502,16 @@ end
 ## XML GENERATE statement.
 ## -----------------------------------------------------------------------------
 
+# Based on "Cobol zOS Language Reference".
 def xmlGenerateStatement =
     XML GENERATE identifier FROM identifier
     [COUNT [IN] identifier]
-    [WITH ENCODING cobolWord]
-    [WITH XML-DECLARATION]
+    [[WITH] ENCODING cobolWord]
+    [[WITH] XML-DECLARATION]
+    [[WITH] ATTRIBUTES]
+    [NAMESPACE [IS] (identifier | literal)
+       [NAMESPACE-PREFIX [IS] (identifier | literal)]
+    ]
     [[ON] EXCEPTION nestedStatements]
     [NOT [ON] EXCEPTION nestedStatements]
     [END-XML]

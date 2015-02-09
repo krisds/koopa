@@ -135,18 +135,26 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 					}
 
 					File copybook = cobolParser.lookup(textName, libraryName);
+					if (copybook == null) {
+						LOGGER.error("Missing copybook " + textName + " in "
+								+ libraryName);
 
-					LOGGER.debug("Found copybook at " + copybook);
-
-					try {
-						// TODO Pass along ParseResults somehow ?
-						copybookTokenizer = cobolParser
-								.getNewTokenizationStage(null, new FileReader(
-										copybook));
-
-					} catch (FileNotFoundException e) {
-						LOGGER.error("Problem while reading copybook.", e);
 						unsupportedDirective = directive;
+
+					} else {
+
+						LOGGER.debug("Found copybook at " + copybook);
+
+						try {
+							// TODO Pass along ParseResults somehow ?
+							copybookTokenizer = cobolParser
+									.getNewTokenizationStage(null,
+											new FileReader(copybook));
+
+						} catch (FileNotFoundException e) {
+							LOGGER.error("Problem while reading copybook.", e);
+							unsupportedDirective = directive;
+						}
 					}
 				}
 

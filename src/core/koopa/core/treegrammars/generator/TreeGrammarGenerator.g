@@ -95,14 +95,14 @@ rule
       b=body[bindings, unbindings]
       { if (r != null) {
           List<StringTemplate> steps = new LinkedList<StringTemplate>();
-          steps.add(b.st);
-          steps.add(r.st);
+          steps.add($b.st);
+          steps.add($r.st);
           bod = %sequence(
             step={steps}
           );
           
         } else {
-          bod = b.st;
+          bod = $b.st;
         }
       }
     )
@@ -138,7 +138,7 @@ body [ List<String> bindings, List<String> unbindings ]
   : { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
     ^(SEQUENCE 
       (b=body[bindings, unbindings]
-        { steps.add(b.st); }
+        { steps.add($b.st); }
       )+
     )
     
@@ -233,7 +233,7 @@ body [ List<String> bindings, List<String> unbindings ]
   | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
     ^(CHOICE
       (b=body[bindings, unbindings]
-        { steps.add(b.st); }
+        { steps.add($b.st); }
       )+
     )
     

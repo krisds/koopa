@@ -18,18 +18,30 @@
 
 	<target name="core-generate">
 		<echo>Generating the Koopa grammar generator...</echo>
-		<antlr-gen grammar="src/core/koopa/core/grammars/generator/KG.g" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGTreeParser.g" tokens="src/core/koopa/core/grammars/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGGenerator.g" tokens="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen grammar="src/core/koopa/core/grammars/generator/KG.g" 
+			output="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGTreeParser.g" 
+			output="src/core/koopa/core/grammars/generator/"
+			tokens="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGGenerator.g"  
+			output="src/core/koopa/core/grammars/generator/"
+			tokens="src/core/koopa/core/grammars/generator/" />
 
 		<echo>Generating the Koopa tree parser generator...</echo>
-		<copy file="src/core/koopa/core/grammars/generator/KG.tokens" tofile="src/core/koopa/core/treegrammars/generator/KG.tokens" />
-		<antlr-gen2 grammar="src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g" tokens="src/core/koopa/core/treegrammars/generator/" />
+		<copy file="src/core/koopa/core/grammars/generator/KG.tokens" 
+			  tofile="src/core/koopa/core/treegrammars/generator/KG.tokens" />
+		<antlr-gen grammar="src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g" 
+			output="src/core/koopa/core/treegrammars/generator/" />
 
 		<echo>Generating the Koopa test generator...</echo>
-		<antlr-gen grammar="src/core/koopa/core/grammars/test/generator/Stage.g" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageTreeParser.g" tokens="src/core/koopa/core/grammars/test/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageGenerator.g" tokens="src/core/koopa/core/grammars/test/generator/" />
+		<antlr-gen grammar="src/core/koopa/core/grammars/test/generator/Stage.g"
+			output="src/core/koopa/core/grammars/test/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageTreeParser.g"
+			output="src/core/koopa/core/grammars/test/generator/"
+			tokens="src/core/koopa/core/grammars/test/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageGenerator.g"
+			output="src/core/koopa/core/grammars/test/generator/"
+			tokens="src/core/koopa/core/grammars/test/generator/"/>
 	</target>
 
 	<target name="core-build">
@@ -268,11 +280,14 @@
 
 	<macrodef name="antlr-gen">
 		<attribute name="grammar" />
+		<attribute name="output" />
 		<sequential>
 			<java classname="org.antlr.Tool" fork="true">
 				<classpath>
-					<pathelement location="lib/antlr-3.1.1.jar" />
+					<pathelement location="lib/antlr-3.5.2-complete.jar" />
 				</classpath>
+				<arg value="-fo" />
+				<arg value="@{output}" />
 				<arg value="@{grammar}" />
 			</java>
 		</sequential>
@@ -281,13 +296,16 @@
 	<macrodef name="antlr-gen2">
 		<attribute name="grammar" />
 		<attribute name="tokens" />
+		<attribute name="output" />
 		<sequential>
 			<java classname="org.antlr.Tool" fork="true">
 				<classpath>
-					<pathelement location="lib/antlr-3.1.1.jar" />
+					<pathelement location="lib/antlr-3.5.2-complete.jar" />
 				</classpath>
 				<arg value="-lib" />
 				<arg value="@{tokens}" />
+				<arg value="-fo" />
+				<arg value="@{output}" />
 				<arg value="@{grammar}" />
 			</java>
 		</sequential>

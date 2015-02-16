@@ -93,14 +93,14 @@ rule
       b=body[bindings, unbindings]
       { if (r != null) {
           List<StringTemplate> steps = new LinkedList<StringTemplate>();
-          steps.add(b.st);
-          steps.add(r.st);
+          steps.add($b.st);
+          steps.add($r.st);
           bod = %sequence(
             step={steps}
           );
           
         } else {
-          bod = b.st;
+          bod = $b.st;
         }
       }
     )
@@ -136,7 +136,7 @@ body [ List<String> bindings, List<String> unbindings ]
   : { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
     ^(SEQUENCE
       (b=body[bindings, unbindings]
-        { steps.add(b.st); }
+        { steps.add($b.st); }
       )+
     )
     
@@ -248,7 +248,7 @@ body [ List<String> bindings, List<String> unbindings ]
   | { List<StringTemplate> steps = new LinkedList<StringTemplate>(); }
     ^(CHOICE
       (b=body[bindings, unbindings]
-        { steps.add(b.st); }
+        { steps.add($b.st); }
       )+
     )
     
@@ -261,7 +261,7 @@ body [ List<String> bindings, List<String> unbindings ]
     }
     ^(DISPATCHED
       (c=caze
-        { keys.add(c.key); rules.add(c.body); }
+        { keys.add($c.key); rules.add($c.body); }
       )+
     )
     
@@ -285,7 +285,7 @@ body [ List<String> bindings, List<String> unbindings ]
   | { List<StringTemplate> choices = new LinkedList<StringTemplate>(); }
     ^(PERMUTED
       (b=body[bindings, unbindings]
-        { choices.add(b.st); }
+        { choices.add($b.st); }
       )+
     )
 
@@ -319,6 +319,6 @@ caze returns [ String key, StringTemplate body ]
   : ^(CASE i=IDENTIFIER b=body[null, null])
   
     { $key = ((CommonTree) i).getText();
-      $body = b.st;
+      $body = $b.st;
     }
   ;

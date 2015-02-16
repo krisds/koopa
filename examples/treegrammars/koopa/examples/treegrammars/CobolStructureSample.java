@@ -8,6 +8,7 @@ import java.util.List;
 
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.cobol.CobolParser;
+import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
@@ -88,7 +89,7 @@ public class CobolStructureSample {
 	private static boolean acceptedByCobolStructureTreeParser(Tree tree) {
 		// System.out.println(tree.toStringTree());
 
-		TreeStream stream = new TreeStream(tree);
+		TreeStream stream = new BasicTreeStream(tree);
 
 		CobolStructureTreeGrammar grammar = new CobolStructureTreeGrammar();
 		TreeParser parser = grammar.compilationGroup();

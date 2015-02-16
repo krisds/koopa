@@ -69,6 +69,11 @@ choice(step) ::= <<choice(
 
 any() ::= <<any()>>
 
+limit(target, limiter) ::= <<limited(
+    $target$,
+    $limiter$
+)>>
+
 
 assign(name, value) ::= <<assign("$name$", $value$)>>
 

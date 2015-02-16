@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
@@ -17,7 +18,7 @@ public class CobolOutlineTreeProcessor implements TreeProcessor {
 		final boolean isCopybook = file.getName().toUpperCase()
 				.endsWith(".CPY");
 
-		TreeStream stream = new TreeStream(tree);
+		TreeStream stream = new BasicTreeStream(tree);
 		CobolOutlineTreeGrammar grammar = new CobolOutlineTreeGrammar();
 
 		TreeParser parser = isCopybook ? grammar.copybook() : grammar

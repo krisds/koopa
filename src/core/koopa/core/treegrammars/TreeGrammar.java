@@ -7,7 +7,9 @@ import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.grammars.Block;
+import koopa.core.grammars.Opt;
 import koopa.core.treeparsers.FutureTreeParser;
+import koopa.core.treeparsers.LimitedTreeStream;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
@@ -21,6 +23,8 @@ public class TreeGrammar {
 
 	protected final ParsingContext scope = new ParsingContext();
 
+	private boolean noskip = false;
+
 	protected Tree getCurrentTree() {
 		return (Tree) scope.getReference();
 	}
@@ -29,13 +33,26 @@ public class TreeGrammar {
 		return new TreeParser() {
 			public boolean accepts(TreeStream stream) {
 				while (true) {
-					Token token = stream.forward(Token.class);
+					Data data = stream.forward();
 
-					if (token == null) {
+					if (data == null) {
 						if (LOGGER.isTraceEnabled())
 							trace(text + " =~ <END OF (SUB)TREE> : no");
 						return false;
 					}
+
+					if (!(data instanceof Token)) {
+						if (noskip) {
+							if (LOGGER.isTraceEnabled())
+								trace("not a token: " + data + "; not skipping");
+
+							return false;
+						}
+
+						continue;
+					}
+
+					Token token = (Token) data;
 
 					if (text.equalsIgnoreCase(token.getText())) {
 						if (LOGGER.isTraceEnabled())
@@ -45,6 +62,13 @@ public class TreeGrammar {
 						scope.assignLValue(stream.getTree());
 
 						return true;
+					}
+
+					if (noskip) {
+						if (LOGGER.isTraceEnabled())
+							trace(text + " =~ " + token + " : no; not skipping");
+
+						return false;
 					}
 
 					if (LOGGER.isTraceEnabled())
@@ -58,13 +82,26 @@ public class TreeGrammar {
 		return new FutureTreeParser() {
 			public boolean accepts(TreeStream stream) {
 				while (true) {
-					Start start = stream.forward(Start.class);
+					Data data = stream.forward();
 
-					if (start == null) {
+					if (data == null) {
 						if (LOGGER.isTraceEnabled())
 							trace("SCOPED <" + name + "> at end of stream");
 						return false;
 					}
+
+					if (!(data instanceof Start)) {
+						if (noskip) {
+							if (LOGGER.isTraceEnabled())
+								trace("not a node: " + data + "; not skipping");
+
+							return false;
+						}
+
+						continue;
+					}
+
+					Start start = (Start) data;
 
 					if (name.equalsIgnoreCase(start.getName())) {
 						if (parser == null) {
@@ -101,6 +138,14 @@ public class TreeGrammar {
 						scope.leave(name);
 
 						return accepts;
+					}
+
+					if (noskip) {
+						if (LOGGER.isTraceEnabled())
+							trace("SCOPED <" + name + "> matches " + start
+									+ " : no; not skipping");
+
+						return false;
 					}
 
 					if (LOGGER.isTraceEnabled())
@@ -365,6 +410,43 @@ public class TreeGrammar {
 			public boolean accepts(TreeStream stream) {
 				scope.setReturnValueFrom(name);
 				return true;
+			}
+		};
+	}
+
+	public TreeParser limited(final TreeParser target, final TreeParser limiter) {
+		return new TreeParser() {
+			public boolean accepts(TreeStream stream) {
+				return target.accepts(new LimitedTreeStream(stream, limiter));
+			}
+		};
+	}
+
+	public TreeParser opt(final Opt opt, final TreeParser parser) {
+		return new TreeParser() {
+			public boolean accepts(TreeStream stream) {
+				boolean prv = false;
+
+				switch (opt) {
+				case NOSKIP:
+					prv = noskip;
+					noskip = true;
+					if (LOGGER.isTraceEnabled())
+						trace("%noskip: " + noskip);
+					break;
+				}
+
+				final boolean accepts = parser.accepts(stream);
+
+				switch (opt) {
+				case NOSKIP:
+					noskip = prv;
+					if (LOGGER.isTraceEnabled())
+						trace("%noskip: " + noskip);
+					break;
+				}
+
+				return accepts;
 			}
 		};
 	}

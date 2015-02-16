@@ -73,6 +73,12 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	               optional(
 	                   declaratives()
 	               ),
+	               limited(
+	                   star(
+	                       paragraph()
+	                   ),
+	                   section()
+	               ),
 	               star(
 	                   section()
 	               ),

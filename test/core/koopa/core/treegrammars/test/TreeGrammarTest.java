@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import koopa.core.grammars.Block;
+import koopa.core.grammars.Opt;
 import koopa.core.treegrammars.TreeGrammar;
+import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
@@ -310,13 +312,55 @@ public class TreeGrammarTest {
 		assertEquals(2, count[0]);
 	}
 
+	@Test
+	public void canMatchWithLimit() {
+		FutureTreeParser limiter = G.scoped("list");
+		limiter.setParser(G.any());
+
+		final int[] count = new int[] { 0 };
+
+		TreeParser cobolCounter = G.star(G.sequence(G.token("Cobol"),
+				G.apply(new Block() {
+					public void apply() {
+						// System.out.println("FOUND ONE");
+						count[0]++;
+					}
+				})));
+
+		TreeParser limitedCobolCounter = G.limited(cobolCounter,
+				G.opt(Opt.NOSKIP, limiter));
+
+		count[0] = 0;
+		shouldAccept(
+				limitedCobolCounter,
+				tree("inventory", tree("list", "PL/I", "Cobol"),
+						tree("list", "PL/I", "Cobol")));
+		assertEquals(0, count[0]);
+
+		count[0] = 0;
+		shouldAccept(
+				limitedCobolCounter,
+				tree("inventory", tree("list", "PL/I", "Cobol"), "FlowMatic",
+						"Cobol", tree("list", "PL/I", "Cobol"), "FlowMatic",
+						"Cobol"));
+		assertEquals(0, count[0]);
+
+		count[0] = 0;
+		shouldAccept(
+				limitedCobolCounter,
+				tree("inventory", "Cobol", "FlowMatic", "Cobol", "PL/I",
+						tree("list", "PL/I", "Cobol"), "FlowMatic", "Cobol",
+						tree("list", "PL/I", "Cobol"), "FlowMatic", "Cobol"));
+		assertEquals(2, count[0]);
+	}
+
 	private void shouldAccept(TreeParser parser, Tree tree) {
-		TreeStream stream = new TreeStream(tree);
+		TreeStream stream = new BasicTreeStream(tree);
 		Assert.assertTrue(parser.accepts(stream));
 	}
 
 	private void shouldReject(TreeParser parser, Tree tree) {
-		TreeStream stream = new TreeStream(tree);
+		TreeStream stream = new BasicTreeStream(tree);
 		Assert.assertFalse(parser.accepts(stream));
 	}
 }

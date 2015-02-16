@@ -264,4 +264,11 @@ body [ List<String> bindings, List<String> unbindings ]
       (body[bindings, unbindings]
       )+
     )
+    
+  | ^(LIMIT b_t=body[bindings, unbindings] b_l=body[bindings, unbindings])
+  
+    -> limit(
+      target = {b_t},
+      limiter = {b_l}
+    )
   ;

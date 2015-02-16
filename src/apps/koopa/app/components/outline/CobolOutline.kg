@@ -15,6 +15,9 @@ def compilationUnit (Tree name) =
     { push(new Reference(getCurrentTree(), name.getProgramText(), PROGRAM_ICON)); }
     
     [declaratives]
+    
+    %limit (paragraph)* %by section
+    
 	(section)*
 	(paragraph)*
 

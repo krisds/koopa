@@ -96,6 +96,10 @@
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
 
+			<test name="koopa.core.treeparsers.test.TreeWalkerTest" />
+			<test name="koopa.core.treeparsers.test.TreeStreamTest" />
+			<test name="koopa.core.treegrammars.test.TreeGrammarTest" />
+			
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
 
 			<test name="koopa.core.trees.test.XMLSerializerTest" />

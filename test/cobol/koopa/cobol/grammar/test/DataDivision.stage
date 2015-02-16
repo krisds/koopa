@@ -18,6 +18,16 @@ target redefines;
 +[ REDEFINES TEST-1 ]
 
 
+target picture;
+
+# Samples by Inaki GE.
++[ PIC Z.ZZZ.ZZ9,99 ]
++[ PIC ---.---.--9 ]
++[ PIC 99999999.999 ]
++[ PIC ZZZZZ9.99999 ]
++[ PIC Z99.99 ]
+
+
 target blankWhenZero;
 
 +[ BLANK WHEN ZERO ]

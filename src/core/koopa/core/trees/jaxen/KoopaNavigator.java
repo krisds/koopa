@@ -5,6 +5,7 @@ import java.util.Iterator;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.treeparsers.Tree;
 
 import org.apache.log4j.Logger;
@@ -342,7 +343,25 @@ public class KoopaNavigator extends DefaultNavigator {
 	}
 
 	public boolean isComment(Object foo) {
-		return false;
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.isComment(" + foo + ")");
+
+		if (!(foo instanceof Tree))
+			return false;
+
+		final Tree tree = (Tree) foo;
+
+		Data data = tree.getData();
+		if (!(data instanceof Token))
+			return false;
+
+		Token token = (Token) data;
+		final boolean isComment = token.hasTag(AreaTag.COMMENT);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + isComment);
+
+		return isComment;
 	}
 
 	public boolean isDocument(Object foo) {
@@ -387,15 +406,16 @@ public class KoopaNavigator extends DefaultNavigator {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("KoopaNavigator.isText(" + foo + ")");
 
-		if (foo instanceof Tree) {
-			final Tree tree = (Tree) foo;
-			final Data koopa = tree.getData();
-
-			return (koopa instanceof Token);
-
-		} else {
+		if (isComment(foo))
 			return false;
-		}
+
+		if (!(foo instanceof Tree))
+			return false;
+
+		final Tree tree = (Tree) foo;
+		final Data koopa = tree.getData();
+
+		return koopa instanceof Token;
 	}
 
 	public XPath parseXPath(String foo) throws SAXPathException {

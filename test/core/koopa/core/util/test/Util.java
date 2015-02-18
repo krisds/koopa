@@ -41,9 +41,12 @@ public final class Util {
 		return tree;
 	}
 
-	public static Tree token(String text) {
+	public static Tree token(String text, Object... tags) {
 		Position start = new Position(0, 0, 0);
 		Token token = new Token(text, start, start.offsetBy(text.length()));
+
+		if (tags != null)
+			token = token.withTags(tags);
 
 		Tree tree = new Tree(token);
 

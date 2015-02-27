@@ -14,7 +14,8 @@ end
 
 # Copybook. This is just a guess at the likely suspect(s).
 def copybook =
-    ( copybookHoldingData
+    ( (compilationUnit)+
+    | copybookHoldingData
     | copybookHoldingBehaviour
     )
 end

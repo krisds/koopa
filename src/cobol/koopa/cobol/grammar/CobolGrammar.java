@@ -65,6 +65,9 @@ public class CobolGrammar extends CobolBaseGrammar {
            copybookParser = future;
            future.setParser(
                choice(
+                   plus(
+                       compilationUnit()
+                   ),
                    copybookHoldingData(),
                    copybookHoldingBehaviour()
                )

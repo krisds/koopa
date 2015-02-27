@@ -18,14 +18,28 @@ import org.junit.Test;
 public class JaxenTest extends TestCase {
 
 	@Test
-	public void testMatchesRoot() throws IOException {
+	public void testMatchesRootName() throws IOException {
 		Tree leaf = token("leaf");
 		Tree branch = tree("branch", leaf);
-		Tree root = tree("branch", branch);
+		Tree root = tree("root", branch);
 		Tree document = tree("koopa", root);
 
 		// TODO Is it always List<Tree> ?
-		List<?> matches = Jaxen.evaluate(document, "/branch");
+		List<?> matches = Jaxen.evaluate(document, "/*[local-name()='root']");
+
+		Assert.assertEquals(1, matches.size());
+		Assert.assertSame(root, matches.get(0));
+	}
+
+	@Test
+	public void testMatchesRoot() throws IOException {
+		Tree leaf = token("leaf");
+		Tree branch = tree("branch", leaf);
+		Tree root = tree("root", branch);
+		Tree document = tree("koopa", root);
+
+		// TODO Is it always List<Tree> ?
+		List<?> matches = Jaxen.evaluate(document, "/root");
 
 		Assert.assertEquals(1, matches.size());
 		Assert.assertSame(root, matches.get(0));
@@ -141,21 +155,21 @@ public class JaxenTest extends TestCase {
 		matches = Jaxen.evaluate(tree, "//branch[1]");
 		Assert.assertEquals(1, matches.size());
 		Assert.assertSame(branches[0], matches.get(0));
-		
+
 		matches = Jaxen.evaluate(tree, "//branch[position()=1]");
 		Assert.assertEquals(1, matches.size());
 		Assert.assertSame(branches[0], matches.get(0));
-		
+
 		matches = Jaxen.evaluate(tree, "//branch[position()<=2]");
 		Assert.assertEquals(2, matches.size());
 		Assert.assertTrue(matches.contains(branches[0]));
 		Assert.assertTrue(matches.contains(branches[1]));
-		
+
 		matches = Jaxen.evaluate(tree, "//branch[position()>2]");
 		Assert.assertEquals(2, matches.size());
 		Assert.assertTrue(matches.contains(branches[2]));
 		Assert.assertTrue(matches.contains(branches[3]));
-		
+
 		matches = Jaxen.evaluate(tree, "//branch[last()]");
 		Assert.assertEquals(1, matches.size());
 		Assert.assertSame(branches[3], matches.get(0));

@@ -13,18 +13,19 @@ public class QueueingTokenSink implements Target<Data> {
 		this.tokens = new LinkedList<Data>();
 	}
 
-
 	@Override
 	public void push(Data data) {
 		synchronized (this.tokens) {
 			this.tokens.add(data);
 		}
 	}
+
 	public Data next() {
 		synchronized (this.tokens) {
 			if (this.tokens.isEmpty()) {
 				// System.out.println("---- EMPTY");
 				return null;
+
 			} else {
 				Data head = this.tokens.removeFirst();
 				// System.out.println("---- " + head);

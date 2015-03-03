@@ -1,5 +1,8 @@
 package koopa.cobol.parser.cobol.preprocessing;
 
+import static koopa.core.trees.jaxen.Jaxen.getMatches;
+import static koopa.core.trees.jaxen.Jaxen.getText;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -71,8 +74,10 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 
 			boolean accepts = preprocessingParser.accepts(sourceTokenizer,
 					sourceSink);
-			LOGGER.trace(hashCode() + " PREPROCESSING GRAMMAR ACCEPTED ? "
-					+ accepts);
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(hashCode() + " PREPROCESSING GRAMMAR ACCEPTED ? "
+						+ accepts);
 		}
 
 		while (true) {
@@ -80,7 +85,8 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 
 			if (data == null) {
 				// End of input.
-				LOGGER.trace(hashCode() + " END OF INPUT");
+				if (LOGGER.isTraceEnabled())
+					LOGGER.trace(hashCode() + " END OF INPUT");
 				return null;
 			}
 
@@ -89,42 +95,27 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 
 				if ("preprocessingDirective".equalsIgnoreCase(down.getName())) {
 
-					LOGGER.trace(hashCode() + " PreprocessingDirective " + data);
+					if (LOGGER.isDebugEnabled())
+						LOGGER.debug(hashCode() + " PreprocessingDirective "
+								+ data);
 
 					LinkedList<Data> directive = getPreprocessingDirective();
 					final Tree tree = getSyntaxTree(directive);
 
-					if (tree == null) {
-						LOGGER.debug("No syntax tree for directive: "
-								+ directive);
-						unsupportedDirective = directive;
-						continue;
-
-					}
-
-					Data data2 = tree.getData();
-					if (!(data2 instanceof Start)) {
-						LOGGER.debug("Unsupported: " + tree);
+					if (!isCopyStatement(tree)) {
+						if (LOGGER.isInfoEnabled())
+							LOGGER.info("Unsupported preprocessing directive: "
+									+ tree);
 						unsupportedDirective = directive;
 						continue;
 					}
 
-					Start start = (Start) data2;
-					if (!"copyStatement".equals(start.getName())) {
-						LOGGER.debug("Unsupported: " + tree);
-						unsupportedDirective = directive;
-						continue;
-					}
+					if (LOGGER.isDebugEnabled())
+						LOGGER.debug("Processing a COPY statement");
 
-					LOGGER.debug("Processing a COPY statement");
-
-					final String textName = getValue(tree, "//textName//text()");
-
-					final String libraryName = getValue(tree,
+					final String textName = getText(tree, "//textName//text()");
+					final String libraryName = getText(tree,
 							"//libraryName//text()");
-
-					// TODO In case of unsupported features: add tokens back
-					// to the original stream and bail out.
 
 					if (LOGGER.isDebugEnabled()) {
 						if (libraryName == null)
@@ -140,21 +131,40 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 								+ libraryName);
 
 						unsupportedDirective = directive;
+						continue;
+					}
 
-					} else {
-
+					if (LOGGER.isDebugEnabled())
 						LOGGER.debug("Found copybook at " + copybook);
 
-						try {
-							// TODO Pass along ParseResults somehow ?
-							copybookTokenizer = cobolParser
-									.getNewTokenizationStage(null,
-											new FileReader(copybook));
+					@SuppressWarnings("unchecked")
+					List<Tree> replacementInstructions = (List<Tree>) getMatches(
+							tree,
+							"copyReplacingPhrase/copyReplacementInstruction");
 
-						} catch (FileNotFoundException e) {
-							LOGGER.error("Problem while reading copybook.", e);
-							unsupportedDirective = directive;
+					// TODO 7.2.2.3, p34, STD.BK.pdf
+					if (!replacementInstructions.isEmpty()) {
+						if (LOGGER.isDebugEnabled())
+							LOGGER.debug("Copy statement defines replacements.");
+
+						for (Tree instruction : replacementInstructions) {
+							ReplacementInstruction replacementInstruction = new ReplacementInstruction(
+									instruction);
+
+							if (LOGGER.isDebugEnabled())
+								LOGGER.debug("  " + replacementInstruction);
 						}
+					}
+
+					try {
+						copybookTokenizer = cobolParser
+								.getNewTokenizationStage(new FileReader(
+										copybook));
+
+					} catch (FileNotFoundException e) {
+						LOGGER.error("Problem while reading copybook: "
+								+ copybook, e);
+						unsupportedDirective = directive;
 					}
 				}
 
@@ -168,16 +178,6 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 				return t;
 			}
 		}
-	}
-
-	// TODO Move this to a utility class; I'm sure this will come in handy
-	// again.
-	private String getValue(Tree tree, String xpath) {
-		final List<?> values = Jaxen.evaluate(tree, xpath);
-		if (values == null || values.size() != 1)
-			return null;
-		else
-			return ((Tree) values.get(0)).getText();
 	}
 
 	private LinkedList<Data> getPreprocessingDirective() {
@@ -264,5 +264,20 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 	@Override
 	public void close() {
 		sourceTokenizer.close();
+	}
+
+	private boolean isCopyStatement(Tree tree) {
+		if (tree == null)
+			return false;
+
+		Data data2 = tree.getData();
+		if (!(data2 instanceof Start))
+			return false;
+
+		Start start = (Start) data2;
+		if (!"copyStatement".equals(start.getName()))
+			return false;
+
+		return true;
 	}
 }

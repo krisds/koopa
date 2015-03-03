@@ -79,7 +79,7 @@ public class CobolParser implements ParserConfiguration {
 				.endsWith(".CPY");
 
 		// Build the tokenisation stage.
-		Source<Token> source = getNewTokenizationStage(results, reader);
+		Source<Token> source = getNewTokenizationStage(reader);
 
 		// This object holds all grammar productions. It is not thread-safe,
 		// meaning that you can only ask it to parse one thing at a time.
@@ -261,8 +261,7 @@ public class CobolParser implements ParserConfiguration {
 		return results;
 	}
 
-	public Source<Token> getNewTokenizationStage(ParseResults results,
-			Reader reader) {
+	public Source<Token> getNewTokenizationStage(Reader reader) {
 		// We will be building up our tokenization stage in several steps. Each
 		// step takes the preceding tokenizer, and extends its abilities.
 		Source<Token> tokenizer;

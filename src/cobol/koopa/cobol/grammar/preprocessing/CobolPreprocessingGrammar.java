@@ -145,6 +145,12 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
            copyReplacementInstructionParser = future;
            future.setParser(
                sequence(
+                   optional(
+                       choice(
+                           leading(),
+                           trailing()
+                       )
+                   ),
                    copyOperandName(),
                    token("BY"),
                    copyOperandName()
@@ -153,6 +159,42 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         }
 
         return copyReplacementInstructionParser;
+    }
+
+    // ========================================================
+    // leading
+    // ........................................................
+
+    private Parser leadingParser = null;
+
+    public Parser leading() {
+        if (leadingParser == null) {
+           FutureParser future = scoped("leading");
+           leadingParser = future;
+           future.setParser(
+               token("LEADING")
+           );
+        }
+
+        return leadingParser;
+    }
+
+    // ========================================================
+    // trailing
+    // ........................................................
+
+    private Parser trailingParser = null;
+
+    public Parser trailing() {
+        if (trailingParser == null) {
+           FutureParser future = scoped("trailing");
+           trailingParser = future;
+           future.setParser(
+               token("TRAILING")
+           );
+        }
+
+        return trailingParser;
     }
 
     // ========================================================
@@ -167,15 +209,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
            copyOperandNameParser = future;
            future.setParser(
                choice(
-                   sequence(
-                       optional(
-                           choice(
-                               token("LEADING"),
-                               token("TRAILING")
-                           )
-                       ),
-                       pseudoLiteral()
-                   ),
+                   pseudoLiteral(),
                    literal(),
                    cobolWord()
                )

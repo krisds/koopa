@@ -31,11 +31,14 @@ def copyReplacingPhrase =
 end
 
 def copyReplacementInstruction =
-	copyOperandName BY copyOperandName
+	[leading | trailing] copyOperandName BY copyOperandName
 end
 
+def leading  =  LEADING   end
+def trailing =  TRAILING  end
+
 def copyOperandName =
-	([LEADING | TRAILING] pseudoLiteral | literal | cobolWord)
+	(pseudoLiteral | literal | cobolWord)
 end
 
 

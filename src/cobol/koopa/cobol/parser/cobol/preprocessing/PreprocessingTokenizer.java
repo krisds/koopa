@@ -23,7 +23,6 @@ import koopa.core.sources.Source;
 import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.jaxen.Jaxen;
 
 import org.apache.log4j.Logger;
 
@@ -142,24 +141,23 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 							tree,
 							"copyReplacingPhrase/copyReplacementInstruction");
 
-					// TODO 7.2.2.3, p34, STD.BK.pdf
+					ReplacingSource replacing = null;
 					if (!replacementInstructions.isEmpty()) {
 						if (LOGGER.isDebugEnabled())
 							LOGGER.debug("Copy statement defines replacements.");
 
-						for (Tree instruction : replacementInstructions) {
-							ReplacementInstruction replacementInstruction = new ReplacementInstruction(
-									instruction);
-
-							if (LOGGER.isDebugEnabled())
-								LOGGER.debug("  " + replacementInstruction);
-						}
+						replacing = new ReplacingSource(replacementInstructions);
 					}
 
 					try {
 						copybookTokenizer = cobolParser
 								.getNewTokenizationStage(new FileReader(
 										copybook));
+
+						if (replacing != null) {
+							replacing.setSource(copybookTokenizer);
+							copybookTokenizer = replacing;
+						}
 
 					} catch (FileNotFoundException e) {
 						LOGGER.error("Problem while reading copybook: "

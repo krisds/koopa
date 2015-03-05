@@ -148,6 +148,9 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		if (token == null)
 			return breadcrumb;
 
+		if (tree == null)
+			return breadcrumb;
+
 		Data node = tree.getData();
 
 		if (node == null)

@@ -8,14 +8,7 @@ import koopa.cobol.parser.cobol.ParsingCoordinator;
 
 public class Cobol85PreprocessingTest extends CobolParsingRegressionTest {
 
-	// Following files can be parsed when activating preprocessing, but fail
-	// otherwise.
-	// testsuite/cobol85/SM101A.CBL
-	// testsuite/cobol85/SM103A.CBL
-	// testsuite/cobol85/SM206A.CBL
-
 	public Cobol85PreprocessingTest() throws IOException {
-		super();
 	}
 
 	@Override

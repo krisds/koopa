@@ -1,6 +1,7 @@
 package koopa.core.treeparsers;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import koopa.core.data.Data;
@@ -129,5 +130,24 @@ public class Tree {
 			return this;
 		else
 			return parent.getRoot();
+	}
+
+	public List<Token> getTokens() {
+		final LinkedList<Token> tokens = new LinkedList<Token>();
+		gather(tokens);
+		return tokens;
+	}
+
+	private void gather(List<Token> tokens) {
+		if (!children.isEmpty()) {
+			for (int i = 0; i < children.size(); i++)
+				children.get(i).gather(tokens);
+
+		} else {
+			if (!(data instanceof Token))
+				return;
+
+			tokens.add((Token) data);
+		}
 	}
 }

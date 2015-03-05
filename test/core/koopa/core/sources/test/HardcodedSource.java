@@ -65,7 +65,7 @@ public class HardcodedSource extends BasicSource<Token> implements
 	public void close() {
 	}
 
-	public static HardcodedSource from(Object[] tagsAndTokens) {
+	public static HardcodedSource from(Object... tagsAndTokens) {
 		return new HardcodedSource(Arrays.asList(tagsAndTokens));
 	}
 }

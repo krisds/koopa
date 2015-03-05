@@ -17,10 +17,10 @@ import javax.swing.border.EtchedBorder;
 
 import koopa.app.Application;
 import koopa.app.listeners.TokenSelectionListener;
+import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.cobol.CobolParser;
-import koopa.cobol.parser.cobol.ParsingCoordinator;
-import koopa.cobol.parser.cobol.ParsingListener;
+import koopa.cobol.parser.ParsingCoordinator;
+import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;

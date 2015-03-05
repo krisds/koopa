@@ -53,7 +53,7 @@ import koopa.app.components.overview.Overview;
 import koopa.app.util.Getter;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.cobol.ParsingCoordinator;
+import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.treeparsers.Tree;

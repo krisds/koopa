@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol.preprocessing;
+package koopa.cobol.parser.preprocessing;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,7 +8,7 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 
 import koopa.cobol.data.tags.SyntacticTag;
-import koopa.cobol.parser.cobol.preprocessing.ReplacingPhrase.Mode;
+import koopa.cobol.parser.preprocessing.ReplacingPhrase.Mode;
 import koopa.cobol.sources.SeparationLogic;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
@@ -16,7 +16,6 @@ import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.treeparsers.Tree;
 
-// TODO Unit tests !
 public class ReplacingPhraseOperand {
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.preprocessing.replacing.operands");
@@ -44,13 +43,20 @@ public class ReplacingPhraseOperand {
 	private final LinkedList<Token> tokens;
 	private final List<Token> textWords;
 
-	public ReplacingPhraseOperand(Tree operand) {
-		this.type = Type.from(operand);
-
-		this.tokens = new LinkedList<Token>();
+	public static ReplacingPhraseOperand from(Tree operand) {
+		Type type = Type.from(operand);
+		LinkedList<Token> tokens = new LinkedList<Token>();
 
 		for (Token token : operand.getTokens())
-			this.tokens.addAll(SeparationLogic.apply(token));
+			tokens.addAll(SeparationLogic.apply(token));
+
+		return new ReplacingPhraseOperand(type, tokens);
+	}
+
+	public ReplacingPhraseOperand(Type type, List<Token> tokens) {
+		this.type = type;
+
+		this.tokens = new LinkedList<Token>(tokens);
 
 		// Discard the pseudo text markers.
 		if (type == Type.PSEUDO) {
@@ -66,14 +72,14 @@ public class ReplacingPhraseOperand {
 			// My guess (based on samples) is that this is also true for the
 			// replacement text.
 			while (!tokens.isEmpty()
-					&& isConsideredSingleSpace(tokens.peekFirst()))
-				tokens.removeFirst();
+					&& isConsideredSingleSpace(this.tokens.peekFirst()))
+				this.tokens.removeFirst();
 			while (!tokens.isEmpty()
-					&& isConsideredSingleSpace(tokens.peekLast()))
-				tokens.removeLast();
+					&& isConsideredSingleSpace(this.tokens.peekLast()))
+				this.tokens.removeLast();
 		}
 
-		this.textWords = reduce(tokens);
+		this.textWords = reduce(this.tokens);
 	}
 
 	private List<Token> reduce(List<Token> tokens) {
@@ -224,6 +230,10 @@ public class ReplacingPhraseOperand {
 
 	public List<Token> getTokens() {
 		return tokens;
+	}
+
+	public ReplacingPhraseOperand.Type getType() {
+		return type;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.cobol.ParsingCoordinator;
+import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.treeparsers.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 

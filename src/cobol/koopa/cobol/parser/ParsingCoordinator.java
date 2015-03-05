@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol;
+package koopa.cobol.parser;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.cobol.parser.ParseResults;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainableSource;

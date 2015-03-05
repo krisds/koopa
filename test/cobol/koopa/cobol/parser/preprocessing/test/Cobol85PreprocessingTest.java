@@ -1,10 +1,11 @@
-package koopa.cobol.parser.test;
+package koopa.cobol.parser.preprocessing.test;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
-import koopa.cobol.parser.cobol.ParsingCoordinator;
+import koopa.cobol.parser.ParsingCoordinator;
+import koopa.cobol.parser.test.CobolParsingRegressionTest;
 
 public class Cobol85PreprocessingTest extends CobolParsingRegressionTest {
 

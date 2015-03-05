@@ -1,12 +1,15 @@
 package koopa.core.util.test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import koopa.core.data.Position;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
+import koopa.core.sources.Source;
+import koopa.core.sources.test.HardcodedSource;
 import koopa.core.treeparsers.Tree;
 
 public final class Util {
@@ -53,4 +56,19 @@ public final class Util {
 		return tree;
 	}
 
+	public static List<Token> asTokens(Object... tagsAndTokens) {
+		final HardcodedSource source = HardcodedSource.from(tagsAndTokens);
+		final List<Token> tokens = getAllTokens(source);
+		return tokens;
+	}
+
+	public static List<Token> getAllTokens(Source<Token> source) {
+		final List<Token> tokens = new LinkedList<Token>();
+
+		Token token = null;
+		while ((token = source.next()) != null)
+			tokens.add(token);
+
+		return tokens;
+	}
 }

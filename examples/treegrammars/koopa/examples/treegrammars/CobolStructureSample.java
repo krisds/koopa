@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.cobol.CobolParser;
 import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;

@@ -33,10 +33,10 @@ import javax.swing.text.StyledDocument;
 
 import koopa.app.listeners.TokenSelectionListener;
 import koopa.cobol.data.tags.SyntacticTag;
+import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.cobol.CobolParser;
-import koopa.cobol.parser.cobol.ParsingCoordinator;
-import koopa.cobol.parser.cobol.ParsingListener;
+import koopa.cobol.parser.ParsingCoordinator;
+import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;

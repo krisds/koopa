@@ -3,7 +3,7 @@ package koopa.app;
 import java.awt.Component;
 import java.io.File;
 
-import koopa.cobol.parser.cobol.ParsingCoordinator;
+import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.treeparsers.Tree;
 import koopa.core.util.Tuple;

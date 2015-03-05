@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol.preprocessing;
+package koopa.cobol.parser.preprocessing;
 
 import static koopa.core.trees.jaxen.Jaxen.getMatches;
 import static koopa.core.trees.jaxen.Jaxen.getText;
@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
-import koopa.cobol.parser.cobol.CobolParser;
+import koopa.cobol.parser.CobolParser;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
@@ -26,7 +26,7 @@ import koopa.core.trees.TreeBuildDirectingSink;
 
 import org.apache.log4j.Logger;
 
-public class PreprocessingTokenizer extends BasicSource<Token> implements
+public class PreprocessingSource extends BasicSource<Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
@@ -43,7 +43,7 @@ public class PreprocessingTokenizer extends BasicSource<Token> implements
 
 	private LinkedList<Data> unsupportedDirective = null;
 
-	public PreprocessingTokenizer(Source<Token> sourceTokenizer,
+	public PreprocessingSource(Source<Token> sourceTokenizer,
 			CobolParser cobolParser) {
 		assert (sourceTokenizer != null);
 

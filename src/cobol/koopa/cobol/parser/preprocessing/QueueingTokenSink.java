@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol.preprocessing;
+package koopa.cobol.parser.preprocessing;
 
 import java.util.LinkedList;
 

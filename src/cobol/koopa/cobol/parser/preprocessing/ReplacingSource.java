@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol.preprocessing;
+package koopa.cobol.parser.preprocessing;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -33,7 +33,6 @@ public class ReplacingSource extends ChainableSource<Token> implements
 		}
 	}
 
-	// TODO 7.2.2.3, p34, STD.BK.pdf
 	@Override
 	protected Token nxt1() {
 		replacing: while (true) {

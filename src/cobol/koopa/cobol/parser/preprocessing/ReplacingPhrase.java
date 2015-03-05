@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol.preprocessing;
+package koopa.cobol.parser.preprocessing;
 
 import static koopa.core.trees.jaxen.Jaxen.getMatch;
 
@@ -29,9 +29,9 @@ public class ReplacingPhrase {
 
 	public ReplacingPhrase(Tree instruction) {
 		this.mode = Mode.from(instruction);
-		this.replacing = new ReplacingPhraseOperand(getMatch(instruction,
+		this.replacing = ReplacingPhraseOperand.from(getMatch(instruction,
 				"copyOperandName[1]"));
-		this.by = new ReplacingPhraseOperand(getMatch(instruction,
+		this.by = ReplacingPhraseOperand.from(getMatch(instruction,
 				"copyOperandName[2]"));
 	}
 

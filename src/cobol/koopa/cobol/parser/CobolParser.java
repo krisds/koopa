@@ -1,4 +1,4 @@
-package koopa.cobol.parser.cobol;
+package koopa.cobol.parser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,9 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import koopa.cobol.grammar.CobolGrammar;
-import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParserConfiguration;
-import koopa.cobol.parser.cobol.preprocessing.PreprocessingTokenizer;
+import koopa.cobol.parser.preprocessing.PreprocessingSource;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
 import koopa.cobol.sources.LineContinuations;
@@ -354,7 +352,7 @@ public class CobolParser implements ParserConfiguration {
 		// EXPERIMENTAL: optional preprocessing stage.
 		// TODO Work on this stage.
 		if (this.preprocessing) {
-			tokenizer = new PreprocessingTokenizer(tokenizer, this);
+			tokenizer = new PreprocessingSource(tokenizer, this);
 		}
 
 		return tokenizer;

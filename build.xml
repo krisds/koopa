@@ -177,6 +177,7 @@
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
 			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
+			<test name="koopa.cobol.parser.preprocessing.test.ReplacingPhraseOperandTest" />
 		</junit>
 	</target>
 
@@ -192,7 +193,7 @@
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.cobol.parser.test.Cobol85RegressionTest" />
-			<test name="koopa.cobol.parser.test.Cobol85PreprocessingTest" />
+			<test name="koopa.cobol.parser.preprocessing.test.Cobol85PreprocessingTest" />
 		</junit>
 	</target>
 

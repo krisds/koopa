@@ -17,7 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import koopa.app.ApplicationSupport;
-import koopa.cobol.parser.cobol.ParsingCoordinator;
+import koopa.cobol.parser.ParsingCoordinator;
 
 /**
  * This is a basic {@linkplain JDialog} for manipulating the copy book paths in

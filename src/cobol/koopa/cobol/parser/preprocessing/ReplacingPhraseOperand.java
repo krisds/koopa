@@ -62,21 +62,6 @@ public class ReplacingPhraseOperand {
 		if (type == Type.PSEUDO) {
 			this.tokens.removeFirst();
 			this.tokens.removeLast();
-
-			// "Beginning and ending spaces are not included in the text
-			// comparison process, and multiple embedded spaces are considered
-			// to be a single space."
-			// IBM - ILE COBOL Reference
-			// http://publib.boulder.ibm.com/iseries/v5r1/ic2924/books/c0925392609.htm#SPTCPY1PT
-			//
-			// My guess (based on samples) is that this is also true for the
-			// replacement text.
-			while (!tokens.isEmpty()
-					&& isConsideredSingleSpace(this.tokens.peekFirst()))
-				this.tokens.removeFirst();
-			while (!tokens.isEmpty()
-					&& isConsideredSingleSpace(this.tokens.peekLast()))
-				this.tokens.removeLast();
 		}
 
 		this.textWords = reduce(this.tokens);
@@ -85,18 +70,16 @@ public class ReplacingPhraseOperand {
 	private List<Token> reduce(List<Token> tokens) {
 		final LinkedList<Token> words = new LinkedList<Token>();
 
-		boolean sawSpace = false;
 		for (Token token : tokens) {
 			// Discard newlines.
 			if (isNewline(token))
 				continue;
 
-			// Discard consecutive spaces.
-			if (sawSpace && isConsideredSingleSpace(token))
+			// Discard spaces. They are not considered text words, and do not
+			// participate in matching.
+			if (isConsideredSingleSpace(token))
 				continue;
 
-			// Everything else we want.
-			sawSpace = isConsideredSingleSpace(token);
 			words.add(token);
 		}
 
@@ -120,7 +103,6 @@ public class ReplacingPhraseOperand {
 
 		boolean matchOccured = true;
 		Stack<Token> seenWhileMatching = new Stack<Token>();
-		boolean sawSpace = false;
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Trying " + this);
@@ -138,12 +120,13 @@ public class ReplacingPhraseOperand {
 				break;
 			}
 
+			// Newlines are not matched against.
 			if (isNewline(libraryTextWord))
 				continue;
 
-			// "Each sequence of one or more space separators is considered to
-			// be a single space."
-			if (sawSpace && isConsideredSingleSpace(libraryTextWord))
+			// Spaces are not matched against, as they are not considered text
+			// words.
+			if (isConsideredSingleSpace(libraryTextWord))
 				continue;
 
 			final Token textWord = it.next();
@@ -152,21 +135,12 @@ public class ReplacingPhraseOperand {
 				LOGGER.trace("    AGAINST " + libraryTextWord);
 			}
 
-			sawSpace = isConsideredSingleSpace(textWord);
-			if (sawSpace) {
-				if (!isConsideredSingleSpace(libraryTextWord)) {
-					matchOccured = false;
-					break;
-				}
+			final String text = textWord.getText();
+			final String libraryText = libraryTextWord.getText();
 
-			} else {
-				final String text = textWord.getText();
-				final String libraryText = libraryTextWord.getText();
-
-				if (!text.equalsIgnoreCase(libraryText)) {
-					matchOccured = false;
-					break;
-				}
+			if (!text.equalsIgnoreCase(libraryText)) {
+				matchOccured = false;
+				break;
 			}
 		}
 

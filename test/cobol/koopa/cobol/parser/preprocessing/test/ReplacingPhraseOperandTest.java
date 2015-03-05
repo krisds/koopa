@@ -81,9 +81,8 @@ public class ReplacingPhraseOperandTest {
 		ReplacingPhraseOperand operand = new ReplacingPhraseOperand(
 				ReplacingPhraseOperand.Type.PSEUDO, tokens);
 
-		assertRejects(operand, MATCHING, PROGRAM_TEXT_AREA, "GRACE",
+		assertMatches(operand, MATCHING, PROGRAM_TEXT_AREA, "GRACE",
 				PROGRAM_TEXT_AREA, "HOPPER");
-
 		assertMatches(operand, MATCHING, PROGRAM_TEXT_AREA, "GRACE",
 				PROGRAM_TEXT_AREA, SEPARATOR, " ", PROGRAM_TEXT_AREA, "HOPPER");
 		assertMatches(operand, MATCHING, PROGRAM_TEXT_AREA, "GRACE",

@@ -2380,8 +2380,7 @@ end
 
 def execSQLStatement =
    (EXEC | EXECUTE) SQL 
-     %limit sqlStatement %by END-EXEC 
-     [--> END-EXEC]
+     (--- sqlStatement --> END-EXEC) 
    END-EXEC
 end
 
@@ -2389,8 +2388,7 @@ end
 
 def execCICSStatement =
     (EXEC | EXECUTE) CICS
-        %limit cicsStatement %by END-EXEC
-        [--> END-EXEC]
+      (--- cicsStatement --> END-EXEC)
     END-EXEC
 end
 

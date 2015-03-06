@@ -154,6 +154,10 @@ part
   | LIMIT part BY part
   -> ^(LIMIT part part)
 
+  | WITH p=part SKIP_TO q=part
+  -> ^(SEQUENCE
+       ^(LIMIT $p $q)
+       ^(SKIP_TO $q))
   ;
 
 more
@@ -217,6 +221,7 @@ STAR : '*' ;
 
 PLUS : '+' ;
 
+WITH : '---' ;
 SKIP_TO : '-->' ;
 
 DOT : '.' ;

@@ -16,7 +16,7 @@ def compilationUnit (Tree name) =
     
     [declaratives]
     
-    %limit (paragraph)* %by section
+    (--- (paragraph)* --> section)
     
 	(section)*
 	(paragraph)*

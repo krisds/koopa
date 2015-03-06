@@ -10658,11 +10658,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("EXECUTE")
                    ),
                    token("SQL"),
-                   limited(
-                       sqlStatement(),
-                       token("END-EXEC")
-                   ),
-                   optional(
+                   sequence(
+                       limited(
+                           sqlStatement(),
+                           token("END-EXEC")
+                       ),
                        skipto(
                            token("END-EXEC")
                        )
@@ -10692,11 +10692,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("EXECUTE")
                    ),
                    token("CICS"),
-                   limited(
-                       cicsStatement(),
-                       token("END-EXEC")
-                   ),
-                   optional(
+                   sequence(
+                       limited(
+                           cicsStatement(),
+                           token("END-EXEC")
+                       ),
                        skipto(
                            token("END-EXEC")
                        )

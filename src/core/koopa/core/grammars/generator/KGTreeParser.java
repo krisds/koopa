@@ -19,16 +19,16 @@ public class KGTreeParser extends TreeParser {
 		"LOCALS", "META", "NAMED", "NATIVE_CODE", "NEWLINE", "NOSKIP", "NOT", 
 		"NUMBER", "OPEN_BRACKET", "OPEN_PAREN", "OPTIONAL", "PERMUTED", "PIPE", 
 		"PLUS", "RETURNS", "RULE", "SEQUENCE", "SKIP_TO", "STAR", "TAG", "TREE", 
-		"WHITESPACE", "'def'", "'end'", "'extends'", "'grammar'", "'returns'", 
+		"WHITESPACE", "WITH", "'def'", "'end'", "'extends'", "'grammar'", "'returns'", 
 		"'tree'"
 	};
 	public static final int EOF=-1;
-	public static final int T__51=51;
 	public static final int T__52=52;
 	public static final int T__53=53;
 	public static final int T__54=54;
 	public static final int T__55=55;
 	public static final int T__56=56;
+	public static final int T__57=57;
 	public static final int ACT=4;
 	public static final int ANY=5;
 	public static final int ARROW=6;
@@ -76,6 +76,7 @@ public class KGTreeParser extends TreeParser {
 	public static final int TAG=48;
 	public static final int TREE=49;
 	public static final int WHITESPACE=50;
+	public static final int WITH=51;
 
 	// delegates
 	public TreeParser[] getDelegates() {

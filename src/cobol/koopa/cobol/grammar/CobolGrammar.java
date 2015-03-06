@@ -7643,6 +7643,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("ACCEPT"),
                    token("ALLOCATE"),
                    token("FREE"),
+                   token("XML"),
                    token("ENABLE"),
                    token("DISABLE"),
                    token("SEND"),

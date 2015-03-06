@@ -531,6 +531,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		RESERVED_WORDS.add("WORDS");
 		RESERVED_WORDS.add("WORKING-STORAGE");
 		RESERVED_WORDS.add("WRITE");
+		RESERVED_WORDS.add("XML");
 		RESERVED_WORDS.add("ZERO");
 		RESERVED_WORDS.add("ZEROES");
 		RESERVED_WORDS.add("ZEROS");

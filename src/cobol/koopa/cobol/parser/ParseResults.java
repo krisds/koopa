@@ -23,6 +23,12 @@ public class ParseResults {
 
 	private Tree tree = null;
 
+	private int numberOfLines = -1;
+
+	private int numberOfLinesWithCode = -1;
+
+	private int numberOfLinesWithComments = -1;
+
 	public ParseResults(File file) {
 		this.file = file;
 		this.validInput = false;
@@ -99,6 +105,33 @@ public class ParseResults {
 		copy.warnings = warnings;
 		copy.errors = errors;
 		copy.tree = tree;
+		copy.numberOfLines = numberOfLines;
+		copy.numberOfLinesWithCode = numberOfLinesWithCode;
+		copy.numberOfLinesWithComments = numberOfLinesWithComments;
 		return copy;
+	}
+
+	public void setNumberOfLines(int numberOfLines) {
+		this.numberOfLines = numberOfLines;
+	}
+
+	public int getNumberOfLines() {
+		return numberOfLines;
+	}
+
+	public void setNumberOfLinesWithCode(int numberOfLinesWithCode) {
+		this.numberOfLinesWithCode = numberOfLinesWithCode;
+	}
+
+	public int getNumberOfLinesWithCode() {
+		return numberOfLinesWithCode;
+	}
+
+	public void setNumberOfLinesWithComments(int numberOfLinesWithComments) {
+		this.numberOfLinesWithComments = numberOfLinesWithComments;
+	}
+
+	public int getNumberOfLinesWithComments() {
+		return numberOfLinesWithComments;
 	}
 }

@@ -20,9 +20,14 @@ public class BatchResults extends AbstractTableModel {
 	public static final int WARNINGS_COLUMN = 2;
 	public static final int TOKEN_COUNT_COLUMN = 3;
 	public static final int COVERAGE_COLUMN = 4;
-	public static final int FILE_COLUMN = 5;
-	public static final int PATH_COLUMN = 6;
-	public static final int CUSTOM_COLUMN = 7;
+
+	public static final int LINES_COLUMN = 5;
+	public static final int CODE_COLUMN = 6;
+	public static final int COMMENTS_COLUMN = 7;
+
+	public static final int FILE_COLUMN = 8;
+	public static final int PATH_COLUMN = 9;
+	public static final int CUSTOM_COLUMNS = 10;
 
 	private static List<String> customKeys;
 
@@ -48,7 +53,7 @@ public class BatchResults extends AbstractTableModel {
 	}
 
 	public int getColumnCount() {
-		return 7 + customKeys.size();
+		return CUSTOM_COLUMNS + customKeys.size();
 	}
 
 	public String getColumnName(int columnIndex) {
@@ -74,9 +79,18 @@ public class BatchResults extends AbstractTableModel {
 		case TOKEN_COUNT_COLUMN:
 			return "Tokens";
 
+		case LINES_COLUMN:
+			return "LOC";
+
+		case CODE_COLUMN:
+			return "SLOC";
+
+		case COMMENTS_COLUMN:
+			return "CLOC";
+
 		default:
 			// Return titles for custom columns:
-			int customColumnIndex = columnIndex - CUSTOM_COLUMN;
+			int customColumnIndex = columnIndex - CUSTOM_COLUMNS;
 
 			if (customColumnIndex < customKeys.size()) {
 				String key = customKeys.get(customColumnIndex);
@@ -124,10 +138,20 @@ public class BatchResults extends AbstractTableModel {
 		case TOKEN_COUNT_COLUMN:
 			return this.tokenCount.get(rowIndex);
 
+		case LINES_COLUMN:
+			return this.parseResults.get(rowIndex).getNumberOfLines();
+
+		case CODE_COLUMN:
+			return this.parseResults.get(rowIndex).getNumberOfLinesWithCode();
+
+		case COMMENTS_COLUMN:
+			return this.parseResults.get(rowIndex)
+					.getNumberOfLinesWithComments();
+
 		default:
 			// Get values from each custom report column key:
 
-			int customColumnIndex = columnIndex - CUSTOM_COLUMN;
+			int customColumnIndex = columnIndex - CUSTOM_COLUMNS;
 
 			if (customColumnIndex < customKeys.size()) {
 				String key = customKeys.get(customColumnIndex);

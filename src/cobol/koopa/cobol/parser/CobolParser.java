@@ -14,6 +14,7 @@ import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.parser.preprocessing.PreprocessingSource;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
+import koopa.cobol.sources.LOCCount;
 import koopa.cobol.sources.LineContinuations;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.PseudoLiterals;
@@ -77,7 +78,8 @@ public class CobolParser implements ParserConfiguration {
 				.endsWith(".CPY");
 
 		// Build the tokenisation stage.
-		Source<Token> source = getNewTokenizationStage(reader);
+		LOCCount loc = new LOCCount(getNewTokenizationStage(reader));
+		Source<Token> source = loc;
 
 		// This object holds all grammar productions. It is not thread-safe,
 		// meaning that you can only ask it to parse one thing at a time.
@@ -205,6 +207,11 @@ public class CobolParser implements ParserConfiguration {
 			return results;
 		}
 
+		// Grab the LOC statistics.
+		results.setNumberOfLines(loc.getNumberOfLines());
+		results.setNumberOfLinesWithCode(loc.getNumberOfLinesWithCode());
+		results.setNumberOfLinesWithComments(loc.getNumberOfLinesWithComments());
+
 		// If we built trees during parsing, here is where we allow further
 		// processing of those trees.
 		if (builder != null) {
@@ -292,62 +299,7 @@ public class CobolParser implements ParserConfiguration {
 			tokenizer = intermediate;
 		}
 
-		// Here we filter out all tokens which are not part of the program text
-		// area (comments are not considered part of this area). This leaves us
-		// with the pure code, which should be perfect for processing by a
-		// parser.
-		// TODO !!!!!!! Also move this into the grammar.
-		// tokenizer = new FilteringTokenizer(tokenizer,
-		// AreaTag.PROGRAM_TEXT_AREA);
-
-		// Here we filter out all pure whitespace separators. This leaves us
-		// with only the "structural" tokens which are of interest to a parser.
-		//
-		// When we do this we need to tag tokens which were not separated by
-		// whitespace. This is needed to correctly build picture strings while
-		// parsing. It would be nicer if we could recognize picture strings
-		// in the tokenizer stages, but I don't see how we can do that without
-		// some form of parsing...
-		//
-		// Update: don't really need this anymore, as it is now handled directly
-		// by the grammar.
-		// TODO !!!!!!! Move this into the grammar, then kill it.
-		// tokenizer = new FilteringTokenizer(tokenizer, new TokenFilter() {
-		// boolean lastWasWhitespace = true;
-		// int lastLinenumber = -1;
-		//
-		// public boolean accepts(Token token) {
-		// final int currentLinenumber = token.getStart().getLinenumber();
-		//
-		// // A change of line is seen as whitespace.
-		// if (lastLinenumber != currentLinenumber) {
-		// lastWasWhitespace = true;
-		// }
-		//
-		// if (!token.hasTag(SyntacticTag.SEPARATOR)) {
-		// if (!lastWasWhitespace) {
-		// token.addTag(TokenizerTag.CHAINED);
-		// }
-		// lastWasWhitespace = false;
-		// lastLinenumber = currentLinenumber;
-		// return true;
-		// }
-		//
-		// final String text = token.getText().trim();
-		// if (text.equals("")) {
-		// lastWasWhitespace = true;
-		// lastLinenumber = currentLinenumber;
-		// return false;
-		// }
-		//
-		// if (!lastWasWhitespace) {
-		// token.addTag(TokenizerTag.CHAINED);
-		// }
-		// lastWasWhitespace = false;
-		// lastLinenumber = currentLinenumber;
-		// return !text.equals(",") && !text.equals(";");
-		// }
-		// });
+		// tokenizer = new Printing(tokenizer, "%% ");
 
 		// EXPERIMENTAL: optional preprocessing stage.
 		// TODO Work on this stage.
@@ -357,31 +309,6 @@ public class CobolParser implements ParserConfiguration {
 
 		return tokenizer;
 	}
-
-	// ------------------------------------------------------------------------
-	// Removed for now due to technical problems. See comment in the
-	// 'parse(File)' method.
-	//
-	// private static boolean acceptedByCobolTreeParser(CommonTree tree,
-	// boolean isCopybook) {
-	// CommonTreeNodeStream nodes = new CommonTreeNodeStream(tree);
-	// CobolTreeParser parser = new CobolTreeParser(nodes);
-	//
-	// try {
-	// if (isCopybook) {
-	// parser.copybook();
-	// } else {
-	// parser.compilationGroup();
-	// }
-	//
-	// return parser.getNumberOfSyntaxErrors() == 0;
-	//
-	// } catch (RecognitionException e) {
-	// e.printStackTrace();
-	// return false;
-	// }
-	// }
-	// ------------------------------------------------------------------------
 
 	private boolean buildTrees() {
 		return this.buildTrees

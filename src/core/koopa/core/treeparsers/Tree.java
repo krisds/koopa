@@ -96,6 +96,10 @@ public class Tree {
 		child.parent = this;
 	}
 
+	public boolean hasChildren() {
+		return !children.isEmpty();
+	}
+
 	public int getChildCount() {
 		return children.size();
 	}

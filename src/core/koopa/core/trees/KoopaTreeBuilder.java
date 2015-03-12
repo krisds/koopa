@@ -37,7 +37,11 @@ public class KoopaTreeBuilder implements TreeBuilder {
 				&& !token.hasTag(AreaTag.COMMENT))
 			return;
 
-		if (token.getText().trim().length() == 0)
+		// We want to ignore all whitespace in the code, as it just makes the
+		// tree much bigger than it needs to be. Comments, however, are kept
+		// intact.
+		if (!token.hasTag(AreaTag.COMMENT)
+				&& token.getText().trim().length() == 0)
 			return;
 
 		Tree tree = new Tree(token);

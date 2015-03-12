@@ -97,6 +97,12 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.COVERAGE_COLUMN)
 				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.LINES_COLUMN)
+				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.CODE_COLUMN)
+				.setPreferredWidth(70);
+		overviewTable.getColumnModel().getColumn(BatchResults.COMMENTS_COLUMN)
+				.setPreferredWidth(70);
 		overviewTable.getColumnModel().getColumn(BatchResults.FILE_COLUMN)
 				.setPreferredWidth(150);
 		overviewTable.getColumnModel().getColumn(BatchResults.PATH_COLUMN)

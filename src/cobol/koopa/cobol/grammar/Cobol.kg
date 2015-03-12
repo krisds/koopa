@@ -1767,8 +1767,8 @@ end
 
 def addStatement =
     ADD ( addition_format1 | addition_format2 | addition_format3 )
-    [[ON] SIZE ERROR nestedStatements]
-    [NOT [ON] SIZE ERROR nestedStatements]
+    [onSizeError]
+    [notOnSizeError]
     [END-ADD]
 end
 
@@ -1876,6 +1876,14 @@ def notOnException =
     NOT [ON] EXCEPTION nestedStatements
 end
 
+def onSizeError =
+    [ON] SIZE ERROR nestedStatements
+end
+
+def notOnSizeError =
+    NOT [ON] SIZE ERROR nestedStatements
+end
+
 def onEscape =
     [ON] ESCAPE nestedStatements
 end
@@ -1947,8 +1955,8 @@ def computeStatement =
     (qualifiedDataName [ROUNDED])+
     ('=' | EQUAL)
     arithmeticExpression
-    [[ON] SIZE ERROR nestedStatements]
-    [NOT [ON] SIZE ERROR nestedStatements]
+    [onSizeError]
+    [notOnSizeError]
     [END-COMPUTE]
 end
 
@@ -1968,11 +1976,20 @@ end
 def deleteStatement =
     DELETE fileName [RECORD]
     
-    [INVALID [KEY] nestedStatements]
-    [NOT INVALID [KEY] nestedStatements]
+    [invalidKey]
+    [notInvalidKey]
     
     [END-DELETE]
 end
+
+def invalidKey =
+    INVALID [KEY] nestedStatements
+end
+
+def notInvalidKey =
+    NOT INVALID [KEY] nestedStatements
+end
+
 
 ## #############################################################################
 ## DELETE FILE statement.
@@ -2248,8 +2265,8 @@ end
 
 def divideStatement =
     DIVIDE ( division_format1 | division_format2 | division_format3 )
-    [[ON] SIZE ERROR nestedStatements]
-    [NOT [ON] SIZE ERROR nestedStatements]
+    [onSizeError]
+    [notOnSizeError]
     [END-DIVIDE]
 end
 
@@ -2804,8 +2821,8 @@ end
 
 def multiplyStatement =
     MULTIPLY ( multiplication_format1 | multiplication_format2 )
-    [[ON] SIZE ERROR nestedStatements]
-    [NOT [ON] SIZE ERROR nestedStatements]
+    [onSizeError]
+    [notOnSizeError]
     [END-MULTIPLY]
 end
 
@@ -2977,8 +2994,8 @@ def readStatement =
     [[AT] END nestedStatements]
     [NOT [AT] END nestedStatements]
     
-    [INVALID [KEY] nestedStatements]
-    [NOT INVALID [KEY] nestedStatements]
+    [invalidKey]
+    [notInvalidKey]
     
     [END-READ]
 end
@@ -3059,8 +3076,8 @@ def rewriteStatement =
     
     [[WITH] [NO] LOCK]
     
-    [INVALID [KEY] nestedStatements]
-    [NOT INVALID [KEY] nestedStatements]
+    [invalidKey]
+    [notInvalidKey]
     
     [END-REWRITE]
 end
@@ -3244,8 +3261,8 @@ def startStatement =
     [sizeModifier]
     [whileKeyModifier]
     
-    [INVALID [KEY] nestedStatements]
-    [NOT INVALID [KEY] nestedStatements]
+    [invalidKey]
+    [notInvalidKey]
     
     [END-START]
 end
@@ -3318,8 +3335,8 @@ end
 
 def subtractStatement =
     SUBTRACT ( subtraction_format1 | subtraction_format2 | subtraction_format3 )
-    [[ON] SIZE ERROR nestedStatements]
-    [NOT [ON] SIZE ERROR nestedStatements]
+    [onSizeError]
+    [notOnSizeError]
     [END-SUBTRACT]
 end
 
@@ -3493,8 +3510,8 @@ def writeStatement =
     
     [[WITH] [NO] LOCK]
     
-    [INVALID [KEY] nestedStatements]
-    [NOT INVALID [KEY] nestedStatements]
+    [invalidKey]
+    [notInvalidKey]
     
     [END-WRITE]
 end

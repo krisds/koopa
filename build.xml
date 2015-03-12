@@ -50,7 +50,7 @@
 
 	<target name="core-compile" depends="core-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
-		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -74,7 +74,7 @@
 		<generate-unit-test path="test/core/" />
 
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -126,7 +126,7 @@
 		<kgg path="src/cobol/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -148,7 +148,7 @@
 		<generate-unit-test path="test/cobol/" />
 
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -204,7 +204,7 @@
 		<kgg path="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
-		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -225,14 +225,14 @@
 		<kgg path="examples/" />
 
 		<echo>Compiling example classes...</echo>
-		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5" includeantruntime="false">
+		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />

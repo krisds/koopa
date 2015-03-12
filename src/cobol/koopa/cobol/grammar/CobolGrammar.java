@@ -7981,25 +7981,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        addition_format3()
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       onSizeError()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       notOnSizeError()
                    ),
                    optional(
                        token("END-ADD")
@@ -8470,6 +8455,57 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
+    // onSizeError
+    // ........................................................
+
+    private Parser onSizeErrorParser = null;
+
+    public Parser onSizeError() {
+        if (onSizeErrorParser == null) {
+           FutureParser future = scoped("onSizeError");
+           onSizeErrorParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("ON")
+                   ),
+                   token("SIZE"),
+                   token("ERROR"),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return onSizeErrorParser;
+    }
+
+    // ========================================================
+    // notOnSizeError
+    // ........................................................
+
+    private Parser notOnSizeErrorParser = null;
+
+    public Parser notOnSizeError() {
+        if (notOnSizeErrorParser == null) {
+           FutureParser future = scoped("notOnSizeError");
+           notOnSizeErrorParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   optional(
+                       token("ON")
+                   ),
+                   token("SIZE"),
+                   token("ERROR"),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return notOnSizeErrorParser;
+    }
+
+    // ========================================================
     // onEscape
     // ........................................................
 
@@ -8801,25 +8837,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    arithmeticExpression(),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       onSizeError()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       notOnSizeError()
                    ),
                    optional(
                        token("END-COMPUTE")
@@ -8867,23 +8888,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("RECORD")
                    ),
                    optional(
-                       sequence(
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       invalidKey()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       notInvalidKey()
                    ),
                    optional(
                        token("END-DELETE")
@@ -8893,6 +8901,55 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return deleteStatementParser;
+    }
+
+    // ========================================================
+    // invalidKey
+    // ........................................................
+
+    private Parser invalidKeyParser = null;
+
+    public Parser invalidKey() {
+        if (invalidKeyParser == null) {
+           FutureParser future = scoped("invalidKey");
+           invalidKeyParser = future;
+           future.setParser(
+               sequence(
+                   token("INVALID"),
+                   optional(
+                       token("KEY")
+                   ),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return invalidKeyParser;
+    }
+
+    // ========================================================
+    // notInvalidKey
+    // ........................................................
+
+    private Parser notInvalidKeyParser = null;
+
+    public Parser notInvalidKey() {
+        if (notInvalidKeyParser == null) {
+           FutureParser future = scoped("notInvalidKey");
+           notInvalidKeyParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   token("INVALID"),
+                   optional(
+                       token("KEY")
+                   ),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return notInvalidKeyParser;
     }
 
     // ========================================================
@@ -10109,25 +10166,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        division_format3()
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       onSizeError()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       notOnSizeError()
                    ),
                    optional(
                        token("END-DIVIDE")
@@ -12539,25 +12581,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        multiplication_format2()
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       onSizeError()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       notOnSizeError()
                    ),
                    optional(
                        token("END-MULTIPLY")
@@ -13139,23 +13166,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       invalidKey()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       notInvalidKey()
                    ),
                    optional(
                        token("END-READ")
@@ -13486,23 +13500,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       invalidKey()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       notInvalidKey()
                    ),
                    optional(
                        token("END-REWRITE")
@@ -14236,23 +14237,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        whileKeyModifier()
                    ),
                    optional(
-                       sequence(
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       invalidKey()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       notInvalidKey()
                    ),
                    optional(
                        token("END-START")
@@ -14621,25 +14609,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        subtraction_format3()
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       onSizeError()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("SIZE"),
-                           token("ERROR"),
-                           nestedStatements()
-                       )
+                       notOnSizeError()
                    ),
                    optional(
                        token("END-SUBTRACT")
@@ -15341,23 +15314,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       invalidKey()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           token("INVALID"),
-                           optional(
-                               token("KEY")
-                           ),
-                           nestedStatements()
-                       )
+                       notInvalidKey()
                    ),
                    optional(
                        token("END-WRITE")

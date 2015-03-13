@@ -597,6 +597,28 @@ public abstract class KoopaGrammar {
 		};
 	}
 
+	/**
+	 * Accepts when the token stream is at the end of the input (ignoring
+	 * separators).
+	 * <p>
+	 * This will skip all intermediate separators.
+	 */
+	protected Parser eof() {
+		return new Parser() {
+			public boolean accepts(ParseStream stream) {
+				skipSeparators(stream);
+
+				final Token token = stream.forward();
+				final boolean atEndOfFile = token == null;
+
+				if (LOGGER.isTraceEnabled())
+					trace(token + " == null : " + atEndOfFile);
+
+				return atEndOfFile;
+			}
+		};
+	}
+
 	protected void returnToken(Token token) {
 		Assign assign = (Assign) scope().get("return");
 		if (assign != null)

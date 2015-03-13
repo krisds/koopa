@@ -41,10 +41,15 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("compilationGroup");
            compilationGroupParser = future;
            future.setParser(
-               star(
-                   choice(
-                       compilerDirective(),
-                       compilationUnit()
+               sequence(
+                   star(
+                       choice(
+                           compilerDirective(),
+                           compilationUnit()
+                       )
+                   ),
+                   optional(
+                       eof()
                    )
                )
            );
@@ -64,12 +69,17 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("copybook");
            copybookParser = future;
            future.setParser(
-               choice(
-                   plus(
-                       compilationUnit()
+               sequence(
+                   choice(
+                       plus(
+                           compilationUnit()
+                       ),
+                       copybookHoldingData(),
+                       copybookHoldingBehaviour()
                    ),
-                   copybookHoldingData(),
-                   copybookHoldingBehaviour()
+                   optional(
+                       eof()
+                   )
                )
            );
         }
@@ -15262,29 +15272,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("AT")
-                           ),
-                           choice(
-                               token("END-OF-PAGE"),
-                               token("EOP")
-                           ),
-                           nestedStatements()
-                       )
+                       atEndOfPage()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("AT")
-                           ),
-                           choice(
-                               token("END-OF-PAGE"),
-                               token("EOP")
-                           ),
-                           nestedStatements()
-                       )
+                       notAtEndOfPage()
                    ),
                    optional(
                        retryPhrase()
@@ -15314,6 +15305,61 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return writeStatementParser;
+    }
+
+    // ========================================================
+    // atEndOfPage
+    // ........................................................
+
+    private Parser atEndOfPageParser = null;
+
+    public Parser atEndOfPage() {
+        if (atEndOfPageParser == null) {
+           FutureParser future = scoped("atEndOfPage");
+           atEndOfPageParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("AT")
+                   ),
+                   choice(
+                       token("END-OF-PAGE"),
+                       token("EOP")
+                   ),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return atEndOfPageParser;
+    }
+
+    // ========================================================
+    // notAtEndOfPage
+    // ........................................................
+
+    private Parser notAtEndOfPageParser = null;
+
+    public Parser notAtEndOfPage() {
+        if (notAtEndOfPageParser == null) {
+           FutureParser future = scoped("notAtEndOfPage");
+           notAtEndOfPageParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   optional(
+                       token("AT")
+                   ),
+                   choice(
+                       token("END-OF-PAGE"),
+                       token("EOP")
+                   ),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return notAtEndOfPageParser;
     }
 
     // ========================================================

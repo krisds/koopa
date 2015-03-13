@@ -10,6 +10,8 @@ grammar Cobol extends CobolBase.
 # Compilation group.
 def compilationGroup =
     (compilerDirective | compilationUnit)*
+    
+    [eof]
 end
 
 # Copybook. This is just a guess at the likely suspect(s).
@@ -18,6 +20,8 @@ def copybook =
     | copybookHoldingData
     | copybookHoldingBehaviour
     )
+    
+    [eof]
 end
 
 def copybookHoldingData =
@@ -3504,11 +3508,11 @@ def writeStatement =
       )
     ]
     
-    [[AT] (END-OF-PAGE | EOP) nestedStatements]
-    [NOT [AT] (END-OF-PAGE | EOP) nestedStatements]
-    
+    [atEndOfPage]
+    [notAtEndOfPage]
+
     [retryPhrase]
-    
+
     [[WITH] [NO] LOCK]
     
     [invalidKey]
@@ -3516,6 +3520,15 @@ def writeStatement =
     
     [END-WRITE]
 end
+
+def atEndOfPage =
+    [AT] (END-OF-PAGE | EOP) nestedStatements
+end
+
+def notAtEndOfPage =
+    NOT [AT] (END-OF-PAGE | EOP) nestedStatements
+end
+
 
 ## #############################################################################
 ## XML GENERATE statement.

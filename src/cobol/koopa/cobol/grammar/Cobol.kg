@@ -2991,8 +2991,8 @@ def readStatement =
     
     [KEY [IS] qualifiedDataName]
     
-    [[AT] END nestedStatements]
-    [NOT [AT] END nestedStatements]
+    [atEnd]
+    [notAtEnd]
     
     [invalidKey]
     [notInvalidKey]
@@ -3007,6 +3007,7 @@ end
 def readLockClause =
     [KEPT | NO | IGNORE] LOCK
 end
+
 
 ## #############################################################################
 ## READY TRACE statement.

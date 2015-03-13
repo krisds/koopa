@@ -13147,23 +13147,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("AT")
-                           ),
-                           token("END"),
-                           nestedStatements()
-                       )
+                       atEnd()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("AT")
-                           ),
-                           token("END"),
-                           nestedStatements()
-                       )
+                       notAtEnd()
                    ),
                    optional(
                        invalidKey()

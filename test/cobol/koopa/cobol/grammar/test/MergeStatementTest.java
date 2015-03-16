@@ -214,4 +214,13 @@ public class MergeStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testMergeStatement_23() {
+      Parser parser = grammar.mergeStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MERGE file-name-1\n     DESCENDING data-name-1 OF qualification-1\n     ON DESCENDING KEY data-name-2 OF qualification-2\n     USING file-name-2 file-name-3\n     GIVING file-name-4 "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

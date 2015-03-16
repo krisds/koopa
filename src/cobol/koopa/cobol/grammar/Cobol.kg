@@ -2794,7 +2794,7 @@ end
 
 def mergeStatement =
     MERGE fileName
-        ( [ON] (ASCENDING | DESCENDING) [KEY] [IS] (dataName)+ )+
+        ( [ON] (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )+
         [ [COLLATING] SEQUENCE [IS] alphabetName ]
         USING fileName (fileName)+
         ( OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]

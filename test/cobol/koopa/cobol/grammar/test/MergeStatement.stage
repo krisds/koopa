@@ -99,3 +99,10 @@ target mergeStatement;
      COLLATING SEQUENCE IS alphabet-name
      USING file-name-2 file-name-3
      OUTPUT PROCEDURE procedure-name-1 THROUGH procedure-name-2 ]
+
+# Using qualified data names:
++[ MERGE file-name-1
+     DESCENDING data-name-1 OF qualification-1
+     ON DESCENDING KEY data-name-2 OF qualification-2
+     USING file-name-2 file-name-3
+     GIVING file-name-4 ]

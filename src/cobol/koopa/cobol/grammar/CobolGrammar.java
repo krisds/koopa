@@ -12469,7 +12469,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                token("IS")
                            ),
                            plus(
-                               dataName()
+                               qualifiedDataName()
                            )
                        )
                    ),

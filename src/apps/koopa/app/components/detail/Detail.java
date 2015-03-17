@@ -18,6 +18,7 @@ import koopa.app.batchit.ParseDetails;
 import koopa.app.components.breadcrumb.Breadcrumb;
 import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
+import koopa.app.components.highlights.Highlights;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
@@ -37,7 +38,7 @@ public class Detail extends JPanel implements Configurable {
 	private ParseResults results = null;
 	private ParsingCoordinator coordinator = null;
 	private ParseDetails parseDetails = new ParseDetails();
-	private SourceView pane = null;
+	private SourceView sourceView = null;
 	private CobolOutline outline = null;
 	private DetailsTable detailsTable = null;
 	private Breadcrumb breadcrumb = null;
@@ -109,7 +110,7 @@ public class Detail extends JPanel implements Configurable {
 	}
 
 	private void setupComponents() {
-		pane = new SourceView(this.coordinator);
+		sourceView = new SourceView(this.coordinator);
 
 		outline = new CobolOutline(this.coordinator);
 
@@ -122,16 +123,16 @@ public class Detail extends JPanel implements Configurable {
 
 				if (!node.isRoot()) {
 					final Reference ref = (Reference) node.getUserObject();
-					pane.scrollTo(ref.getPositionInFile());
+					sourceView.scrollTo(ref.getPositionInFile());
 
 				} else {
-					pane.scrollTo(0);
+					sourceView.scrollTo(0);
 				}
 			}
 		});
 
 		breadcrumb = new Breadcrumb(application, coordinator);
-		pane.addTokenSelectionListener(breadcrumb);
+		sourceView.addTokenSelectionListener(breadcrumb);
 
 		detailsTable = new DetailsTable(parseDetails);
 
@@ -139,7 +140,7 @@ public class Detail extends JPanel implements Configurable {
 			@Override
 			public void userSelectedDetail(Tuple<Token, String> detail) {
 				final Token token = detail.getFirst();
-				pane.scrollTo(token.getStart().getPositionInFile());
+				sourceView.scrollTo(token.getStart().getPositionInFile());
 			}
 		});
 
@@ -147,7 +148,7 @@ public class Detail extends JPanel implements Configurable {
 		detailsScroll.setBorder(null);
 
 		JSplitPane horizontalSplit = new JSplitPane(
-				JSplitPane.HORIZONTAL_SPLIT, outline, pane);
+				JSplitPane.HORIZONTAL_SPLIT, outline, sourceView);
 		horizontalSplit.setResizeWeight(0.3);
 
 		JPanel x = new JPanel();
@@ -191,13 +192,13 @@ public class Detail extends JPanel implements Configurable {
 	}
 
 	public void scrollTo(int position) {
-		if (pane != null)
-			pane.scrollTo(position);
+		if (sourceView != null)
+			sourceView.scrollTo(position);
 	}
 
 	public void scrollToLine(int line) {
-		if (pane != null)
-			pane.scrollToLine(line);
+		if (sourceView != null)
+			sourceView.scrollToLine(line);
 	}
 
 	public void selectDetail(Tuple<Token, String> detail) {
@@ -222,14 +223,18 @@ public class Detail extends JPanel implements Configurable {
 	}
 
 	public int getNumberOfLines() {
-		return pane.getNumberOfLines();
+		return sourceView.getNumberOfLines();
 	}
 
 	public boolean find(String search) {
-		return pane.find(search);
+		return sourceView.find(search);
 	}
 
 	public ParsingCoordinator getParsingCoordinator() {
 		return coordinator;
+	}
+
+	public Highlights getNewHighlights() {
+		return sourceView.getNewHighlights();
 	}
 }

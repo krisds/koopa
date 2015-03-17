@@ -1,4 +1,4 @@
-package koopa.app.components.sourceview;
+package koopa.app.components.highlights;
 
 /*
  * 09/13/2005

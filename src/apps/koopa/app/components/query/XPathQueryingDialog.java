@@ -1,6 +1,7 @@
 package koopa.app.components.query;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -22,7 +23,9 @@ import javax.swing.ListSelectionModel;
 import koopa.app.Application;
 import koopa.app.ApplicationListener;
 import koopa.app.components.detail.Detail;
+import koopa.app.components.highlights.Highlights;
 import koopa.app.components.overview.Overview;
+import koopa.core.data.Position;
 import koopa.core.treeparsers.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.trees.jaxen.XPathException;
@@ -32,7 +35,10 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 public class XPathQueryingDialog extends JDialog implements ApplicationListener {
 
-	private static final long serialVersionUID = 8823045458789993217L;
+	private static final long serialVersionUID = 1L;
+
+	private static final Color HIGHLIGHT_COLOR = new Color(248, 236, 201);
+	private Highlights highlights = null;
 
 	private static XPathQueryingDialog dialog = null;
 
@@ -94,6 +100,10 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 					status.setText(matches == null ? "No" : matches.size()
 							+ " matches.");
 
+					Component view = application.getView();
+					if (view instanceof Detail)
+						highlightAllMatches((Detail) view);
+
 				} catch (XPathException xpe) {
 					selectedResults.setResults(null);
 					status.setText(xpe.getMessage());
@@ -153,6 +163,26 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		add(status, BorderLayout.SOUTH);
 
 		switchedView(application.getView());
+	}
+
+	private void highlightAllMatches(Detail detail) {
+		if (highlights != null)
+			highlights.removeAllHighlights();
+
+		highlights = detail.getNewHighlights();
+
+		// Highlight all matches in the source view...
+		List<?> results = selectedResults.getResults();
+		for (Object match : results) {
+			if (match instanceof Tree) {
+				final Tree tree = (Tree) match;
+
+				Position start = tree.getStart();
+				Position end = tree.getEnd();
+
+				highlights.addHighlight(start, end, HIGHLIGHT_COLOR);
+			}
+		}
 	}
 
 	@Override

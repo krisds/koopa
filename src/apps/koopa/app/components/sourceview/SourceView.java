@@ -31,6 +31,8 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import koopa.app.components.highlights.Highlights;
+import koopa.app.components.highlights.SquiggleUnderlineHighlightPainter;
 import koopa.app.listeners.TokenSelectionListener;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.parser.CobolParser;
@@ -103,7 +105,7 @@ public class SourceView extends JPanel implements ParsingListener {
 
 		// new LinePainter(pane, new Color(238, 245, 254));
 		new LinePainter(pane, new Color(230, 240, 254));
-		new TokenHighlighter(this, pane);
+		pane.addCaretListener(new TokenHighlighter(this));
 
 		scroll = new JScrollPane(pane);
 
@@ -363,11 +365,12 @@ public class SourceView extends JPanel implements ParsingListener {
 						continue;
 					}
 
-					for (Range range: token.getRanges()) {
+					for (Range range : token.getRanges()) {
 						final int start = range.getStart().getPositionInFile() - 1;
 						final int end = range.getEnd().getPositionInFile();
 						final int len = end - start;
-						document.setCharacterAttributes(start, len, style, false);
+						document.setCharacterAttributes(start, len, style,
+								false);
 					}
 				}
 			}
@@ -472,5 +475,9 @@ public class SourceView extends JPanel implements ParsingListener {
 		pane.select(startPosition, endPosition);
 
 		return true;
+	}
+
+	public Highlights getNewHighlights() {
+		return new Highlights(pane);
 	}
 }

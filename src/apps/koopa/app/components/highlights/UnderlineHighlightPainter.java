@@ -1,4 +1,4 @@
-package koopa.app.components.sourceview;
+package koopa.app.components.highlights;
 
 import java.awt.Color;
 import java.awt.FontMetrics;

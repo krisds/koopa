@@ -109,6 +109,10 @@ public class XPathResults extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
+	public List<?> getResults() {
+		return results;
+	}
+
 	public int getPositionInFile(int row) {
 		final Position position = this.positions.get(row);
 		return position != null ? position.getPositionInFile() : -1;

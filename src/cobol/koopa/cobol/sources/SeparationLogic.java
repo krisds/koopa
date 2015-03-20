@@ -33,7 +33,6 @@ public class SeparationLogic {
 	public static List<Token> apply(final Token token) {
 		final List<Token> tokens = new LinkedList<Token>();
 		apply(token, new Feedback() {
-			@Override
 			public void add(Token token) {
 				tokens.add(token);
 			}

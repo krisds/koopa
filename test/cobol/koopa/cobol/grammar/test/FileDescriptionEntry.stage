@@ -2,7 +2,7 @@ package koopa.cobol.grammar.test;
 grammar koopa.cobol.grammar.CobolGrammar;
 tokenizer koopa.cobol.sources.test.CobolTestSource;
 
-target blockContains;
+target blockContainsClause;
 
 +[ BLOCK CONTAINS 1 TO 7 CHARACTERS ]
 +[ BLOCK CONTAINS 1 TO 7 RECORDS ]
@@ -20,7 +20,7 @@ target blockContains;
 +[ BLOCK 1 RECORDS ]
 +[ BLOCK 1 ]
 
-target codeSet;
+target codeSetClause;
 
 +[ CODE-SET IS MY-ALPHABET-NAME ]
 +[ CODE-SET MY-ALPHABET-NAME ]
@@ -95,7 +95,7 @@ target labelRecords;
 +[ LABEL RECORDS MY-DATA-NAME ]
 +[ LABEL RECORDS MY-DATA-NAME MY-OTHER-DATA-NAME ]
 
-target linage;
+target linageClause;
 
 +[ LINAGE IS 10 LINES ]
 +[ LINAGE IS MY-LINE-COUNT LINES ]
@@ -160,7 +160,7 @@ target linage;
 +[ LINAGE IS 10 LINES
      BOTTOM MY-TOP ]
 
-target record;
+target recordClause;
 
 +[ RECORD CONTAINS 2 CHARACTERS ]
 +[ RECORD 2 CHARACTERS ]
@@ -229,7 +229,7 @@ target valueOf;
 +[ VALUE OF ID IS "MY LITERAL" ]
 +[ VALUE OF ID "MY LITERAL" ]
 
-target report;
+target reportClause;
 
 +[ REPORT IS MY-REPORT-NAME ]
 +[ REPORTS ARE MY-REPORT-NAME MY-OTHER-REPORT-NAME ]

@@ -722,4 +722,175 @@ public class ProcedureDivisionTest extends TestCase {
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 000-Main.\n     DISPLAY 'Starting cobsub.cbl'.\n     DISPLAY 'Arg1=' Arg1.\n     DISPLAY 'Arg2=' Arg2.\n     DISPLAY 'Arg3=' Arg3.\n     MOVE 'X' TO Arg1 (1:1).\n     MOVE 'X' TO Arg2 (1:1).\n     MOVE 987654321 TO Arg3.\n     MOVE 2 TO RETURN-CODE.\n     GOBACK. "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testRoundedPhrase_80() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_81() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS AWAY-FROM-ZERO "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_82() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    AWAY-FROM-ZERO "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_83() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS NEAREST-AWAY-FROM-ZERO "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_84() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    NEAREST-AWAY-FROM-ZERO "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_85() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS NEAREST-EVEN "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_86() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    NEAREST-EVEN "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_87() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS NEAREST-TOWARD-ZERO "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_88() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    NEAREST-TOWARD-ZERO "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_89() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS PROHIBITED "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_90() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    PROHIBITED "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_91() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS TOWARD-GREATER "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_92() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    TOWARD-GREATER "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_93() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS TOWARD-LESSER "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_94() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    TOWARD-LESSER "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_95() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE IS TRUNCATION "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRoundedPhrase_96() {
+      Parser parser = grammar.roundedPhrase();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROUNDED MODE    TRUNCATION "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testSecureClause_97() {
+      Parser parser = grammar.secureClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SECURE "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRequiredClause_98() {
+      Parser parser = grammar.requiredClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REQUIRED "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

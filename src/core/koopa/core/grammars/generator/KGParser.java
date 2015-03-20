@@ -987,7 +987,7 @@ public class KGParser extends Parser {
 
 
 	// $ANTLR start "part"
-	// src/core/koopa/core/grammars/generator/KG.g:96:1: part : (code= NATIVE_CODE -> ^( ACT NATIVE_CODE ) | TAG | ANY | LITERAL | NUMBER |a= IDENTIFIER (e= EQUALS (b= IDENTIFIER |b= NUMBER |b= DOT |b= ANY ) )? -> { e != null }? ^( ASSIGN $a $b) -> IDENTIFIER | DOT | OPEN_PAREN sequence (m+= more )* CLOSE_PAREN (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( CHOICE sequence ( more )* ) ) -> { r != null && m == null }? ^( $r sequence ) -> { r == null && m != null }? ^( CHOICE sequence ( more )* ) -> sequence | OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) ) -> { r != null && m == null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ) ) ) -> { r == null && m != null }? ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) -> ^( OPTIONAL sequence ) | SKIP_TO part -> ^( SKIP_TO part ) | BANG OPEN_PAREN sequence (m+= more )* CLOSE_PAREN -> { m == null }? ^( OPTIONAL sequence ) -> ^( PERMUTED sequence ( more )* ) | DOLLAR OPEN_PAREN dispatch (m+= more_dispatch )* CLOSE_PAREN -> { m == null }? ^( DISPATCHED dispatch ) -> ^( DISPATCHED dispatch ( more_dispatch )* ) | NOT part -> ^( NOT part ) | NOSKIP part -> ^( NOSKIP part ) | LIMIT part BY part -> ^( LIMIT part part ) | WITH p= part SKIP_TO q= part -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) ) );
+	// src/core/koopa/core/grammars/generator/KG.g:96:1: part : (code= NATIVE_CODE -> ^( ACT NATIVE_CODE ) | TAG | ANY | LITERAL | NUMBER |a= IDENTIFIER (e= EQUALS (b= IDENTIFIER |b= NUMBER |b= DOT |b= ANY ) )? -> { e != null }? ^( ASSIGN $a $b) -> IDENTIFIER | DOT | OPEN_PAREN sequence (m+= more )* CLOSE_PAREN (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( CHOICE sequence ( more )* ) ) -> { r != null && m == null }? ^( $r sequence ) -> { r == null && m != null }? ^( CHOICE sequence ( more )* ) -> sequence | OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) ) -> { r != null && m == null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ) ) ) -> { r == null && m != null }? ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) -> ^( OPTIONAL sequence ) | SKIP_TO part -> ^( SKIP_TO part ) | BANG OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET -> { m == null }? ^( OPTIONAL sequence ) -> ^( OPTIONAL ^( PERMUTED sequence ( more )* ) ) | BANG OPEN_PAREN sequence (m+= more )* CLOSE_PAREN -> { m == null }? sequence -> ^( PERMUTED sequence ( more )* ) | DOLLAR OPEN_PAREN dispatch (m+= more_dispatch )* CLOSE_PAREN -> { m == null }? ^( DISPATCHED dispatch ) -> ^( DISPATCHED dispatch ( more_dispatch )* ) | NOT part -> ^( NOT part ) | NOSKIP part -> ^( NOSKIP part ) | LIMIT part BY part -> ^( LIMIT part part ) | WITH p= part SKIP_TO q= part -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) ) );
 	public final KGParser.part_return part() throws RecognitionException {
 		KGParser.part_return retval = new KGParser.part_return();
 		retval.start = input.LT(1);
@@ -1010,17 +1010,20 @@ public class KGParser extends Parser {
 		Token CLOSE_BRACKET29=null;
 		Token SKIP_TO30=null;
 		Token BANG32=null;
-		Token OPEN_PAREN33=null;
-		Token CLOSE_PAREN35=null;
-		Token DOLLAR36=null;
+		Token OPEN_BRACKET33=null;
+		Token CLOSE_BRACKET35=null;
+		Token BANG36=null;
 		Token OPEN_PAREN37=null;
 		Token CLOSE_PAREN39=null;
-		Token NOT40=null;
-		Token NOSKIP42=null;
-		Token LIMIT44=null;
-		Token BY46=null;
-		Token WITH48=null;
-		Token SKIP_TO49=null;
+		Token DOLLAR40=null;
+		Token OPEN_PAREN41=null;
+		Token CLOSE_PAREN43=null;
+		Token NOT44=null;
+		Token NOSKIP46=null;
+		Token LIMIT48=null;
+		Token BY50=null;
+		Token WITH52=null;
+		Token SKIP_TO53=null;
 		List<Object> list_m=null;
 		ParserRuleReturnScope p =null;
 		ParserRuleReturnScope q =null;
@@ -1028,11 +1031,12 @@ public class KGParser extends Parser {
 		ParserRuleReturnScope sequence28 =null;
 		ParserRuleReturnScope part31 =null;
 		ParserRuleReturnScope sequence34 =null;
-		ParserRuleReturnScope dispatch38 =null;
-		ParserRuleReturnScope part41 =null;
-		ParserRuleReturnScope part43 =null;
+		ParserRuleReturnScope sequence38 =null;
+		ParserRuleReturnScope dispatch42 =null;
 		ParserRuleReturnScope part45 =null;
 		ParserRuleReturnScope part47 =null;
+		ParserRuleReturnScope part49 =null;
+		ParserRuleReturnScope part51 =null;
 		RuleReturnScope m = null;
 		CommonTree code_tree=null;
 		CommonTree a_tree=null;
@@ -1050,17 +1054,20 @@ public class KGParser extends Parser {
 		CommonTree CLOSE_BRACKET29_tree=null;
 		CommonTree SKIP_TO30_tree=null;
 		CommonTree BANG32_tree=null;
-		CommonTree OPEN_PAREN33_tree=null;
-		CommonTree CLOSE_PAREN35_tree=null;
-		CommonTree DOLLAR36_tree=null;
+		CommonTree OPEN_BRACKET33_tree=null;
+		CommonTree CLOSE_BRACKET35_tree=null;
+		CommonTree BANG36_tree=null;
 		CommonTree OPEN_PAREN37_tree=null;
 		CommonTree CLOSE_PAREN39_tree=null;
-		CommonTree NOT40_tree=null;
-		CommonTree NOSKIP42_tree=null;
-		CommonTree LIMIT44_tree=null;
-		CommonTree BY46_tree=null;
-		CommonTree WITH48_tree=null;
-		CommonTree SKIP_TO49_tree=null;
+		CommonTree DOLLAR40_tree=null;
+		CommonTree OPEN_PAREN41_tree=null;
+		CommonTree CLOSE_PAREN43_tree=null;
+		CommonTree NOT44_tree=null;
+		CommonTree NOSKIP46_tree=null;
+		CommonTree LIMIT48_tree=null;
+		CommonTree BY50_tree=null;
+		CommonTree WITH52_tree=null;
+		CommonTree SKIP_TO53_tree=null;
 		RewriteRuleTokenStream stream_NUMBER=new RewriteRuleTokenStream(adaptor,"token NUMBER");
 		RewriteRuleTokenStream stream_EQUALS=new RewriteRuleTokenStream(adaptor,"token EQUALS");
 		RewriteRuleTokenStream stream_BANG=new RewriteRuleTokenStream(adaptor,"token BANG");
@@ -1088,95 +1095,114 @@ public class KGParser extends Parser {
 		RewriteRuleSubtreeStream stream_part=new RewriteRuleSubtreeStream(adaptor,"rule part");
 
 		try {
-			// src/core/koopa/core/grammars/generator/KG.g:97:3: (code= NATIVE_CODE -> ^( ACT NATIVE_CODE ) | TAG | ANY | LITERAL | NUMBER |a= IDENTIFIER (e= EQUALS (b= IDENTIFIER |b= NUMBER |b= DOT |b= ANY ) )? -> { e != null }? ^( ASSIGN $a $b) -> IDENTIFIER | DOT | OPEN_PAREN sequence (m+= more )* CLOSE_PAREN (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( CHOICE sequence ( more )* ) ) -> { r != null && m == null }? ^( $r sequence ) -> { r == null && m != null }? ^( CHOICE sequence ( more )* ) -> sequence | OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) ) -> { r != null && m == null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ) ) ) -> { r == null && m != null }? ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) -> ^( OPTIONAL sequence ) | SKIP_TO part -> ^( SKIP_TO part ) | BANG OPEN_PAREN sequence (m+= more )* CLOSE_PAREN -> { m == null }? ^( OPTIONAL sequence ) -> ^( PERMUTED sequence ( more )* ) | DOLLAR OPEN_PAREN dispatch (m+= more_dispatch )* CLOSE_PAREN -> { m == null }? ^( DISPATCHED dispatch ) -> ^( DISPATCHED dispatch ( more_dispatch )* ) | NOT part -> ^( NOT part ) | NOSKIP part -> ^( NOSKIP part ) | LIMIT part BY part -> ^( LIMIT part part ) | WITH p= part SKIP_TO q= part -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) ) )
-			int alt16=16;
+			// src/core/koopa/core/grammars/generator/KG.g:97:3: (code= NATIVE_CODE -> ^( ACT NATIVE_CODE ) | TAG | ANY | LITERAL | NUMBER |a= IDENTIFIER (e= EQUALS (b= IDENTIFIER |b= NUMBER |b= DOT |b= ANY ) )? -> { e != null }? ^( ASSIGN $a $b) -> IDENTIFIER | DOT | OPEN_PAREN sequence (m+= more )* CLOSE_PAREN (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( CHOICE sequence ( more )* ) ) -> { r != null && m == null }? ^( $r sequence ) -> { r == null && m != null }? ^( CHOICE sequence ( more )* ) -> sequence | OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET (r= STAR |r= PLUS )? -> { r != null && m != null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) ) -> { r != null && m == null }? ^( $r ^( OPTIONAL ^( CHOICE sequence ) ) ) -> { r == null && m != null }? ^( OPTIONAL ^( CHOICE sequence ( more )* ) ) -> ^( OPTIONAL sequence ) | SKIP_TO part -> ^( SKIP_TO part ) | BANG OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET -> { m == null }? ^( OPTIONAL sequence ) -> ^( OPTIONAL ^( PERMUTED sequence ( more )* ) ) | BANG OPEN_PAREN sequence (m+= more )* CLOSE_PAREN -> { m == null }? sequence -> ^( PERMUTED sequence ( more )* ) | DOLLAR OPEN_PAREN dispatch (m+= more_dispatch )* CLOSE_PAREN -> { m == null }? ^( DISPATCHED dispatch ) -> ^( DISPATCHED dispatch ( more_dispatch )* ) | NOT part -> ^( NOT part ) | NOSKIP part -> ^( NOSKIP part ) | LIMIT part BY part -> ^( LIMIT part part ) | WITH p= part SKIP_TO q= part -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) ) )
+			int alt17=17;
 			switch ( input.LA(1) ) {
 			case NATIVE_CODE:
 				{
-				alt16=1;
+				alt17=1;
 				}
 				break;
 			case TAG:
 				{
-				alt16=2;
+				alt17=2;
 				}
 				break;
 			case ANY:
 				{
-				alt16=3;
+				alt17=3;
 				}
 				break;
 			case LITERAL:
 				{
-				alt16=4;
+				alt17=4;
 				}
 				break;
 			case NUMBER:
 				{
-				alt16=5;
+				alt17=5;
 				}
 				break;
 			case IDENTIFIER:
 				{
-				alt16=6;
+				alt17=6;
 				}
 				break;
 			case DOT:
 				{
-				alt16=7;
+				alt17=7;
 				}
 				break;
 			case OPEN_PAREN:
 				{
-				alt16=8;
+				alt17=8;
 				}
 				break;
 			case OPEN_BRACKET:
 				{
-				alt16=9;
+				alt17=9;
 				}
 				break;
 			case SKIP_TO:
 				{
-				alt16=10;
+				alt17=10;
 				}
 				break;
 			case BANG:
 				{
-				alt16=11;
+				int LA17_11 = input.LA(2);
+				if ( (LA17_11==OPEN_BRACKET) ) {
+					alt17=11;
+				}
+				else if ( (LA17_11==OPEN_PAREN) ) {
+					alt17=12;
+				}
+
+				else {
+					int nvaeMark = input.mark();
+					try {
+						input.consume();
+						NoViableAltException nvae =
+							new NoViableAltException("", 17, 11, input);
+						throw nvae;
+					} finally {
+						input.rewind(nvaeMark);
+					}
+				}
+
 				}
 				break;
 			case DOLLAR:
 				{
-				alt16=12;
+				alt17=13;
 				}
 				break;
 			case NOT:
 				{
-				alt16=13;
+				alt17=14;
 				}
 				break;
 			case NOSKIP:
 				{
-				alt16=14;
+				alt17=15;
 				}
 				break;
 			case LIMIT:
 				{
-				alt16=15;
+				alt17=16;
 				}
 				break;
 			case WITH:
 				{
-				alt16=16;
+				alt17=17;
 				}
 				break;
 			default:
 				NoViableAltException nvae =
-					new NoViableAltException("", 16, 0, input);
+					new NoViableAltException("", 17, 0, input);
 				throw nvae;
 			}
-			switch (alt16) {
+			switch (alt17) {
 				case 1 :
 					// src/core/koopa/core/grammars/generator/KG.g:97:5: code= NATIVE_CODE
 					{
@@ -1770,20 +1796,20 @@ public class KGParser extends Parser {
 					}
 					break;
 				case 11 :
-					// src/core/koopa/core/grammars/generator/KG.g:138:5: BANG OPEN_PAREN sequence (m+= more )* CLOSE_PAREN
+					// src/core/koopa/core/grammars/generator/KG.g:138:5: BANG OPEN_BRACKET sequence (m+= more )* CLOSE_BRACKET
 					{
 					BANG32=(Token)match(input,BANG,FOLLOW_BANG_in_part960);  
 					stream_BANG.add(BANG32);
 
-					OPEN_PAREN33=(Token)match(input,OPEN_PAREN,FOLLOW_OPEN_PAREN_in_part962);  
-					stream_OPEN_PAREN.add(OPEN_PAREN33);
+					OPEN_BRACKET33=(Token)match(input,OPEN_BRACKET,FOLLOW_OPEN_BRACKET_in_part962);  
+					stream_OPEN_BRACKET.add(OPEN_BRACKET33);
 
 					pushFollow(FOLLOW_sequence_in_part964);
 					sequence34=sequence();
 					state._fsp--;
 
 					stream_sequence.add(sequence34.getTree());
-					// src/core/koopa/core/grammars/generator/KG.g:138:31: (m+= more )*
+					// src/core/koopa/core/grammars/generator/KG.g:138:33: (m+= more )*
 					loop14:
 					while (true) {
 						int alt14=2;
@@ -1794,7 +1820,7 @@ public class KGParser extends Parser {
 
 						switch (alt14) {
 						case 1 :
-							// src/core/koopa/core/grammars/generator/KG.g:138:31: m+= more
+							// src/core/koopa/core/grammars/generator/KG.g:138:33: m+= more
 							{
 							pushFollow(FOLLOW_more_in_part968);
 							m=more();
@@ -1811,8 +1837,8 @@ public class KGParser extends Parser {
 						}
 					}
 
-					CLOSE_PAREN35=(Token)match(input,CLOSE_PAREN,FOLLOW_CLOSE_PAREN_in_part971);  
-					stream_CLOSE_PAREN.add(CLOSE_PAREN35);
+					CLOSE_BRACKET35=(Token)match(input,CLOSE_BRACKET,FOLLOW_CLOSE_BRACKET_in_part971);  
+					stream_CLOSE_BRACKET.add(CLOSE_BRACKET35);
 
 					// AST REWRITE
 					// elements: sequence, more, sequence
@@ -1837,14 +1863,105 @@ public class KGParser extends Parser {
 
 					}
 
-					else // 141:5: -> ^( PERMUTED sequence ( more )* )
+					else // 141:5: -> ^( OPTIONAL ^( PERMUTED sequence ( more )* ) )
 					{
-						// src/core/koopa/core/grammars/generator/KG.g:141:8: ^( PERMUTED sequence ( more )* )
+						// src/core/koopa/core/grammars/generator/KG.g:141:8: ^( OPTIONAL ^( PERMUTED sequence ( more )* ) )
+						{
+						CommonTree root_1 = (CommonTree)adaptor.nil();
+						root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(OPTIONAL, "OPTIONAL"), root_1);
+						// src/core/koopa/core/grammars/generator/KG.g:141:19: ^( PERMUTED sequence ( more )* )
+						{
+						CommonTree root_2 = (CommonTree)adaptor.nil();
+						root_2 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(PERMUTED, "PERMUTED"), root_2);
+						adaptor.addChild(root_2, stream_sequence.nextTree());
+						// src/core/koopa/core/grammars/generator/KG.g:141:39: ( more )*
+						while ( stream_more.hasNext() ) {
+							adaptor.addChild(root_2, stream_more.nextTree());
+						}
+						stream_more.reset();
+
+						adaptor.addChild(root_1, root_2);
+						}
+
+						adaptor.addChild(root_0, root_1);
+						}
+
+					}
+
+
+					retval.tree = root_0;
+
+					}
+					break;
+				case 12 :
+					// src/core/koopa/core/grammars/generator/KG.g:143:5: BANG OPEN_PAREN sequence (m+= more )* CLOSE_PAREN
+					{
+					BANG36=(Token)match(input,BANG,FOLLOW_BANG_in_part1018);  
+					stream_BANG.add(BANG36);
+
+					OPEN_PAREN37=(Token)match(input,OPEN_PAREN,FOLLOW_OPEN_PAREN_in_part1020);  
+					stream_OPEN_PAREN.add(OPEN_PAREN37);
+
+					pushFollow(FOLLOW_sequence_in_part1022);
+					sequence38=sequence();
+					state._fsp--;
+
+					stream_sequence.add(sequence38.getTree());
+					// src/core/koopa/core/grammars/generator/KG.g:143:31: (m+= more )*
+					loop15:
+					while (true) {
+						int alt15=2;
+						int LA15_0 = input.LA(1);
+						if ( (LA15_0==PIPE) ) {
+							alt15=1;
+						}
+
+						switch (alt15) {
+						case 1 :
+							// src/core/koopa/core/grammars/generator/KG.g:143:31: m+= more
+							{
+							pushFollow(FOLLOW_more_in_part1026);
+							m=more();
+							state._fsp--;
+
+							stream_more.add(m.getTree());
+							if (list_m==null) list_m=new ArrayList<Object>();
+							list_m.add(m.getTree());
+							}
+							break;
+
+						default :
+							break loop15;
+						}
+					}
+
+					CLOSE_PAREN39=(Token)match(input,CLOSE_PAREN,FOLLOW_CLOSE_PAREN_in_part1029);  
+					stream_CLOSE_PAREN.add(CLOSE_PAREN39);
+
+					// AST REWRITE
+					// elements: more, sequence, sequence
+					// token labels: 
+					// rule labels: retval
+					// token list labels: 
+					// rule list labels: 
+					// wildcard labels: 
+					retval.tree = root_0;
+					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
+
+					root_0 = (CommonTree)adaptor.nil();
+					// 145:5: -> { m == null }? sequence
+					if ( m == null ) {
+						adaptor.addChild(root_0, stream_sequence.nextTree());
+					}
+
+					else // 146:5: -> ^( PERMUTED sequence ( more )* )
+					{
+						// src/core/koopa/core/grammars/generator/KG.g:146:8: ^( PERMUTED sequence ( more )* )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(PERMUTED, "PERMUTED"), root_1);
 						adaptor.addChild(root_1, stream_sequence.nextTree());
-						// src/core/koopa/core/grammars/generator/KG.g:141:28: ( more )*
+						// src/core/koopa/core/grammars/generator/KG.g:146:28: ( more )*
 						while ( stream_more.hasNext() ) {
 							adaptor.addChild(root_1, stream_more.nextTree());
 						}
@@ -1860,34 +1977,34 @@ public class KGParser extends Parser {
 
 					}
 					break;
-				case 12 :
-					// src/core/koopa/core/grammars/generator/KG.g:143:5: DOLLAR OPEN_PAREN dispatch (m+= more_dispatch )* CLOSE_PAREN
+				case 13 :
+					// src/core/koopa/core/grammars/generator/KG.g:148:5: DOLLAR OPEN_PAREN dispatch (m+= more_dispatch )* CLOSE_PAREN
 					{
-					DOLLAR36=(Token)match(input,DOLLAR,FOLLOW_DOLLAR_in_part1014);  
-					stream_DOLLAR.add(DOLLAR36);
+					DOLLAR40=(Token)match(input,DOLLAR,FOLLOW_DOLLAR_in_part1068);  
+					stream_DOLLAR.add(DOLLAR40);
 
-					OPEN_PAREN37=(Token)match(input,OPEN_PAREN,FOLLOW_OPEN_PAREN_in_part1016);  
-					stream_OPEN_PAREN.add(OPEN_PAREN37);
+					OPEN_PAREN41=(Token)match(input,OPEN_PAREN,FOLLOW_OPEN_PAREN_in_part1070);  
+					stream_OPEN_PAREN.add(OPEN_PAREN41);
 
-					pushFollow(FOLLOW_dispatch_in_part1018);
-					dispatch38=dispatch();
+					pushFollow(FOLLOW_dispatch_in_part1072);
+					dispatch42=dispatch();
 					state._fsp--;
 
-					stream_dispatch.add(dispatch38.getTree());
-					// src/core/koopa/core/grammars/generator/KG.g:143:33: (m+= more_dispatch )*
-					loop15:
+					stream_dispatch.add(dispatch42.getTree());
+					// src/core/koopa/core/grammars/generator/KG.g:148:33: (m+= more_dispatch )*
+					loop16:
 					while (true) {
-						int alt15=2;
-						int LA15_0 = input.LA(1);
-						if ( (LA15_0==PIPE) ) {
-							alt15=1;
+						int alt16=2;
+						int LA16_0 = input.LA(1);
+						if ( (LA16_0==PIPE) ) {
+							alt16=1;
 						}
 
-						switch (alt15) {
+						switch (alt16) {
 						case 1 :
-							// src/core/koopa/core/grammars/generator/KG.g:143:33: m+= more_dispatch
+							// src/core/koopa/core/grammars/generator/KG.g:148:33: m+= more_dispatch
 							{
-							pushFollow(FOLLOW_more_dispatch_in_part1022);
+							pushFollow(FOLLOW_more_dispatch_in_part1076);
 							m=more_dispatch();
 							state._fsp--;
 
@@ -1898,15 +2015,15 @@ public class KGParser extends Parser {
 							break;
 
 						default :
-							break loop15;
+							break loop16;
 						}
 					}
 
-					CLOSE_PAREN39=(Token)match(input,CLOSE_PAREN,FOLLOW_CLOSE_PAREN_in_part1025);  
-					stream_CLOSE_PAREN.add(CLOSE_PAREN39);
+					CLOSE_PAREN43=(Token)match(input,CLOSE_PAREN,FOLLOW_CLOSE_PAREN_in_part1079);  
+					stream_CLOSE_PAREN.add(CLOSE_PAREN43);
 
 					// AST REWRITE
-					// elements: more_dispatch, dispatch, dispatch
+					// elements: dispatch, more_dispatch, dispatch
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1916,9 +2033,9 @@ public class KGParser extends Parser {
 					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
-					// 145:5: -> { m == null }? ^( DISPATCHED dispatch )
+					// 150:5: -> { m == null }? ^( DISPATCHED dispatch )
 					if ( m == null ) {
-						// src/core/koopa/core/grammars/generator/KG.g:145:23: ^( DISPATCHED dispatch )
+						// src/core/koopa/core/grammars/generator/KG.g:150:23: ^( DISPATCHED dispatch )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(DISPATCHED, "DISPATCHED"), root_1);
@@ -1928,14 +2045,14 @@ public class KGParser extends Parser {
 
 					}
 
-					else // 146:5: -> ^( DISPATCHED dispatch ( more_dispatch )* )
+					else // 151:5: -> ^( DISPATCHED dispatch ( more_dispatch )* )
 					{
-						// src/core/koopa/core/grammars/generator/KG.g:146:8: ^( DISPATCHED dispatch ( more_dispatch )* )
+						// src/core/koopa/core/grammars/generator/KG.g:151:8: ^( DISPATCHED dispatch ( more_dispatch )* )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(DISPATCHED, "DISPATCHED"), root_1);
 						adaptor.addChild(root_1, stream_dispatch.nextTree());
-						// src/core/koopa/core/grammars/generator/KG.g:146:30: ( more_dispatch )*
+						// src/core/koopa/core/grammars/generator/KG.g:151:30: ( more_dispatch )*
 						while ( stream_more_dispatch.hasNext() ) {
 							adaptor.addChild(root_1, stream_more_dispatch.nextTree());
 						}
@@ -1951,17 +2068,17 @@ public class KGParser extends Parser {
 
 					}
 					break;
-				case 13 :
-					// src/core/koopa/core/grammars/generator/KG.g:148:5: NOT part
+				case 14 :
+					// src/core/koopa/core/grammars/generator/KG.g:153:5: NOT part
 					{
-					NOT40=(Token)match(input,NOT,FOLLOW_NOT_in_part1068);  
-					stream_NOT.add(NOT40);
+					NOT44=(Token)match(input,NOT,FOLLOW_NOT_in_part1122);  
+					stream_NOT.add(NOT44);
 
-					pushFollow(FOLLOW_part_in_part1070);
-					part41=part();
+					pushFollow(FOLLOW_part_in_part1124);
+					part45=part();
 					state._fsp--;
 
-					stream_part.add(part41.getTree());
+					stream_part.add(part45.getTree());
 					// AST REWRITE
 					// elements: part, NOT
 					// token labels: 
@@ -1973,9 +2090,9 @@ public class KGParser extends Parser {
 					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
-					// 149:5: -> ^( NOT part )
+					// 154:5: -> ^( NOT part )
 					{
-						// src/core/koopa/core/grammars/generator/KG.g:149:8: ^( NOT part )
+						// src/core/koopa/core/grammars/generator/KG.g:154:8: ^( NOT part )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot(stream_NOT.nextNode(), root_1);
@@ -1990,17 +2107,17 @@ public class KGParser extends Parser {
 
 					}
 					break;
-				case 14 :
-					// src/core/koopa/core/grammars/generator/KG.g:151:5: NOSKIP part
+				case 15 :
+					// src/core/koopa/core/grammars/generator/KG.g:156:5: NOSKIP part
 					{
-					NOSKIP42=(Token)match(input,NOSKIP,FOLLOW_NOSKIP_in_part1089);  
-					stream_NOSKIP.add(NOSKIP42);
+					NOSKIP46=(Token)match(input,NOSKIP,FOLLOW_NOSKIP_in_part1143);  
+					stream_NOSKIP.add(NOSKIP46);
 
-					pushFollow(FOLLOW_part_in_part1091);
-					part43=part();
+					pushFollow(FOLLOW_part_in_part1145);
+					part47=part();
 					state._fsp--;
 
-					stream_part.add(part43.getTree());
+					stream_part.add(part47.getTree());
 					// AST REWRITE
 					// elements: part, NOSKIP
 					// token labels: 
@@ -2012,9 +2129,9 @@ public class KGParser extends Parser {
 					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
-					// 152:3: -> ^( NOSKIP part )
+					// 157:3: -> ^( NOSKIP part )
 					{
-						// src/core/koopa/core/grammars/generator/KG.g:152:6: ^( NOSKIP part )
+						// src/core/koopa/core/grammars/generator/KG.g:157:6: ^( NOSKIP part )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot(stream_NOSKIP.nextNode(), root_1);
@@ -2029,27 +2146,27 @@ public class KGParser extends Parser {
 
 					}
 					break;
-				case 15 :
-					// src/core/koopa/core/grammars/generator/KG.g:154:5: LIMIT part BY part
+				case 16 :
+					// src/core/koopa/core/grammars/generator/KG.g:159:5: LIMIT part BY part
 					{
-					LIMIT44=(Token)match(input,LIMIT,FOLLOW_LIMIT_in_part1108);  
-					stream_LIMIT.add(LIMIT44);
+					LIMIT48=(Token)match(input,LIMIT,FOLLOW_LIMIT_in_part1162);  
+					stream_LIMIT.add(LIMIT48);
 
-					pushFollow(FOLLOW_part_in_part1110);
-					part45=part();
+					pushFollow(FOLLOW_part_in_part1164);
+					part49=part();
 					state._fsp--;
 
-					stream_part.add(part45.getTree());
-					BY46=(Token)match(input,BY,FOLLOW_BY_in_part1112);  
-					stream_BY.add(BY46);
+					stream_part.add(part49.getTree());
+					BY50=(Token)match(input,BY,FOLLOW_BY_in_part1166);  
+					stream_BY.add(BY50);
 
-					pushFollow(FOLLOW_part_in_part1114);
-					part47=part();
+					pushFollow(FOLLOW_part_in_part1168);
+					part51=part();
 					state._fsp--;
 
-					stream_part.add(part47.getTree());
+					stream_part.add(part51.getTree());
 					// AST REWRITE
-					// elements: part, LIMIT, part
+					// elements: LIMIT, part, part
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2059,9 +2176,9 @@ public class KGParser extends Parser {
 					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
-					// 155:3: -> ^( LIMIT part part )
+					// 160:3: -> ^( LIMIT part part )
 					{
-						// src/core/koopa/core/grammars/generator/KG.g:155:6: ^( LIMIT part part )
+						// src/core/koopa/core/grammars/generator/KG.g:160:6: ^( LIMIT part part )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot(stream_LIMIT.nextNode(), root_1);
@@ -2077,27 +2194,27 @@ public class KGParser extends Parser {
 
 					}
 					break;
-				case 16 :
-					// src/core/koopa/core/grammars/generator/KG.g:157:5: WITH p= part SKIP_TO q= part
+				case 17 :
+					// src/core/koopa/core/grammars/generator/KG.g:162:5: WITH p= part SKIP_TO q= part
 					{
-					WITH48=(Token)match(input,WITH,FOLLOW_WITH_in_part1133);  
-					stream_WITH.add(WITH48);
+					WITH52=(Token)match(input,WITH,FOLLOW_WITH_in_part1187);  
+					stream_WITH.add(WITH52);
 
-					pushFollow(FOLLOW_part_in_part1137);
+					pushFollow(FOLLOW_part_in_part1191);
 					p=part();
 					state._fsp--;
 
 					stream_part.add(p.getTree());
-					SKIP_TO49=(Token)match(input,SKIP_TO,FOLLOW_SKIP_TO_in_part1139);  
-					stream_SKIP_TO.add(SKIP_TO49);
+					SKIP_TO53=(Token)match(input,SKIP_TO,FOLLOW_SKIP_TO_in_part1193);  
+					stream_SKIP_TO.add(SKIP_TO53);
 
-					pushFollow(FOLLOW_part_in_part1143);
+					pushFollow(FOLLOW_part_in_part1197);
 					q=part();
 					state._fsp--;
 
 					stream_part.add(q.getTree());
 					// AST REWRITE
-					// elements: q, SKIP_TO, p, q
+					// elements: p, q, q, SKIP_TO
 					// token labels: 
 					// rule labels: p, q, retval
 					// token list labels: 
@@ -2109,13 +2226,13 @@ public class KGParser extends Parser {
 					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
-					// 158:3: -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) )
+					// 163:3: -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) )
 					{
-						// src/core/koopa/core/grammars/generator/KG.g:158:6: ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) )
+						// src/core/koopa/core/grammars/generator/KG.g:163:6: ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) )
 						{
 						CommonTree root_1 = (CommonTree)adaptor.nil();
 						root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(SEQUENCE, "SEQUENCE"), root_1);
-						// src/core/koopa/core/grammars/generator/KG.g:159:8: ^( LIMIT $p $q)
+						// src/core/koopa/core/grammars/generator/KG.g:164:8: ^( LIMIT $p $q)
 						{
 						CommonTree root_2 = (CommonTree)adaptor.nil();
 						root_2 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(LIMIT, "LIMIT"), root_2);
@@ -2124,7 +2241,7 @@ public class KGParser extends Parser {
 						adaptor.addChild(root_1, root_2);
 						}
 
-						// src/core/koopa/core/grammars/generator/KG.g:160:8: ^( SKIP_TO $q)
+						// src/core/koopa/core/grammars/generator/KG.g:165:8: ^( SKIP_TO $q)
 						{
 						CommonTree root_2 = (CommonTree)adaptor.nil();
 						root_2 = (CommonTree)adaptor.becomeRoot(stream_SKIP_TO.nextNode(), root_2);
@@ -2171,32 +2288,32 @@ public class KGParser extends Parser {
 
 
 	// $ANTLR start "more"
-	// src/core/koopa/core/grammars/generator/KG.g:163:1: more : PIPE sequence -> sequence ;
+	// src/core/koopa/core/grammars/generator/KG.g:168:1: more : PIPE sequence -> sequence ;
 	public final KGParser.more_return more() throws RecognitionException {
 		KGParser.more_return retval = new KGParser.more_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token PIPE50=null;
-		ParserRuleReturnScope sequence51 =null;
+		Token PIPE54=null;
+		ParserRuleReturnScope sequence55 =null;
 
-		CommonTree PIPE50_tree=null;
+		CommonTree PIPE54_tree=null;
 		RewriteRuleTokenStream stream_PIPE=new RewriteRuleTokenStream(adaptor,"token PIPE");
 		RewriteRuleSubtreeStream stream_sequence=new RewriteRuleSubtreeStream(adaptor,"rule sequence");
 
 		try {
-			// src/core/koopa/core/grammars/generator/KG.g:164:3: ( PIPE sequence -> sequence )
-			// src/core/koopa/core/grammars/generator/KG.g:164:5: PIPE sequence
+			// src/core/koopa/core/grammars/generator/KG.g:169:3: ( PIPE sequence -> sequence )
+			// src/core/koopa/core/grammars/generator/KG.g:169:5: PIPE sequence
 			{
-			PIPE50=(Token)match(input,PIPE,FOLLOW_PIPE_in_more1195);  
-			stream_PIPE.add(PIPE50);
+			PIPE54=(Token)match(input,PIPE,FOLLOW_PIPE_in_more1249);  
+			stream_PIPE.add(PIPE54);
 
-			pushFollow(FOLLOW_sequence_in_more1197);
-			sequence51=sequence();
+			pushFollow(FOLLOW_sequence_in_more1251);
+			sequence55=sequence();
 			state._fsp--;
 
-			stream_sequence.add(sequence51.getTree());
+			stream_sequence.add(sequence55.getTree());
 			// AST REWRITE
 			// elements: sequence
 			// token labels: 
@@ -2208,7 +2325,7 @@ public class KGParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 166:5: -> sequence
+			// 171:5: -> sequence
 			{
 				adaptor.addChild(root_0, stream_sequence.nextTree());
 			}
@@ -2245,38 +2362,38 @@ public class KGParser extends Parser {
 
 
 	// $ANTLR start "dispatch"
-	// src/core/koopa/core/grammars/generator/KG.g:169:1: dispatch : IDENTIFIER ARROW sequence -> ^( CASE IDENTIFIER sequence ) ;
+	// src/core/koopa/core/grammars/generator/KG.g:174:1: dispatch : IDENTIFIER ARROW sequence -> ^( CASE IDENTIFIER sequence ) ;
 	public final KGParser.dispatch_return dispatch() throws RecognitionException {
 		KGParser.dispatch_return retval = new KGParser.dispatch_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token IDENTIFIER52=null;
-		Token ARROW53=null;
-		ParserRuleReturnScope sequence54 =null;
+		Token IDENTIFIER56=null;
+		Token ARROW57=null;
+		ParserRuleReturnScope sequence58 =null;
 
-		CommonTree IDENTIFIER52_tree=null;
-		CommonTree ARROW53_tree=null;
+		CommonTree IDENTIFIER56_tree=null;
+		CommonTree ARROW57_tree=null;
 		RewriteRuleTokenStream stream_ARROW=new RewriteRuleTokenStream(adaptor,"token ARROW");
 		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
 		RewriteRuleSubtreeStream stream_sequence=new RewriteRuleSubtreeStream(adaptor,"rule sequence");
 
 		try {
-			// src/core/koopa/core/grammars/generator/KG.g:170:3: ( IDENTIFIER ARROW sequence -> ^( CASE IDENTIFIER sequence ) )
-			// src/core/koopa/core/grammars/generator/KG.g:170:5: IDENTIFIER ARROW sequence
+			// src/core/koopa/core/grammars/generator/KG.g:175:3: ( IDENTIFIER ARROW sequence -> ^( CASE IDENTIFIER sequence ) )
+			// src/core/koopa/core/grammars/generator/KG.g:175:5: IDENTIFIER ARROW sequence
 			{
-			IDENTIFIER52=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_dispatch1223);  
-			stream_IDENTIFIER.add(IDENTIFIER52);
+			IDENTIFIER56=(Token)match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_dispatch1277);  
+			stream_IDENTIFIER.add(IDENTIFIER56);
 
-			ARROW53=(Token)match(input,ARROW,FOLLOW_ARROW_in_dispatch1225);  
-			stream_ARROW.add(ARROW53);
+			ARROW57=(Token)match(input,ARROW,FOLLOW_ARROW_in_dispatch1279);  
+			stream_ARROW.add(ARROW57);
 
-			pushFollow(FOLLOW_sequence_in_dispatch1227);
-			sequence54=sequence();
+			pushFollow(FOLLOW_sequence_in_dispatch1281);
+			sequence58=sequence();
 			state._fsp--;
 
-			stream_sequence.add(sequence54.getTree());
+			stream_sequence.add(sequence58.getTree());
 			// AST REWRITE
 			// elements: sequence, IDENTIFIER
 			// token labels: 
@@ -2288,9 +2405,9 @@ public class KGParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 172:5: -> ^( CASE IDENTIFIER sequence )
+			// 177:5: -> ^( CASE IDENTIFIER sequence )
 			{
-				// src/core/koopa/core/grammars/generator/KG.g:172:8: ^( CASE IDENTIFIER sequence )
+				// src/core/koopa/core/grammars/generator/KG.g:177:8: ^( CASE IDENTIFIER sequence )
 				{
 				CommonTree root_1 = (CommonTree)adaptor.nil();
 				root_1 = (CommonTree)adaptor.becomeRoot((CommonTree)adaptor.create(CASE, "CASE"), root_1);
@@ -2333,32 +2450,32 @@ public class KGParser extends Parser {
 
 
 	// $ANTLR start "more_dispatch"
-	// src/core/koopa/core/grammars/generator/KG.g:175:1: more_dispatch : PIPE dispatch -> dispatch ;
+	// src/core/koopa/core/grammars/generator/KG.g:180:1: more_dispatch : PIPE dispatch -> dispatch ;
 	public final KGParser.more_dispatch_return more_dispatch() throws RecognitionException {
 		KGParser.more_dispatch_return retval = new KGParser.more_dispatch_return();
 		retval.start = input.LT(1);
 
 		CommonTree root_0 = null;
 
-		Token PIPE55=null;
-		ParserRuleReturnScope dispatch56 =null;
+		Token PIPE59=null;
+		ParserRuleReturnScope dispatch60 =null;
 
-		CommonTree PIPE55_tree=null;
+		CommonTree PIPE59_tree=null;
 		RewriteRuleTokenStream stream_PIPE=new RewriteRuleTokenStream(adaptor,"token PIPE");
 		RewriteRuleSubtreeStream stream_dispatch=new RewriteRuleSubtreeStream(adaptor,"rule dispatch");
 
 		try {
-			// src/core/koopa/core/grammars/generator/KG.g:176:3: ( PIPE dispatch -> dispatch )
-			// src/core/koopa/core/grammars/generator/KG.g:176:5: PIPE dispatch
+			// src/core/koopa/core/grammars/generator/KG.g:181:3: ( PIPE dispatch -> dispatch )
+			// src/core/koopa/core/grammars/generator/KG.g:181:5: PIPE dispatch
 			{
-			PIPE55=(Token)match(input,PIPE,FOLLOW_PIPE_in_more_dispatch1259);  
-			stream_PIPE.add(PIPE55);
+			PIPE59=(Token)match(input,PIPE,FOLLOW_PIPE_in_more_dispatch1313);  
+			stream_PIPE.add(PIPE59);
 
-			pushFollow(FOLLOW_dispatch_in_more_dispatch1261);
-			dispatch56=dispatch();
+			pushFollow(FOLLOW_dispatch_in_more_dispatch1315);
+			dispatch60=dispatch();
 			state._fsp--;
 
-			stream_dispatch.add(dispatch56.getTree());
+			stream_dispatch.add(dispatch60.getTree());
 			// AST REWRITE
 			// elements: dispatch
 			// token labels: 
@@ -2370,7 +2487,7 @@ public class KGParser extends Parser {
 			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
-			// 178:5: -> dispatch
+			// 183:5: -> dispatch
 			{
 				adaptor.addChild(root_0, stream_dispatch.nextTree());
 			}
@@ -2453,33 +2570,38 @@ public class KGParser extends Parser {
 	public static final BitSet FOLLOW_PLUS_in_part842 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_SKIP_TO_in_part934 = new BitSet(new long[]{0x0009407D1A300120L});
 	public static final BitSet FOLLOW_part_in_part936 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_BANG_in_part960 = new BitSet(new long[]{0x0000004000000000L});
-	public static final BitSet FOLLOW_OPEN_PAREN_in_part962 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_sequence_in_part964 = new BitSet(new long[]{0x0000020000004000L});
-	public static final BitSet FOLLOW_more_in_part968 = new BitSet(new long[]{0x0000020000004000L});
-	public static final BitSet FOLLOW_CLOSE_PAREN_in_part971 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_DOLLAR_in_part1014 = new BitSet(new long[]{0x0000004000000000L});
-	public static final BitSet FOLLOW_OPEN_PAREN_in_part1016 = new BitSet(new long[]{0x0000000002000000L});
-	public static final BitSet FOLLOW_dispatch_in_part1018 = new BitSet(new long[]{0x0000020000004000L});
-	public static final BitSet FOLLOW_more_dispatch_in_part1022 = new BitSet(new long[]{0x0000020000004000L});
-	public static final BitSet FOLLOW_CLOSE_PAREN_in_part1025 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_NOT_in_part1068 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_part_in_part1070 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_NOSKIP_in_part1089 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_part_in_part1091 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_LIMIT_in_part1108 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_part_in_part1110 = new BitSet(new long[]{0x0000000000000400L});
-	public static final BitSet FOLLOW_BY_in_part1112 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_part_in_part1114 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_WITH_in_part1133 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_part_in_part1137 = new BitSet(new long[]{0x0000400000000000L});
-	public static final BitSet FOLLOW_SKIP_TO_in_part1139 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_part_in_part1143 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_PIPE_in_more1195 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_sequence_in_more1197 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_IDENTIFIER_in_dispatch1223 = new BitSet(new long[]{0x0000000000000040L});
-	public static final BitSet FOLLOW_ARROW_in_dispatch1225 = new BitSet(new long[]{0x0009407D1A300120L});
-	public static final BitSet FOLLOW_sequence_in_dispatch1227 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_PIPE_in_more_dispatch1259 = new BitSet(new long[]{0x0000000002000000L});
-	public static final BitSet FOLLOW_dispatch_in_more_dispatch1261 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_BANG_in_part960 = new BitSet(new long[]{0x0000002000000000L});
+	public static final BitSet FOLLOW_OPEN_BRACKET_in_part962 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_sequence_in_part964 = new BitSet(new long[]{0x0000020000002000L});
+	public static final BitSet FOLLOW_more_in_part968 = new BitSet(new long[]{0x0000020000002000L});
+	public static final BitSet FOLLOW_CLOSE_BRACKET_in_part971 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_BANG_in_part1018 = new BitSet(new long[]{0x0000004000000000L});
+	public static final BitSet FOLLOW_OPEN_PAREN_in_part1020 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_sequence_in_part1022 = new BitSet(new long[]{0x0000020000004000L});
+	public static final BitSet FOLLOW_more_in_part1026 = new BitSet(new long[]{0x0000020000004000L});
+	public static final BitSet FOLLOW_CLOSE_PAREN_in_part1029 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_DOLLAR_in_part1068 = new BitSet(new long[]{0x0000004000000000L});
+	public static final BitSet FOLLOW_OPEN_PAREN_in_part1070 = new BitSet(new long[]{0x0000000002000000L});
+	public static final BitSet FOLLOW_dispatch_in_part1072 = new BitSet(new long[]{0x0000020000004000L});
+	public static final BitSet FOLLOW_more_dispatch_in_part1076 = new BitSet(new long[]{0x0000020000004000L});
+	public static final BitSet FOLLOW_CLOSE_PAREN_in_part1079 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_NOT_in_part1122 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_part_in_part1124 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_NOSKIP_in_part1143 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_part_in_part1145 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_LIMIT_in_part1162 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_part_in_part1164 = new BitSet(new long[]{0x0000000000000400L});
+	public static final BitSet FOLLOW_BY_in_part1166 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_part_in_part1168 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_WITH_in_part1187 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_part_in_part1191 = new BitSet(new long[]{0x0000400000000000L});
+	public static final BitSet FOLLOW_SKIP_TO_in_part1193 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_part_in_part1197 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_PIPE_in_more1249 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_sequence_in_more1251 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_IDENTIFIER_in_dispatch1277 = new BitSet(new long[]{0x0000000000000040L});
+	public static final BitSet FOLLOW_ARROW_in_dispatch1279 = new BitSet(new long[]{0x0009407D1A300120L});
+	public static final BitSet FOLLOW_sequence_in_dispatch1281 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_PIPE_in_more_dispatch1313 = new BitSet(new long[]{0x0000000002000000L});
+	public static final BitSet FOLLOW_dispatch_in_more_dispatch1315 = new BitSet(new long[]{0x0000000000000002L});
 }

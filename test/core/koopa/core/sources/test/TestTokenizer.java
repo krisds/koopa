@@ -59,7 +59,6 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 		return token;
 	}
 
-	@Override
 	public void close() {
 		source.close();
 	}

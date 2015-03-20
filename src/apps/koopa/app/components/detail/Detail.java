@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -137,7 +138,6 @@ public class Detail extends JPanel implements Configurable {
 		detailsTable = new DetailsTable(parseDetails);
 
 		detailsTable.addListener(new DetailsTableListener() {
-			@Override
 			public void userSelectedDetail(Tuple<Token, String> detail) {
 				final Token token = detail.getFirst();
 				sourceView.scrollTo(token.getStart().getPositionInFile());
@@ -154,7 +154,9 @@ public class Detail extends JPanel implements Configurable {
 		JPanel x = new JPanel();
 		x.setLayout(new BorderLayout());
 		x.add(horizontalSplit, BorderLayout.CENTER);
-		x.add(breadcrumb, BorderLayout.SOUTH);
+		JScrollPane scrollingBreadcrumb = new JScrollPane(breadcrumb);
+		scrollingBreadcrumb.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		x.add(scrollingBreadcrumb, BorderLayout.SOUTH);
 
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, x,
 				detailsScroll);

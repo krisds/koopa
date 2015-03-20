@@ -597,7 +597,7 @@ end
 def selectStatement = 
     selectClause
     assignClause
-    !( organizationClause
+    ![ organizationClause
      | collationClause
      | recordDelimiterClause
      | reserveClause
@@ -609,7 +609,7 @@ def selectStatement =
      | fileStatusClause
      | sharingClause
      | paddingClause
-     )
+     ]
 #    [--> .]
 	.
 end
@@ -697,10 +697,10 @@ end
 
 def alternateRecordKeyClause =
     ALTERNATE [RECORD] [KEY] [IS] recordKeyDefinition
-        !( passwordClause
+        ![ passwordClause
          | suppressClause
          | [WITH] DUPLICATES
-         )
+         ]
 end
 
 def recordKeyDefinition =
@@ -792,6 +792,10 @@ def dataDivisionBody =
     )+
 end
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# FILE SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def fileSection =
 	FILE SECTION .
 	[fileSectionBody]
@@ -804,9 +808,50 @@ def fileSectionBody =
     [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
-def recordDescriptionEntry =
-	(dataDescriptionEntry | copyStatement)
+def fileDescriptionEntry =
+    ( fdFileDescriptionEntry
+    | sdFileDescriptionEntry
+    )
 end
+
+def fdFileDescriptionEntry =
+    FD fileName
+   ![ externalClause         # STD.BK sequential, relative-or-indexed, report
+    | globalClause           # STD.BK sequential, relative-or-indexed, report
+    | formatClause           # STD.BK sequential
+    | blockContainsClause    # STD.BK sequential, relative-or-indexed, report
+    | recordClause           # STD.BK sequential, relative-or-indexed, report
+    | linageClause           # STD.BK sequential
+    | codeSetClause          # STD.BK sequential, report
+    | reportClause           # STD.BK report
+    
+    | dataRecords
+    | labelRecords
+    | recordingMode
+    | threadLocalClause
+    | valueOfFileId
+    | valueOf
+    ]
+    (--> .)                  # TODO Handle skipped.
+    .
+end
+
+def sdFileDescriptionEntry =
+    SD fileName
+   ![ recordClause           # STD.BK
+    | blockContainsClause    # Supported by IBM Enterprise Cobol for z/OS.
+    | dataRecords
+    | labelRecords
+    | recordingMode
+    | valueOfFileId
+    ]
+    (--> .)                  # TODO Handle skipped.
+    .
+end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# WORKING-STORAGE SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def workingStorageSection =
 	WORKING-STORAGE SECTION .
@@ -816,6 +861,8 @@ def workingStorageSection =
     )*
 end
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def threadLocalStorageSection =
     THREAD-LOCAL-STORAGE SECTION .
     ( recordDescriptionEntry
@@ -823,6 +870,8 @@ def threadLocalStorageSection =
     | execStatement [.]
     )*
 end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def objectStorageSection =
     OBJECT-STORAGE SECTION .
@@ -832,6 +881,10 @@ def objectStorageSection =
     )*
 end
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# LOCAL-STORAGE SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def localStorageSection =
 	LOCAL-STORAGE SECTION .
 	( recordDescriptionEntry
@@ -840,6 +893,10 @@ def localStorageSection =
     )*
 end
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# LINKAGE SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def linkageSection =
 	LINKAGE SECTION .
     ( recordDescriptionEntry
@@ -847,6 +904,8 @@ def linkageSection =
     | execStatement [.]
     )*
 end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def communicationSection =
 	COMMUNICATION SECTION .
@@ -865,7 +924,7 @@ end
 def communicationDescriptionEntry_format1 =
     CD cdName [FOR] [INITIAL] INPUT
     ( (dataDescName)+
-    |  !( [SYMBOLIC] QUEUE      [IS] dataDescName
+    | ![ [SYMBOLIC] QUEUE       [IS] dataDescName
        | [SYMBOLIC] SUB-QUEUE-1 [IS] dataDescName
        | [SYMBOLIC] SUB-QUEUE-2 [IS] dataDescName
        | [SYMBOLIC] SUB-QUEUE-3 [IS] dataDescName
@@ -876,7 +935,7 @@ def communicationDescriptionEntry_format1 =
        | END KEY                [IS] dataDescName
        | STATUS KEY             [IS] dataDescName
        | [MESSAGE] COUNT        [IS] dataDescName
-       )
+       ]
     )
     .
 end
@@ -895,16 +954,20 @@ end
 def communicationDescriptionEntry_format3 =
     CD cdName [FOR] [INITIAL] I-O
     ( (dataDescName)+
-    | !( MESSAGE DATE           [IS] dataDescName
+    | ![ MESSAGE DATE           [IS] dataDescName
        | MESSAGE TIME           [IS] dataDescName
        | [SYMBOLIC] TERMINAL    [IS] dataDescName
        | TEXT LENGTH            [IS] dataDescName
        | END KEY                [IS] dataDescName
        | STATUS KEY             [IS] dataDescName
-       )
+       ]
     )
     .
 end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# REPORT SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def reportSection =
 	REPORT SECTION .
@@ -912,136 +975,214 @@ def reportSection =
 end
 
 def reportDescriptionEntry =
-    RD reportName [[IS] GLOBAL]
-    [ [WITH] CODE (literal | mnemonicName) ]
-    [ (CONTROL [IS] | CONTROLS [ARE]) (FINAL (dataName)* | (dataName)+) ]
-    [ PAGE [LIMIT | LIMITS] [IS | ARE] integer [LINE | LINES]
-        [ HEADING integer ]
-        [ FIRST DETAIL integer ]
-        [ LAST DETAIL integer ]
-        [ FOOTING integer ]
-    ]
-    .
+    RD reportName 
+    ![ globalClause                    # STD.BK
+     | codeClause                      # STD.BK
+     | controlClause                   # STD.BK
+     | pageClause                      # STD.BK
+     ] .
 end
 
 def reportGroupDescriptionEntry =
-    ( reportGroupDescriptionEntry_format1
-    | reportGroupDescriptionEntry_format2
-    | reportGroupDescriptionEntry_format3
-    )
-end
-
-def reportGroupDescriptionEntry_format1 =
-    01 [dataName]
-    [ LINE [NUMBER] [IS] ( integer [[ON] NEXT PAGE]
-                         | PLUS integer
-                         | NEXT PAGE
-                         ) ]
-    [ NEXT GROUP [IS] ( integer
-                      | PLUS integer
-                      | NEXT PAGE
-                      ) ]
-    TYPE [IS] ( (RH | REPORT HEADING)
-              | (PH | PAGE HEADING)
-              | (CH | CONTROL HEADING) (FINAL | dataName)
-              | (DE | DETAIL)
-              | (CF | CONTROL FOOTING) (FINAL | dataName)
-              | (PF | PAGE FOOTING)
-              | (RF | REPORT FOOTING)
-              )
-    [ USAGE [IS] (DISPLAY | DISPLAY-1) ]
-    .
-end
-
-def reportGroupDescriptionEntry_format2 =
     levelNumber [dataName]
-    [ LINE [NUMBER] [IS] ( integer [[ON] NEXT PAGE]
-                         | PLUS integer
-                         | NEXT PAGE
-                         ) ]
-    [ USAGE [IS] (DISPLAY | DISPLAY-1) ]
-    .
-end
-
-def reportGroupDescriptionEntry_format3 =
-    levelNumber [dataName]
-    !( picture
-     | USAGE [IS] (DISPLAY | DISPLAY-1)
-     | SIGN [IS] (LEADING | TRAILING) SEPARATE [CHARACTER]
-     | (JUSTIFIED | JUST) [RIGHT]
-     | BLANK [WHEN] zero
-     | LINE [NUMBER] [IS] ( integer [[ON] NEXT PAGE]
-                          | PLUS integer
-                          | NEXT PAGE
-                          )
-     | COLUMN [NUMBER] [IS] integer
-     | ( SOURCE [IS] identifier
-       | VALUE [IS] literal
-       | (SUM identifier [UPON (dataName)+])
-           [RESET [ON] (FINAL | dataName)]
+    ![ lineClause                      # STD.BK
+     | nextGroupClause                 # STD.BK
+     | reportGroupTypeClause           # STD.BK
+     | reportGroupUsageClause          # STD.BK
+     | pictureClause                   # STD.BK
+     | signClause                      # STD.BK
+     | justifiedClause                 # STD.BK
+     | blankWhenZeroClause             # STD.BK
+     | columnClause                    # STD.BK
+     | ( sourceClause                  # STD.BK
+       | reportSectionValueClause      # STD.BK
+       | sumClause                     # STD.BK
        )
-     | GROUP [INDICATE]
-     )
+     | groupIndicateClause             # STD.BK
+     | occursClause                    # STD.BK
+     | varyingClause                   # STD.BK
+     ]
     .
 end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# SCREEN SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def screenSection =
 	SCREEN SECTION .
+    ( screenDescriptionEntry )*
     [--> (paragraphStart | sectionStart | divisionStart)]
-#    ( screenDescriptionEntry )*
 end
 
 def screenDescriptionEntry =
     levelNumber [FILLER | screenName]
-    (screenEntryPhrase)*
+    !( globalClause                     # STD.BK group, elementary
+     | lineClause                       # STD.BK group, elementary
+     | columnClause                     # STD.BK group, elementary
+     | blankClause                      # STD.BK group, elementary
+    
+     | bellClause                       # STD.BK elementary
+     | blinkClause                      # STD.BK elementary
+     | highlightClause                  # STD.BK elementary
+     | reverseVideoClause               # STD.BK elementary
+     | underlineClause                  # STD.BK elementary
+     | foregroundColorClause            # STD.BK elementary
+     | backgroundColorClause            # STD.BK elementary
+
+     | signClause                       # STD.BK group, elementary
+     | fullClause                       # STD.BK group, elementary
+     | autoClause                       # STD.BK group, elementary
+     | secureClause                     # STD.BK group, elementary
+     | requiredClause                   # STD.BK group, elementary
+     | occursClause                     # STD.BK group, elementary
+     | usageClause                      # STD.BK group, elementary
+
+     | eraseClause                      # STD.BK elementary
+     | pictureClause                    # STD.BK elementary
+    
+     | screenFromClause                 # STD.BK elementary
+     | screenToClause                   # STD.BK elementary
+     | screenUsingClause                # STD.BK elementary
+     | screenValueClause                # STD.BK elementary
+    
+     | blankWhenZeroClause              # STD.BK elementary
+     | justifiedClause                  # STD.BK elementary
+     
+     | controlClause
+     | screenEntryPhrase
+     )
 end
 
-def fileDescriptionEntry =
-    ( fdFileDescriptionEntry
-    | sdFileDescriptionEntry
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Other entries
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def recordDescriptionEntry =
+	(dataDescriptionEntry | copyStatement)
+end
+
+def dataDescriptionEntry =
+    ( constantEntry_level01
+    | constantEntry_level78
+    | dataDescriptionEntry_format3_and_4
+    | dataDescriptionEntry_format2
+    | dataDescriptionEntry_format1
     )
 end
 
-def fdFileDescriptionEntry =
-    FD fileName
-   !( blockContains
-    | codeSet
-    | dataRecords
-    | external
-    | global
+def constantEntry_level01 =
+    (1 | 01) cobolWord CONSTANT [globalClause]
+    ( [AS] identifier | FROM cobolWord ) .
+end
+
+def constantEntry_level78 =
+    78 cobolWord
+    VALUE [IS] valueIsOperand
+    (valueIsOperator valueIsOperand)* .
+end
+
+def valueIsOperand =
+    ( NEXT
+    | START [OF] dataName
+    | LENGTH [OF] dataName
+    | arithmeticExpression
+    | literal
+    )
+end
+
+def valueIsOperator =
+    ( AND
+    | OR
+    | '&'
+    | '+'
+    | '-'
+    | '*'
+    | '/'
+    )
+end
+
+def dataDescriptionEntry_format1 =
+    levelNumber [dataDescName]
+   ![ redefinesClause                  # STD.BK
+    | typedefClause                    # STD.BK
+    | alignedClause                    # STD.BK
+    | anyLengthClause                  # STD.BK
+    | basedClause                      # STD.BK
+    | blankWhenZeroClause              # STD.BK
+    | constantRecordClause             # STD.BK
+    | externalClause                   # STD.BK
+    | globalClause                     # STD.BK
+    | groupUsageClause                 # STD.BK
+    | justifiedClause                  # STD.BK
+    | occursClause                     # STD.BK
+    | pictureClause                    # STD.BK
+    | propertyClause                   # STD.BK
+    | sameAsClause                     # STD.BK
+    | selectWhenClause                 # STD.BK
+    | signClause                       # STD.BK
+    | synchronizedClause               # STD.BK
+    | typeNameTypeClause               # STD.BK
+    | classClause                      # STD.BK
+    | defaultClause                    # STD.BK
+    | destinationClause                # STD.BK
+    | (invalidClause)+                 # STD.BK
+    | presentWhenClause                # STD.BK
+    | varyingClause                    # STD.BK
+    | validateStatusClause             # STD.BK
+    | valueClause                      # STD.BK
+    
     | threadLocalClause
-    | labelRecords
-    | linage
-    | record
-    | recordingMode
-    | valueOfFileId
-    | valueOf
-    | report
-    )
+    | dtLinePos
+    | columnClause
+    | autoClause
+    | backgroundColorClause
+    | bellClause
+    | blinkClause
+    | controlPhrase
+    | eraseClause
+    | fillPhrase
+    | foregroundColorClause
+    | fullClause
+    | gridPhrase
+    | highPhrase
+    | lowPhrase
+    | linePhrase
+    | promptPhrase
+    | requiredPhrase
+    | reversePhrase
+    | securePhrase
+    | sizePhrase
+    | USING identifier
+    | FROM (identifier | literal) [TO identifier]
+    | PUBLIC
+    | PRIVATE
+    | PROTECTED
+    | INTERNAL
+    | attributeClause
+    
+    | usageClause      # STD.BK -- Note: This has some catch-alls in it.
+    | literal
+    ]
     (--> .)  # TODO Handle skipped.
     .
 end
 
-def sdFileDescriptionEntry =
-    SD fileName
-   !( blockContains    # Supported by IBM Enterprise Cobol for z/OS.
-    | dataRecords
-    | labelRecords
-    | record
-    | recordingMode
-    | valueOfFileId
-    )
-    (--> .)  # TODO Handle skipped.
+def dataDescriptionEntry_format2 =
+    66 dataName
+    RENAMES qualifiedDataName
+    [(THROUGH | THRU) qualifiedDataName]
+    . 
+end
+
+def dataDescriptionEntry_format3_and_4 =
+    88 [-(VALUE|VALUES) conditionName]
+    valueClause
     .
 end
 
-def blockContains =
-    BLOCK [CONTAINS] integer [TO integer] [CHARACTERS | RECORDS]
-end
 
-def codeSet =
-    CODE-SET [IS] alphabetName [FOR (identifier)+]
-end
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def dataRecords =
     [DATA] ( RECORD [IS] | RECORDS [ARE] ) (dataName)+
@@ -1049,34 +1190,6 @@ end
 
 def labelRecords =
     LABEL ( RECORD [IS] | RECORDS [ARE] ) (OMITTED | STANDARD | (dataName)+)
-end
-
-def linage =
-    LINAGE [IS] (dataName | integer) [LINES]
-    [footing]
-    [linesAtTop]
-    [linesAtBottom]
-end
-
-def footing =
-    [WITH] FOOTING [AT] (dataName | integer)
-end
-
-def linesAtTop =
-    [LINES] [AT] TOP (dataName | integer)
-end
-
-def linesAtBottom =
-    [LINES] [AT] BOTTOM (dataName | integer)
-end
-
-def record =
-    RECORD
-    ( [CONTAINS] integer [TO integer] [CHARACTERS]
-    | [IS] VARYING [IN] [SIZE]
-      [[FROM] integer [TO integer] [CHARACTERS]]
-      [DEPENDING [ON] fileName]
-    )
 end
 
 def recordingMode =
@@ -1093,85 +1206,6 @@ def valueOf =
     )+
 end
 
-# Based on http://www.helsinki.fi/atk/unix/dec_manuals/cobv27ua/cobrm_014.htm
-def report =
-    ( REPORT | REPORTS ) [IS | ARE] (reportName)+
-end
-
-def dataDescriptionEntry =
-    ( constantDescriptionEntry
-    | dataDescriptionEntry_format3
-    | dataDescriptionEntry_format2
-    | dataDescriptionEntry_format1
-    )
-end
-
-def dataDescriptionEntry_format1 =
-    levelNumber [dataDescName]
-   !( redefines
-    | external
-    | global
-    | typedefClause
-    | threadLocalClause
-    | picture
-    | occurs
-    | dtLinePos
-    | dtColPos
-    | sign
-    | valueClause
-    | sync
-    | justified
-    | blankWhenZero
-    | anyLengthClause
-    | autoPhrase
-    | backgroundPhrase
-    | beepPhrase
-    | blinkPhrase
-    | controlPhrase
-    | erasePhrase
-    | fillPhrase
-    | foregroundPhrase
-    | fullPhrase
-    | gridPhrase
-    | highPhrase
-    | lowPhrase
-    | linePhrase
-    | promptPhrase
-    | requiredPhrase
-    | reversePhrase
-    | securePhrase
-    | sizePhrase
-    | propertyClause
-    | USING identifier
-    | FROM (identifier | literal) [TO identifier]
-    | PUBLIC
-    | PRIVATE
-    | PROTECTED
-    | INTERNAL
-    | based
-    | attributeClause
-    | usage      # Note: This has some catch-alls in it.
-    | literal
-    )
-    (--> .)  # TODO Handle skipped.
-    .
-end
-
-def dataDescriptionEntry_format2 =
-    66 dataName
-    RENAMES qualifiedDataName
-    [(THROUGH | THRU) qualifiedDataName]
-    . 
-end
-
-def dataDescriptionEntry_format3 =
-    88 conditionName
-    ( VALUE [IS] | VALUES [ARE] )
-    ( (-FALSE) (cicsValue | literal) [(THROUGH | THRU) literal] )+
-    [ whenSetToFalseClause ]
-    .
-end
-
 # Cfr. a.o. http://ibmmainframes.com/post-55387.html
 def cicsValue =
 	(DFHVALUE | DFHRESP) '(' cobolWord ')'
@@ -1182,41 +1216,8 @@ def whenSetToFalseClause =
     [WHEN] [SET] [TO] FALSE [IS] literal
 end
 
-# See https://sourceforge.net/p/open-cobol/manual/, page 5-16.
-def constantDescriptionEntry =
-    ( 78 cobolWord
-        VALUE [IS] valueIsOperand (valueIsOperator valueIsOperand)*
-
-    | (1 | 01) cobolWord CONSTANT [global]
-        ( [AS] identifier
-        | FROM cobolWord
-        )
-    )
-    .
-end
-
-def redefines =
-    REDEFINES cobolWord
-end
-
 def blankWhenZero =
     BLANK [WHEN] zero
-end
-
-def anyLengthClause =
-    ANY LENGTH
-end
-
-def external =
-    [IS] EXTERNAL [(AS | BY) literal]
-end
-
-def global =
-    [IS] GLOBAL
-end
-
-def typedefClause =
-    [IS] TYPEDEF
 end
 
 def threadLocalClause =
@@ -1235,33 +1236,402 @@ def justified =
     [OUTPUT] (JUSTIFIED | JUST) [LEFT | RIGHT | CENTERED]
 end
 
-def occurs =
+# TODO The recurring negations in here (-FALSE) are pretty ugly...
+def valueClause =
+    ( VALUE [IS] | VALUES [ARE] )
+    
+    (
+      # table
+      ( (literal)+
+        FROM '(' (subscript)+ ')'
+        [ TO '(' (subscript)+ ')' ] 
+      )+
+      
+    | ( ( cicsValue
+    
+        | # data-item, condition-name, report-section, content-validation-entry
+          (-FALSE) literal
+        )
+        
+        # condition-name, content-validation-entry
+        [(THROUGH | THRU) literal]
+      )+
+
+      # condition-name, content-validation-entry
+      [[IN] (-FALSE) alphabetName]
+    
+      # condition-name
+      [[WHEN] [SET] [TO] FALSE [IS] literal]
+
+      # content-validation-entry
+      [[IS | ARE] (INVALID | VALID)] [WHEN condition]
+        
+    | constant
+    )
+end
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# DATA DIVISION clauses
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def alignedClause =
+    ALIGNED
+end
+
+def anyLengthClause =
+    ANY LENGTH
+end
+
+def autoClause =
+    ( # screen
+      AUTO
+    | AUTO-SKIP
+    )
+end
+
+def backgroundColorClause =
+    (BACKGROUND-COLOR | BACKGROUND-COLOUR) [IS] integer
+end
+
+def basedClause =
+    BASED
+end
+
+def bellClause =
+    BELL
+end
+
+def blankClause =
+    BLANK (SCREEN | LINE)
+end
+
+def blankWhenZeroClause =
+    BLANK [WHEN] zero
+end
+
+def blinkClause =
+    BLINK
+end
+
+def blockContainsClause =
+    BLOCK [CONTAINS] integer [TO integer] [CHARACTERS | RECORDS]
+end
+
+def classClause =
+    CLASS [IS]
+    ( NUMERIC
+    | ALPHABETIC
+    | ALPHABETIC-LOWER
+    | ALPHABETIC-UPPER
+    | BOOLEAN
+    | name                     #= alphabetName or className
+    )
+end
+
+def codeClause =
+    [WITH] CODE (literal | identifier)
+end
+
+def codeSetClause =
+    CODE-SET [IS] alphabetName [FOR (identifier)+]
+end
+
+def columnClause =
+    # report-writer, screen-item
+	( (COL | COLUMN) [NUMBER | NUMBERS]
+	| COLUMNS
+	| COLS
+	)
+	
+	# report-writer
+	[LEFT | CENTER | RIGHT]
+	
+	[IS | ARE]
+	
+	[PLUS | '+' | MINUS | '-'] (integer | identifier | literal)
+end
+
+def constantRecordClause =
+    CONSTANT RECORD
+end
+
+def controlClause =
+    (CONTROL [IS] | CONTROLS [ARE]) (FINAL (dataName)* | (dataName)+)
+end
+
+def defaultClause =
+    DEFAULT [IS] (NONE | literal | identifier)
+end
+
+def destinationClause =
+    DESTINATION [IS] (identifier)+
+end
+
+def eraseClause =
+    ERASE 
+    [ EOL 
+    | EOS
+    | [END OF] LINE
+    | [END OF] SCREEN
+    ]
+end
+
+def externalClause =
+    # TODO BY ?
+    [IS] EXTERNAL [(AS | BY) literal]
+end
+
+def foregroundColorClause =
+    (FOREGROUND-COLOR | FOREGROUND-COLOUR) [IS] (integer | identifier)
+end
+
+def formatClause =
+    FORMAT !(BIT | CHARACTER | NUMERIC) DATA
+end
+
+def fullClause =
+    FULL
+end
+
+def globalClause =
+    [IS] GLOBAL
+end
+
+def groupIndicateClause =
+    GROUP [INDICATE]
+end
+
+def groupUsageClause =
+    GROUP-USAGE [IS] (BIT | NATIONAL)
+end
+
+def highlightClause =
+    (HIGHLIGHT | LOWLIGHT)
+end
+
+def invalidClause =
+    INVALID WHEN condition
+end
+
+def justifiedClause =
+    (JUSTIFIED | JUST) [RIGHT]
+end
+
+
+def linageClause =
+    LINAGE [IS] (dataName | integer) [LINES]
+    [footingClause]
+    [linesAtTopClause]
+    [linesAtBottomClause]
+end
+
+def footingClause       = [WITH] FOOTING [AT] (dataName | integer)  end
+def linesAtTopClause    = [LINES] [AT] TOP (dataName | integer)     end
+def linesAtBottomClause = [LINES] [AT] BOTTOM (dataName | integer)  end
+
+
+def lineClause =
+    ( # report-writer, screen 
+      LINE [NUMBER | NUMBERS] [IS | ARE]
+      
+    | # report-writer
+      LINES [ARE]
+    )
+    
+    ( ( # report-writer
+        integer [[ON] NEXT PAGE]
+      
+      | # report-writer, screen
+        (PLUS | '+') (integer | identifier)
+      
+      | # report-writer
+        [ON] NEXT PAGE
+      )+
+    
+    | # screen
+      (PLUS | '+' | MINUS | '-') (integer | identifier)
+    )      
+    
+end
+
+def nextGroupClause =
+    NEXT GROUP [IS]
+    ( integer
+    | PLUS integer
+    | NEXT PAGE [[WITH] RESET]
+    )
+end
+
+def occursClause =
     OCCURS
-    ( [integer TO] integer [TIMES]
+    ( ( # dynamic-capacity-table
+        DYNAMIC
+        [CAPACITY [IN] dataName]
+        [FROM integer]
+        [TO integer]
+        [INITIALIZED]
+        
+      | # fixed-table, occurs-depending-table, report-writer
+        [integer TO] integer [TIMES]
+      )
+    
+        # occurs-depending-table, report-writer
         [ DEPENDING [ON] qualifiedDataName ]
+        
+        # report-writer
+        [ STEP integer ]
+        
+        # fixed-table, occurs-depending-table, dynamic-capacity-table
         ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )*
         ( INDEXED [BY] (indexName)+ )*
+        
     | ANY
-    )+
+    )
 end
 
-def picture =
+def pageClause =
+    PAGE [LIMIT | LIMITS] [IS | ARE] integer [LINE | LINES]
+    [ HEADING integer ]
+    [ FIRST DETAIL integer ]
+    [ LAST DETAIL integer ]
+    [ FOOTING integer ]
+end
+
+
+def pictureClause =
     (PIC | PICTURE) [IS] pictureString
+    [pictureLocaleClause]
 end
 
-def sign =
+def pictureLocaleClause =
+  LOCALE [[IS] cobolWord]
+  SIZE [IS] integer
+end
+
+
+def presentWhenClause =
+    PRESENT WHEN condition
+end
+
+def propertyClause =
+    PROPERTY [ [WITH] NO (GET | SET) ] [[IS] FINAL]
+end
+
+def recordClause =
+    RECORD ( recordContainsClause | recordIsVaryingClause )
+end
+
+def recordContainsClause = [CONTAINS] integer [TO integer] [CHARACTERS] end
+def recordIsVaryingClause =
+    [IS] VARYING [IN] [SIZE]
+    [[FROM] integer [TO integer] [CHARACTERS]]
+    [DEPENDING [ON] fileName]
+end
+
+
+def redefinesClause =
+    REDEFINES dataName
+end
+
+def reportClause =
+    ( REPORT [IS] | REPORTS [ARE] ) (reportName)+
+end
+
+def reportGroupTypeClause =
+    TYPE [IS]
+    ( (RH | REPORT HEADING )
+    | (PH | PAGE HEADING   )
+    | (CH | CONTROL HEADING) [ON|FOR] (FINAL | dataName)
+    | (DE | DETAIL         )
+    | (CF | CONTROL FOOTING) [ON|FOR] (FINAL | dataName)
+    | (PF | PAGE FOOTING   )
+    | (RF | REPORT FOOTING )
+    )
+end
+
+def reportGroupUsageClause =
+    USAGE [IS] (DISPLAY | DISPLAY-1) 
+end
+
+def reportSectionValueClause =
+    (VALUE [IS] | VALUES [ARE]) (literal)+
+end
+
+def reverseVideoClause =
+    REVERSE-VIDEO
+end
+
+def requiredClause =
+    REQUIRED
+end
+
+def sameAsClause =
+    SAME AS dataName
+end
+
+def screenFromClause =
+    FROM (literal | identifier)
+end
+
+def screenToClause =
+    TO identifier
+end
+
+def screenUsingClause =
+    USING identifier
+end
+
+def screenValueClause =
+    VALUE [IS] literal
+end
+
+
+def secureClause =
+    SECURE
+end
+
+def selectWhenClause =
+    SELECT WHEN (OTHER | conditionName)
+end
+
+def signClause =
     [SIGN [IS]] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
 end
 
-def sync =
+def sourceClause =
+    (SOURCE [IS] | SOURCES [ARE])
+    (arithmeticExpression | identifier)+
+    [roundedPhrase]
+end
+
+def sumClause =
+    (SUM [OF] (-UPON identifier)+ [UPON (dataName)+])+
+    [RESET [ON] (FINAL | dataName)]
+    # TODO [roundedPhrase]
+end
+
+def synchronizedClause =
     (SYNCHRONIZED | SYNC) [LEFT | RIGHT]
 end
 
-def usage =
-    [USAGE [IS]] usageClause
+def typedefClause =
+    [IS] TYPEDEF [STRONG]
+end
+
+def typeNameTypeClause =
+    TYPE [TO] typeName
+end
+
+def underlineClause =
+    UNDERLINE
 end
 
 def usageClause =
+    [USAGE [IS]] usageOperand
+end
+
+def usageOperand =
     ( BINARY                                # *ANSI85
     | BINARY-CHAR   [SIGNED | UNSIGNED]     # *ISO2002 *MF
     | BINARY-SHORT  [SIGNED | UNSIGNED]     # *ISO2002 *MF
@@ -1290,6 +1660,7 @@ def usageClause =
     | CONDITION-VALUE                       # *.NET *JVM
     | DECIMAL                               # *.NET *JVM
     | DISPLAY
+    | DISPLAY-1
     | INDEX
     | MONITOR-POINTER                       # *MF
     | MUTEX-POINTER                         # *MF
@@ -1317,51 +1688,20 @@ def usageClause =
     )
 end
 
-def valueClause =
-    ( valueClause_format2
-    | valueClause_format1
-    )
+
+def validateStatusClause =
+    (VALIDATE-STATUS | VAL-STATUS) [IS] (literal | identifier)
+    [WHEN] [NO] ERROR
+    [ON !(FORMAT | CONTENT | RELATION)]
+    FOR (identifier)+
 end
 
-def valueClause_start =
-    ( VALUE [IS] | VALUES [ARE] )
+def varyingClause =
+    VARYING (dataName [FROM arithmeticExpression] [BY arithmeticExpression])+
 end
 
-def valueClause_format1 =
-    valueClause_start ( literal | constant )
-end
 
-def valueClause_format2 =
-    valueClause_start
-    ( (literal)+ FROM '(' (subscript)+ ')' [ TO '(' (subscript)+ ')' ] )+     # *ISO2002 *MF
-end
 
-def valueIsOperand =
-    (NEXT | START [OF] dataName | LENGTH [OF] dataName | arithmeticExpression | literal)
-end
-
-def valueIsOperator =
-    ( AND
-    | OR
-    | '&'
-    | '+'
-    | '-'
-    | '*'
-    | '/'
-    )
-end
-
-# Refs:
-# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF40R.html
-
-# See http://opencobol.add1tocobol.com/#based
-def based =
-    BASED
-end
-
-def propertyClause =
-    PROPERTY [ [WITH] NO (GET | SET) ]      # *ISO2002
-end
 
 ## #############################################################################
 ## PROCEDURE DIVISION .
@@ -1381,6 +1721,28 @@ def procedureDivision =
     (section)*
 #	[--> divisionStart]
 end
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Common phrases and features
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def roundedPhrase =
+    ROUNDED
+    [ MODE [IS]
+      ( AWAY-FROM-ZERO
+      | NEAREST-AWAY-FROM-ZERO
+      | NEAREST-EVEN
+      | NEAREST-TOWARD-ZERO
+      | PROHIBITED
+      | TOWARD-GREATER
+      | TOWARD-LESSER
+      | TRUNCATION
+      )
+    ]
+end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Refs. http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
 def usingOrChainingPhrase =
@@ -2109,7 +2471,7 @@ def screenEntryPhrase =
     | lowPhrase
     | linePhrase
     | offPhrase
-    | picture
+    | pictureClause
     | promptPhrase
     | requiredPhrase
     | reversePhrase
@@ -2435,11 +2797,11 @@ end
 def cicsReadQ =
    READQ 
    ( TS (QUEUE | QNAME) '(' queueName ')' 
-     !( (SYSID|SYS) '(' cicsSysid ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
       | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | (ITEM cicsWaterInBrackets | NEXT)
       | NUMITEMS cicsWaterInBrackets
-      )
+      ]
    | TD QUEUE '(' (literal | identifier) ')' 
    )
 end
@@ -2447,12 +2809,12 @@ end
 def cicsWriteQ =
    WRITEQ 
    ( TS (QUEUE | QNAME) '(' queueName ')'
-     !( (SYSID|SYS) '(' cicsSysid ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
       | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | (NUMITEMS cicsWaterInBrackets | ITEM cicsWaterInBrackets [REWRITE])
       | NOSUSPEND
       | (MAIN|AUXILIARY)
-      )
+      ]
    | TD QUEUE '(' queueName ')'
    )
 end
@@ -2464,52 +2826,52 @@ end
 
 def cicsReadFile =
    ( READ (FILE | DATASET) '(' fileName ')'
-     !( (SYSID|SYS) '(' cicsSysid ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
       | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets [GENERIC]]
       | (GTEQ|EQUAL)
       | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
       | NOSUSPEND
-      )
+      ]
    | READNEXT (FILE|DATASET) '(' fileName ')'
-     !( (SYSID|SYS) '(' cicsSysid ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
       | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
       | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets] 
       | (RBA|XRBA|RRN)
       | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
       | NOSUSPEND
-      )
+      ]
    )
 end
 
 def cicsWriteFile =
    WRITE (FILE | DATASET) '(' fileName ')'
-   !( (SYSID|SYS) '(' cicsSysid ')'
+   ![ (SYSID|SYS) '(' cicsSysid ')'
     | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
     | RIDFLD cicsWaterInBrackets [KEYLENGTH cicsWaterInBrackets] 
     | (RBA|XRBA|RRN)
     | MASSINSERT
     | NOSUSPEND
-    )
+    ]
 end
 
 def cicsLink =
    LINK PROGRAM '(' programID ')'
-   !( (SYSID|SYS) '(' cicsSysid ')'
+   ![ (SYSID|SYS) '(' cicsSysid ')'
     | COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
     | SYNCONRETURN
     | TRANSID cicsWaterInBrackets
     | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
     | CHANNEL cicsWaterInBrackets
-    )
+    ]
 end
 
 def cicsXctl =
    XCTL PROGRAM '(' programID ')'
-   !( COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] 
+   ![ COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] 
     | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
     | CHANNEL cicsWaterInBrackets
-    )
+    ]
 end
 
 def cicsLoad =
@@ -3028,14 +3390,14 @@ end
 def receiveStatement =
     RECEIVE 
     ( dataName FROM ( THREAD dataName | LAST THREAD | ANY THREAD )
-      !( BEFORE [TIME] (numeric | identifier)
+      ![ BEFORE [TIME] (numeric | identifier)
        | [WITH] NO WAIT
        | THREAD     [IN] dataName
        | SIZE       [IN] (numeric | identifier)
        | STATUS     [IN] (alphanumericLiteral | identifier)
        | onException
        | notOnException
-       )                                                                # *ACU
+       ]                                                                # *ACU
     | cdName (MESSAGE | SEGMENT) [INTO] identifier
              [NO DATA nestedStatements]
              [WITH DATA nestedStatements]

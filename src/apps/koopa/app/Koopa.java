@@ -143,7 +143,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
-	@Override
 	public void setOption(String name, String value) {
 	}
 
@@ -538,7 +537,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		}
 	}
 
-	@Override
 	public void openFile(File file) {
 		Component view = getView();
 
@@ -551,12 +549,10 @@ public class Koopa extends JFrame implements Application, Configurable {
 		}
 	}
 
-	@Override
 	public void openFile(File file, ParsingCoordinator parsingCoordinator) {
 		openFile(file, parsingCoordinator, null);
 	}
 
-	@Override
 	public void openFile(File file, ParsingCoordinator parsingCoordinator,
 			Tuple<Token, String> selectedToken) {
 
@@ -595,22 +591,18 @@ public class Koopa extends JFrame implements Application, Configurable {
 		return title;
 	}
 
-	@Override
 	public void resultsWereCleared() {
 		updateMenus();
 	}
 
-	@Override
 	public void walkingAndParsing() {
 		updateMenus();
 	}
 
-	@Override
 	public void doneWalkingAndParsing() {
 		updateMenus();
 	}
 
-	@Override
 	public void reloadFile() {
 		Component view = getView();
 
@@ -627,7 +619,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		}
 	}
 
-	@Override
 	public void scrollTo(int position) {
 		Component view = getView();
 
@@ -637,7 +628,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		}
 	}
 
-	@Override
 	public void addApplicationListener(ApplicationListener listener) {
 		listeners.add(listener);
 	}
@@ -660,7 +650,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		}
 	}
 
-	@Override
 	public Tree getSyntaxTree() {
 		final Component view = getView();
 		if (view == overview)
@@ -669,12 +658,10 @@ public class Koopa extends JFrame implements Application, Configurable {
 			return ((Detail) view).getParseResults().getTree();
 	}
 
-	@Override
 	public Component getView() {
 		return tabbedPane.getSelectedComponent();
 	}
 
-	@Override
 	public void closeView(Component component) {
 		if (component == overview)
 			return;
@@ -686,17 +673,14 @@ public class Koopa extends JFrame implements Application, Configurable {
 		updateMenus();
 	}
 
-	@Override
 	public void closeView() {
 		closeView(getView());
 	}
 
-	@Override
 	public void showGrammarRules() {
 		showGrammarRule(null);
 	}
 
-	@Override
 	public void showGrammarRule(String name) {
 		if (grammarView == null) {
 			grammarView = new GrammarView("/koopa/cobol/grammar/Cobol.kg");
@@ -729,7 +713,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		}
 	}
 
-	@Override
 	public void quitParsing() {
 		overview.quitParsing();
 	}

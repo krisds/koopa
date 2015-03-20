@@ -17,7 +17,6 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 
 	private Source<? extends Token> source = null;
 	private final Feedback feedback = new Feedback() {
-		@Override
 		public void add(Token token) {
 			enqueue(token);
 		}

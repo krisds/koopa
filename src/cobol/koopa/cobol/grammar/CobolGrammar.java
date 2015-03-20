@@ -2792,19 +2792,21 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    selectClause(),
                    assignClause(),
-                   permuted(
-                       organizationClause(),
-                       collationClause(),
-                       recordDelimiterClause(),
-                       reserveClause(),
-                       accessModeClause(),
-                       lockModeClause(),
-                       relativeKeyClause(),
-                       recordKeyClause(),
-                       alternateRecordKeyClause(),
-                       fileStatusClause(),
-                       sharingClause(),
-                       paddingClause()
+                   optional(
+                       permuted(
+                           organizationClause(),
+                           collationClause(),
+                           recordDelimiterClause(),
+                           reserveClause(),
+                           accessModeClause(),
+                           lockModeClause(),
+                           relativeKeyClause(),
+                           recordKeyClause(),
+                           alternateRecordKeyClause(),
+                           fileStatusClause(),
+                           sharingClause(),
+                           paddingClause()
+                       )
                    ),
                    token(".")
                )
@@ -3343,14 +3345,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("IS")
                    ),
                    recordKeyDefinition(),
-                   permuted(
-                       passwordClause(),
-                       suppressClause(),
-                       sequence(
-                           optional(
-                               token("WITH")
-                           ),
-                           token("DUPLICATES")
+                   optional(
+                       permuted(
+                           passwordClause(),
+                           suppressClause(),
+                           sequence(
+                               optional(
+                                   token("WITH")
+                               ),
+                               token("DUPLICATES")
+                           )
                        )
                    )
                )
@@ -3795,24 +3799,102 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // recordDescriptionEntry
+    // fileDescriptionEntry
     // ........................................................
 
-    private Parser recordDescriptionEntryParser = null;
+    private Parser fileDescriptionEntryParser = null;
 
-    public Parser recordDescriptionEntry() {
-        if (recordDescriptionEntryParser == null) {
-           FutureParser future = scoped("recordDescriptionEntry");
-           recordDescriptionEntryParser = future;
+    public Parser fileDescriptionEntry() {
+        if (fileDescriptionEntryParser == null) {
+           FutureParser future = scoped("fileDescriptionEntry");
+           fileDescriptionEntryParser = future;
            future.setParser(
                choice(
-                   dataDescriptionEntry(),
-                   copyStatement()
+                   fdFileDescriptionEntry(),
+                   sdFileDescriptionEntry()
                )
            );
         }
 
-        return recordDescriptionEntryParser;
+        return fileDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // fdFileDescriptionEntry
+    // ........................................................
+
+    private Parser fdFileDescriptionEntryParser = null;
+
+    public Parser fdFileDescriptionEntry() {
+        if (fdFileDescriptionEntryParser == null) {
+           FutureParser future = scoped("fdFileDescriptionEntry");
+           fdFileDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   token("FD"),
+                   fileName(),
+                   optional(
+                       permuted(
+                           externalClause(),
+                           globalClause(),
+                           formatClause(),
+                           blockContainsClause(),
+                           recordClause(),
+                           linageClause(),
+                           codeSetClause(),
+                           reportClause(),
+                           dataRecords(),
+                           labelRecords(),
+                           recordingMode(),
+                           threadLocalClause(),
+                           valueOfFileId(),
+                           valueOf()
+                       )
+                   ),
+                   skipto(
+                       token(".")
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return fdFileDescriptionEntryParser;
+    }
+
+    // ========================================================
+    // sdFileDescriptionEntry
+    // ........................................................
+
+    private Parser sdFileDescriptionEntryParser = null;
+
+    public Parser sdFileDescriptionEntry() {
+        if (sdFileDescriptionEntryParser == null) {
+           FutureParser future = scoped("sdFileDescriptionEntry");
+           sdFileDescriptionEntryParser = future;
+           future.setParser(
+               sequence(
+                   token("SD"),
+                   fileName(),
+                   optional(
+                       permuted(
+                           recordClause(),
+                           blockContainsClause(),
+                           dataRecords(),
+                           labelRecords(),
+                           recordingMode(),
+                           valueOfFileId()
+                       )
+                   ),
+                   skipto(
+                       token(".")
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return sdFileDescriptionEntryParser;
     }
 
     // ========================================================
@@ -4060,106 +4142,108 @@ public class CobolGrammar extends CobolBaseGrammar {
                        plus(
                            dataDescName()
                        ),
-                       permuted(
-                           sequence(
-                               optional(
-                                   token("SYMBOLIC")
+                       optional(
+                           permuted(
+                               sequence(
+                                   optional(
+                                       token("SYMBOLIC")
+                                   ),
+                                   token("QUEUE"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               token("QUEUE"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   optional(
+                                       token("SYMBOLIC")
+                                   ),
+                                   token("SUB-QUEUE-1"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               optional(
-                                   token("SYMBOLIC")
+                               sequence(
+                                   optional(
+                                       token("SYMBOLIC")
+                                   ),
+                                   token("SUB-QUEUE-2"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               token("SUB-QUEUE-1"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   optional(
+                                       token("SYMBOLIC")
+                                   ),
+                                   token("SUB-QUEUE-3"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               optional(
-                                   token("SYMBOLIC")
+                               sequence(
+                                   token("MESSAGE"),
+                                   token("DATE"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               token("SUB-QUEUE-2"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("MESSAGE"),
+                                   token("TIME"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               optional(
-                                   token("SYMBOLIC")
+                               sequence(
+                                   optional(
+                                       token("SYMBOLIC")
+                                   ),
+                                   token("SOURCE"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               token("SUB-QUEUE-3"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("TEXT"),
+                                   token("LENGTH"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("MESSAGE"),
-                               token("DATE"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("END"),
+                                   token("KEY"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("MESSAGE"),
-                               token("TIME"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("STATUS"),
+                                   token("KEY"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               optional(
-                                   token("SYMBOLIC")
-                               ),
-                               token("SOURCE"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("TEXT"),
-                               token("LENGTH"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("END"),
-                               token("KEY"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("STATUS"),
-                               token("KEY"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               optional(
-                                   token("MESSAGE")
-                               ),
-                               token("COUNT"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
+                               sequence(
+                                   optional(
+                                       token("MESSAGE")
+                                   ),
+                                   token("COUNT"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
+                               )
                            )
                        )
                    ),
@@ -4296,56 +4380,58 @@ public class CobolGrammar extends CobolBaseGrammar {
                        plus(
                            dataDescName()
                        ),
-                       permuted(
-                           sequence(
-                               token("MESSAGE"),
-                               token("DATE"),
-                               optional(
-                                   token("IS")
+                       optional(
+                           permuted(
+                               sequence(
+                                   token("MESSAGE"),
+                                   token("DATE"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("MESSAGE"),
-                               token("TIME"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("MESSAGE"),
+                                   token("TIME"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               optional(
-                                   token("SYMBOLIC")
+                               sequence(
+                                   optional(
+                                       token("SYMBOLIC")
+                                   ),
+                                   token("TERMINAL"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               token("TERMINAL"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("TEXT"),
+                                   token("LENGTH"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("TEXT"),
-                               token("LENGTH"),
-                               optional(
-                                   token("IS")
+                               sequence(
+                                   token("END"),
+                                   token("KEY"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
                                ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("END"),
-                               token("KEY"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
-                           ),
-                           sequence(
-                               token("STATUS"),
-                               token("KEY"),
-                               optional(
-                                   token("IS")
-                               ),
-                               dataDescName()
+                               sequence(
+                                   token("STATUS"),
+                                   token("KEY"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   dataDescName()
+                               )
                            )
                        )
                    ),
@@ -4402,102 +4488,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("RD"),
                    reportName(),
                    optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           token("GLOBAL")
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("WITH")
-                           ),
-                           token("CODE"),
-                           choice(
-                               literal(),
-                               mnemonicName()
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           choice(
-                               sequence(
-                                   token("CONTROL"),
-                                   optional(
-                                       token("IS")
-                                   )
-                               ),
-                               sequence(
-                                   token("CONTROLS"),
-                                   optional(
-                                       token("ARE")
-                                   )
-                               )
-                           ),
-                           choice(
-                               sequence(
-                                   token("FINAL"),
-                                   star(
-                                       dataName()
-                                   )
-                               ),
-                               plus(
-                                   dataName()
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("PAGE"),
-                           optional(
-                               choice(
-                                   token("LIMIT"),
-                                   token("LIMITS")
-                               )
-                           ),
-                           optional(
-                               choice(
-                                   token("IS"),
-                                   token("ARE")
-                               )
-                           ),
-                           integer(),
-                           optional(
-                               choice(
-                                   token("LINE"),
-                                   token("LINES")
-                               )
-                           ),
-                           optional(
-                               sequence(
-                                   token("HEADING"),
-                                   integer()
-                               )
-                           ),
-                           optional(
-                               sequence(
-                                   token("FIRST"),
-                                   token("DETAIL"),
-                                   integer()
-                               )
-                           ),
-                           optional(
-                               sequence(
-                                   token("LAST"),
-                                   token("DETAIL"),
-                                   integer()
-                               )
-                           ),
-                           optional(
-                               sequence(
-                                   token("FOOTING"),
-                                   integer()
-                               )
-                           )
+                       permuted(
+                           globalClause(),
+                           codeClause(),
+                           controlClause(),
+                           pageClause()
                        )
                    ),
                    token(".")
@@ -4519,393 +4514,38 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("reportGroupDescriptionEntry");
            reportGroupDescriptionEntryParser = future;
            future.setParser(
-               choice(
-                   reportGroupDescriptionEntry_format1(),
-                   reportGroupDescriptionEntry_format2(),
-                   reportGroupDescriptionEntry_format3()
+               sequence(
+                   levelNumber(),
+                   optional(
+                       dataName()
+                   ),
+                   optional(
+                       permuted(
+                           lineClause(),
+                           nextGroupClause(),
+                           reportGroupTypeClause(),
+                           reportGroupUsageClause(),
+                           pictureClause(),
+                           signClause(),
+                           justifiedClause(),
+                           blankWhenZeroClause(),
+                           columnClause(),
+                           choice(
+                               sourceClause(),
+                               reportSectionValueClause(),
+                               sumClause()
+                           ),
+                           groupIndicateClause(),
+                           occursClause(),
+                           varyingClause()
+                       )
+                   ),
+                   token(".")
                )
            );
         }
 
         return reportGroupDescriptionEntryParser;
-    }
-
-    // ========================================================
-    // reportGroupDescriptionEntry_format1
-    // ........................................................
-
-    private Parser reportGroupDescriptionEntry_format1Parser = null;
-
-    public Parser reportGroupDescriptionEntry_format1() {
-        if (reportGroupDescriptionEntry_format1Parser == null) {
-           FutureParser future = scoped("reportGroupDescriptionEntry_format1");
-           reportGroupDescriptionEntry_format1Parser = future;
-           future.setParser(
-               sequence(
-                   token("01"),
-                   optional(
-                       dataName()
-                   ),
-                   optional(
-                       sequence(
-                           token("LINE"),
-                           optional(
-                               token("NUMBER")
-                           ),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               sequence(
-                                   integer(),
-                                   optional(
-                                       sequence(
-                                           optional(
-                                               token("ON")
-                                           ),
-                                           token("NEXT"),
-                                           token("PAGE")
-                                       )
-                                   )
-                               ),
-                               sequence(
-                                   token("PLUS"),
-                                   integer()
-                               ),
-                               sequence(
-                                   token("NEXT"),
-                                   token("PAGE")
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("NEXT"),
-                           token("GROUP"),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               integer(),
-                               sequence(
-                                   token("PLUS"),
-                                   integer()
-                               ),
-                               sequence(
-                                   token("NEXT"),
-                                   token("PAGE")
-                               )
-                           )
-                       )
-                   ),
-                   token("TYPE"),
-                   optional(
-                       token("IS")
-                   ),
-                   choice(
-                       choice(
-                           token("RH"),
-                           sequence(
-                               token("REPORT"),
-                               token("HEADING")
-                           )
-                       ),
-                       choice(
-                           token("PH"),
-                           sequence(
-                               token("PAGE"),
-                               token("HEADING")
-                           )
-                       ),
-                       sequence(
-                           choice(
-                               token("CH"),
-                               sequence(
-                                   token("CONTROL"),
-                                   token("HEADING")
-                               )
-                           ),
-                           choice(
-                               token("FINAL"),
-                               dataName()
-                           )
-                       ),
-                       choice(
-                           token("DE"),
-                           token("DETAIL")
-                       ),
-                       sequence(
-                           choice(
-                               token("CF"),
-                               sequence(
-                                   token("CONTROL"),
-                                   token("FOOTING")
-                               )
-                           ),
-                           choice(
-                               token("FINAL"),
-                               dataName()
-                           )
-                       ),
-                       choice(
-                           token("PF"),
-                           sequence(
-                               token("PAGE"),
-                               token("FOOTING")
-                           )
-                       ),
-                       choice(
-                           token("RF"),
-                           sequence(
-                               token("REPORT"),
-                               token("FOOTING")
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("USAGE"),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("DISPLAY"),
-                               token("DISPLAY-1")
-                           )
-                       )
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return reportGroupDescriptionEntry_format1Parser;
-    }
-
-    // ========================================================
-    // reportGroupDescriptionEntry_format2
-    // ........................................................
-
-    private Parser reportGroupDescriptionEntry_format2Parser = null;
-
-    public Parser reportGroupDescriptionEntry_format2() {
-        if (reportGroupDescriptionEntry_format2Parser == null) {
-           FutureParser future = scoped("reportGroupDescriptionEntry_format2");
-           reportGroupDescriptionEntry_format2Parser = future;
-           future.setParser(
-               sequence(
-                   levelNumber(),
-                   optional(
-                       dataName()
-                   ),
-                   optional(
-                       sequence(
-                           token("LINE"),
-                           optional(
-                               token("NUMBER")
-                           ),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               sequence(
-                                   integer(),
-                                   optional(
-                                       sequence(
-                                           optional(
-                                               token("ON")
-                                           ),
-                                           token("NEXT"),
-                                           token("PAGE")
-                                       )
-                                   )
-                               ),
-                               sequence(
-                                   token("PLUS"),
-                                   integer()
-                               ),
-                               sequence(
-                                   token("NEXT"),
-                                   token("PAGE")
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("USAGE"),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("DISPLAY"),
-                               token("DISPLAY-1")
-                           )
-                       )
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return reportGroupDescriptionEntry_format2Parser;
-    }
-
-    // ========================================================
-    // reportGroupDescriptionEntry_format3
-    // ........................................................
-
-    private Parser reportGroupDescriptionEntry_format3Parser = null;
-
-    public Parser reportGroupDescriptionEntry_format3() {
-        if (reportGroupDescriptionEntry_format3Parser == null) {
-           FutureParser future = scoped("reportGroupDescriptionEntry_format3");
-           reportGroupDescriptionEntry_format3Parser = future;
-           future.setParser(
-               sequence(
-                   levelNumber(),
-                   optional(
-                       dataName()
-                   ),
-                   permuted(
-                       picture(),
-                       sequence(
-                           token("USAGE"),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("DISPLAY"),
-                               token("DISPLAY-1")
-                           )
-                       ),
-                       sequence(
-                           token("SIGN"),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("LEADING"),
-                               token("TRAILING")
-                           ),
-                           token("SEPARATE"),
-                           optional(
-                               token("CHARACTER")
-                           )
-                       ),
-                       sequence(
-                           choice(
-                               token("JUSTIFIED"),
-                               token("JUST")
-                           ),
-                           optional(
-                               token("RIGHT")
-                           )
-                       ),
-                       sequence(
-                           token("BLANK"),
-                           optional(
-                               token("WHEN")
-                           ),
-                           zero()
-                       ),
-                       sequence(
-                           token("LINE"),
-                           optional(
-                               token("NUMBER")
-                           ),
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               sequence(
-                                   integer(),
-                                   optional(
-                                       sequence(
-                                           optional(
-                                               token("ON")
-                                           ),
-                                           token("NEXT"),
-                                           token("PAGE")
-                                       )
-                                   )
-                               ),
-                               sequence(
-                                   token("PLUS"),
-                                   integer()
-                               ),
-                               sequence(
-                                   token("NEXT"),
-                                   token("PAGE")
-                               )
-                           )
-                       ),
-                       sequence(
-                           token("COLUMN"),
-                           optional(
-                               token("NUMBER")
-                           ),
-                           optional(
-                               token("IS")
-                           ),
-                           integer()
-                       ),
-                       choice(
-                           sequence(
-                               token("SOURCE"),
-                               optional(
-                                   token("IS")
-                               ),
-                               identifier()
-                           ),
-                           sequence(
-                               token("VALUE"),
-                               optional(
-                                   token("IS")
-                               ),
-                               literal()
-                           ),
-                           sequence(
-                               sequence(
-                                   token("SUM"),
-                                   identifier(),
-                                   optional(
-                                       sequence(
-                                           token("UPON"),
-                                           plus(
-                                               dataName()
-                                           )
-                                       )
-                                   )
-                               ),
-                               optional(
-                                   sequence(
-                                       token("RESET"),
-                                       optional(
-                                           token("ON")
-                                       ),
-                                       choice(
-                                           token("FINAL"),
-                                           dataName()
-                                       )
-                                   )
-                               )
-                           )
-                       ),
-                       sequence(
-                           token("GROUP"),
-                           optional(
-                               token("INDICATE")
-                           )
-                       )
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return reportGroupDescriptionEntry_format3Parser;
     }
 
     // ========================================================
@@ -4923,6 +4563,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("SCREEN"),
                    token("SECTION"),
                    token("."),
+                   star(
+                       screenDescriptionEntry()
+                   ),
                    optional(
                        skipto(
                            choice(
@@ -4958,7 +4601,34 @@ public class CobolGrammar extends CobolBaseGrammar {
                            screenName()
                        )
                    ),
-                   star(
+                   permuted(
+                       globalClause(),
+                       lineClause(),
+                       columnClause(),
+                       blankClause(),
+                       bellClause(),
+                       blinkClause(),
+                       highlightClause(),
+                       reverseVideoClause(),
+                       underlineClause(),
+                       foregroundColorClause(),
+                       backgroundColorClause(),
+                       signClause(),
+                       fullClause(),
+                       autoClause(),
+                       secureClause(),
+                       requiredClause(),
+                       occursClause(),
+                       usageClause(),
+                       eraseClause(),
+                       pictureClause(),
+                       screenFromClause(),
+                       screenToClause(),
+                       screenUsingClause(),
+                       screenValueClause(),
+                       blankWhenZeroClause(),
+                       justifiedClause(),
+                       controlClause(),
                        screenEntryPhrase()
                    )
                )
@@ -4969,165 +4639,355 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // fileDescriptionEntry
+    // recordDescriptionEntry
     // ........................................................
 
-    private Parser fileDescriptionEntryParser = null;
+    private Parser recordDescriptionEntryParser = null;
 
-    public Parser fileDescriptionEntry() {
-        if (fileDescriptionEntryParser == null) {
-           FutureParser future = scoped("fileDescriptionEntry");
-           fileDescriptionEntryParser = future;
+    public Parser recordDescriptionEntry() {
+        if (recordDescriptionEntryParser == null) {
+           FutureParser future = scoped("recordDescriptionEntry");
+           recordDescriptionEntryParser = future;
            future.setParser(
                choice(
-                   fdFileDescriptionEntry(),
-                   sdFileDescriptionEntry()
+                   dataDescriptionEntry(),
+                   copyStatement()
                )
            );
         }
 
-        return fileDescriptionEntryParser;
+        return recordDescriptionEntryParser;
     }
 
     // ========================================================
-    // fdFileDescriptionEntry
+    // dataDescriptionEntry
     // ........................................................
 
-    private Parser fdFileDescriptionEntryParser = null;
+    private Parser dataDescriptionEntryParser = null;
 
-    public Parser fdFileDescriptionEntry() {
-        if (fdFileDescriptionEntryParser == null) {
-           FutureParser future = scoped("fdFileDescriptionEntry");
-           fdFileDescriptionEntryParser = future;
+    public Parser dataDescriptionEntry() {
+        if (dataDescriptionEntryParser == null) {
+           FutureParser future = scoped("dataDescriptionEntry");
+           dataDescriptionEntryParser = future;
            future.setParser(
-               sequence(
-                   token("FD"),
-                   fileName(),
-                   permuted(
-                       blockContains(),
-                       codeSet(),
-                       dataRecords(),
-                       external(),
-                       global(),
-                       threadLocalClause(),
-                       labelRecords(),
-                       linage(),
-                       record(),
-                       recordingMode(),
-                       valueOfFileId(),
-                       valueOf(),
-                       report()
-                   ),
-                   skipto(
-                       token(".")
-                   ),
-                   token(".")
+               choice(
+                   constantEntry_level01(),
+                   constantEntry_level78(),
+                   dataDescriptionEntry_format3_and_4(),
+                   dataDescriptionEntry_format2(),
+                   dataDescriptionEntry_format1()
                )
            );
         }
 
-        return fdFileDescriptionEntryParser;
+        return dataDescriptionEntryParser;
     }
 
     // ========================================================
-    // sdFileDescriptionEntry
+    // constantEntry_level01
     // ........................................................
 
-    private Parser sdFileDescriptionEntryParser = null;
+    private Parser constantEntry_level01Parser = null;
 
-    public Parser sdFileDescriptionEntry() {
-        if (sdFileDescriptionEntryParser == null) {
-           FutureParser future = scoped("sdFileDescriptionEntry");
-           sdFileDescriptionEntryParser = future;
+    public Parser constantEntry_level01() {
+        if (constantEntry_level01Parser == null) {
+           FutureParser future = scoped("constantEntry_level01");
+           constantEntry_level01Parser = future;
            future.setParser(
                sequence(
-                   token("SD"),
-                   fileName(),
-                   permuted(
-                       blockContains(),
-                       dataRecords(),
-                       labelRecords(),
-                       record(),
-                       recordingMode(),
-                       valueOfFileId()
+                   choice(
+                       token("1"),
+                       token("01")
                    ),
-                   skipto(
-                       token(".")
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return sdFileDescriptionEntryParser;
-    }
-
-    // ========================================================
-    // blockContains
-    // ........................................................
-
-    private Parser blockContainsParser = null;
-
-    public Parser blockContains() {
-        if (blockContainsParser == null) {
-           FutureParser future = scoped("blockContains");
-           blockContainsParser = future;
-           future.setParser(
-               sequence(
-                   token("BLOCK"),
+                   cobolWord(),
+                   token("CONSTANT"),
                    optional(
-                       token("CONTAINS")
+                       globalClause()
                    ),
-                   integer(),
-                   optional(
+                   choice(
                        sequence(
-                           token("TO"),
-                           integer()
+                           optional(
+                               token("AS")
+                           ),
+                           identifier()
+                       ),
+                       sequence(
+                           token("FROM"),
+                           cobolWord()
                        )
                    ),
-                   optional(
-                       choice(
-                           token("CHARACTERS"),
-                           token("RECORDS")
-                       )
-                   )
+                   token(".")
                )
            );
         }
 
-        return blockContainsParser;
+        return constantEntry_level01Parser;
     }
 
     // ========================================================
-    // codeSet
+    // constantEntry_level78
     // ........................................................
 
-    private Parser codeSetParser = null;
+    private Parser constantEntry_level78Parser = null;
 
-    public Parser codeSet() {
-        if (codeSetParser == null) {
-           FutureParser future = scoped("codeSet");
-           codeSetParser = future;
+    public Parser constantEntry_level78() {
+        if (constantEntry_level78Parser == null) {
+           FutureParser future = scoped("constantEntry_level78");
+           constantEntry_level78Parser = future;
            future.setParser(
                sequence(
-                   token("CODE-SET"),
+                   token("78"),
+                   cobolWord(),
+                   token("VALUE"),
                    optional(
                        token("IS")
                    ),
-                   alphabetName(),
-                   optional(
+                   valueIsOperand(),
+                   star(
                        sequence(
-                           token("FOR"),
-                           plus(
-                               identifier()
-                           )
+                           valueIsOperator(),
+                           valueIsOperand()
                        )
-                   )
+                   ),
+                   token(".")
                )
            );
         }
 
-        return codeSetParser;
+        return constantEntry_level78Parser;
+    }
+
+    // ========================================================
+    // valueIsOperand
+    // ........................................................
+
+    private Parser valueIsOperandParser = null;
+
+    public Parser valueIsOperand() {
+        if (valueIsOperandParser == null) {
+           FutureParser future = scoped("valueIsOperand");
+           valueIsOperandParser = future;
+           future.setParser(
+               choice(
+                   token("NEXT"),
+                   sequence(
+                       token("START"),
+                       optional(
+                           token("OF")
+                       ),
+                       dataName()
+                   ),
+                   sequence(
+                       token("LENGTH"),
+                       optional(
+                           token("OF")
+                       ),
+                       dataName()
+                   ),
+                   arithmeticExpression(),
+                   literal()
+               )
+           );
+        }
+
+        return valueIsOperandParser;
+    }
+
+    // ========================================================
+    // valueIsOperator
+    // ........................................................
+
+    private Parser valueIsOperatorParser = null;
+
+    public Parser valueIsOperator() {
+        if (valueIsOperatorParser == null) {
+           FutureParser future = scoped("valueIsOperator");
+           valueIsOperatorParser = future;
+           future.setParser(
+               choice(
+                   token("AND"),
+                   token("OR"),
+                   token("&"),
+                   token("+"),
+                   token("-"),
+                   token("*"),
+                   token("/")
+               )
+           );
+        }
+
+        return valueIsOperatorParser;
+    }
+
+    // ========================================================
+    // dataDescriptionEntry_format1
+    // ........................................................
+
+    private Parser dataDescriptionEntry_format1Parser = null;
+
+    public Parser dataDescriptionEntry_format1() {
+        if (dataDescriptionEntry_format1Parser == null) {
+           FutureParser future = scoped("dataDescriptionEntry_format1");
+           dataDescriptionEntry_format1Parser = future;
+           future.setParser(
+               sequence(
+                   levelNumber(),
+                   optional(
+                       dataDescName()
+                   ),
+                   optional(
+                       permuted(
+                           redefinesClause(),
+                           typedefClause(),
+                           alignedClause(),
+                           anyLengthClause(),
+                           basedClause(),
+                           blankWhenZeroClause(),
+                           constantRecordClause(),
+                           externalClause(),
+                           globalClause(),
+                           groupUsageClause(),
+                           justifiedClause(),
+                           occursClause(),
+                           pictureClause(),
+                           propertyClause(),
+                           sameAsClause(),
+                           selectWhenClause(),
+                           signClause(),
+                           synchronizedClause(),
+                           typeNameTypeClause(),
+                           classClause(),
+                           defaultClause(),
+                           destinationClause(),
+                           plus(
+                               invalidClause()
+                           ),
+                           presentWhenClause(),
+                           varyingClause(),
+                           validateStatusClause(),
+                           valueClause(),
+                           threadLocalClause(),
+                           dtLinePos(),
+                           columnClause(),
+                           autoClause(),
+                           backgroundColorClause(),
+                           bellClause(),
+                           blinkClause(),
+                           controlPhrase(),
+                           eraseClause(),
+                           fillPhrase(),
+                           foregroundColorClause(),
+                           fullClause(),
+                           gridPhrase(),
+                           highPhrase(),
+                           lowPhrase(),
+                           linePhrase(),
+                           promptPhrase(),
+                           requiredPhrase(),
+                           reversePhrase(),
+                           securePhrase(),
+                           sizePhrase(),
+                           sequence(
+                               token("USING"),
+                               identifier()
+                           ),
+                           sequence(
+                               token("FROM"),
+                               choice(
+                                   identifier(),
+                                   literal()
+                               ),
+                               optional(
+                                   sequence(
+                                       token("TO"),
+                                       identifier()
+                                   )
+                               )
+                           ),
+                           token("PUBLIC"),
+                           token("PRIVATE"),
+                           token("PROTECTED"),
+                           token("INTERNAL"),
+                           attributeClause(),
+                           usageClause(),
+                           literal()
+                       )
+                   ),
+                   skipto(
+                       token(".")
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return dataDescriptionEntry_format1Parser;
+    }
+
+    // ========================================================
+    // dataDescriptionEntry_format2
+    // ........................................................
+
+    private Parser dataDescriptionEntry_format2Parser = null;
+
+    public Parser dataDescriptionEntry_format2() {
+        if (dataDescriptionEntry_format2Parser == null) {
+           FutureParser future = scoped("dataDescriptionEntry_format2");
+           dataDescriptionEntry_format2Parser = future;
+           future.setParser(
+               sequence(
+                   token("66"),
+                   dataName(),
+                   token("RENAMES"),
+                   qualifiedDataName(),
+                   optional(
+                       sequence(
+                           choice(
+                               token("THROUGH"),
+                               token("THRU")
+                           ),
+                           qualifiedDataName()
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return dataDescriptionEntry_format2Parser;
+    }
+
+    // ========================================================
+    // dataDescriptionEntry_format3_and_4
+    // ........................................................
+
+    private Parser dataDescriptionEntry_format3_and_4Parser = null;
+
+    public Parser dataDescriptionEntry_format3_and_4() {
+        if (dataDescriptionEntry_format3_and_4Parser == null) {
+           FutureParser future = scoped("dataDescriptionEntry_format3_and_4");
+           dataDescriptionEntry_format3_and_4Parser = future;
+           future.setParser(
+               sequence(
+                   token("88"),
+                   optional(
+                       sequence(
+                           not(
+                               choice(
+                                   token("VALUE"),
+                                   token("VALUES")
+                               )
+                           ),
+                           conditionName()
+                       )
+                   ),
+                   valueClause(),
+                   token(".")
+               )
+           );
+        }
+
+        return dataDescriptionEntry_format3_and_4Parser;
     }
 
     // ========================================================
@@ -5208,210 +5068,6 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return labelRecordsParser;
-    }
-
-    // ========================================================
-    // linage
-    // ........................................................
-
-    private Parser linageParser = null;
-
-    public Parser linage() {
-        if (linageParser == null) {
-           FutureParser future = scoped("linage");
-           linageParser = future;
-           future.setParser(
-               sequence(
-                   token("LINAGE"),
-                   optional(
-                       token("IS")
-                   ),
-                   choice(
-                       dataName(),
-                       integer()
-                   ),
-                   optional(
-                       token("LINES")
-                   ),
-                   optional(
-                       footing()
-                   ),
-                   optional(
-                       linesAtTop()
-                   ),
-                   optional(
-                       linesAtBottom()
-                   )
-               )
-           );
-        }
-
-        return linageParser;
-    }
-
-    // ========================================================
-    // footing
-    // ........................................................
-
-    private Parser footingParser = null;
-
-    public Parser footing() {
-        if (footingParser == null) {
-           FutureParser future = scoped("footing");
-           footingParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("WITH")
-                   ),
-                   token("FOOTING"),
-                   optional(
-                       token("AT")
-                   ),
-                   choice(
-                       dataName(),
-                       integer()
-                   )
-               )
-           );
-        }
-
-        return footingParser;
-    }
-
-    // ========================================================
-    // linesAtTop
-    // ........................................................
-
-    private Parser linesAtTopParser = null;
-
-    public Parser linesAtTop() {
-        if (linesAtTopParser == null) {
-           FutureParser future = scoped("linesAtTop");
-           linesAtTopParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("LINES")
-                   ),
-                   optional(
-                       token("AT")
-                   ),
-                   token("TOP"),
-                   choice(
-                       dataName(),
-                       integer()
-                   )
-               )
-           );
-        }
-
-        return linesAtTopParser;
-    }
-
-    // ========================================================
-    // linesAtBottom
-    // ........................................................
-
-    private Parser linesAtBottomParser = null;
-
-    public Parser linesAtBottom() {
-        if (linesAtBottomParser == null) {
-           FutureParser future = scoped("linesAtBottom");
-           linesAtBottomParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("LINES")
-                   ),
-                   optional(
-                       token("AT")
-                   ),
-                   token("BOTTOM"),
-                   choice(
-                       dataName(),
-                       integer()
-                   )
-               )
-           );
-        }
-
-        return linesAtBottomParser;
-    }
-
-    // ========================================================
-    // record
-    // ........................................................
-
-    private Parser recordParser = null;
-
-    public Parser record() {
-        if (recordParser == null) {
-           FutureParser future = scoped("record");
-           recordParser = future;
-           future.setParser(
-               sequence(
-                   token("RECORD"),
-                   choice(
-                       sequence(
-                           optional(
-                               token("CONTAINS")
-                           ),
-                           integer(),
-                           optional(
-                               sequence(
-                                   token("TO"),
-                                   integer()
-                               )
-                           ),
-                           optional(
-                               token("CHARACTERS")
-                           )
-                       ),
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           token("VARYING"),
-                           optional(
-                               token("IN")
-                           ),
-                           optional(
-                               token("SIZE")
-                           ),
-                           optional(
-                               sequence(
-                                   optional(
-                                       token("FROM")
-                                   ),
-                                   integer(),
-                                   optional(
-                                       sequence(
-                                           token("TO"),
-                                           integer()
-                                       )
-                                   ),
-                                   optional(
-                                       token("CHARACTERS")
-                                   )
-                               )
-                           ),
-                           optional(
-                               sequence(
-                                   token("DEPENDING"),
-                                   optional(
-                                       token("ON")
-                                   ),
-                                   fileName()
-                               )
-                           )
-                       )
-                   )
-               )
-           );
-        }
-
-        return recordParser;
     }
 
     // ========================================================
@@ -5515,241 +5171,6 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // report
-    // ........................................................
-
-    private Parser reportParser = null;
-
-    public Parser report() {
-        if (reportParser == null) {
-           FutureParser future = scoped("report");
-           reportParser = future;
-           future.setParser(
-               sequence(
-                   choice(
-                       token("REPORT"),
-                       token("REPORTS")
-                   ),
-                   optional(
-                       choice(
-                           token("IS"),
-                           token("ARE")
-                       )
-                   ),
-                   plus(
-                       reportName()
-                   )
-               )
-           );
-        }
-
-        return reportParser;
-    }
-
-    // ========================================================
-    // dataDescriptionEntry
-    // ........................................................
-
-    private Parser dataDescriptionEntryParser = null;
-
-    public Parser dataDescriptionEntry() {
-        if (dataDescriptionEntryParser == null) {
-           FutureParser future = scoped("dataDescriptionEntry");
-           dataDescriptionEntryParser = future;
-           future.setParser(
-               choice(
-                   constantDescriptionEntry(),
-                   dataDescriptionEntry_format3(),
-                   dataDescriptionEntry_format2(),
-                   dataDescriptionEntry_format1()
-               )
-           );
-        }
-
-        return dataDescriptionEntryParser;
-    }
-
-    // ========================================================
-    // dataDescriptionEntry_format1
-    // ........................................................
-
-    private Parser dataDescriptionEntry_format1Parser = null;
-
-    public Parser dataDescriptionEntry_format1() {
-        if (dataDescriptionEntry_format1Parser == null) {
-           FutureParser future = scoped("dataDescriptionEntry_format1");
-           dataDescriptionEntry_format1Parser = future;
-           future.setParser(
-               sequence(
-                   levelNumber(),
-                   optional(
-                       dataDescName()
-                   ),
-                   permuted(
-                       redefines(),
-                       external(),
-                       global(),
-                       typedefClause(),
-                       threadLocalClause(),
-                       picture(),
-                       occurs(),
-                       dtLinePos(),
-                       dtColPos(),
-                       sign(),
-                       valueClause(),
-                       sync(),
-                       justified(),
-                       blankWhenZero(),
-                       anyLengthClause(),
-                       autoPhrase(),
-                       backgroundPhrase(),
-                       beepPhrase(),
-                       blinkPhrase(),
-                       controlPhrase(),
-                       erasePhrase(),
-                       fillPhrase(),
-                       foregroundPhrase(),
-                       fullPhrase(),
-                       gridPhrase(),
-                       highPhrase(),
-                       lowPhrase(),
-                       linePhrase(),
-                       promptPhrase(),
-                       requiredPhrase(),
-                       reversePhrase(),
-                       securePhrase(),
-                       sizePhrase(),
-                       propertyClause(),
-                       sequence(
-                           token("USING"),
-                           identifier()
-                       ),
-                       sequence(
-                           token("FROM"),
-                           choice(
-                               identifier(),
-                               literal()
-                           ),
-                           optional(
-                               sequence(
-                                   token("TO"),
-                                   identifier()
-                               )
-                           )
-                       ),
-                       token("PUBLIC"),
-                       token("PRIVATE"),
-                       token("PROTECTED"),
-                       token("INTERNAL"),
-                       based(),
-                       attributeClause(),
-                       usage(),
-                       literal()
-                   ),
-                   skipto(
-                       token(".")
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return dataDescriptionEntry_format1Parser;
-    }
-
-    // ========================================================
-    // dataDescriptionEntry_format2
-    // ........................................................
-
-    private Parser dataDescriptionEntry_format2Parser = null;
-
-    public Parser dataDescriptionEntry_format2() {
-        if (dataDescriptionEntry_format2Parser == null) {
-           FutureParser future = scoped("dataDescriptionEntry_format2");
-           dataDescriptionEntry_format2Parser = future;
-           future.setParser(
-               sequence(
-                   token("66"),
-                   dataName(),
-                   token("RENAMES"),
-                   qualifiedDataName(),
-                   optional(
-                       sequence(
-                           choice(
-                               token("THROUGH"),
-                               token("THRU")
-                           ),
-                           qualifiedDataName()
-                       )
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return dataDescriptionEntry_format2Parser;
-    }
-
-    // ========================================================
-    // dataDescriptionEntry_format3
-    // ........................................................
-
-    private Parser dataDescriptionEntry_format3Parser = null;
-
-    public Parser dataDescriptionEntry_format3() {
-        if (dataDescriptionEntry_format3Parser == null) {
-           FutureParser future = scoped("dataDescriptionEntry_format3");
-           dataDescriptionEntry_format3Parser = future;
-           future.setParser(
-               sequence(
-                   token("88"),
-                   conditionName(),
-                   choice(
-                       sequence(
-                           token("VALUE"),
-                           optional(
-                               token("IS")
-                           )
-                       ),
-                       sequence(
-                           token("VALUES"),
-                           optional(
-                               token("ARE")
-                           )
-                       )
-                   ),
-                   plus(
-                       sequence(
-                           not(
-                               token("FALSE")
-                           ),
-                           choice(
-                               cicsValue(),
-                               literal()
-                           ),
-                           optional(
-                               sequence(
-                                   choice(
-                                       token("THROUGH"),
-                                       token("THRU")
-                                   ),
-                                   literal()
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       whenSetToFalseClause()
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return dataDescriptionEntry_format3Parser;
-    }
-
-    // ========================================================
     // cicsValue
     // ........................................................
 
@@ -5809,87 +5230,6 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // constantDescriptionEntry
-    // ........................................................
-
-    private Parser constantDescriptionEntryParser = null;
-
-    public Parser constantDescriptionEntry() {
-        if (constantDescriptionEntryParser == null) {
-           FutureParser future = scoped("constantDescriptionEntry");
-           constantDescriptionEntryParser = future;
-           future.setParser(
-               sequence(
-                   choice(
-                       sequence(
-                           token("78"),
-                           cobolWord(),
-                           token("VALUE"),
-                           optional(
-                               token("IS")
-                           ),
-                           valueIsOperand(),
-                           star(
-                               sequence(
-                                   valueIsOperator(),
-                                   valueIsOperand()
-                               )
-                           )
-                       ),
-                       sequence(
-                           choice(
-                               token("1"),
-                               token("01")
-                           ),
-                           cobolWord(),
-                           token("CONSTANT"),
-                           optional(
-                               global()
-                           ),
-                           choice(
-                               sequence(
-                                   optional(
-                                       token("AS")
-                                   ),
-                                   identifier()
-                               ),
-                               sequence(
-                                   token("FROM"),
-                                   cobolWord()
-                               )
-                           )
-                       )
-                   ),
-                   token(".")
-               )
-           );
-        }
-
-        return constantDescriptionEntryParser;
-    }
-
-    // ========================================================
-    // redefines
-    // ........................................................
-
-    private Parser redefinesParser = null;
-
-    public Parser redefines() {
-        if (redefinesParser == null) {
-           FutureParser future = scoped("redefines");
-           redefinesParser = future;
-           future.setParser(
-               sequence(
-                   token("REDEFINES"),
-                   cobolWord()
-               )
-           );
-        }
-
-        return redefinesParser;
-    }
-
-    // ========================================================
     // blankWhenZero
     // ........................................................
 
@@ -5911,105 +5251,6 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return blankWhenZeroParser;
-    }
-
-    // ========================================================
-    // anyLengthClause
-    // ........................................................
-
-    private Parser anyLengthClauseParser = null;
-
-    public Parser anyLengthClause() {
-        if (anyLengthClauseParser == null) {
-           FutureParser future = scoped("anyLengthClause");
-           anyLengthClauseParser = future;
-           future.setParser(
-               sequence(
-                   token("ANY"),
-                   token("LENGTH")
-               )
-           );
-        }
-
-        return anyLengthClauseParser;
-    }
-
-    // ========================================================
-    // external
-    // ........................................................
-
-    private Parser externalParser = null;
-
-    public Parser external() {
-        if (externalParser == null) {
-           FutureParser future = scoped("external");
-           externalParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("IS")
-                   ),
-                   token("EXTERNAL"),
-                   optional(
-                       sequence(
-                           choice(
-                               token("AS"),
-                               token("BY")
-                           ),
-                           literal()
-                       )
-                   )
-               )
-           );
-        }
-
-        return externalParser;
-    }
-
-    // ========================================================
-    // global
-    // ........................................................
-
-    private Parser globalParser = null;
-
-    public Parser global() {
-        if (globalParser == null) {
-           FutureParser future = scoped("global");
-           globalParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("IS")
-                   ),
-                   token("GLOBAL")
-               )
-           );
-        }
-
-        return globalParser;
-    }
-
-    // ========================================================
-    // typedefClause
-    // ........................................................
-
-    private Parser typedefClauseParser = null;
-
-    public Parser typedefClause() {
-        if (typedefClauseParser == null) {
-           FutureParser future = scoped("typedefClause");
-           typedefClauseParser = future;
-           future.setParser(
-               sequence(
-                   optional(
-                       token("IS")
-                   ),
-                   token("TYPEDEF")
-               )
-           );
-        }
-
-        return typedefClauseParser;
     }
 
     // ========================================================
@@ -6112,89 +5353,1369 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // occurs
+    // valueClause
     // ........................................................
 
-    private Parser occursParser = null;
+    private Parser valueClauseParser = null;
 
-    public Parser occurs() {
-        if (occursParser == null) {
-           FutureParser future = scoped("occurs");
-           occursParser = future;
+    public Parser valueClause() {
+        if (valueClauseParser == null) {
+           FutureParser future = scoped("valueClause");
+           valueClauseParser = future;
            future.setParser(
                sequence(
-                   token("OCCURS"),
-                   plus(
-                       choice(
+                   choice(
+                       sequence(
+                           token("VALUE"),
+                           optional(
+                               token("IS")
+                           )
+                       ),
+                       sequence(
+                           token("VALUES"),
+                           optional(
+                               token("ARE")
+                           )
+                       )
+                   ),
+                   choice(
+                       plus(
                            sequence(
+                               plus(
+                                   literal()
+                               ),
+                               token("FROM"),
+                               token("("),
+                               plus(
+                                   subscript()
+                               ),
+                               token(")"),
                                optional(
                                    sequence(
-                                       integer(),
-                                       token("TO")
-                                   )
-                               ),
-                               integer(),
-                               optional(
-                                   token("TIMES")
-                               ),
-                               optional(
-                                   sequence(
-                                       token("DEPENDING"),
-                                       optional(
-                                           token("ON")
-                                       ),
-                                       qualifiedDataName()
-                                   )
-                               ),
-                               star(
-                                   sequence(
-                                       choice(
-                                           token("ASCENDING"),
-                                           token("DESCENDING")
-                                       ),
-                                       optional(
-                                           token("KEY")
-                                       ),
-                                       optional(
-                                           token("IS")
-                                       ),
+                                       token("TO"),
+                                       token("("),
                                        plus(
-                                           qualifiedDataName()
+                                           subscript()
+                                       ),
+                                       token(")")
+                                   )
+                               )
+                           )
+                       ),
+                       sequence(
+                           plus(
+                               sequence(
+                                   choice(
+                                       cicsValue(),
+                                       sequence(
+                                           not(
+                                               token("FALSE")
+                                           ),
+                                           literal()
                                        )
-                                   )
-                               ),
-                               star(
-                                   sequence(
-                                       token("INDEXED"),
-                                       optional(
-                                           token("BY")
-                                       ),
-                                       plus(
-                                           indexName()
+                                   ),
+                                   optional(
+                                       sequence(
+                                           choice(
+                                               token("THROUGH"),
+                                               token("THRU")
+                                           ),
+                                           literal()
                                        )
                                    )
                                )
                            ),
-                           token("ANY")
+                           optional(
+                               sequence(
+                                   optional(
+                                       token("IN")
+                                   ),
+                                   not(
+                                       token("FALSE")
+                                   ),
+                                   alphabetName()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   optional(
+                                       token("WHEN")
+                                   ),
+                                   optional(
+                                       token("SET")
+                                   ),
+                                   optional(
+                                       token("TO")
+                                   ),
+                                   token("FALSE"),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   literal()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   optional(
+                                       choice(
+                                           token("IS"),
+                                           token("ARE")
+                                       )
+                                   ),
+                                   choice(
+                                       token("INVALID"),
+                                       token("VALID")
+                                   )
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("WHEN"),
+                                   condition()
+                               )
+                           )
+                       ),
+                       constant()
+                   )
+               )
+           );
+        }
+
+        return valueClauseParser;
+    }
+
+    // ========================================================
+    // alignedClause
+    // ........................................................
+
+    private Parser alignedClauseParser = null;
+
+    public Parser alignedClause() {
+        if (alignedClauseParser == null) {
+           FutureParser future = scoped("alignedClause");
+           alignedClauseParser = future;
+           future.setParser(
+               token("ALIGNED")
+           );
+        }
+
+        return alignedClauseParser;
+    }
+
+    // ========================================================
+    // anyLengthClause
+    // ........................................................
+
+    private Parser anyLengthClauseParser = null;
+
+    public Parser anyLengthClause() {
+        if (anyLengthClauseParser == null) {
+           FutureParser future = scoped("anyLengthClause");
+           anyLengthClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("ANY"),
+                   token("LENGTH")
+               )
+           );
+        }
+
+        return anyLengthClauseParser;
+    }
+
+    // ========================================================
+    // autoClause
+    // ........................................................
+
+    private Parser autoClauseParser = null;
+
+    public Parser autoClause() {
+        if (autoClauseParser == null) {
+           FutureParser future = scoped("autoClause");
+           autoClauseParser = future;
+           future.setParser(
+               choice(
+                   token("AUTO"),
+                   token("AUTO-SKIP")
+               )
+           );
+        }
+
+        return autoClauseParser;
+    }
+
+    // ========================================================
+    // backgroundColorClause
+    // ........................................................
+
+    private Parser backgroundColorClauseParser = null;
+
+    public Parser backgroundColorClause() {
+        if (backgroundColorClauseParser == null) {
+           FutureParser future = scoped("backgroundColorClause");
+           backgroundColorClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("BACKGROUND-COLOR"),
+                       token("BACKGROUND-COLOUR")
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   integer()
+               )
+           );
+        }
+
+        return backgroundColorClauseParser;
+    }
+
+    // ========================================================
+    // basedClause
+    // ........................................................
+
+    private Parser basedClauseParser = null;
+
+    public Parser basedClause() {
+        if (basedClauseParser == null) {
+           FutureParser future = scoped("basedClause");
+           basedClauseParser = future;
+           future.setParser(
+               token("BASED")
+           );
+        }
+
+        return basedClauseParser;
+    }
+
+    // ========================================================
+    // bellClause
+    // ........................................................
+
+    private Parser bellClauseParser = null;
+
+    public Parser bellClause() {
+        if (bellClauseParser == null) {
+           FutureParser future = scoped("bellClause");
+           bellClauseParser = future;
+           future.setParser(
+               token("BELL")
+           );
+        }
+
+        return bellClauseParser;
+    }
+
+    // ========================================================
+    // blankClause
+    // ........................................................
+
+    private Parser blankClauseParser = null;
+
+    public Parser blankClause() {
+        if (blankClauseParser == null) {
+           FutureParser future = scoped("blankClause");
+           blankClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("BLANK"),
+                   choice(
+                       token("SCREEN"),
+                       token("LINE")
+                   )
+               )
+           );
+        }
+
+        return blankClauseParser;
+    }
+
+    // ========================================================
+    // blankWhenZeroClause
+    // ........................................................
+
+    private Parser blankWhenZeroClauseParser = null;
+
+    public Parser blankWhenZeroClause() {
+        if (blankWhenZeroClauseParser == null) {
+           FutureParser future = scoped("blankWhenZeroClause");
+           blankWhenZeroClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("BLANK"),
+                   optional(
+                       token("WHEN")
+                   ),
+                   zero()
+               )
+           );
+        }
+
+        return blankWhenZeroClauseParser;
+    }
+
+    // ========================================================
+    // blinkClause
+    // ........................................................
+
+    private Parser blinkClauseParser = null;
+
+    public Parser blinkClause() {
+        if (blinkClauseParser == null) {
+           FutureParser future = scoped("blinkClause");
+           blinkClauseParser = future;
+           future.setParser(
+               token("BLINK")
+           );
+        }
+
+        return blinkClauseParser;
+    }
+
+    // ========================================================
+    // blockContainsClause
+    // ........................................................
+
+    private Parser blockContainsClauseParser = null;
+
+    public Parser blockContainsClause() {
+        if (blockContainsClauseParser == null) {
+           FutureParser future = scoped("blockContainsClause");
+           blockContainsClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("BLOCK"),
+                   optional(
+                       token("CONTAINS")
+                   ),
+                   integer(),
+                   optional(
+                       sequence(
+                           token("TO"),
+                           integer()
+                       )
+                   ),
+                   optional(
+                       choice(
+                           token("CHARACTERS"),
+                           token("RECORDS")
                        )
                    )
                )
            );
         }
 
-        return occursParser;
+        return blockContainsClauseParser;
     }
 
     // ========================================================
-    // picture
+    // classClause
     // ........................................................
 
-    private Parser pictureParser = null;
+    private Parser classClauseParser = null;
 
-    public Parser picture() {
-        if (pictureParser == null) {
-           FutureParser future = scoped("picture");
-           pictureParser = future;
+    public Parser classClause() {
+        if (classClauseParser == null) {
+           FutureParser future = scoped("classClause");
+           classClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("CLASS"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("NUMERIC"),
+                       token("ALPHABETIC"),
+                       token("ALPHABETIC-LOWER"),
+                       token("ALPHABETIC-UPPER"),
+                       token("BOOLEAN"),
+                       name()
+                   )
+               )
+           );
+        }
+
+        return classClauseParser;
+    }
+
+    // ========================================================
+    // codeClause
+    // ........................................................
+
+    private Parser codeClauseParser = null;
+
+    public Parser codeClause() {
+        if (codeClauseParser == null) {
+           FutureParser future = scoped("codeClause");
+           codeClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("CODE"),
+                   choice(
+                       literal(),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return codeClauseParser;
+    }
+
+    // ========================================================
+    // codeSetClause
+    // ........................................................
+
+    private Parser codeSetClauseParser = null;
+
+    public Parser codeSetClause() {
+        if (codeSetClauseParser == null) {
+           FutureParser future = scoped("codeSetClause");
+           codeSetClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("CODE-SET"),
+                   optional(
+                       token("IS")
+                   ),
+                   alphabetName(),
+                   optional(
+                       sequence(
+                           token("FOR"),
+                           plus(
+                               identifier()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return codeSetClauseParser;
+    }
+
+    // ========================================================
+    // columnClause
+    // ........................................................
+
+    private Parser columnClauseParser = null;
+
+    public Parser columnClause() {
+        if (columnClauseParser == null) {
+           FutureParser future = scoped("columnClause");
+           columnClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       sequence(
+                           choice(
+                               token("COL"),
+                               token("COLUMN")
+                           ),
+                           optional(
+                               choice(
+                                   token("NUMBER"),
+                                   token("NUMBERS")
+                               )
+                           )
+                       ),
+                       token("COLUMNS"),
+                       token("COLS")
+                   ),
+                   optional(
+                       choice(
+                           token("LEFT"),
+                           token("CENTER"),
+                           token("RIGHT")
+                       )
+                   ),
+                   optional(
+                       choice(
+                           token("IS"),
+                           token("ARE")
+                       )
+                   ),
+                   optional(
+                       choice(
+                           token("PLUS"),
+                           token("+"),
+                           token("MINUS"),
+                           token("-")
+                       )
+                   ),
+                   choice(
+                       integer(),
+                       identifier(),
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return columnClauseParser;
+    }
+
+    // ========================================================
+    // constantRecordClause
+    // ........................................................
+
+    private Parser constantRecordClauseParser = null;
+
+    public Parser constantRecordClause() {
+        if (constantRecordClauseParser == null) {
+           FutureParser future = scoped("constantRecordClause");
+           constantRecordClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("CONSTANT"),
+                   token("RECORD")
+               )
+           );
+        }
+
+        return constantRecordClauseParser;
+    }
+
+    // ========================================================
+    // controlClause
+    // ........................................................
+
+    private Parser controlClauseParser = null;
+
+    public Parser controlClause() {
+        if (controlClauseParser == null) {
+           FutureParser future = scoped("controlClause");
+           controlClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       sequence(
+                           token("CONTROL"),
+                           optional(
+                               token("IS")
+                           )
+                       ),
+                       sequence(
+                           token("CONTROLS"),
+                           optional(
+                               token("ARE")
+                           )
+                       )
+                   ),
+                   choice(
+                       sequence(
+                           token("FINAL"),
+                           star(
+                               dataName()
+                           )
+                       ),
+                       plus(
+                           dataName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return controlClauseParser;
+    }
+
+    // ========================================================
+    // defaultClause
+    // ........................................................
+
+    private Parser defaultClauseParser = null;
+
+    public Parser defaultClause() {
+        if (defaultClauseParser == null) {
+           FutureParser future = scoped("defaultClause");
+           defaultClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("DEFAULT"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("NONE"),
+                       literal(),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return defaultClauseParser;
+    }
+
+    // ========================================================
+    // destinationClause
+    // ........................................................
+
+    private Parser destinationClauseParser = null;
+
+    public Parser destinationClause() {
+        if (destinationClauseParser == null) {
+           FutureParser future = scoped("destinationClause");
+           destinationClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("DESTINATION"),
+                   optional(
+                       token("IS")
+                   ),
+                   plus(
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return destinationClauseParser;
+    }
+
+    // ========================================================
+    // eraseClause
+    // ........................................................
+
+    private Parser eraseClauseParser = null;
+
+    public Parser eraseClause() {
+        if (eraseClauseParser == null) {
+           FutureParser future = scoped("eraseClause");
+           eraseClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("ERASE"),
+                   optional(
+                       choice(
+                           token("EOL"),
+                           token("EOS"),
+                           sequence(
+                               optional(
+                                   sequence(
+                                       token("END"),
+                                       token("OF")
+                                   )
+                               ),
+                               token("LINE")
+                           ),
+                           sequence(
+                               optional(
+                                   sequence(
+                                       token("END"),
+                                       token("OF")
+                                   )
+                               ),
+                               token("SCREEN")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return eraseClauseParser;
+    }
+
+    // ========================================================
+    // externalClause
+    // ........................................................
+
+    private Parser externalClauseParser = null;
+
+    public Parser externalClause() {
+        if (externalClauseParser == null) {
+           FutureParser future = scoped("externalClause");
+           externalClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("IS")
+                   ),
+                   token("EXTERNAL"),
+                   optional(
+                       sequence(
+                           choice(
+                               token("AS"),
+                               token("BY")
+                           ),
+                           literal()
+                       )
+                   )
+               )
+           );
+        }
+
+        return externalClauseParser;
+    }
+
+    // ========================================================
+    // foregroundColorClause
+    // ........................................................
+
+    private Parser foregroundColorClauseParser = null;
+
+    public Parser foregroundColorClause() {
+        if (foregroundColorClauseParser == null) {
+           FutureParser future = scoped("foregroundColorClause");
+           foregroundColorClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("FOREGROUND-COLOR"),
+                       token("FOREGROUND-COLOUR")
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       integer(),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return foregroundColorClauseParser;
+    }
+
+    // ========================================================
+    // formatClause
+    // ........................................................
+
+    private Parser formatClauseParser = null;
+
+    public Parser formatClause() {
+        if (formatClauseParser == null) {
+           FutureParser future = scoped("formatClause");
+           formatClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("FORMAT"),
+                   permuted(
+                       token("BIT"),
+                       token("CHARACTER"),
+                       token("NUMERIC")
+                   ),
+                   token("DATA")
+               )
+           );
+        }
+
+        return formatClauseParser;
+    }
+
+    // ========================================================
+    // fullClause
+    // ........................................................
+
+    private Parser fullClauseParser = null;
+
+    public Parser fullClause() {
+        if (fullClauseParser == null) {
+           FutureParser future = scoped("fullClause");
+           fullClauseParser = future;
+           future.setParser(
+               token("FULL")
+           );
+        }
+
+        return fullClauseParser;
+    }
+
+    // ========================================================
+    // globalClause
+    // ........................................................
+
+    private Parser globalClauseParser = null;
+
+    public Parser globalClause() {
+        if (globalClauseParser == null) {
+           FutureParser future = scoped("globalClause");
+           globalClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("IS")
+                   ),
+                   token("GLOBAL")
+               )
+           );
+        }
+
+        return globalClauseParser;
+    }
+
+    // ========================================================
+    // groupIndicateClause
+    // ........................................................
+
+    private Parser groupIndicateClauseParser = null;
+
+    public Parser groupIndicateClause() {
+        if (groupIndicateClauseParser == null) {
+           FutureParser future = scoped("groupIndicateClause");
+           groupIndicateClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("GROUP"),
+                   optional(
+                       token("INDICATE")
+                   )
+               )
+           );
+        }
+
+        return groupIndicateClauseParser;
+    }
+
+    // ========================================================
+    // groupUsageClause
+    // ........................................................
+
+    private Parser groupUsageClauseParser = null;
+
+    public Parser groupUsageClause() {
+        if (groupUsageClauseParser == null) {
+           FutureParser future = scoped("groupUsageClause");
+           groupUsageClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("GROUP-USAGE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("BIT"),
+                       token("NATIONAL")
+                   )
+               )
+           );
+        }
+
+        return groupUsageClauseParser;
+    }
+
+    // ========================================================
+    // highlightClause
+    // ........................................................
+
+    private Parser highlightClauseParser = null;
+
+    public Parser highlightClause() {
+        if (highlightClauseParser == null) {
+           FutureParser future = scoped("highlightClause");
+           highlightClauseParser = future;
+           future.setParser(
+               choice(
+                   token("HIGHLIGHT"),
+                   token("LOWLIGHT")
+               )
+           );
+        }
+
+        return highlightClauseParser;
+    }
+
+    // ========================================================
+    // invalidClause
+    // ........................................................
+
+    private Parser invalidClauseParser = null;
+
+    public Parser invalidClause() {
+        if (invalidClauseParser == null) {
+           FutureParser future = scoped("invalidClause");
+           invalidClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("INVALID"),
+                   token("WHEN"),
+                   condition()
+               )
+           );
+        }
+
+        return invalidClauseParser;
+    }
+
+    // ========================================================
+    // justifiedClause
+    // ........................................................
+
+    private Parser justifiedClauseParser = null;
+
+    public Parser justifiedClause() {
+        if (justifiedClauseParser == null) {
+           FutureParser future = scoped("justifiedClause");
+           justifiedClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       token("JUSTIFIED"),
+                       token("JUST")
+                   ),
+                   optional(
+                       token("RIGHT")
+                   )
+               )
+           );
+        }
+
+        return justifiedClauseParser;
+    }
+
+    // ========================================================
+    // linageClause
+    // ........................................................
+
+    private Parser linageClauseParser = null;
+
+    public Parser linageClause() {
+        if (linageClauseParser == null) {
+           FutureParser future = scoped("linageClause");
+           linageClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("LINAGE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       dataName(),
+                       integer()
+                   ),
+                   optional(
+                       token("LINES")
+                   ),
+                   optional(
+                       footingClause()
+                   ),
+                   optional(
+                       linesAtTopClause()
+                   ),
+                   optional(
+                       linesAtBottomClause()
+                   )
+               )
+           );
+        }
+
+        return linageClauseParser;
+    }
+
+    // ========================================================
+    // footingClause
+    // ........................................................
+
+    private Parser footingClauseParser = null;
+
+    public Parser footingClause() {
+        if (footingClauseParser == null) {
+           FutureParser future = scoped("footingClause");
+           footingClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("WITH")
+                   ),
+                   token("FOOTING"),
+                   optional(
+                       token("AT")
+                   ),
+                   choice(
+                       dataName(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return footingClauseParser;
+    }
+
+    // ========================================================
+    // linesAtTopClause
+    // ........................................................
+
+    private Parser linesAtTopClauseParser = null;
+
+    public Parser linesAtTopClause() {
+        if (linesAtTopClauseParser == null) {
+           FutureParser future = scoped("linesAtTopClause");
+           linesAtTopClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("LINES")
+                   ),
+                   optional(
+                       token("AT")
+                   ),
+                   token("TOP"),
+                   choice(
+                       dataName(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return linesAtTopClauseParser;
+    }
+
+    // ========================================================
+    // linesAtBottomClause
+    // ........................................................
+
+    private Parser linesAtBottomClauseParser = null;
+
+    public Parser linesAtBottomClause() {
+        if (linesAtBottomClauseParser == null) {
+           FutureParser future = scoped("linesAtBottomClause");
+           linesAtBottomClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("LINES")
+                   ),
+                   optional(
+                       token("AT")
+                   ),
+                   token("BOTTOM"),
+                   choice(
+                       dataName(),
+                       integer()
+                   )
+               )
+           );
+        }
+
+        return linesAtBottomClauseParser;
+    }
+
+    // ========================================================
+    // lineClause
+    // ........................................................
+
+    private Parser lineClauseParser = null;
+
+    public Parser lineClause() {
+        if (lineClauseParser == null) {
+           FutureParser future = scoped("lineClause");
+           lineClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       sequence(
+                           token("LINE"),
+                           optional(
+                               choice(
+                                   token("NUMBER"),
+                                   token("NUMBERS")
+                               )
+                           ),
+                           optional(
+                               choice(
+                                   token("IS"),
+                                   token("ARE")
+                               )
+                           )
+                       ),
+                       sequence(
+                           token("LINES"),
+                           optional(
+                               token("ARE")
+                           )
+                       )
+                   ),
+                   choice(
+                       plus(
+                           choice(
+                               sequence(
+                                   integer(),
+                                   optional(
+                                       sequence(
+                                           optional(
+                                               token("ON")
+                                           ),
+                                           token("NEXT"),
+                                           token("PAGE")
+                                       )
+                                   )
+                               ),
+                               sequence(
+                                   choice(
+                                       token("PLUS"),
+                                       token("+")
+                                   ),
+                                   choice(
+                                       integer(),
+                                       identifier()
+                                   )
+                               ),
+                               sequence(
+                                   optional(
+                                       token("ON")
+                                   ),
+                                   token("NEXT"),
+                                   token("PAGE")
+                               )
+                           )
+                       ),
+                       sequence(
+                           choice(
+                               token("PLUS"),
+                               token("+"),
+                               token("MINUS"),
+                               token("-")
+                           ),
+                           choice(
+                               integer(),
+                               identifier()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return lineClauseParser;
+    }
+
+    // ========================================================
+    // nextGroupClause
+    // ........................................................
+
+    private Parser nextGroupClauseParser = null;
+
+    public Parser nextGroupClause() {
+        if (nextGroupClauseParser == null) {
+           FutureParser future = scoped("nextGroupClause");
+           nextGroupClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("NEXT"),
+                   token("GROUP"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       integer(),
+                       sequence(
+                           token("PLUS"),
+                           integer()
+                       ),
+                       sequence(
+                           token("NEXT"),
+                           token("PAGE"),
+                           optional(
+                               sequence(
+                                   optional(
+                                       token("WITH")
+                                   ),
+                                   token("RESET")
+                               )
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return nextGroupClauseParser;
+    }
+
+    // ========================================================
+    // occursClause
+    // ........................................................
+
+    private Parser occursClauseParser = null;
+
+    public Parser occursClause() {
+        if (occursClauseParser == null) {
+           FutureParser future = scoped("occursClause");
+           occursClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("OCCURS"),
+                   choice(
+                       sequence(
+                           choice(
+                               sequence(
+                                   token("DYNAMIC"),
+                                   optional(
+                                       sequence(
+                                           token("CAPACITY"),
+                                           optional(
+                                               token("IN")
+                                           ),
+                                           dataName()
+                                       )
+                                   ),
+                                   optional(
+                                       sequence(
+                                           token("FROM"),
+                                           integer()
+                                       )
+                                   ),
+                                   optional(
+                                       sequence(
+                                           token("TO"),
+                                           integer()
+                                       )
+                                   ),
+                                   optional(
+                                       token("INITIALIZED")
+                                   )
+                               ),
+                               sequence(
+                                   optional(
+                                       sequence(
+                                           integer(),
+                                           token("TO")
+                                       )
+                                   ),
+                                   integer(),
+                                   optional(
+                                       token("TIMES")
+                                   )
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("DEPENDING"),
+                                   optional(
+                                       token("ON")
+                                   ),
+                                   qualifiedDataName()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("STEP"),
+                                   integer()
+                               )
+                           ),
+                           star(
+                               sequence(
+                                   choice(
+                                       token("ASCENDING"),
+                                       token("DESCENDING")
+                                   ),
+                                   optional(
+                                       token("KEY")
+                                   ),
+                                   optional(
+                                       token("IS")
+                                   ),
+                                   plus(
+                                       qualifiedDataName()
+                                   )
+                               )
+                           ),
+                           star(
+                               sequence(
+                                   token("INDEXED"),
+                                   optional(
+                                       token("BY")
+                                   ),
+                                   plus(
+                                       indexName()
+                                   )
+                               )
+                           )
+                       ),
+                       token("ANY")
+                   )
+               )
+           );
+        }
+
+        return occursClauseParser;
+    }
+
+    // ========================================================
+    // pageClause
+    // ........................................................
+
+    private Parser pageClauseParser = null;
+
+    public Parser pageClause() {
+        if (pageClauseParser == null) {
+           FutureParser future = scoped("pageClause");
+           pageClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("PAGE"),
+                   optional(
+                       choice(
+                           token("LIMIT"),
+                           token("LIMITS")
+                       )
+                   ),
+                   optional(
+                       choice(
+                           token("IS"),
+                           token("ARE")
+                       )
+                   ),
+                   integer(),
+                   optional(
+                       choice(
+                           token("LINE"),
+                           token("LINES")
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("HEADING"),
+                           integer()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("FIRST"),
+                           token("DETAIL"),
+                           integer()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("LAST"),
+                           token("DETAIL"),
+                           integer()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("FOOTING"),
+                           integer()
+                       )
+                   )
+               )
+           );
+        }
+
+        return pageClauseParser;
+    }
+
+    // ========================================================
+    // pictureClause
+    // ........................................................
+
+    private Parser pictureClauseParser = null;
+
+    public Parser pictureClause() {
+        if (pictureClauseParser == null) {
+           FutureParser future = scoped("pictureClause");
+           pictureClauseParser = future;
            future.setParser(
                sequence(
                    choice(
@@ -6204,24 +6725,639 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        token("IS")
                    ),
-                   pictureString()
+                   pictureString(),
+                   optional(
+                       pictureLocaleClause()
+                   )
                )
            );
         }
 
-        return pictureParser;
+        return pictureClauseParser;
     }
 
     // ========================================================
-    // sign
+    // pictureLocaleClause
     // ........................................................
 
-    private Parser signParser = null;
+    private Parser pictureLocaleClauseParser = null;
 
-    public Parser sign() {
-        if (signParser == null) {
-           FutureParser future = scoped("sign");
-           signParser = future;
+    public Parser pictureLocaleClause() {
+        if (pictureLocaleClauseParser == null) {
+           FutureParser future = scoped("pictureLocaleClause");
+           pictureLocaleClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("LOCALE"),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           cobolWord()
+                       )
+                   ),
+                   token("SIZE"),
+                   optional(
+                       token("IS")
+                   ),
+                   integer()
+               )
+           );
+        }
+
+        return pictureLocaleClauseParser;
+    }
+
+    // ========================================================
+    // presentWhenClause
+    // ........................................................
+
+    private Parser presentWhenClauseParser = null;
+
+    public Parser presentWhenClause() {
+        if (presentWhenClauseParser == null) {
+           FutureParser future = scoped("presentWhenClause");
+           presentWhenClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("PRESENT"),
+                   token("WHEN"),
+                   condition()
+               )
+           );
+        }
+
+        return presentWhenClauseParser;
+    }
+
+    // ========================================================
+    // propertyClause
+    // ........................................................
+
+    private Parser propertyClauseParser = null;
+
+    public Parser propertyClause() {
+        if (propertyClauseParser == null) {
+           FutureParser future = scoped("propertyClause");
+           propertyClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("PROPERTY"),
+                   optional(
+                       sequence(
+                           optional(
+                               token("WITH")
+                           ),
+                           token("NO"),
+                           choice(
+                               token("GET"),
+                               token("SET")
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           token("FINAL")
+                       )
+                   )
+               )
+           );
+        }
+
+        return propertyClauseParser;
+    }
+
+    // ========================================================
+    // recordClause
+    // ........................................................
+
+    private Parser recordClauseParser = null;
+
+    public Parser recordClause() {
+        if (recordClauseParser == null) {
+           FutureParser future = scoped("recordClause");
+           recordClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("RECORD"),
+                   choice(
+                       recordContainsClause(),
+                       recordIsVaryingClause()
+                   )
+               )
+           );
+        }
+
+        return recordClauseParser;
+    }
+
+    // ========================================================
+    // recordContainsClause
+    // ........................................................
+
+    private Parser recordContainsClauseParser = null;
+
+    public Parser recordContainsClause() {
+        if (recordContainsClauseParser == null) {
+           FutureParser future = scoped("recordContainsClause");
+           recordContainsClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("CONTAINS")
+                   ),
+                   integer(),
+                   optional(
+                       sequence(
+                           token("TO"),
+                           integer()
+                       )
+                   ),
+                   optional(
+                       token("CHARACTERS")
+                   )
+               )
+           );
+        }
+
+        return recordContainsClauseParser;
+    }
+
+    // ========================================================
+    // recordIsVaryingClause
+    // ........................................................
+
+    private Parser recordIsVaryingClauseParser = null;
+
+    public Parser recordIsVaryingClause() {
+        if (recordIsVaryingClauseParser == null) {
+           FutureParser future = scoped("recordIsVaryingClause");
+           recordIsVaryingClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       token("IS")
+                   ),
+                   token("VARYING"),
+                   optional(
+                       token("IN")
+                   ),
+                   optional(
+                       token("SIZE")
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("FROM")
+                           ),
+                           integer(),
+                           optional(
+                               sequence(
+                                   token("TO"),
+                                   integer()
+                               )
+                           ),
+                           optional(
+                               token("CHARACTERS")
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("DEPENDING"),
+                           optional(
+                               token("ON")
+                           ),
+                           fileName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return recordIsVaryingClauseParser;
+    }
+
+    // ========================================================
+    // redefinesClause
+    // ........................................................
+
+    private Parser redefinesClauseParser = null;
+
+    public Parser redefinesClause() {
+        if (redefinesClauseParser == null) {
+           FutureParser future = scoped("redefinesClause");
+           redefinesClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("REDEFINES"),
+                   dataName()
+               )
+           );
+        }
+
+        return redefinesClauseParser;
+    }
+
+    // ========================================================
+    // reportClause
+    // ........................................................
+
+    private Parser reportClauseParser = null;
+
+    public Parser reportClause() {
+        if (reportClauseParser == null) {
+           FutureParser future = scoped("reportClause");
+           reportClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       sequence(
+                           token("REPORT"),
+                           optional(
+                               token("IS")
+                           )
+                       ),
+                       sequence(
+                           token("REPORTS"),
+                           optional(
+                               token("ARE")
+                           )
+                       )
+                   ),
+                   plus(
+                       reportName()
+                   )
+               )
+           );
+        }
+
+        return reportClauseParser;
+    }
+
+    // ========================================================
+    // reportGroupTypeClause
+    // ........................................................
+
+    private Parser reportGroupTypeClauseParser = null;
+
+    public Parser reportGroupTypeClause() {
+        if (reportGroupTypeClauseParser == null) {
+           FutureParser future = scoped("reportGroupTypeClause");
+           reportGroupTypeClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("TYPE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       choice(
+                           token("RH"),
+                           sequence(
+                               token("REPORT"),
+                               token("HEADING")
+                           )
+                       ),
+                       choice(
+                           token("PH"),
+                           sequence(
+                               token("PAGE"),
+                               token("HEADING")
+                           )
+                       ),
+                       sequence(
+                           choice(
+                               token("CH"),
+                               sequence(
+                                   token("CONTROL"),
+                                   token("HEADING")
+                               )
+                           ),
+                           optional(
+                               choice(
+                                   token("ON"),
+                                   token("FOR")
+                               )
+                           ),
+                           choice(
+                               token("FINAL"),
+                               dataName()
+                           )
+                       ),
+                       choice(
+                           token("DE"),
+                           token("DETAIL")
+                       ),
+                       sequence(
+                           choice(
+                               token("CF"),
+                               sequence(
+                                   token("CONTROL"),
+                                   token("FOOTING")
+                               )
+                           ),
+                           optional(
+                               choice(
+                                   token("ON"),
+                                   token("FOR")
+                               )
+                           ),
+                           choice(
+                               token("FINAL"),
+                               dataName()
+                           )
+                       ),
+                       choice(
+                           token("PF"),
+                           sequence(
+                               token("PAGE"),
+                               token("FOOTING")
+                           )
+                       ),
+                       choice(
+                           token("RF"),
+                           sequence(
+                               token("REPORT"),
+                               token("FOOTING")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return reportGroupTypeClauseParser;
+    }
+
+    // ========================================================
+    // reportGroupUsageClause
+    // ........................................................
+
+    private Parser reportGroupUsageClauseParser = null;
+
+    public Parser reportGroupUsageClause() {
+        if (reportGroupUsageClauseParser == null) {
+           FutureParser future = scoped("reportGroupUsageClause");
+           reportGroupUsageClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("USAGE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("DISPLAY"),
+                       token("DISPLAY-1")
+                   )
+               )
+           );
+        }
+
+        return reportGroupUsageClauseParser;
+    }
+
+    // ========================================================
+    // reportSectionValueClause
+    // ........................................................
+
+    private Parser reportSectionValueClauseParser = null;
+
+    public Parser reportSectionValueClause() {
+        if (reportSectionValueClauseParser == null) {
+           FutureParser future = scoped("reportSectionValueClause");
+           reportSectionValueClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       sequence(
+                           token("VALUE"),
+                           optional(
+                               token("IS")
+                           )
+                       ),
+                       sequence(
+                           token("VALUES"),
+                           optional(
+                               token("ARE")
+                           )
+                       )
+                   ),
+                   plus(
+                       literal()
+                   )
+               )
+           );
+        }
+
+        return reportSectionValueClauseParser;
+    }
+
+    // ========================================================
+    // reverseVideoClause
+    // ........................................................
+
+    private Parser reverseVideoClauseParser = null;
+
+    public Parser reverseVideoClause() {
+        if (reverseVideoClauseParser == null) {
+           FutureParser future = scoped("reverseVideoClause");
+           reverseVideoClauseParser = future;
+           future.setParser(
+               token("REVERSE-VIDEO")
+           );
+        }
+
+        return reverseVideoClauseParser;
+    }
+
+    // ========================================================
+    // requiredClause
+    // ........................................................
+
+    private Parser requiredClauseParser = null;
+
+    public Parser requiredClause() {
+        if (requiredClauseParser == null) {
+           FutureParser future = scoped("requiredClause");
+           requiredClauseParser = future;
+           future.setParser(
+               token("REQUIRED")
+           );
+        }
+
+        return requiredClauseParser;
+    }
+
+    // ========================================================
+    // sameAsClause
+    // ........................................................
+
+    private Parser sameAsClauseParser = null;
+
+    public Parser sameAsClause() {
+        if (sameAsClauseParser == null) {
+           FutureParser future = scoped("sameAsClause");
+           sameAsClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("SAME"),
+                   token("AS"),
+                   dataName()
+               )
+           );
+        }
+
+        return sameAsClauseParser;
+    }
+
+    // ========================================================
+    // screenFromClause
+    // ........................................................
+
+    private Parser screenFromClauseParser = null;
+
+    public Parser screenFromClause() {
+        if (screenFromClauseParser == null) {
+           FutureParser future = scoped("screenFromClause");
+           screenFromClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("FROM"),
+                   choice(
+                       literal(),
+                       identifier()
+                   )
+               )
+           );
+        }
+
+        return screenFromClauseParser;
+    }
+
+    // ========================================================
+    // screenToClause
+    // ........................................................
+
+    private Parser screenToClauseParser = null;
+
+    public Parser screenToClause() {
+        if (screenToClauseParser == null) {
+           FutureParser future = scoped("screenToClause");
+           screenToClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("TO"),
+                   identifier()
+               )
+           );
+        }
+
+        return screenToClauseParser;
+    }
+
+    // ========================================================
+    // screenUsingClause
+    // ........................................................
+
+    private Parser screenUsingClauseParser = null;
+
+    public Parser screenUsingClause() {
+        if (screenUsingClauseParser == null) {
+           FutureParser future = scoped("screenUsingClause");
+           screenUsingClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("USING"),
+                   identifier()
+               )
+           );
+        }
+
+        return screenUsingClauseParser;
+    }
+
+    // ========================================================
+    // screenValueClause
+    // ........................................................
+
+    private Parser screenValueClauseParser = null;
+
+    public Parser screenValueClause() {
+        if (screenValueClauseParser == null) {
+           FutureParser future = scoped("screenValueClause");
+           screenValueClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("VALUE"),
+                   optional(
+                       token("IS")
+                   ),
+                   literal()
+               )
+           );
+        }
+
+        return screenValueClauseParser;
+    }
+
+    // ========================================================
+    // secureClause
+    // ........................................................
+
+    private Parser secureClauseParser = null;
+
+    public Parser secureClause() {
+        if (secureClauseParser == null) {
+           FutureParser future = scoped("secureClause");
+           secureClauseParser = future;
+           future.setParser(
+               token("SECURE")
+           );
+        }
+
+        return secureClauseParser;
+    }
+
+    // ========================================================
+    // selectWhenClause
+    // ........................................................
+
+    private Parser selectWhenClauseParser = null;
+
+    public Parser selectWhenClause() {
+        if (selectWhenClauseParser == null) {
+           FutureParser future = scoped("selectWhenClause");
+           selectWhenClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("SELECT"),
+                   token("WHEN"),
+                   choice(
+                       token("OTHER"),
+                       conditionName()
+                   )
+               )
+           );
+        }
+
+        return selectWhenClauseParser;
+    }
+
+    // ========================================================
+    // signClause
+    // ........................................................
+
+    private Parser signClauseParser = null;
+
+    public Parser signClause() {
+        if (signClauseParser == null) {
+           FutureParser future = scoped("signClause");
+           signClauseParser = future;
            future.setParser(
                sequence(
                    optional(
@@ -6248,19 +7384,116 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return signParser;
+        return signClauseParser;
     }
 
     // ========================================================
-    // sync
+    // sourceClause
     // ........................................................
 
-    private Parser syncParser = null;
+    private Parser sourceClauseParser = null;
 
-    public Parser sync() {
-        if (syncParser == null) {
-           FutureParser future = scoped("sync");
-           syncParser = future;
+    public Parser sourceClause() {
+        if (sourceClauseParser == null) {
+           FutureParser future = scoped("sourceClause");
+           sourceClauseParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       sequence(
+                           token("SOURCE"),
+                           optional(
+                               token("IS")
+                           )
+                       ),
+                       sequence(
+                           token("SOURCES"),
+                           optional(
+                               token("ARE")
+                           )
+                       )
+                   ),
+                   plus(
+                       choice(
+                           arithmeticExpression(),
+                           identifier()
+                       )
+                   ),
+                   optional(
+                       roundedPhrase()
+                   )
+               )
+           );
+        }
+
+        return sourceClauseParser;
+    }
+
+    // ========================================================
+    // sumClause
+    // ........................................................
+
+    private Parser sumClauseParser = null;
+
+    public Parser sumClause() {
+        if (sumClauseParser == null) {
+           FutureParser future = scoped("sumClause");
+           sumClauseParser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       sequence(
+                           token("SUM"),
+                           optional(
+                               token("OF")
+                           ),
+                           plus(
+                               sequence(
+                                   not(
+                                       token("UPON")
+                                   ),
+                                   identifier()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("UPON"),
+                                   plus(
+                                       dataName()
+                                   )
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("RESET"),
+                           optional(
+                               token("ON")
+                           ),
+                           choice(
+                               token("FINAL"),
+                               dataName()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return sumClauseParser;
+    }
+
+    // ========================================================
+    // synchronizedClause
+    // ........................................................
+
+    private Parser synchronizedClauseParser = null;
+
+    public Parser synchronizedClause() {
+        if (synchronizedClauseParser == null) {
+           FutureParser future = scoped("synchronizedClause");
+           synchronizedClauseParser = future;
            future.setParser(
                sequence(
                    choice(
@@ -6277,35 +7510,75 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return syncParser;
+        return synchronizedClauseParser;
     }
 
     // ========================================================
-    // usage
+    // typedefClause
     // ........................................................
 
-    private Parser usageParser = null;
+    private Parser typedefClauseParser = null;
 
-    public Parser usage() {
-        if (usageParser == null) {
-           FutureParser future = scoped("usage");
-           usageParser = future;
+    public Parser typedefClause() {
+        if (typedefClauseParser == null) {
+           FutureParser future = scoped("typedefClause");
+           typedefClauseParser = future;
            future.setParser(
                sequence(
                    optional(
-                       sequence(
-                           token("USAGE"),
-                           optional(
-                               token("IS")
-                           )
-                       )
+                       token("IS")
                    ),
-                   usageClause()
+                   token("TYPEDEF"),
+                   optional(
+                       token("STRONG")
+                   )
                )
            );
         }
 
-        return usageParser;
+        return typedefClauseParser;
+    }
+
+    // ========================================================
+    // typeNameTypeClause
+    // ........................................................
+
+    private Parser typeNameTypeClauseParser = null;
+
+    public Parser typeNameTypeClause() {
+        if (typeNameTypeClauseParser == null) {
+           FutureParser future = scoped("typeNameTypeClause");
+           typeNameTypeClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("TYPE"),
+                   optional(
+                       token("TO")
+                   ),
+                   typeName()
+               )
+           );
+        }
+
+        return typeNameTypeClauseParser;
+    }
+
+    // ========================================================
+    // underlineClause
+    // ........................................................
+
+    private Parser underlineClauseParser = null;
+
+    public Parser underlineClause() {
+        if (underlineClauseParser == null) {
+           FutureParser future = scoped("underlineClause");
+           underlineClauseParser = future;
+           future.setParser(
+               token("UNDERLINE")
+           );
+        }
+
+        return underlineClauseParser;
     }
 
     // ========================================================
@@ -6318,6 +7591,34 @@ public class CobolGrammar extends CobolBaseGrammar {
         if (usageClauseParser == null) {
            FutureParser future = scoped("usageClause");
            usageClauseParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("USAGE"),
+                           optional(
+                               token("IS")
+                           )
+                       )
+                   ),
+                   usageOperand()
+               )
+           );
+        }
+
+        return usageClauseParser;
+    }
+
+    // ========================================================
+    // usageOperand
+    // ........................................................
+
+    private Parser usageOperandParser = null;
+
+    public Parser usageOperand() {
+        if (usageOperandParser == null) {
+           FutureParser future = scoped("usageOperand");
+           usageOperandParser = future;
            future.setParser(
                choice(
                    token("BINARY"),
@@ -6380,6 +7681,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("CONDITION-VALUE"),
                    token("DECIMAL"),
                    token("DISPLAY"),
+                   token("DISPLAY-1"),
                    token("INDEX"),
                    token("MONITOR-POINTER"),
                    token("MUTEX-POINTER"),
@@ -6446,117 +7748,86 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return usageClauseParser;
+        return usageOperandParser;
     }
 
     // ========================================================
-    // valueClause
+    // validateStatusClause
     // ........................................................
 
-    private Parser valueClauseParser = null;
+    private Parser validateStatusClauseParser = null;
 
-    public Parser valueClause() {
-        if (valueClauseParser == null) {
-           FutureParser future = scoped("valueClause");
-           valueClauseParser = future;
-           future.setParser(
-               choice(
-                   valueClause_format2(),
-                   valueClause_format1()
-               )
-           );
-        }
-
-        return valueClauseParser;
-    }
-
-    // ========================================================
-    // valueClause_start
-    // ........................................................
-
-    private Parser valueClause_startParser = null;
-
-    public Parser valueClause_start() {
-        if (valueClause_startParser == null) {
-           FutureParser future = scoped("valueClause_start");
-           valueClause_startParser = future;
-           future.setParser(
-               choice(
-                   sequence(
-                       token("VALUE"),
-                       optional(
-                           token("IS")
-                       )
-                   ),
-                   sequence(
-                       token("VALUES"),
-                       optional(
-                           token("ARE")
-                       )
-                   )
-               )
-           );
-        }
-
-        return valueClause_startParser;
-    }
-
-    // ========================================================
-    // valueClause_format1
-    // ........................................................
-
-    private Parser valueClause_format1Parser = null;
-
-    public Parser valueClause_format1() {
-        if (valueClause_format1Parser == null) {
-           FutureParser future = scoped("valueClause_format1");
-           valueClause_format1Parser = future;
+    public Parser validateStatusClause() {
+        if (validateStatusClauseParser == null) {
+           FutureParser future = scoped("validateStatusClause");
+           validateStatusClauseParser = future;
            future.setParser(
                sequence(
-                   valueClause_start(),
+                   choice(
+                       token("VALIDATE-STATUS"),
+                       token("VAL-STATUS")
+                   ),
+                   optional(
+                       token("IS")
+                   ),
                    choice(
                        literal(),
-                       constant()
+                       identifier()
+                   ),
+                   optional(
+                       token("WHEN")
+                   ),
+                   optional(
+                       token("NO")
+                   ),
+                   token("ERROR"),
+                   optional(
+                       sequence(
+                           token("ON"),
+                           permuted(
+                               token("FORMAT"),
+                               token("CONTENT"),
+                               token("RELATION")
+                           )
+                       )
+                   ),
+                   token("FOR"),
+                   plus(
+                       identifier()
                    )
                )
            );
         }
 
-        return valueClause_format1Parser;
+        return validateStatusClauseParser;
     }
 
     // ========================================================
-    // valueClause_format2
+    // varyingClause
     // ........................................................
 
-    private Parser valueClause_format2Parser = null;
+    private Parser varyingClauseParser = null;
 
-    public Parser valueClause_format2() {
-        if (valueClause_format2Parser == null) {
-           FutureParser future = scoped("valueClause_format2");
-           valueClause_format2Parser = future;
+    public Parser varyingClause() {
+        if (varyingClauseParser == null) {
+           FutureParser future = scoped("varyingClause");
+           varyingClauseParser = future;
            future.setParser(
                sequence(
-                   valueClause_start(),
+                   token("VARYING"),
                    plus(
                        sequence(
-                           plus(
-                               literal()
-                           ),
-                           token("FROM"),
-                           token("("),
-                           plus(
-                               subscript()
-                           ),
-                           token(")"),
+                           dataName(),
                            optional(
                                sequence(
-                                   token("TO"),
-                                   token("("),
-                                   plus(
-                                       subscript()
-                                   ),
-                                   token(")")
+                                   token("FROM"),
+                                   arithmeticExpression()
+                               )
+                           ),
+                           optional(
+                               sequence(
+                                   token("BY"),
+                                   arithmeticExpression()
                                )
                            )
                        )
@@ -6565,119 +7836,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return valueClause_format2Parser;
-    }
-
-    // ========================================================
-    // valueIsOperand
-    // ........................................................
-
-    private Parser valueIsOperandParser = null;
-
-    public Parser valueIsOperand() {
-        if (valueIsOperandParser == null) {
-           FutureParser future = scoped("valueIsOperand");
-           valueIsOperandParser = future;
-           future.setParser(
-               choice(
-                   token("NEXT"),
-                   sequence(
-                       token("START"),
-                       optional(
-                           token("OF")
-                       ),
-                       dataName()
-                   ),
-                   sequence(
-                       token("LENGTH"),
-                       optional(
-                           token("OF")
-                       ),
-                       dataName()
-                   ),
-                   arithmeticExpression(),
-                   literal()
-               )
-           );
-        }
-
-        return valueIsOperandParser;
-    }
-
-    // ========================================================
-    // valueIsOperator
-    // ........................................................
-
-    private Parser valueIsOperatorParser = null;
-
-    public Parser valueIsOperator() {
-        if (valueIsOperatorParser == null) {
-           FutureParser future = scoped("valueIsOperator");
-           valueIsOperatorParser = future;
-           future.setParser(
-               choice(
-                   token("AND"),
-                   token("OR"),
-                   token("&"),
-                   token("+"),
-                   token("-"),
-                   token("*"),
-                   token("/")
-               )
-           );
-        }
-
-        return valueIsOperatorParser;
-    }
-
-    // ========================================================
-    // based
-    // ........................................................
-
-    private Parser basedParser = null;
-
-    public Parser based() {
-        if (basedParser == null) {
-           FutureParser future = scoped("based");
-           basedParser = future;
-           future.setParser(
-               token("BASED")
-           );
-        }
-
-        return basedParser;
-    }
-
-    // ========================================================
-    // propertyClause
-    // ........................................................
-
-    private Parser propertyClauseParser = null;
-
-    public Parser propertyClause() {
-        if (propertyClauseParser == null) {
-           FutureParser future = scoped("propertyClause");
-           propertyClauseParser = future;
-           future.setParser(
-               sequence(
-                   token("PROPERTY"),
-                   optional(
-                       sequence(
-                           optional(
-                               token("WITH")
-                           ),
-                           token("NO"),
-                           choice(
-                               token("GET"),
-                               token("SET")
-                           )
-                       )
-                   )
-               )
-           );
-        }
-
-        return propertyClauseParser;
+        return varyingClauseParser;
     }
 
     // ========================================================
@@ -6721,6 +7880,44 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return procedureDivisionParser;
+    }
+
+    // ========================================================
+    // roundedPhrase
+    // ........................................................
+
+    private Parser roundedPhraseParser = null;
+
+    public Parser roundedPhrase() {
+        if (roundedPhraseParser == null) {
+           FutureParser future = scoped("roundedPhrase");
+           roundedPhraseParser = future;
+           future.setParser(
+               sequence(
+                   token("ROUNDED"),
+                   optional(
+                       sequence(
+                           token("MODE"),
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("AWAY-FROM-ZERO"),
+                               token("NEAREST-AWAY-FROM-ZERO"),
+                               token("NEAREST-EVEN"),
+                               token("NEAREST-TOWARD-ZERO"),
+                               token("PROHIBITED"),
+                               token("TOWARD-GREATER"),
+                               token("TOWARD-LESSER"),
+                               token("TRUNCATION")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return roundedPhraseParser;
     }
 
     // ========================================================
@@ -9374,7 +10571,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    lowPhrase(),
                    linePhrase(),
                    offPhrase(),
-                   picture(),
+                   pictureClause(),
                    promptPhrase(),
                    requiredPhrase(),
                    reversePhrase(),
@@ -10834,41 +12031,43 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("("),
                            queueName(),
                            token(")"),
-                           permuted(
-                               sequence(
-                                   choice(
-                                       token("SYSID"),
-                                       token("SYS")
-                                   ),
-                                   token("("),
-                                   cicsSysid(),
-                                   token(")")
-                               ),
-                               sequence(
-                                   choice(
-                                       token("SET"),
-                                       token("INTO")
-                                   ),
-                                   token("("),
-                                   dataArea(),
-                                   token(")"),
-                                   optional(
-                                       sequence(
-                                           token("LENGTH"),
-                                           cicsWaterInBrackets()
-                                       )
-                                   )
-                               ),
-                               choice(
+                           optional(
+                               permuted(
                                    sequence(
-                                       token("ITEM"),
-                                       cicsWaterInBrackets()
+                                       choice(
+                                           token("SYSID"),
+                                           token("SYS")
+                                       ),
+                                       token("("),
+                                       cicsSysid(),
+                                       token(")")
                                    ),
-                                   token("NEXT")
-                               ),
-                               sequence(
-                                   token("NUMITEMS"),
-                                   cicsWaterInBrackets()
+                                   sequence(
+                                       choice(
+                                           token("SET"),
+                                           token("INTO")
+                                       ),
+                                       token("("),
+                                       dataArea(),
+                                       token(")"),
+                                       optional(
+                                           sequence(
+                                               token("LENGTH"),
+                                               cicsWaterInBrackets()
+                                           )
+                                       )
+                                   ),
+                                   choice(
+                                       sequence(
+                                           token("ITEM"),
+                                           cicsWaterInBrackets()
+                                       ),
+                                       token("NEXT")
+                                   ),
+                                   sequence(
+                                       token("NUMITEMS"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
                            )
                        ),
@@ -10913,45 +12112,47 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("("),
                            queueName(),
                            token(")"),
-                           permuted(
-                               sequence(
-                                   choice(
-                                       token("SYSID"),
-                                       token("SYS")
-                                   ),
-                                   token("("),
-                                   cicsSysid(),
-                                   token(")")
-                               ),
-                               sequence(
-                                   token("FROM"),
-                                   token("("),
-                                   dataArea(),
-                                   token(")"),
-                                   optional(
-                                       sequence(
-                                           token("LENGTH"),
-                                           cicsWaterInBrackets()
-                                       )
-                                   )
-                               ),
-                               choice(
+                           optional(
+                               permuted(
                                    sequence(
-                                       token("NUMITEMS"),
-                                       cicsWaterInBrackets()
+                                       choice(
+                                           token("SYSID"),
+                                           token("SYS")
+                                       ),
+                                       token("("),
+                                       cicsSysid(),
+                                       token(")")
                                    ),
                                    sequence(
-                                       token("ITEM"),
-                                       cicsWaterInBrackets(),
+                                       token("FROM"),
+                                       token("("),
+                                       dataArea(),
+                                       token(")"),
                                        optional(
-                                           token("REWRITE")
+                                           sequence(
+                                               token("LENGTH"),
+                                               cicsWaterInBrackets()
+                                           )
                                        )
+                                   ),
+                                   choice(
+                                       sequence(
+                                           token("NUMITEMS"),
+                                           cicsWaterInBrackets()
+                                       ),
+                                       sequence(
+                                           token("ITEM"),
+                                           cicsWaterInBrackets(),
+                                           optional(
+                                               token("REWRITE")
+                                           )
+                                       )
+                                   ),
+                                   token("NOSUSPEND"),
+                                   choice(
+                                       token("MAIN"),
+                                       token("AUXILIARY")
                                    )
-                               ),
-                               token("NOSUSPEND"),
-                               choice(
-                                   token("MAIN"),
-                                   token("AUXILIARY")
                                )
                            )
                        ),
@@ -11033,59 +12234,61 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("("),
                        fileName(),
                        token(")"),
-                       permuted(
-                           sequence(
-                               choice(
-                                   token("SYSID"),
-                                   token("SYS")
+                       optional(
+                           permuted(
+                               sequence(
+                                   choice(
+                                       token("SYSID"),
+                                       token("SYS")
+                                   ),
+                                   token("("),
+                                   cicsSysid(),
+                                   token(")")
                                ),
-                               token("("),
-                               cicsSysid(),
-                               token(")")
-                           ),
-                           sequence(
-                               choice(
-                                   token("SET"),
-                                   token("INTO")
-                               ),
-                               token("("),
-                               dataArea(),
-                               token(")"),
-                               optional(
-                                   sequence(
-                                       token("LENGTH"),
-                                       cicsWaterInBrackets()
-                                   )
-                               )
-                           ),
-                           sequence(
-                               token("RIDFLD"),
-                               cicsWaterInBrackets(),
-                               optional(
-                                   sequence(
-                                       token("KEYLENGTH"),
-                                       cicsWaterInBrackets(),
-                                       optional(
-                                           token("GENERIC")
+                               sequence(
+                                   choice(
+                                       token("SET"),
+                                       token("INTO")
+                                   ),
+                                   token("("),
+                                   dataArea(),
+                                   token(")"),
+                                   optional(
+                                       sequence(
+                                           token("LENGTH"),
+                                           cicsWaterInBrackets()
                                        )
                                    )
-                               )
-                           ),
-                           choice(
-                               token("GTEQ"),
-                               token("EQUAL")
-                           ),
-                           choice(
-                               token("UNCOMMITTED"),
-                               token("CONSISTENT"),
-                               token("REPEATABLE"),
+                               ),
                                sequence(
-                                   token("UPDATE"),
-                                   token("TOKEN"),
-                                   cicsWaterInBrackets()
-                               )
-                           ),
-                           token("NOSUSPEND")
+                                   token("RIDFLD"),
+                                   cicsWaterInBrackets(),
+                                   optional(
+                                       sequence(
+                                           token("KEYLENGTH"),
+                                           cicsWaterInBrackets(),
+                                           optional(
+                                               token("GENERIC")
+                                           )
+                                       )
+                                   )
+                               ),
+                               choice(
+                                   token("GTEQ"),
+                                   token("EQUAL")
+                               ),
+                               choice(
+                                   token("UNCOMMITTED"),
+                                   token("CONSISTENT"),
+                                   token("REPEATABLE"),
+                                   sequence(
+                                       token("UPDATE"),
+                                       token("TOKEN"),
+                                       cicsWaterInBrackets()
+                                   )
+                               ),
+                               token("NOSUSPEND")
+                           )
                        )
                    ),
                    sequence(
@@ -11097,57 +12300,59 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("("),
                        fileName(),
                        token(")"),
-                       permuted(
-                           sequence(
-                               choice(
-                                   token("SYSID"),
-                                   token("SYS")
-                               ),
-                               token("("),
-                               cicsSysid(),
-                               token(")")
-                           ),
-                           sequence(
-                               choice(
-                                   token("SET"),
-                                   token("INTO")
-                               ),
-                               token("("),
-                               dataArea(),
-                               token(")"),
-                               optional(
-                                   sequence(
-                                       token("LENGTH"),
-                                       cicsWaterInBrackets()
-                                   )
-                               )
-                           ),
-                           sequence(
-                               token("RIDFLD"),
-                               cicsWaterInBrackets(),
-                               optional(
-                                   sequence(
-                                       token("KEYLENGTH"),
-                                       cicsWaterInBrackets()
-                                   )
-                               )
-                           ),
-                           choice(
-                               token("RBA"),
-                               token("XRBA"),
-                               token("RRN")
-                           ),
-                           choice(
-                               token("UNCOMMITTED"),
-                               token("CONSISTENT"),
-                               token("REPEATABLE"),
+                       optional(
+                           permuted(
                                sequence(
-                                   token("UPDATE"),
-                                   token("TOKEN"),
-                                   cicsWaterInBrackets()
-                               )
-                           ),
-                           token("NOSUSPEND")
+                                   choice(
+                                       token("SYSID"),
+                                       token("SYS")
+                                   ),
+                                   token("("),
+                                   cicsSysid(),
+                                   token(")")
+                               ),
+                               sequence(
+                                   choice(
+                                       token("SET"),
+                                       token("INTO")
+                                   ),
+                                   token("("),
+                                   dataArea(),
+                                   token(")"),
+                                   optional(
+                                       sequence(
+                                           token("LENGTH"),
+                                           cicsWaterInBrackets()
+                                       )
+                                   )
+                               ),
+                               sequence(
+                                   token("RIDFLD"),
+                                   cicsWaterInBrackets(),
+                                   optional(
+                                       sequence(
+                                           token("KEYLENGTH"),
+                                           cicsWaterInBrackets()
+                                       )
+                                   )
+                               ),
+                               choice(
+                                   token("RBA"),
+                                   token("XRBA"),
+                                   token("RRN")
+                               ),
+                               choice(
+                                   token("UNCOMMITTED"),
+                                   token("CONSISTENT"),
+                                   token("REPEATABLE"),
+                                   sequence(
+                                       token("UPDATE"),
+                                       token("TOKEN"),
+                                       cicsWaterInBrackets()
+                                   )
+                               ),
+                               token("NOSUSPEND")
+                           )
                        )
                    )
                )
@@ -11177,45 +12382,47 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("("),
                    fileName(),
                    token(")"),
-                   permuted(
-                       sequence(
-                           choice(
-                               token("SYSID"),
-                               token("SYS")
+                   optional(
+                       permuted(
+                           sequence(
+                               choice(
+                                   token("SYSID"),
+                                   token("SYS")
+                               ),
+                               token("("),
+                               cicsSysid(),
+                               token(")")
                            ),
-                           token("("),
-                           cicsSysid(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("FROM"),
-                           token("("),
-                           dataArea(),
-                           token(")"),
-                           optional(
-                               sequence(
-                                   token("LENGTH"),
-                                   cicsWaterInBrackets()
+                           sequence(
+                               token("FROM"),
+                               token("("),
+                               dataArea(),
+                               token(")"),
+                               optional(
+                                   sequence(
+                                       token("LENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
-                           )
-                       ),
-                       sequence(
-                           token("RIDFLD"),
-                           cicsWaterInBrackets(),
-                           optional(
-                               sequence(
-                                   token("KEYLENGTH"),
-                                   cicsWaterInBrackets()
+                           ),
+                           sequence(
+                               token("RIDFLD"),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("KEYLENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
-                           )
-                       ),
-                       choice(
-                           token("RBA"),
-                           token("XRBA"),
-                           token("RRN")
-                       ),
-                       token("MASSINSERT"),
-                       token("NOSUSPEND")
+                           ),
+                           choice(
+                               token("RBA"),
+                               token("XRBA"),
+                               token("RRN")
+                           ),
+                           token("MASSINSERT"),
+                           token("NOSUSPEND")
+                       )
                    )
                )
            );
@@ -11241,52 +12448,54 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("("),
                    programID(),
                    token(")"),
-                   permuted(
-                       sequence(
-                           choice(
-                               token("SYSID"),
-                               token("SYS")
+                   optional(
+                       permuted(
+                           sequence(
+                               choice(
+                                   token("SYSID"),
+                                   token("SYS")
+                               ),
+                               token("("),
+                               cicsSysid(),
+                               token(")")
                            ),
-                           token("("),
-                           cicsSysid(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("COMMAREA"),
-                           token("("),
-                           commareaName(),
-                           token(")"),
-                           optional(
-                               sequence(
-                                   token("LENGTH"),
-                                   cicsWaterInBrackets()
+                           sequence(
+                               token("COMMAREA"),
+                               token("("),
+                               commareaName(),
+                               token(")"),
+                               optional(
+                                   sequence(
+                                       token("LENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
+                               ),
+                               optional(
+                                   sequence(
+                                       token("DATALENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
                            ),
-                           optional(
-                               sequence(
-                                   token("DATALENGTH"),
-                                   cicsWaterInBrackets()
+                           token("SYNCONRETURN"),
+                           sequence(
+                               token("TRANSID"),
+                               cicsWaterInBrackets()
+                           ),
+                           sequence(
+                               token("INPUTMSG"),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("INPUTMSGLEN"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
+                           ),
+                           sequence(
+                               token("CHANNEL"),
+                               cicsWaterInBrackets()
                            )
-                       ),
-                       token("SYNCONRETURN"),
-                       sequence(
-                           token("TRANSID"),
-                           cicsWaterInBrackets()
-                       ),
-                       sequence(
-                           token("INPUTMSG"),
-                           cicsWaterInBrackets(),
-                           optional(
-                               sequence(
-                                   token("INPUTMSGLEN"),
-                                   cicsWaterInBrackets()
-                               )
-                           )
-                       ),
-                       sequence(
-                           token("CHANNEL"),
-                           cicsWaterInBrackets()
                        )
                    )
                )
@@ -11313,32 +12522,34 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("("),
                    programID(),
                    token(")"),
-                   permuted(
-                       sequence(
-                           token("COMMAREA"),
-                           token("("),
-                           commareaName(),
-                           token(")"),
-                           optional(
-                               sequence(
-                                   token("LENGTH"),
-                                   cicsWaterInBrackets()
+                   optional(
+                       permuted(
+                           sequence(
+                               token("COMMAREA"),
+                               token("("),
+                               commareaName(),
+                               token(")"),
+                               optional(
+                                   sequence(
+                                       token("LENGTH"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
-                           )
-                       ),
-                       sequence(
-                           token("INPUTMSG"),
-                           cicsWaterInBrackets(),
-                           optional(
-                               sequence(
-                                   token("INPUTMSGLEN"),
-                                   cicsWaterInBrackets()
+                           ),
+                           sequence(
+                               token("INPUTMSG"),
+                               cicsWaterInBrackets(),
+                               optional(
+                                   sequence(
+                                       token("INPUTMSGLEN"),
+                                       cicsWaterInBrackets()
+                                   )
                                )
+                           ),
+                           sequence(
+                               token("CHANNEL"),
+                               cicsWaterInBrackets()
                            )
-                       ),
-                       sequence(
-                           token("CHANNEL"),
-                           cicsWaterInBrackets()
                        )
                    )
                )
@@ -13286,53 +14497,55 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    token("THREAD")
                                )
                            ),
-                           permuted(
-                               sequence(
-                                   token("BEFORE"),
-                                   optional(
-                                       token("TIME")
+                           optional(
+                               permuted(
+                                   sequence(
+                                       token("BEFORE"),
+                                       optional(
+                                           token("TIME")
+                                       ),
+                                       choice(
+                                           numeric(),
+                                           identifier()
+                                       )
                                    ),
-                                   choice(
-                                       numeric(),
-                                       identifier()
-                                   )
-                               ),
-                               sequence(
-                                   optional(
-                                       token("WITH")
+                                   sequence(
+                                       optional(
+                                           token("WITH")
+                                       ),
+                                       token("NO"),
+                                       token("WAIT")
                                    ),
-                                   token("NO"),
-                                   token("WAIT")
-                               ),
-                               sequence(
-                                   token("THREAD"),
-                                   optional(
-                                       token("IN")
+                                   sequence(
+                                       token("THREAD"),
+                                       optional(
+                                           token("IN")
+                                       ),
+                                       dataName()
                                    ),
-                                   dataName()
-                               ),
-                               sequence(
-                                   token("SIZE"),
-                                   optional(
-                                       token("IN")
+                                   sequence(
+                                       token("SIZE"),
+                                       optional(
+                                           token("IN")
+                                       ),
+                                       choice(
+                                           numeric(),
+                                           identifier()
+                                       )
                                    ),
-                                   choice(
-                                       numeric(),
-                                       identifier()
-                                   )
-                               ),
-                               sequence(
-                                   token("STATUS"),
-                                   optional(
-                                       token("IN")
+                                   sequence(
+                                       token("STATUS"),
+                                       optional(
+                                           token("IN")
+                                       ),
+                                       choice(
+                                           alphanumericLiteral(),
+                                           identifier()
+                                       )
                                    ),
-                                   choice(
-                                       alphanumericLiteral(),
-                                       identifier()
-                                   )
-                               ),
-                               onException(),
-                               notOnException()
+                                   onException(),
+                                   notOnException()
+                               )
                            )
                        ),
                        sequence(

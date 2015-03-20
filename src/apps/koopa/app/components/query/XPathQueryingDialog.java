@@ -180,12 +180,12 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 				Position start = tree.getStart();
 				Position end = tree.getEnd();
 
+				// TODO Should highlight indivual ranges instead ?
 				highlights.addHighlight(start, end, HIGHLIGHT_COLOR);
 			}
 		}
 	}
 
-	@Override
 	public void switchedView(Component view) {
 		if (view instanceof Overview) {
 			xpathQuery.setEnabled(false);
@@ -221,7 +221,6 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 
 	}
 
-	@Override
 	public void updatedView(Component view) {
 		if (view instanceof Detail) {
 			Detail detail = (Detail) view;
@@ -237,7 +236,6 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		}
 	}
 
-	@Override
 	public void closedDetail(Component view) {
 		if (view instanceof Detail)
 			resultsPerDetail.remove((Detail) view);

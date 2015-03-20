@@ -20,7 +20,6 @@ public class Printing extends BasicSource<Token> implements Source<Token> {
 		this.prefix = prefix;
 	}
 
-	@Override
 	public void close() {
 		source.close();
 	}

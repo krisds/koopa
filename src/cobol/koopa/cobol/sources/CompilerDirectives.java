@@ -252,7 +252,6 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		return false;
 	}
 
-	@Override
 	public void close() {
 		source.close();
 	}

@@ -27,7 +27,6 @@ public class ShowASTAction extends AbstractAction implements Action {
 
 	public void actionPerformed(ActionEvent ae) {
 		SwingUtilities.invokeLater(new Runnable() {
-			@Override
 			public void run() {
 				final Tree tree = application.getSyntaxTree();
 				String filename = ((Detail) application.getView()).getFile()

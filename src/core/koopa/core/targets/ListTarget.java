@@ -17,7 +17,6 @@ public class ListTarget implements Target<Data> {
 
 	private List<Data> packets = new ArrayList<Data>();
 
-	@Override
 	public void push(Data packet) {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("<< " + packet);

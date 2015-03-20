@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EtchedBorder;
 
 import koopa.app.Application;
 import koopa.app.listeners.TokenSelectionListener;
@@ -65,11 +63,8 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		noSelection.setFont(FONT);
 
 		add(noSelection);
-
-		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 	}
 
-	@Override
 	public void beforeParsing(File file, CobolParser config) {
 		while (index > 0)
 			remove(labels.get(--index));
@@ -80,12 +75,10 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		repaint();
 	}
 
-	@Override
 	public void afterParsing(File file, ParseResults results) {
 		this.parseTree = results.getTree();
 	}
 
-	@Override
 	public void selectedToken(Token token) {
 		while (index > 0)
 			remove(labels.get(--index));

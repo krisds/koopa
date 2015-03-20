@@ -20,7 +20,6 @@ public abstract class BasicSource<T extends Data> implements Source<T> {
 	// TODO -> better name
 	protected abstract T nxt1();
 
-	@Override
 	public T next() {
 		if (unseen.isEmpty())
 			return nxt1();
@@ -28,7 +27,6 @@ public abstract class BasicSource<T extends Data> implements Source<T> {
 			return unseen.removeFirst();
 	}
 
-	@Override
 	public void unshift(T packet) {
 		if (packet != null)
 			this.unseen.addFirst(packet);

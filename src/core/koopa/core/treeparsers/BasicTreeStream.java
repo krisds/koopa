@@ -33,7 +33,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Data forward() {
 		Tree current = walker.next();
 
@@ -51,7 +50,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public BasicTreeStream forSubtree() {
 		if (walker.getCurrent() == null)
 			return null;
@@ -67,7 +65,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void bookmark() {
 		bookmarks.push(walker.getState());
 
@@ -78,7 +75,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void rewind() {
 		walker.setState(bookmarks.pop());
 
@@ -89,7 +85,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void commit() {
 		bookmarks.pop();
 
@@ -100,7 +95,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void rewindSubtree() {
 		assert (this.parentStream != null);
 
@@ -113,7 +107,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void commitSubtree() {
 		assert (this.parentStream != null);
 
@@ -129,7 +122,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Tree getTree() {
 		return walker.getCurrent();
 	}
@@ -149,7 +141,6 @@ public class BasicTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void skipCurrentTree() {
 		walker.skipRemainderOfTree(walker.getCurrent());
 	}

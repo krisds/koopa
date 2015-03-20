@@ -13,7 +13,6 @@ public class QueueingTokenSink implements Target<Data> {
 		this.tokens = new LinkedList<Data>();
 	}
 
-	@Override
 	public void push(Data data) {
 		synchronized (this.tokens) {
 			this.tokens.add(data);

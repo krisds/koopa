@@ -25,7 +25,6 @@ public class SourceViewSink implements Target<Data> {
 		return lines;
 	}
 
-	@Override
 	public void push(Data data) {
 		if (data instanceof Marker) {
 			if (data instanceof InWater) {

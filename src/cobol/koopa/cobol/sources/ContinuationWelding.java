@@ -105,7 +105,6 @@ public class ContinuationWelding extends BasicSource<Token> implements
 		return buffer.removeFirst();
 	}
 
-	@Override
 	public void close() {
 		source.close();
 	}

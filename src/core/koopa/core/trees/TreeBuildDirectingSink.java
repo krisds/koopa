@@ -25,7 +25,6 @@ public class TreeBuildDirectingSink implements Target<Data> {
 		this.hideWater = hideWater;
 	}
 
-	@Override
 	public void push(Data data) {
 		if (this.inWater && data instanceof OnLand) {
 			this.inWater = false;

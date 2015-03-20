@@ -5,7 +5,7 @@
 		<delete dir="build/" />
 	</target>
 
-	<target name="build" depends="clean,core,core-tests,cobol,cobol-tests,apps,examples">
+	<target name="build" depends="clean,core,core-tests,cobol,cobol-tests,apps,examples,report-java-version">
 	</target>
 
 	<target name="run-tests" depends="run-core-tests,run-cobol-tests,run-cobol-regression-tests">
@@ -18,30 +18,18 @@
 
 	<target name="core-generate">
 		<echo>Generating the Koopa grammar generator...</echo>
-		<antlr-gen grammar="src/core/koopa/core/grammars/generator/KG.g" 
-			output="src/core/koopa/core/grammars/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGTreeParser.g" 
-			output="src/core/koopa/core/grammars/generator/"
-			tokens="src/core/koopa/core/grammars/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGGenerator.g"  
-			output="src/core/koopa/core/grammars/generator/"
-			tokens="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen grammar="src/core/koopa/core/grammars/generator/KG.g" output="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGTreeParser.g" output="src/core/koopa/core/grammars/generator/" tokens="src/core/koopa/core/grammars/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/generator/KGGenerator.g" output="src/core/koopa/core/grammars/generator/" tokens="src/core/koopa/core/grammars/generator/" />
 
 		<echo>Generating the Koopa tree parser generator...</echo>
-		<copy file="src/core/koopa/core/grammars/generator/KG.tokens" 
-			  tofile="src/core/koopa/core/treegrammars/generator/KG.tokens" />
-		<antlr-gen grammar="src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g" 
-			output="src/core/koopa/core/treegrammars/generator/" />
+		<copy file="src/core/koopa/core/grammars/generator/KG.tokens" tofile="src/core/koopa/core/treegrammars/generator/KG.tokens" />
+		<antlr-gen grammar="src/core/koopa/core/treegrammars/generator/TreeGrammarGenerator.g" output="src/core/koopa/core/treegrammars/generator/" />
 
 		<echo>Generating the Koopa test generator...</echo>
-		<antlr-gen grammar="src/core/koopa/core/grammars/test/generator/Stage.g"
-			output="src/core/koopa/core/grammars/test/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageTreeParser.g"
-			output="src/core/koopa/core/grammars/test/generator/"
-			tokens="src/core/koopa/core/grammars/test/generator/" />
-		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageGenerator.g"
-			output="src/core/koopa/core/grammars/test/generator/"
-			tokens="src/core/koopa/core/grammars/test/generator/"/>
+		<antlr-gen grammar="src/core/koopa/core/grammars/test/generator/Stage.g" output="src/core/koopa/core/grammars/test/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageTreeParser.g" output="src/core/koopa/core/grammars/test/generator/" tokens="src/core/koopa/core/grammars/test/generator/" />
+		<antlr-gen2 grammar="src/core/koopa/core/grammars/test/generator/StageGenerator.g" output="src/core/koopa/core/grammars/test/generator/" tokens="src/core/koopa/core/grammars/test/generator/" />
 	</target>
 
 	<target name="core-build">
@@ -111,7 +99,7 @@
 			<test name="koopa.core.treeparsers.test.TreeWalkerTest" />
 			<test name="koopa.core.treeparsers.test.TreeStreamTest" />
 			<test name="koopa.core.treegrammars.test.TreeGrammarTest" />
-			
+
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
 
 			<test name="koopa.core.trees.test.XMLSerializerTest" />
@@ -273,6 +261,22 @@
 		<property name="revision" value="unknown" />
 
 		<echo file="build/REVISION" message="${revision}" />
+	</target>
+
+	<!-- CLASS VERSION CHECK -->
+
+	<target name="report-java-version">
+		<java classname="koopa.core.util.ClassVersionChecker" fork="true">
+			<jvmarg value="-ea" />
+			<arg value="@{path}" />
+			<classpath>
+				<pathelement path="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement path="${java.class.path}" />
+			</classpath>
+		</java>
 	</target>
 
 	<!-- MACROS -->

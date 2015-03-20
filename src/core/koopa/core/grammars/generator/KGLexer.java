@@ -214,11 +214,11 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = COMMENT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:182:9: ( '#' (~ ( '\\n' | '\\r' ) )* )
-			// src/core/koopa/core/grammars/generator/KG.g:182:11: '#' (~ ( '\\n' | '\\r' ) )*
+			// src/core/koopa/core/grammars/generator/KG.g:187:9: ( '#' (~ ( '\\n' | '\\r' ) )* )
+			// src/core/koopa/core/grammars/generator/KG.g:187:11: '#' (~ ( '\\n' | '\\r' ) )*
 			{
 			match('#'); if (state.failed) return;
-			// src/core/koopa/core/grammars/generator/KG.g:182:15: (~ ( '\\n' | '\\r' ) )*
+			// src/core/koopa/core/grammars/generator/KG.g:187:15: (~ ( '\\n' | '\\r' ) )*
 			loop1:
 			while (true) {
 				int alt1=2;
@@ -266,10 +266,10 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = NEWLINE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:184:9: ( ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' ) )
-			// src/core/koopa/core/grammars/generator/KG.g:184:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
+			// src/core/koopa/core/grammars/generator/KG.g:189:9: ( ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' ) )
+			// src/core/koopa/core/grammars/generator/KG.g:189:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
 			{
-			// src/core/koopa/core/grammars/generator/KG.g:184:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
+			// src/core/koopa/core/grammars/generator/KG.g:189:11: ( ( '\\r\\n' )=> '\\r\\n' | '\\r' | '\\n' )
 			int alt2=3;
 			int LA2_0 = input.LA(1);
 			if ( (LA2_0=='\r') ) {
@@ -292,20 +292,20 @@ public class KGLexer extends Lexer {
 
 			switch (alt2) {
 				case 1 :
-					// src/core/koopa/core/grammars/generator/KG.g:184:13: ( '\\r\\n' )=> '\\r\\n'
+					// src/core/koopa/core/grammars/generator/KG.g:189:13: ( '\\r\\n' )=> '\\r\\n'
 					{
 					match("\r\n"); if (state.failed) return;
 
 					}
 					break;
 				case 2 :
-					// src/core/koopa/core/grammars/generator/KG.g:184:34: '\\r'
+					// src/core/koopa/core/grammars/generator/KG.g:189:34: '\\r'
 					{
 					match('\r'); if (state.failed) return;
 					}
 					break;
 				case 3 :
-					// src/core/koopa/core/grammars/generator/KG.g:184:41: '\\n'
+					// src/core/koopa/core/grammars/generator/KG.g:189:41: '\\n'
 					{
 					match('\n'); if (state.failed) return;
 					}
@@ -330,8 +330,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = NOSKIP;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:186:8: ( '%noskip' )
-			// src/core/koopa/core/grammars/generator/KG.g:186:10: '%noskip'
+			// src/core/koopa/core/grammars/generator/KG.g:191:8: ( '%noskip' )
+			// src/core/koopa/core/grammars/generator/KG.g:191:10: '%noskip'
 			{
 			match("%noskip"); if (state.failed) return;
 
@@ -351,8 +351,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = LIMIT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:188:7: ( '%limit' )
-			// src/core/koopa/core/grammars/generator/KG.g:188:9: '%limit'
+			// src/core/koopa/core/grammars/generator/KG.g:193:7: ( '%limit' )
+			// src/core/koopa/core/grammars/generator/KG.g:193:9: '%limit'
 			{
 			match("%limit"); if (state.failed) return;
 
@@ -372,8 +372,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = BY;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:190:4: ( '%by' )
-			// src/core/koopa/core/grammars/generator/KG.g:190:6: '%by'
+			// src/core/koopa/core/grammars/generator/KG.g:195:4: ( '%by' )
+			// src/core/koopa/core/grammars/generator/KG.g:195:6: '%by'
 			{
 			match("%by"); if (state.failed) return;
 
@@ -393,8 +393,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = ARROW;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:192:7: ( '=>' )
-			// src/core/koopa/core/grammars/generator/KG.g:192:9: '=>'
+			// src/core/koopa/core/grammars/generator/KG.g:197:7: ( '=>' )
+			// src/core/koopa/core/grammars/generator/KG.g:197:9: '=>'
 			{
 			match("=>"); if (state.failed) return;
 
@@ -414,13 +414,13 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = TAG;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:194:5: ( '@' LETTER ( LETTER | DIGIT | '-' | '_' )* )
-			// src/core/koopa/core/grammars/generator/KG.g:194:7: '@' LETTER ( LETTER | DIGIT | '-' | '_' )*
+			// src/core/koopa/core/grammars/generator/KG.g:199:5: ( '@' LETTER ( LETTER | DIGIT | '-' | '_' )* )
+			// src/core/koopa/core/grammars/generator/KG.g:199:7: '@' LETTER ( LETTER | DIGIT | '-' | '_' )*
 			{
 			match('@'); if (state.failed) return;
 			mLETTER(); if (state.failed) return;
 
-			// src/core/koopa/core/grammars/generator/KG.g:194:18: ( LETTER | DIGIT | '-' | '_' )*
+			// src/core/koopa/core/grammars/generator/KG.g:199:18: ( LETTER | DIGIT | '-' | '_' )*
 			loop3:
 			while (true) {
 				int alt3=2;
@@ -467,8 +467,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = ANY;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:196:5: ( '_' )
-			// src/core/koopa/core/grammars/generator/KG.g:196:7: '_'
+			// src/core/koopa/core/grammars/generator/KG.g:201:5: ( '_' )
+			// src/core/koopa/core/grammars/generator/KG.g:201:7: '_'
 			{
 			match('_'); if (state.failed) return;
 			}
@@ -487,12 +487,12 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = IDENTIFIER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:198:12: ( LETTER ( LETTER | DIGIT | '-' | '_' )* )
-			// src/core/koopa/core/grammars/generator/KG.g:198:14: LETTER ( LETTER | DIGIT | '-' | '_' )*
+			// src/core/koopa/core/grammars/generator/KG.g:203:12: ( LETTER ( LETTER | DIGIT | '-' | '_' )* )
+			// src/core/koopa/core/grammars/generator/KG.g:203:14: LETTER ( LETTER | DIGIT | '-' | '_' )*
 			{
 			mLETTER(); if (state.failed) return;
 
-			// src/core/koopa/core/grammars/generator/KG.g:198:21: ( LETTER | DIGIT | '-' | '_' )*
+			// src/core/koopa/core/grammars/generator/KG.g:203:21: ( LETTER | DIGIT | '-' | '_' )*
 			loop4:
 			while (true) {
 				int alt4=2;
@@ -539,11 +539,11 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = LITERAL;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:200:9: ( '\\'' (~ ( '\\'' | '\\n' | '\\r' ) )+ '\\'' )
-			// src/core/koopa/core/grammars/generator/KG.g:200:11: '\\'' (~ ( '\\'' | '\\n' | '\\r' ) )+ '\\''
+			// src/core/koopa/core/grammars/generator/KG.g:205:9: ( '\\'' (~ ( '\\'' | '\\n' | '\\r' ) )+ '\\'' )
+			// src/core/koopa/core/grammars/generator/KG.g:205:11: '\\'' (~ ( '\\'' | '\\n' | '\\r' ) )+ '\\''
 			{
 			match('\''); if (state.failed) return;
-			// src/core/koopa/core/grammars/generator/KG.g:200:16: (~ ( '\\'' | '\\n' | '\\r' ) )+
+			// src/core/koopa/core/grammars/generator/KG.g:205:16: (~ ( '\\'' | '\\n' | '\\r' ) )+
 			int cnt5=0;
 			loop5:
 			while (true) {
@@ -596,10 +596,10 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = NUMBER;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:202:8: ( ( DIGIT )+ )
-			// src/core/koopa/core/grammars/generator/KG.g:202:10: ( DIGIT )+
+			// src/core/koopa/core/grammars/generator/KG.g:207:8: ( ( DIGIT )+ )
+			// src/core/koopa/core/grammars/generator/KG.g:207:10: ( DIGIT )+
 			{
-			// src/core/koopa/core/grammars/generator/KG.g:202:10: ( DIGIT )+
+			// src/core/koopa/core/grammars/generator/KG.g:207:10: ( DIGIT )+
 			int cnt6=0;
 			loop6:
 			while (true) {
@@ -651,10 +651,10 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = WHITESPACE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:204:12: ( ( ' ' | '\\t' )+ )
-			// src/core/koopa/core/grammars/generator/KG.g:204:14: ( ' ' | '\\t' )+
+			// src/core/koopa/core/grammars/generator/KG.g:209:12: ( ( ' ' | '\\t' )+ )
+			// src/core/koopa/core/grammars/generator/KG.g:209:14: ( ' ' | '\\t' )+
 			{
-			// src/core/koopa/core/grammars/generator/KG.g:204:14: ( ' ' | '\\t' )+
+			// src/core/koopa/core/grammars/generator/KG.g:209:14: ( ' ' | '\\t' )+
 			int cnt7=0;
 			loop7:
 			while (true) {
@@ -707,8 +707,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = EQUALS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:206:8: ( '=' )
-			// src/core/koopa/core/grammars/generator/KG.g:206:10: '='
+			// src/core/koopa/core/grammars/generator/KG.g:211:8: ( '=' )
+			// src/core/koopa/core/grammars/generator/KG.g:211:10: '='
 			{
 			match('='); if (state.failed) return;
 			}
@@ -727,8 +727,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = OPEN_PAREN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:208:12: ( '(' )
-			// src/core/koopa/core/grammars/generator/KG.g:208:14: '('
+			// src/core/koopa/core/grammars/generator/KG.g:213:12: ( '(' )
+			// src/core/koopa/core/grammars/generator/KG.g:213:14: '('
 			{
 			match('('); if (state.failed) return;
 			}
@@ -747,8 +747,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = CLOSE_PAREN;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:210:13: ( ')' )
-			// src/core/koopa/core/grammars/generator/KG.g:210:15: ')'
+			// src/core/koopa/core/grammars/generator/KG.g:215:13: ( ')' )
+			// src/core/koopa/core/grammars/generator/KG.g:215:15: ')'
 			{
 			match(')'); if (state.failed) return;
 			}
@@ -767,8 +767,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = OPEN_BRACKET;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:212:14: ( '[' )
-			// src/core/koopa/core/grammars/generator/KG.g:212:16: '['
+			// src/core/koopa/core/grammars/generator/KG.g:217:14: ( '[' )
+			// src/core/koopa/core/grammars/generator/KG.g:217:16: '['
 			{
 			match('['); if (state.failed) return;
 			}
@@ -787,8 +787,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = CLOSE_BRACKET;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:214:15: ( ']' )
-			// src/core/koopa/core/grammars/generator/KG.g:214:17: ']'
+			// src/core/koopa/core/grammars/generator/KG.g:219:15: ( ']' )
+			// src/core/koopa/core/grammars/generator/KG.g:219:17: ']'
 			{
 			match(']'); if (state.failed) return;
 			}
@@ -807,11 +807,11 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = NATIVE_CODE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:218:13: ( '{' (~ '}' )* '}' )
-			// src/core/koopa/core/grammars/generator/KG.g:218:15: '{' (~ '}' )* '}'
+			// src/core/koopa/core/grammars/generator/KG.g:223:13: ( '{' (~ '}' )* '}' )
+			// src/core/koopa/core/grammars/generator/KG.g:223:15: '{' (~ '}' )* '}'
 			{
 			match('{'); if (state.failed) return;
-			// src/core/koopa/core/grammars/generator/KG.g:218:19: (~ '}' )*
+			// src/core/koopa/core/grammars/generator/KG.g:223:19: (~ '}' )*
 			loop8:
 			while (true) {
 				int alt8=2;
@@ -859,8 +859,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = STAR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:220:6: ( '*' )
-			// src/core/koopa/core/grammars/generator/KG.g:220:8: '*'
+			// src/core/koopa/core/grammars/generator/KG.g:225:6: ( '*' )
+			// src/core/koopa/core/grammars/generator/KG.g:225:8: '*'
 			{
 			match('*'); if (state.failed) return;
 			}
@@ -879,8 +879,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = PLUS;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:222:6: ( '+' )
-			// src/core/koopa/core/grammars/generator/KG.g:222:8: '+'
+			// src/core/koopa/core/grammars/generator/KG.g:227:6: ( '+' )
+			// src/core/koopa/core/grammars/generator/KG.g:227:8: '+'
 			{
 			match('+'); if (state.failed) return;
 			}
@@ -899,8 +899,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = WITH;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:224:6: ( '---' )
-			// src/core/koopa/core/grammars/generator/KG.g:224:8: '---'
+			// src/core/koopa/core/grammars/generator/KG.g:229:6: ( '---' )
+			// src/core/koopa/core/grammars/generator/KG.g:229:8: '---'
 			{
 			match("---"); if (state.failed) return;
 
@@ -920,8 +920,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = SKIP_TO;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:225:9: ( '-->' )
-			// src/core/koopa/core/grammars/generator/KG.g:225:11: '-->'
+			// src/core/koopa/core/grammars/generator/KG.g:230:9: ( '-->' )
+			// src/core/koopa/core/grammars/generator/KG.g:230:11: '-->'
 			{
 			match("-->"); if (state.failed) return;
 
@@ -941,8 +941,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = DOT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:227:5: ( '.' )
-			// src/core/koopa/core/grammars/generator/KG.g:227:7: '.'
+			// src/core/koopa/core/grammars/generator/KG.g:232:5: ( '.' )
+			// src/core/koopa/core/grammars/generator/KG.g:232:7: '.'
 			{
 			match('.'); if (state.failed) return;
 			}
@@ -961,8 +961,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = PIPE;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:229:6: ( '|' )
-			// src/core/koopa/core/grammars/generator/KG.g:229:8: '|'
+			// src/core/koopa/core/grammars/generator/KG.g:234:6: ( '|' )
+			// src/core/koopa/core/grammars/generator/KG.g:234:8: '|'
 			{
 			match('|'); if (state.failed) return;
 			}
@@ -981,8 +981,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = COMMA;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:231:7: ( ',' )
-			// src/core/koopa/core/grammars/generator/KG.g:231:9: ','
+			// src/core/koopa/core/grammars/generator/KG.g:236:7: ( ',' )
+			// src/core/koopa/core/grammars/generator/KG.g:236:9: ','
 			{
 			match(','); if (state.failed) return;
 			}
@@ -1001,8 +1001,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = BANG;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:233:6: ( '!' )
-			// src/core/koopa/core/grammars/generator/KG.g:233:8: '!'
+			// src/core/koopa/core/grammars/generator/KG.g:238:6: ( '!' )
+			// src/core/koopa/core/grammars/generator/KG.g:238:8: '!'
 			{
 			match('!'); if (state.failed) return;
 			}
@@ -1021,8 +1021,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = DOLLAR;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:235:8: ( '$' )
-			// src/core/koopa/core/grammars/generator/KG.g:235:10: '$'
+			// src/core/koopa/core/grammars/generator/KG.g:240:8: ( '$' )
+			// src/core/koopa/core/grammars/generator/KG.g:240:10: '$'
 			{
 			match('$'); if (state.failed) return;
 			}
@@ -1041,8 +1041,8 @@ public class KGLexer extends Lexer {
 		try {
 			int _type = NOT;
 			int _channel = DEFAULT_TOKEN_CHANNEL;
-			// src/core/koopa/core/grammars/generator/KG.g:237:5: ( '-' )
-			// src/core/koopa/core/grammars/generator/KG.g:237:7: '-'
+			// src/core/koopa/core/grammars/generator/KG.g:242:5: ( '-' )
+			// src/core/koopa/core/grammars/generator/KG.g:242:7: '-'
 			{
 			match('-'); if (state.failed) return;
 			}
@@ -1059,7 +1059,7 @@ public class KGLexer extends Lexer {
 	// $ANTLR start "LETTER"
 	public final void mLETTER() throws RecognitionException {
 		try {
-			// src/core/koopa/core/grammars/generator/KG.g:239:17: ( 'a' .. 'z' | 'A' .. 'Z' )
+			// src/core/koopa/core/grammars/generator/KG.g:244:17: ( 'a' .. 'z' | 'A' .. 'Z' )
 			// src/core/koopa/core/grammars/generator/KG.g:
 			{
 			if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z')||(input.LA(1) >= 'a' && input.LA(1) <= 'z') ) {
@@ -1084,7 +1084,7 @@ public class KGLexer extends Lexer {
 	// $ANTLR start "DIGIT"
 	public final void mDIGIT() throws RecognitionException {
 		try {
-			// src/core/koopa/core/grammars/generator/KG.g:240:16: ( '0' .. '9' )
+			// src/core/koopa/core/grammars/generator/KG.g:245:16: ( '0' .. '9' )
 			// src/core/koopa/core/grammars/generator/KG.g:
 			{
 			if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
@@ -1356,8 +1356,8 @@ public class KGLexer extends Lexer {
 
 	// $ANTLR start synpred1_KG
 	public final void synpred1_KG_fragment() throws RecognitionException {
-		// src/core/koopa/core/grammars/generator/KG.g:184:13: ( '\\r\\n' )
-		// src/core/koopa/core/grammars/generator/KG.g:184:14: '\\r\\n'
+		// src/core/koopa/core/grammars/generator/KG.g:189:13: ( '\\r\\n' )
+		// src/core/koopa/core/grammars/generator/KG.g:189:14: '\\r\\n'
 		{
 		match("\r\n"); if (state.failed) return;
 

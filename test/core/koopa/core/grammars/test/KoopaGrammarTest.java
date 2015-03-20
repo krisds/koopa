@@ -124,6 +124,9 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldAccept(parser, input("COmmon", "Language"));
 		shouldAccept(parser, input("Business", "Language"));
 		shouldAccept(parser, input("Language"));
+		
+		// But we need at least one match.
+		shouldReject(parser, input());
 	}
 
 	@Test

@@ -54,7 +54,6 @@ public abstract class Parser {
 			this.nextSink = nextSink;
 		}
 
-		@Override
 		public void push(Data packet) {
 			if (inWater && packet instanceof OnLand) {
 				inWater = false;

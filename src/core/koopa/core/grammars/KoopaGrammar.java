@@ -391,10 +391,12 @@ public abstract class KoopaGrammar {
 					}
 				}
 
-				if (LOGGER.isTraceEnabled())
-					pop("<permuted]");
+				boolean accepts = remaining.size() < choices.size();
 
-				return true;
+				if (LOGGER.isTraceEnabled())
+					pop("<permuted]: " + accepts);
+
+				return accepts;
 			}
 		};
 	};

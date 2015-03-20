@@ -13,12 +13,12 @@ target dataDivision;
    COPY "WORKSTOR.WS" .
 ]
 
-target redefines;
+target redefinesClause;
 
 +[ REDEFINES TEST-1 ]
 
 
-target picture;
+target pictureClause;
 
 # Samples by Inaki GE.
 +[ PIC Z.ZZZ.ZZ9,99 ]
@@ -28,7 +28,7 @@ target picture;
 +[ PIC Z99.99 ]
 
 
-target blankWhenZero;
+target blankWhenZeroClause;
 
 +[ BLANK WHEN ZERO ]
 +[ BLANK WHEN ZEROS ]
@@ -44,7 +44,7 @@ target space;
 +[ SPACE ]
 +[ SPACES ]
 
-target external;
+target externalClause;
 
 +[ EXTERNAL ]
 +[ IS EXTERNAL ]
@@ -59,12 +59,22 @@ target propertyClause;
 +[ PROPERTY NO SET ]
 +[ PROPERTY WITH NO GET ]
 +[ PROPERTY WITH NO SET ]
++[ PROPERTY IS FINAL ]
++[ PROPERTY NO GET IS FINAL ]
++[ PROPERTY NO SET IS FINAL ]
++[ PROPERTY WITH NO GET IS FINAL ]
++[ PROPERTY WITH NO SET IS FINAL ]
++[ PROPERTY FINAL ]
++[ PROPERTY NO GET FINAL ]
++[ PROPERTY NO SET FINAL ]
++[ PROPERTY WITH NO GET FINAL ]
++[ PROPERTY WITH NO SET FINAL ]
 -[ PROPERTY GET ]
 -[ PROPERTY SET ]
 -[ PROPERTY WITH GET ]
 -[ PROPERTY WITH SET ]
 
-target global;
+target globalClause;
 
 +[ IS GLOBAL ]
 +[ GLOBAL ]
@@ -73,6 +83,8 @@ target typedefClause;
 
 +[ IS TYPEDEF ]
 +[ TYPEDEF ]
++[ IS TYPEDEF STRONG ]
++[ TYPEDEF STRONG ]
 
 target threadLocalClause;
 
@@ -84,7 +96,7 @@ target justified;
 +[ JUSTIFIED RIGHT ]
 +[ JUST RIGHT ]
 
-target occurs;
+target occursClause;
 
 +[ OCCURS 42 TIMES ]
 +[ OCCURS 42 ]
@@ -147,6 +159,14 @@ target occurs;
    ASCENDING MY-ASC-KEY MY-OTHER-ASC-KEY
    INDEXED BY MY-INDEX MY-OTHER-INDEX ]
 
++[ OCCURS DYNAMIC
+   CAPACITY IN MY-CAPACITY
+   FROM 7 TO 42
+   INITIALIZED
+   DESCENDING KEY IS MY-DESC-KEY MY-OTHER-DESC-KEY
+   ASCENDING MY-ASC-KEY MY-OTHER-ASC-KEY
+   INDEXED BY MY-INDEX MY-OTHER-INDEX ]
+
 
 # Requested by MasterProgrammer, and corroborated by the IBM Enterprise Cobol reference:
 # The data-name in the key clause can be qualified.
@@ -180,7 +200,7 @@ target occurs;
 
 
 
-target sign;
+target signClause;
 
 +[ LEADING ]
 +[ TRAILING ]
@@ -206,7 +226,7 @@ target sign;
 +[ SIGN IS TRAILING SEPARATE CHARACTER ]
 
 
-target sync;
+target synchronizedClause;
 
 +[ SYNCHRONIZED ]
 +[ SYNC ]
@@ -218,7 +238,7 @@ target sync;
 +[ SYNC RIGHT ]
 
 
-target usage;
+target usageClause;
 
 +[ BINARY ] 
 +[ USAGE BINARY ] 
@@ -760,5 +780,179 @@ target reportSection;
                COLUMN NUMBER IS 1
                LINE NUMBER IS PLUS 1 . ]
 
-target screenSection;
+target formatClause;
 
++[ FORMAT BIT DATA ]
++[ FORMAT CHARACTER DATA ]
++[ FORMAT NUMERIC DATA ]
++[ FORMAT BIT CHARACTER NUMERIC DATA ]
+-[ FORMAT DATA ]
+-[ FORMAT BIT NUMERIC BIT DATA ]
+
+target alignedClause;
+
++[ ALIGNED ]
+
+target anyLengthClause;
+
++[ ANY LENGTH ]
+
+target basedClause;
+
++[ BASED ]
+
+target constantRecordClause;
+
++[ CONSTANT RECORD ]
+
+target groupUsageClause;
+
++[ GROUP-USAGE IS BIT ]
++[ GROUP-USAGE BIT ]
++[ GROUP-USAGE IS NATIONAL ]
++[ GROUP-USAGE NATIONAL ]
+
+target sameAsClause;
+
++[ SAME AS FOO ]
+-[ SAME FOO ]
+
+target selectWhenClause;
+
++[ SELECT WHEN OTHER ]
++[ SELECT WHEN MY-CONDITION ]
+-[ SELECT OTHER ]
+-[ SELECT MY-CONDITION ]
+
+target typeNameTypeClause;
+
++[ TYPE MY-TYPE ]
+
+target classClause;
+
++[ CLASS IS NUMERIC ]
++[ CLASS NUMERIC ]
++[ CLASS IS ALPHABETIC ]
++[ CLASS ALPHABETIC ]
++[ CLASS IS ALPHABETIC-LOWER ]
++[ CLASS ALPHABETIC-LOWER ]
++[ CLASS IS ALPHABETIC-UPPER ]
++[ CLASS ALPHABETIC-UPPER ]
++[ CLASS IS BOOLEAN ]
++[ CLASS BOOLEAN ]
++[ CLASS IS MY-ALPHABET ]
++[ CLASS MY-ALPHABET ]
++[ CLASS IS MY-CLASS ]
++[ CLASS MY-CLASS ]
+
+target defaultClause;
+
++[ DEFAULT IS NONE ]
++[ DEFAULT NONE ]
++[ DEFAULT IS "COBOL" ]
++[ DEFAULT "COBOL" ]
++[ DEFAULT IS MY-DEFAULT ]
++[ DEFAULT MY-DEFAULT ]
+
+target destinationClause;
+
++[ DESTINATION IS MOUNT-DOOM ]
++[ DESTINATION MOUNT-DOOM ]
++[ DESTINATION IS MORDOR MOUNT-DOOM ]
++[ DESTINATION MORDOR MOUNT-DOOM ]
+
+target invalidClause;
+
++[ INVALID WHEN A < B ]
+-[ INVALID A < B ]
+
+target presentWhenClause;
+
++[ PRESENT WHEN A < B ]
+-[ PRESENT A < B ]
+
+target validateStatusClause;
++[ VALIDATE-STATUS IS "OK" WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS    "OK" WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VAL-STATUS      IS "OK" WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VAL-STATUS         "OK" WHEN NO ERROR FOR MISSION-PARAMETERS ]
+
++[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS    JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VAL-STATUS      IS JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VAL-STATUS         JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS ]
+
++[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS IS JUST-FINE WHEN    ERROR FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS IS JUST-FINE      NO ERROR FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS IS JUST-FINE         ERROR FOR MISSION-PARAMETERS ]
+
++[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR
+   ON FORMAT
+   FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR
+   ON CONTENT
+   FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR
+   ON RELATION
+   FOR MISSION-PARAMETERS ]
++[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR
+   ON RELATION CONTENT FORMAT
+   FOR MISSION-PARAMETERS ]
+-[ VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR
+   ON RELATION FORMAT RELATION
+   FOR MISSION-PARAMETERS ]
+
+target lineClause;
+
++[ LINE NUMBER IS  PLUS 42 ]
++[ LINE NUMBER IS     + 42 ]
++[ LINE NUMBER IS MINUS 42 ]
++[ LINE NUMBER IS     - 42 ]
+
++[ LINE NUMBER IS  PLUS FORTY-TWO ]
++[ LINE NUMBER IS     + FORTY-TWO ]
++[ LINE NUMBER IS MINUS FORTY-TWO ]
++[ LINE NUMBER IS     - FORTY-TWO ]
+
++[ LINE NUMBER IS 42 ON NEXT PAGE ]
++[ LINE NUMBER IS 42              ]
++[ LINE NUMBER IS    ON NEXT PAGE ]
+
++[ LINE NUMBERS ARE 1 2 3 ]
++[ LINES        ARE 1 2 3 ]
+
+target highlightClause;
+
++[ HIGHLIGHT ]
++[ LOWLIGHT  ]
+
+target reverseVideoClause;
+
++[ REVERSE-VIDEO ]
+
+target underlineClause;
+
++[ UNDERLINE ]
+
+target foregroundColorClause;
+
++[ FOREGROUND-COLOUR IS 42 ]
++[ FOREGROUND-COLOR  IS 42 ]
++[ FOREGROUND-COLOUR IS ORANGE ]
++[ FOREGROUND-COLOR  IS ORANGE ]
++[ FOREGROUND-COLOUR    42 ]
++[ FOREGROUND-COLOR     42 ]
++[ FOREGROUND-COLOUR    ORANGE ]
++[ FOREGROUND-COLOR     ORANGE ]
+
+target backgroundColorClause;
+
++[ BACKGROUND-COLOUR IS 42 ]
++[ BACKGROUND-COLOR  IS 42 ]
++[ BACKGROUND-COLOUR IS ORANGE ]
++[ BACKGROUND-COLOR  IS ORANGE ]
++[ BACKGROUND-COLOUR    42 ]
++[ BACKGROUND-COLOR     42 ]
++[ BACKGROUND-COLOUR    ORANGE ]
++[ BACKGROUND-COLOR     ORANGE ]

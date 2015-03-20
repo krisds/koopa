@@ -20,18 +20,17 @@ public class LimitedParseStream implements ParseStream {
 		this.limiter = limiter;
 	}
 
-	@Override
 	public Token forward() {
 		stream.bookmark();
-		
+
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("%limited ?");
-		
+
 		boolean hitLimit = limiter.accepts(stream);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("%limited ? " + hitLimit);
-		
+
 		stream.rewind();
 
 		if (hitLimit)
@@ -40,37 +39,30 @@ public class LimitedParseStream implements ParseStream {
 			return stream.forward();
 	}
 
-	@Override
 	public void insert(Marker marker) {
 		stream.insert(marker);
 	}
 
-	@Override
 	public void rewind(Token token) {
 		stream.rewind(token);
 	}
 
-	@Override
 	public Token peek() {
 		return stream.peek();
 	}
 
-	@Override
 	public String peekMore() {
 		return stream.peekMore();
 	}
 
-	@Override
 	public void bookmark() {
 		stream.bookmark();
 	}
 
-	@Override
 	public void rewind() {
 		stream.rewind();
 	}
 
-	@Override
 	public void commit() {
 		stream.commit();
 	}

@@ -12,7 +12,6 @@ public abstract class ChainableSource<T extends Data> extends BasicSource<T>
 		this.source = source;
 	}
 
-	@Override
 	public void close() {
 		if (this.source != null)
 			this.source.close();

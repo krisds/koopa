@@ -119,7 +119,6 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		final DetailsTable detailsTable = new DetailsTable(parseDetails);
 
 		detailsTable.addListener(new DetailsTableListener() {
-			@Override
 			public void userSelectedDetail(Tuple<Token, String> detail) {
 				final int selected = overviewTable
 						.convertRowIndexToModel(overviewTable.getSelectedRow());

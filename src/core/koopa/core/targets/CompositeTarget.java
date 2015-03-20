@@ -12,7 +12,6 @@ public class CompositeTarget<T extends Data> implements Target<T> {
 
 	private final List<Target<T>> targets = new LinkedList<Target<T>>();;
 
-	@Override
 	public void push(T data) {
 		for (Target<T> target : targets)
 			target.push(data);

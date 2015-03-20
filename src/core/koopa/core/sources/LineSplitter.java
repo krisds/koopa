@@ -168,7 +168,6 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 		end = new Position(positionInFile - 1, linenumber, positionInLine - 1);
 	}
 
-	@Override
 	public void close() {
 		try {
 			if (reader != null)

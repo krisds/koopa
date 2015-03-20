@@ -115,7 +115,6 @@ public class CopybookPathsSelector extends JDialog {
 
 		removeCopybookPathButton.setEnabled(false);
 		pathsList.addListSelectionListener(new ListSelectionListener() {
-			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting())
 					return;

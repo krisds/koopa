@@ -259,7 +259,6 @@ public class PreprocessingSource extends BasicSource<Token> implements
 		return token;
 	}
 
-	@Override
 	public void close() {
 		sourceTokenizer.close();
 	}

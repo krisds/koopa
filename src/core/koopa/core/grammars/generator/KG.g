@@ -135,9 +135,14 @@ part
   
     -> ^(SKIP_TO part)
   
-  | BANG OPEN_PAREN sequence m+=more* CLOSE_PAREN
+  | BANG OPEN_BRACKET sequence m+=more* CLOSE_BRACKET
     
     -> { m == null }? ^(OPTIONAL sequence)
+    -> ^(OPTIONAL ^(PERMUTED sequence more*))
+  
+  | BANG OPEN_PAREN sequence m+=more* CLOSE_PAREN
+    
+    -> { m == null }? sequence
     -> ^(PERMUTED sequence more*)
   
   | DOLLAR OPEN_PAREN dispatch m+=more_dispatch* CLOSE_PAREN

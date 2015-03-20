@@ -7,7 +7,6 @@ import koopa.core.data.Data;
  */
 public class NullTarget<T extends Data> implements Target<T> {
 
-	@Override
 	public void push(T packet) {
 	}
 }

@@ -36,7 +36,6 @@ import org.junit.runner.RunWith;
 @RunWith(Files.class)
 public class CoreSourcesValidationTest implements FileBasedTest, TokenValidator {
 
-	@Override
 	public File[] getFiles() {
 		File folder = new File("test/core/koopa/core/sources/test/");
 
@@ -52,7 +51,6 @@ public class CoreSourcesValidationTest implements FileBasedTest, TokenValidator 
 
 	private File file;
 
-	@Override
 	public void setFile(File file) {
 		this.file = file;
 	}
@@ -94,7 +92,6 @@ public class CoreSourcesValidationTest implements FileBasedTest, TokenValidator 
 				new Object[] { SOURCE_FORMATTING_DIRECTIVE });
 	}
 
-	@Override
 	public void validate(Token token, String category) {
 		if ("_".equalsIgnoreCase(category)) {
 			// A "don't care". For when you don't care.

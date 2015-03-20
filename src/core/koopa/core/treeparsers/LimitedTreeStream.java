@@ -19,7 +19,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Data forward() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("checking limit");
@@ -46,7 +45,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public TreeStream forSubtree() {
 		if (stream.getTree() == null)
 			return null;
@@ -60,7 +58,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void bookmark() {
 		stream.bookmark();
 	}
@@ -68,7 +65,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void rewind() {
 		stream.rewind();
 	}
@@ -76,7 +72,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void commit() {
 		stream.commit();
 	}
@@ -84,7 +79,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void rewindSubtree() {
 		stream.rewindSubtree();
 	}
@@ -92,7 +86,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void commitSubtree() {
 		stream.commitSubtree();
 	}
@@ -100,7 +93,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Tree getTree() {
 		return stream.getTree();
 	}
@@ -108,7 +100,6 @@ public class LimitedTreeStream implements TreeStream {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public void skipCurrentTree() {
 		stream.skipCurrentTree();
 	}

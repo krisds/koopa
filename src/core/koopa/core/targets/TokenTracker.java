@@ -10,7 +10,6 @@ public class TokenTracker implements Target<Data> {
 
 	private final List<Token> tokens = new ArrayList<Token>();
 
-	@Override
 	public void push(Data data) {
 		if (data instanceof Token)
 			tokens.add((Token) data);

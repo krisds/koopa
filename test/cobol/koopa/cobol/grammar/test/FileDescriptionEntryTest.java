@@ -18,8 +18,8 @@ public class FileDescriptionEntryTest extends TestCase {
   }
 
     @Test
-    public void testBlockContains_1() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_1() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK CONTAINS 1 TO 7 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -27,8 +27,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_2() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_2() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK CONTAINS 1 TO 7 RECORDS "));
       assertTrue(parser.accepts(tokenizer));
@@ -36,8 +36,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_3() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_3() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK CONTAINS 1 TO 7 "));
       assertTrue(parser.accepts(tokenizer));
@@ -45,8 +45,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_4() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_4() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK CONTAINS 1 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -54,8 +54,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_5() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_5() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK CONTAINS 1 RECORDS "));
       assertTrue(parser.accepts(tokenizer));
@@ -63,8 +63,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_6() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_6() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK CONTAINS 1 "));
       assertTrue(parser.accepts(tokenizer));
@@ -72,8 +72,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_7() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_7() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK 1 TO 7 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -81,8 +81,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_8() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_8() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK 1 TO 7 RECORDS "));
       assertTrue(parser.accepts(tokenizer));
@@ -90,8 +90,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_9() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_9() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK 1 TO 7 "));
       assertTrue(parser.accepts(tokenizer));
@@ -99,8 +99,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_10() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_10() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK 1 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -108,8 +108,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_11() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_11() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK 1 RECORDS "));
       assertTrue(parser.accepts(tokenizer));
@@ -117,8 +117,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testBlockContains_12() {
-      Parser parser = grammar.blockContains();
+    public void testBlockContainsClause_12() {
+      Parser parser = grammar.blockContainsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BLOCK 1 "));
       assertTrue(parser.accepts(tokenizer));
@@ -126,8 +126,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testCodeSet_13() {
-      Parser parser = grammar.codeSet();
+    public void testCodeSetClause_13() {
+      Parser parser = grammar.codeSetClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CODE-SET IS MY-ALPHABET-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -135,8 +135,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testCodeSet_14() {
-      Parser parser = grammar.codeSet();
+    public void testCodeSetClause_14() {
+      Parser parser = grammar.codeSetClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CODE-SET MY-ALPHABET-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -560,8 +560,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_63() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_63() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES "));
       assertTrue(parser.accepts(tokenizer));
@@ -569,8 +569,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_64() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_64() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS MY-LINE-COUNT LINES "));
       assertTrue(parser.accepts(tokenizer));
@@ -578,8 +578,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_65() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_65() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 "));
       assertTrue(parser.accepts(tokenizer));
@@ -587,8 +587,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_66() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_66() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS MY-LINE-COUNT "));
       assertTrue(parser.accepts(tokenizer));
@@ -596,8 +596,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_67() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_67() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE 10 LINES "));
       assertTrue(parser.accepts(tokenizer));
@@ -605,8 +605,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_68() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_68() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE MY-LINE-COUNT LINES "));
       assertTrue(parser.accepts(tokenizer));
@@ -614,8 +614,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_69() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_69() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE 10 "));
       assertTrue(parser.accepts(tokenizer));
@@ -623,8 +623,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_70() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_70() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE MY-LINE-COUNT "));
       assertTrue(parser.accepts(tokenizer));
@@ -632,8 +632,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_71() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_71() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     WITH FOOTING AT 20 "));
       assertTrue(parser.accepts(tokenizer));
@@ -641,8 +641,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_72() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_72() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     WITH FOOTING AT MY-FOOTING "));
       assertTrue(parser.accepts(tokenizer));
@@ -650,8 +650,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_73() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_73() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     WITH FOOTING 20 "));
       assertTrue(parser.accepts(tokenizer));
@@ -659,8 +659,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_74() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_74() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     WITH FOOTING MY-FOOTING "));
       assertTrue(parser.accepts(tokenizer));
@@ -668,8 +668,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_75() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_75() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     FOOTING AT 20 "));
       assertTrue(parser.accepts(tokenizer));
@@ -677,8 +677,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_76() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_76() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     FOOTING AT MY-FOOTING "));
       assertTrue(parser.accepts(tokenizer));
@@ -686,8 +686,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_77() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_77() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     FOOTING 20 "));
       assertTrue(parser.accepts(tokenizer));
@@ -695,8 +695,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_78() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_78() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     FOOTING MY-FOOTING "));
       assertTrue(parser.accepts(tokenizer));
@@ -704,8 +704,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_79() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_79() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES AT TOP 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -713,8 +713,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_80() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_80() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES AT TOP MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -722,8 +722,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_81() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_81() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     AT TOP 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -731,8 +731,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_82() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_82() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     AT TOP MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -740,8 +740,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_83() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_83() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES TOP 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -749,8 +749,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_84() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_84() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES TOP MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -758,8 +758,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_85() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_85() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     TOP 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -767,8 +767,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_86() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_86() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     TOP MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -776,8 +776,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_87() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_87() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES AT BOTTOM 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -785,8 +785,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_88() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_88() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES AT BOTTOM MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -794,8 +794,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_89() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_89() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     AT BOTTOM 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -803,8 +803,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_90() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_90() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     AT BOTTOM MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -812,8 +812,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_91() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_91() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES BOTTOM 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -821,8 +821,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_92() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_92() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     LINES BOTTOM MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -830,8 +830,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_93() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_93() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     BOTTOM 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -839,8 +839,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testLinage_94() {
-      Parser parser = grammar.linage();
+    public void testLinageClause_94() {
+      Parser parser = grammar.linageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE IS 10 LINES\n     BOTTOM MY-TOP "));
       assertTrue(parser.accepts(tokenizer));
@@ -848,8 +848,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_95() {
-      Parser parser = grammar.record();
+    public void testRecordClause_95() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD CONTAINS 2 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -857,8 +857,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_96() {
-      Parser parser = grammar.record();
+    public void testRecordClause_96() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD 2 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -866,8 +866,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_97() {
-      Parser parser = grammar.record();
+    public void testRecordClause_97() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD CONTAINS 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -875,8 +875,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_98() {
-      Parser parser = grammar.record();
+    public void testRecordClause_98() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD 2 "));
       assertTrue(parser.accepts(tokenizer));
@@ -884,8 +884,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_99() {
-      Parser parser = grammar.record();
+    public void testRecordClause_99() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD CONTAINS 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -893,8 +893,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_100() {
-      Parser parser = grammar.record();
+    public void testRecordClause_100() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -902,8 +902,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_101() {
-      Parser parser = grammar.record();
+    public void testRecordClause_101() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD CONTAINS 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -911,8 +911,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_102() {
-      Parser parser = grammar.record();
+    public void testRecordClause_102() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -920,8 +920,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_103() {
-      Parser parser = grammar.record();
+    public void testRecordClause_103() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING IN SIZE FROM 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -929,8 +929,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_104() {
-      Parser parser = grammar.record();
+    public void testRecordClause_104() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING IN SIZE FROM 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -938,8 +938,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_105() {
-      Parser parser = grammar.record();
+    public void testRecordClause_105() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING IN SIZE FROM 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -947,8 +947,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_106() {
-      Parser parser = grammar.record();
+    public void testRecordClause_106() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING IN SIZE FROM 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -956,8 +956,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_107() {
-      Parser parser = grammar.record();
+    public void testRecordClause_107() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING FROM 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -965,8 +965,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_108() {
-      Parser parser = grammar.record();
+    public void testRecordClause_108() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING FROM 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -974,8 +974,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_109() {
-      Parser parser = grammar.record();
+    public void testRecordClause_109() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING FROM 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -983,8 +983,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_110() {
-      Parser parser = grammar.record();
+    public void testRecordClause_110() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING FROM 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -992,8 +992,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_111() {
-      Parser parser = grammar.record();
+    public void testRecordClause_111() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING IN SIZE 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -1001,8 +1001,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_112() {
-      Parser parser = grammar.record();
+    public void testRecordClause_112() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING IN SIZE 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -1010,8 +1010,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_113() {
-      Parser parser = grammar.record();
+    public void testRecordClause_113() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING IN SIZE 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -1019,8 +1019,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_114() {
-      Parser parser = grammar.record();
+    public void testRecordClause_114() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING IN SIZE 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -1028,8 +1028,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_115() {
-      Parser parser = grammar.record();
+    public void testRecordClause_115() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -1037,8 +1037,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_116() {
-      Parser parser = grammar.record();
+    public void testRecordClause_116() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -1046,8 +1046,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_117() {
-      Parser parser = grammar.record();
+    public void testRecordClause_117() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING 2 TO 6 CHARACTERS "));
       assertTrue(parser.accepts(tokenizer));
@@ -1055,8 +1055,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_118() {
-      Parser parser = grammar.record();
+    public void testRecordClause_118() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD VARYING 2 TO 6 "));
       assertTrue(parser.accepts(tokenizer));
@@ -1064,8 +1064,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_119() {
-      Parser parser = grammar.record();
+    public void testRecordClause_119() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING IN SIZE FROM 2 TO 6 CHARACTERS\n     DEPENDING ON MY-FILE-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -1073,8 +1073,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testRecord_120() {
-      Parser parser = grammar.record();
+    public void testRecordClause_120() {
+      Parser parser = grammar.recordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECORD IS VARYING IN SIZE FROM 2 TO 6 CHARACTERS\n     DEPENDING MY-FILE-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -1298,8 +1298,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testReport_145() {
-      Parser parser = grammar.report();
+    public void testReportClause_145() {
+      Parser parser = grammar.reportClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT IS MY-REPORT-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -1307,8 +1307,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testReport_146() {
-      Parser parser = grammar.report();
+    public void testReportClause_146() {
+      Parser parser = grammar.reportClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORTS ARE MY-REPORT-NAME MY-OTHER-REPORT-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -1316,8 +1316,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testReport_147() {
-      Parser parser = grammar.report();
+    public void testReportClause_147() {
+      Parser parser = grammar.reportClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT MY-REPORT-NAME "));
       assertTrue(parser.accepts(tokenizer));
@@ -1325,8 +1325,8 @@ public class FileDescriptionEntryTest extends TestCase {
     }
 
     @Test
-    public void testReport_148() {
-      Parser parser = grammar.report();
+    public void testReportClause_148() {
+      Parser parser = grammar.reportClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORTS MY-REPORT-NAME MY-OTHER-REPORT-NAME "));
       assertTrue(parser.accepts(tokenizer));

@@ -56,7 +56,6 @@ public class SourceFormattingDirectives extends BasicSource<Token> implements
 		return token;
 	}
 
-	@Override
 	public void close() {
 		source.close();
 	}

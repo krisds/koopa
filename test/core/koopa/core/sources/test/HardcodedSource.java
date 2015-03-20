@@ -61,7 +61,6 @@ public class HardcodedSource extends BasicSource<Token> implements
 		return token;
 	}
 
-	@Override
 	public void close() {
 	}
 

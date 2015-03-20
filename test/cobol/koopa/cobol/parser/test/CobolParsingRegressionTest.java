@@ -34,7 +34,6 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		actualResultsFile = getActualResultsFile();
 	}
 
-	@Override
 	public abstract File[] getFiles();
 
 	protected File getTargetResultsFile() {
@@ -48,7 +47,6 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 	protected void configure(ParsingCoordinator coordinator) {
 	}
 
-	@Override
 	public void setFile(File file) {
 		this.file = file;
 	}

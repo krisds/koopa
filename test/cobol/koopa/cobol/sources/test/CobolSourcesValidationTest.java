@@ -59,7 +59,6 @@ import org.junit.runner.RunWith;
 public class CobolSourcesValidationTest implements FileBasedTest,
 		TokenValidator {
 
-	@Override
 	public File[] getFiles() {
 		File folder = new File("test/cobol/koopa/cobol/sources/test/");
 
@@ -75,7 +74,6 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 
 	private File file;
 
-	@Override
 	public void setFile(File file) {
 		this.file = file;
 	}
@@ -175,7 +173,6 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		TAG_VALIDATIONS.put("SKIPPED", new Object[] { SKIPPED });
 	}
 
-	@Override
 	public void validate(Token token, String category) {
 		if ("_".equalsIgnoreCase(category)) {
 			// A "don't care". For when you don't care.

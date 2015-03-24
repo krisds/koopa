@@ -1723,27 +1723,6 @@ def procedureDivision =
 end
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Common phrases and features
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-def roundedPhrase =
-    ROUNDED
-    [ MODE [IS]
-      ( AWAY-FROM-ZERO
-      | NEAREST-AWAY-FROM-ZERO
-      | NEAREST-EVEN
-      | NEAREST-TOWARD-ZERO
-      | PROHIBITED
-      | TOWARD-GREATER
-      | TOWARD-LESSER
-      | TRUNCATION
-      )
-    ]
-end
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 # Refs. http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
 def usingOrChainingPhrase =
     (USING | CHAINING | GIVING) 
@@ -1772,6 +1751,29 @@ def returningProcedurePhrase =
 	(RETURNING | YIELDING | GIVING)
     dataName [AS typeName [attributeClause]]
 end
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Common phrases and features
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def roundedPhrase =
+    ROUNDED
+    [ MODE [IS]
+      ( AWAY-FROM-ZERO
+      | NEAREST-AWAY-FROM-ZERO
+      | NEAREST-EVEN
+      | NEAREST-TOWARD-ZERO
+      | PROHIBITED
+      | TOWARD-GREATER
+      | TOWARD-LESSER
+      | TRUNCATION
+      )
+    ]
+end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 def declaratives =
     DECLARATIVES .
@@ -2775,131 +2777,6 @@ def execCICSStatement =
     (EXEC | EXECUTE) CICS
       (--- cicsStatement --> END-EXEC)
     END-EXEC
-end
-
-def cicsStatement =
-   ( cicsReadQ
-   | cicsWriteQ
-   | cicsDeleteQ 
-   | cicsReadFile
-   | cicsWriteFile 
-   | cicsLink
-   | cicsXctl
-   | cicsLoad
-   | cicsStart
-   )
-end
-
-def dataArea =
-   (literal | identifier)
-end
-
-def cicsReadQ =
-   READQ 
-   ( TS (QUEUE | QNAME) '(' queueName ')' 
-     ![ (SYSID|SYS) '(' cicsSysid ')'
-      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
-      | (ITEM cicsWaterInBrackets | NEXT)
-      | NUMITEMS cicsWaterInBrackets
-      ]
-   | TD QUEUE '(' (literal | identifier) ')' 
-   )
-end
-
-def cicsWriteQ =
-   WRITEQ 
-   ( TS (QUEUE | QNAME) '(' queueName ')'
-     ![ (SYSID|SYS) '(' cicsSysid ')'
-      | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
-      | (NUMITEMS cicsWaterInBrackets | ITEM cicsWaterInBrackets [REWRITE])
-      | NOSUSPEND
-      | (MAIN|AUXILIARY)
-      ]
-   | TD QUEUE '(' queueName ')'
-   )
-end
-
-def cicsDeleteQ =
-   DELETEQ (TS|TD) (QUEUE | QNAME) '(' queueName ')'
-   [(SYSID|SYS) '(' cicsSysid ')']
-end
-
-def cicsReadFile =
-   ( READ (FILE | DATASET) '(' fileName ')'
-     ![ (SYSID|SYS) '(' cicsSysid ')'
-      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
-      | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets [GENERIC]]
-      | (GTEQ|EQUAL)
-      | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
-      | NOSUSPEND
-      ]
-   | READNEXT (FILE|DATASET) '(' fileName ')'
-     ![ (SYSID|SYS) '(' cicsSysid ')'
-      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
-      | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets] 
-      | (RBA|XRBA|RRN)
-      | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
-      | NOSUSPEND
-      ]
-   )
-end
-
-def cicsWriteFile =
-   WRITE (FILE | DATASET) '(' fileName ')'
-   ![ (SYSID|SYS) '(' cicsSysid ')'
-    | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
-    | RIDFLD cicsWaterInBrackets [KEYLENGTH cicsWaterInBrackets] 
-    | (RBA|XRBA|RRN)
-    | MASSINSERT
-    | NOSUSPEND
-    ]
-end
-
-def cicsLink =
-   LINK PROGRAM '(' programID ')'
-   ![ (SYSID|SYS) '(' cicsSysid ')'
-    | COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
-    | SYNCONRETURN
-    | TRANSID cicsWaterInBrackets
-    | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
-    | CHANNEL cicsWaterInBrackets
-    ]
-end
-
-def cicsXctl =
-   XCTL PROGRAM '(' programID ')'
-   ![ COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] 
-    | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
-    | CHANNEL cicsWaterInBrackets
-    ]
-end
-
-def cicsLoad =
-   LOAD PROGRAM '(' programID ')'
-end
-
-def cicsStart =
-   START (TRANSID|TR) '(' transactionName ')'
-end
-
-def cicsSysid =
-   (literal | identifier)
-end
-
-def queueName =
-   (literal | identifier)
-end
-
-def transactionName =
-   (literal | identifier)
-end
-
-def commareaName =
-   (literal | identifier)
-end
-
-def cicsWaterInBrackets =
-   '(' [--> ')'] ')'
 end
 
 # EXEC DLI support. -----------------------------------------------------------

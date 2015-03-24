@@ -1,0 +1,14 @@
+package koopa.cobol.cics.grammar.test;
+grammar koopa.cobol.cics.grammar.CICSGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target cicsReadFile;
+
+
+# Based on https://sites.google.com/site/cicssampleprograms1/home
+
++[ READ
+     FILE('FILE001')                
+     INTO(REC1)
+     RIDFLD(EID2)
+     LENGTH(LENGTH OF REC1) ]

@@ -1,0 +1,174 @@
+grammar CICS extends CICSBase.
+
+def cicsStatement =
+   ( cicsReadQ
+   | cicsWriteQ
+   | cicsDeleteQ 
+   | cicsReadFile
+   | cicsWriteFile 
+   | cicsLink
+   | cicsXctl
+   | cicsLoad
+   | cicsStart
+   
+   | cicsSendMap
+   | cicsReceiveMap
+   )
+end
+
+# Based on:
+# http://www.tutorialspoint.com/cics/cics_map.htm
+# http://www.mainframestechhelp.com/tutorials/cics/cics-send-map.htm
+# http://www.felgall.com/cics2.htm
+def cicsSendMap =
+  SEND 
+    MAP '(' mapName ')'
+    ![ MAPSET '(' mapsetName ')'
+     | FROM '(' dataArea ')'
+     | LENGTH '(' dataValue ')'
+     | ( DATAONLY | MAPONLY )
+     | CURSOR ['(' cursorDataValue ')']
+     | FORMFEED
+     | ( ERASE | ERASEAUP )
+     | PRINT
+     | FREEKB
+     | ALARM
+     | FRSET
+     | FORMFEED
+     | NLEOM
+     | ACCUM
+     | (PAGING | TERMINAL [WAIT])
+     | LAST
+     | (L40 | L64 | L80 | HONEOM)
+     | REQID '(' _ ')'
+     ]
+end
+
+
+# Based on:
+# http://www.tutorialspoint.com/cics/cics_map.htm
+# http://www.mainframestechhelp.com/tutorials/cics/cics-receive-map.htm
+# http://www.felgall.com/cics2.htm
+def cicsReceiveMap =
+  RECEIVE 
+    MAP '(' mapName ')'
+    ![ MAPSET '(' mapsetName ')'
+     | INTO '(' dataArea ')'
+     | FROM '(' dataArea ')'
+     | LENGTH '(' dataValue ')'
+   	 | SET '(' ptrRef ')'
+	 | TERMINAL
+	 | ASIS 
+	 ]
+end
+
+
+def cicsReadQ =
+   READQ 
+   ( TS (QUEUE | QNAME) '(' queueName ')' 
+     ![ (SYSID|SYS) '(' cicsSysid ')'
+      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
+      | (ITEM cicsWaterInBrackets | NEXT)
+      | NUMITEMS cicsWaterInBrackets
+      ]
+   | TD QUEUE '(' _ ')' 
+   )
+end
+
+def cicsWriteQ =
+   WRITEQ 
+   ( TS (QUEUE | QNAME) '(' queueName ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
+      | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
+      | (NUMITEMS cicsWaterInBrackets | ITEM cicsWaterInBrackets [REWRITE])
+      | NOSUSPEND
+      | (MAIN|AUXILIARY)
+      ]
+   | TD QUEUE '(' queueName ')'
+   )
+end
+
+def cicsDeleteQ =
+   DELETEQ (TS|TD) (QUEUE | QNAME) '(' queueName ')'
+   [(SYSID|SYS) '(' cicsSysid ')']
+end
+
+def cicsReadFile =
+   ( READ (FILE | DATASET) '(' fileName ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
+      | (SET|INTO) '(' dataArea ')'
+      | RIDFLD cicsWaterInBrackets
+      | (GTEQ|EQUAL)
+      | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
+      | NOSUSPEND
+      | LENGTH cicsWaterInBrackets
+      | KEYLENGTH cicsWaterInBrackets [GENERIC]
+      ]
+   | READNEXT (FILE|DATASET) '(' fileName ')'
+     ![ (SYSID|SYS) '(' cicsSysid ')'
+      | (SET|INTO) '(' dataArea ')' [LENGTH cicsWaterInBrackets]
+      | RIDFLD cicsWaterInBrackets     [KEYLENGTH cicsWaterInBrackets] 
+      | (RBA|XRBA|RRN)
+      | (UNCOMMITTED|CONSISTENT|REPEATABLE|UPDATE TOKEN cicsWaterInBrackets)
+      | NOSUSPEND
+      ]
+   )
+end
+
+def cicsWriteFile =
+   WRITE (FILE | DATASET) '(' fileName ')'
+   ![ (SYSID|SYS) '(' cicsSysid ')'
+    | FROM '(' dataArea ')' [LENGTH cicsWaterInBrackets]
+    | RIDFLD cicsWaterInBrackets [KEYLENGTH cicsWaterInBrackets] 
+    | (RBA|XRBA|RRN)
+    | MASSINSERT
+    | NOSUSPEND
+    ]
+end
+
+def cicsLink =
+   LINK PROGRAM '(' programID ')'
+   ![ (SYSID|SYS) '(' cicsSysid ')'
+    | COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] [DATALENGTH cicsWaterInBrackets]
+    | SYNCONRETURN
+    | TRANSID cicsWaterInBrackets
+    | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
+    | CHANNEL cicsWaterInBrackets
+    ]
+end
+
+def cicsXctl =
+   XCTL PROGRAM '(' programID ')'
+   ![ COMMAREA '(' commareaName ')' [LENGTH cicsWaterInBrackets] 
+    | INPUTMSG cicsWaterInBrackets [INPUTMSGLEN cicsWaterInBrackets]
+    | CHANNEL cicsWaterInBrackets
+    ]
+end
+
+def cicsLoad =
+   LOAD PROGRAM '(' programID ')'
+end
+
+def cicsStart =
+   START (TRANSID|TR) '(' transactionName ')'
+end
+
+def cicsWaterInBrackets =
+   '(' [--> ')'] ')'
+end
+
+
+
+def mapName         = _ end
+def mapsetName      = _ end
+def dataArea        = _ end
+def dataValue       = _ end
+def cursorDataValue = _ end
+def ptrRef          = _ end
+
+def cicsSysid = _ end
+def queueName = _ end
+def transactionName = _ end
+def commareaName = _ end
+def fileName = _ end
+def programID = _ end

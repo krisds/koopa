@@ -165,6 +165,7 @@
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
 			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
+			<test name="koopa.cobol.cics.grammar.test.EmbeddedCICSGrammarTests" />
 			<test name="koopa.cobol.parser.preprocessing.test.ReplacingPhraseOperandTest" />
 		</junit>
 	</target>

@@ -1,0 +1,9 @@
+package koopa.cobol.cics.grammar.test;
+grammar koopa.cobol.cics.grammar.CICSGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target cicsReadQ;
+
++[ READQ TS QUEUE(W-QUEUE) INTO(W-REC) ITEM(3) ]
++[ READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) ITEM(W-NUMB) ]
++[ READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) NEXT ]

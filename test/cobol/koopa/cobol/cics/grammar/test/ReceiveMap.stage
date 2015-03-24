@@ -1,0 +1,18 @@
+package koopa.cobol.cics.grammar.test;
+grammar koopa.cobol.cics.grammar.CICSGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target cicsReceiveMap;
+
+
+# Based on https://sites.google.com/site/cicssampleprograms1/home
+
++[ RECEIVE MAP('FILE1')                  
+     MAPSET('FILE02') ]
+
+     
+# Based on http://www.csis.ysu.edu/~tom/crs/cis4808/SENDMAP.txt
+
++[ RECEIVE MAP ('ZnnAM01')                                    
+     INTO (ZnnAM01I)
+     MAPSET ('ZnnAMAP') ]

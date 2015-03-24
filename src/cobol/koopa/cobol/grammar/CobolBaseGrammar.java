@@ -3,6 +3,7 @@ package koopa.cobol.grammar;
 import java.util.ArrayList;
 import java.util.List;
 
+import koopa.cobol.cics.grammar.CICSGrammar;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sql.grammar.SQLGrammar;
@@ -17,7 +18,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	protected String getNamespace() {
 		return "cobol";
 	}
-	
+
 	// ============================================================================
 	// pictureString
 	// ............................................................................
@@ -151,5 +152,19 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			sqlGrammar = new SQLGrammar();
 
 		return sqlGrammar.sqlStatement();
+	}
+
+	// ============================================================================
+	// cicsStatement
+	// ............................................................................
+
+	private CICSGrammar cicsGrammar = null;
+
+	// TODO This is a poor man's version of grammar composition...
+	public Parser cicsStatement() {
+		if (cicsGrammar == null)
+			cicsGrammar = new CICSGrammar();
+
+		return cicsGrammar.cicsStatement();
 	}
 }

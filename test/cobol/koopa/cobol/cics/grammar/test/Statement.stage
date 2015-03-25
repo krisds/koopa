@@ -1,0 +1,86 @@
+package koopa.cobol.cics.grammar.test;
+grammar koopa.cobol.cics.grammar.CICSGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target cicsStatement;
+
+
+# Based on https://sites.google.com/site/cicssampleprograms1/home
+
++[ READ
+     FILE('FILE001')                
+     INTO(REC1)
+     RIDFLD(EID2)
+     LENGTH(LENGTH OF REC1) ]
+
+
+# Based on https://sites.google.com/site/cicssampleprograms1/home
+
++[ RECEIVE MAP('FILE1')                  
+     MAPSET('FILE02') ]
+
+     
+# Based on http://www.csis.ysu.edu/~tom/crs/cis4808/SENDMAP.txt
+
++[ RECEIVE MAP ('ZnnAM01')                                    
+     INTO (ZnnAM01I)
+     MAPSET ('ZnnAMAP') ]
+
+
+# Based on https://sites.google.com/site/cicssampleprograms1/home
+
++[ SEND MAP('FILE')                    
+     MAPSET('FILE01') ]
+
++[ SEND MAP('FILE1')
+     MAPSET('FILE02')              
+     ERASE ]
+
+
+# Based on http://www.csis.ysu.edu/~tom/crs/cis4808/SENDMAP.txt
+
++[ SEND MAP ('ZnnAM01')
+     FROM (ZnnAM01O)
+     MAPSET ('ZnnAMAP')
+     ERASE ]
+
+
+# Based on http://infocenter.sybase.com/archive/index.jsp?topic=/com.sybase.infocenter.dc36123.1502/html/XA/X21092.htm
+
++[ SEND MAP('MSGLINE') 
+     MAPSET('AIXCSET')
+     FREEKB ]
+
+
+# Based on:
+# Application Programming Reference, CICS Transaction Server for z/OS Version 5 Release 2
+# Via. https://developer.ibm.com/answers/questions/170491/finding-cics-manuals-in-hardcopy-pdf-and-html-form.html
++[ ADDRESS SET(ptr)
+     USING(address of struc01) ]
++[ ASKTIME ABSTIME(utime) ]
++[ BIF DEEDIT
+     FIELD(CONTG)
+     LENGTH(9) ]
++[ ENTER TRACENUM(123)
+     FROM(USER-TRACE-ENTRY) ]
++[ FREEMAIN DATAPOINTER(AREA-POINTER) ]
+
+
+# Other...
+
+-[ NOT-A-CICS-COMMAND ]
+-[ READ (A-FILE) ]
+-[ READ FILE ) A-FILE ( ]
+
++[ READQ TS QUEUE(W-QUEUE) INTO(W-REC) ITEM(3) ]
++[ READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) ITEM(W-NUMB) ]
++[ READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) NEXT ]
++[ READ FILE ('AFILE') RIDFLD(W-KEY) KEYLENGTH(18) INTO(W-REC) ]
++[ READ FILE (W-FILE) RIDFLD(W-KEY) INTO(W-REC) SYSID('CICS') ]
++[ WRITE FILE ('AFILE') RIDFLD(W-KEY) FROM(W-REC) ]
++[ WRITE FILE('W-FILE') RIDFLD(W-KEY) FROM(W-REC) SYSID(W-CICS) ]
++[ LINK PROGRAM('PROG1') COMMAREA(W-DATA) ]
++[ XCTL PROGRAM(W-PGM) SYSID('CICS') ]
++[ XCTL PROGRAM(W-PGM) SYSID(W-CICS) ]
++[ XCTL PROGRAM('PROG1') COMMAREA(W-DATA) ]
++[ LINK PROGRAM(W-PGM) SYSID('CICS') ]

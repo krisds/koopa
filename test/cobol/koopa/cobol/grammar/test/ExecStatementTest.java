@@ -229,131 +229,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecCICSStatement_26() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READQ TS QUEUE(W-QUEUE) INTO(W-REC) ITEM(3) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_27() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) ITEM(W-NUMB) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_28() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READ QUEUE TS QUEUE END-EXEC "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_29() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) NEXT END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_30() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READ FILE ('AFILE') RIDFLD(W-KEY) KEYLENGTH(18) INTO(W-REC) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_31() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READ FILE (W-FILE) RIDFLD(W-KEY) INTO(W-REC) SYSID('CICS') END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_32() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS WRITE FILE ('AFILE') RIDFLD(W-KEY) FROM(W-REC) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_33() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS WRITE FILE('W-FILE') RIDFLD(W-KEY) FROM(W-REC) SYSID(W-CICS) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_34() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS LINK PROGRAM('PROG1') COMMAREA(W-DATA) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_35() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS XCTL PROGRAM(W-PGM) SYSID('CICS') END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_36() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS XCTL PROGRAM(W-PGM) SYSID(W-CICS) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_37() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS XCTL PROGRAM('PROG1') COMMAREA(W-DATA) END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_38() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS LINK PROGRAM(W-PGM) SYSID('CICS') END-EXEC "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecCICSStatement_39() {
-      Parser parser = grammar.execCICSStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC CICS READ DATA (WHATEVER) RID(W-KEY-WHATEVER) END-EXEC "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testExecDLIStatement_40() {
+    public void testExecDLIStatement_26() {
       Parser parser = grammar.execDLIStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC DLI END-EXEC "));
@@ -362,7 +238,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecDLIStatement_41() {
+    public void testExecDLIStatement_27() {
       Parser parser = grammar.execDLIStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXECUTE DLI END-EXEC "));
@@ -371,7 +247,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecHTMLStatement_42() {
+    public void testExecHTMLStatement_28() {
       Parser parser = grammar.execHTMLStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC HTML END-EXEC "));
@@ -380,7 +256,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecHTMLStatement_43() {
+    public void testExecHTMLStatement_29() {
       Parser parser = grammar.execHTMLStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXECUTE HTML END-EXEC "));
@@ -389,7 +265,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecHTMLStatement_44() {
+    public void testExecHTMLStatement_30() {
       Parser parser = grammar.execHTMLStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC HTML <h1>Hello, :name!</h1> END-EXEC "));
@@ -398,7 +274,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecHTMLStatement_45() {
+    public void testExecHTMLStatement_31() {
       Parser parser = grammar.execHTMLStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXECUTE HTML <h1>Hello, :name!</h1> END-EXEC "));
@@ -407,7 +283,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecTextDataStatement_46() {
+    public void testExecTextDataStatement_32() {
       Parser parser = grammar.execTextDataStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXEC foo END-EXEC "));
@@ -416,7 +292,7 @@ public class ExecStatementTest extends TestCase {
     }
 
     @Test
-    public void testExecTextDataStatement_47() {
+    public void testExecTextDataStatement_33() {
       Parser parser = grammar.execTextDataStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" EXECUTE foo END-EXEC "));

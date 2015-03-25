@@ -14,10 +14,7 @@ public class EmbeddedCICSGrammarTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Embedded CICS Grammar test suite.");
 
-		suite.addTestSuite(ReadFileTest.class);
-		suite.addTestSuite(ReadQTest.class);
-		suite.addTestSuite(ReceiveMapTest.class);
-		suite.addTestSuite(SendMapTest.class);
+		suite.addTestSuite(StatementTest.class);
 		return suite;
 	}
 }

@@ -4,32 +4,6 @@ tokenizer koopa.cobol.sources.test.CobolTestSource;
 
 target execStatement;
 
--[ EXEC ]
--[ EXEC END-EXEC ]
--[ EXEC SQL ]
--[ EXEC DLI ]
--[ EXEC HTML ]
--[ EXEC foo ]
-
--[ EXECUTE ]
--[ EXECUTE END-EXEC ]
--[ EXECUTE SQL ]
--[ EXECUTE DLI ]
--[ EXECUTE HTML ]
--[ EXECUTE foo ]
-
-+[ EXEC SQL  END-EXEC ]         # SQL
-+[ EXEC CICS END-EXEC ]         # CICS
-+[ EXEC DLI  END-EXEC ]         # DLI
-+[ EXEC HTML END-EXEC ]         # HTML
-+[ EXEC foo  END-EXEC ]         # text-data
-
-+[ EXECUTE SQL  END-EXEC ]
-+[ EXECUTE CICS END-EXEC ]
-+[ EXECUTE DLI  END-EXEC ]
-+[ EXECUTE HTML END-EXEC ]
-+[ EXECUTE foo  END-EXEC ]
-
 target execSQLStatement;
 
 -[ EXEC SQL END-EXEC ]

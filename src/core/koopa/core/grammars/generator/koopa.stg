@@ -41,16 +41,20 @@ public class $name$Grammar extends $extending$Grammar {
 }
 >>
 
-rule(name, body) ::= <<
+rule(publik, name, body) ::= <<
 // ========================================================
 // $name$
 // ........................................................
 
 private Parser $name$Parser = null;
 
+$if(publik)$
 public Parser $name$() {
+$else$
+private Parser $name$() {
+$endif$
     if ($name$Parser == null) {
-       FutureParser future = scoped("$name$");
+       FutureParser future = scoped("$name$", $publik$);
        $name$Parser = future;
        future.setParser(
            $body$

@@ -88,6 +88,10 @@ public abstract class KoopaGrammar {
 	}
 
 	protected FutureParser scoped(final String name) {
+		return scoped(name, true);
+	}
+
+	protected FutureParser scoped(final String name, final boolean publik) {
 		// Using this for memoization because, as it turns out, it occurs often
 		// enough that the same grammar rule gets evaluated on the same token.
 		// If we already know it has failed before then we can shortcircuit a
@@ -122,12 +126,15 @@ public abstract class KoopaGrammar {
 				scope.push(newScope);
 
 				stream.bookmark();
-				stream.insert(Start.on(getNamespace(), name));
+				if (publik)
+					stream.insert(Start.on(getNamespace(), name));
 
 				boolean accepts = parser.accepts(stream);
 
 				if (accepts) {
-					stream.insert(End.on(getNamespace(), name));
+					if (publik)
+						stream.insert(End.on(getNamespace(), name));
+					
 					stream.commit();
 
 				} else {

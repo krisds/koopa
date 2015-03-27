@@ -2753,7 +2753,7 @@ end
 ## EXEC statement.
 ## -----------------------------------------------------------------------------
 
-def execStatement =
+private def execStatement =
    ( execSQLStatement
    | execCICSStatement
    | execDLIStatement

@@ -110,11 +110,20 @@ def option =
     name ['(' value ')']
 end
 
+# TODO I could try listing all possible option names as well...
 def name =
-    -@SEPARATOR _ 
+    -'(' -')' _ 
 end
 
+# Values can have more embedded parentheses. So we just make sure those are 
+# balanced, without caring much what else is in there. 
 def value =
-    (-@SEPARATOR _)+ 
+    (param)+ 
+end
+
+private def param =
+    ( '(' (param)+ ')'
+    | -'(' -')' _ 
+    )
 end
 

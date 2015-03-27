@@ -59,8 +59,13 @@ meta
     -> ^(META TREE ^(NAMED $n) ^(EXTENDING $s))
   ;
 
+modifier
+  : PUBLIC    -> PUBLIC
+  | PRIVATE   -> PRIVATE
+  ;
+
 rule
-  : 'def' i=IDENTIFIER
+  : (v=modifier)? 'def' i=IDENTIFIER
       (OPEN_PAREN l=locals CLOSE_PAREN)?
       ('returns' r=IDENTIFIER)? EQUALS
   
@@ -68,10 +73,17 @@ rule
   
     'end'
 
-    -> { l != null && r != null }? ^(RULE $i locals ^(RETURNS $r) sequence)
-    -> { l != null && r == null }? ^(RULE $i locals sequence)
-    -> { l == null && r != null }? ^(RULE $i ^(RETURNS $r) sequence)
-    -> ^(RULE $i sequence)
+    -> { v != null && l != null && r != null }? ^(RULE $v $i locals ^(RETURNS $r) sequence)
+    -> { v != null && l != null && r == null }? ^(RULE $v $i locals sequence)
+    
+    -> { v != null && l == null && r != null }? ^(RULE $v $i ^(RETURNS $r) sequence)
+    -> { v != null && l == null && r == null }? ^(RULE $v $i sequence)
+    
+    -> { v == null && l != null && r != null }? ^(RULE PUBLIC $i locals ^(RETURNS $r) sequence)
+    -> { v == null && l != null && r == null }? ^(RULE PUBLIC $i locals sequence)
+    
+    -> { v == null && l == null && r != null }? ^(RULE PUBLIC $i ^(RETURNS $r) sequence)
+    ->                                          ^(RULE PUBLIC $i sequence)
   ;
 
 locals
@@ -187,6 +199,9 @@ more_dispatch
 COMMENT : '#' (~('\n' | '\r'))* { $channel = HIDDEN; } ;
 
 NEWLINE : ( ('\r\n') => '\r\n' | '\r' | '\n' ) { $channel = HIDDEN; } ;
+
+PRIVATE : 'private' ;
+PUBLIC  : 'public' ;
 
 NOSKIP : '%noskip' ;
 

@@ -137,29 +137,13 @@ public class StatementTest extends TestCase {
     public void testCicsStatement_14() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READ (A-FILE) "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testCicsStatement_15() {
-      Parser parser = grammar.cicsStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READ FILE ) A-FILE ( "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testCicsStatement_16() {
-      Parser parser = grammar.cicsStatement();
-      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READQ TS QUEUE(W-QUEUE) INTO(W-REC) ITEM(3) "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testCicsStatement_17() {
+    public void testCicsStatement_15() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) ITEM(W-NUMB) "));
@@ -168,7 +152,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_18() {
+    public void testCicsStatement_16() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READQ TS QUEUE(W-QUEUE) SET(W-REC-PTR) NEXT "));
@@ -177,7 +161,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_19() {
+    public void testCicsStatement_17() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READ FILE ('AFILE') RIDFLD(W-KEY) KEYLENGTH(18) INTO(W-REC) "));
@@ -186,7 +170,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_20() {
+    public void testCicsStatement_18() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" READ FILE (W-FILE) RIDFLD(W-KEY) INTO(W-REC) SYSID('CICS') "));
@@ -195,7 +179,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_21() {
+    public void testCicsStatement_19() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" WRITE FILE ('AFILE') RIDFLD(W-KEY) FROM(W-REC) "));
@@ -204,7 +188,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_22() {
+    public void testCicsStatement_20() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" WRITE FILE('W-FILE') RIDFLD(W-KEY) FROM(W-REC) SYSID(W-CICS) "));
@@ -213,7 +197,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_23() {
+    public void testCicsStatement_21() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINK PROGRAM('PROG1') COMMAREA(W-DATA) "));
@@ -222,7 +206,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_24() {
+    public void testCicsStatement_22() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XCTL PROGRAM(W-PGM) SYSID('CICS') "));
@@ -231,7 +215,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_25() {
+    public void testCicsStatement_23() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XCTL PROGRAM(W-PGM) SYSID(W-CICS) "));
@@ -240,7 +224,7 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_26() {
+    public void testCicsStatement_24() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XCTL PROGRAM('PROG1') COMMAREA(W-DATA) "));
@@ -249,11 +233,70 @@ public class StatementTest extends TestCase {
     }
 
     @Test
-    public void testCicsStatement_27() {
+    public void testCicsStatement_25() {
+      Parser parser = grammar.cicsStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" XCTL PROGRAM(PROGRAM-NAME(ACTION-SUB)) RESP(RESPONSE-CODE) "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testCicsStatement_26() {
       Parser parser = grammar.cicsStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINK PROGRAM(W-PGM) SYSID('CICS') "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testOption_27() {
+      Parser parser = grammar.option();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" (PROGRAM-NAME) "));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testOption_28() {
+      Parser parser = grammar.option();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PROGRAM (PROGRAM-NAME) "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testOption_29() {
+      Parser parser = grammar.option();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PROGRAM (PROGRAM-NAME(ACTION-SUB)) "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testOption_30() {
+      Parser parser = grammar.option();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PROGRAM )PROGRAM-NAME( "));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testOption_31() {
+      Parser parser = grammar.option();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PROGRAM (PROGRAM-NAME ACTION-SUB)) "));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testOption_32() {
+      Parser parser = grammar.option();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PROGRAM (PROGRAM-NAME(ACTION-SUB)  "));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 }

@@ -31,7 +31,9 @@ extending
   ;
 
 rule
-  : ^(RULE IDENTIFIER 
+  : ^(RULE
+      (PUBLIC | PRIVATE)
+      IDENTIFIER 
       locals?
       returning?
       body

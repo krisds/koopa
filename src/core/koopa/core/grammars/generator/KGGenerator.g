@@ -63,11 +63,19 @@ extending returns [String name = null]
   ;
 
 rule
-  : { List<String> bindings = null;
+  : { boolean publik = true;
+      List<String> bindings = null;
       List<String> unbindings = null;
       StringTemplate bod = null;
     }
-    ^(RULE n=IDENTIFIER 
+    ^(RULE 
+      
+      ( PUBLIC   { publik = true;  }
+      | PRIVATE  { publik = false; }
+      )
+      
+      n=IDENTIFIER
+     
       (l=locals
         { bindings = new LinkedList<String>();
           unbindings = new LinkedList<String>();
@@ -106,6 +114,7 @@ rule
     )
     
     -> rule(
+         publik = {publik},
          name = {n},
          body = {bod}
        )

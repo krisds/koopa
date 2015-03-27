@@ -32,9 +32,8 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser cicsStatementParser = null;
 
-    public Parser cicsStatement() {
-        if (cicsStatementParser == null) {
-           FutureParser future = scoped("cicsStatement");
+    public Parser cicsStatement() {    if (cicsStatementParser == null) {
+           FutureParser future = scoped("cicsStatement", true);
            cicsStatementParser = future;
            future.setParser(
                sequence(
@@ -55,9 +54,8 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser commandParser = null;
 
-    public Parser command() {
-        if (commandParser == null) {
-           FutureParser future = scoped("command");
+    public Parser command() {    if (commandParser == null) {
+           FutureParser future = scoped("command", true);
            commandParser = future;
            future.setParser(
                choice(
@@ -168,9 +166,8 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser optionParser = null;
 
-    public Parser option() {
-        if (optionParser == null) {
-           FutureParser future = scoped("option");
+    public Parser option() {    if (optionParser == null) {
+           FutureParser future = scoped("option", true);
            optionParser = future;
            future.setParser(
                sequence(
@@ -195,14 +192,16 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser nameParser = null;
 
-    public Parser name() {
-        if (nameParser == null) {
-           FutureParser future = scoped("name");
+    public Parser name() {    if (nameParser == null) {
+           FutureParser future = scoped("name", true);
            nameParser = future;
            future.setParser(
                sequence(
                    not(
-                       tagged(SEPARATOR)
+                       token("(")
+                   ),
+                   not(
+                       token(")")
                    ),
                    any()
                )
@@ -218,15 +217,43 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser valueParser = null;
 
-    public Parser value() {
-        if (valueParser == null) {
-           FutureParser future = scoped("value");
+    public Parser value() {    if (valueParser == null) {
+           FutureParser future = scoped("value", true);
            valueParser = future;
            future.setParser(
                plus(
+                   param()
+               )
+           );
+        }
+
+        return valueParser;
+    }
+
+    // ========================================================
+    // param
+    // ........................................................
+
+    private Parser paramParser = null;
+
+    private Parser param() {    if (paramParser == null) {
+           FutureParser future = scoped("param", false);
+           paramParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       token("("),
+                       plus(
+                           param()
+                       ),
+                       token(")")
+                   ),
                    sequence(
                        not(
-                           tagged(SEPARATOR)
+                           token("(")
+                       ),
+                       not(
+                           token(")")
                        ),
                        any()
                    )
@@ -234,7 +261,7 @@ public class CICSGrammar extends CICSBaseGrammar {
            );
         }
 
-        return valueParser;
+        return paramParser;
     }
 
 }

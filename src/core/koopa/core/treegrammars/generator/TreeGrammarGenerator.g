@@ -69,7 +69,10 @@ rule
       List<String> unbindings = null;
       StringTemplate bod = null;
     }
-    ^(RULE n=IDENTIFIER 
+    ^(RULE 
+      (PUBLIC | PRIVATE)
+      n=IDENTIFIER
+      
       (l=locals
         { bindings = new LinkedList<String>();
           unbindings = new LinkedList<String>();

@@ -2559,7 +2559,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_286() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 TEST-10\n      RENAMES TEST-1 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FUBAR RENAMES OOPS THROUGH SNAFU . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2568,7 +2568,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_287() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 TEST-11\n      RENAMES TEST-2 THROUGH TEST-3 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-13A\n    VALUE -1 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2577,7 +2577,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_288() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 TEST-12\n      RENAMES TEST-4 THRU TEST-5 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-13B\n      VALUE IS \"AAA\" . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2586,7 +2586,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_289() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 TEST-10B\n      RENAMES TEST-1 OF TESTSUITE . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-14\n      VALUE \"BBB\" . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2595,7 +2595,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_290() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 TEST-11B\n      RENAMES TEST-2 OF TESTSUITE THROUGH TEST-3 OF TESTSUITE . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-15\n      VALUES ARE \"CCC\" . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2604,7 +2604,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_291() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 TEST-12B\n      RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-16\n      VALUES \"DDD\" . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2613,7 +2613,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_292() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-13A\n    VALUE -1 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-17\n      VALUES ARE 0 THROUGH 10 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2622,7 +2622,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_293() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-13B\n      VALUE IS \"AAA\" . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-18\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2631,7 +2631,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_294() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-14\n      VALUE \"BBB\" . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-19\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30\n                 66 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2640,7 +2640,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_295() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-15\n      VALUES ARE \"CCC\" . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-20\n      VALUES ARE 0 THROUGH 10\n                 15\n                 20 THROUGH 30 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2649,7 +2649,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_296() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-16\n      VALUES \"DDD\" . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-21\n      VALUE IS ZERO . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2658,7 +2658,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_297() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-17\n      VALUES ARE 0 THROUGH 10 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-22\n      VALUE IS 'B'\n      WHEN SET TO FALSE IS 'A' . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2667,7 +2667,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_298() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-18\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-23\n      VALUE IS 'B'\n      WHEN SET TO FALSE 'A' . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2676,7 +2676,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_299() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-19\n      VALUES ARE 0 THROUGH 10\n                 20 THROUGH 30\n                 66 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-24\n      VALUE IS 'B'\n      FALSE IS 'A' . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2685,7 +2685,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_300() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-20\n      VALUES ARE 0 THROUGH 10\n                 15\n                 20 THROUGH 30 . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-25\n      VALUE IS 'B'\n      FALSE 'A' . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2694,7 +2694,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_301() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-21\n      VALUE IS ZERO . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 foo VALUE DFHVALUE ( AAAA )\n                DFHVALUE ( BBBB ) . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2703,7 +2703,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_302() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-22\n      VALUE IS 'B'\n      WHEN SET TO FALSE IS 'A' . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 foo VALUE DFHRESP  ( CCCC ) . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2712,7 +2712,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_303() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-23\n      VALUE IS 'B'\n      WHEN SET TO FALSE 'A' . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 BUFFER\n      POINTER\n      VALUE NULL . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2721,7 +2721,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_304() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-24\n      VALUE IS 'B'\n      FALSE IS 'A' . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ANY LENGTH . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2730,7 +2730,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_305() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 TEST-25\n      VALUE IS 'B'\n      FALSE 'A' . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ANY LENGTH . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2739,7 +2739,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_306() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 foo VALUE DFHVALUE ( AAAA )\n                DFHVALUE ( BBBB ) . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ANY LENGTH\n   BLANK WHEN ZERO . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2748,7 +2748,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_307() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 88 foo VALUE DFHRESP  ( CCCC ) . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo IS EXTERNAL AS \"bar\" . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2757,7 +2757,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_308() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 BUFFER\n      POINTER\n      VALUE NULL . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PUBLIC . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2766,7 +2766,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_309() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ANY LENGTH . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo INTERNAL . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2775,7 +2775,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_310() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ANY LENGTH . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PRIVATE . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2784,7 +2784,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_311() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ANY LENGTH\n   BLANK WHEN ZERO . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROTECTED . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2793,7 +2793,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_312() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo IS EXTERNAL AS \"bar\" . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ATTRIBUTE bar ( n ) . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2802,7 +2802,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_313() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PUBLIC . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PUBLIC\n   ATTRIBUTE bar ( NAME n = v ) . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2811,7 +2811,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_314() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo INTERNAL . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PRIVATE\n   CUSTOM-ATTRIBUTE bar . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2820,7 +2820,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_315() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PRIVATE . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROTECTED\n   CUSTOM-ATTRIBUTE bar ( n = v ) . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2829,7 +2829,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_316() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROTECTED . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo IS TYPEDEF . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2838,7 +2838,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_317() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo ATTRIBUTE bar ( n ) . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo IS THREAD-LOCAL . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2847,7 +2847,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_318() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PUBLIC\n   ATTRIBUTE bar ( NAME n = v ) . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROPERTY . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2856,7 +2856,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_319() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PRIVATE\n   CUSTOM-ATTRIBUTE bar . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROPERTY WITH NO SET . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2865,7 +2865,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_320() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROTECTED\n   CUSTOM-ATTRIBUTE bar ( n = v ) . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 77 OPTIONS PIC S9(9) BINARY . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2874,7 +2874,7 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_321() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo IS TYPEDEF . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 01 based-var PIC X(80) BASED . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -2883,182 +2883,12 @@ public class DataDivisionTest extends TestCase {
     public void testDataDescriptionEntry_322() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo IS THREAD-LOCAL . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_323() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROPERTY . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_324() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 05 foo PROPERTY WITH NO SET . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_325() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 77 OPTIONS PIC S9(9) BINARY . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_326() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 lines-to-display . "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_327() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 lines-to-display value is 12 . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_328() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 lines-to-display value 12 . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_329() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE NEXT . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_330() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE NEXT + 1 . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_331() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE START bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_332() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE START OF bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_333() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foobar VALUE START OF foo + LENGTH OF bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_334() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE LENGTH bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_335() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE LENGTH OF bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_336() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foobar VALUE \"foo\" & bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_337() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE 4 * 2 . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_338() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE bar ** 2 . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_339() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE 4 * bar . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_340() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 01 based-var PIC X(80) BASED . "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testDataDescriptionEntry_341() {
-      Parser parser = grammar.dataDescriptionEntry();
-      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FUNCTION FN ( X ) . "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDataDescriptionEntry_342() {
+    public void testDataDescriptionEntry_323() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH FUNCTION FN ( X ) . "));
@@ -3066,7 +2896,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_343() {
+    public void testDataDescriptionEntry_324() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES EXCEPTION-OBJECT . "));
@@ -3074,7 +2904,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_344() {
+    public void testDataDescriptionEntry_325() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH EXCEPTION-OBJECT . "));
@@ -3082,7 +2912,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_345() {
+    public void testDataDescriptionEntry_326() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES NULL . "));
@@ -3090,7 +2920,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_346() {
+    public void testDataDescriptionEntry_327() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH NULL . "));
@@ -3098,7 +2928,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_347() {
+    public void testDataDescriptionEntry_328() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES SELF . "));
@@ -3106,7 +2936,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_348() {
+    public void testDataDescriptionEntry_329() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH SELF . "));
@@ -3114,7 +2944,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_349() {
+    public void testDataDescriptionEntry_330() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES SUPER . "));
@@ -3122,7 +2952,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_350() {
+    public void testDataDescriptionEntry_331() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH SUPER . "));
@@ -3130,7 +2960,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_351() {
+    public void testDataDescriptionEntry_332() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES MY-CLASS-NAME OF SUPER . "));
@@ -3138,7 +2968,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_352() {
+    public void testDataDescriptionEntry_333() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH MY-CLASS-NAME OF SUPER . "));
@@ -3146,7 +2976,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_353() {
+    public void testDataDescriptionEntry_334() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES ADDRESS OF SOMETHING . "));
@@ -3154,7 +2984,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDataDescriptionEntry_354() {
+    public void testDataDescriptionEntry_335() {
       Parser parser = grammar.dataDescriptionEntry();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 66 FAULTY\n      RENAMES FOO\n      THROUGH ADDRESS OF SOMETHING . "));
@@ -3162,7 +2992,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLocalStorageSection_355() {
+    public void testLocalStorageSection_336() {
       Parser parser = grammar.localStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LOCAL-STORAGE Section .\n   COPY \"LOCLSTOR.LS\" . "));
@@ -3171,7 +3001,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLocalStorageSection_356() {
+    public void testLocalStorageSection_337() {
       Parser parser = grammar.localStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LOCAL-STORAGE SECTION .\n   77 OPTIONS PIC S9(9) BINARY . "));
@@ -3180,7 +3010,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testWorkingStorageSection_357() {
+    public void testWorkingStorageSection_338() {
       Parser parser = grammar.workingStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" WORKING-STORAGE Section .\n   COPY \"WORKSTOR.WS\" .\n"));
@@ -3189,7 +3019,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testThreadLocalStorageSection_358() {
+    public void testThreadLocalStorageSection_339() {
       Parser parser = grammar.threadLocalStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" THREAD-LOCAL-STORAGE Section .\n   COPY \"THRDSTOR.LS\" . "));
@@ -3198,7 +3028,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testThreadLocalStorageSection_359() {
+    public void testThreadLocalStorageSection_340() {
       Parser parser = grammar.threadLocalStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" THREAD-LOCAL-STORAGE SECTION .\n   77 OPTIONS PIC S9(9) BINARY . "));
@@ -3207,7 +3037,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testObjectStorageSection_360() {
+    public void testObjectStorageSection_341() {
       Parser parser = grammar.objectStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" OBJECT-STORAGE Section .\n   COPY \"OBJSTOR.OS\" . "));
@@ -3216,7 +3046,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testObjectStorageSection_361() {
+    public void testObjectStorageSection_342() {
       Parser parser = grammar.objectStorageSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" OBJECT-STORAGE SECTION .\n   77 OPTIONS PIC S9(9) BINARY . "));
@@ -3225,7 +3055,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_362() {
+    public void testCommunicationSection_343() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION . "));
@@ -3234,7 +3064,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_363() {
+    public void testCommunicationSection_344() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  CM-INQUE-1 FOR INPUT . "));
@@ -3243,7 +3073,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_364() {
+    public void testCommunicationSection_345() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  CM-INQUE-1 FOR INITIAL INPUT . "));
@@ -3252,7 +3082,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_365() {
+    public void testCommunicationSection_346() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  COMMNAME FOR INITIAL INPUT\n       SYMBOLIC SUB-QUEUE-1 IS CQ . "));
@@ -3261,7 +3091,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_366() {
+    public void testCommunicationSection_347() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  CM-INQUE-1 FOR INPUT\n       SYMBOLIC QUEUE IS MAIN-QUEUE\n       SYMBOLIC SUB-QUEUE-1 IS NO-SPEC-1\n       SYMBOLIC SUB-QUEUE-2 IS NO-SPEC-2\n       SYMBOLIC SUB-QUEUE-3 IS NO-SPEC-3\n       MESSAGE DATE IS DATE-RECEIVED\n       MESSAGE TIME IS TIME-RECEIVED\n       SYMBOLIC SOURCE IS WHERE-FROM\n       TEXT LENGTH IS MSG-LENGTH\n       END KEY IS END-KEY\n       STATUS KEY IS STATUS-KEY\n       MESSAGE COUNT IS MSG-COUNT . "));
@@ -3270,7 +3100,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_367() {
+    public void testCommunicationSection_348() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  CM-INQUE-1 FOR INPUT\n       MAIN-QUEUE NO-SPEC-1 NO-SPEC-2 NO-SPEC-3 FILLER\n       TIME-RECEIVED FILLER IN-LENGTH END-KEY IN-STATUS\n       FILLER . "));
@@ -3279,7 +3109,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_368() {
+    public void testCommunicationSection_349() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  CM-OUTQUE-1 FOR OUTPUT\n       DESTINATION COUNT IS ONE\n       TEXT LENGTH IS MSG-LENGTH\n       STATUS KEY IS STATUS-KEY\n       ERROR KEY IS ERR-KEY\n       SYMBOLIC DESTINATION IS SYM-DEST . "));
@@ -3288,7 +3118,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_369() {
+    public void testCommunicationSection_350() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  COMM2 FOR OUTPUT\n       DESTINATION TABLE OCCURS 7 TIMES . "));
@@ -3297,7 +3127,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testCommunicationSection_370() {
+    public void testCommunicationSection_351() {
       Parser parser = grammar.communicationSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMUNICATION SECTION .\n   CD  COMMNAME FOR INITIAL INPUT\n       SYMBOLIC SUB-QUEUE-1 IS CQ .\n   01  CREC .\n       03  CNAME1 PIC X(8) .\n       03  CQ     PIC 9(8) .\n       03  FILLER PIC X(62) .\n       03  CINT   PIC 9 .\n       03  FILLER PIC X(8) .\n   CD  COMM2 FOR OUTPUT\n       DESTINATION TABLE OCCURS 7 TIMES . "));
@@ -3306,7 +3136,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testReportSection_371() {
+    public void testReportSection_352() {
       Parser parser = grammar.reportSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT SECTION . "));
@@ -3315,7 +3145,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testReportSection_372() {
+    public void testReportSection_353() {
       Parser parser = grammar.reportSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT SECTION .\n   RD  RW-FS2-REPORT-1\n       PAGE LIMIT 20\n       FIRST DETAIL 1\n       LAST DETAIL 20 .\n       01  RW-FS2-GROUP\n           LINE NUMBER IS PLUS 1\n           TYPE IS DETAIL . "));
@@ -3324,7 +3154,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testReportSection_373() {
+    public void testReportSection_354() {
       Parser parser = grammar.reportSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT SECTION .\n   RD  RW-FS1-REPORT-1\n       PAGE LIMIT IS 20 LINES .\n   01  RW-FS1-GROUP\n       TYPE IS DETAIL .\n       03  RW-FS1-ELEM\n           LINE NUMBER IS PLUS 1\n           COLUMN NUMBER IS 5\n           PICTURE X(76)\n           SOURCE IS REPORT-LINE-IMAGE . "));
@@ -3333,7 +3163,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testReportSection_374() {
+    public void testReportSection_355() {
       Parser parser = grammar.reportSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT SECTION .\n   RD  RW-FS3-REPORT-1\n       PAGE 30\n       HEADING 1\n       FIRST DETAIL 6\n       LAST DETAIL 20 . "));
@@ -3341,7 +3171,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testReportSection_375() {
+    public void testReportSection_356() {
       Parser parser = grammar.reportSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REPORT SECTION .\n   RD  RFIL2 .\n       01  RREC\n           TYPE IS DETAIL .\n           02  PIC 9(8)\n               SOURCE IS RKEY\n               COLUMN NUMBER IS 1\n               LINE NUMBER IS PLUS 1 . "));
@@ -3350,7 +3180,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testFormatClause_376() {
+    public void testFormatClause_357() {
       Parser parser = grammar.formatClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FORMAT BIT DATA "));
@@ -3359,7 +3189,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testFormatClause_377() {
+    public void testFormatClause_358() {
       Parser parser = grammar.formatClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FORMAT CHARACTER DATA "));
@@ -3368,7 +3198,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testFormatClause_378() {
+    public void testFormatClause_359() {
       Parser parser = grammar.formatClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FORMAT NUMERIC DATA "));
@@ -3377,7 +3207,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testFormatClause_379() {
+    public void testFormatClause_360() {
       Parser parser = grammar.formatClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FORMAT BIT CHARACTER NUMERIC DATA "));
@@ -3386,7 +3216,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testFormatClause_380() {
+    public void testFormatClause_361() {
       Parser parser = grammar.formatClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FORMAT DATA "));
@@ -3394,7 +3224,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testFormatClause_381() {
+    public void testFormatClause_362() {
       Parser parser = grammar.formatClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FORMAT BIT NUMERIC BIT DATA "));
@@ -3402,7 +3232,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testAlignedClause_382() {
+    public void testAlignedClause_363() {
       Parser parser = grammar.alignedClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALIGNED "));
@@ -3411,7 +3241,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testAnyLengthClause_383() {
+    public void testAnyLengthClause_364() {
       Parser parser = grammar.anyLengthClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ANY LENGTH "));
@@ -3420,7 +3250,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBasedClause_384() {
+    public void testBasedClause_365() {
       Parser parser = grammar.basedClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BASED "));
@@ -3429,7 +3259,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testConstantRecordClause_385() {
+    public void testConstantRecordClause_366() {
       Parser parser = grammar.constantRecordClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CONSTANT RECORD "));
@@ -3438,7 +3268,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testGroupUsageClause_386() {
+    public void testGroupUsageClause_367() {
       Parser parser = grammar.groupUsageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" GROUP-USAGE IS BIT "));
@@ -3447,7 +3277,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testGroupUsageClause_387() {
+    public void testGroupUsageClause_368() {
       Parser parser = grammar.groupUsageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" GROUP-USAGE BIT "));
@@ -3456,7 +3286,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testGroupUsageClause_388() {
+    public void testGroupUsageClause_369() {
       Parser parser = grammar.groupUsageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" GROUP-USAGE IS NATIONAL "));
@@ -3465,7 +3295,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testGroupUsageClause_389() {
+    public void testGroupUsageClause_370() {
       Parser parser = grammar.groupUsageClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" GROUP-USAGE NATIONAL "));
@@ -3474,7 +3304,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testSameAsClause_390() {
+    public void testSameAsClause_371() {
       Parser parser = grammar.sameAsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SAME AS FOO "));
@@ -3483,7 +3313,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testSameAsClause_391() {
+    public void testSameAsClause_372() {
       Parser parser = grammar.sameAsClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SAME FOO "));
@@ -3491,7 +3321,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testSelectWhenClause_392() {
+    public void testSelectWhenClause_373() {
       Parser parser = grammar.selectWhenClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT WHEN OTHER "));
@@ -3500,7 +3330,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testSelectWhenClause_393() {
+    public void testSelectWhenClause_374() {
       Parser parser = grammar.selectWhenClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT WHEN MY-CONDITION "));
@@ -3509,7 +3339,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testSelectWhenClause_394() {
+    public void testSelectWhenClause_375() {
       Parser parser = grammar.selectWhenClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT OTHER "));
@@ -3517,7 +3347,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testSelectWhenClause_395() {
+    public void testSelectWhenClause_376() {
       Parser parser = grammar.selectWhenClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT MY-CONDITION "));
@@ -3525,7 +3355,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testTypeNameTypeClause_396() {
+    public void testTypeNameTypeClause_377() {
       Parser parser = grammar.typeNameTypeClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" TYPE MY-TYPE "));
@@ -3534,7 +3364,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_397() {
+    public void testClassClause_378() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS NUMERIC "));
@@ -3543,7 +3373,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_398() {
+    public void testClassClause_379() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS NUMERIC "));
@@ -3552,7 +3382,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_399() {
+    public void testClassClause_380() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS ALPHABETIC "));
@@ -3561,7 +3391,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_400() {
+    public void testClassClause_381() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS ALPHABETIC "));
@@ -3570,7 +3400,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_401() {
+    public void testClassClause_382() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS ALPHABETIC-LOWER "));
@@ -3579,7 +3409,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_402() {
+    public void testClassClause_383() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS ALPHABETIC-LOWER "));
@@ -3588,7 +3418,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_403() {
+    public void testClassClause_384() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS ALPHABETIC-UPPER "));
@@ -3597,7 +3427,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_404() {
+    public void testClassClause_385() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS ALPHABETIC-UPPER "));
@@ -3606,7 +3436,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_405() {
+    public void testClassClause_386() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS BOOLEAN "));
@@ -3615,7 +3445,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_406() {
+    public void testClassClause_387() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS BOOLEAN "));
@@ -3624,7 +3454,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_407() {
+    public void testClassClause_388() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS MY-ALPHABET "));
@@ -3633,7 +3463,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_408() {
+    public void testClassClause_389() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS MY-ALPHABET "));
@@ -3642,7 +3472,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_409() {
+    public void testClassClause_390() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS IS MY-CLASS "));
@@ -3651,7 +3481,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testClassClause_410() {
+    public void testClassClause_391() {
       Parser parser = grammar.classClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CLASS MY-CLASS "));
@@ -3660,7 +3490,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDefaultClause_411() {
+    public void testDefaultClause_392() {
       Parser parser = grammar.defaultClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DEFAULT IS NONE "));
@@ -3669,7 +3499,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDefaultClause_412() {
+    public void testDefaultClause_393() {
       Parser parser = grammar.defaultClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DEFAULT NONE "));
@@ -3678,7 +3508,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDefaultClause_413() {
+    public void testDefaultClause_394() {
       Parser parser = grammar.defaultClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DEFAULT IS \"COBOL\" "));
@@ -3687,7 +3517,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDefaultClause_414() {
+    public void testDefaultClause_395() {
       Parser parser = grammar.defaultClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DEFAULT \"COBOL\" "));
@@ -3696,7 +3526,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDefaultClause_415() {
+    public void testDefaultClause_396() {
       Parser parser = grammar.defaultClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DEFAULT IS MY-DEFAULT "));
@@ -3705,7 +3535,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDefaultClause_416() {
+    public void testDefaultClause_397() {
       Parser parser = grammar.defaultClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DEFAULT MY-DEFAULT "));
@@ -3714,7 +3544,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDestinationClause_417() {
+    public void testDestinationClause_398() {
       Parser parser = grammar.destinationClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DESTINATION IS MOUNT-DOOM "));
@@ -3723,7 +3553,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDestinationClause_418() {
+    public void testDestinationClause_399() {
       Parser parser = grammar.destinationClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DESTINATION MOUNT-DOOM "));
@@ -3732,7 +3562,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDestinationClause_419() {
+    public void testDestinationClause_400() {
       Parser parser = grammar.destinationClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DESTINATION IS MORDOR MOUNT-DOOM "));
@@ -3741,7 +3571,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testDestinationClause_420() {
+    public void testDestinationClause_401() {
       Parser parser = grammar.destinationClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DESTINATION MORDOR MOUNT-DOOM "));
@@ -3750,7 +3580,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testInvalidClause_421() {
+    public void testInvalidClause_402() {
       Parser parser = grammar.invalidClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" INVALID WHEN A < B "));
@@ -3759,7 +3589,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testInvalidClause_422() {
+    public void testInvalidClause_403() {
       Parser parser = grammar.invalidClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" INVALID A < B "));
@@ -3767,7 +3597,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testPresentWhenClause_423() {
+    public void testPresentWhenClause_404() {
       Parser parser = grammar.presentWhenClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PRESENT WHEN A < B "));
@@ -3776,7 +3606,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testPresentWhenClause_424() {
+    public void testPresentWhenClause_405() {
       Parser parser = grammar.presentWhenClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PRESENT A < B "));
@@ -3784,7 +3614,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_425() {
+    public void testValidateStatusClause_406() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS \"OK\" WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3793,7 +3623,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_426() {
+    public void testValidateStatusClause_407() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS    \"OK\" WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3802,7 +3632,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_427() {
+    public void testValidateStatusClause_408() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VAL-STATUS      IS \"OK\" WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3811,7 +3641,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_428() {
+    public void testValidateStatusClause_409() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VAL-STATUS         \"OK\" WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3820,7 +3650,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_429() {
+    public void testValidateStatusClause_410() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3829,7 +3659,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_430() {
+    public void testValidateStatusClause_411() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS    JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3838,7 +3668,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_431() {
+    public void testValidateStatusClause_412() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VAL-STATUS      IS JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3847,7 +3677,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_432() {
+    public void testValidateStatusClause_413() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VAL-STATUS         JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3856,7 +3686,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_433() {
+    public void testValidateStatusClause_414() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR FOR MISSION-PARAMETERS "));
@@ -3865,7 +3695,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_434() {
+    public void testValidateStatusClause_415() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN    ERROR FOR MISSION-PARAMETERS "));
@@ -3874,7 +3704,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_435() {
+    public void testValidateStatusClause_416() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE      NO ERROR FOR MISSION-PARAMETERS "));
@@ -3883,7 +3713,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_436() {
+    public void testValidateStatusClause_417() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE         ERROR FOR MISSION-PARAMETERS "));
@@ -3892,7 +3722,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_437() {
+    public void testValidateStatusClause_418() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR\n   ON FORMAT\n   FOR MISSION-PARAMETERS "));
@@ -3901,7 +3731,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_438() {
+    public void testValidateStatusClause_419() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR\n   ON CONTENT\n   FOR MISSION-PARAMETERS "));
@@ -3910,7 +3740,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_439() {
+    public void testValidateStatusClause_420() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR\n   ON RELATION\n   FOR MISSION-PARAMETERS "));
@@ -3919,7 +3749,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_440() {
+    public void testValidateStatusClause_421() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR\n   ON RELATION CONTENT FORMAT\n   FOR MISSION-PARAMETERS "));
@@ -3928,7 +3758,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testValidateStatusClause_441() {
+    public void testValidateStatusClause_422() {
       Parser parser = grammar.validateStatusClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" VALIDATE-STATUS IS JUST-FINE WHEN NO ERROR\n   ON RELATION FORMAT RELATION\n   FOR MISSION-PARAMETERS "));
@@ -3936,7 +3766,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_442() {
+    public void testLineClause_423() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS  PLUS 42 "));
@@ -3945,7 +3775,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_443() {
+    public void testLineClause_424() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS     + 42 "));
@@ -3954,7 +3784,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_444() {
+    public void testLineClause_425() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS MINUS 42 "));
@@ -3963,7 +3793,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_445() {
+    public void testLineClause_426() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS     - 42 "));
@@ -3972,7 +3802,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_446() {
+    public void testLineClause_427() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS  PLUS FORTY-TWO "));
@@ -3981,7 +3811,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_447() {
+    public void testLineClause_428() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS     + FORTY-TWO "));
@@ -3990,7 +3820,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_448() {
+    public void testLineClause_429() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS MINUS FORTY-TWO "));
@@ -3999,7 +3829,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_449() {
+    public void testLineClause_430() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS     - FORTY-TWO "));
@@ -4008,7 +3838,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_450() {
+    public void testLineClause_431() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS 42 ON NEXT PAGE "));
@@ -4017,7 +3847,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_451() {
+    public void testLineClause_432() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS 42              "));
@@ -4026,7 +3856,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_452() {
+    public void testLineClause_433() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBER IS    ON NEXT PAGE "));
@@ -4035,7 +3865,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_453() {
+    public void testLineClause_434() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE NUMBERS ARE 1 2 3 "));
@@ -4044,7 +3874,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testLineClause_454() {
+    public void testLineClause_435() {
       Parser parser = grammar.lineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINES        ARE 1 2 3 "));
@@ -4053,7 +3883,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testHighlightClause_455() {
+    public void testHighlightClause_436() {
       Parser parser = grammar.highlightClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" HIGHLIGHT "));
@@ -4062,7 +3892,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testHighlightClause_456() {
+    public void testHighlightClause_437() {
       Parser parser = grammar.highlightClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LOWLIGHT  "));
@@ -4071,7 +3901,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testReverseVideoClause_457() {
+    public void testReverseVideoClause_438() {
       Parser parser = grammar.reverseVideoClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" REVERSE-VIDEO "));
@@ -4080,7 +3910,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testUnderlineClause_458() {
+    public void testUnderlineClause_439() {
       Parser parser = grammar.underlineClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" UNDERLINE "));
@@ -4089,7 +3919,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_459() {
+    public void testForegroundColorClause_440() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOUR IS 42 "));
@@ -4098,7 +3928,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_460() {
+    public void testForegroundColorClause_441() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOR  IS 42 "));
@@ -4107,7 +3937,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_461() {
+    public void testForegroundColorClause_442() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOUR IS ORANGE "));
@@ -4116,7 +3946,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_462() {
+    public void testForegroundColorClause_443() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOR  IS ORANGE "));
@@ -4125,7 +3955,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_463() {
+    public void testForegroundColorClause_444() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOUR    42 "));
@@ -4134,7 +3964,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_464() {
+    public void testForegroundColorClause_445() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOR     42 "));
@@ -4143,7 +3973,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_465() {
+    public void testForegroundColorClause_446() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOUR    ORANGE "));
@@ -4152,7 +3982,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testForegroundColorClause_466() {
+    public void testForegroundColorClause_447() {
       Parser parser = grammar.foregroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FOREGROUND-COLOR     ORANGE "));
@@ -4161,7 +3991,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_467() {
+    public void testBackgroundColorClause_448() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOUR IS 42 "));
@@ -4170,7 +4000,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_468() {
+    public void testBackgroundColorClause_449() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOR  IS 42 "));
@@ -4179,7 +4009,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_469() {
+    public void testBackgroundColorClause_450() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOUR IS ORANGE "));
@@ -4188,7 +4018,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_470() {
+    public void testBackgroundColorClause_451() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOR  IS ORANGE "));
@@ -4197,7 +4027,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_471() {
+    public void testBackgroundColorClause_452() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOUR    42 "));
@@ -4206,7 +4036,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_472() {
+    public void testBackgroundColorClause_453() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOR     42 "));
@@ -4215,7 +4045,7 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_473() {
+    public void testBackgroundColorClause_454() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOUR    ORANGE "));
@@ -4224,10 +4054,180 @@ public class DataDivisionTest extends TestCase {
     }
 
     @Test
-    public void testBackgroundColorClause_474() {
+    public void testBackgroundColorClause_455() {
       Parser parser = grammar.backgroundColorClause();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" BACKGROUND-COLOR     ORANGE "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_456() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE NEXT . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_457() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE NEXT + 1 . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_458() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE START bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_459() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE START OF bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_460() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foobar VALUE START OF foo + LENGTH OF bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_461() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE LENGTH bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_462() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE LENGTH OF bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_463() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foobar VALUE \"foo\" & bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_464() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE 4 * 2 . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_465() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 foo VALUE 4 * bar . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_466() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 lines-to-display . "));
+      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_467() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 lines-to-display value is 12 . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testConstantEntry_468() {
+      Parser parser = grammar.constantEntry();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" 78 lines-to-display value 12 . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRenamesClause_469() {
+      Parser parser = grammar.renamesClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RENAMES THAT-THING                                     "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRenamesClause_470() {
+      Parser parser = grammar.renamesClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RENAMES THAT-THING          THROUGH THIS-THING         "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRenamesClause_471() {
+      Parser parser = grammar.renamesClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RENAMES THAT-THING          THRU    THIS-THING         "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRenamesClause_472() {
+      Parser parser = grammar.renamesClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RENAMES THAT-THING OF YOURS                            "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRenamesClause_473() {
+      Parser parser = grammar.renamesClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RENAMES THAT-THING OF YOURS THROUGH THIS-THING OF MINE "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testRenamesClause_474() {
+      Parser parser = grammar.renamesClause();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RENAMES THAT-THING OF YOURS THRU    THIS-THING OF MINE "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

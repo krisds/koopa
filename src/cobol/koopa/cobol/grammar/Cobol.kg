@@ -25,7 +25,8 @@ def copybook =
 end
 
 def copybookHoldingData =
-    ( dataDescriptionEntry
+    ( constantEntry
+    | dataDescriptionEntry
     | specialNameStatement
     | fileDescriptionEntry (recordDescriptionEntry)*
     | selectStatement [.]
@@ -1059,50 +1060,34 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def recordDescriptionEntry =
-	(dataDescriptionEntry | copyStatement)
+	(constantEntry | dataDescriptionEntry | copyStatement)
 end
 
 def dataDescriptionEntry =
-    ( constantEntry_level01
-    | constantEntry_level78
-    | dataDescriptionEntry_format3_and_4
+    ( dataDescriptionEntry_format3_and_4
     | dataDescriptionEntry_format2
     | dataDescriptionEntry_format1
     )
 end
 
-def constantEntry_level01 =
+def constantEntry =
+    ( constantEntry_level01
+    | constantEntry_level78
+    )
+end
+
+private def constantEntry_level01 =
     (1 | 01) cobolWord CONSTANT [globalClause]
     ( [AS] identifier | FROM cobolWord ) .
 end
 
-def constantEntry_level78 =
-    78 cobolWord
-    VALUE [IS] valueIsOperand
-    (valueIsOperator valueIsOperand)* .
+# Seen in MF and GNU COBOL
+private def constantEntry_level78 =
+    78 cobolWord constantValueClause .
 end
 
-def valueIsOperand =
-    ( NEXT
-    | START [OF] dataName
-    | LENGTH [OF] dataName
-    | arithmeticExpression
-    | literal
-    )
-end
 
-def valueIsOperator =
-    ( AND
-    | OR
-    | '&'
-    | '+'
-    | '-'
-    | '*'
-    | '/'
-    )
-end
-
-def dataDescriptionEntry_format1 =
+private def dataDescriptionEntry_format1 =
     levelNumber [dataDescName]
    ![ redefinesClause                  # STD.BK
     | typedefClause                    # STD.BK
@@ -1168,14 +1153,13 @@ def dataDescriptionEntry_format1 =
     .
 end
 
-def dataDescriptionEntry_format2 =
+private def dataDescriptionEntry_format2 =
     66 dataName
-    RENAMES qualifiedDataName
-    [(THROUGH | THRU) qualifiedDataName]
+    renamesClause
     . 
 end
 
-def dataDescriptionEntry_format3_and_4 =
+private def dataDescriptionEntry_format3_and_4 =
     88 [-(VALUE|VALUES) conditionName]
     valueClause
     .
@@ -1356,6 +1340,26 @@ def constantRecordClause =
     CONSTANT RECORD
 end
 
+# MF: see http://supportline.microfocus.com/Documentation/books/sx50/lhpdf402.htm
+def constantValueClause =
+    VALUE [IS]
+    
+    ( NEXT                       # MF
+    | START  [OF] dataName       # MF
+    | LENGTH [OF] dataName       # MF
+    | literal                    # MF and GNU COBOL
+    )
+    
+    [ # MF
+      (AND | OR | '&' | '+' | '-' | '*' | '/')
+      ( NEXT
+      | START  [OF] dataName
+      | LENGTH [OF] dataName
+      | integer
+      )
+    ]
+end
+
 def controlClause =
     (CONTROL [IS] | CONTROLS [ARE]) (FINAL (dataName)* | (dataName)+)
 end
@@ -1534,6 +1538,11 @@ def redefinesClause =
     REDEFINES dataName
 end
 
+def renamesClause =
+    RENAMES qualifiedDataName
+    [(THROUGH | THRU) qualifiedDataName]
+end
+
 def reportClause =
     ( REPORT [IS] | REPORTS [ARE] ) (reportName)+
 end
@@ -1633,14 +1642,11 @@ end
 
 def usageOperand =
     ( BINARY                                # *ANSI85
-    | BINARY-CHAR   [SIGNED | UNSIGNED]     # *ISO2002 *MF
-    | BINARY-SHORT  [SIGNED | UNSIGNED]     # *ISO2002 *MF
-    | BINARY-LONG   [SIGNED | UNSIGNED]     # *ISO2002 *MF
-    | BINARY-DOUBLE [SIGNED | UNSIGNED]     # *ISO2002 *MF
     | BINARY-C-LONG
-    | FLOAT-SHORT
-    | FLOAT-LONG
-    | FLOAT-EXTENDED
+    | BINARY-CHAR   [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-DOUBLE [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-LONG   [SIGNED | UNSIGNED]     # *ISO2002 *MF
+    | BINARY-SHORT  [SIGNED | UNSIGNED]     # *ISO2002 *MF
     | BIT
     | CHARACTER                             # *.NET *JVM
     | COMPUTATIONAL
@@ -1655,13 +1661,32 @@ def usageOperand =
     | COMP-4                                # *OSVS *VSC2 *MF
     | COMPUTATIONAL-5                       # *OSVS *VSC2 *MF
     | COMP-5                                # *OSVS *VSC2 *MF
+    | COMPUTATIONAL-6                       # *ACUCOBOL-GT
+    | COMP-6                                # *ACUCOBOL-GT
     | COMPUTATIONAL-X                       # *MF
     | COMP-X                                # *MF
+    | COMPUTATIONAL-N                       # *ACUCOBOL-GT
+    | COMP-N                                # *ACUCOBOL-GT
     | CONDITION-VALUE                       # *.NET *JVM
     | DECIMAL                               # *.NET *JVM
     | DISPLAY
     | DISPLAY-1
+    | DOUBLE                                # *ACUCOBOL-GT
     | INDEX
+    | FLOAT                                 # *ACUCOBOL-GT
+    | FLOAT-EXTENDED
+    | FLOAT-LONG
+    | FLOAT-SHORT
+    | HANDLE [[OF]                          # *ACUCOBOL-GT
+        ( WINDOW
+        | SUBWINDOW
+        | FONT [cobolWord]
+        | THREAD
+        | MENU
+        | VARIANT
+        | LAYOUT-MANAGER [cobolWord]
+        ) 
+      ]
     | MONITOR-POINTER                       # *MF
     | MUTEX-POINTER                         # *MF
     | NATIONAL                              # *ISO2002 *MF
@@ -1678,11 +1703,11 @@ def usageOperand =
     | SIGNED-INT
     | SIGNED-LONG
     | SIGNED-SHORT
+    | THREAD-POINTER                        # *MF
     | UNSIGNED-INT
     | UNSIGNED-LONG
     | UNSIGNED-SHORT
     | STRING                                # *.NET *JVM
-    | THREAD-POINTER                        # *MF
     | typedefName                           # *MF
     | className                             # *.NET *JVM
     )

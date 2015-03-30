@@ -474,23 +474,7 @@ target dataDescriptionEntry;
 
 -[ AA TEST-9 . ]
 
-+[ 66 TEST-10
-      RENAMES TEST-1 . ]
-
-+[ 66 TEST-11
-      RENAMES TEST-2 THROUGH TEST-3 . ]
-
-+[ 66 TEST-12
-      RENAMES TEST-4 THRU TEST-5 . ]
-
-+[ 66 TEST-10B
-      RENAMES TEST-1 OF TESTSUITE . ]
-
-+[ 66 TEST-11B
-      RENAMES TEST-2 OF TESTSUITE THROUGH TEST-3 OF TESTSUITE . ]
-
-+[ 66 TEST-12B
-      RENAMES TEST-4 OF TESTSUITE THRU TEST-5 OF TESTSUITE . ]
++[ 66 FUBAR RENAMES OOPS THROUGH SNAFU . ]
 
 +[ 88 TEST-13A
     VALUE -1 . ]
@@ -581,26 +565,6 @@ target dataDescriptionEntry;
 
 +[ 77 OPTIONS PIC S9(9) BINARY . ]
 
-
-# Examples of level 78 from Simon Sobisch.
--[ 78 lines-to-display . ]              # VALUE is required
-+[ 78 lines-to-display value is 12 . ]
-+[ 78 lines-to-display value 12 . ]
-
-+[ 78 foo VALUE NEXT . ]
-+[ 78 foo VALUE NEXT + 1 . ]
-
-+[ 78 foo VALUE START bar . ]
-+[ 78 foo VALUE START OF bar . ]
-+[ 78 foobar VALUE START OF foo + LENGTH OF bar . ]
-
-+[ 78 foo VALUE LENGTH bar . ]
-+[ 78 foo VALUE LENGTH OF bar . ]
-+[ 78 foobar VALUE "foo" & bar . ]
-
-+[ 78 foo VALUE 4 * 2 . ]
-+[ 78 foo VALUE bar ** 2 . ]
-+[ 78 foo VALUE 4 * bar . ]
 
 # Example from http://opencobol.add1tocobol.com/#based.
 +[ 01 based-var PIC X(80) BASED . ]
@@ -956,3 +920,37 @@ target backgroundColorClause;
 +[ BACKGROUND-COLOR     42 ]
 +[ BACKGROUND-COLOUR    ORANGE ]
 +[ BACKGROUND-COLOR     ORANGE ]
+
+
+target constantEntry;
+
++[ 78 foo VALUE NEXT . ]
++[ 78 foo VALUE NEXT + 1 . ]
+
++[ 78 foo VALUE START bar . ]
++[ 78 foo VALUE START OF bar . ]
++[ 78 foobar VALUE START OF foo + LENGTH OF bar . ]
+
++[ 78 foo VALUE LENGTH bar . ]
++[ 78 foo VALUE LENGTH OF bar . ]
++[ 78 foobar VALUE "foo" & bar . ]
+
++[ 78 foo VALUE 4 * 2 . ]
++[ 78 foo VALUE 4 * bar . ]
+
+
+# Examples of level 78 from Simon Sobisch.
+-[ 78 lines-to-display . ]              # VALUE is required
++[ 78 lines-to-display value is 12 . ]
++[ 78 lines-to-display value 12 . ]
+
+
+target renamesClause;
+
++[ RENAMES THAT-THING                                     ]
++[ RENAMES THAT-THING          THROUGH THIS-THING         ]
++[ RENAMES THAT-THING          THRU    THIS-THING         ]
++[ RENAMES THAT-THING OF YOURS                            ]
++[ RENAMES THAT-THING OF YOURS THROUGH THIS-THING OF MINE ]
++[ RENAMES THAT-THING OF YOURS THRU    THIS-THING OF MINE ]
+

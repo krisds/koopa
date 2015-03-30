@@ -97,6 +97,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                plus(
                    choice(
+                       constantEntry(),
                        dataDescriptionEntry(),
                        specialNameStatement(),
                        sequence(
@@ -4528,6 +4529,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            recordDescriptionEntryParser = future;
            future.setParser(
                choice(
+                   constantEntry(),
                    dataDescriptionEntry(),
                    copyStatement()
                )
@@ -4548,8 +4550,6 @@ public class CobolGrammar extends CobolBaseGrammar {
            dataDescriptionEntryParser = future;
            future.setParser(
                choice(
-                   constantEntry_level01(),
-                   constantEntry_level78(),
                    dataDescriptionEntry_format3_and_4(),
                    dataDescriptionEntry_format2(),
                    dataDescriptionEntry_format1()
@@ -4561,13 +4561,33 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
+    // constantEntry
+    // ........................................................
+
+    private Parser constantEntryParser = null;
+
+    public Parser constantEntry() {    if (constantEntryParser == null) {
+           FutureParser future = scoped("constantEntry", true);
+           constantEntryParser = future;
+           future.setParser(
+               choice(
+                   constantEntry_level01(),
+                   constantEntry_level78()
+               )
+           );
+        }
+
+        return constantEntryParser;
+    }
+
+    // ========================================================
     // constantEntry_level01
     // ........................................................
 
     private Parser constantEntry_level01Parser = null;
 
-    public Parser constantEntry_level01() {    if (constantEntry_level01Parser == null) {
-           FutureParser future = scoped("constantEntry_level01", true);
+    private Parser constantEntry_level01() {    if (constantEntry_level01Parser == null) {
+           FutureParser future = scoped("constantEntry_level01", false);
            constantEntry_level01Parser = future;
            future.setParser(
                sequence(
@@ -4606,24 +4626,14 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private Parser constantEntry_level78Parser = null;
 
-    public Parser constantEntry_level78() {    if (constantEntry_level78Parser == null) {
-           FutureParser future = scoped("constantEntry_level78", true);
+    private Parser constantEntry_level78() {    if (constantEntry_level78Parser == null) {
+           FutureParser future = scoped("constantEntry_level78", false);
            constantEntry_level78Parser = future;
            future.setParser(
                sequence(
                    token("78"),
                    cobolWord(),
-                   token("VALUE"),
-                   optional(
-                       token("IS")
-                   ),
-                   valueIsOperand(),
-                   star(
-                       sequence(
-                           valueIsOperator(),
-                           valueIsOperand()
-                       )
-                   ),
+                   constantValueClause(),
                    token(".")
                )
            );
@@ -4633,73 +4643,13 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // valueIsOperand
-    // ........................................................
-
-    private Parser valueIsOperandParser = null;
-
-    public Parser valueIsOperand() {    if (valueIsOperandParser == null) {
-           FutureParser future = scoped("valueIsOperand", true);
-           valueIsOperandParser = future;
-           future.setParser(
-               choice(
-                   token("NEXT"),
-                   sequence(
-                       token("START"),
-                       optional(
-                           token("OF")
-                       ),
-                       dataName()
-                   ),
-                   sequence(
-                       token("LENGTH"),
-                       optional(
-                           token("OF")
-                       ),
-                       dataName()
-                   ),
-                   arithmeticExpression(),
-                   literal()
-               )
-           );
-        }
-
-        return valueIsOperandParser;
-    }
-
-    // ========================================================
-    // valueIsOperator
-    // ........................................................
-
-    private Parser valueIsOperatorParser = null;
-
-    public Parser valueIsOperator() {    if (valueIsOperatorParser == null) {
-           FutureParser future = scoped("valueIsOperator", true);
-           valueIsOperatorParser = future;
-           future.setParser(
-               choice(
-                   token("AND"),
-                   token("OR"),
-                   token("&"),
-                   token("+"),
-                   token("-"),
-                   token("*"),
-                   token("/")
-               )
-           );
-        }
-
-        return valueIsOperatorParser;
-    }
-
-    // ========================================================
     // dataDescriptionEntry_format1
     // ........................................................
 
     private Parser dataDescriptionEntry_format1Parser = null;
 
-    public Parser dataDescriptionEntry_format1() {    if (dataDescriptionEntry_format1Parser == null) {
-           FutureParser future = scoped("dataDescriptionEntry_format1", true);
+    private Parser dataDescriptionEntry_format1() {    if (dataDescriptionEntry_format1Parser == null) {
+           FutureParser future = scoped("dataDescriptionEntry_format1", false);
            dataDescriptionEntry_format1Parser = future;
            future.setParser(
                sequence(
@@ -4802,24 +4752,14 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private Parser dataDescriptionEntry_format2Parser = null;
 
-    public Parser dataDescriptionEntry_format2() {    if (dataDescriptionEntry_format2Parser == null) {
-           FutureParser future = scoped("dataDescriptionEntry_format2", true);
+    private Parser dataDescriptionEntry_format2() {    if (dataDescriptionEntry_format2Parser == null) {
+           FutureParser future = scoped("dataDescriptionEntry_format2", false);
            dataDescriptionEntry_format2Parser = future;
            future.setParser(
                sequence(
                    token("66"),
                    dataName(),
-                   token("RENAMES"),
-                   qualifiedDataName(),
-                   optional(
-                       sequence(
-                           choice(
-                               token("THROUGH"),
-                               token("THRU")
-                           ),
-                           qualifiedDataName()
-                       )
-                   ),
+                   renamesClause(),
                    token(".")
                )
            );
@@ -4834,8 +4774,8 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private Parser dataDescriptionEntry_format3_and_4Parser = null;
 
-    public Parser dataDescriptionEntry_format3_and_4() {    if (dataDescriptionEntry_format3_and_4Parser == null) {
-           FutureParser future = scoped("dataDescriptionEntry_format3_and_4", true);
+    private Parser dataDescriptionEntry_format3_and_4() {    if (dataDescriptionEntry_format3_and_4Parser == null) {
+           FutureParser future = scoped("dataDescriptionEntry_format3_and_4", false);
            dataDescriptionEntry_format3_and_4Parser = future;
            future.setParser(
                sequence(
@@ -5721,6 +5661,77 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return constantRecordClauseParser;
+    }
+
+    // ========================================================
+    // constantValueClause
+    // ........................................................
+
+    private Parser constantValueClauseParser = null;
+
+    public Parser constantValueClause() {    if (constantValueClauseParser == null) {
+           FutureParser future = scoped("constantValueClause", true);
+           constantValueClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("VALUE"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("NEXT"),
+                       sequence(
+                           token("START"),
+                           optional(
+                               token("OF")
+                           ),
+                           dataName()
+                       ),
+                       sequence(
+                           token("LENGTH"),
+                           optional(
+                               token("OF")
+                           ),
+                           dataName()
+                       ),
+                       literal()
+                   ),
+                   optional(
+                       sequence(
+                           choice(
+                               token("AND"),
+                               token("OR"),
+                               token("&"),
+                               token("+"),
+                               token("-"),
+                               token("*"),
+                               token("/")
+                           ),
+                           choice(
+                               token("NEXT"),
+                               sequence(
+                                   token("START"),
+                                   optional(
+                                       token("OF")
+                                   ),
+                                   dataName()
+                               ),
+                               sequence(
+                                   token("LENGTH"),
+                                   optional(
+                                       token("OF")
+                                   ),
+                                   dataName()
+                               ),
+                               integer()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return constantValueClauseParser;
     }
 
     // ========================================================
@@ -6776,6 +6787,35 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
+    // renamesClause
+    // ........................................................
+
+    private Parser renamesClauseParser = null;
+
+    public Parser renamesClause() {    if (renamesClauseParser == null) {
+           FutureParser future = scoped("renamesClause", true);
+           renamesClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("RENAMES"),
+                   qualifiedDataName(),
+                   optional(
+                       sequence(
+                           choice(
+                               token("THROUGH"),
+                               token("THRU")
+                           ),
+                           qualifiedDataName()
+                       )
+                   )
+               )
+           );
+        }
+
+        return renamesClauseParser;
+    }
+
+    // ========================================================
     // reportClause
     // ........................................................
 
@@ -7412,6 +7452,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                choice(
                    token("BINARY"),
+                   token("BINARY-C-LONG"),
                    sequence(
                        token("BINARY-CHAR"),
                        optional(
@@ -7422,7 +7463,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    sequence(
-                       token("BINARY-SHORT"),
+                       token("BINARY-DOUBLE"),
                        optional(
                            choice(
                                token("SIGNED"),
@@ -7440,7 +7481,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    sequence(
-                       token("BINARY-DOUBLE"),
+                       token("BINARY-SHORT"),
                        optional(
                            choice(
                                token("SIGNED"),
@@ -7448,10 +7489,6 @@ public class CobolGrammar extends CobolBaseGrammar {
                            )
                        )
                    ),
-                   token("BINARY-C-LONG"),
-                   token("FLOAT-SHORT"),
-                   token("FLOAT-LONG"),
-                   token("FLOAT-EXTENDED"),
                    token("BIT"),
                    token("CHARACTER"),
                    token("COMPUTATIONAL"),
@@ -7466,13 +7503,51 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("COMP-4"),
                    token("COMPUTATIONAL-5"),
                    token("COMP-5"),
+                   token("COMPUTATIONAL-6"),
+                   token("COMP-6"),
                    token("COMPUTATIONAL-X"),
                    token("COMP-X"),
+                   token("COMPUTATIONAL-N"),
+                   token("COMP-N"),
                    token("CONDITION-VALUE"),
                    token("DECIMAL"),
                    token("DISPLAY"),
                    token("DISPLAY-1"),
+                   token("DOUBLE"),
                    token("INDEX"),
+                   token("FLOAT"),
+                   token("FLOAT-EXTENDED"),
+                   token("FLOAT-LONG"),
+                   token("FLOAT-SHORT"),
+                   sequence(
+                       token("HANDLE"),
+                       optional(
+                           sequence(
+                               optional(
+                                   token("OF")
+                               ),
+                               choice(
+                                   token("WINDOW"),
+                                   token("SUBWINDOW"),
+                                   sequence(
+                                       token("FONT"),
+                                       optional(
+                                           cobolWord()
+                                       )
+                                   ),
+                                   token("THREAD"),
+                                   token("MENU"),
+                                   token("VARIANT"),
+                                   sequence(
+                                       token("LAYOUT-MANAGER"),
+                                       optional(
+                                           cobolWord()
+                                       )
+                                   )
+                               )
+                           )
+                       )
+                   ),
                    token("MONITOR-POINTER"),
                    token("MUTEX-POINTER"),
                    token("NATIONAL"),
@@ -7527,11 +7602,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("SIGNED-INT"),
                    token("SIGNED-LONG"),
                    token("SIGNED-SHORT"),
+                   token("THREAD-POINTER"),
                    token("UNSIGNED-INT"),
                    token("UNSIGNED-LONG"),
                    token("UNSIGNED-SHORT"),
                    token("STRING"),
-                   token("THREAD-POINTER"),
                    typedefName(),
                    className()
                )

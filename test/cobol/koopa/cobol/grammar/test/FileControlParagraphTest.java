@@ -308,7 +308,7 @@ public class FileControlParagraphTest extends TestCase {
     public void testSelectStatement_33() {
       Parser parser = grammar.selectStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT foo ASSIGN TO PRINTER-L . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT foo ASSIGN TO PRINTER-1 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -317,7 +317,7 @@ public class FileControlParagraphTest extends TestCase {
     public void testSelectStatement_34() {
       Parser parser = grammar.selectStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT foo ASSIGN TO PRINTER-L bar . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT foo ASSIGN TO PRINTER-1 bar . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -1344,6 +1344,15 @@ public class FileControlParagraphTest extends TestCase {
       Parser parser = grammar.selectStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT outputFile ASSIGN 'OSVSAAOF.DAT'\n     ORGANIZATION SEQUENTIAL . "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testSelectStatement_149() {
+      Parser parser = grammar.selectStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SELECT IX-FD1\n   ASSIGN TO XXXXX024\n   RESERVE  3\n   ORGANIZATION IS INDEXED\n   ACCESS DYNAMIC\n   RECORD  KEY IS IX-FD1-KEY\n   ALTERNATE RECORD IS IX-FD1-ALTKEY1 . "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

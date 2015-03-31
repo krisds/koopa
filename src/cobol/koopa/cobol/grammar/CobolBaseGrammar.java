@@ -1,5 +1,7 @@
 package koopa.cobol.grammar;
 
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParseStream;
 import koopa.core.parsers.Parser;
@@ -167,4 +170,54 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
 		return cicsGrammar.cicsStatement();
 	}
+
+	// ============================================================================
+	// commentEnry
+	// ............................................................................
+
+	// This is a deprecated language feature, but one which appears quite
+	// prominently in the testsuite.
+
+	// Following is based on a description found here:
+	// http://supportline.microfocus.com/documentation/books/sx20books/lrpdfx.htm
+
+	private Parser commentEntryParser = null;
+
+	public Parser commentEntry() {
+		if (commentEntryParser == null) {
+			FutureParser future = scoped("commentEntry");
+			commentEntryParser = future;
+			future.setParser(new Parser() {
+				public boolean accepts(ParseStream stream) {
+					boolean sawSomething = false;
+
+					while (true) {
+						Token token = stream.forward();
+
+						if (token == null)
+							return sawSomething;
+
+						if (!token.hasTag(PROGRAM_TEXT_AREA))
+							continue;
+
+						if (token.hasTag(AreaTag.COMMENT))
+							continue;
+
+						if (token.getText().trim().length() == 0)
+							continue;
+						
+						// Area B = 12..72, or 11-71 when zero-based.
+						if (token.getStart().getPositionInLine() < 11) {
+							stream.rewind(token);
+							return sawSomething;
+						}
+						
+						sawSomething = true;
+					}
+				}
+			});
+		}
+		return commentEntryParser;
+	}
+
 }

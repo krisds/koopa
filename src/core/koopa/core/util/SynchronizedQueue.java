@@ -27,13 +27,11 @@ public class SynchronizedQueue<T> {
 	 * Add an item to the queue, and unblock all threads waiting on more data.
 	 */
 	public synchronized void enqueue(T item) {
-		assert (active);
-
-		// System.out.println(name + " << " + item);
-		queue.add(item);
-
-		if (active)
+		if (active) {
+			// System.out.println(name + " << " + item);
+			queue.add(item);
 			notifyAll();
+		}
 	}
 
 	/**

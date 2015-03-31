@@ -6,12 +6,12 @@ target execStatement;
 
 target execSQLStatement;
 
--[ EXEC SQL END-EXEC ]
+# -[ EXEC SQL END-EXEC ]
 +[ EXEC SQL INCLUDE payroll END-EXEC ]
 
 target execCICSStatement;
 
--[ EXEC CICS END-EXEC ]
+# -[ EXEC CICS END-EXEC ]
 
 target execDLIStatement;
 

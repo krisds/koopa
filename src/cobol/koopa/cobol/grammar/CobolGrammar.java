@@ -165,36 +165,21 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("compilationUnit", true);
            compilationUnitParser = future;
            future.setParser(
-               sequence(
-                   choice(
-                       sequence(
-                           identificationDivision(),
-                           optional(
-                               environmentDivision()
-                           ),
-                           optional(
-                               dataDivision()
-                           )
-                       ),
-                       sequence(
-                           environmentDivision(),
-                           optional(
-                               dataDivision()
-                           )
-                       ),
-                       dataDivision()
-                   ),
-                   optional(
-                       sequence(
-                           procedureDivision(),
-                           star(
-                               compilationUnit()
-                           )
-                       )
-                   ),
-                   optional(
-                       endMarker()
-                   )
+               choice(
+                   programPrototype(),
+                   functionPrototype(),
+                   programDefinition(),
+                   functionDefinition(),
+                   classDefinition(),
+                   interfaceDefinition(),
+                   methodDefinition(),
+                   callPrototypeDefinition(),
+                   delegateDefinition(),
+                   enumDefinition(),
+                   iteratorDefinition(),
+                   enumDefinition(),
+                   operatorDefinition(),
+                   valueTypeDefinition()
                )
            );
         }
@@ -203,253 +188,45 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // endMarker
+    // programPrototype
     // ........................................................
 
-    private Parser endMarkerParser = null;
+    private Parser programPrototypeParser = null;
 
-    public Parser endMarker() {    if (endMarkerParser == null) {
-           FutureParser future = scoped("endMarker", true);
-           endMarkerParser = future;
-           future.setParser(
-               choice(
-                   sequence(
-                       token("END"),
-                       token("FUNCTION"),
-                       functionName(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("CLASS"),
-                       className(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("FACTORY"),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("STATIC"),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("OBJECT"),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("OPERATOR"),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("METHOD"),
-                       optional(
-                           methodName()
-                       ),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("INTERFACE"),
-                       interfaceName(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("DELEGATE"),
-                       delegateName(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("ENUM"),
-                       enumName(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("OPERATOR"),
-                       cobolWord(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("VALUETYPE"),
-                       valuetypeName(),
-                       token(".")
-                   ),
-                   sequence(
-                       token("END"),
-                       token("PROGRAM"),
-                       programName(),
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return endMarkerParser;
-    }
-
-    // ========================================================
-    // identificationDivision
-    // ........................................................
-
-    private Parser identificationDivisionParser = null;
-
-    public Parser identificationDivision() {    if (identificationDivisionParser == null) {
-           FutureParser future = scoped("identificationDivision", true);
-           identificationDivisionParser = future;
-           future.setParser(
-               choice(
-                   sequence(
-                       choice(
-                           token("ID"),
-                           token("IDENTIFICATION")
-                       ),
-                       token("DIVISION"),
-                       token("."),
-                       optional(
-                           identificationDivisionBody()
-                       )
-                   ),
-                   identificationDivisionBody()
-               )
-           );
-        }
-
-        return identificationDivisionParser;
-    }
-
-    // ========================================================
-    // identificationDivisionBody
-    // ........................................................
-
-    private Parser identificationDivisionBodyParser = null;
-
-    public Parser identificationDivisionBody() {    if (identificationDivisionBodyParser == null) {
-           FutureParser future = scoped("identificationDivisionBody", true);
-           identificationDivisionBodyParser = future;
+    public Parser programPrototype() {    if (programPrototypeParser == null) {
+           FutureParser future = scoped("programPrototype", true);
+           programPrototypeParser = future;
            future.setParser(
                sequence(
-                   plus(
-                       choice(
-                           callPrototypeIdParagraph(),
-                           programPrototypeIdParagraph(),
-                           programIdParagraph(),
-                           classIdParagrah(),
-                           factoryParagraph(),
-                           objectParagraph(),
-                           methodIdParagraph(),
-                           interfaceIdParagraph(),
-                           functionIdParagraph(),
-                           delegateIdParagraph(),
-                           enumIdParagraph(),
-                           iteratorIdParagraph(),
-                           operatorIdParagraph(),
-                           valuetypeIdParagraph(),
-                           sequence(
-                               token("AUTHOR"),
-                               token("."),
-                               skipto(
-                                   token(".")
-                               ),
-                               token(".")
-                           ),
-                           sequence(
-                               token("INSTALLATION"),
-                               token("."),
-                               skipto(
-                                   token(".")
-                               ),
-                               token(".")
-                           ),
-                           sequence(
-                               token("DATE-WRITTEN"),
-                               token("."),
-                               skipto(
-                                   token(".")
-                               ),
-                               token(".")
-                           ),
-                           sequence(
-                               token("DATE-COMPILED"),
-                               token("."),
-                               skipto(
-                                   token(".")
-                               ),
-                               token(".")
-                           ),
-                           sequence(
-                               token("SECURITY"),
-                               token("."),
-                               skipto(
-                                   token(".")
-                               ),
-                               token(".")
-                           ),
-                           sequence(
-                               token("REMARKS"),
-                               token("."),
-                               skipto(
-                                   token(".")
-                               ),
-                               token(".")
-                           )
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
                        )
                    ),
+                   programPrototypeIdParagraph(),
                    optional(
-                       skipto(
-                           choice(
-                               paragraphStart(),
-                               sectionStart(),
-                               divisionStart()
-                           )
-                       )
-                   )
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("PROGRAM"),
+                   name(),
+                   token(".")
                )
            );
         }
 
-        return identificationDivisionBodyParser;
-    }
-
-    // ========================================================
-    // callPrototypeIdParagraph
-    // ........................................................
-
-    private Parser callPrototypeIdParagraphParser = null;
-
-    public Parser callPrototypeIdParagraph() {    if (callPrototypeIdParagraphParser == null) {
-           FutureParser future = scoped("callPrototypeIdParagraph", true);
-           callPrototypeIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("PROGRAM-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   programName(),
-                   optional(
-                       token("IS")
-                   ),
-                   token("EXTERNAL"),
-                   optional(
-                       token("PROGRAM")
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return callPrototypeIdParagraphParser;
+        return programPrototypeParser;
     }
 
     // ========================================================
@@ -467,7 +244,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        token(".")
                    ),
-                   programName(),
+                   name(),
                    optional(
                        sequence(
                            token("AS"),
@@ -486,6 +263,141 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return programPrototypeIdParagraphParser;
+    }
+
+    // ========================================================
+    // functionPrototype
+    // ........................................................
+
+    private Parser functionPrototypeParser = null;
+
+    public Parser functionPrototype() {    if (functionPrototypeParser == null) {
+           FutureParser future = scoped("functionPrototype", true);
+           functionPrototypeParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   functionPrototypeIdParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("FUNCTION"),
+                   name(),
+                   token(".")
+               )
+           );
+        }
+
+        return functionPrototypeParser;
+    }
+
+    // ========================================================
+    // functionPrototypeIdParagraph
+    // ........................................................
+
+    private Parser functionPrototypeIdParagraphParser = null;
+
+    public Parser functionPrototypeIdParagraph() {    if (functionPrototypeIdParagraphParser == null) {
+           FutureParser future = scoped("functionPrototypeIdParagraph", true);
+           functionPrototypeIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("FUNCTION-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   name(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   token("PROTOTYPE"),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return functionPrototypeIdParagraphParser;
+    }
+
+    // ========================================================
+    // programDefinition
+    // ........................................................
+
+    private Parser programDefinitionParser = null;
+
+    public Parser programDefinition() {    if (programDefinitionParser == null) {
+           FutureParser future = scoped("programDefinition", true);
+           programDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   programIdParagraph(),
+                   optional(
+                       replaceStatement()
+                   ),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       metadata()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       sequence(
+                           procedureDivision(),
+                           star(
+                               programDefinition()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("END"),
+                           token("PROGRAM"),
+                           programName(),
+                           token(".")
+                       )
+                   )
+               )
+           );
+        }
+
+        return programDefinitionParser;
     }
 
     // ========================================================
@@ -515,20 +427,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                            optional(
                                token("IS")
                            ),
-                           choice(
-                               sequence(
+                           permuted(
+                               token("COMMON"),
+                               choice(
                                    token("INITIAL"),
-                                   optional(
-                                       token("COMMON")
-                                   )
-                               ),
-                               sequence(
-                                   token("COMMON"),
-                                   optional(
-                                       token("INITIAL")
-                                   )
-                               ),
-                               token("RECURSIVE")
+                                   token("RECURSIVE")
+                               )
                            ),
                            optional(
                                token("PROGRAM")
@@ -536,12 +440,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           skipto(
-                               token(".")
-                           ),
-                           token(".")
-                       )
+                       token(".")
                    )
                )
            );
@@ -551,21 +450,137 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // classIdParagrah
+    // functionDefinition
     // ........................................................
 
-    private Parser classIdParagrahParser = null;
+    private Parser functionDefinitionParser = null;
 
-    public Parser classIdParagrah() {    if (classIdParagrahParser == null) {
-           FutureParser future = scoped("classIdParagrah", true);
-           classIdParagrahParser = future;
+    public Parser functionDefinition() {    if (functionDefinitionParser == null) {
+           FutureParser future = scoped("functionDefinition", true);
+           functionDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   functionIdParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("FUNCTION"),
+                   name(),
+                   token(".")
+               )
+           );
+        }
+
+        return functionDefinitionParser;
+    }
+
+    // ========================================================
+    // functionIdParagraph
+    // ........................................................
+
+    private Parser functionIdParagraphParser = null;
+
+    public Parser functionIdParagraph() {    if (functionIdParagraphParser == null) {
+           FutureParser future = scoped("functionIdParagraph", true);
+           functionIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("FUNCTION-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   name(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return functionIdParagraphParser;
+    }
+
+    // ========================================================
+    // classDefinition
+    // ........................................................
+
+    private Parser classDefinitionParser = null;
+
+    public Parser classDefinition() {    if (classDefinitionParser == null) {
+           FutureParser future = scoped("classDefinition", true);
+           classDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   classIdParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       factoryDefinition()
+                   ),
+                   optional(
+                       instanceDefinition()
+                   ),
+                   token("END"),
+                   token("CLASS"),
+                   name(),
+                   token(".")
+               )
+           );
+        }
+
+        return classDefinitionParser;
+    }
+
+    // ========================================================
+    // classIdParagraph
+    // ........................................................
+
+    private Parser classIdParagraphParser = null;
+
+    public Parser classIdParagraph() {    if (classIdParagraphParser == null) {
+           FutureParser future = scoped("classIdParagraph", true);
+           classIdParagraphParser = future;
            future.setParser(
                sequence(
                    token("CLASS-ID"),
                    optional(
                        token(".")
                    ),
-                   className(),
+                   name(),
                    optional(
                        sequence(
                            token("AS"),
@@ -642,551 +657,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return classIdParagrahParser;
-    }
-
-    // ========================================================
-    // factoryParagraph
-    // ........................................................
-
-    private Parser factoryParagraphParser = null;
-
-    public Parser factoryParagraph() {    if (factoryParagraphParser == null) {
-           FutureParser future = scoped("factoryParagraph", true);
-           factoryParagraphParser = future;
-           future.setParser(
-               sequence(
-                   choice(
-                       token("FACTORY"),
-                       token("STATIC")
-                   ),
-                   optional(
-                       token(".")
-                   ),
-                   optional(
-                       sequence(
-                           token("IMPLEMENTS"),
-                           plus(
-                               interfaceName()
-                           ),
-                           token(".")
-                       )
-                   )
-               )
-           );
-        }
-
-        return factoryParagraphParser;
-    }
-
-    // ========================================================
-    // objectParagraph
-    // ........................................................
-
-    private Parser objectParagraphParser = null;
-
-    public Parser objectParagraph() {    if (objectParagraphParser == null) {
-           FutureParser future = scoped("objectParagraph", true);
-           objectParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("OBJECT"),
-                   optional(
-                       token(".")
-                   ),
-                   optional(
-                       sequence(
-                           token("IMPLEMENTS"),
-                           plus(
-                               interfaceName()
-                           ),
-                           token(".")
-                       )
-                   )
-               )
-           );
-        }
-
-        return objectParagraphParser;
-    }
-
-    // ========================================================
-    // methodIdParagraph
-    // ........................................................
-
-    private Parser methodIdParagraphParser = null;
-
-    public Parser methodIdParagraph() {    if (methodIdParagraphParser == null) {
-           FutureParser future = scoped("methodIdParagraph", true);
-           methodIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("METHOD-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   choice(
-                       methodName(),
-                       sequence(
-                           choice(
-                               token("GET"),
-                               token("SET")
-                           ),
-                           token("PROPERTY"),
-                           propertyName()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       token("SYNC")
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("STATIC"),
-                               sequence(
-                                   optional(
-                                       token("STATIC")
-                                   ),
-                                   token("EXTENSION")
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("PUBLIC"),
-                               token("PRIVATE"),
-                               token("PROTECTED"),
-                               token("INTERNAL")
-                           )
-                       )
-                   ),
-                   optional(
-                       choice(
-                           token("OVERRIDE"),
-                           token("REDEFINE")
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("FINAL"),
-                               token("ABSTRACT")
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("FOR"),
-                           interfaceName()
-                       )
-                   ),
-                   optional(
-                       attributeClause()
-                   ),
-                   optional(
-                       sequence(
-                           token("USING"),
-                           plus(
-                               parameterName()
-                           )
-                       )
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return methodIdParagraphParser;
-    }
-
-    // ========================================================
-    // interfaceIdParagraph
-    // ........................................................
-
-    private Parser interfaceIdParagraphParser = null;
-
-    public Parser interfaceIdParagraph() {    if (interfaceIdParagraphParser == null) {
-           FutureParser future = scoped("interfaceIdParagraph", true);
-           interfaceIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("INTERFACE-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   interfaceName(),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("PUBLIC"),
-                               token("INTERNAL")
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("INHERITS"),
-                           optional(
-                               token("FROM")
-                           ),
-                           plus(
-                               typeSpecifier()
-                           )
-                       )
-                   ),
-                   optional(
-                       attributeClause()
-                   ),
-                   optional(
-                       sequence(
-                           token("USING"),
-                           plus(
-                               parameterName()
-                           )
-                       )
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return interfaceIdParagraphParser;
-    }
-
-    // ========================================================
-    // functionIdParagraph
-    // ........................................................
-
-    private Parser functionIdParagraphParser = null;
-
-    public Parser functionIdParagraph() {    if (functionIdParagraphParser == null) {
-           FutureParser future = scoped("functionIdParagraph", true);
-           functionIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("FUNCTION-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   functionName(),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           token("PROTOTYPE")
-                       )
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return functionIdParagraphParser;
-    }
-
-    // ========================================================
-    // delegateIdParagraph
-    // ........................................................
-
-    private Parser delegateIdParagraphParser = null;
-
-    public Parser delegateIdParagraph() {    if (delegateIdParagraphParser == null) {
-           FutureParser future = scoped("delegateIdParagraph", true);
-           delegateIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("DELEGATE-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   delegateName(),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           plus(
-                               choice(
-                                   token("PUBLIC"),
-                                   token("PRIVATE"),
-                                   token("PROTECTED"),
-                                   token("INTERNAL")
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       attributeClause()
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return delegateIdParagraphParser;
-    }
-
-    // ========================================================
-    // enumIdParagraph
-    // ........................................................
-
-    private Parser enumIdParagraphParser = null;
-
-    public Parser enumIdParagraph() {    if (enumIdParagraphParser == null) {
-           FutureParser future = scoped("enumIdParagraph", true);
-           enumIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("ENUM-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   enumName(),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           plus(
-                               choice(
-                                   token("PUBLIC"),
-                                   token("PRIVATE"),
-                                   token("PROTECTED"),
-                                   token("INTERNAL")
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       attributeClause()
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return enumIdParagraphParser;
-    }
-
-    // ========================================================
-    // iteratorIdParagraph
-    // ........................................................
-
-    private Parser iteratorIdParagraphParser = null;
-
-    public Parser iteratorIdParagraph() {    if (iteratorIdParagraphParser == null) {
-           FutureParser future = scoped("iteratorIdParagraph", true);
-           iteratorIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("ITERATOR-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   iteratorName(),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           plus(
-                               choice(
-                                   token("PUBLIC"),
-                                   token("PRIVATE"),
-                                   token("PROTECTED"),
-                                   token("INTERNAL")
-                               )
-                           )
-                       )
-                   ),
-                   optional(
-                       attributeClause()
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return iteratorIdParagraphParser;
-    }
-
-    // ========================================================
-    // operatorIdParagraph
-    // ........................................................
-
-    private Parser operatorIdParagraphParser = null;
-
-    public Parser operatorIdParagraph() {    if (operatorIdParagraphParser == null) {
-           FutureParser future = scoped("operatorIdParagraph", true);
-           operatorIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("OPERATOR-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   choice(
-                       sequence(
-                           token("="),
-                           optional(
-                               token("EXTENSION")
-                           )
-                       ),
-                       token("<>"),
-                       token(">="),
-                       token(">"),
-                       token("<="),
-                       token("<"),
-                       token("+"),
-                       token("-"),
-                       token("*"),
-                       token("/"),
-                       token("B-AND"),
-                       token("B-OR"),
-                       token("B-XOR"),
-                       token("B-NOT"),
-                       token("B-LEFT"),
-                       token("B-RIGHT"),
-                       token("IMPLICIT"),
-                       token("EXPLICIT")
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return operatorIdParagraphParser;
-    }
-
-    // ========================================================
-    // valuetypeIdParagraph
-    // ........................................................
-
-    private Parser valuetypeIdParagraphParser = null;
-
-    public Parser valuetypeIdParagraph() {    if (valuetypeIdParagraphParser == null) {
-           FutureParser future = scoped("valuetypeIdParagraph", true);
-           valuetypeIdParagraphParser = future;
-           future.setParser(
-               sequence(
-                   token("VALUETYPE-ID"),
-                   optional(
-                       token(".")
-                   ),
-                   valuetypeName(),
-                   optional(
-                       sequence(
-                           token("AS"),
-                           literal()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("FINAL"),
-                               token("PARTIAL"),
-                               token("ABSTRACT")
-                           )
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           optional(
-                               token("IS")
-                           ),
-                           choice(
-                               token("PUBLIC"),
-                               token("INTERNAL")
-                           )
-                       )
-                   ),
-                   optional(
-                       attributeClause()
-                   ),
-                   optional(
-                       sequence(
-                           token("IMPLEMENTS"),
-                           plus(
-                               interfaceName()
-                           )
-                       )
-                   ),
-                   optional(
-                       token(".")
-                   )
-               )
-           );
-        }
-
-        return valuetypeIdParagraphParser;
+        return classIdParagraphParser;
     }
 
     // ========================================================
@@ -1245,6 +716,1161 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return attributeClauseParser;
+    }
+
+    // ========================================================
+    // factoryDefinition
+    // ........................................................
+
+    private Parser factoryDefinitionParser = null;
+
+    public Parser factoryDefinition() {    if (factoryDefinitionParser == null) {
+           FutureParser future = scoped("factoryDefinition", true);
+           factoryDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   factoryParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("FACTORY"),
+                   token(".")
+               )
+           );
+        }
+
+        return factoryDefinitionParser;
+    }
+
+    // ========================================================
+    // factoryParagraph
+    // ........................................................
+
+    private Parser factoryParagraphParser = null;
+
+    public Parser factoryParagraph() {    if (factoryParagraphParser == null) {
+           FutureParser future = scoped("factoryParagraph", true);
+           factoryParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("FACTORY"),
+                   optional(
+                       token(".")
+                   ),
+                   optional(
+                       sequence(
+                           token("IMPLEMENTS"),
+                           plus(
+                               name()
+                           ),
+                           token(".")
+                       )
+                   )
+               )
+           );
+        }
+
+        return factoryParagraphParser;
+    }
+
+    // ========================================================
+    // instanceDefinition
+    // ........................................................
+
+    private Parser instanceDefinitionParser = null;
+
+    public Parser instanceDefinition() {    if (instanceDefinitionParser == null) {
+           FutureParser future = scoped("instanceDefinition", true);
+           instanceDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   objectParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("OBJECT"),
+                   token(".")
+               )
+           );
+        }
+
+        return instanceDefinitionParser;
+    }
+
+    // ========================================================
+    // objectParagraph
+    // ........................................................
+
+    private Parser objectParagraphParser = null;
+
+    public Parser objectParagraph() {    if (objectParagraphParser == null) {
+           FutureParser future = scoped("objectParagraph", true);
+           objectParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("OBJECT"),
+                   optional(
+                       token(".")
+                   ),
+                   optional(
+                       sequence(
+                           token("IMPLEMENTS"),
+                           plus(
+                               name()
+                           ),
+                           optional(
+                               token(".")
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return objectParagraphParser;
+    }
+
+    // ========================================================
+    // interfaceDefinition
+    // ........................................................
+
+    private Parser interfaceDefinitionParser = null;
+
+    public Parser interfaceDefinition() {    if (interfaceDefinitionParser == null) {
+           FutureParser future = scoped("interfaceDefinition", true);
+           interfaceDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   interfaceIdParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("INTERFACE"),
+                   name(),
+                   token(".")
+               )
+           );
+        }
+
+        return interfaceDefinitionParser;
+    }
+
+    // ========================================================
+    // interfaceIdParagraph
+    // ........................................................
+
+    private Parser interfaceIdParagraphParser = null;
+
+    public Parser interfaceIdParagraph() {    if (interfaceIdParagraphParser == null) {
+           FutureParser future = scoped("interfaceIdParagraph", true);
+           interfaceIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("INTERFACE-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   name(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("INHERITS"),
+                           optional(
+                               token("FROM")
+                           ),
+                           plus(
+                               name()
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("USING"),
+                           optional(
+                               token("FROM")
+                           ),
+                           plus(
+                               name()
+                           )
+                       )
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return interfaceIdParagraphParser;
+    }
+
+    // ========================================================
+    // methodDefinition
+    // ........................................................
+
+    private Parser methodDefinitionParser = null;
+
+    public Parser methodDefinition() {    if (methodDefinitionParser == null) {
+           FutureParser future = scoped("methodDefinition", true);
+           methodDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   methodIdParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   token("END"),
+                   token("METHOD"),
+                   optional(
+                       name()
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return methodDefinitionParser;
+    }
+
+    // ========================================================
+    // methodIdParagraph
+    // ........................................................
+
+    private Parser methodIdParagraphParser = null;
+
+    public Parser methodIdParagraph() {    if (methodIdParagraphParser == null) {
+           FutureParser future = scoped("methodIdParagraph", true);
+           methodIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("METHOD-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   choice(
+                       sequence(
+                           choice(
+                               token("GET"),
+                               token("SET")
+                           ),
+                           token("PROPERTY"),
+                           name()
+                       ),
+                       sequence(
+                           name(),
+                           optional(
+                               sequence(
+                                   token("AS"),
+                                   literal()
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       token("OVERRIDE")
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           token("FINAL")
+                       )
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return methodIdParagraphParser;
+    }
+
+    // ========================================================
+    // callPrototypeDefinition
+    // ........................................................
+
+    private Parser callPrototypeDefinitionParser = null;
+
+    public Parser callPrototypeDefinition() {    if (callPrototypeDefinitionParser == null) {
+           FutureParser future = scoped("callPrototypeDefinition", true);
+           callPrototypeDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   callPrototypeIdParagraph(),
+                   optional(
+                       optionsParagraph()
+                   ),
+                   optional(
+                       environmentDivision()
+                   ),
+                   optional(
+                       dataDivision()
+                   ),
+                   optional(
+                       procedureDivision()
+                   ),
+                   optional(
+                       sequence(
+                           token("END"),
+                           token("PROGRAM"),
+                           programName(),
+                           token(".")
+                       )
+                   )
+               )
+           );
+        }
+
+        return callPrototypeDefinitionParser;
+    }
+
+    // ========================================================
+    // callPrototypeIdParagraph
+    // ........................................................
+
+    private Parser callPrototypeIdParagraphParser = null;
+
+    public Parser callPrototypeIdParagraph() {    if (callPrototypeIdParagraphParser == null) {
+           FutureParser future = scoped("callPrototypeIdParagraph", true);
+           callPrototypeIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("PROGRAM-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   programName(),
+                   optional(
+                       token("IS")
+                   ),
+                   token("EXTERNAL"),
+                   optional(
+                       token("PROGRAM")
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return callPrototypeIdParagraphParser;
+    }
+
+    // ========================================================
+    // delegateDefinition
+    // ........................................................
+
+    private Parser delegateDefinitionParser = null;
+
+    public Parser delegateDefinition() {    if (delegateDefinitionParser == null) {
+           FutureParser future = scoped("delegateDefinition", true);
+           delegateDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   delegateIdParagraph(),
+                   procedureDivisionHeader(),
+                   token("END"),
+                   token("DELEGATE"),
+                   token(".")
+               )
+           );
+        }
+
+        return delegateDefinitionParser;
+    }
+
+    // ========================================================
+    // delegateIdParagraph
+    // ........................................................
+
+    private Parser delegateIdParagraphParser = null;
+
+    public Parser delegateIdParagraph() {    if (delegateIdParagraphParser == null) {
+           FutureParser future = scoped("delegateIdParagraph", true);
+           delegateIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("DELEGATE-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   delegateName(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           plus(
+                               choice(
+                                   token("PUBLIC"),
+                                   token("PRIVATE"),
+                                   token("PROTECTED"),
+                                   token("INTERNAL")
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       attributeClause()
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return delegateIdParagraphParser;
+    }
+
+    // ========================================================
+    // enumDefinition
+    // ........................................................
+
+    private Parser enumDefinitionParser = null;
+
+    public Parser enumDefinition() {    if (enumDefinitionParser == null) {
+           FutureParser future = scoped("enumDefinition", true);
+           enumDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   enumIdParagraph(),
+                   optional(
+                       skipto(
+                           sequence(
+                               token("END"),
+                               token("ENUM"),
+                               token(".")
+                           )
+                       )
+                   ),
+                   token("END"),
+                   token("ENUM"),
+                   token(".")
+               )
+           );
+        }
+
+        return enumDefinitionParser;
+    }
+
+    // ========================================================
+    // enumIdParagraph
+    // ........................................................
+
+    private Parser enumIdParagraphParser = null;
+
+    public Parser enumIdParagraph() {    if (enumIdParagraphParser == null) {
+           FutureParser future = scoped("enumIdParagraph", true);
+           enumIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("ENUM-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   enumName(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           plus(
+                               choice(
+                                   token("PUBLIC"),
+                                   token("PRIVATE"),
+                                   token("PROTECTED"),
+                                   token("INTERNAL")
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       attributeClause()
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return enumIdParagraphParser;
+    }
+
+    // ========================================================
+    // iteratorDefinition
+    // ........................................................
+
+    private Parser iteratorDefinitionParser = null;
+
+    public Parser iteratorDefinition() {    if (iteratorDefinitionParser == null) {
+           FutureParser future = scoped("iteratorDefinition", true);
+           iteratorDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   iteratorIdParagraph(),
+                   optional(
+                       skipto(
+                           sequence(
+                               token("END"),
+                               token("ITERATOR"),
+                               token(".")
+                           )
+                       )
+                   ),
+                   token("END"),
+                   token("ITERATOR"),
+                   token(".")
+               )
+           );
+        }
+
+        return iteratorDefinitionParser;
+    }
+
+    // ========================================================
+    // iteratorIdParagraph
+    // ........................................................
+
+    private Parser iteratorIdParagraphParser = null;
+
+    public Parser iteratorIdParagraph() {    if (iteratorIdParagraphParser == null) {
+           FutureParser future = scoped("iteratorIdParagraph", true);
+           iteratorIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("ITERATOR-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   iteratorName(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           plus(
+                               choice(
+                                   token("PUBLIC"),
+                                   token("PRIVATE"),
+                                   token("PROTECTED"),
+                                   token("INTERNAL")
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       attributeClause()
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return iteratorIdParagraphParser;
+    }
+
+    // ========================================================
+    // operatorDefinition
+    // ........................................................
+
+    private Parser operatorDefinitionParser = null;
+
+    public Parser operatorDefinition() {    if (operatorDefinitionParser == null) {
+           FutureParser future = scoped("operatorDefinition", true);
+           operatorDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   operatorIdParagraph(),
+                   optional(
+                       skipto(
+                           sequence(
+                               token("END"),
+                               token("ENUM"),
+                               token(".")
+                           )
+                       )
+                   ),
+                   token("END"),
+                   token("OPERATOR"),
+                   token(".")
+               )
+           );
+        }
+
+        return operatorDefinitionParser;
+    }
+
+    // ========================================================
+    // operatorIdParagraph
+    // ........................................................
+
+    private Parser operatorIdParagraphParser = null;
+
+    public Parser operatorIdParagraph() {    if (operatorIdParagraphParser == null) {
+           FutureParser future = scoped("operatorIdParagraph", true);
+           operatorIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("OPERATOR-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   choice(
+                       sequence(
+                           token("="),
+                           optional(
+                               token("EXTENSION")
+                           )
+                       ),
+                       token("<>"),
+                       token(">="),
+                       token(">"),
+                       token("<="),
+                       token("<"),
+                       token("+"),
+                       token("-"),
+                       token("*"),
+                       token("/"),
+                       token("B-AND"),
+                       token("B-OR"),
+                       token("B-XOR"),
+                       token("B-NOT"),
+                       token("B-LEFT"),
+                       token("B-RIGHT"),
+                       token("IMPLICIT"),
+                       token("EXPLICIT")
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return operatorIdParagraphParser;
+    }
+
+    // ========================================================
+    // valueTypeDefinition
+    // ........................................................
+
+    private Parser valueTypeDefinitionParser = null;
+
+    public Parser valueTypeDefinition() {    if (valueTypeDefinitionParser == null) {
+           FutureParser future = scoped("valueTypeDefinition", true);
+           valueTypeDefinitionParser = future;
+           future.setParser(
+               sequence(
+                   optional(
+                       sequence(
+                           token("IDENTIFICATION"),
+                           token("DIVISION"),
+                           token(".")
+                       )
+                   ),
+                   valueTypeIdParagraph(),
+                   optional(
+                       skipto(
+                           sequence(
+                               token("END"),
+                               token("ENUM"),
+                               token(".")
+                           )
+                       )
+                   ),
+                   token("END"),
+                   token("VALUETYPE"),
+                   token(".")
+               )
+           );
+        }
+
+        return valueTypeDefinitionParser;
+    }
+
+    // ========================================================
+    // valueTypeIdParagraph
+    // ........................................................
+
+    private Parser valueTypeIdParagraphParser = null;
+
+    public Parser valueTypeIdParagraph() {    if (valueTypeIdParagraphParser == null) {
+           FutureParser future = scoped("valueTypeIdParagraph", true);
+           valueTypeIdParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("VALUETYPE-ID"),
+                   optional(
+                       token(".")
+                   ),
+                   valuetypeName(),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           literal()
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("FINAL"),
+                               token("PARTIAL"),
+                               token("ABSTRACT")
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           optional(
+                               token("IS")
+                           ),
+                           choice(
+                               token("PUBLIC"),
+                               token("INTERNAL")
+                           )
+                       )
+                   ),
+                   optional(
+                       attributeClause()
+                   ),
+                   optional(
+                       sequence(
+                           token("IMPLEMENTS"),
+                           plus(
+                               interfaceName()
+                           )
+                       )
+                   ),
+                   optional(
+                       token(".")
+                   )
+               )
+           );
+        }
+
+        return valueTypeIdParagraphParser;
+    }
+
+    // ========================================================
+    // endMarker
+    // ........................................................
+
+    private Parser endMarkerParser = null;
+
+    public Parser endMarker() {    if (endMarkerParser == null) {
+           FutureParser future = scoped("endMarker", true);
+           endMarkerParser = future;
+           future.setParser(
+               sequence(
+                   token("END"),
+                   choice(
+                       sequence(
+                           token("CLASS"),
+                           name()
+                       ),
+                       token("FACTORY"),
+                       sequence(
+                           token("FUNCTION"),
+                           name()
+                       ),
+                       sequence(
+                           token("INTERFACE"),
+                           name()
+                       ),
+                       sequence(
+                           token("METHOD"),
+                           optional(
+                               name()
+                           )
+                       ),
+                       token("OBJECT"),
+                       sequence(
+                           token("PROGRAM"),
+                           programName()
+                       ),
+                       sequence(
+                           token("DELEGATE"),
+                           name()
+                       ),
+                       sequence(
+                           token("ENUM"),
+                           name()
+                       ),
+                       sequence(
+                           token("OPERATOR"),
+                           optional(
+                               name()
+                           )
+                       ),
+                       token("STATIC"),
+                       sequence(
+                           token("VALUETYPE"),
+                           name()
+                       )
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return endMarkerParser;
+    }
+
+    // ========================================================
+    // optionsParagraph
+    // ........................................................
+
+    private Parser optionsParagraphParser = null;
+
+    public Parser optionsParagraph() {    if (optionsParagraphParser == null) {
+           FutureParser future = scoped("optionsParagraph", true);
+           optionsParagraphParser = future;
+           future.setParser(
+               sequence(
+                   token("OPTIONS"),
+                   token("."),
+                   optional(
+                       arithmeticClause()
+                   ),
+                   optional(
+                       defaultRoundedClause()
+                   ),
+                   optional(
+                       entryConventionClause()
+                   ),
+                   optional(
+                       intermediateRoundingClause()
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return optionsParagraphParser;
+    }
+
+    // ========================================================
+    // arithmeticClause
+    // ........................................................
+
+    private Parser arithmeticClauseParser = null;
+
+    public Parser arithmeticClause() {    if (arithmeticClauseParser == null) {
+           FutureParser future = scoped("arithmeticClause", true);
+           arithmeticClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("ARITHMETIC"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("NATIVE"),
+                       token("STANDARD"),
+                       token("STANDARD-BINARY"),
+                       token("STANDARD-DECIMAL")
+                   )
+               )
+           );
+        }
+
+        return arithmeticClauseParser;
+    }
+
+    // ========================================================
+    // defaultRoundedClause
+    // ........................................................
+
+    private Parser defaultRoundedClauseParser = null;
+
+    public Parser defaultRoundedClause() {    if (defaultRoundedClauseParser == null) {
+           FutureParser future = scoped("defaultRoundedClause", true);
+           defaultRoundedClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("DEFAULT"),
+                   token("ROUNDED"),
+                   optional(
+                       token("MODE")
+                   ),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("AWAY-FROM-ZERO"),
+                       token("NEAREST-AWAY-FROM-ZERO"),
+                       token("NEAREST-EVEN"),
+                       token("NEAREST-TOWARD-ZERO"),
+                       token("PROHIBITED"),
+                       token("TOWARD-GREATER"),
+                       token("TOWARD-LESSER"),
+                       token("TRUNCATION")
+                   )
+               )
+           );
+        }
+
+        return defaultRoundedClauseParser;
+    }
+
+    // ========================================================
+    // entryConventionClause
+    // ........................................................
+
+    private Parser entryConventionClauseParser = null;
+
+    public Parser entryConventionClause() {    if (entryConventionClauseParser == null) {
+           FutureParser future = scoped("entryConventionClause", true);
+           entryConventionClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("ENTRY-CONVENTION"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("COBOL"),
+                       name()
+                   )
+               )
+           );
+        }
+
+        return entryConventionClauseParser;
+    }
+
+    // ========================================================
+    // intermediateRoundingClause
+    // ........................................................
+
+    private Parser intermediateRoundingClauseParser = null;
+
+    public Parser intermediateRoundingClause() {    if (intermediateRoundingClauseParser == null) {
+           FutureParser future = scoped("intermediateRoundingClause", true);
+           intermediateRoundingClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("INTERMEDIATE"),
+                   token("ROUNDING"),
+                   optional(
+                       token("IS")
+                   ),
+                   choice(
+                       token("NEAREST-AWAY-FROM-ZERO"),
+                       token("NEAREST-EVEN"),
+                       token("PROHIBITED"),
+                       token("TRUNCATION")
+                   )
+               )
+           );
+        }
+
+        return intermediateRoundingClauseParser;
+    }
+
+    // ========================================================
+    // metadata
+    // ........................................................
+
+    private Parser metadataParser = null;
+
+    public Parser metadata() {    if (metadataParser == null) {
+           FutureParser future = scoped("metadata", true);
+           metadataParser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       choice(
+                           sequence(
+                               token("AUTHOR"),
+                               token("."),
+                               optional(
+                                   commentEntry()
+                               )
+                           ),
+                           sequence(
+                               token("INSTALLATION"),
+                               token("."),
+                               optional(
+                                   commentEntry()
+                               )
+                           ),
+                           sequence(
+                               token("DATE-WRITTEN"),
+                               token("."),
+                               optional(
+                                   commentEntry()
+                               )
+                           ),
+                           sequence(
+                               token("DATE-COMPILED"),
+                               token("."),
+                               optional(
+                                   commentEntry()
+                               )
+                           ),
+                           sequence(
+                               token("SECURITY"),
+                               token("."),
+                               optional(
+                                   commentEntry()
+                               )
+                           ),
+                           sequence(
+                               token("REMARKS"),
+                               token("."),
+                               optional(
+                                   commentEntry()
+                               )
+                           )
+                       )
+                   ),
+                   optional(
+                       skipto(
+                           choice(
+                               paragraphStart(),
+                               sectionStart(),
+                               divisionStart()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return metadataParser;
     }
 
     // ========================================================
@@ -2837,8 +3463,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    choice(
                        diskClause(),
-                       dataName(),
-                       assignmentName()
+                       literal(),
+                       name()
                    )
                )
            );
@@ -2914,14 +3540,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("DISPLAY")
                    ),
                    sequence(
-                       optional(
-                           choice(
-                               token("DISK"),
-                               token("KEYBOARD"),
-                               token("DISPLAY"),
-                               token("PRINTER"),
-                               token("PRINTER-1")
-                           )
+                       choice(
+                           token("DISK"),
+                           token("KEYBOARD"),
+                           token("DISPLAY"),
+                           token("PRINTER"),
+                           token("PRINTER-1")
                        ),
                        star(
                            choice(
@@ -3009,9 +3633,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        token("ALTERNATE")
                    ),
-                   choice(
-                       token("AREA"),
-                       token("AREAS")
+                   optional(
+                       choice(
+                           token("AREA"),
+                           token("AREAS")
+                       )
                    )
                )
            );
@@ -7713,18 +8339,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            procedureDivisionParser = future;
            future.setParser(
                sequence(
-                   token("PROCEDURE"),
-                   token("DIVISION"),
-                   optional(
-                       mnemonicName()
-                   ),
-                   optional(
-                       usingOrChainingPhrase()
-                   ),
-                   optional(
-                       returningProcedurePhrase()
-                   ),
-                   token("."),
+                   procedureDivisionHeader(),
                    optional(
                        declaratives()
                    ),
@@ -7742,6 +8357,36 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return procedureDivisionParser;
+    }
+
+    // ========================================================
+    // procedureDivisionHeader
+    // ........................................................
+
+    private Parser procedureDivisionHeaderParser = null;
+
+    public Parser procedureDivisionHeader() {    if (procedureDivisionHeaderParser == null) {
+           FutureParser future = scoped("procedureDivisionHeader", true);
+           procedureDivisionHeaderParser = future;
+           future.setParser(
+               sequence(
+                   token("PROCEDURE"),
+                   token("DIVISION"),
+                   optional(
+                       mnemonicName()
+                   ),
+                   optional(
+                       usingOrChainingPhrase()
+                   ),
+                   optional(
+                       returningProcedurePhrase()
+                   ),
+                   token(".")
+               )
+           );
+        }
+
+        return procedureDivisionHeaderParser;
     }
 
     // ========================================================
@@ -11657,7 +12302,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("SQL"),
                    sequence(
                        limited(
-                           sqlStatement(),
+                           optional(
+                               sqlStatement()
+                           ),
                            token("END-EXEC")
                        ),
                        skipto(
@@ -11690,7 +12337,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("CICS"),
                    sequence(
                        limited(
-                           cicsStatement(),
+                           optional(
+                               cicsStatement()
+                           ),
                            token("END-EXEC")
                        ),
                        skipto(
@@ -18259,26 +18908,6 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return reportNameParser;
-    }
-
-    // ========================================================
-    // assignmentName
-    // ........................................................
-
-    private Parser assignmentNameParser = null;
-
-    public Parser assignmentName() {    if (assignmentNameParser == null) {
-           FutureParser future = scoped("assignmentName", true);
-           assignmentNameParser = future;
-           future.setParser(
-               choice(
-                   cobolWord(),
-                   literal()
-               )
-           );
-        }
-
-        return assignmentNameParser;
     }
 
     // ========================================================

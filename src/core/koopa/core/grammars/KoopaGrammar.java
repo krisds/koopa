@@ -134,7 +134,7 @@ public abstract class KoopaGrammar {
 				if (accepts) {
 					if (publik)
 						stream.insert(End.on(getNamespace(), name));
-					
+
 					stream.commit();
 
 				} else {
@@ -147,6 +147,30 @@ public abstract class KoopaGrammar {
 				if (LOGGER.isTraceEnabled())
 					pop(name + (accepts ? ": yes " : ": no ") + peek
 							+ " - up to " + stream.peekMore() + "...");
+
+				return accepts;
+			}
+		};
+	}
+
+	protected Parser as(final String name, final Parser parser) {
+		return new Parser() {
+			public boolean accepts(ParseStream stream) {
+				if (LOGGER.isTraceEnabled())
+					push(name + " ? " + stream.peekMore() + "...");
+
+				stream.bookmark();
+				stream.insert(Start.on(getNamespace(), name));
+
+				boolean accepts = parser.accepts(stream);
+
+				if (accepts) {
+					stream.insert(End.on(getNamespace(), name));
+					stream.commit();
+
+				} else {
+					stream.rewind();
+				}
 
 				return accepts;
 			}

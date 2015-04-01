@@ -123,13 +123,17 @@ tag(text) ::= <<tagged($text$)>>
 
 any() ::= <<any()>>
 
-opt(option,body) ::= <<opt($option$,
+opt(option, body) ::= <<opt($option$,
     $body$
 )>>
 
 limit(target, limiter) ::= <<limited(
     $target$,
     $limiter$
+)>>
+
+as(name, body) ::= <<as("$name$",
+    $body$
 )>>
 
 dispatched(keys, rules) ::= <<dispatched(

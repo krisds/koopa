@@ -71,9 +71,11 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def programPrototype =
-    [IDENTIFICATION DIVISION .]
-    programPrototypeIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      programPrototypeIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -89,9 +91,11 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def functionPrototype =
-    [IDENTIFICATION DIVISION .]
-    functionPrototypeIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      functionPrototypeIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -107,11 +111,13 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def programDefinition =
-    [IDENTIFICATION DIVISION .]
-    programIdParagraph
-    [replaceStatement]                                # SM208A.CBL
-    [optionsParagraph]
-    [metadata]                                        # Found in the testsuite.
+    ( [IDENTIFICATION DIVISION .]
+      programIdParagraph
+      [replaceStatement]                         # SM208A.CBL
+      [optionsParagraph]
+      [metadata]                                 # Found in the testsuite.
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision (programDefinition)*]
@@ -128,9 +134,11 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def functionDefinition =
-    [IDENTIFICATION DIVISION .]
-    functionIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      functionIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -146,9 +154,11 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def classDefinition =
-    [IDENTIFICATION DIVISION .]
-    classIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      classIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [factoryDefinition]
     [instanceDefinition]
@@ -173,9 +183,11 @@ def attributeClause =
 end
 
 def factoryDefinition =
-    [IDENTIFICATION DIVISION .]
-    factoryParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      factoryParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -187,9 +199,11 @@ def factoryParagraph =
 end
 
 def instanceDefinition =
-    [IDENTIFICATION DIVISION .]
-    objectParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      objectParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -205,9 +219,11 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def interfaceDefinition =
-    [IDENTIFICATION DIVISION .]
-    interfaceIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      interfaceIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [procedureDivision]
     END INTERFACE name .
@@ -225,9 +241,11 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def methodDefinition =
-    [IDENTIFICATION DIVISION .]
-    methodIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      methodIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -254,9 +272,11 @@ end
 # variation on the program id paragraph.
 
 def callPrototypeDefinition =
-    [IDENTIFICATION DIVISION .]
-    callPrototypeIdParagraph
-    [optionsParagraph]
+    ( [IDENTIFICATION DIVISION .]
+      callPrototypeIdParagraph
+      [optionsParagraph]
+    ) %as identificationDivision
+    
     [environmentDivision]
     [dataDivision]
     [procedureDivision]
@@ -274,8 +294,10 @@ end
 # Cfr. http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FGUID-DA75663F-6357-4064-8112-C87E7457DE51.html
 
 def delegateDefinition =
-    [IDENTIFICATION DIVISION .]
-    delegateIdParagraph
+    ( [IDENTIFICATION DIVISION .]
+      delegateIdParagraph
+    ) %as identificationDivision
+    
     procedureDivisionHeader
     END DELEGATE .
 end
@@ -292,8 +314,10 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def enumDefinition =
-    [IDENTIFICATION DIVISION .]
-    enumIdParagraph
+    ( [IDENTIFICATION DIVISION .]
+      enumIdParagraph
+    ) %as identificationDivision
+    
     [ --> (END ENUM .) ]
     END ENUM .
 end
@@ -312,8 +336,10 @@ end
 # Cfr. http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FGUID-FFC2F800-AB92-4E3A-89BF-7078E064C3B3.html
 
 def iteratorDefinition =
-    [IDENTIFICATION DIVISION .]
-    iteratorIdParagraph
+    ( [IDENTIFICATION DIVISION .]
+      iteratorIdParagraph
+    ) %as identificationDivision
+    
     [ --> (END ITERATOR .) ]
     END ITERATOR .
 end
@@ -332,8 +358,10 @@ end
 # Cfr. http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FGUID-FFC2F800-AB92-4E3A-89BF-7078E064C3B3.html
 
 def operatorDefinition =
-    [IDENTIFICATION DIVISION .]
-    operatorIdParagraph
+    ( [IDENTIFICATION DIVISION .]
+      operatorIdParagraph
+    ) %as identificationDivision
+    
     [ --> (END ENUM .) ]
     END OPERATOR .
 end
@@ -369,8 +397,10 @@ end
 # Cfr. http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FGUID-FFC2F800-AB92-4E3A-89BF-7078E064C3B3.html
 
 def valueTypeDefinition =
-    [IDENTIFICATION DIVISION .]
-    valueTypeIdParagraph
+    ( [IDENTIFICATION DIVISION .]
+      valueTypeIdParagraph
+    ) %as identificationDivision
+    
     [ --> (END ENUM .) ]
     END VALUETYPE .
 end

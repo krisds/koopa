@@ -51,13 +51,13 @@ meta [ Properties meta ]
   ;
 
 named returns [String name = null]
-  : ^(NAMED i=IDENTIFIER)
+  : ^(NAMED (i=IDENTIFIER | i=TOKEN))
   
     { $named.name = ((CommonTree) $i).getText(); }
   ;
 
 extending returns [String name = null]
-  : ^(EXTENDING i=IDENTIFIER)
+  : ^(EXTENDING (i=IDENTIFIER | i=TOKEN))
   
     { $extending.name = ((CommonTree) $i).getText(); }
   ;
@@ -137,7 +137,7 @@ locals returns [List<Tuple<String, String>> tuples = new LinkedList<Tuple<String
   ;
 
 declaration returns [Tuple<String, String> tuple = null]
-  : ^(DECLARATION a=IDENTIFIER b=IDENTIFIER)
+  : ^(DECLARATION (a=IDENTIFIER|a=TOKEN) (b=IDENTIFIER|b=TOKEN))
     { $declaration.tuple = new Tuple<String, String>(((CommonTree) $a).getText(), ((CommonTree) $b).getText()); }
   ;
 
@@ -193,16 +193,14 @@ body [ List<String> bindings, List<String> unbindings ]
   
   | i=IDENTIFIER
   
-    { String text = ((CommonTree) i).getText();
- 	  boolean isLowerCase = Character.isLowerCase(text.charAt(0));
-    }
-
-    -> {isLowerCase}? call(
+    -> call(
       name = {i}
     )
     
+  | t=TOKEN
+  
     -> token(
-      text = {i}
+      text = {t}
     )
   
   | d=DOT
@@ -211,19 +209,17 @@ body [ List<String> bindings, List<String> unbindings ]
       text = {d}
     )
   
-  | ^(ASSIGN l=IDENTIFIER (i=IDENTIFIER | n=NUMBER | d=DOT))
+  | ^(ASSIGN l=IDENTIFIER (i=IDENTIFIER | t=TOKEN | n=NUMBER | d=DOT))
     { StringTemplate body = null;
       if (i != null) {
-        String text = ((CommonTree) i).getText();
-        if (Character.isLowerCase(text.charAt(0))) {
-          body = %call(
-            name={i}
-          );
-        } else {
-          body = %token(
-            text={i}
-          );
-        }
+        body = %call(
+          name={i}
+        );
+      
+      } else if (t != null) {
+        body = %token(
+          text={t}
+        );
       
       } else if (n != null) {
         body = %token(
@@ -322,12 +318,19 @@ body [ List<String> bindings, List<String> unbindings ]
       target = {b_t},
       limiter = {b_l}
     )
+    
+  | ^(AS i=IDENTIFIER b=body[bindings, unbindings])
+  
+    -> as(
+      name = {i},
+      body = {b}
+    )
   ;
 
 caze returns [ String key, StringTemplate body ]
-  : ^(CASE i=IDENTIFIER b=body[null, null])
+  : ^(CASE t=TOKEN b=body[null, null])
   
-    { $key = ((CommonTree) i).getText();
+    { $key  = ((CommonTree) t).getText();
       $body = $b.st;
     }
   ;

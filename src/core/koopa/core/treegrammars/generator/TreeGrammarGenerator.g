@@ -52,13 +52,13 @@ meta [ Properties meta ]
   ;
 
 named returns [String name = null]
-  : ^(NAMED i=IDENTIFIER)
+  : ^(NAMED (i=IDENTIFIER | i=TOKEN))
   
     { $named.name = ((CommonTree) $i).getText(); }
   ;
 
 extending returns [String name = null]
-  : ^(EXTENDING i=IDENTIFIER)
+  : ^(EXTENDING (i=IDENTIFIER | i=TOKEN))
   
     { $extending.name = ((CommonTree) $i).getText(); }
   ;
@@ -133,7 +133,7 @@ locals returns [List<Tuple<String, String>> tuples = new LinkedList<Tuple<String
   ;
 
 declaration returns [Tuple<String, String> tuple = null]
-  : ^(DECLARATION a=IDENTIFIER b=IDENTIFIER)
+  : ^(DECLARATION (a=IDENTIFIER|a=TOKEN) (b=IDENTIFIER|b=TOKEN))
     { $declaration.tuple = new Tuple<String, String>(((CommonTree) $a).getText(), ((CommonTree) $b).getText()); }
   ;
 

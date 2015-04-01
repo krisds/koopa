@@ -198,16 +198,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            programPrototypeParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           programPrototypeIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   programPrototypeIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -276,16 +280,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            functionPrototypeParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           functionPrototypeIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   functionPrototypeIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -354,22 +362,26 @@ public class CobolGrammar extends CobolBaseGrammar {
            programDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           programIdParagraph(),
+                           optional(
+                               replaceStatement()
+                           ),
+                           optional(
+                               optionsParagraph()
+                           ),
+                           optional(
+                               metadata()
+                           )
                        )
-                   ),
-                   programIdParagraph(),
-                   optional(
-                       replaceStatement()
-                   ),
-                   optional(
-                       optionsParagraph()
-                   ),
-                   optional(
-                       metadata()
                    ),
                    optional(
                        environmentDivision()
@@ -460,16 +472,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            functionDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           functionIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   functionIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -534,16 +550,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            classDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           classIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   classIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -729,16 +749,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            factoryDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           factoryParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   factoryParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -801,16 +825,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            instanceDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           objectParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   objectParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -875,16 +903,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            interfaceDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           interfaceIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   interfaceIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -968,16 +1000,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            methodDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           methodIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   methodIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -1067,16 +1103,20 @@ public class CobolGrammar extends CobolBaseGrammar {
            callPrototypeDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           callPrototypeIdParagraph(),
+                           optional(
+                               optionsParagraph()
+                           )
                        )
-                   ),
-                   callPrototypeIdParagraph(),
-                   optional(
-                       optionsParagraph()
                    ),
                    optional(
                        environmentDivision()
@@ -1146,14 +1186,18 @@ public class CobolGrammar extends CobolBaseGrammar {
            delegateDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           delegateIdParagraph()
                        )
                    ),
-                   delegateIdParagraph(),
                    procedureDivisionHeader(),
                    token("END"),
                    token("DELEGATE"),
@@ -1226,14 +1270,18 @@ public class CobolGrammar extends CobolBaseGrammar {
            enumDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           enumIdParagraph()
                        )
                    ),
-                   enumIdParagraph(),
                    optional(
                        skipto(
                            sequence(
@@ -1314,14 +1362,18 @@ public class CobolGrammar extends CobolBaseGrammar {
            iteratorDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           iteratorIdParagraph()
                        )
                    ),
-                   iteratorIdParagraph(),
                    optional(
                        skipto(
                            sequence(
@@ -1402,14 +1454,18 @@ public class CobolGrammar extends CobolBaseGrammar {
            operatorDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           operatorIdParagraph()
                        )
                    ),
-                   operatorIdParagraph(),
                    optional(
                        skipto(
                            sequence(
@@ -1490,14 +1546,18 @@ public class CobolGrammar extends CobolBaseGrammar {
            valueTypeDefinitionParser = future;
            future.setParser(
                sequence(
-                   optional(
+                   as("identificationDivision",
                        sequence(
-                           token("IDENTIFICATION"),
-                           token("DIVISION"),
-                           token(".")
+                           optional(
+                               sequence(
+                                   token("IDENTIFICATION"),
+                                   token("DIVISION"),
+                                   token(".")
+                               )
+                           ),
+                           valueTypeIdParagraph()
                        )
                    ),
-                   valueTypeIdParagraph(),
                    optional(
                        skipto(
                            sequence(

@@ -49,19 +49,24 @@ koopa
   ;
 
 meta
-  : (t='tree')? 'grammar' n=IDENTIFIER
-    ('extends' s=IDENTIFIER)?
+  : (t='tree')? 'grammar' n=name
+    ('extends' s=name)?
     DOT
     
-    -> { t == null && s == null }? ^(META ^(NAMED $n))
-    -> { t == null && s != null }? ^(META ^(NAMED $n) ^(EXTENDING $s))
-    -> { t != null && s == null }? ^(META TREE ^(NAMED $n))
-    -> ^(META TREE ^(NAMED $n) ^(EXTENDING $s))
+    -> { t == null && s == null }? ^(META      ^(NAMED $n)                )
+    -> { t == null && s != null }? ^(META      ^(NAMED $n) ^(EXTENDING $s))
+    -> { t != null && s == null }? ^(META TREE ^(NAMED $n)                )
+    ->                             ^(META TREE ^(NAMED $n) ^(EXTENDING $s))
+  ;
+
+name
+  : IDENTIFIER -> IDENTIFIER
+  | TOKEN      -> TOKEN
   ;
 
 modifier
-  : PUBLIC    -> PUBLIC
-  | PRIVATE   -> PRIVATE
+  : PUBLIC     -> PUBLIC
+  | PRIVATE    -> PRIVATE
   ;
 
 rule
@@ -93,16 +98,23 @@ locals
   ;
 
 declaration
-  : IDENTIFIER IDENTIFIER
+  : type=name n=name
 
-    -> ^(DECLARATION IDENTIFIER IDENTIFIER)
+    -> ^(DECLARATION $type $n)
   ;
 
 sequence
-  : p+=part+
+  : p+=possibly_renamed_part+
 
-    -> { $p.size() > 1 }? ^(SEQUENCE part+)
-    -> part+
+    -> { $p.size() > 1 }? ^(SEQUENCE possibly_renamed_part+)
+    -> possibly_renamed_part+
+  ;
+
+possibly_renamed_part
+  : part (n=rename)?
+  
+    -> { n != null }? ^(AS $n part)
+    -> part
   ;
 
 part
@@ -122,26 +134,28 @@ part
   | NUMBER
   
   | a=IDENTIFIER 
-    (e=EQUALS (b=IDENTIFIER | b=NUMBER | b=DOT | b=ANY))?
+    (e=EQUALS (b=IDENTIFIER | b=TOKEN | b=NUMBER | b=DOT | b=ANY))?
     
     -> { e != null }? ^(ASSIGN $a $b)
     -> IDENTIFIER
+  
+  | TOKEN
 
   | DOT
 
   | OPEN_PAREN sequence m+=more* CLOSE_PAREN (r=STAR | r=PLUS)?
 
     -> { r != null && m != null }? ^($r ^(CHOICE sequence more*))
-    -> { r != null && m == null }? ^($r sequence)
-    -> { r == null && m != null }? ^(CHOICE sequence more*)
-    -> sequence
+    -> { r != null && m == null }? ^($r          sequence       )
+    -> { r == null && m != null }?      ^(CHOICE sequence more*)
+    ->                                           sequence
 
   | OPEN_BRACKET sequence m+=more* CLOSE_BRACKET (r=STAR | r=PLUS)?
 
     -> { r != null && m != null }? ^($r ^(OPTIONAL ^(CHOICE sequence more*)))
-    -> { r != null && m == null }? ^($r ^(OPTIONAL ^(CHOICE sequence)))
-    -> { r == null && m != null }? ^(OPTIONAL ^(CHOICE sequence more*))
-    -> ^(OPTIONAL sequence)
+    -> { r != null && m == null }? ^($r ^(OPTIONAL ^(CHOICE sequence      )))
+    -> { r == null && m != null }?      ^(OPTIONAL ^(CHOICE sequence more*))
+    ->                                  ^(OPTIONAL          sequence       )
 
   | SKIP_TO part
   
@@ -177,6 +191,11 @@ part
        ^(SKIP_TO $q))
   ;
 
+rename
+  : AS IDENTIFIER
+    -> IDENTIFIER
+  ;
+
 more
   : PIPE sequence
   
@@ -184,9 +203,9 @@ more
   ;
   
 dispatch
-  : IDENTIFIER ARROW sequence
+  : TOKEN ARROW sequence
   
-    -> ^(CASE IDENTIFIER sequence)
+    -> ^(CASE TOKEN sequence)
   ;
   
 more_dispatch
@@ -201,21 +220,21 @@ COMMENT : '#' (~('\n' | '\r'))* { $channel = HIDDEN; } ;
 NEWLINE : ( ('\r\n') => '\r\n' | '\r' | '\n' ) { $channel = HIDDEN; } ;
 
 PRIVATE : 'private' ;
-PUBLIC  : 'public' ;
+PUBLIC  : 'public'  ;
 
-NOSKIP : '%noskip' ;
+NOSKIP  : '%noskip' ;
+LIMIT   : '%limit'  ;
+BY      : '%by'     ;
+AS      : '%as'     ;
 
-LIMIT : '%limit' ;
-
-BY : '%by' ;
-
-ARROW : '=>' ;
+ARROW   : '=>'      ;
 
 TAG : '@' LETTER ( LETTER | DIGIT | '-' | '_' )* ;
 
 ANY : '_' ;
 
-IDENTIFIER : LETTER ( LETTER | DIGIT | '-' | '_' )* ;
+IDENTIFIER : LOWERCASE ( LETTER | DIGIT | '-' | '_' )* ;
+TOKEN      : UPPERCASE ( LETTER | DIGIT | '-' | '_' )* ;
 
 LITERAL : '\'' (~('\'' | '\n' | '\r'))+ '\'';
 
@@ -256,5 +275,7 @@ DOLLAR : '$' ;
 
 NOT : '-' ;
 
-fragment LETTER : 'a'..'z' | 'A'..'Z' ;
-fragment DIGIT : '0'..'9' ;
+fragment LETTER    : LOWERCASE | UPPERCASE ;
+fragment LOWERCASE : 'a'..'z' ;
+fragment UPPERCASE : 'A'..'Z' ;
+fragment DIGIT     : '0'..'9' ;

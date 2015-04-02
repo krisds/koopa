@@ -202,7 +202,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -284,7 +287,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -366,7 +372,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -476,7 +485,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -554,7 +566,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -753,7 +768,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -829,7 +847,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -907,7 +928,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1004,7 +1028,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1107,7 +1134,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1190,7 +1220,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1274,7 +1307,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1366,7 +1402,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1458,7 +1497,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -1550,7 +1592,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            optional(
                                sequence(
-                                   token("IDENTIFICATION"),
+                                   choice(
+                                       token("ID"),
+                                       token("IDENTIFICATION")
+                                   ),
                                    token("DIVISION"),
                                    token(".")
                                )
@@ -16663,7 +16708,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    choice(
                        sequence(
-                           token("IDENTIFICATION"),
+                           choice(
+                               token("ID"),
+                               token("IDENTIFICATION")
+                           ),
                            token("DIVISION")
                        ),
                        sequence(

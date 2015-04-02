@@ -44,7 +44,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    star(
                        choice(
                            compilerDirective(),
-                           compilationUnit()
+                           sourceUnit()
                        )
                    ),
                    optional(
@@ -70,7 +70,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    choice(
                        plus(
-                           compilationUnit()
+                           sourceUnit()
                        ),
                        copybookHoldingData(),
                        copybookHoldingBehaviour()
@@ -156,14 +156,14 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // compilationUnit
+    // sourceUnit
     // ........................................................
 
-    private Parser compilationUnitParser = null;
+    private Parser sourceUnitParser = null;
 
-    public Parser compilationUnit() {    if (compilationUnitParser == null) {
-           FutureParser future = scoped("compilationUnit", true);
-           compilationUnitParser = future;
+    public Parser sourceUnit() {    if (sourceUnitParser == null) {
+           FutureParser future = scoped("sourceUnit", true);
+           sourceUnitParser = future;
            future.setParser(
                choice(
                    programPrototype(),
@@ -184,7 +184,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return compilationUnitParser;
+        return sourceUnitParser;
     }
 
     // ========================================================
@@ -402,7 +402,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            procedureDivision(),
                            star(
-                               programDefinition()
+                               as("sourceUnit",
+                                   programDefinition()
+                               )
                            )
                        )
                    ),
@@ -16431,7 +16433,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                token("SET")
                            ),
                            divisionStart(),
-                           compilationUnit(),
+                           sourceUnit(),
                            verb()
                        )
                    )

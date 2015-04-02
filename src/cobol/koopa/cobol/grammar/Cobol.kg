@@ -9,14 +9,14 @@ grammar Cobol extends CobolBase.
 
 # Compilation group.
 def compilationGroup =
-    (compilerDirective | compilationUnit)*
+    (compilerDirective | sourceUnit)*
     
     [eof]
 end
 
 # Copybook. This is just a guess at the likely suspect(s).
 def copybook =
-    ( (compilationUnit)+
+    ( (sourceUnit)+
     | copybookHoldingData
     | copybookHoldingBehaviour
     )
@@ -47,7 +47,7 @@ end
 ## Compilation units
 ## -----------------------------------------------------------------------------
 
-def compilationUnit =
+def sourceUnit =
     ( programPrototype                 # STD.BK
     | functionPrototype                # STD.BK
     | programDefinition                # STD.BK
@@ -120,7 +120,7 @@ def programDefinition =
     
     [environmentDivision]
     [dataDivision]
-    [procedureDivision (programDefinition)*]
+    [procedureDivision (programDefinition %as sourceUnit)*]
     [END PROGRAM programName .]
 end
 
@@ -4095,7 +4095,7 @@ end
 
 def compilerDirective =
     ('\u0024' SET)
-    (--> ('\u0024' SET | divisionStart | compilationUnit | verb))
+    (--> ('\u0024' SET | divisionStart | sourceUnit | verb))
 end
 
 def compilerIfStatement =

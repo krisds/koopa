@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.targets.TokenTracker;
 import koopa.core.treeparsers.Tree;
@@ -39,15 +40,23 @@ public class ParseResults {
 	}
 
 	public void addWarning(Token t, String msg) {
-		if (msg != null) {
-			this.warnings.add(new Tuple<Token, String>(t, msg));
-		}
+		if (msg == null)
+			return;
+
+		if (t == null)
+			t = new Token("", new Position(0, 0, 0), new Position(0, 0, 0));
+
+		this.warnings.add(new Tuple<Token, String>(t, msg));
 	}
 
 	public void addError(Token t, String msg) {
-		if (msg != null) {
-			this.errors.add(new Tuple<Token, String>(t, msg));
-		}
+		if (msg == null)
+			return;
+
+		if (t == null)
+			t = new Token("", new Position(0, 0, 0), new Position(0, 0, 0));
+
+		this.errors.add(new Tuple<Token, String>(t, msg));
 	}
 
 	public File getFile() {

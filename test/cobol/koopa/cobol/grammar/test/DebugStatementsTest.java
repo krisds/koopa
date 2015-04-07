@@ -39,7 +39,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_3() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING \"foo\" . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING \"foo\" "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -48,7 +48,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_4() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -57,7 +57,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_5() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE FOR DEBUGGING foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE FOR DEBUGGING foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -66,7 +66,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_6() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE FOR DEBUGGING ON foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE FOR DEBUGGING ON foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -75,7 +75,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_7() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ON foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ON foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -84,7 +84,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_8() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL PROCEDURES . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL PROCEDURES "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -93,7 +93,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_9() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -102,7 +102,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_10() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL OF foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL OF foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -111,7 +111,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_11() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL REFERENCES foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL REFERENCES foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -120,7 +120,7 @@ public class DebugStatementsTest extends TestCase {
     public void testUseStatement_12() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL REFERENCES OF foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE DEBUGGING ALL REFERENCES OF foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

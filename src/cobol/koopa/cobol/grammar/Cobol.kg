@@ -2052,7 +2052,6 @@ end
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 def declaratives =
     DECLARATIVES .
     (declarativeSection)*
@@ -2061,7 +2060,7 @@ end
 
 def declarativeSection =
     sectionName SECTION .
-    useStatement
+    ((useStatement .) %as statement) %as sentence
     (sentence)*
     (paragraph)*
 end
@@ -3087,14 +3086,18 @@ end
 
 def exitStatement =
     EXIT
-    [ PROGRAM [returningPhrase]
-    | PARAGRAPH
-    | SECTION            # *MF
-    | PERFORM [CYCLE]    # *MF
-    | METHOD             # *ISO2002
-    | FUNCTION           # *ISO2002
-    | ITERATOR           # *.NET
+    
+    [( PROGRAM            # STD.BK
+     | PARAGRAPH          # STD.BK
+     | SECTION            # STD.BK
+     | PERFORM [CYCLE]    # STD.BK
+     | METHOD             # STD.BK
+     | FUNCTION           # STD.BK
+     | ITERATOR           # *.NET
+     ) %as endpoint
     ]
+    
+    [returningPhrase]
 end
 
 def returningPhrase =
@@ -3952,7 +3955,6 @@ def useStatement =
 	| debugDeclarative
 	| labelDeclarative
     | beforeReportingDeclarative)
-	.
 end
 
 def errorDeclarative =	
@@ -4089,7 +4091,7 @@ def compilerStatement =
     | compilerDisplayStatement
     | copyStatement
     | replaceStatement
-    | useStatement
+    | useStatement .
     )
 end
 

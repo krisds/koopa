@@ -1,15 +1,17 @@
 tree grammar CobolOutline extends CobolOutlineBase.
 
 def compilationGroup =
-    compilationUnit
+    (sourceUnit)*
 end
 
 def copybook =
   (paragraph)*
+  (section)*
+  (sourceUnit)*
 end
 
 
-def compilationUnit (Tree name) =
+def sourceUnit (Tree name) =
     name=programName
 
     { push(new Reference(getCurrentTree(), name.getProgramText(), PROGRAM_ICON)); }

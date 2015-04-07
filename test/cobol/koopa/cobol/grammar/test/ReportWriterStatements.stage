@@ -26,5 +26,5 @@ target terminateStatement;
 
 target useStatement;
 
-+[ USE BEFORE REPORTING foo . ]
-+[ USE GLOBAL BEFORE REPORTING foo . ]
++[ USE BEFORE REPORTING foo ]
++[ USE GLOBAL BEFORE REPORTING foo ]

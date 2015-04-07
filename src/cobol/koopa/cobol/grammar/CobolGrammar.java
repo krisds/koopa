@@ -8795,7 +8795,14 @@ public class CobolGrammar extends CobolBaseGrammar {
                    sectionName(),
                    token("SECTION"),
                    token("."),
-                   useStatement(),
+                   as("sentence",
+                       as("statement",
+                           sequence(
+                               useStatement(),
+                               token(".")
+                           )
+                       )
+                   ),
                    star(
                        sentence()
                    ),
@@ -12561,25 +12568,25 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("EXIT"),
                    optional(
-                       choice(
-                           sequence(
+                       as("endpoint",
+                           choice(
                                token("PROGRAM"),
-                               optional(
-                                   returningPhrase()
-                               )
-                           ),
-                           token("PARAGRAPH"),
-                           token("SECTION"),
-                           sequence(
-                               token("PERFORM"),
-                               optional(
-                                   token("CYCLE")
-                               )
-                           ),
-                           token("METHOD"),
-                           token("FUNCTION"),
-                           token("ITERATOR")
+                               token("PARAGRAPH"),
+                               token("SECTION"),
+                               sequence(
+                                   token("PERFORM"),
+                                   optional(
+                                       token("CYCLE")
+                                   )
+                               ),
+                               token("METHOD"),
+                               token("FUNCTION"),
+                               token("ITERATOR")
+                           )
                        )
+                   ),
+                   optional(
+                       returningPhrase()
                    )
                )
            );
@@ -15834,8 +15841,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        debugDeclarative(),
                        labelDeclarative(),
                        beforeReportingDeclarative()
-                   ),
-                   token(".")
+                   )
                )
            );
         }
@@ -16403,7 +16409,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                    compilerDisplayStatement(),
                    copyStatement(),
                    replaceStatement(),
-                   useStatement()
+                   sequence(
+                       useStatement(),
+                       token(".")
+                   )
                )
            );
         }

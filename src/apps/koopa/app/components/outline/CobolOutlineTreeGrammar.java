@@ -23,7 +23,9 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	       FutureTreeParser future = scoped("compilationGroup");
 	       compilationGroupParser = future;
 	       future.setParser(
-	           compilationUnit()
+	           star(
+	               sourceUnit()
+	           )
 	       );
 	    }
 
@@ -41,8 +43,16 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	       FutureTreeParser future = scoped("copybook");
 	       copybookParser = future;
 	       future.setParser(
-	           star(
-	               paragraph()
+	           sequence(
+	               star(
+	                   paragraph()
+	               ),
+	               star(
+	                   section()
+	               ),
+	               star(
+	                   sourceUnit()
+	               )
 	           )
 	       );
 	    }
@@ -51,15 +61,15 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	}
 
 	// ========================================================
-	// compilationUnit
+	// sourceUnit
 	// ........................................................
 
-	private TreeParser compilationUnitParser = null;
+	private TreeParser sourceUnitParser = null;
 
-	public TreeParser compilationUnit() {
-	    if (compilationUnitParser == null) {
-	       FutureTreeParser future = scoped("compilationUnit");
-	       compilationUnitParser = future;
+	public TreeParser sourceUnit() {
+	    if (sourceUnitParser == null) {
+	       FutureTreeParser future = scoped("sourceUnit");
+	       sourceUnitParser = future;
 	       future.setParser(
 	           sequence(
 	               assign("name", programName()),
@@ -98,7 +108,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	       );
 	    }
 
-	    return compilationUnitParser;
+	    return sourceUnitParser;
 	}
 
 	// ========================================================

@@ -394,6 +394,7 @@ public class SourceView extends JPanel implements ParsingListener {
 
 			for (int i = 0; i < results.getErrorCount(); i++) {
 				final Token token = results.getError(i).getFirst();
+				if (token == null) continue;
 				final int start = token.getStart().getPositionInFile() - 1;
 				final int end = token.getEnd().getPositionInFile();
 				final int len = end - start;

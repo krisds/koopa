@@ -108,7 +108,7 @@ public class ReportWriterStatementsTest extends TestCase {
     public void testUseStatement_11() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE BEFORE REPORTING foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE BEFORE REPORTING foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -117,7 +117,7 @@ public class ReportWriterStatementsTest extends TestCase {
     public void testUseStatement_12() {
       Parser parser = grammar.useStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE GLOBAL BEFORE REPORTING foo . "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE GLOBAL BEFORE REPORTING foo "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

@@ -9946,23 +9946,40 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("ALTER"),
                    plus(
-                       sequence(
-                           procedureName(),
-                           token("TO"),
-                           optional(
-                               sequence(
-                                   token("PROCEED"),
-                                   token("TO")
-                               )
-                           ),
-                           procedureName()
-                       )
+                       alterationClause()
                    )
                )
            );
         }
 
         return alterStatementParser;
+    }
+
+    // ========================================================
+    // alterationClause
+    // ........................................................
+
+    private Parser alterationClauseParser = null;
+
+    public Parser alterationClause() {    if (alterationClauseParser == null) {
+           FutureParser future = scoped("alterationClause", true);
+           alterationClauseParser = future;
+           future.setParser(
+               sequence(
+                   procedureName(),
+                   token("TO"),
+                   optional(
+                       sequence(
+                           token("PROCEED"),
+                           token("TO")
+                       )
+                   ),
+                   procedureName()
+               )
+           );
+        }
+
+        return alterationClauseParser;
     }
 
     // ========================================================

@@ -214,6 +214,13 @@
 		<kgg path="examples/" />
 
 		<echo>Compiling example classes...</echo>
+		<javac srcdir="examples/basic/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
 		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" target="1.5" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">

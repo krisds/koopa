@@ -9,8 +9,10 @@ import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.CobolTokens;
+import koopa.cobol.Copybooks;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
-import koopa.cobol.parser.CobolParser;
+import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
@@ -32,7 +34,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.preprocessing");
 
-	private CobolParser cobolParser = null;
+	private Copybooks copybooks = null;
 
 	private Source<Token> sourceTokenizer = null;
 	private QueueingTokenSink sourceSink = null;
@@ -43,12 +45,15 @@ public class PreprocessingSource extends BasicSource<Token> implements
 
 	private LinkedList<Data> unsupportedDirective = null;
 
+	private SourceFormat format = null;
+
 	public PreprocessingSource(Source<Token> sourceTokenizer,
-			CobolParser cobolParser) {
+			SourceFormat format, Copybooks copybooks) {
 		assert (sourceTokenizer != null);
 
 		this.sourceTokenizer = sourceTokenizer;
-		this.cobolParser = cobolParser;
+		this.copybooks = copybooks;
+		this.format = format;
 
 		// TODO Token tracking and this ? (Cfr.
 		// CobolParser.keepingTrackOfTokens)
@@ -124,7 +129,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 									+ " in library " + libraryName);
 					}
 
-					File copybook = cobolParser.lookup(textName, libraryName);
+					File copybook = copybooks.lookup(textName, libraryName);
 					if (copybook == null) {
 						LOGGER.error("Missing copybook " + textName + " in "
 								+ libraryName);
@@ -150,9 +155,8 @@ public class PreprocessingSource extends BasicSource<Token> implements
 					}
 
 					try {
-						copybookTokenizer = cobolParser
-								.getNewTokenizationStage(new FileReader(
-										copybook));
+						copybookTokenizer = CobolTokens.getNewSource(
+								new FileReader(copybook), format, copybooks);
 
 						if (replacing != null) {
 							replacing.setSource(copybookTokenizer);

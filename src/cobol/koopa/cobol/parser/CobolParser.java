@@ -1,31 +1,21 @@
 package koopa.cobol.parser;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.CobolTokens;
+import koopa.cobol.Copybooks;
 import koopa.cobol.grammar.CobolGrammar;
-import koopa.cobol.parser.preprocessing.PreprocessingSource;
-import koopa.cobol.sources.CompilerDirectives;
-import koopa.cobol.sources.ContinuationWelding;
 import koopa.cobol.sources.LOCCount;
-import koopa.cobol.sources.LineContinuations;
-import koopa.cobol.sources.ProgramArea;
-import koopa.cobol.sources.PseudoLiterals;
-import koopa.cobol.sources.Separators;
 import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parser;
 import koopa.core.sources.ChainableSource;
-import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.targets.CompositeTarget;
 import koopa.core.targets.Target;
@@ -51,11 +41,11 @@ public class CobolParser implements ParserConfiguration {
 	private boolean buildTrees = false;
 
 	private SourceFormat format = SourceFormat.FIXED;
+	private Copybooks copybooks = new Copybooks();
 
 	/** EXPERIMENTAL */
 	// TODO Extend ParserConfiguration to allow changing these from there.
 	private boolean preprocessing = false;
-	private List<File> copybookPaths = new ArrayList<File>();
 
 	public ParseResults parse(File file) throws IOException {
 		LOGGER.info("Parsing " + file);
@@ -78,7 +68,8 @@ public class CobolParser implements ParserConfiguration {
 				.endsWith(".CPY");
 
 		// Build the tokenisation stage.
-		LOCCount loc = new LOCCount(getNewTokenizationStage(reader));
+		LOCCount loc = new LOCCount(CobolTokens.getNewSource(reader, format,
+				intermediateTokenizers, preprocessing ? copybooks : null));
 		Source<Token> source = loc;
 
 		// This object holds all grammar productions. It is not thread-safe,
@@ -266,50 +257,6 @@ public class CobolParser implements ParserConfiguration {
 		return results;
 	}
 
-	public Source<Token> getNewTokenizationStage(Reader reader) {
-		// We will be building up our tokenization stage in several steps. Each
-		// step takes the preceding tokenizer, and extends its abilities.
-		Source<Token> tokenizer;
-
-		// Split the input into lines.
-		tokenizer = new LineSplitter(new BufferedReader(reader));
-		// Filter out some compiler directives.
-		tokenizer = new CompilerDirectives(tokenizer, format);
-		// Split up the different areas of each line (depending on the format).
-		tokenizer = new ProgramArea(tokenizer, format);
-		// Filter out some source formatting directives.
-		tokenizer = new SourceFormattingDirectives(tokenizer);
-
-		// In case of fixed format: take care of line continuations
-		if (this.format == SourceFormat.FIXED) {
-			tokenizer = new LineContinuations(tokenizer);
-			tokenizer = new ContinuationWelding(tokenizer);
-		}
-
-		// Split up the lines into separators and non-separators.
-		tokenizer = new Separators(tokenizer);
-		// Find (and mark) pseudo literals.
-		tokenizer = new PseudoLiterals(tokenizer);
-
-		// This allows external tools to see all tokens before further
-		// processing. At the moment it is not guaranteed that all tokens will
-		// make it to the token sinks.
-		for (ChainableSource<Token> intermediate : this.intermediateTokenizers) {
-			intermediate.setSource(tokenizer);
-			tokenizer = intermediate;
-		}
-
-		// tokenizer = new Printing(tokenizer, "%% ");
-
-		// EXPERIMENTAL: optional preprocessing stage.
-		// TODO Work on this stage.
-		if (this.preprocessing) {
-			tokenizer = new PreprocessingSource(tokenizer, this);
-		}
-
-		return tokenizer;
-	}
-
 	private boolean buildTrees() {
 		return this.buildTrees
 				|| (this.treeProcessors != null && this.treeProcessors.size() > 0);
@@ -369,27 +316,7 @@ public class CobolParser implements ParserConfiguration {
 		this.preprocessing = preprocessing;
 	}
 
-	/** EXPERIMENTAL ! */
-	public void setCopybookPath(List<File> copybookPaths) {
-		this.copybookPaths = copybookPaths;
-	}
-
-	// TODO Smarter lookup system, with variations in extensions.
-	public File lookup(final String textName, final String libraryName) {
-		if (this.copybookPaths == null)
-			return null;
-
-		for (File path : this.copybookPaths) {
-			File[] matches = path.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.equalsIgnoreCase(textName + ".cpy");
-				}
-			});
-
-			if (matches != null && matches.length > 0)
-				return matches[0];
-		}
-
-		return null;
+	public void setCopybookPath(List<File> paths) {
+		this.copybooks.setLookupPaths(paths);
 	}
 }

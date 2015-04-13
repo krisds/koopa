@@ -4,8 +4,8 @@ import java.io.StringReader;
 import java.util.List;
 
 import koopa.app.components.astview.ASTFrame;
+import koopa.cobol.CobolTokens;
 import koopa.cobol.grammar.CobolGrammar;
-import koopa.cobol.sources.CobolTokens;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -33,8 +33,7 @@ public class ParseString {
 
 		StringReader reader = new StringReader(text);
 
-		CobolTokens tokens = new CobolTokens();
-		Source<Token> source = tokens.getNewSource(reader, format);
+		Source<Token> source = CobolTokens.getNewSource(reader, format);
 
 		KoopaTreeBuilder builder = new KoopaTreeBuilder();
 		Target<Data> target = builder.getTarget();

@@ -7,6 +7,7 @@ import java.util.List;
 import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 
 public class Tree {
@@ -153,5 +154,15 @@ public class Tree {
 
 			tokens.add((Token) data);
 		}
+	}
+
+	public boolean isNode(String name) {
+		if (data == null)
+			return false;
+
+		if ((data instanceof Start))
+			return false;
+
+		return name.equals(((Start) data).getName());
 	}
 }

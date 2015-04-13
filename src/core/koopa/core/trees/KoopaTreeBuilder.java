@@ -74,4 +74,8 @@ public class KoopaTreeBuilder implements TreeBuilder {
 		if (this.treeparts.isEmpty())
 			this.trees.add(tree);
 	}
+
+	public TreeBuildDirectingSink getTarget() {
+		return new TreeBuildDirectingSink(this, false);
+	}
 }

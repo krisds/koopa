@@ -3145,12 +3145,11 @@ end
 ## -----------------------------------------------------------------------------
 
 def goToStatement =
-    GO [TO]
-    [ procedureName
-        [ (procedureName)*
-          DEPENDING [ON] identifier
-        ]
-    ]
+    GO [TO] (procedureName)* [dependingOn]
+end
+
+def dependingOn =
+    DEPENDING [ON] identifier
 end
 
 ## #############################################################################
@@ -3160,15 +3159,20 @@ end
 def ifStatement =
     IF condition [THEN]
       ( nestedStatements
-      | NEXT SENTENCE
+      | nextSentence %as statement
       )
     [ELSE
       ( nestedStatements
-      | NEXT SENTENCE
+      | nextSentence %as statement
       )
     ]
     [END-IF]
 end
+
+def nextSentence =
+    NEXT SENTENCE
+end
+
 
 ## #############################################################################
 ## INITIATE statement.

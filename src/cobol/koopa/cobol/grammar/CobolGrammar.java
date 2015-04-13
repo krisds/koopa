@@ -12751,28 +12751,40 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        token("TO")
                    ),
+                   star(
+                       procedureName()
+                   ),
                    optional(
-                       sequence(
-                           procedureName(),
-                           optional(
-                               sequence(
-                                   star(
-                                       procedureName()
-                                   ),
-                                   token("DEPENDING"),
-                                   optional(
-                                       token("ON")
-                                   ),
-                                   identifier()
-                               )
-                           )
-                       )
+                       dependingOn()
                    )
                )
            );
         }
 
         return goToStatementParser;
+    }
+
+    // ========================================================
+    // dependingOn
+    // ........................................................
+
+    private Parser dependingOnParser = null;
+
+    public Parser dependingOn() {    if (dependingOnParser == null) {
+           FutureParser future = scoped("dependingOn", true);
+           dependingOnParser = future;
+           future.setParser(
+               sequence(
+                   token("DEPENDING"),
+                   optional(
+                       token("ON")
+                   ),
+                   identifier()
+               )
+           );
+        }
+
+        return dependingOnParser;
     }
 
     // ========================================================
@@ -12793,9 +12805,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    choice(
                        nestedStatements(),
-                       sequence(
-                           token("NEXT"),
-                           token("SENTENCE")
+                       as("statement",
+                           nextSentence()
                        )
                    ),
                    optional(
@@ -12803,9 +12814,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("ELSE"),
                            choice(
                                nestedStatements(),
-                               sequence(
-                                   token("NEXT"),
-                                   token("SENTENCE")
+                               as("statement",
+                                   nextSentence()
                                )
                            )
                        )
@@ -12818,6 +12828,26 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return ifStatementParser;
+    }
+
+    // ========================================================
+    // nextSentence
+    // ........................................................
+
+    private Parser nextSentenceParser = null;
+
+    public Parser nextSentence() {    if (nextSentenceParser == null) {
+           FutureParser future = scoped("nextSentence", true);
+           nextSentenceParser = future;
+           future.setParser(
+               sequence(
+                   token("NEXT"),
+                   token("SENTENCE")
+               )
+           );
+        }
+
+        return nextSentenceParser;
     }
 
     // ========================================================

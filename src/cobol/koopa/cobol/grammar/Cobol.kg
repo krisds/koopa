@@ -2365,6 +2365,7 @@ def acceptFromOther =
     | STANDARD OBJECT identifier
     | THREAD HANDLE
     | WINDOW HANDLE
+    | ENVIRONMENT ( name | alphanumericLiteral )
     )
 end
 
@@ -3435,7 +3436,10 @@ def performStatement =
         | until
         | varying
         ]
-        ( nestedStatements END-PERFORM | statement -THRU -THROUGH | END-PERFORM )
+        ( nestedStatements END-PERFORM
+        | statement %as nestedStatements   -THRU -THROUGH
+        | END-PERFORM 
+        )
         
     | # Perform procedureName
         procedureName [(THROUGH | THRU) procedureName]

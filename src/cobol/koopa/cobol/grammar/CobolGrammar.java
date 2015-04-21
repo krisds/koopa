@@ -9577,6 +9577,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            token("WINDOW"),
                            token("HANDLE")
+                       ),
+                       sequence(
+                           token("ENVIRONMENT"),
+                           choice(
+                               name(),
+                               alphanumericLiteral()
+                           )
                        )
                    )
                )
@@ -13833,7 +13840,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    token("END-PERFORM")
                                ),
                                sequence(
-                                   statement(),
+                                   as("nestedStatements",
+                                       statement()
+                                   ),
                                    not(
                                        token("THRU")
                                    ),

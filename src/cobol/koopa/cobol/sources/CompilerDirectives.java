@@ -33,10 +33,10 @@ public class CompilerDirectives extends BasicSource<Token> implements
 			.compile("(^|\\s)TITLE\\s.*");
 
 	private static final Pattern FIXED_FORM_COMPILER_DIRECTIVE = Pattern
-			.compile("^.{6}\\s\\s*(>>|$).*");
+			.compile("^.{6}\\s\\s*(>>|\\$).*");
 
 	private static final Pattern FREE_FORM_COMPILER_DIRECTIVE = Pattern
-			.compile("^\\s*(>>|$).*");
+			.compile("^\\s*(>>|\\$).*");
 
 	private final SourceFormat format;
 

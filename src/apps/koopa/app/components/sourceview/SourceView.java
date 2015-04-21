@@ -1,5 +1,11 @@
 package koopa.app.components.sourceview;
 
+import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.IslandTag.LAND;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -34,15 +40,12 @@ import javax.swing.text.StyledDocument;
 import koopa.app.components.highlights.Highlights;
 import koopa.app.components.highlights.SquiggleUnderlineHighlightPainter;
 import koopa.app.listeners.TokenSelectionListener;
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
-import koopa.core.data.tags.AreaTag;
-import koopa.core.data.tags.IslandTag;
 import koopa.core.targets.TokenTracker;
 
 @SuppressWarnings("serial")
@@ -307,15 +310,14 @@ public class SourceView extends JPanel implements ParsingListener {
 			this.tokenTracker = results.getTokenTracker();
 
 			for (Token token : this.tokenTracker.getTokens()) {
-				if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
+				if (token.hasTag(PROGRAM_TEXT_AREA) && !token.hasTag(COMMENT))
 					continue;
-				}
 
 				final int start = token.getStart().getPositionInFile() - 1;
 				final int end = token.getEnd().getPositionInFile();
 				final int len = end - start;
 
-				if (token.hasTag(AreaTag.COMPILER_DIRECTIVE))
+				if (token.hasTag(COMPILER_DIRECTIVE))
 					document.setCharacterAttributes(start, len,
 							getCompilerDirectiveStyle(document), false);
 				else
@@ -323,42 +325,16 @@ public class SourceView extends JPanel implements ParsingListener {
 							getCommentStyle(document), false);
 			}
 
-			// for (List<Token> line : tokenizer.getLines()) {
-			// for (Token token : line) {
-			// final int start = token.getStart().getPositionInFile() - 1;
-			// final int end = token.getEnd().getPositionInFile();
-			// final int len = end - start;
-			//
-			// document.setCharacterAttributes(start, len,
-			// getCommentStyle(document), false);
-			// }
-			// }
-
 			final List<List<Token>> lines = sink.getLines();
 			for (List<Token> line : lines) {
 				for (Token token : line) {
 
 					final Style style;
-					if (token.hasTag(SyntacticTag.STRING_LITERAL)) {
+					if (token.hasTag(STRING_LITERAL)) {
 						style = getStringStyle(document);
 
-						// } else if
-						// (token.hasTag(SyntacticTag.DECIMAL_LITERAL)) {
-						// document.setCharacterAttributes(start, len,
-						// getStringStyle(document), false);
-						//
-						// } else if
-						// (token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
-						// document.setCharacterAttributes(start, len,
-						// getStringStyle(document), false);
-						//
-						// } else if (token.hasTag(SyntacticTag.PSEUDO_LITERAL))
-						// {
-						// document.setCharacterAttributes(start, len,
-						// getStringStyle(document), false);
-
-					} else if (token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-							&& token.hasTag(IslandTag.LAND)) {
+					} else if (token.hasTag(PROGRAM_TEXT_AREA)
+							&& token.hasTag(LAND) && !token.hasTag(COMMENT)) {
 						style = getLandStyle(document);
 
 					} else {
@@ -394,7 +370,8 @@ public class SourceView extends JPanel implements ParsingListener {
 
 			for (int i = 0; i < results.getErrorCount(); i++) {
 				final Token token = results.getError(i).getFirst();
-				if (token == null) continue;
+				if (token == null)
+					continue;
 				final int start = token.getStart().getPositionInFile() - 1;
 				final int end = token.getEnd().getPositionInFile();
 				final int len = end - start;

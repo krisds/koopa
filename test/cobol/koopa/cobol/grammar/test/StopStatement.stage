@@ -5,24 +5,57 @@ tokenizer koopa.cobol.sources.test.CobolTestSource;
 target stopStatement;
 
 +[ STOP RUN ]
-+[ STOP "FOO" ]
-+[ STOP 42 ]
 
-# TODO The literal can't be anything other than an unsigned integer+
 
-+[ STOP RUN GIVING foo ]
-+[ STOP RUN RETURNING foo ]
-
-+[ STOP RUN GIVING ADDRESS OF foo ]
++[ STOP RUN GIVING    ADDRESS OF foo ]
++[ STOP RUN GIVING               foo ]
 +[ STOP RUN RETURNING ADDRESS OF foo ]
++[ STOP RUN RETURNING            foo ]
 
-+[ STOP RUN GIVING 100 ]
-+[ STOP RUN RETURNING 100 ]
-
-+[ STOP RUN GIVING 100 SIZE 200 ]
-+[ STOP RUN RETURNING 100 SIZE 200 ]
-
-+[ STOP RUN GIVING 100 SIZE IS 200 ]
++[ STOP RUN GIVING    100             ]
++[ STOP RUN GIVING    100 SIZE IS 200 ]
++[ STOP RUN GIVING    100 SIZE    200 ]
++[ STOP RUN RETURNING 100             ]
 +[ STOP RUN RETURNING 100 SIZE IS 200 ]
++[ STOP RUN RETURNING 100 SIZE    200 ]
+
+
++[ STOP RUN WITH NORMAL STATUS my-status ]
++[ STOP RUN WITH NORMAL STATUS "success" ]
++[ STOP RUN WITH NORMAL STATUS 42        ]
++[ STOP RUN WITH NORMAL STATUS           ]
++[ STOP RUN      NORMAL STATUS my-status ]
++[ STOP RUN      NORMAL STATUS "success" ]
++[ STOP RUN      NORMAL STATUS 42        ]
++[ STOP RUN      NORMAL STATUS           ]
++[ STOP RUN WITH NORMAL        my-status ]
++[ STOP RUN WITH NORMAL        "success" ]
++[ STOP RUN WITH NORMAL        42        ]
++[ STOP RUN WITH NORMAL                  ]
++[ STOP RUN      NORMAL        my-status ]
++[ STOP RUN      NORMAL        "success" ]
++[ STOP RUN      NORMAL        42        ]
++[ STOP RUN      NORMAL                  ]
++[ STOP RUN WITH ERROR  STATUS my-status ]
++[ STOP RUN WITH ERROR  STATUS "failed"  ]
++[ STOP RUN WITH ERROR  STATUS 666       ]
++[ STOP RUN WITH ERROR  STATUS           ]
++[ STOP RUN      ERROR  STATUS my-status ]
++[ STOP RUN      ERROR  STATUS "failed"  ]
++[ STOP RUN      ERROR  STATUS 666       ]
++[ STOP RUN      ERROR  STATUS           ]
++[ STOP RUN WITH ERROR         my-status ]
++[ STOP RUN WITH ERROR         "failed"  ]
++[ STOP RUN WITH ERROR         666       ]
++[ STOP RUN WITH ERROR                   ]
++[ STOP RUN      ERROR         my-status ]
++[ STOP RUN      ERROR         "failed"  ]
++[ STOP RUN      ERROR         666       ]
++[ STOP RUN      ERROR                   ]
+
+
++[ STOP "this madness" ]
++[ STOP 42             ]
+
 
 +[ STOP ITERATOR ]

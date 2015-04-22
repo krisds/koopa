@@ -15404,49 +15404,69 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("stopStatement", true);
            stopStatementParser = future;
            future.setParser(
-               choice(
-                   sequence(
-                       token("STOP"),
-                       literal()
-                   ),
-                   sequence(
-                       token("STOP"),
-                       token("RUN"),
-                       optional(
-                           sequence(
-                               choice(
-                                   token("GIVING"),
-                                   token("RETURNING")
-                               ),
+               sequence(
+                   token("STOP"),
+                   choice(
+                       sequence(
+                           as("endpoint",
+                               token("RUN")
+                           ),
+                           optional(
                                choice(
                                    sequence(
-                                       optional(
-                                           sequence(
-                                               token("ADDRESS"),
-                                               token("OF")
-                                           )
+                                       choice(
+                                           token("GIVING"),
+                                           token("RETURNING")
                                        ),
-                                       identifier()
+                                       choice(
+                                           sequence(
+                                               optional(
+                                                   sequence(
+                                                       token("ADDRESS"),
+                                                       token("OF")
+                                                   )
+                                               ),
+                                               identifier()
+                                           ),
+                                           sequence(
+                                               integer(),
+                                               optional(
+                                                   sequence(
+                                                       token("SIZE"),
+                                                       optional(
+                                                           token("IS")
+                                                       ),
+                                                       integer()
+                                                   )
+                                               )
+                                           )
+                                       )
                                    ),
                                    sequence(
-                                       integer(),
                                        optional(
-                                           sequence(
-                                               token("SIZE"),
-                                               optional(
-                                                   token("IS")
-                                               ),
-                                               integer()
+                                           token("WITH")
+                                       ),
+                                       choice(
+                                           token("ERROR"),
+                                           token("NORMAL")
+                                       ),
+                                       optional(
+                                           token("STATUS")
+                                       ),
+                                       optional(
+                                           choice(
+                                               identifier(),
+                                               literal()
                                            )
                                        )
                                    )
                                )
                            )
-                       )
-                   ),
-                   sequence(
-                       token("STOP"),
-                       token("ITERATOR")
+                       ),
+                       as("endpoint",
+                           token("ITERATOR")
+                       ),
+                       literal()
                    )
                )
            );

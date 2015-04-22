@@ -3844,14 +3844,30 @@ end
 ## -----------------------------------------------------------------------------
 
 def stopStatement =
-    ( STOP literal
-    | STOP RUN [ (GIVING | RETURNING) ([ADDRESS OF] identifier | integer [SIZE [IS] integer]) ]
-    | STOP ITERATOR
+    STOP
+
+    ( RUN %as endpoint
+      [ # MF
+        (GIVING | RETURNING)
+        ( [ADDRESS OF] identifier
+        | integer [SIZE [IS] integer]
+        )
+
+      | # STD.BK
+        [WITH] (ERROR | NORMAL) [STATUS] [identifier | literal]        
+      ]
+
+    | # MF .NET/JVM
+      ITERATOR %as endpoint
+
+    | # ANSI 85
+      literal
     )
 end
 
 # Refs:
 # http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC06.html
+
 
 ## #############################################################################
 ## STRING statement.

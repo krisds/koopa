@@ -40,6 +40,7 @@ def copybookHoldingBehaviour =
     (sentence)*
     (paragraph)*
     (section)*
+    (statement)*
 end
 
 
@@ -855,7 +856,7 @@ def selectStatement =
      | lockModeClause
      | relativeKeyClause
      | recordKeyClause
-     | alternateRecordKeyClause
+     | (alternateRecordKeyClause)+
      | fileStatusClause
      | sharingClause
      | paddingClause
@@ -1039,6 +1040,7 @@ def dataDivisionBody =
 	| communicationSection
 	| reportSection
 	| screenSection
+	| copyStatement
     )+
 end
 
@@ -3728,7 +3730,8 @@ end
 
 def setStatement =
     SET
-    ( setFormatMonitorValue
+    ( setEnvironmentVariable
+    | setFormatMonitorValue
     | setFormatDataPointerAssignment
     | setFormatProcedurePointerAssignment
     | setFormatSemaphoreValue
@@ -3781,6 +3784,11 @@ def setFormatSemaphoreValue =
     (UP | DOWN)
     BY
     (integer | identifier)
+end
+
+# Based on a sample found in the wild...
+def setEnvironmentVariable =
+    ENVIRONMENT literal TO literal
 end
 
 # Refs:

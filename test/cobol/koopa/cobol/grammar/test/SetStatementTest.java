@@ -436,4 +436,13 @@ public class SetStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testSetStatement_48() {
+      Parser parser = grammar.setStatement();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET ENVIRONMENT \"OJ_DBG\" TO \"1\" "));
+      assertTrue(parser.accepts(tokenizer));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

@@ -1,0 +1,16 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target selectStatement;
+
+# Sample from ITP-Advanced-COBOL-FINAL
++[ SELECT MER-FILE
+     ASSIGN TO 'MER.DAT'
+     ORGANIZATION IS INDEXED
+     ACCESS MODE IS SEQUENTIAL
+     RECORD KEY IS MER-ID-KEY
+     ALTERNATE RECORD KEY IS MER-NAME-KEY
+     ALTERNATE RECORD KEY IS MER-EMAIL-KEY
+     ALTERNATE RECORD KEY IS MER-PHONE-KEY
+     FILE STATUS IS WS-STAT . ]

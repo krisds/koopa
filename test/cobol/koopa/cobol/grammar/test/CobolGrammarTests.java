@@ -74,6 +74,7 @@ public class CobolGrammarTests {
 		suite.addTestSuite(ReturnStatementTest.class);
 		suite.addTestSuite(RewriteStatementTest.class);
 		suite.addTestSuite(SearchStatementTest.class);
+		suite.addTestSuite(SelectStatementTest.class);
 		suite.addTestSuite(ServiceStatementTest.class);
 		suite.addTestSuite(SetStatementTest.class);
 		suite.addTestSuite(SpecialNamesParagraphTest.class);

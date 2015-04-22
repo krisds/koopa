@@ -147,6 +147,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    star(
                        section()
+                   ),
+                   star(
+                       statement()
                    )
                )
            );
@@ -3462,7 +3465,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                            lockModeClause(),
                            relativeKeyClause(),
                            recordKeyClause(),
-                           alternateRecordKeyClause(),
+                           plus(
+                               alternateRecordKeyClause()
+                           ),
                            fileStatusClause(),
                            sharingClause(),
                            paddingClause()
@@ -4358,7 +4363,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                        linkageSection(),
                        communicationSection(),
                        reportSection(),
-                       screenSection()
+                       screenSection(),
+                       copyStatement()
                    )
                )
            );
@@ -14911,6 +14917,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("SET"),
                    choice(
+                       setEnvironmentVariable(),
                        setFormatMonitorValue(),
                        setFormatDataPointerAssignment(),
                        setFormatProcedurePointerAssignment(),
@@ -15160,6 +15167,28 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return setFormatSemaphoreValueParser;
+    }
+
+    // ========================================================
+    // setEnvironmentVariable
+    // ........................................................
+
+    private Parser setEnvironmentVariableParser = null;
+
+    public Parser setEnvironmentVariable() {    if (setEnvironmentVariableParser == null) {
+           FutureParser future = scoped("setEnvironmentVariable", true);
+           setEnvironmentVariableParser = future;
+           future.setParser(
+               sequence(
+                   token("ENVIRONMENT"),
+                   literal(),
+                   token("TO"),
+                   literal()
+               )
+           );
+        }
+
+        return setEnvironmentVariableParser;
     }
 
     // ========================================================

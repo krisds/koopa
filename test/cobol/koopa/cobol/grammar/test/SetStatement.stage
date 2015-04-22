@@ -59,3 +59,6 @@ target setStatement;
 +[ SET foo TO DOWN BY 1 ]
 +[ SET foo TO UP BY bar ]
 +[ SET foo bar TO DOWN BY baz ]
+
+# Sample from OpenJensen:
++[ SET ENVIRONMENT "OJ_DBG" TO "1" ]

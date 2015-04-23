@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import koopa.core.data.Token;
+import koopa.core.data.markers.Start;
 import koopa.core.grammars.Block;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.Parser;
@@ -32,7 +33,10 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser cicsStatementParser = null;
 
-    public Parser cicsStatement() {    if (cicsStatementParser == null) {
+    public final Start cicsStatement = Start.on(getNamespace(), "cicsStatement");
+
+    public Parser cicsStatement() {
+        if (cicsStatementParser == null) {
            FutureParser future = scoped("cicsStatement", true);
            cicsStatementParser = future;
            future.setParser(
@@ -54,7 +58,10 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser commandParser = null;
 
-    public Parser command() {    if (commandParser == null) {
+    public final Start command = Start.on(getNamespace(), "command");
+
+    public Parser command() {
+        if (commandParser == null) {
            FutureParser future = scoped("command", true);
            commandParser = future;
            future.setParser(
@@ -166,7 +173,10 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser optionParser = null;
 
-    public Parser option() {    if (optionParser == null) {
+    public final Start option = Start.on(getNamespace(), "option");
+
+    public Parser option() {
+        if (optionParser == null) {
            FutureParser future = scoped("option", true);
            optionParser = future;
            future.setParser(
@@ -192,7 +202,10 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser nameParser = null;
 
-    public Parser name() {    if (nameParser == null) {
+    public final Start name = Start.on(getNamespace(), "name");
+
+    public Parser name() {
+        if (nameParser == null) {
            FutureParser future = scoped("name", true);
            nameParser = future;
            future.setParser(
@@ -217,7 +230,10 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser valueParser = null;
 
-    public Parser value() {    if (valueParser == null) {
+    public final Start value = Start.on(getNamespace(), "value");
+
+    public Parser value() {
+        if (valueParser == null) {
            FutureParser future = scoped("value", true);
            valueParser = future;
            future.setParser(
@@ -236,7 +252,8 @@ public class CICSGrammar extends CICSBaseGrammar {
 
     private Parser paramParser = null;
 
-    private Parser param() {    if (paramParser == null) {
+    private Parser param() {
+        if (paramParser == null) {
            FutureParser future = scoped("param", false);
            paramParser = future;
            future.setParser(

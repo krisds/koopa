@@ -338,3 +338,6 @@ target acceptStatement;
 # +[ ACCEPT FIELD-DATA (INX1) LINE FIELD-LINE (INX1)
 #        COL FIELD-COLUMN (INX1) CONTROL FIELD-CONTROL (INX1) ]
 
+
+# Sample from ACAS.
++[ accept   ws-env-lines   from lines ]

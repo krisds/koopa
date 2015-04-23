@@ -207,9 +207,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		RESERVED_WORDS.add("ENTRY");
 		RESERVED_WORDS.add("ENVIRONMENT");
 		RESERVED_WORDS.add("EO");
-		RESERVED_WORDS.add("EO");
-		RESERVED_WORDS.add("EOP");
-		RESERVED_WORDS.add("EOP");
+		// RESERVED_WORDS.add("EOP");
 		RESERVED_WORDS.add("EQUAL");
 		RESERVED_WORDS.add("EQUAL");
 		// RESERVED_WORDS.add("ERASE");
@@ -466,7 +464,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		RESERVED_WORDS.add("STANDARD-1");
 		RESERVED_WORDS.add("STANDARD-2");
 		RESERVED_WORDS.add("START");
-		RESERVED_WORDS.add("STATUS");
+		//RESERVED_WORDS.add("STATUS");
 		RESERVED_WORDS.add("STOP");
 		// RESERVED_WORDS.add("STORE");
 		RESERVED_WORDS.add("STRING");

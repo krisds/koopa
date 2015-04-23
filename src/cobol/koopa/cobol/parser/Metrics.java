@@ -61,6 +61,11 @@ public class Metrics {
 			if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA)) {
 				continue;
 			}
+			
+			// Ignore all comments within the program text.
+			if (token.hasTag(AreaTag.COMMENT)) {
+				continue;
+			}
 
 			// Ignoring whitespace.
 			if (token.hasTag(SyntacticTag.SEPARATOR)

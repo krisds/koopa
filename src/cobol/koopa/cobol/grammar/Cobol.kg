@@ -1175,7 +1175,11 @@ end
 
 def communicationDescriptionEntry_format1 =
     CD cdName [FOR] [INITIAL] INPUT
-    ( (dataDescName)+
+    
+    ( # TODO We really want to exclude all of the possible starter tokens for
+      # the other clauses.  Can we automate that somehow ?
+      ( -STATUS dataDescName )+
+      
     | ![ [SYMBOLIC] QUEUE       [IS] dataDescName
        | [SYMBOLIC] SUB-QUEUE-1 [IS] dataDescName
        | [SYMBOLIC] SUB-QUEUE-2 [IS] dataDescName
@@ -2333,6 +2337,7 @@ end
 def acceptStatement =
     ACCEPT 
     ( acceptFromDate
+    | acceptScreenSizeData             # GNUCobol
     | acceptFromOther
     | acceptFromMnemonic
     | acceptMessageCount
@@ -2408,6 +2413,11 @@ end
 def modeIsBlockPhrase =
     MODE [IS] BLOCK
 end
+
+def acceptScreenSizeData =
+    identifier FROM (LINES | COLUMNS)
+end
+
 
 ## #############################################################################
 ## ADD statement.
@@ -2667,6 +2677,26 @@ end
 ## -----------------------------------------------------------------------------
 
 def displayStatement =
+    DISPLAY
+    ( OMITTED | identifier | literal )+
+	
+	( uponClause
+	| withNoAdvancing
+    | UNIT (identifier | literal)
+    | dtAtPositioning
+    | dtLineColPositioning
+    | uponClause
+    | modeIsBlockPhrase
+    | [WITH] (screenEntryPhrase)+
+    )*
+	
+    [onException]
+    [notOnException]
+    
+	[END-DISPLAY]
+end
+
+def displayStatement__ =
 	DISPLAY 
 	( displayTerminalFormat
 	| displayDeviceFormat

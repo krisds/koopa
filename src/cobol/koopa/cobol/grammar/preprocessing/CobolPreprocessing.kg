@@ -53,7 +53,9 @@ def textName =
 end
 
 def libraryName =
-    cobolWord
+    ( cobolWord
+    | alphanumericLiteral
+    )
 end
 
 def literal =

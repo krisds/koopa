@@ -31,3 +31,27 @@ SEQNR I TEXT      EOLN/TEXT
 SEQNR I TEXT EOLN/TEXT
 
 
+# =============================================================================
+# Switching to FREE mode.
+
+       >> source free
+<------------------->^
+COMPILER_DIRECTIVE   eoln
+
+display "freedom".
+<---------------->^
+text              eoln
+
+
+# =============================================================================
+# Switching to FIXED mode.
+
+>> source fixed
+<------------->^
+compiler_directive EOLN
+
+       DISPLAY FOO.
+<---->^<---------->^
+SEQNR I TEXT       EOLN/TEXT
+
+

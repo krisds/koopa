@@ -2,38 +2,30 @@
 <--------------------------------------------------------------------------->^
 _                                                                            EOLN
 
+       >> source format is free
+<----------------------------->^
+COMPILER_DIRECTIVE             eoln
+
+>> source format is fixed
+<----------------------->^
+compiler_directive       EOLN
+
+       >> source format is free    *> witty remark
+<---------------------------------><------------->^
+COMPILER_DIRECTIVE                 COMMENT        eoln
+
+>> source format is fixed    *> witty remark
+<---------------------------><------------->^
+compiler_directive           comment        EOLN
+
+       >> source free
+<------------------->^
+COMPILER_DIRECTIVE   eoln
+
+>> source fixed
+<------------->^
+compiler_directive EOLN
+
 $ SET SOURCEFORMAT "FREE"
 <----------------------->^
 COMPILER_DIRECTIVE       EOLN
-
-123456 >> source format is free
-<----------------------------->^
-COMPILER_DIRECTIVE             EOLN
-
-123456 >> source format free
-<-------------------------->^
-COMPILER_DIRECTIVE          EOLN
-
-123456 >> source is free
-<---------------------->^
-COMPILER_DIRECTIVE      EOLN
-
-123456 >> source free
-<------------------->^
-COMPILER_DIRECTIVE   EOLN
-
-123456 >> source format is fixed
-<------------------------------>^
-COMPILER_DIRECTIVE              EOLN
-
-123456 >> source format fixed
-<--------------------------->^
-COMPILER_DIRECTIVE           EOLN
-
-123456 >> source is fixed
-<----------------------->^
-COMPILER_DIRECTIVE       EOLN
-
-123456 >> source fixed
-<-------------------->^
-COMPILER_DIRECTIVE    EOLN

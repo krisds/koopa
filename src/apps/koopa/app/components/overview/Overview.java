@@ -28,6 +28,7 @@ import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
+import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.parser.ParsingListener;
@@ -245,7 +246,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 			return;
 		}
 
-		if (ApplicationSupport.isCobolFile(file)) {
+		if (CobolFiles.isCobolFile(file)) {
 			targets.add(file);
 		}
 	}

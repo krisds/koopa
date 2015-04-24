@@ -13,6 +13,8 @@ import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.cobol.data.tags.SyntacticTag.SIGNED;
 import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
+import static koopa.cobol.sources.SourceFormat.FIXED;
+import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.END_OF_LINE;
@@ -83,7 +85,7 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		AnnotatedSourceSample sample = new AnnotatedSourceSample(
 				new FileReader(file));
 
-		Source<Token> source = getSource(sample, SourceFormat.FIXED);
+		Source<Token> source = getSource(sample, FIXED);
 
 		sample.assertOutputIsAsExpected(source, this);
 	}
@@ -107,15 +109,13 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		if (file.getName().startsWith("SourceFormattingDirectives"))
 			return source;
 
-		if (format == SourceFormat.FIXED) {
-			source = new LineContinuations(source);
-			if (file.getName().startsWith("LineContinuations"))
-				return source;
+		source = new LineContinuations(source);
+		if (file.getName().startsWith("LineContinuations"))
+			return source;
 
-			source = new ContinuationWelding(source);
-			if (file.getName().startsWith("ContinuationWelding"))
-				return source;
-		}
+		source = new ContinuationWelding(source);
+		if (file.getName().startsWith("ContinuationWelding"))
+			return source;
 
 		source = new Separators(source);
 		if (file.getName().startsWith("Separators"))
@@ -137,16 +137,38 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		TAG_VALIDATIONS = new HashMap<String, Object[]>();
 
 		TAG_VALIDATIONS.put(":", new Object[] { SEPARATOR });
-		TAG_VALIDATIONS.put("EOLN", new Object[] { END_OF_LINE });
-		TAG_VALIDATIONS.put("COMPILER_DIRECTIVE",
-				new Object[] { COMPILER_DIRECTIVE });
-		TAG_VALIDATIONS.put("SEQNR", new Object[] { SEQUENCE_NUMBER_AREA });
-		TAG_VALIDATIONS.put("I", new Object[] { INDICATOR_AREA });
-		TAG_VALIDATIONS.put("TEXT", new Object[] { PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("IDENT", new Object[] { IDENTIFICATION_AREA });
-		TAG_VALIDATIONS.put("COMMENT", new Object[] { COMMENT });
-		TAG_VALIDATIONS.put("FORMATTING",
-				new Object[] { SOURCE_FORMATTING_DIRECTIVE });
+
+		TAG_VALIDATIONS.put("EOLN", new Object[] { END_OF_LINE, FIXED });
+		TAG_VALIDATIONS.put("eoln", new Object[] { END_OF_LINE, FREE });
+
+		TAG_VALIDATIONS.put("COMPILER_DIRECTIVE", new Object[] {
+				COMPILER_DIRECTIVE, FIXED });
+		TAG_VALIDATIONS.put("compiler_directive", new Object[] {
+				COMPILER_DIRECTIVE, FREE });
+
+		TAG_VALIDATIONS.put("COMMENT", new Object[] { COMMENT, FIXED });
+		TAG_VALIDATIONS.put("comment", new Object[] { COMMENT, FREE });
+
+		TAG_VALIDATIONS.put("SEQNR",
+				new Object[] { SEQUENCE_NUMBER_AREA, FIXED });
+		TAG_VALIDATIONS.put("seqnr",
+				new Object[] { SEQUENCE_NUMBER_AREA, FREE });
+
+		TAG_VALIDATIONS.put("I", new Object[] { INDICATOR_AREA, FIXED });
+		TAG_VALIDATIONS.put("i", new Object[] { INDICATOR_AREA, FREE });
+
+		TAG_VALIDATIONS.put("TEXT", new Object[] { PROGRAM_TEXT_AREA, FIXED });
+		TAG_VALIDATIONS.put("text", new Object[] { PROGRAM_TEXT_AREA, FREE });
+
+		TAG_VALIDATIONS.put("IDENT",
+				new Object[] { IDENTIFICATION_AREA, FIXED });
+		TAG_VALIDATIONS
+				.put("ident", new Object[] { IDENTIFICATION_AREA, FREE });
+
+		TAG_VALIDATIONS.put("FORMATTING", new Object[] {
+				SOURCE_FORMATTING_DIRECTIVE, FIXED });
+		TAG_VALIDATIONS.put("formatting", new Object[] {
+				SOURCE_FORMATTING_DIRECTIVE, FREE });
 
 		TAG_VALIDATIONS.put("CS", new Object[] { CHARACTER_STRING,
 				PROGRAM_TEXT_AREA });

@@ -5,7 +5,9 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-/** EXPERIMENTAL ! Support for preprocessing. */
+import koopa.core.util.Files;
+
+/** EXPERIMENTAL ! Support for pre-processing. */
 public class Copybooks {
 	private List<File> copybookPaths = new ArrayList<File>();
 
@@ -13,15 +15,16 @@ public class Copybooks {
 		this.copybookPaths = copybookPaths;
 	}
 
-	// TODO Smarter lookup system, with variations in extensions.
+	// TODO Take library name into account.
 	public File lookup(final String textName, final String libraryName) {
 		if (this.copybookPaths == null)
 			return null;
 
 		for (File path : this.copybookPaths) {
 			File[] matches = path.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.equalsIgnoreCase(textName + ".cpy");
+				public boolean accept(File path, String name) {
+					return CobolFiles.isCopybook(name)
+							&& Files.getName(name).equalsIgnoreCase(textName);
 				}
 			});
 

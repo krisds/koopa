@@ -34,16 +34,14 @@ public class CobolTokens {
 		tokenizer = new LineSplitter(new BufferedReader(reader));
 		// Filter out some compiler directives.
 		tokenizer = new CompilerDirectives(tokenizer, format);
-		// Split up the different areas of each line (depending on the format).
-		tokenizer = new ProgramArea(tokenizer, format);
+		// Split up the different areas of each line.
+		tokenizer = new ProgramArea(tokenizer);
 		// Filter out some source formatting directives.
 		tokenizer = new SourceFormattingDirectives(tokenizer);
 
-		// In case of fixed format: take care of line continuations
-		if (format == SourceFormat.FIXED) {
-			tokenizer = new LineContinuations(tokenizer);
-			tokenizer = new ContinuationWelding(tokenizer);
-		}
+		// In case of fixed format: take care of line continuations.
+		tokenizer = new LineContinuations(tokenizer);
+		tokenizer = new ContinuationWelding(tokenizer);
 
 		// Split up the lines into separators and non-separators.
 		tokenizer = new Separators(tokenizer);

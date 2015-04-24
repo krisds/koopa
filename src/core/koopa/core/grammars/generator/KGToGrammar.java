@@ -9,7 +9,7 @@ import java.io.Reader;
 import java.util.Properties;
 
 import koopa.core.KGG;
-import koopa.core.util.Util;
+import koopa.core.util.Files;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
@@ -78,7 +78,7 @@ public class KGToGrammar {
 
 		String natives = null;
 		if (nativesFile.exists())
-			natives = Util.contents(nativesFile);
+			natives = Files.getText(nativesFile);
 
 		// We can then throw everything to the StringTemplate processor.
 		Reader templatesIn = new InputStreamReader(

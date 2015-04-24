@@ -1,12 +1,19 @@
 package koopa.cobol.sources;
 
+import static koopa.cobol.sources.SourceFormat.FIXED;
+import static koopa.cobol.sources.SourceFormat.FREE;
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.END_OF_LINE;
+import static koopa.core.data.tags.AreaTag.IDENTIFICATION_AREA;
+import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
 
 import java.io.IOException;
 
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 
@@ -17,26 +24,14 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.programarea");
 
-	private final SourceFormat format;
-
 	private final Source<? extends Token> source;
 
 	public ProgramArea(Source<? extends Token> source) {
-		this(source, SourceFormat.FIXED);
-	}
-
-	public ProgramArea(Source<? extends Token> source, SourceFormat format) {
 		super();
 
 		assert (source != null);
-		assert (format != null);
 
 		this.source = source;
-		this.format = format;
-	}
-
-	public SourceFormat getFormat() {
-		return format;
 	}
 
 	protected void tokenize() throws IOException {
@@ -45,26 +40,21 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 
 			Token token = source.next();
 
-			if (token == null) {
+			if (token == null)
 				return;
-			}
 
-			if (token.hasTag(AreaTag.END_OF_LINE)) {
-
-				if (LOGGER.isTraceEnabled()) {
+			if (token.hasTag(END_OF_LINE)) {
+				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("End of line: " + token);
-				}
 
 				enqueue(token.withTags(PROGRAM_TEXT_AREA));
 				continue;
 			}
 
-			if (token.hasTag(AreaTag.COMMENT)
-					|| token.hasTag(AreaTag.COMPILER_DIRECTIVE)) {
+			if (token.hasTag(COMMENT) || token.hasTag(COMPILER_DIRECTIVE)) {
 
-				if (LOGGER.isTraceEnabled()) {
+				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("Whitespace: " + token);
-				}
 
 				enqueue(token);
 				continue;
@@ -78,7 +68,11 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 				continue;
 			}
 
-			if (format == SourceFormat.FREE) {
+			SourceFormat format = FIXED;
+			if (token.hasTag(FREE))
+				format = FREE;
+
+			if (format == FREE) {
 				int c = text.charAt(0);
 
 				if (c == 'D' || c == 'd') {
@@ -86,7 +80,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 					// Otherwise it's program text.
 					if (text.charAt(1) == ' ') {
 						final Token indicator = tokenizeArea(token, 0, 1,
-								AreaTag.INDICATOR_AREA);
+								INDICATOR_AREA, format);
 
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Indicator: " + indicator);
@@ -94,7 +88,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 						enqueue(indicator);
 
 						final Token comment = tokenizeArea(token, 1, length,
-								AreaTag.COMMENT);
+								COMMENT, format);
 
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Comment: " + comment);
@@ -103,7 +97,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 
 					} else {
 						// Program text.
-						token = token.withTags(AreaTag.PROGRAM_TEXT_AREA);
+						token = token.withTags(PROGRAM_TEXT_AREA, format);
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Program text: " + token);
 						enqueue(token);
@@ -115,7 +109,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 					// Note: Keep this after the debug line check, as the
 					// indicatesComment method accepts 'd' and 'D' as well.
 					final Token indicator = tokenizeArea(token, 0, 1,
-							AreaTag.INDICATOR_AREA);
+							INDICATOR_AREA, format);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("Indicator: " + indicator);
@@ -123,7 +117,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 					enqueue(indicator);
 
 					final Token comment = tokenizeArea(token, 1, length,
-							AreaTag.COMMENT);
+							COMMENT, format);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("Comment: " + comment);
@@ -132,7 +126,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 
 				} else {
 					// Program text.
-					token = token.withTags(AreaTag.PROGRAM_TEXT_AREA);
+					token = token.withTags(PROGRAM_TEXT_AREA, format);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("Program text: " + token);
@@ -140,12 +134,12 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 					enqueue(token);
 				}
 
-			} else if (format == SourceFormat.FIXED) {
+			} else if (format == FIXED) {
 				// 1-6 (in Java: 0-5) = sequence number
 
 				final int endOfSequenceNumber = Math.min(6, length);
 				final Token sequenceNumber = tokenizeArea(token, 0,
-						endOfSequenceNumber, AreaTag.SEQUENCE_NUMBER_AREA);
+						endOfSequenceNumber, SEQUENCE_NUMBER_AREA, format);
 
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("Sequence number: " + sequenceNumber);
@@ -157,7 +151,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 				if (length >= 7) {
 					final int endOfIndicator = Math.min(7, length);
 					final Token indicator = tokenizeArea(token, 6,
-							endOfIndicator, AreaTag.INDICATOR_AREA);
+							endOfIndicator, INDICATOR_AREA, format);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("Indicator: " + indicator);
@@ -172,7 +166,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 					final int endOfProgramText = Math.min(72, length);
 					if (lineIsComment) {
 						final Token comment = tokenizeArea(token, 7,
-								endOfProgramText, AreaTag.COMMENT);
+								endOfProgramText, COMMENT, format);
 
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Comment: " + comment);
@@ -181,7 +175,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 
 					} else {
 						final Token programText = tokenizeArea(token, 7,
-								endOfProgramText, AreaTag.PROGRAM_TEXT_AREA);
+								endOfProgramText, PROGRAM_TEXT_AREA, format);
 
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Program text: " + programText);
@@ -193,7 +187,7 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 				// 73-... (in Java: 72-...) = identification
 				if (length >= 73) {
 					final Token identification = tokenizeArea(token, 72,
-							length, AreaTag.IDENTIFICATION_AREA);
+							length, IDENTIFICATION_AREA, format);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("Identification: " + identification);
@@ -202,8 +196,8 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 				}
 
 			} else {
-				// Unexpected format.
-				System.err.println("Unexpected format: " + format);
+				// Unexpected referenceFormat.
+				System.err.println("Unexpected referenceFormat: " + format);
 				// TODO Should throw an exception instead. Exiting hard is not
 				// nice.
 				System.exit(1);
@@ -215,12 +209,12 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 		return c == '*' || c == '/' || c == '$' || c == 'D' || c == 'd';
 	}
 
-	private Token tokenizeArea(Token token, int begin, int end, Object tag) {
+	private Token tokenizeArea(Token token, int begin, int end, Object... tags) {
 		final String text = token.getText().substring(begin, end);
 
 		final Position start = token.getStart();
 		final Token newToken = new Token(text, start.offsetBy(begin),
-				start.offsetBy(end - 1), tag);
+				start.offsetBy(end - 1), tags);
 
 		return newToken;
 	}

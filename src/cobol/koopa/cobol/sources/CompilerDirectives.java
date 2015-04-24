@@ -1,5 +1,6 @@
 package koopa.cobol.sources;
 
+import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
 import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
@@ -9,91 +10,167 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import koopa.core.data.Token;
+import koopa.core.data.Tokens;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 
 import org.apache.log4j.Logger;
 
-// TODO Set up unit tests for these...
 public class CompilerDirectives extends BasicSource<Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.compiler-directives");
 
-	// For the '$ SET SOURCEFORMAT'. A MicroFocus compiler directive.
-	private static final Pattern MF_SET_DIRECTIVE = Pattern
-			.compile("^\\s*\\$\\s*SET\\s+SOURCEFORMAT(\\s|\"|\\().*");
-
-	// For the CBL/PROCESS compiler directive.
-	private static final Pattern CBL_PROCESS_STATEMENT = Pattern
-			.compile("(^|\\s)(CBL|PROCESS)\\s.*");
-
-	private static final Pattern TITLE_STATEMENT = Pattern
-			.compile("(^|\\s)TITLE\\s.*");
-
-	private static final Pattern FIXED_FORM_COMPILER_DIRECTIVE = Pattern
-			.compile("^.{6}\\s\\s*(>>|\\$).*");
-
-	private static final Pattern FREE_FORM_COMPILER_DIRECTIVE = Pattern
-			.compile("^\\s*(>>|\\$).*");
-
-	private final SourceFormat format;
-
 	private final Source<? extends Token> source;
 
 	private final LinkedList<Token> queuedTokens = new LinkedList<Token>();
 
+	private SourceFormat referenceFormat;
+
 	public CompilerDirectives(Source<? extends Token> source,
-			SourceFormat format) {
+			SourceFormat initialReferenceFormat) {
 		super();
 
 		assert (source != null);
-		assert (format != null);
+		assert (initialReferenceFormat != null);
 
 		this.source = source;
-		this.format = format;
+		this.referenceFormat = initialReferenceFormat;
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("Initial reference format: " + referenceFormat);
 	}
 
 	@Override
 	public Token nxt1() {
-		if (!queuedTokens.isEmpty()) {
+		if (!queuedTokens.isEmpty())
 			return queuedTokens.removeFirst();
-		}
 
 		final Token token = source.next();
 
-		if (token == null) {
+		if (token == null)
 			return null;
-		}
 
-		if (token.tagCount() > 0) {
-			return token;
-		}
+		if (token.tagCount() > 0)
+			return token.withTags(referenceFormat);
 
-		if (isCompilerDirective(token)) {
+		if (isCompilerDirective(token))
 			return queuedTokens.removeFirst();
-		}
 
-		if (isMicroFocusCompilerDirective(token)) {
+		if (isMicroFocusCompilerDirective(token))
 			return queuedTokens.removeFirst();
-		}
 
-		if (isTitleStatement(token)) {
+		if (isTitleStatement(token))
 			return queuedTokens.removeFirst();
-		}
 
-		if (isCblProcessStatement(token)) {
+		if (isCblProcessStatement(token))
 			return queuedTokens.removeFirst();
-		}
 
-		return token;
+		return token.withTags(referenceFormat);
 	}
+
+	public void close() {
+		source.close();
+	}
+
+	// ========================================================================
+
+	private static final String INDICATOR = ">>|\\$";
+	private static final String DIRECTIVE = "((?!\\*\\>).)*";
+	private static final String INLINE_COMMENT = "\\*\\>.*";
+
+	private static final Pattern FIXED_FORM_COMPILER_DIRECTIVE = Pattern
+			.compile("^\\s{6}\\s\\s*(" + INDICATOR + ")\\s*(" + DIRECTIVE
+					+ ")\\s*(" + INLINE_COMMENT + ")?$");
+
+	private static final Pattern FREE_FORM_COMPILER_DIRECTIVE = Pattern
+			.compile("^\\s*(" + INDICATOR + ")\\s*(" + DIRECTIVE + ")\\s*("
+					+ INLINE_COMMENT + ")?$");
+
+	private static final int DIRECTIVE_GROUP = 2;
+	private static final int INLINE_COMMENT_GROUP = 4;
+
+	/**
+	 * Based on ISO/IEC 1989:20xx FCD 1.0 (E), section 7.3
+	 * "Compiler directives".
+	 */
+	private boolean isCompilerDirective(Token token) {
+		final String text = token.getText().toUpperCase();
+
+		final Matcher matcher;
+		if (referenceFormat == SourceFormat.FIXED)
+			matcher = FIXED_FORM_COMPILER_DIRECTIVE.matcher(text);
+		else
+			matcher = FREE_FORM_COMPILER_DIRECTIVE.matcher(text);
+
+		if (!matcher.find())
+			return false;
+
+		final SourceFormat format = referenceFormat;
+		final String directive = matcher.group(DIRECTIVE_GROUP);
+		if (isSourceFormatDirective(directive)) {
+			// Yay.
+		}
+
+		Token comment = null;
+		if (matcher.group(INLINE_COMMENT_GROUP) != null) {
+			int start = matcher.start(INLINE_COMMENT_GROUP);
+			comment = Tokens.subtoken(token, start).withTags(COMMENT, format);
+
+			queuedTokens.addFirst(comment);
+			token = Tokens.subtoken(token, 0, start);
+		}
+
+		token = token.withTags(COMPILER_DIRECTIVE, format);
+		queuedTokens.addFirst(token);
+
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(token);
+			if (comment != null)
+				LOGGER.trace(comment);
+		}
+
+		return true;
+	}
+
+	// ========================================================================
+
+	private static final Pattern SOURCE_FORMAT_DIRECTIVE = Pattern
+			.compile("^SOURCE(\\s+FORMAT)?(\\s+IS)?\\s+(FREE|FIXED)\\s*$");
+
+	private static final int FORMAT_GROUP = 3;
+
+	private boolean isSourceFormatDirective(String directive) {
+		final String text = directive.toUpperCase();
+
+		final Matcher matcher = SOURCE_FORMAT_DIRECTIVE.matcher(text);
+
+		if (!matcher.find())
+			return false;
+
+		String format = matcher.group(FORMAT_GROUP);
+		if ("FREE".equals(format))
+			referenceFormat = SourceFormat.FREE;
+		else
+			referenceFormat = SourceFormat.FIXED;
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("Reference format: " + referenceFormat);
+
+		return true;
+	}
+
+	// ========================================================================
+
+	// For the '$ SET SOURCEFORMAT'. A MicroFocus compiler directive.
+	private static final Pattern MF_SET_DIRECTIVE = Pattern
+			.compile("^\\s*\\$\\s*SET\\s+SOURCEFORMAT(\\s|\"|\\().*");
 
 	private boolean isMicroFocusCompilerDirective(Token token) {
 		// TODO Find some real documentation on this statement.
 		// TODO When the directive sets the sourceformat, use that to switch the
-		// Koopa tokenizer source format ?
+		// Koopa tokenizer source referenceFormat ?
 		final String text = token.getText();
 
 		// TODO Make this match more exact ? Right now it can accept bad inputs,
@@ -104,7 +181,7 @@ public class CompilerDirectives extends BasicSource<Token> implements
 			return false;
 		}
 
-		token = token.withTags(COMPILER_DIRECTIVE);
+		token = token.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("MicroFocus compiler directive: " + token);
@@ -112,6 +189,11 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		queuedTokens.addFirst(token);
 		return true;
 	}
+
+	// ========================================================================
+
+	private static final Pattern TITLE_STATEMENT = Pattern
+			.compile("(^|\\s)TITLE\\s.*");
 
 	private boolean isTitleStatement(Token token) {
 		// Enterprise COBOL for z/OS V4.2 Language Reference, p571:
@@ -127,7 +209,7 @@ public class CompilerDirectives extends BasicSource<Token> implements
 			return false;
 		}
 
-		token = token.withTags(COMPILER_DIRECTIVE);
+		token = token.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Title statement: " + token);
@@ -135,6 +217,12 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		queuedTokens.addFirst(token);
 		return true;
 	}
+
+	// ========================================================================
+
+	// For the CBL/PROCESS compiler directive.
+	private static final Pattern CBL_PROCESS_STATEMENT = Pattern
+			.compile("(^|\\s)(CBL|PROCESS)\\s.*");
 
 	private boolean isCblProcessStatement(final Token token) {
 		// Enterprise COBOL for z/OS V4.2 Language Reference, p554:
@@ -190,7 +278,7 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		if (startOfToken > 0) {
 			final Token sequenceNumber = new Token(text.substring(0,
 					startOfToken), token.getStart(), token.getStart().offsetBy(
-					5), SEQUENCE_NUMBER_AREA);
+					5), SEQUENCE_NUMBER_AREA, referenceFormat);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Sequence number: " + sequenceNumber);
@@ -201,7 +289,8 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		final int endOfToken = Math.min(text.length(), 72);
 		final Token directive = new Token(text.substring(startOfToken,
 				endOfToken), token.getStart().offsetBy(startOfToken), token
-				.getStart().offsetBy(endOfToken - 1), COMPILER_DIRECTIVE);
+				.getStart().offsetBy(endOfToken - 1), COMPILER_DIRECTIVE,
+				referenceFormat);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("CBL (PROCESS) statement: " + directive);
@@ -212,7 +301,7 @@ public class CompilerDirectives extends BasicSource<Token> implements
 			// Extra identification area.
 			final Token identification = new Token(text.substring(72), token
 					.getStart().offsetBy(endOfToken), token.getEnd(),
-					INDICATOR_AREA);
+					INDICATOR_AREA, referenceFormat);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Identification: " + identification);
@@ -221,38 +310,5 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		}
 
 		return true;
-	}
-
-	/**
-	 * Based on ISO/IEC 1989:20xx FCD 1.0 (E), section 7.3
-	 * "Compiler directives".
-	 */
-	private boolean isCompilerDirective(Token token) {
-		final String text = token.getText().toUpperCase();
-
-		final Matcher matcher;
-		if (format == SourceFormat.FIXED) {
-			matcher = FIXED_FORM_COMPILER_DIRECTIVE.matcher(text);
-			// TODO Separate out the sequence number and indicator areas.
-
-		} else {
-			matcher = FREE_FORM_COMPILER_DIRECTIVE.matcher(text);
-		}
-
-		if (matcher.find()) {
-			token = token.withTags(COMPILER_DIRECTIVE);
-			queuedTokens.addFirst(token);
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Compiler directive: " + token);
-
-			return true;
-		}
-
-		return false;
-	}
-
-	public void close() {
-		source.close();
 	}
 }

@@ -52,6 +52,7 @@ import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.misc.Tab;
 import koopa.app.components.overview.Overview;
 import koopa.app.util.Getter;
+import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
@@ -157,7 +158,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		file = new JMenu("File");
 
 		open = new JMenuItem(new OpenFileAction("Parse ...", this,
-				ApplicationSupport.getCobolFileFilter(false), this));
+				CobolFiles.getFileFilter(false), this));
 
 		setAccelerators(open, MODIFIER + " O");
 		file.add(open);

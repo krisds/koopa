@@ -17,23 +17,18 @@ import koopa.core.sources.Source;
 public class CobolTestSource {
 
 	public static Source<Token> forSample(String data) {
-		SourceFormat format = SourceFormat.FREE;
+		SourceFormat initialReferenceFormat = SourceFormat.FREE;
 
 		// The tokenizers in this sequence should generate the expected tokens.
 		// TODO Reuse setup from CobolParser somehow ?
 		Source<Token> source = new LineSplitter(new StringReader(data));
-		source = new CompilerDirectives(source, format);
-		source = new ProgramArea(source, format);
+		source = new CompilerDirectives(source, initialReferenceFormat);
+		source = new ProgramArea(source);
 		source = new SourceFormattingDirectives(source);
-
-		if (format == SourceFormat.FIXED) {
-			source = new LineContinuations(source);
-			source = new ContinuationWelding(source);
-		}
-
+		source = new LineContinuations(source);
+		source = new ContinuationWelding(source);
 		source = new Separators(source);
 		source = new PseudoLiterals(source);
-
 		return source;
 	}
 }

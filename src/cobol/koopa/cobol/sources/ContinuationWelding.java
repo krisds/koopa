@@ -4,6 +4,7 @@ import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
 import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
+import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
@@ -93,7 +94,7 @@ public class ContinuationWelding extends BasicSource<Token> implements
 				tokens.add(token);
 		}
 
-		final Token composedToken = new Token(tokens, PROGRAM_TEXT_AREA);
+		final Token composedToken = new Token(tokens, PROGRAM_TEXT_AREA, FIXED);
 
 		// Add the composed token.
 		buffer.addLast(composedToken);

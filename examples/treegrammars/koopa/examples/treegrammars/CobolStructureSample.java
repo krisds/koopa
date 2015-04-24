@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
 import koopa.core.treeparsers.BasicTreeStream;
@@ -40,8 +41,7 @@ public class CobolStructureSample {
 		List<File> erroneous = new LinkedList<File>();
 
 		for (File file : sources) {
-			final boolean isCopybook = file.getName().toUpperCase()
-					.endsWith(".CPY");
+			final boolean isCopybook = CobolFiles.isCopybook(file);
 
 			if (isCopybook)
 				continue;

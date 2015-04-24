@@ -5,13 +5,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.prefs.BackingStoreException;
@@ -34,33 +32,7 @@ public class ApplicationSupport {
 	private static final String PREFERENCES_ROOT = "net.sourceforge.koopa.app.preferences";
 	private static Preferences preferences = getPreferences();
 
-	private static List<String> EXTENSIONS = new LinkedList<String>();
-
-	private static String DESCRIPTION = "";
-
 	private static JFileChooser chooser = null;
-
-	static {
-		EXTENSIONS.add(".CPY");
-		EXTENSIONS.add(".COPY");
-		EXTENSIONS.add(".CBL");
-		EXTENSIONS.add(".COB");
-
-		String extraExtensions = System
-				.getProperty("koopa.cobolFileExtensions");
-		if (extraExtensions != null) {
-			for (String extraExtension : extraExtensions.split(",")) {
-				EXTENSIONS.add("." + extraExtension.trim().toUpperCase());
-			}
-		}
-
-		for (String extension : EXTENSIONS) {
-			if (DESCRIPTION.length() > 0)
-				DESCRIPTION += ", ";
-
-			DESCRIPTION += extension;
-		}
-	}
 
 	public static File askUserForFile(boolean openFile, String key,
 			FileFilter filter, Component parent) {
@@ -72,9 +44,8 @@ public class ApplicationSupport {
 
 				File lastUsed = new File(lastUsedFileName);
 
-				if (lastUsed.exists()) {
+				if (lastUsed.exists())
 					start = lastUsed.getParentFile();
-				}
 			}
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
@@ -92,9 +63,9 @@ public class ApplicationSupport {
 
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setAcceptAllFileFilterUsed(false);
-		if (filter != null) {
+
+		if (filter != null)
 			chooser.setFileFilter(filter);
-		}
 
 		int returnVal = openFile ? chooser.showOpenDialog(parent) : chooser
 				.showSaveDialog(parent);
@@ -251,58 +222,6 @@ public class ApplicationSupport {
 						e);
 			}
 		}
-	}
-
-	public static FileFilter getCobolFileFilter() {
-		return getCobolFileFilter(true);
-	}
-
-	public static FileFilter getCobolFileFilter(final boolean filesOnly) {
-		return new FileFilter() {
-			public boolean accept(File f) {
-				if (!filesOnly && f.isDirectory())
-					return true;
-
-				return isCobolFile(f);
-			}
-
-			public String getDescription() {
-				return "Cobol file (" + DESCRIPTION + ")";
-			}
-		};
-	}
-
-	public static FilenameFilter getFilenameFilter() {
-		return getFilenameFilter(true);
-	}
-
-	public static FilenameFilter getFilenameFilter(final boolean filesOnly) {
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				if (!filesOnly && dir.isDirectory())
-					return true;
-
-				return isCobolFileName(name);
-			}
-		};
-	}
-
-	public static boolean isCobolFile(File file) {
-		if (!file.isFile())
-			return false;
-
-		return isCobolFileName(file.getName());
-	}
-
-	public static boolean isCobolFileName(String name) {
-		name = name.toUpperCase();
-
-		for (String extension : EXTENSIONS) {
-			if (name.endsWith(extension))
-				return true;
-		}
-
-		return false;
 	}
 
 	public static JFrame inFrame(String title, Component component) {

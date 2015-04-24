@@ -4,6 +4,7 @@ import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
 import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
+import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.END_OF_LINE;
@@ -54,6 +55,12 @@ public class LineContinuations extends ThreadedSource<Token> implements
 				// buffer, then call it a day.
 				enqueueAll();
 				break;
+			}
+
+			if (token.hasTag(FREE)) {
+				enqueueAll();
+				enqueue(token);
+				continue;
 			}
 
 			if (token.hasTag(INDICATOR_AREA) && token.getText().equals("-")) {
@@ -395,7 +402,7 @@ public class LineContinuations extends ThreadedSource<Token> implements
 		// We skip past the continuation indicator.
 		skippedByContinuation.addFirst(continuationIndicator);
 
-		Token last = buffer.removeLast();
+		Token last = buffer.isEmpty() ? null : buffer.removeLast();
 
 		while (last != null && last.getStart().getLinenumber() >= lineNumber) {
 
@@ -405,7 +412,7 @@ public class LineContinuations extends ThreadedSource<Token> implements
 			// Keep track of skipped tokens in the order in which they appear in
 			// the text.
 			skippedByContinuation.addFirst(last);
-			last = buffer.removeLast();
+			last = buffer.isEmpty() ? null : buffer.removeLast();
 		}
 
 		return null;

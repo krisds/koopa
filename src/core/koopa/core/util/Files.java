@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public final class Util {
-	private Util() {
+public final class Files {
+	private Files() {
 	}
 
-	public static String contents(File file) {
+	public static String getText(File file) {
 		if (file == null)
 			return null;
 
@@ -41,5 +41,31 @@ public final class Util {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static String getName(String filename) {
+		int dot = filename.lastIndexOf(".");
+
+		if (dot < 0)
+			return filename;
+
+		return filename.substring(0, dot);
+	}
+
+	public static String getName(File file) {
+		return getName(file.getName());
+	}
+
+	public static String getExtension(String filename) {
+		int dot = filename.lastIndexOf(".");
+
+		if (dot < 0)
+			return "";
+
+		return filename.substring(dot);
+	}
+
+	public static String getExtension(File file) {
+		return getExtension(file.getName());
 	}
 }

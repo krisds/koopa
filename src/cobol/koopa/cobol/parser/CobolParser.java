@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.CobolFiles;
 import koopa.cobol.CobolTokens;
 import koopa.cobol.Copybooks;
 import koopa.cobol.grammar.CobolGrammar;
@@ -64,13 +65,13 @@ public class CobolParser implements ParserConfiguration {
 	private ParseResults parse(File file, FileReader reader) throws IOException {
 		ParseResults results = new ParseResults(file);
 
-		final boolean isCopybook = file.getName().toUpperCase()
-				.endsWith(".CPY");
+		final boolean isCopybook = CobolFiles.isCopybook(file);
 
 		// Build the tokenisation stage.
-		LOCCount loc = new LOCCount(CobolTokens.getNewSource(reader, format,
-				intermediateTokenizers, preprocessing ? copybooks : null));
-		Source<Token> source = loc;
+		Source<Token> source = CobolTokens.getNewSource(reader, format,
+				intermediateTokenizers, preprocessing ? copybooks : null);
+		LOCCount loc = new LOCCount(source);
+		source = loc;
 
 		// This object holds all grammar productions. It is not thread-safe,
 		// meaning that you can only ask it to parse one thing at a time.
@@ -79,11 +80,10 @@ public class CobolParser implements ParserConfiguration {
 		// Depending on the type of file we ask the grammar for the right
 		// parser.
 		Parser parser = null;
-		if (isCopybook) {
+		if (isCopybook)
 			parser = grammar.copybook();
-		} else {
+		else
 			parser = grammar.compilationGroup();
-		}
 
 		KoopaTreeBuilder builder = null;
 

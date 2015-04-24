@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.app.ApplicationSupport;
+import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
@@ -101,8 +101,8 @@ public class ToXml {
 			toXml(source, target);
 
 		} else if (source.isDirectory()) {
-			File[] files = source.listFiles(ApplicationSupport
-					.getFilenameFilter(false));
+			File[] files = source
+					.listFiles(CobolFiles.getFilenameFilter(false));
 
 			for (File fileInFolder : files) {
 				System.out.println(fileInFolder.getPath());

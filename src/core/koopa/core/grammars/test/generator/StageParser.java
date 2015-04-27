@@ -92,10 +92,10 @@ public class StageParser extends Parser {
 
 		CommonTree EOF5_tree=null;
 		RewriteRuleTokenStream stream_EOF=new RewriteRuleTokenStream(adaptor,"token EOF");
-		RewriteRuleSubtreeStream stream_grammarDeclaration=new RewriteRuleSubtreeStream(adaptor,"rule grammarDeclaration");
 		RewriteRuleSubtreeStream stream_packageDeclaration=new RewriteRuleSubtreeStream(adaptor,"rule packageDeclaration");
-		RewriteRuleSubtreeStream stream_testsForGrammarRule=new RewriteRuleSubtreeStream(adaptor,"rule testsForGrammarRule");
+		RewriteRuleSubtreeStream stream_grammarDeclaration=new RewriteRuleSubtreeStream(adaptor,"rule grammarDeclaration");
 		RewriteRuleSubtreeStream stream_tokenizerDeclaration=new RewriteRuleSubtreeStream(adaptor,"rule tokenizerDeclaration");
+		RewriteRuleSubtreeStream stream_testsForGrammarRule=new RewriteRuleSubtreeStream(adaptor,"rule testsForGrammarRule");
 
 		try {
 			// src/core/koopa/core/grammars/test/generator/Stage.g:26:3: ( packageDeclaration grammarDeclaration tokenizerDeclaration ( testsForGrammarRule )* EOF -> ^( STAGE packageDeclaration grammarDeclaration tokenizerDeclaration ( testsForGrammarRule )* ) )
@@ -146,7 +146,7 @@ public class StageParser extends Parser {
 			stream_EOF.add(EOF5);
 
 			// AST REWRITE
-			// elements: tokenizerDeclaration, testsForGrammarRule, grammarDeclaration, packageDeclaration
+			// elements: packageDeclaration, grammarDeclaration, tokenizerDeclaration, testsForGrammarRule
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -222,9 +222,9 @@ public class StageParser extends Parser {
 		CommonTree string_literal6_tree=null;
 		CommonTree IDENTIFIER7_tree=null;
 		CommonTree SEMI8_tree=null;
-		RewriteRuleTokenStream stream_21=new RewriteRuleTokenStream(adaptor,"token 21");
 		RewriteRuleTokenStream stream_SEMI=new RewriteRuleTokenStream(adaptor,"token SEMI");
 		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
+		RewriteRuleTokenStream stream_21=new RewriteRuleTokenStream(adaptor,"token 21");
 
 		try {
 			// src/core/koopa/core/grammars/test/generator/Stage.g:36:3: ( 'grammar' IDENTIFIER SEMI -> ^( GRAMMAR IDENTIFIER ) )
@@ -394,8 +394,8 @@ public class StageParser extends Parser {
 		CommonTree string_literal12_tree=null;
 		CommonTree IDENTIFIER13_tree=null;
 		CommonTree SEMI14_tree=null;
-		RewriteRuleTokenStream stream_SEMI=new RewriteRuleTokenStream(adaptor,"token SEMI");
 		RewriteRuleTokenStream stream_24=new RewriteRuleTokenStream(adaptor,"token 24");
+		RewriteRuleTokenStream stream_SEMI=new RewriteRuleTokenStream(adaptor,"token SEMI");
 		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
 
 		try {

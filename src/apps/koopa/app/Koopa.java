@@ -158,7 +158,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		file = new JMenu("File");
 
 		open = new JMenuItem(new OpenFileAction("Parse ...", this,
-				CobolFiles.getFileFilter(false), this));
+				CobolFiles.getSwingFileFilter(false), this));
 
 		setAccelerators(open, MODIFIER + " O");
 		file.add(open);

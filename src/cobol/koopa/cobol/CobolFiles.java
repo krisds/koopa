@@ -124,11 +124,11 @@ public class CobolFiles {
 		}
 	}
 
-	public static FileFilter getFileFilter() {
-		return getFileFilter(true);
+	public static FileFilter getSwingFileFilter() {
+		return getSwingFileFilter(true);
 	}
 
-	public static FileFilter getFileFilter(final boolean filesOnly) {
+	public static FileFilter getSwingFileFilter(final boolean filesOnly) {
 		return new FileFilter() {
 			public boolean accept(File f) {
 				if (!filesOnly && f.isDirectory())
@@ -139,6 +139,21 @@ public class CobolFiles {
 
 			public String getDescription() {
 				return "Cobol file (" + DESCRIPTION + ")";
+			}
+		};
+	}
+
+	public static java.io.FileFilter getFileFilter() {
+		return getFileFilter(true);
+	}
+
+	public static java.io.FileFilter getFileFilter(final boolean filesOnly) {
+		return new java.io.FileFilter() {
+			public boolean accept(File f) {
+				if (!filesOnly && f.isDirectory())
+					return true;
+
+				return isCobolFile(f);
 			}
 		};
 	}

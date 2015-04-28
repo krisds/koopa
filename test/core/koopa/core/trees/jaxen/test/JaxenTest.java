@@ -174,4 +174,31 @@ public class JaxenTest extends TestCase {
 		Assert.assertEquals(1, matches.size());
 		Assert.assertSame(branches[3], matches.get(0));
 	}
+
+	@Test
+	public void testCanSelectFollowingSibling() throws IOException {
+		Tree[] branches = new Tree[] { tree("branch", "0"),
+				tree("branch", "1"), tree("branch", "2"),
+				tree("bird", "woodpecker"), tree("branch", "3") };
+
+		Tree tree = tree("root", branches[0], branches[1], branches[2],
+				branches[3], branches[4]);
+
+		List<?> matches = null;
+
+		matches = Jaxen.evaluate(tree, "//branch[2]");
+		Assert.assertEquals(1, matches.size());
+		Assert.assertSame(branches[1], matches.get(0));
+
+		matches = Jaxen.evaluate(tree, "//branch[2]/following-sibling::*");
+		Assert.assertEquals(3, matches.size());
+		Assert.assertTrue(matches.contains(branches[2]));
+		Assert.assertTrue(matches.contains(branches[3]));
+		Assert.assertTrue(matches.contains(branches[4]));
+
+		matches = Jaxen.evaluate(tree, "//branch[2]/following-sibling::branch");
+		Assert.assertEquals(2, matches.size());
+		Assert.assertTrue(matches.contains(branches[2]));
+		Assert.assertTrue(matches.contains(branches[4]));
+	}
 }

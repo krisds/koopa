@@ -7,21 +7,22 @@ import koopa.core.treeparsers.Tree;
 public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 
 	private final Tree parent;
-	private final int count;
 	private int index;
 
 	public FollowingSibilingAxisIterator(Tree child) {
 		this.parent = child.getParent();
-		this.count = (parent != null) ? parent.getChildCount() : -1;
-		this.index = child.getChildIndex();
+		this.index = child.getChildIndex() + 1;
 	}
 
 	public boolean hasNext() {
-		return this.index < this.count;
+		return index < parent.getChildCount();
 	}
 
 	public Tree next() {
-		return this.parent.getChild(this.index++);
+		if (index < parent.getChildCount())
+			return parent.getChild(index++);
+		else
+			return null;
 	}
 
 	public void remove() {

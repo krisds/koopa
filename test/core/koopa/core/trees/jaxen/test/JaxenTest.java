@@ -201,4 +201,30 @@ public class JaxenTest extends TestCase {
 		Assert.assertTrue(matches.contains(branches[2]));
 		Assert.assertTrue(matches.contains(branches[4]));
 	}
+
+	@Test
+	public void testCanSelectParent() throws IOException {
+		Tree[] leaves = new Tree[] { tree("leaf"), tree("leaf") };
+
+		Tree[] branches = new Tree[] { tree("branch", "0"),
+				tree("branch", "1"), tree("branch", leaves[0], leaves[1]),
+				tree("branch", "3") };
+
+		Tree tree = tree("root", branches[0], branches[1], branches[2],
+				branches[3]);
+
+		List<?> matches = null;
+
+		matches = Jaxen.evaluate(tree, "//leaf[2]");
+		Assert.assertEquals(1, matches.size());
+		Assert.assertSame(leaves[1], matches.get(0));
+
+		matches = Jaxen.evaluate(tree, "//branch/..");
+		Assert.assertEquals(1, matches.size());
+		Assert.assertSame(tree, matches.get(0));
+
+		matches = Jaxen.evaluate(tree, "//leaf/../..");
+		Assert.assertEquals(1, matches.size());
+		Assert.assertSame(tree, matches.get(0));
+	}
 }

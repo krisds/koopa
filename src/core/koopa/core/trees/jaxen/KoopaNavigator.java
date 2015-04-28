@@ -151,7 +151,7 @@ public class KoopaNavigator extends DefaultNavigator {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("KoopaNavigator.getParentAxisIterator(" + foo + ")");
 
-		return super.getParentAxisIterator(foo);
+		return new ParentAxisIterator((Tree) foo);
 	}
 
 	public Object getParentNode(Object foo) throws UnsupportedAxisException {

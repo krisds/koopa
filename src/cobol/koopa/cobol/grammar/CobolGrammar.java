@@ -11072,6 +11072,33 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
+    // notOnOverflow
+    // ........................................................
+
+    private Parser notOnOverflowParser = null;
+
+    public final Start notOnOverflow = Start.on(getNamespace(), "notOnOverflow");
+
+    public Parser notOnOverflow() {
+        if (notOnOverflowParser == null) {
+           FutureParser future = scoped("notOnOverflow", true);
+           notOnOverflowParser = future;
+           future.setParser(
+               sequence(
+                   token("NOT"),
+                   optional(
+                       token("ON")
+                   ),
+                   token("OVERFLOW"),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return notOnOverflowParser;
+    }
+
+    // ========================================================
     // onException
     // ........................................................
 
@@ -15608,18 +15635,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                            ),
                            identifier(),
                            optional(
-                               sequence(
-                                   token("NO"),
-                                   token("DATA"),
-                                   nestedStatements()
-                               )
+                               noData()
                            ),
                            optional(
-                               sequence(
-                                   token("WITH"),
-                                   token("DATA"),
-                                   nestedStatements()
-                               )
+                               withData()
                            )
                        )
                    ),
@@ -15631,6 +15650,54 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return receiveStatementParser;
+    }
+
+    // ========================================================
+    // noData
+    // ........................................................
+
+    private Parser noDataParser = null;
+
+    public final Start noData = Start.on(getNamespace(), "noData");
+
+    public Parser noData() {
+        if (noDataParser == null) {
+           FutureParser future = scoped("noData", true);
+           noDataParser = future;
+           future.setParser(
+               sequence(
+                   token("NO"),
+                   token("DATA"),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return noDataParser;
+    }
+
+    // ========================================================
+    // withData
+    // ........................................................
+
+    private Parser withDataParser = null;
+
+    public final Start withData = Start.on(getNamespace(), "withData");
+
+    public Parser withData() {
+        if (withDataParser == null) {
+           FutureParser future = scoped("withData", true);
+           withDataParser = future;
+           future.setParser(
+               sequence(
+                   token("WITH"),
+                   token("DATA"),
+                   nestedStatements()
+               )
+           );
+        }
+
+        return withDataParser;
     }
 
     // ========================================================
@@ -16927,23 +16994,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("OVERFLOW"),
-                           nestedStatements()
-                       )
+                       onOverflow()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("OVERFLOW"),
-                           nestedStatements()
-                       )
+                       notOnOverflow()
                    ),
                    optional(
                        token("END-STRING")
@@ -17306,23 +17360,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("OVERFLOW"),
-                           nestedStatements()
-                       )
+                       onOverflow()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("OVERFLOW"),
-                           nestedStatements()
-                       )
+                       notOnOverflow()
                    ),
                    optional(
                        token("END-UNSTRING")
@@ -17843,23 +17884,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("EXCEPTION"),
-                           nestedStatements()
-                       )
+                       onException()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("EXCEPTION"),
-                           nestedStatements()
-                       )
+                       notOnException()
                    ),
                    optional(
                        token("END-XML")
@@ -17908,23 +17936,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           optional(
-                               token("ON")
-                           ),
-                           token("EXCEPTION"),
-                           nestedStatements()
-                       )
+                       onException()
                    ),
                    optional(
-                       sequence(
-                           token("NOT"),
-                           optional(
-                               token("ON")
-                           ),
-                           token("EXCEPTION"),
-                           nestedStatements()
-                       )
+                       notOnException()
                    ),
                    optional(
                        token("END-XML")

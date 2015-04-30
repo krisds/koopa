@@ -2530,6 +2530,10 @@ def onOverflow =
     [ON] OVERFLOW nestedStatements
 end
 
+def notOnOverflow =
+    NOT [ON] OVERFLOW nestedStatements
+end
+
 def onException =
     [ON] EXCEPTION nestedStatements
 end
@@ -3601,11 +3605,20 @@ def receiveStatement =
        | notOnException
        ]                                                                # *ACU
     | cdName (MESSAGE | SEGMENT) [INTO] identifier
-             [NO DATA nestedStatements]
-             [WITH DATA nestedStatements]
+       [noData]
+       [withData]
     )
     [END-RECEIVE]
 end
+
+def noData =
+    NO DATA nestedStatements
+end
+
+def withData =
+    WITH DATA nestedStatements
+end
+
 
 ## #############################################################################
 ## RELEASE statement.
@@ -3915,8 +3928,8 @@ def stringStatement =
     STRING
     ( ( identifier | literal ) [DELIMITED [BY] (SIZE | identifier | literal)] )+
     INTO identifier [[WITH] POINTER identifier]
-    [[ON] OVERFLOW nestedStatements]
-    [NOT [ON] OVERFLOW nestedStatements]
+    [onOverflow]
+    [notOnOverflow]
     [END-STRING]
 end
 
@@ -4006,8 +4019,8 @@ def unstringStatement =
     [[WITH] POINTER identifier]
     [TALLYING [IN] identifier]
     
-    [[ON] OVERFLOW nestedStatements]
-    [NOT [ON] OVERFLOW nestedStatements]
+    [onOverflow]
+    [notOnOverflow]
     [END-UNSTRING]
 end
 
@@ -4129,8 +4142,8 @@ def xmlGenerateStatement =
     [NAMESPACE [IS] (identifier | literal)
        [NAMESPACE-PREFIX [IS] (identifier | literal)]
     ]
-    [[ON] EXCEPTION nestedStatements]
-    [NOT [ON] EXCEPTION nestedStatements]
+    [onException]
+    [notOnException]
     [END-XML]
 end
 
@@ -4142,8 +4155,8 @@ def xmlParseStatement =
     XML PARSE identifier
     [PROCESSING PROCEDURE [IS] procedureName]
         [(THROUGH | THRU) procedureName]
-    [[ON] EXCEPTION nestedStatements]
-    [NOT [ON] EXCEPTION nestedStatements]
+    [onException]
+    [notOnException]
     [END-XML]
 end
 

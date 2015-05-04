@@ -15906,14 +15906,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                        atEnd()
                    ),
                    plus(
-                       sequence(
-                           token("WHEN"),
-                           condition(),
-                           choice(
-                               nestedStatements(),
-                               sequence(
-                                   token("NEXT"),
-                                   token("SENTENCE")
+                       as("when",
+                           sequence(
+                               token("WHEN"),
+                               condition(),
+                               choice(
+                                   nestedStatements(),
+                                   sequence(
+                                       token("NEXT"),
+                                       token("SENTENCE")
+                                   )
                                )
                            )
                        )

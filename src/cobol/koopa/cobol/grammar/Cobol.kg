@@ -3687,10 +3687,11 @@ def searchStatement =
    
     [atEnd]
    
-    ( WHEN condition
-      ( nestedStatements
-      | NEXT SENTENCE
-      )
+    (( WHEN condition
+       ( nestedStatements
+       | NEXT SENTENCE
+       )
+     ) %as when
     )+ 
    
     [END-SEARCH]

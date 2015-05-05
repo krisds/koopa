@@ -3194,20 +3194,24 @@ end
 ## -----------------------------------------------------------------------------
 
 def ifStatement =
-    IF condition [THEN]
-      ( nestedStatements
-      | nextSentence %as statement
-      )
-    [ELSE
-      ( nestedStatements
-      | nextSentence %as statement
-      )
-    ]
+    IF condition
+      thenBranch
+      [elseBranch]
     [END-IF]
 end
 
-def nextSentence =
-    NEXT SENTENCE
+def thenBranch =
+    [THEN] (
+      nestedStatements
+    | (nextSentenceStatement %as statement) %as nestedStatements
+    )
+end
+
+def elseBranch =
+    ELSE (
+      nestedStatements
+    | (nextSentenceStatement %as statement) %as nestedStatements
+    )
 end
 
 

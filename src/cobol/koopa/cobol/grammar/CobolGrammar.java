@@ -14014,25 +14014,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("IF"),
                    condition(),
+                   thenBranch(),
                    optional(
-                       token("THEN")
-                   ),
-                   choice(
-                       nestedStatements(),
-                       as("statement",
-                           nextSentence()
-                       )
-                   ),
-                   optional(
-                       sequence(
-                           token("ELSE"),
-                           choice(
-                               nestedStatements(),
-                               as("statement",
-                                   nextSentence()
-                               )
-                           )
-                       )
+                       elseBranch()
                    ),
                    optional(
                        token("END-IF")
@@ -14045,26 +14029,65 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // nextSentence
+    // thenBranch
     // ........................................................
 
-    private Parser nextSentenceParser = null;
+    private Parser thenBranchParser = null;
 
-    public final Start nextSentence = Start.on(getNamespace(), "nextSentence");
+    public final Start thenBranch = Start.on(getNamespace(), "thenBranch");
 
-    public Parser nextSentence() {
-        if (nextSentenceParser == null) {
-           FutureParser future = scoped("nextSentence", true);
-           nextSentenceParser = future;
+    public Parser thenBranch() {
+        if (thenBranchParser == null) {
+           FutureParser future = scoped("thenBranch", true);
+           thenBranchParser = future;
            future.setParser(
                sequence(
-                   token("NEXT"),
-                   token("SENTENCE")
+                   optional(
+                       token("THEN")
+                   ),
+                   choice(
+                       nestedStatements(),
+                       as("nestedStatements",
+                           as("statement",
+                               nextSentenceStatement()
+                           )
+                       )
+                   )
                )
            );
         }
 
-        return nextSentenceParser;
+        return thenBranchParser;
+    }
+
+    // ========================================================
+    // elseBranch
+    // ........................................................
+
+    private Parser elseBranchParser = null;
+
+    public final Start elseBranch = Start.on(getNamespace(), "elseBranch");
+
+    public Parser elseBranch() {
+        if (elseBranchParser == null) {
+           FutureParser future = scoped("elseBranch", true);
+           elseBranchParser = future;
+           future.setParser(
+               sequence(
+                   token("ELSE"),
+                   choice(
+                       nestedStatements(),
+                       as("nestedStatements",
+                           as("statement",
+                               nextSentenceStatement()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return elseBranchParser;
     }
 
     // ========================================================

@@ -1158,6 +1158,9 @@ def linkageSection =
 end
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# COMMUNICATION SECTION
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# * MF: http://supportline.microfocus.com/documentation/books/mx20books/atcomm.htm
 
 def communicationSection =
 	COMMUNICATION SECTION .
@@ -1178,19 +1181,19 @@ def communicationDescriptionEntry_format1 =
     
     ( # TODO We really want to exclude all of the possible starter tokens for
       # the other clauses.  Can we automate that somehow ?
-      ( -STATUS dataDescName )+
+      ( FILLER | -STATUS dataName )+
       
-    | ![ [SYMBOLIC] QUEUE       [IS] dataDescName
-       | [SYMBOLIC] SUB-QUEUE-1 [IS] dataDescName
-       | [SYMBOLIC] SUB-QUEUE-2 [IS] dataDescName
-       | [SYMBOLIC] SUB-QUEUE-3 [IS] dataDescName
-       | MESSAGE DATE           [IS] dataDescName
-       | MESSAGE TIME           [IS] dataDescName
-       | [SYMBOLIC] SOURCE      [IS] dataDescName
-       | TEXT LENGTH            [IS] dataDescName
-       | END KEY                [IS] dataDescName
-       | STATUS KEY             [IS] dataDescName
-       | [MESSAGE] COUNT        [IS] dataDescName
+    | ![ [SYMBOLIC] QUEUE       [IS] dataName
+       | [SYMBOLIC] SUB-QUEUE-1 [IS] dataName
+       | [SYMBOLIC] SUB-QUEUE-2 [IS] dataName
+       | [SYMBOLIC] SUB-QUEUE-3 [IS] dataName
+       | MESSAGE DATE           [IS] dataName
+       | MESSAGE TIME           [IS] dataName
+       | [SYMBOLIC] SOURCE      [IS] dataName
+       | TEXT LENGTH            [IS] dataName
+       | END KEY                [IS] dataName
+       | STATUS KEY             [IS] dataName
+       | [MESSAGE] COUNT        [IS] dataName
        ]
     )
     .
@@ -1198,24 +1201,24 @@ end
 
 def communicationDescriptionEntry_format2 =
     CD cdName [FOR] OUTPUT
-    [ DESTINATION COUNT         [IS] dataDescName ]
-    [ TEXT LENGTH               [IS] dataDescName ]
-    [ STATUS KEY                [IS] dataDescName ]
+    [ DESTINATION COUNT         [IS] dataName ]
+    [ TEXT LENGTH               [IS] dataName ]
+    [ STATUS KEY                [IS] dataName ]
     [ DESTINATION TABLE OCCURS integer [TIMES] [INDEXED [BY] (indexName)+] ]
-    [ ERROR KEY                 [IS] dataDescName ]
-    [ [SYMBOLIC] DESTINATION    [IS] dataDescName ]
+    [ ERROR KEY                 [IS] dataName ]
+    [ [SYMBOLIC] DESTINATION    [IS] dataName ]
     .
 end
 
 def communicationDescriptionEntry_format3 =
     CD cdName [FOR] [INITIAL] I-O
-    ( (dataDescName)+
-    | ![ MESSAGE DATE           [IS] dataDescName
-       | MESSAGE TIME           [IS] dataDescName
-       | [SYMBOLIC] TERMINAL    [IS] dataDescName
-       | TEXT LENGTH            [IS] dataDescName
-       | END KEY                [IS] dataDescName
-       | STATUS KEY             [IS] dataDescName
+    ( (FILLER | dataName)+
+    | ![ MESSAGE DATE           [IS] dataName
+       | MESSAGE TIME           [IS] dataName
+       | [SYMBOLIC] TERMINAL    [IS] dataName
+       | TEXT LENGTH            [IS] dataName
+       | END KEY                [IS] dataName
+       | STATUS KEY             [IS] dataName
        ]
     )
     .
@@ -1332,18 +1335,24 @@ def constantEntry =
 end
 
 private def constantEntry_level01 =
-    (1 | 01) cobolWord CONSTANT [globalClause]
+    (1 | 01) %as levelNumber
+    cobolWord %as entryName
+    CONSTANT [globalClause]
     ( [AS] identifier | FROM cobolWord ) .
 end
 
 # Seen in MF and GNU COBOL
 private def constantEntry_level78 =
-    78 cobolWord constantValueClause .
+    78 %as levelNumber
+    cobolWord %as entryName 
+    constantValueClause .
 end
 
 
 private def dataDescriptionEntry_format1 =
-    levelNumber [dataDescName]
+    levelNumber
+    [(FILLER | CURSOR | dataName) %as entryName]
+    
    ![ redefinesClause                  # STD.BK
     | typedefClause                    # STD.BK
     | alignedClause                    # STD.BK
@@ -1409,13 +1418,15 @@ private def dataDescriptionEntry_format1 =
 end
 
 private def dataDescriptionEntry_format2 =
-    66 dataName
+    66 %as levelNumber
+    dataName %as entryName
     renamesClause
     . 
 end
 
 private def dataDescriptionEntry_format3_and_4 =
-    88 [-(VALUE|VALUES) conditionName]
+    88 %as levelNumber
+    [-(VALUE|VALUES) conditionName %as entryName]
     valueClause
     .
 end
@@ -4682,11 +4693,6 @@ end
 # Full Qualified Data name with subscripts.
 def qualifiedDataName =
 	dataName [qualifier] ['(' (subscript)+ ')']
-end
-
-# Data name on describe.
-def dataDescName =
-	(FILLER | CURSOR | dataName)
 end
 
 def screenName =

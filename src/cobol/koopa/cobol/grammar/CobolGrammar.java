@@ -5169,11 +5169,14 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("INPUT"),
                    choice(
                        plus(
-                           sequence(
-                               not(
-                                   token("STATUS")
-                               ),
-                               dataDescName()
+                           choice(
+                               token("FILLER"),
+                               sequence(
+                                   not(
+                                       token("STATUS")
+                                   ),
+                                   dataName()
+                               )
                            )
                        ),
                        optional(
@@ -5186,7 +5189,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    optional(
@@ -5196,7 +5199,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    optional(
@@ -5206,7 +5209,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    optional(
@@ -5216,7 +5219,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("MESSAGE"),
@@ -5224,7 +5227,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("MESSAGE"),
@@ -5232,7 +5235,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    optional(
@@ -5242,7 +5245,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("TEXT"),
@@ -5250,7 +5253,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("END"),
@@ -5258,7 +5261,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("STATUS"),
@@ -5266,7 +5269,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    optional(
@@ -5276,7 +5279,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                )
                            )
                        )
@@ -5316,7 +5319,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            optional(
                                token("IS")
                            ),
-                           dataDescName()
+                           dataName()
                        )
                    ),
                    optional(
@@ -5326,7 +5329,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            optional(
                                token("IS")
                            ),
-                           dataDescName()
+                           dataName()
                        )
                    ),
                    optional(
@@ -5336,7 +5339,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            optional(
                                token("IS")
                            ),
-                           dataDescName()
+                           dataName()
                        )
                    ),
                    optional(
@@ -5368,7 +5371,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            optional(
                                token("IS")
                            ),
-                           dataDescName()
+                           dataName()
                        )
                    ),
                    optional(
@@ -5380,7 +5383,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            optional(
                                token("IS")
                            ),
-                           dataDescName()
+                           dataName()
                        )
                    ),
                    token(".")
@@ -5416,7 +5419,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("I-O"),
                    choice(
                        plus(
-                           dataDescName()
+                           choice(
+                               token("FILLER"),
+                               dataName()
+                           )
                        ),
                        optional(
                            permuted(
@@ -5426,7 +5432,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("MESSAGE"),
@@ -5434,7 +5440,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    optional(
@@ -5444,7 +5450,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("TEXT"),
@@ -5452,7 +5458,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("END"),
@@ -5460,7 +5466,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                ),
                                sequence(
                                    token("STATUS"),
@@ -5468,7 +5474,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    optional(
                                        token("IS")
                                    ),
-                                   dataDescName()
+                                   dataName()
                                )
                            )
                        )
@@ -5769,11 +5775,15 @@ public class CobolGrammar extends CobolBaseGrammar {
            constantEntry_level01Parser = future;
            future.setParser(
                sequence(
-                   choice(
-                       token("1"),
-                       token("01")
+                   as("levelNumber",
+                       choice(
+                           token("1"),
+                           token("01")
+                       )
                    ),
-                   cobolWord(),
+                   as("entryName",
+                       cobolWord()
+                   ),
                    token("CONSTANT"),
                    optional(
                        globalClause()
@@ -5810,8 +5820,12 @@ public class CobolGrammar extends CobolBaseGrammar {
            constantEntry_level78Parser = future;
            future.setParser(
                sequence(
-                   token("78"),
-                   cobolWord(),
+                   as("levelNumber",
+                       token("78")
+                   ),
+                   as("entryName",
+                       cobolWord()
+                   ),
                    constantValueClause(),
                    token(".")
                )
@@ -5835,7 +5849,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    levelNumber(),
                    optional(
-                       dataDescName()
+                       as("entryName",
+                           choice(
+                               token("FILLER"),
+                               token("CURSOR"),
+                               dataName()
+                           )
+                       )
                    ),
                    optional(
                        permuted(
@@ -5938,8 +5958,12 @@ public class CobolGrammar extends CobolBaseGrammar {
            dataDescriptionEntry_format2Parser = future;
            future.setParser(
                sequence(
-                   token("66"),
-                   dataName(),
+                   as("levelNumber",
+                       token("66")
+                   ),
+                   as("entryName",
+                       dataName()
+                   ),
                    renamesClause(),
                    token(".")
                )
@@ -5961,7 +5985,9 @@ public class CobolGrammar extends CobolBaseGrammar {
            dataDescriptionEntry_format3_and_4Parser = future;
            future.setParser(
                sequence(
-                   token("88"),
+                   as("levelNumber",
+                       token("88")
+                   ),
                    optional(
                        sequence(
                            not(
@@ -5970,7 +5996,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    token("VALUES")
                                )
                            ),
-                           conditionName()
+                           as("entryName",
+                               conditionName()
+                           )
                        )
                    ),
                    valueClause(),
@@ -20103,30 +20131,6 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return qualifiedDataNameParser;
-    }
-
-    // ========================================================
-    // dataDescName
-    // ........................................................
-
-    private Parser dataDescNameParser = null;
-
-    public final Start dataDescName = Start.on(getNamespace(), "dataDescName");
-
-    public Parser dataDescName() {
-        if (dataDescNameParser == null) {
-           FutureParser future = scoped("dataDescName", true);
-           dataDescNameParser = future;
-           future.setParser(
-               choice(
-                   token("FILLER"),
-                   token("CURSOR"),
-                   dataName()
-               )
-           );
-        }
-
-        return dataDescNameParser;
     }
 
     // ========================================================

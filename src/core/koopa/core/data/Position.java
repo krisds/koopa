@@ -9,6 +9,8 @@ package koopa.core.data;
  */
 public final class Position {
 
+	public static final Position ZERO = new Position(0, 0, 0);
+
 	private final int linenumber;
 	private final int positionInFile;
 	private final int positionInLine;

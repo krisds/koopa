@@ -1050,13 +1050,9 @@ end
 
 def fileSection =
 	FILE SECTION .
-	[fileSectionBody]
-end
-
-def fileSectionBody =
 	( copyStatement
 	| fileDescriptionEntry (recordDescriptionEntry)*
-    )+
+    )*
     [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
@@ -1276,7 +1272,7 @@ end
 
 def screenDescriptionEntry =
     levelNumber [FILLER | screenName]
-    !( globalClause                     # STD.BK group, elementary
+    ![ globalClause                     # STD.BK group, elementary
      | lineClause                       # STD.BK group, elementary
      | columnClause                     # STD.BK group, elementary
      | blankClause                      # STD.BK group, elementary
@@ -1310,7 +1306,8 @@ def screenDescriptionEntry =
      
      | controlClause
      | screenEntryPhrase
-     )
+     ]
+    .
 end
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

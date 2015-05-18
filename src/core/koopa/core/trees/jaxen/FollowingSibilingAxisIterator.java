@@ -4,7 +4,11 @@ import java.util.Iterator;
 
 import koopa.core.treeparsers.Tree;
 
+import org.apache.log4j.Logger;
+
 public class FollowingSibilingAxisIterator implements Iterator<Tree> {
+
+	private static final Logger LOGGER = Logger.getLogger("xpath");
 
 	private final Tree parent;
 	private int index;
@@ -15,14 +19,32 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 	}
 
 	public boolean hasNext() {
-		return index < parent.getChildCount();
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("FollowingSibilingAxisIterator(" + parent
+					+ ").hasNext()");
+
+		final boolean hasNext = index < parent.getChildCount();
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + hasNext);
+
+		return hasNext;
 	}
 
 	public Tree next() {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("FollowingSibilingAxisIterator(" + parent + ").next()");
+
+		final Tree next;
 		if (index < parent.getChildCount())
-			return parent.getChild(index++);
+			next = parent.getChild(index++);
 		else
-			return null;
+			next = null;
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + next);
+
+		return next;
 	}
 
 	public void remove() {

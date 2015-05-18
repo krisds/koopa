@@ -4754,31 +4754,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("FILE"),
                    token("SECTION"),
                    token("."),
-                   optional(
-                       fileSectionBody()
-                   )
-               )
-           );
-        }
-
-        return fileSectionParser;
-    }
-
-    // ========================================================
-    // fileSectionBody
-    // ........................................................
-
-    private Parser fileSectionBodyParser = null;
-
-    public final Start fileSectionBody = Start.on(getNamespace(), "fileSectionBody");
-
-    public Parser fileSectionBody() {
-        if (fileSectionBodyParser == null) {
-           FutureParser future = scoped("fileSectionBody", true);
-           fileSectionBodyParser = future;
-           future.setParser(
-               sequence(
-                   plus(
+                   star(
                        choice(
                            copyStatement(),
                            sequence(
@@ -4802,7 +4778,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return fileSectionBodyParser;
+        return fileSectionParser;
     }
 
     // ========================================================
@@ -5655,36 +5631,39 @@ public class CobolGrammar extends CobolBaseGrammar {
                            screenName()
                        )
                    ),
-                   permuted(
-                       globalClause(),
-                       lineClause(),
-                       columnClause(),
-                       blankClause(),
-                       bellClause(),
-                       blinkClause(),
-                       highlightClause(),
-                       reverseVideoClause(),
-                       underlineClause(),
-                       foregroundColorClause(),
-                       backgroundColorClause(),
-                       signClause(),
-                       fullClause(),
-                       autoClause(),
-                       secureClause(),
-                       requiredClause(),
-                       occursClause(),
-                       usageClause(),
-                       eraseClause(),
-                       pictureClause(),
-                       screenFromClause(),
-                       screenToClause(),
-                       screenUsingClause(),
-                       screenValueClause(),
-                       blankWhenZeroClause(),
-                       justifiedClause(),
-                       controlClause(),
-                       screenEntryPhrase()
-                   )
+                   optional(
+                       permuted(
+                           globalClause(),
+                           lineClause(),
+                           columnClause(),
+                           blankClause(),
+                           bellClause(),
+                           blinkClause(),
+                           highlightClause(),
+                           reverseVideoClause(),
+                           underlineClause(),
+                           foregroundColorClause(),
+                           backgroundColorClause(),
+                           signClause(),
+                           fullClause(),
+                           autoClause(),
+                           secureClause(),
+                           requiredClause(),
+                           occursClause(),
+                           usageClause(),
+                           eraseClause(),
+                           pictureClause(),
+                           screenFromClause(),
+                           screenToClause(),
+                           screenUsingClause(),
+                           screenValueClause(),
+                           blankWhenZeroClause(),
+                           justifiedClause(),
+                           controlClause(),
+                           screenEntryPhrase()
+                       )
+                   ),
+                   token(".")
                )
            );
         }

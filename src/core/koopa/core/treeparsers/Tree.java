@@ -1,5 +1,8 @@
 package koopa.core.treeparsers;
 
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +11,6 @@ import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.data.tags.AreaTag;
 
 public class Tree {
 
@@ -33,24 +35,32 @@ public class Tree {
 
 	public String getProgramText() {
 		StringBuilder builder = new StringBuilder();
-		gather(builder, AreaTag.PROGRAM_TEXT_AREA);
+		gather(builder);
 		return builder.toString();
 	}
 
-	private void gather(StringBuilder builder, Object tag) {
+	private void gather(StringBuilder builder) {
 		if (!children.isEmpty()) {
 			for (int i = 0; i < children.size(); i++)
-				children.get(i).gather(builder, tag);
+				children.get(i).gather(builder);
 
-		} else {
-			if (!(data instanceof Token))
-				return;
-
-			if (tag != null && !((Token) data).hasTag(tag))
-				return;
-
-			builder.append(getText());
+			return;
 		}
+
+		if (!(data instanceof Token))
+			return;
+
+		Token token = (Token) data;
+
+		if (!token.hasTag(PROGRAM_TEXT_AREA))
+			return;
+		if (token.hasTag(COMMENT))
+			return;
+
+		if (builder.length() > 0)
+			builder.append(" ");
+
+		builder.append(token.getText());
 	}
 
 	public Data getData() {

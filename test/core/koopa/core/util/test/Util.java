@@ -1,5 +1,7 @@
 package koopa.core.util.test;
 
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +10,7 @@ import koopa.core.data.Position;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.HardcodedSource;
 import koopa.core.treeparsers.Tree;
@@ -54,6 +57,14 @@ public final class Util {
 		Tree tree = new Tree(token);
 
 		return tree;
+	}
+
+	public static Tree text(String text) {
+		return token(text, PROGRAM_TEXT_AREA);
+	}
+
+	public static Tree comment(String text) {
+		return token(text, AreaTag.COMMENT);
 	}
 
 	public static List<Token> asTokens(Object... tagsAndTokens) {

@@ -63,6 +63,11 @@ public final class Util {
 		return token(text, PROGRAM_TEXT_AREA);
 	}
 
+	public static Tree text(String text, int start, int end) {
+		return new Tree(new Token(text, new Position(start, 0, start),
+				new Position(end, 0, end), PROGRAM_TEXT_AREA));
+	}
+
 	public static Tree comment(String text) {
 		return token(text, AreaTag.COMMENT);
 	}

@@ -102,6 +102,7 @@
 
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
 
+			<test name="koopa.core.trees.test.TreePositionsTest" />
 			<test name="koopa.core.trees.test.ProgramTextTest" />
 			<test name="koopa.core.trees.test.XMLSerializerTest" />
 			<test name="koopa.core.trees.jaxen.test.JaxenTest" />

@@ -6,7 +6,6 @@ import static koopa.core.util.test.Util.tree;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import koopa.core.treeparsers.Tree;
 
@@ -20,7 +19,7 @@ public class ProgramTextTest extends TestCase {
 
 		String expected = "";
 
-		Assert.assertEquals(expected, tree.getProgramText());
+		assertEquals(expected, tree.getProgramText());
 	}
 
 	@Test
@@ -29,27 +28,38 @@ public class ProgramTextTest extends TestCase {
 
 		String expected = "COBOL";
 
-		Assert.assertEquals(expected, tree.getProgramText());
+		assertEquals(expected, tree.getProgramText());
 	}
 
 	@Test
 	public void testTreeOfTokens() throws IOException {
-		Tree tree = tree("quote", text("Stop"), text("bashing"), text("Cobol"));
+		Tree tree = tree("test", text("Stop", 0, 3), text("bashing", 5, 11),
+				text("Cobol", 13, 17));
 
 		String expected = "Stop bashing Cobol";
 
-		Assert.assertEquals(expected, tree.getProgramText());
+		assertEquals(expected, tree.getProgramText());
 	}
 
 	@Test
 	public void testTreeOfTokensWithComments() throws IOException {
-		Tree tree = tree("quote", text("Stop"),
-				comment("-don't do it any more-"), text("bashing"),
-				comment("-or making jokes about-"), text("Cobol"),
+		Tree tree = tree("test", text("Stop", 0, 3),
+				comment("-don't do it any more-"), text("bashing", 5, 11),
+				comment("-or making jokes about-"), text("Cobol", 13, 17),
 				comment("-seriously!-"));
 
 		String expected = "Stop bashing Cobol";
 
-		Assert.assertEquals(expected, tree.getProgramText());
+		assertEquals(expected, tree.getProgramText());
+	}
+
+	@Test
+	public void testTreeOfConsecutiveTokens() throws IOException {
+		Tree tree = tree("test", text("Stop", 0, 3), text("bashing", 4, 10),
+				text("Cobol", 11, 15));
+
+		String expected = "StopbashingCobol";
+
+		assertEquals(expected, tree.getProgramText());
 	}
 }

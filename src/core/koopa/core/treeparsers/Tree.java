@@ -11,6 +11,7 @@ import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
+import koopa.core.data.tags.AreaTag;
 
 public class Tree {
 
@@ -33,16 +34,24 @@ public class Tree {
 			return "";
 	}
 
+	/**
+	 * Builds up a string representation of the program text being held in this
+	 * tree.
+	 * <p>
+	 * This does not take {@linkplain AreaTag#COMMENT}s into account.
+	 */
 	public String getProgramText() {
 		StringBuilder builder = new StringBuilder();
-		gather(builder);
+		gather(builder, new Token[] { null });
 		return builder.toString();
 	}
 
-	private void gather(StringBuilder builder) {
+	// The context array is just a poor-man's struct to carry the previously
+	// seen token.
+	private void gather(StringBuilder builder, Token[] context) {
 		if (!children.isEmpty()) {
 			for (int i = 0; i < children.size(); i++)
-				children.get(i).gather(builder);
+				children.get(i).gather(builder, context);
 
 			return;
 		}
@@ -54,25 +63,35 @@ public class Tree {
 
 		if (!token.hasTag(PROGRAM_TEXT_AREA))
 			return;
+
 		if (token.hasTag(COMMENT))
 			return;
 
-		if (builder.length() > 0)
+		if (context[0] != null && builder.length() > 0
+				&& context[0].getEnd().getPositionInFile() + 1 //
+				< token.getStart().getPositionInFile())
 			builder.append(" ");
 
 		builder.append(token.getText());
+		context[0] = token;
 	}
 
 	public Data getData() {
 		return data;
 	}
 
+	/**
+	 * Searches the tree for the first known start position.
+	 * <p>
+	 * This does not take {@linkplain AreaTag#COMMENT}s into account.
+	 */
 	public Position getStart() {
-		final Position start = (data instanceof Token) ? ((Token) data)
-				.getStart() : null;
+		if (data instanceof Token) {
+			Token token = (Token) data;
 
-		if (start != null)
-			return start;
+			if (!(token.hasTag(COMMENT)))
+				return token.getStart();
+		}
 
 		for (int i = 0; i < children.size(); i++) {
 			Position position = children.get(i).getStart();
@@ -84,12 +103,18 @@ public class Tree {
 		return null;
 	}
 
+	/**
+	 * Searches the tree for the last known end position.
+	 * <p>
+	 * This does not take {@linkplain AreaTag#COMMENT}s into account.
+	 */
 	public Position getEnd() {
-		final Position end = (data instanceof Token) ? ((Token) data).getEnd()
-				: null;
+		if (data instanceof Token) {
+			Token token = (Token) data;
 
-		if (end != null)
-			return end;
+			if (!(token.hasTag(COMMENT)))
+				return token.getEnd();
+		}
 
 		for (int i = children.size() - 1; i >= 0; i--) {
 			Position position = children.get(i).getEnd();
@@ -105,6 +130,21 @@ public class Tree {
 		child.childIndex = children.size();
 		children.add(child);
 		child.parent = this;
+	}
+
+	public void insertChild(int index, Tree child) {
+		children.add(index, child);
+		child.parent = this;
+		for (int i = index; i < children.size(); i++)
+			children.get(i).childIndex = i;
+	}
+
+	public void removeChild(int index) {
+		Tree child = children.remove(index);
+		child.childIndex = -1;
+		child.parent = null;
+		for (int i = index; i < children.size(); i++)
+			children.get(i).childIndex = i;
 	}
 
 	public boolean hasChildren() {

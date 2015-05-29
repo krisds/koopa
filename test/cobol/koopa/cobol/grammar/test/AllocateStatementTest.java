@@ -153,7 +153,7 @@ public class AllocateStatementTest extends TestCase {
     public void testAllocateStatement_16() {
       Parser parser = grammar.allocateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE based-var RETURNING EXCEPTION-OBJECT "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE NULL "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -161,7 +161,7 @@ public class AllocateStatementTest extends TestCase {
     public void testAllocateStatement_17() {
       Parser parser = grammar.allocateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE SELF "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -169,7 +169,7 @@ public class AllocateStatementTest extends TestCase {
     public void testAllocateStatement_18() {
       Parser parser = grammar.allocateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE based-var RETURNING NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE SUPER "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -177,7 +177,7 @@ public class AllocateStatementTest extends TestCase {
     public void testAllocateStatement_19() {
       Parser parser = grammar.allocateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE SELF "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 
@@ -185,55 +185,7 @@ public class AllocateStatementTest extends TestCase {
     public void testAllocateStatement_20() {
       Parser parser = grammar.allocateStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE based-var RETURNING SELF "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAllocateStatement_21() {
-      Parser parser = grammar.allocateStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE SUPER "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAllocateStatement_22() {
-      Parser parser = grammar.allocateStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE based-var RETURNING SUPER "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAllocateStatement_23() {
-      Parser parser = grammar.allocateStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE MY-CLASS-NAME OF SUPER "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAllocateStatement_24() {
-      Parser parser = grammar.allocateStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE based-var RETURNING MY-CLASS-NAME OF SUPER "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAllocateStatement_25() {
-      Parser parser = grammar.allocateStatement();
-      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE ADDRESS OF SOMETHING "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testAllocateStatement_26() {
-      Parser parser = grammar.allocateStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ALLOCATE based-var RETURNING ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
     }
 }

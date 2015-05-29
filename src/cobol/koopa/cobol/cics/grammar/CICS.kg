@@ -112,7 +112,7 @@ end
 
 # TODO I could try listing all possible option names as well...
 def name =
-    -'(' -')' _ 
+    (%not '(') (%not ')') _ 
 end
 
 # Values can have more embedded parentheses. So we just make sure those are 
@@ -123,7 +123,7 @@ end
 
 private def param =
     ( '(' (param)+ ')'
-    | -'(' -')' _ 
+    | (%not '(') (%not ')') _ 
     )
 end
 

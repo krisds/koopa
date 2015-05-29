@@ -232,12 +232,4 @@ public class ChainStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
-
-    @Test
-    public void testChainStatement_25() {
-      Parser parser = grammar.chainStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CHAIN foo\n     USING BY REFERENCE bar\n     USING BY CONTENT bar "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
-    }
 }

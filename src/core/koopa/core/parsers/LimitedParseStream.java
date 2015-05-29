@@ -66,4 +66,8 @@ public class LimitedParseStream implements ParseStream {
 	public void commit() {
 		stream.commit();
 	}
+
+	public ParseStack getStack() {
+		return stream.getStack();
+	}
 }

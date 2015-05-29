@@ -79,16 +79,21 @@ end
 #
 # TODO Allow ",2"; which is still tricky.
 def decimal =
+    ( ('+' | '-') %noskip unsigned_decimal
+    | unsigned_decimal
+    )
+end
+
+private def unsigned_decimal =
     ( intgr %noskip ( (',' | '.') uintgr )
     | '.' %noskip uintgr
     )
 end
 
-def intgr =
+private def intgr =
     @INTEGER_LITERAL _
 end
 
-def uintgr =
+private def uintgr =
     @UNSIGNED @INTEGER_LITERAL _
 end
-

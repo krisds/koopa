@@ -119,7 +119,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            selectStatement(),
                            optional(
-                               token(".")
+                               literal(".")
                            )
                        ),
                        copyStatement(),
@@ -127,7 +127,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            execStatement(),
                            optional(
-                               token(".")
+                               literal(".")
                            )
                        )
                    )
@@ -229,7 +229,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            programPrototypeIdParagraph(),
@@ -250,7 +250,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("END"),
                    token("PROGRAM"),
                    name(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -274,7 +274,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("PROGRAM-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    name(),
                    optional(
@@ -288,7 +288,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    token("PROTOTYPE"),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -320,7 +320,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            functionPrototypeIdParagraph(),
@@ -341,7 +341,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("END"),
                    token("FUNCTION"),
                    name(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -365,7 +365,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("FUNCTION-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    name(),
                    optional(
@@ -379,7 +379,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    token("PROTOTYPE"),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -411,7 +411,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            programIdParagraph(),
@@ -447,7 +447,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("END"),
                            token("PROGRAM"),
                            programName(),
-                           token(".")
+                           literal(".")
                        )
                    )
                )
@@ -473,7 +473,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("PROGRAM-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    programName(),
                    optional(
@@ -500,7 +500,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -532,7 +532,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            functionIdParagraph(),
@@ -553,7 +553,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("END"),
                    token("FUNCTION"),
                    name(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -577,7 +577,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("FUNCTION-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    name(),
                    optional(
@@ -587,7 +587,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -619,7 +619,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            classIdParagraph(),
@@ -640,7 +640,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("END"),
                    token("CLASS"),
                    name(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -664,7 +664,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("CLASS-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    name(),
                    optional(
@@ -737,7 +737,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -764,19 +764,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            token("ATTRIBUTE"),
                            attributeName(),
-                           token("("),
+                           literal("("),
                            star(
                                choice(
                                    sequence(
                                        token("NAME"),
                                        propertyName(),
-                                       token("="),
+                                       literal("="),
                                        propertyValue()
                                    ),
                                    parameterName()
                                )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
                            token("CUSTOM-ATTRIBUTE"),
@@ -784,18 +784,18 @@ public class CobolGrammar extends CobolBaseGrammar {
                            className(),
                            optional(
                                sequence(
-                                   token("("),
+                                   literal("("),
                                    star(
                                        choice(
                                            sequence(
                                                propertyName(),
-                                               token("="),
+                                               literal("="),
                                                propertyValue()
                                            ),
                                            parameterName()
                                        )
                                    ),
-                                   token(")")
+                                   literal(")")
                                )
                            )
                        )
@@ -830,7 +830,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            factoryParagraph(),
@@ -850,7 +850,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    token("END"),
                    token("FACTORY"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -874,7 +874,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("FACTORY"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    optional(
                        sequence(
@@ -882,7 +882,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            plus(
                                name()
                            ),
-                           token(".")
+                           literal(".")
                        )
                    )
                )
@@ -915,7 +915,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            objectParagraph(),
@@ -935,7 +935,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    token("END"),
                    token("OBJECT"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -959,7 +959,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("OBJECT"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    optional(
                        sequence(
@@ -968,7 +968,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                name()
                            ),
                            optional(
-                               token(".")
+                               literal(".")
                            )
                        )
                    )
@@ -1002,7 +1002,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            interfaceIdParagraph(),
@@ -1020,7 +1020,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("END"),
                    token("INTERFACE"),
                    name(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1044,7 +1044,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("INTERFACE-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    name(),
                    optional(
@@ -1076,7 +1076,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1108,7 +1108,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            methodIdParagraph(),
@@ -1131,7 +1131,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        name()
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1155,7 +1155,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("METHOD-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    choice(
                        sequence(
@@ -1188,7 +1188,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1220,7 +1220,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            callPrototypeIdParagraph(),
@@ -1243,7 +1243,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("END"),
                            token("PROGRAM"),
                            programName(),
-                           token(".")
+                           literal(".")
                        )
                    )
                )
@@ -1269,7 +1269,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("PROGRAM-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    programName(),
                    optional(
@@ -1280,7 +1280,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("PROGRAM")
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1312,7 +1312,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            delegateIdParagraph()
@@ -1321,7 +1321,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    procedureDivisionHeader(),
                    token("END"),
                    token("DELEGATE"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1345,7 +1345,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("DELEGATE-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    delegateName(),
                    optional(
@@ -1373,7 +1373,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        attributeClause()
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1405,7 +1405,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            enumIdParagraph()
@@ -1416,13 +1416,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                token("END"),
                                token("ENUM"),
-                               token(".")
+                               literal(".")
                            )
                        )
                    ),
                    token("END"),
                    token("ENUM"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1446,7 +1446,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("ENUM-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    enumName(),
                    optional(
@@ -1474,7 +1474,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        attributeClause()
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1506,7 +1506,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            iteratorIdParagraph()
@@ -1517,13 +1517,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                token("END"),
                                token("ITERATOR"),
-                               token(".")
+                               literal(".")
                            )
                        )
                    ),
                    token("END"),
                    token("ITERATOR"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1547,7 +1547,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("ITERATOR-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    iteratorName(),
                    optional(
@@ -1575,7 +1575,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        attributeClause()
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1607,7 +1607,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            operatorIdParagraph()
@@ -1618,13 +1618,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                token("END"),
                                token("ENUM"),
-                               token(".")
+                               literal(".")
                            )
                        )
                    ),
                    token("END"),
                    token("OPERATOR"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1648,24 +1648,24 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("OPERATOR-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    choice(
                        sequence(
-                           token("="),
+                           literal("="),
                            optional(
                                token("EXTENSION")
                            )
                        ),
-                       token("<>"),
-                       token(">="),
-                       token(">"),
-                       token("<="),
-                       token("<"),
-                       token("+"),
-                       token("-"),
-                       token("*"),
-                       token("/"),
+                       literal("<>"),
+                       literal(">="),
+                       literal(">"),
+                       literal("<="),
+                       literal("<"),
+                       literal("+"),
+                       literal("-"),
+                       literal("*"),
+                       literal("/"),
                        token("B-AND"),
                        token("B-OR"),
                        token("B-XOR"),
@@ -1676,7 +1676,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("EXPLICIT")
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1708,7 +1708,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("IDENTIFICATION")
                                    ),
                                    token("DIVISION"),
-                                   token(".")
+                                   literal(".")
                                )
                            ),
                            valueTypeIdParagraph()
@@ -1719,13 +1719,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                token("END"),
                                token("ENUM"),
-                               token(".")
+                               literal(".")
                            )
                        )
                    ),
                    token("END"),
                    token("VALUETYPE"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1749,7 +1749,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("VALUETYPE-ID"),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    valuetypeName(),
                    optional(
@@ -1793,7 +1793,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -1862,7 +1862,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            name()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -1885,7 +1885,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("OPTIONS"),
-                   token("."),
+                   literal("."),
                    optional(
                        arithmeticClause()
                    ),
@@ -1898,7 +1898,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        intermediateRoundingClause()
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -2055,42 +2055,42 @@ public class CobolGrammar extends CobolBaseGrammar {
                        choice(
                            sequence(
                                token("AUTHOR"),
-                               token("."),
+                               literal("."),
                                optional(
                                    commentEntry()
                                )
                            ),
                            sequence(
                                token("INSTALLATION"),
-                               token("."),
+                               literal("."),
                                optional(
                                    commentEntry()
                                )
                            ),
                            sequence(
                                token("DATE-WRITTEN"),
-                               token("."),
+                               literal("."),
                                optional(
                                    commentEntry()
                                )
                            ),
                            sequence(
                                token("DATE-COMPILED"),
-                               token("."),
+                               literal("."),
                                optional(
                                    commentEntry()
                                )
                            ),
                            sequence(
                                token("SECURITY"),
-                               token("."),
+                               literal("."),
                                optional(
                                    commentEntry()
                                )
                            ),
                            sequence(
                                token("REMARKS"),
-                               token("."),
+                               literal("."),
                                optional(
                                    commentEntry()
                                )
@@ -2130,7 +2130,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    sequence(
                        token("ENVIRONMENT"),
                        token("DIVISION"),
-                       token("."),
+                       literal("."),
                        optional(
                            environmentDivisionBody()
                        )
@@ -2226,7 +2226,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("CONFIGURATION"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    optional(
                        configurationSectionBody()
                    )
@@ -2293,14 +2293,14 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("SOURCE-COMPUTER"),
-                   token("."),
+                   literal("."),
                    optional(
                        sequence(
                            computerName(),
                            optional(
                                withDebuggingMode()
                            ),
-                           token(".")
+                           literal(".")
                        )
                    ),
                    optional(
@@ -2360,16 +2360,16 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("OBJECT-COMPUTER"),
-                   token("."),
+                   literal("."),
                    optional(
                        sequence(
                            computerName(),
                            optional(
                                skipto(
-                                   token(".")
+                                   literal(".")
                                )
                            ),
-                           token(".")
+                           literal(".")
                        )
                    ),
                    optional(
@@ -2403,7 +2403,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("CONSTRAINTS"),
-                   token("."),
+                   literal("."),
                    optional(
                        skipto(
                            choice(
@@ -2435,7 +2435,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("CLASS-ATTRIBUTES"),
-                   token("."),
+                   literal("."),
                    optional(
                        skipto(
                            choice(
@@ -2467,7 +2467,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("ASSEMBLY-ATTRIBUTES"),
-                   token("."),
+                   literal("."),
                    optional(
                        skipto(
                            choice(
@@ -2508,7 +2508,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -2532,7 +2532,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("SPECIAL-NAMES"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            specialNameStatement(),
@@ -2540,7 +2540,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    ),
                    optional(
                        skipto(
@@ -3348,7 +3348,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("REPOSITORY"),
-                   token("."),
+                   literal("."),
                    optional(
                        sequence(
                            plus(
@@ -3362,7 +3362,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    enumSpecifier()
                                )
                            ),
-                           token(".")
+                           literal(".")
                        )
                    )
                )
@@ -3624,7 +3624,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("INPUT-OUTPUT"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    optional(
                        ioSectionBody()
                    )
@@ -3686,7 +3686,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("FILE-CONTROL"),
-                   token("."),
+                   literal("."),
                    optional(
                        fileControlEntry()
                    )
@@ -3756,7 +3756,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            paddingClause()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -4021,7 +4021,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    choice(
                        token("STANDARD-1"),
-                       alphanumericLiteral()
+                       literal(),
+                       name()
                    )
                )
            );
@@ -4362,7 +4363,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            identifier()
                        ),
                        choice(
-                           token("="),
+                           literal("="),
                            sequence(
                                token("SOURCE"),
                                optional(
@@ -4406,9 +4407,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        token("IS")
                    ),
-                   dataName(),
+                   qualifiedDataName(),
                    optional(
-                       dataName()
+                       qualifiedDataName()
                    )
                )
            );
@@ -4565,7 +4566,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("I-O-CONTROL"),
-                   token("."),
+                   literal("."),
                    optional(
                        skipto(
                            choice(
@@ -4599,7 +4600,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    sequence(
                        token("OBJECT"),
                        token("SECTION"),
-                       token("."),
+                       literal("."),
                        optional(
                            objectSectionBody()
                        )
@@ -4652,7 +4653,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("CLASS-CONTROL"),
-                   token("."),
+                   literal("."),
                    plus(
                        choice(
                            sequence(
@@ -4665,7 +4666,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -4691,7 +4692,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    sequence(
                        token("DATA"),
                        token("DIVISION"),
-                       token("."),
+                       literal("."),
                        optional(
                            dataDivisionBody()
                        )
@@ -4753,7 +4754,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("FILE"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            copyStatement(),
@@ -4839,9 +4840,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    skipto(
-                       token(".")
+                       literal(".")
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -4876,9 +4877,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    skipto(
-                       token(".")
+                       literal(".")
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -4902,7 +4903,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("WORKING-STORAGE"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            recordDescriptionEntry(),
@@ -4910,7 +4911,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                execStatement(),
                                optional(
-                                   token(".")
+                                   literal(".")
                                )
                            )
                        )
@@ -4938,7 +4939,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("THREAD-LOCAL-STORAGE"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            recordDescriptionEntry(),
@@ -4946,7 +4947,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                execStatement(),
                                optional(
-                                   token(".")
+                                   literal(".")
                                )
                            )
                        )
@@ -4974,7 +4975,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("OBJECT-STORAGE"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            recordDescriptionEntry(),
@@ -4982,7 +4983,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                execStatement(),
                                optional(
-                                   token(".")
+                                   literal(".")
                                )
                            )
                        )
@@ -5010,7 +5011,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("LOCAL-STORAGE"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            recordDescriptionEntry(),
@@ -5018,7 +5019,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                execStatement(),
                                optional(
-                                   token(".")
+                                   literal(".")
                                )
                            )
                        )
@@ -5046,7 +5047,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("LINKAGE"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            recordDescriptionEntry(),
@@ -5054,7 +5055,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            sequence(
                                execStatement(),
                                optional(
-                                   token(".")
+                                   literal(".")
                                )
                            )
                        )
@@ -5082,7 +5083,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("COMMUNICATION"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        choice(
                            communicationDescriptionEntry(),
@@ -5260,7 +5261,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            )
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5362,7 +5363,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            dataName()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5455,7 +5456,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            )
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5479,7 +5480,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("REPORT"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        sequence(
                            reportDescriptionEntry(),
@@ -5519,7 +5520,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            pageClause()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5566,7 +5567,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            varyingClause()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5590,7 +5591,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("SCREEN"),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    star(
                        screenDescriptionEntry()
                    ),
@@ -5663,7 +5664,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            screenEntryPhrase()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5761,7 +5762,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    as("entryName",
-                       cobolWord()
+                       choice(
+                           token("FILLER"),
+                           cobolWord()
+                       )
                    ),
                    token("CONSTANT"),
                    optional(
@@ -5779,7 +5783,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            cobolWord()
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5806,7 +5810,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        cobolWord()
                    ),
                    constantValueClause(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5915,9 +5919,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    skipto(
-                       token(".")
+                       literal(".")
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5944,7 +5948,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        dataName()
                    ),
                    renamesClause(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -5981,7 +5985,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    valueClause(),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -6197,9 +6201,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("DFHVALUE"),
                        token("DFHRESP")
                    ),
-                   token("("),
+                   literal("("),
                    cobolWord(),
-                   token(")")
+                   literal(")")
                )
            );
         }
@@ -6407,22 +6411,30 @@ public class CobolGrammar extends CobolBaseGrammar {
                        plus(
                            sequence(
                                plus(
-                                   literal()
+                                   sequence(
+                                       not(
+                                           choice(
+                                               token("THROUGH"),
+                                               token("THRU")
+                                           )
+                                       ),
+                                       literal()
+                                   )
                                ),
                                token("FROM"),
-                               token("("),
+                               literal("("),
                                plus(
                                    subscript()
                                ),
-                               token(")"),
+                               literal(")"),
                                optional(
                                    sequence(
                                        token("TO"),
-                                       token("("),
+                                       literal("("),
                                        plus(
                                            subscript()
                                        ),
-                                       token(")")
+                                       literal(")")
                                    )
                                )
                            )
@@ -6896,9 +6908,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        choice(
                            token("PLUS"),
-                           token("+"),
+                           literal("+"),
                            token("MINUS"),
-                           token("-")
+                           literal("-")
                        )
                    ),
                    choice(
@@ -6977,11 +6989,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                            choice(
                                token("AND"),
                                token("OR"),
-                               token("&"),
-                               token("+"),
-                               token("-"),
-                               token("*"),
-                               token("/")
+                               literal("&"),
+                               literal("+"),
+                               literal("-"),
+                               literal("*"),
+                               literal("/")
                            ),
                            choice(
                                token("NEXT"),
@@ -7620,7 +7632,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                sequence(
                                    choice(
                                        token("PLUS"),
-                                       token("+")
+                                       literal("+")
                                    ),
                                    choice(
                                        integer(),
@@ -7639,9 +7651,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        sequence(
                            choice(
                                token("PLUS"),
-                               token("+"),
+                               literal("+"),
                                token("MINUS"),
-                               token("-")
+                               literal("-")
                            ),
                            choice(
                                integer(),
@@ -9202,7 +9214,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        returningProcedurePhrase()
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -9505,13 +9517,13 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("DECLARATIVES"),
-                   token("."),
+                   literal("."),
                    star(
                        declarativeSection()
                    ),
                    token("END"),
                    token("DECLARATIVES"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -9535,12 +9547,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    sectionName(),
                    token("SECTION"),
-                   token("."),
+                   literal("."),
                    as("sentence",
                        as("statement",
                            sequence(
                                useStatement(),
-                               token(".")
+                               literal(".")
                            )
                        )
                    ),
@@ -9576,7 +9588,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        segmentNumber()
                    ),
-                   token("."),
+                   literal("."),
                    star(
                        sentence()
                    ),
@@ -9605,7 +9617,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    paragraphName(),
-                   token("."),
+                   literal("."),
                    star(
                        sentence()
                    )
@@ -9640,9 +9652,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                                continuationOfStatement()
                            )
                        ),
-                       token(".")
+                       literal(".")
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -9813,7 +9825,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        optional(
                            skipto(
                                choice(
-                                   token("."),
+                                   literal("."),
                                    endOfStatement(),
                                    verb(),
                                    subStatementMarker()
@@ -10004,11 +10016,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private Parser eventPhraseParser = null;
 
-    public final Start eventPhrase = Start.on(getNamespace(), "eventPhrase");
-
-    public Parser eventPhrase() {
+    private Parser eventPhrase() {
         if (eventPhraseParser == null) {
-           FutureParser future = scoped("eventPhrase", true);
+           FutureParser future = scoped("eventPhrase", false);
            eventPhraseParser = future;
            future.setParser(
                sequence(
@@ -10022,23 +10032,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                token("AT")
                            )
                        ),
-                       choice(
-                           assign("t", token("EXCEPTION")),
-                           sequence(
-                               assign("t", token("SIZE")),
-                               token("ERROR")
-                           ),
-                           assign("t", token("OVERFLOW")),
-                           sequence(
-                               assign("t", token("INVALID")),
-                               optional(
-                                   token("KEY")
-                               )
-                           ),
-                           assign("t", token("END")),
-                           assign("t", token("END-OF-PAGE")),
-                           assign("t", token("EOP"))
-                       )
+                       assign("t", eventType())
                    ),
                    returning("t")
                )
@@ -10046,6 +10040,43 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return eventPhraseParser;
+    }
+
+    // ========================================================
+    // eventType
+    // ........................................................
+
+    private Parser eventTypeParser = null;
+
+    private Parser eventType() {
+        if (eventTypeParser == null) {
+           FutureParser future = scoped("eventType", false);
+           eventTypeParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       assign("t", token("EXCEPTION")),
+                       sequence(
+                           assign("t", token("SIZE")),
+                           token("ERROR")
+                       ),
+                       assign("t", token("OVERFLOW")),
+                       sequence(
+                           assign("t", token("INVALID")),
+                           optional(
+                               token("KEY")
+                           )
+                       ),
+                       assign("t", token("END")),
+                       assign("t", token("END-OF-PAGE")),
+                       assign("t", token("EOP"))
+                   ),
+                   returning("t")
+               )
+           );
+        }
+
+        return eventTypeParser;
     }
 
     // ========================================================
@@ -10853,26 +10884,23 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("CALL"),
                    choice(
                        token("NESTED"),
+                       alphanumericLiteral(),
                        sequence(
-                           mnemonicName(),
-                           choice(
-                               alphanumericLiteral(),
-                               identifier()
-                           )
-                       ),
-                       sequence(
-                           choice(
-                               alphanumericLiteral(),
-                               identifier()
-                           ),
+                           identifier(),
                            optional(
-                               sequence(
-                                   token("AS"),
-                                   choice(
-                                       token("NESTED"),
-                                       programName()
-                                   )
+                               choice(
+                                   alphanumericLiteral(),
+                                   identifier()
                                )
+                           )
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           token("AS"),
+                           choice(
+                               token("NESTED"),
+                               programName()
                            )
                        )
                    ),
@@ -11558,7 +11586,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    choice(
-                       token("="),
+                       literal("="),
                        token("EQUAL")
                    ),
                    arithmeticExpression(),
@@ -12091,8 +12119,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        choice(
                            token("PLUS"),
-                           token("+"),
-                           token("-")
+                           literal("+"),
+                           literal("-")
                        )
                    ),
                    choice(
@@ -12135,8 +12163,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        choice(
                            token("PLUS"),
-                           token("+"),
-                           token("-")
+                           literal("+"),
+                           literal("-")
                        )
                    ),
                    choice(
@@ -13365,11 +13393,19 @@ public class CobolGrammar extends CobolBaseGrammar {
            FutureParser future = scoped("subject", true);
            subjectParser = future;
            future.setParser(
-               choice(
-                   condition(),
-                   arithmeticExpression(),
-                   identifier(),
-                   literal()
+               sequence(
+                   choice(
+                       condition(),
+                       arithmeticExpression(),
+                       identifier(),
+                       literal()
+                   ),
+                   skipto(
+                       choice(
+                           token("ALSO"),
+                           token("WHEN")
+                       )
+                   )
                )
            );
         }
@@ -13394,6 +13430,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    plus(
                        sequence(
                            token("WHEN"),
+                           not(
+                               token("OTHER")
+                           ),
                            object(),
                            star(
                                sequence(
@@ -13465,9 +13504,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    sequence(
-                       token("("),
+                       literal("("),
                        object(),
-                       token(")")
+                       literal(")")
                    )
                )
            );
@@ -14340,7 +14379,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        skipto(
                            choice(
-                               token("."),
+                               literal("."),
                                endOfStatement()
                            )
                        )
@@ -14840,7 +14879,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        skipto(
                            choice(
-                               token("."),
+                               literal("."),
                                endOfStatement()
                            )
                        )
@@ -14998,6 +15037,9 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    token("ON"),
+                   not(
+                       eventType()
+                   ),
                    choice(
                        literal(),
                        identifier()
@@ -15561,7 +15603,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("READY"),
                    token("TRACE"),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -15776,7 +15818,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("RESET"),
                    token("TRACE"),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -16338,18 +16380,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("SET"),
                    choice(
                        setEnvironmentVariable(),
-                       setFormatMonitorValue(),
-                       setFormatDataPointerAssignment(),
-                       setFormatProcedurePointerAssignment(),
-                       setFormatSemaphoreValue(),
-                       setFormat1(),
-                       setFormat2(),
-                       setFormat3()
+                       setOther()
                    ),
                    optional(
                        skipto(
                            choice(
-                               token("."),
+                               literal("."),
                                endOfStatement()
                            )
                        )
@@ -16359,255 +16395,6 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return setStatementParser;
-    }
-
-    // ========================================================
-    // setFormat1
-    // ........................................................
-
-    private Parser setFormat1Parser = null;
-
-    public final Start setFormat1 = Start.on(getNamespace(), "setFormat1");
-
-    public Parser setFormat1() {
-        if (setFormat1Parser == null) {
-           FutureParser future = scoped("setFormat1", true);
-           setFormat1Parser = future;
-           future.setParser(
-               sequence(
-                   plus(
-                       choice(
-                           indexName(),
-                           identifier()
-                       )
-                   ),
-                   token("TO"),
-                   choice(
-                       indexName(),
-                       identifier(),
-                       integer()
-                   )
-               )
-           );
-        }
-
-        return setFormat1Parser;
-    }
-
-    // ========================================================
-    // setFormat2
-    // ........................................................
-
-    private Parser setFormat2Parser = null;
-
-    public final Start setFormat2 = Start.on(getNamespace(), "setFormat2");
-
-    public Parser setFormat2() {
-        if (setFormat2Parser == null) {
-           FutureParser future = scoped("setFormat2", true);
-           setFormat2Parser = future;
-           future.setParser(
-               sequence(
-                   plus(
-                       mnemonicName()
-                   ),
-                   token("TO"),
-                   choice(
-                       token("ON"),
-                       token("OFF")
-                   )
-               )
-           );
-        }
-
-        return setFormat2Parser;
-    }
-
-    // ========================================================
-    // setFormat3
-    // ........................................................
-
-    private Parser setFormat3Parser = null;
-
-    public final Start setFormat3 = Start.on(getNamespace(), "setFormat3");
-
-    public Parser setFormat3() {
-        if (setFormat3Parser == null) {
-           FutureParser future = scoped("setFormat3", true);
-           setFormat3Parser = future;
-           future.setParser(
-               sequence(
-                   plus(
-                       identifier()
-                   ),
-                   token("TO"),
-                   choice(
-                       token("TRUE"),
-                       token("FALSE")
-                   )
-               )
-           );
-        }
-
-        return setFormat3Parser;
-    }
-
-    // ========================================================
-    // setFormatDataPointerAssignment
-    // ........................................................
-
-    private Parser setFormatDataPointerAssignmentParser = null;
-
-    public final Start setFormatDataPointerAssignment = Start.on(getNamespace(), "setFormatDataPointerAssignment");
-
-    public Parser setFormatDataPointerAssignment() {
-        if (setFormatDataPointerAssignmentParser == null) {
-           FutureParser future = scoped("setFormatDataPointerAssignment", true);
-           setFormatDataPointerAssignmentParser = future;
-           future.setParser(
-               sequence(
-                   plus(
-                       choice(
-                           sequence(
-                               token("ADDRESS"),
-                               optional(
-                                   token("OF")
-                               ),
-                               identifier()
-                           ),
-                           identifier()
-                       )
-                   ),
-                   token("TO"),
-                   choice(
-                       sequence(
-                           token("ADDRESS"),
-                           optional(
-                               token("OF")
-                           ),
-                           identifier()
-                       ),
-                       mnemonicName(),
-                       token("NULL"),
-                       token("NULLS")
-                   )
-               )
-           );
-        }
-
-        return setFormatDataPointerAssignmentParser;
-    }
-
-    // ========================================================
-    // setFormatProcedurePointerAssignment
-    // ........................................................
-
-    private Parser setFormatProcedurePointerAssignmentParser = null;
-
-    public final Start setFormatProcedurePointerAssignment = Start.on(getNamespace(), "setFormatProcedurePointerAssignment");
-
-    public Parser setFormatProcedurePointerAssignment() {
-        if (setFormatProcedurePointerAssignmentParser == null) {
-           FutureParser future = scoped("setFormatProcedurePointerAssignment", true);
-           setFormatProcedurePointerAssignmentParser = future;
-           future.setParser(
-               sequence(
-                   procedureName(),
-                   token("TO"),
-                   choice(
-                       procedureName(),
-                       sequence(
-                           token("ENTRY"),
-                           choice(
-                               identifier(),
-                               literal()
-                           )
-                       ),
-                       token("NULL"),
-                       token("NULLS")
-                   )
-               )
-           );
-        }
-
-        return setFormatProcedurePointerAssignmentParser;
-    }
-
-    // ========================================================
-    // setFormatMonitorValue
-    // ........................................................
-
-    private Parser setFormatMonitorValueParser = null;
-
-    public final Start setFormatMonitorValue = Start.on(getNamespace(), "setFormatMonitorValue");
-
-    public Parser setFormatMonitorValue() {
-        if (setFormatMonitorValueParser == null) {
-           FutureParser future = scoped("setFormatMonitorValue", true);
-           setFormatMonitorValueParser = future;
-           future.setParser(
-               sequence(
-                   plus(
-                       mnemonicName()
-                   ),
-                   token("TO"),
-                   optional(
-                       token("NOT")
-                   ),
-                   choice(
-                       token("BROWSING"),
-                       token("READING"),
-                       token("WRITING")
-                   ),
-                   optional(
-                       sequence(
-                           token("CONVERTING"),
-                           token("FROM"),
-                           choice(
-                               token("BROWSING"),
-                               token("WRITING")
-                           )
-                       )
-                   )
-               )
-           );
-        }
-
-        return setFormatMonitorValueParser;
-    }
-
-    // ========================================================
-    // setFormatSemaphoreValue
-    // ........................................................
-
-    private Parser setFormatSemaphoreValueParser = null;
-
-    public final Start setFormatSemaphoreValue = Start.on(getNamespace(), "setFormatSemaphoreValue");
-
-    public Parser setFormatSemaphoreValue() {
-        if (setFormatSemaphoreValueParser == null) {
-           FutureParser future = scoped("setFormatSemaphoreValue", true);
-           setFormatSemaphoreValueParser = future;
-           future.setParser(
-               sequence(
-                   plus(
-                       mnemonicName()
-                   ),
-                   token("TO"),
-                   choice(
-                       token("UP"),
-                       token("DOWN")
-                   ),
-                   token("BY"),
-                   choice(
-                       integer(),
-                       identifier()
-                   )
-               )
-           );
-        }
-
-        return setFormatSemaphoreValueParser;
     }
 
     // ========================================================
@@ -16633,6 +16420,101 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return setEnvironmentVariableParser;
+    }
+
+    // ========================================================
+    // setOther
+    // ........................................................
+
+    private Parser setOtherParser = null;
+
+    public final Start setOther = Start.on(getNamespace(), "setOther");
+
+    public Parser setOther() {
+        if (setOtherParser == null) {
+           FutureParser future = scoped("setOther", true);
+           setOtherParser = future;
+           future.setParser(
+               sequence(
+                   plus(
+                       choice(
+                           sequence(
+                               token("ADDRESS"),
+                               optional(
+                                   token("OF")
+                               ),
+                               identifier()
+                           ),
+                           name(),
+                           identifier()
+                       )
+                   ),
+                   choice(
+                       sequence(
+                           token("TO"),
+                           choice(
+                               token("ON"),
+                               token("OFF"),
+                               token("TRUE"),
+                               token("FALSE"),
+                               sequence(
+                                   token("ADDRESS"),
+                                   optional(
+                                       token("OF")
+                                   ),
+                                   identifier()
+                               ),
+                               sequence(
+                                   optional(
+                                       token("NOT")
+                                   ),
+                                   choice(
+                                       token("BROWSING"),
+                                       token("READING"),
+                                       token("WRITING")
+                                   ),
+                                   optional(
+                                       sequence(
+                                           token("CONVERTING"),
+                                           token("FROM"),
+                                           choice(
+                                               token("BROWSING"),
+                                               token("WRITING")
+                                           )
+                                       )
+                                   )
+                               ),
+                               sequence(
+                                   token("ENTRY"),
+                                   choice(
+                                       identifier(),
+                                       literal()
+                                   )
+                               ),
+                               token("NULL"),
+                               token("NULLS"),
+                               name(),
+                               identifier(),
+                               integer()
+                           )
+                       ),
+                       sequence(
+                           choice(
+                               token("UP"),
+                               token("DOWN")
+                           ),
+                           token("BY"),
+                           choice(
+                               integer(),
+                               identifier()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return setOtherParser;
     }
 
     // ========================================================
@@ -18004,7 +17886,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    replaceStatement(),
                    sequence(
                        useStatement(),
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -18028,13 +17910,13 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    sequence(
-                       token("\u0024"),
+                       literal("\u0024"),
                        token("SET")
                    ),
                    skipto(
                        choice(
                            sequence(
-                               token("\u0024"),
+                               literal("\u0024"),
                                token("SET")
                            ),
                            divisionStart(),
@@ -18063,7 +17945,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            compilerIfStatementParser = future;
            future.setParser(
                sequence(
-                   token("\u0024"),
+                   literal("\u0024"),
                    token("IF"),
                    operand(),
                    optional(
@@ -18080,9 +17962,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    token("NOT")
                                ),
                                choice(
-                                   token("<"),
-                                   token(">"),
-                                   token("=")
+                                   literal("<"),
+                                   literal(">"),
+                                   literal("=")
                                ),
                                operand()
                            )
@@ -18094,7 +17976,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    optional(
                        sequence(
-                           token("\u0024"),
+                           literal("\u0024"),
                            token("ELSE"),
                            choice(
                                compilerStatement(),
@@ -18102,7 +17984,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            )
                        )
                    ),
-                   token("\u0024"),
+                   literal("\u0024"),
                    token("END")
                )
            );
@@ -18125,12 +18007,12 @@ public class CobolGrammar extends CobolBaseGrammar {
            compilerDisplayStatementParser = future;
            future.setParser(
                sequence(
-                   token("\u0024"),
+                   literal("\u0024"),
                    token("DISPLAY"),
                    choice(
                        sequence(
                            token("VCS"),
-                           token("="),
+                           literal("="),
                            literal()
                        ),
                        textName()
@@ -18213,7 +18095,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -18262,7 +18144,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("EJECT"),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -18291,7 +18173,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("SKIP3")
                    ),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -18317,7 +18199,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("TITLE"),
                    literal(),
                    optional(
-                       token(".")
+                       literal(".")
                    )
                )
            );
@@ -18367,7 +18249,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            )
                        )
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -18404,7 +18286,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("SCREEN")
                    ),
                    token("SECTION"),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -18438,7 +18320,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("I-O-CONTROL"),
                        token("CLASS-CONTROL")
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -18540,457 +18422,598 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("FUNCTION"),
                    choice(
                        sequence(
-                           token("ABS"),
-                           token("("),
+                           literal("ABS"),
+                           literal("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("ACOS"),
-                           token("("),
+                           literal("ACOS"),
+                           literal("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("ANNUITY"),
-                           token("("),
-                           argument(),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("ASIN"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("ATAN"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("BOOLEAN-OF-INTEGER"),
-                           token("("),
-                           argument(),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("BYTE-LENGTH"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("CHAR"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("CHAR-NATIONAL"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("COMBINED-DATETIME"),
-                           token("("),
-                           argument(),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("CONCATENATE"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("COS"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       token("CURRENT-DATE"),
-                       sequence(
-                           token("DATE-OF-INTEGER"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("DATE-TO-YYYYMMDD"),
-                           token("("),
+                           literal("ANNUITY"),
+                           literal("("),
                            argument(),
                            optional(
-                               argument()
+                               literal(",")
                            ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("DAY-OF-INTEGER"),
-                           token("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("DAY-TO-YYYYDDD"),
-                           token("("),
+                           literal("ASIN"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("ATAN"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("BOOLEAN-OF-INTEGER"),
+                           literal("("),
                            argument(),
                            optional(
-                               argument()
+                               literal(",")
                            ),
-                           token(")")
+                           argument(),
+                           literal(")")
                        ),
                        sequence(
-                           token("DISPLAY-OF"),
-                           token("("),
+                           literal("BYTE-LENGTH"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("CHAR"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("CHAR-NATIONAL"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("COMBINED-DATETIME"),
+                           literal("("),
                            argument(),
                            optional(
-                               argument()
+                               literal(",")
                            ),
-                           token(")")
-                       ),
-                       token("E"),
-                       token("EXCEPTION-FILE"),
-                       token("EXCEPTION-LOCATION"),
-                       token("EXCEPTION-STATEMENT"),
-                       token("EXCEPTION-STATUS"),
-                       sequence(
-                           token("EXP"),
-                           token("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("EXP10"),
-                           token("("),
+                           literal("CONCATENATE"),
+                           literal("("),
                            argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("FACTORIAL"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("FRACTION-PART"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("INTEGER"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("INTEGER-OF-BOOLEAN"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("INTEGER-OF-DATE"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("INTEGER-OF-DAY"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("INTEGER-PART"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("LENGTH"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("LENGTH-AN"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("LOCALE-DATE"),
-                           token("("),
-                           argument(),
-                           optional(
-                               argument()
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("LOCALE-TIME"),
-                           token("("),
+                           literal("COS"),
+                           literal("("),
                            argument(),
-                           optional(
-                               argument()
-                           ),
-                           token(")")
+                           literal(")")
                        ),
+                       literal("CURRENT-DATE"),
                        sequence(
-                           token("LOCALE-TIME-FROM-SECS"),
-                           token("("),
+                           literal("DATE-OF-INTEGER"),
+                           literal("("),
                            argument(),
-                           optional(
-                               argument()
-                           ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("LOG"),
-                           token("("),
+                           literal("DATE-TO-YYYYMMDD"),
+                           literal("("),
                            argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("LOG10"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("LOWER-CASE"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("MAX"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("MEAN"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("MEDIAN"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("MIDRANGE"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("MIN"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("MOD"),
-                           token("("),
-                           argument(),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("NATIONAL-OF"),
-                           token("("),
-                           argument(),
-                           optional(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("NUMVAL"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("NUMVAL-C"),
-                           token("("),
-                           argument(),
-                           optional(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("ORD"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("ORD-MAX"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("ORD-MIN"),
-                           token("("),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       token("PI"),
-                       sequence(
-                           token("PRESENT-VALUE"),
-                           token("("),
-                           argument(),
-                           plus(
-                               argument()
-                           ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("RANDOM"),
                            optional(
                                sequence(
-                                   token("("),
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("DAY-OF-INTEGER"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("DAY-TO-YYYYDDD"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("DISPLAY-OF"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       literal("E"),
+                       literal("EXCEPTION-FILE"),
+                       literal("EXCEPTION-LOCATION"),
+                       literal("EXCEPTION-STATEMENT"),
+                       literal("EXCEPTION-STATUS"),
+                       sequence(
+                           literal("EXP"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("EXP10"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("FACTORIAL"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("FRACTION-PART"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("INTEGER"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("INTEGER-OF-BOOLEAN"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("INTEGER-OF-DATE"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("INTEGER-OF-DAY"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("INTEGER-PART"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LENGTH"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LENGTH-AN"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LOCALE-DATE"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LOCALE-TIME"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LOCALE-TIME-FROM-SECS"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LOG"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LOG10"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("LOWER-CASE"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("MAX"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("MEAN"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("MEDIAN"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("MIDRANGE"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("MIN"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("MOD"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               literal(",")
+                           ),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("NATIONAL-OF"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("NUMVAL"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("NUMVAL-C"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("ORD"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("ORD-MAX"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("ORD-MIN"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       literal("PI"),
+                       sequence(
+                           literal("PRESENT-VALUE"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("RANDOM"),
+                           optional(
+                               sequence(
+                                   literal("("),
                                    argument(),
-                                   token(")")
+                                   literal(")")
                                )
                            )
                        ),
                        sequence(
-                           token("RANGE"),
-                           token("("),
-                           plus(
-                               argument()
+                           literal("RANGE"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("REM"),
-                           token("("),
+                           literal("REM"),
+                           literal("("),
                            argument(),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("REVERSE"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("SECONDS-FROM-FORMATTED-TIME"),
-                           token("("),
-                           argument(),
-                           argument(),
-                           token(")")
-                       ),
-                       token("SECONDS-PAST-MIDNIGHT"),
-                       sequence(
-                           token("SIGN"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("SIN"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("SQRT"),
-                           token("("),
-                           argument(),
-                           token(")")
-                       ),
-                       sequence(
-                           token("STANDARD-DEVIATION"),
-                           token("("),
-                           plus(
-                               argument()
+                           optional(
+                               literal(",")
                            ),
-                           token(")")
-                       ),
-                       sequence(
-                           token("STORED-CHAR-LENGTH"),
-                           token("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("SUBSTITUTE"),
-                           token("("),
-                           plus(
-                               argument()
+                           literal("REVERSE"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("SECONDS-FROM-FORMATTED-TIME"),
+                           literal("("),
+                           argument(),
+                           optional(
+                               literal(",")
                            ),
-                           token(")")
+                           argument(),
+                           literal(")")
+                       ),
+                       literal("SECONDS-PAST-MIDNIGHT"),
+                       sequence(
+                           literal("SIGN"),
+                           literal("("),
+                           argument(),
+                           literal(")")
                        ),
                        sequence(
-                           token("SUBSTITUTE-CASE"),
-                           token("("),
-                           plus(
-                               argument()
+                           literal("SIN"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("SQRT"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("STANDARD-DEVIATION"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("SUM"),
-                           token("("),
-                           plus(
-                               argument()
+                           literal("STORED-CHAR-LENGTH"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("SUBSTITUTE"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("TAN"),
-                           token("("),
+                           literal("SUBSTITUTE-CASE"),
+                           literal("("),
                            argument(),
-                           token(")")
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
                        ),
                        sequence(
-                           token("TEST-DATE-YYYYMMDD"),
-                           token("("),
+                           literal("SUM"),
+                           literal("("),
                            argument(),
-                           token(")")
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
+                           ),
+                           literal(")")
                        ),
                        sequence(
-                           token("TEST-DAY-YYYYDDD"),
-                           token("("),
+                           literal("TAN"),
+                           literal("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("TRIM"),
-                           token("("),
+                           literal("TEST-DATE-YYYYMMDD"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("TEST-DAY-YYYYDDD"),
+                           literal("("),
+                           argument(),
+                           literal(")")
+                       ),
+                       sequence(
+                           literal("TRIM"),
+                           literal("("),
                            argument(),
                            optional(
                                choice(
@@ -18998,41 +19021,58 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    token("TRAILING")
                                )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("UPPER-CASE"),
-                           token("("),
+                           literal("UPPER-CASE"),
+                           literal("("),
                            argument(),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
-                           token("VARIANCE"),
-                           token("("),
-                           plus(
-                               argument()
+                           literal("VARIANCE"),
+                           literal("("),
+                           argument(),
+                           star(
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
                            ),
-                           token(")")
+                           literal(")")
                        ),
-                       token("WHEN-COMPILED"),
+                       literal("WHEN-COMPILED"),
                        sequence(
-                           token("YEAR-TO-YYYY"),
-                           token("("),
+                           literal("YEAR-TO-YYYY"),
+                           literal("("),
                            argument(),
                            optional(
-                               argument()
+                               sequence(
+                                   optional(
+                                       literal(",")
+                                   ),
+                                   argument()
+                               )
                            ),
-                           token(")")
+                           literal(")")
                        ),
                        sequence(
                            functionName(),
                            optional(
                                sequence(
-                                   token("("),
-                                   plus(
-                                       argument()
+                                   literal("("),
+                                   argument(),
+                                   star(
+                                       sequence(
+                                           optional(
+                                               literal(",")
+                                           ),
+                                           argument()
+                                       )
                                    ),
-                                   token(")")
+                                   literal(")")
                                )
                            )
                        )
@@ -19193,8 +19233,8 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                choice(
                    arithmeticExpression(),
-                   identifier(),
-                   literal()
+                   literal(),
+                   identifier()
                )
            );
         }
@@ -19293,8 +19333,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    identifier(),
                    choice(
-                       token("+"),
-                       token("-")
+                       literal("+"),
+                       literal("-")
                    ),
                    integer()
                )
@@ -19318,13 +19358,13 @@ public class CobolGrammar extends CobolBaseGrammar {
            referenceModifierParser = future;
            future.setParser(
                sequence(
-                   token("("),
+                   literal("("),
                    arithmeticExpression(),
-                   token(":"),
+                   literal(":"),
                    optional(
                        arithmeticExpression()
                    ),
-                   token(")")
+                   literal(")")
                )
            );
         }
@@ -19427,8 +19467,8 @@ public class CobolGrammar extends CobolBaseGrammar {
            signDefParser = future;
            future.setParser(
                choice(
-                   token("+"),
-                   token("-")
+                   literal("+"),
+                   literal("-")
                )
            );
         }
@@ -19454,8 +19494,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                    star(
                        sequence(
                            choice(
-                               token("*"),
-                               token("/")
+                               literal("*"),
+                               literal("/")
                            ),
                            factor()
                        )
@@ -19481,8 +19521,8 @@ public class CobolGrammar extends CobolBaseGrammar {
            unaryOperatorParser = future;
            future.setParser(
                choice(
-                   token("+"),
-                   token("-"),
+                   literal("+"),
+                   literal("-"),
                    token("B-NOT")
                )
            );
@@ -19511,7 +19551,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    atomicExpression(),
                    star(
                        sequence(
-                           token("**"),
+                           literal("**"),
                            optional(
                                unaryOperator()
                            ),
@@ -19543,9 +19583,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                    identifier(),
                    numeric(),
                    sequence(
-                       token("("),
+                       literal("("),
                        arithmeticExpression(),
-                       token(")")
+                       literal(")")
                    )
                )
            );
@@ -19571,14 +19611,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                    optional(
                        token("NOT")
                    ),
-                   choice(
-                       conditionStart(),
-                       sequence(
-                           token("("),
-                           condition(),
-                           token(")")
-                       )
-                   ),
+                   conditionStart(),
                    star(
                        furtherCondition()
                    )
@@ -19605,6 +19638,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                choice(
                    token("TRUE"),
                    token("FALSE"),
+                   sequence(
+                       literal("("),
+                       condition(),
+                       literal(")")
+                   ),
                    operand()
                )
            );
@@ -19672,7 +19710,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                        optional(
                            relop()
                        ),
-                       operand()
+                       literal("("),
+                       condition(),
+                       literal(")")
                    ),
                    sequence(
                        optional(
@@ -19690,9 +19730,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                        optional(
                            relop()
                        ),
-                       token("("),
-                       condition(),
-                       token(")")
+                       operand()
                    )
                )
            );
@@ -19837,7 +19875,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("THAN")
                        )
                    ),
-                   token(">")
+                   literal(">")
                )
            );
         }
@@ -19865,7 +19903,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("THAN")
                        )
                    ),
-                   token("<")
+                   literal("<")
                )
            );
         }
@@ -19893,7 +19931,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("TO")
                        )
                    ),
-                   token("=")
+                   literal("=")
                )
            );
         }
@@ -19961,7 +19999,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("TO")
                        )
                    ),
-                   token("<>")
+                   literal("<>")
                )
            );
         }
@@ -19994,7 +20032,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("TO")
                        )
                    ),
-                   token(">=")
+                   literal(">=")
                )
            );
         }
@@ -20027,7 +20065,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("TO")
                        )
                    ),
-                   token("<=")
+                   literal("<=")
                )
            );
         }
@@ -20098,11 +20136,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    optional(
                        sequence(
-                           token("("),
+                           literal("("),
                            plus(
                                subscript()
                            ),
-                           token(")")
+                           literal(")")
                        )
                    )
                )
@@ -20186,7 +20224,10 @@ public class CobolGrammar extends CobolBaseGrammar {
            procedureNameParser = future;
            future.setParser(
                sequence(
-                   name(),
+                   choice(
+                       literal("COMMIT"),
+                       name()
+                   ),
                    optional(
                        sequence(
                            choice(
@@ -20926,7 +20967,7 @@ public class CobolGrammar extends CobolBaseGrammar {
            concatenatedLiteralParser = future;
            future.setParser(
                sequence(
-                   token("&"),
+                   literal("&"),
                    choice(
                        literalValue(),
                        constant()
@@ -21182,92 +21223,6 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return alphanumericConstantParser;
-    }
-
-    // ========================================================
-    // decimal
-    // ........................................................
-
-    private Parser decimalParser = null;
-
-    public final Start decimal = Start.on(getNamespace(), "decimal");
-
-    public Parser decimal() {
-        if (decimalParser == null) {
-           FutureParser future = scoped("decimal", true);
-           decimalParser = future;
-           future.setParser(
-               choice(
-                   sequence(
-                       intgr(),
-                       opt(NOSKIP,
-                           sequence(
-                               choice(
-                                   token(","),
-                                   token(".")
-                               ),
-                               uintgr()
-                           )
-                       )
-                   ),
-                   sequence(
-                       token("."),
-                       opt(NOSKIP,
-                           uintgr()
-                       )
-                   )
-               )
-           );
-        }
-
-        return decimalParser;
-    }
-
-    // ========================================================
-    // intgr
-    // ........................................................
-
-    private Parser intgrParser = null;
-
-    public final Start intgr = Start.on(getNamespace(), "intgr");
-
-    public Parser intgr() {
-        if (intgrParser == null) {
-           FutureParser future = scoped("intgr", true);
-           intgrParser = future;
-           future.setParser(
-               sequence(
-                   tagged(INTEGER_LITERAL),
-                   any()
-               )
-           );
-        }
-
-        return intgrParser;
-    }
-
-    // ========================================================
-    // uintgr
-    // ........................................................
-
-    private Parser uintgrParser = null;
-
-    public final Start uintgr = Start.on(getNamespace(), "uintgr");
-
-    public Parser uintgr() {
-        if (uintgrParser == null) {
-           FutureParser future = scoped("uintgr", true);
-           uintgrParser = future;
-           future.setParser(
-               sequence(
-                   tagged(UNSIGNED),
-                   tagged(INTEGER_LITERAL),
-                   any()
-               )
-           );
-        }
-
-        return uintgrParser;
     }
 
 }

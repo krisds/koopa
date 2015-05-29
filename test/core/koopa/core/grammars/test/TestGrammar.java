@@ -26,12 +26,12 @@ public class TestGrammar extends KoopaGrammar {
 	// ========================================================================
 
 	@Override
-	protected String getNamespace() {
+	public String getNamespace() {
 		return "test";
 	}
 
 	@Override
-	protected boolean isSeparator(String text) {
+	public boolean isSeparator(String text) {
 		return separators.contains(text);
 	}
 
@@ -41,7 +41,7 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	protected FutureParser scoped(String name) {
+	public FutureParser scoped(String name) {
 		return super.scoped(name);
 	}
 
@@ -66,7 +66,7 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	protected Parser plus(Parser parser) {
+	public Parser plus(Parser parser) {
 		return super.plus(parser);
 	}
 
@@ -101,32 +101,47 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	protected Parser not(Parser parser) {
+	public Parser not(Parser parser) {
 		return super.not(parser);
 	}
 
 	@Override
-	protected Parser any() {
+	public Parser any() {
 		return super.any();
 	}
 
 	@Override
-	protected Parser tagged(Object tag) {
+	public Parser tagged(Object tag) {
 		return super.tagged(tag);
 	}
 
 	@Override
-	protected Parser opt(Opt opt, Parser parser) {
+	public Parser opt(Opt opt, Parser parser) {
 		return super.opt(opt, parser);
 	}
 
 	@Override
-	protected Parser limited(Parser target, Parser limiter) {
+	public Parser limited(Parser target, Parser limiter) {
 		return super.limited(target, limiter);
 	}
 
 	@Override
-	protected Parser dispatched(String[] keys, Parser[] parsers) {
+	public Parser dispatched(String[] keys, Parser[] parsers) {
 		return super.dispatched(keys, parsers);
+	}
+
+	@Override
+	public Parser as(String name, Parser parser) {
+		return super.as(name, parser);
+	}
+
+	@Override
+	public Parser eof() {
+		return super.eof();
+	}
+
+	@Override
+	protected Parser literal(String text) {
+		return super.literal(text);
 	}
 }

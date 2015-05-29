@@ -898,7 +898,7 @@ def collationClause =
 end
 
 def recordDelimiterClause =
-    RECORD DELIMITER [IS] ( STANDARD-1 | alphanumericLiteral )
+    RECORD DELIMITER [IS] ( STANDARD-1 | literal | name )
 end
 
 def reserveClause =
@@ -961,7 +961,7 @@ def recordKeyDefinition =
 end
 
 def fileStatusClause =
-	[FILE | SORT] STATUS [IS] dataName [dataName]
+	[FILE | SORT] STATUS [IS] qualifiedDataName [qualifiedDataName]
 end
 
 def passwordClause =
@@ -1177,7 +1177,7 @@ def communicationDescriptionEntry_format1 =
     
     ( # TODO We really want to exclude all of the possible starter tokens for
       # the other clauses.  Can we automate that somehow ?
-      ( FILLER | -STATUS dataName )+
+      ( FILLER | (%not STATUS) dataName )+
       
     | ![ [SYMBOLIC] QUEUE       [IS] dataName
        | [SYMBOLIC] SUB-QUEUE-1 [IS] dataName
@@ -1333,7 +1333,7 @@ end
 
 private def constantEntry_level01 =
     (1 | 01) %as levelNumber
-    cobolWord %as entryName
+    (FILLER | cobolWord) %as entryName
     CONSTANT [globalClause]
     ( [AS] identifier | FROM cobolWord ) .
 end
@@ -1423,7 +1423,7 @@ end
 
 private def dataDescriptionEntry_format3_and_4 =
     88 %as levelNumber
-    [-(VALUE|VALUES) conditionName %as entryName]
+    [(%not (VALUE|VALUES)) conditionName %as entryName]
     valueClause
     .
 end
@@ -1489,7 +1489,7 @@ def valueClause =
     
     (
       # table
-      ( (literal)+
+      ( ( (%not (THROUGH | THRU)) literal)+
         FROM '(' (subscript)+ ')'
         [ TO '(' (subscript)+ ')' ] 
       )+
@@ -1497,7 +1497,7 @@ def valueClause =
     | ( ( cicsValue
     
         | # data-item, condition-name, report-section, content-validation-entry
-          (-FALSE) literal
+          (%not FALSE) literal
         )
         
         # condition-name, content-validation-entry
@@ -1505,7 +1505,7 @@ def valueClause =
       )+
 
       # condition-name, content-validation-entry
-      [[IN] (-FALSE) alphabetName]
+      [[IN] (%not FALSE) alphabetName]
     
       # condition-name
       [[WHEN] [SET] [TO] FALSE [IS] literal]
@@ -1878,7 +1878,7 @@ def sourceClause =
 end
 
 def sumClause =
-    (SUM [OF] (-UPON identifier)+ [UPON (dataName)+])+
+    (SUM [OF] ((%not UPON) identifier)+ [UPON (dataName)+])+
     [RESET [ON] (FINAL | dataName)]
     # TODO [roundedPhrase]
 end
@@ -2211,8 +2211,11 @@ def nestedStatements =
     (statement)+
 end
 
-def eventPhrase (Token t) returns t =
-    [NOT] [ON | AT]
+private def eventPhrase (Token t) returns t =
+    [NOT] [ON | AT] t=eventType
+end
+
+private def eventType (Token t) returns t =
     ( t=EXCEPTION
     | t=SIZE ERROR
     | t=OVERFLOW
@@ -2489,9 +2492,12 @@ def callStatement =
     CALL
     
     ( NESTED
-    | mnemonicName (alphanumericLiteral | identifier)
-    | (alphanumericLiteral | identifier) [AS (NESTED | programName)]
+    | alphanumericLiteral
+    | identifier
+        # http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFA06.html
+        [alphanumericLiteral | identifier]   
     )
+    [AS (NESTED | programName)]
     
     [ callUsing ]
     [ callGivingOrReturning ]
@@ -3015,11 +3021,23 @@ end
 
 def subject =
 	(condition | arithmeticExpression | identifier | literal)
+	
+	# TODO Condition may be the start of an arithmetic expression. If so it
+	# may match that expression incompletely, and cause the matching of the
+	# evaluate statement to fail. Simple example:
+	#   EVALUATE ( TEMP + 96 ) * 2
+	# The "( TEMP + 96 )" is allowable by condition, and the "* 2" will be
+	# ignored.
+	# One idea might be to add a check after condition which peeks at the next
+	# token and double checks whether it's an ALSO or a WHEN.
+	# Another idea is to run both condition and arithmeticExpression, and to
+	# pick the longest match.
+	--> (ALSO | WHEN)
 end
 
 
 def when =
-    ( WHEN object
+    ( WHEN (%not OTHER) object
       (ALSO object)*
     )+ 
     nestedStatements
@@ -3336,7 +3354,7 @@ end
 
 def tallyingAllLeadingOrTrailingPhrase =
 	(ALL | LEADING | TRAILING)
-	( (identifier -FOR | literal)
+	( (identifier (%not FOR) | literal)
 	  (locationPhrase)*
 	)*
 end
@@ -3433,7 +3451,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def onStatement =
-    ON (literal | identifier)
+    ON (%not eventType) (literal | identifier)
         [ AND EVERY (literal | identifier) ]
         [ UNTIL (literal | identifier) ]
         ( nestedStatements
@@ -3485,7 +3503,7 @@ def performStatement =
         | varying
         ]
         ( nestedStatements END-PERFORM
-        | statement %as nestedStatements   -THRU -THROUGH
+        | statement %as nestedStatements  (%not THRU) (%not THROUGH)
         | END-PERFORM 
         )
         
@@ -3787,64 +3805,50 @@ end
 def setStatement =
     SET
     ( setEnvironmentVariable
-    | setFormatMonitorValue
-    | setFormatDataPointerAssignment
-    | setFormatProcedurePointerAssignment
-    | setFormatSemaphoreValue
-    | setFormat1
-    | setFormat2
-    | setFormat3
+    | setOther
     )
     [--> (. | endOfStatement)]
-end
-
-def setFormat1 =
-	(indexName | identifier)+
-	TO
-	(indexName | identifier | integer)
-end
-
-def setFormat2 =
-	(mnemonicName)+
-	TO
-	(ON | OFF)
-end
-
-def setFormat3 =
-	(identifier)+
-	TO
-	(TRUE | FALSE)
-end
-
-def setFormatDataPointerAssignment =
-    (ADDRESS [OF] identifier | identifier)+
-    TO
-    (ADDRESS [OF] identifier | mnemonicName | NULL | NULLS)
-end
-
-def setFormatProcedurePointerAssignment =
-    procedureName
-    TO
-    (procedureName | ENTRY (identifier | literal) | NULL | NULLS)
-end
-
-def setFormatMonitorValue =
-    (mnemonicName)+
-    TO [NOT] (BROWSING | READING | WRITING)
-    [CONVERTING FROM (BROWSING | WRITING)]
-end
-
-def setFormatSemaphoreValue =
-    (mnemonicName)+
-    TO
-    (UP | DOWN)
-    BY
-    (integer | identifier)
 end
 
 # Based on a sample found in the wild...
 def setEnvironmentVariable =
     ENVIRONMENT literal TO literal
+end
+
+def setOther =
+    ( ADDRESS [OF] identifier
+    | name
+    | identifier
+    )+
+    
+	( TO (
+        ON                     # STD Format 3 (switch setting)
+	  | OFF                    # STD Format 3 (switch setting)
+	
+	  | TRUE                   # STD Format 4 (condition setting)
+	  | FALSE                  # STD Format 4 (condition setting)
+	
+      # Was from "setFormatDataPointerAssignment"
+	  | ADDRESS [OF] identifier
+	
+      # Was from "setFormatMonitorValue"
+      | [NOT] (BROWSING | READING | WRITING)
+        [CONVERTING FROM (BROWSING | WRITING)]
+	
+      # Was from "setFormatProcedurePointerAssignment"
+	  | ENTRY (identifier | literal)
+	  | NULL
+	  | NULLS
+	
+	  | name
+      | identifier
+      | integer
+      )
+
+    # Was from "setFormatSemaphoreValue"
+    | (UP | DOWN) BY (integer | identifier)
+    )
+    
 end
 
 # Refs:
@@ -4343,84 +4347,84 @@ end
 
 def function = 
     FUNCTION
-    ( ABS                   '(' argument ')'                    # *MF *OC
-    | ACOS                  '(' argument ')'                    # *ANS85
-    | ANNUITY               '(' argument argument ')'           # *ANS85
-    | ASIN                  '(' argument ')'                    # *ANS85
-    | ATAN                  '(' argument ')'                    # *ANS85
-    | BOOLEAN-OF-INTEGER    '(' argument argument ')'
-    | BYTE-LENGTH           '(' argument ')'                    # *OC
-    | CHAR                  '(' argument ')'                    # *ANS85
-    | CHAR-NATIONAL         '(' argument ')'                    # *ISO2002 *MF
-    | COMBINED-DATETIME     '(' argument argument ')'           # *OC
-    | CONCATENATE           '(' (argument)+ ')'                 # *OC
-    | COS                   '(' argument ')'                    # *ANS85
-    | CURRENT-DATE                                              # *OC
-    | DATE-OF-INTEGER       '(' argument ')'                    # *ANS85
-    | DATE-TO-YYYYMMDD      '(' argument [argument] ')'         # *ANS85
-    | DAY-OF-INTEGER        '(' argument ')'                    # *ANS85
-    | DAY-TO-YYYYDDD        '(' argument [argument] ')'         # *ANS85
-    | DISPLAY-OF            '(' argument [argument] ')'         # *ISO2002 *MF
-    | E                                                         # *MF *OC
-    | EXCEPTION-FILE                                            # *OC
-    | EXCEPTION-LOCATION                                        # *OC
-    | EXCEPTION-STATEMENT                                       # *OC
-    | EXCEPTION-STATUS                                          # *OC
-    | EXP                   '(' argument ')'                    # *MF *OC
-    | EXP10                 '(' argument ')'                    # *MF *OC
-    | FACTORIAL             '(' argument ')'                    # *ANS85
-    | FRACTION-PART         '(' argument ')'                    # *MF *OC
-    | INTEGER               '(' argument ')'                    # *ANS85
-    | INTEGER-OF-BOOLEAN    '(' argument ')'
-    | INTEGER-OF-DATE       '(' argument ')'                    # *ANS85
-    | INTEGER-OF-DAY        '(' argument ')'                    # *ANS85
-    | INTEGER-PART          '(' argument ')'                    # *ANS85
-    | LENGTH                '(' argument ')'                    # *ANS85
-    | LENGTH-AN             '(' argument ')'                    # *MF
-    | LOCALE-DATE           '(' argument [argument] ')'         # *OC
-    | LOCALE-TIME           '(' argument [argument] ')'         # *OC
-    | LOCALE-TIME-FROM-SECS '(' argument [argument] ')'         # *OC
-    | LOG                   '(' argument ')'                    # *ANS85
-    | LOG10                 '(' argument ')'                    # *ANS85
-    | LOWER-CASE            '(' argument ')'                    # *ANS85
-    | MAX                   '(' (argument)+ ')'                 # *ANS85
-    | MEAN                  '(' (argument)+ ')'                 # *ANS85
-    | MEDIAN                '(' (argument)+ ')'                 # *ANS85
-    | MIDRANGE              '(' (argument)+ ')'                 # *ANS85
-    | MIN                   '(' (argument)+ ')'                 # *ANS85
-    | MOD                   '(' argument argument ')'           # *ANS85
-    | NATIONAL-OF           '(' argument [argument] ')'         # *ISO2002 *MF
-    | NUMVAL                '(' argument ')'                    # *ANS85
-    | NUMVAL-C              '(' argument [argument] ')'         # *ANS85
-    | ORD                   '(' argument ')'                    # *ANS85
-    | ORD-MAX               '(' (argument)+ ')'                 # *ANS85
-    | ORD-MIN               '(' (argument)+ ')'                 # *ANS85
-    | PI                                                        # *MF *OC
-    | PRESENT-VALUE         '(' argument (argument)+ ')'        # *ANS85
-    | RANDOM                [ '(' argument ')' ]                # *ANS85
-    | RANGE                 '(' (argument)+ ')'                 # *ANS85
-    | REM                   '(' argument argument ')'           # *ANS85
-    | REVERSE               '(' argument ')'                    # *ANS85
-    | SECONDS-FROM-FORMATTED-TIME
-                            '(' argument argument ')'           # *OC
-    | SECONDS-PAST-MIDNIGHT                                     # *OC
-    | SIGN                  '(' argument ')'                    # *ANS85
-    | SIN                   '(' argument ')'                    # *ANS85
-    | SQRT                  '(' argument ')'                    # *ANS85
-    | STANDARD-DEVIATION    '(' (argument)+ ')'                 # *ANS85
-    | STORED-CHAR-LENGTH    '(' argument ')'                    # *OC
-    | SUBSTITUTE            '(' (argument)+ ')'                 # *OC
-    | SUBSTITUTE-CASE       '(' (argument)+ ')'                 # *OC
-    | SUM                   '(' (argument)+ ')'                 # *ANS85
-    | TAN                   '(' argument ')'                    # *ANS85
-    | TEST-DATE-YYYYMMDD    '(' argument ')'                    # *OC
-    | TEST-DAY-YYYYDDD      '(' argument ')'                    # *OC
-    | TRIM                  '(' argument [LEADING|TRAILING] ')' # *OC
-    | UPPER-CASE            '(' argument ')'                    # *ANS85
-    | VARIANCE              '(' (argument)+ ')'                 # *ANS85
-    | WHEN-COMPILED                                             # *ANS85
-    | YEAR-TO-YYYY          '(' argument [argument] ')'         # *ANS85
-    | functionName          [ '(' (argument)+ ')' ]
+    ( 'ABS'                   '(' argument ')'                    # *MF *OC
+    | 'ACOS'                  '(' argument ')'                    # *ANS85
+    | 'ANNUITY'               '(' argument [','] argument ')'     # *ANS85
+    | 'ASIN'                  '(' argument ')'                    # *ANS85
+    | 'ATAN'                  '(' argument ')'                    # *ANS85
+    | 'BOOLEAN-OF-INTEGER'    '(' argument [','] argument ')'
+    | 'BYTE-LENGTH'           '(' argument ')'                    # *OC
+    | 'CHAR'                  '(' argument ')'                    # *ANS85
+    | 'CHAR-NATIONAL'         '(' argument ')'                    # *ISO2002 *MF
+    | 'COMBINED-DATETIME'     '(' argument [','] argument ')'     # *OC
+    | 'CONCATENATE'           '(' argument ([','] argument)* ')'  # *OC
+    | 'COS'                   '(' argument ')'                    # *ANS85
+    | 'CURRENT-DATE'                                              # *OC
+    | 'DATE-OF-INTEGER'       '(' argument ')'                    # *ANS85
+    | 'DATE-TO-YYYYMMDD'      '(' argument [[','] argument] ')'   # *ANS85
+    | 'DAY-OF-INTEGER'        '(' argument ')'                    # *ANS85
+    | 'DAY-TO-YYYYDDD'        '(' argument [[','] argument] ')'   # *ANS85
+    | 'DISPLAY-OF'            '(' argument [[','] argument] ')'   # *ISO2002 *MF
+    | 'E'                                                         # *MF *OC
+    | 'EXCEPTION-FILE'                                            # *OC
+    | 'EXCEPTION-LOCATION'                                        # *OC
+    | 'EXCEPTION-STATEMENT'                                       # *OC
+    | 'EXCEPTION-STATUS'                                          # *OC
+    | 'EXP'                   '(' argument ')'                    # *MF *OC
+    | 'EXP10'                 '(' argument ')'                    # *MF *OC
+    | 'FACTORIAL'             '(' argument ')'                    # *ANS85
+    | 'FRACTION-PART'         '(' argument ')'                    # *MF *OC
+    | 'INTEGER'               '(' argument ')'                    # *ANS85
+    | 'INTEGER-OF-BOOLEAN'    '(' argument ')'
+    | 'INTEGER-OF-DATE'       '(' argument ')'                    # *ANS85
+    | 'INTEGER-OF-DAY'        '(' argument ')'                    # *ANS85
+    | 'INTEGER-PART'          '(' argument ')'                    # *ANS85
+    | 'LENGTH'                '(' argument ')'                    # *ANS85
+    | 'LENGTH-AN'             '(' argument ')'                    # *MF
+    | 'LOCALE-DATE'           '(' argument [[','] argument] ')'   # *OC
+    | 'LOCALE-TIME'           '(' argument [[','] argument] ')'   # *OC
+    | 'LOCALE-TIME-FROM-SECS' '(' argument [[','] argument] ')'   # *OC
+    | 'LOG'                   '(' argument ')'                    # *ANS85
+    | 'LOG10'                 '(' argument ')'                    # *ANS85
+    | 'LOWER-CASE'            '(' argument ')'                    # *ANS85
+    | 'MAX'                   '(' argument ([','] argument)* ')'  # *ANS85
+    | 'MEAN'                  '(' argument ([','] argument)* ')'  # *ANS85
+    | 'MEDIAN'                '(' argument ([','] argument)* ')'  # *ANS85
+    | 'MIDRANGE'              '(' argument ([','] argument)* ')'  # *ANS85
+    | 'MIN'                   '(' argument ([','] argument)* ')'  # *ANS85
+    | 'MOD'                   '(' argument [','] argument ')'     # *ANS85
+    | 'NATIONAL-OF'           '(' argument [[','] argument] ')'   # *ISO2002 *MF
+    | 'NUMVAL'                '(' argument ')'                    # *ANS85
+    | 'NUMVAL-C'              '(' argument [[','] argument] ')'   # *ANS85
+    | 'ORD'                   '(' argument ')'                    # *ANS85
+    | 'ORD-MAX'               '(' argument ([','] argument)* ')'  # *ANS85
+    | 'ORD-MIN'               '(' argument ([','] argument)* ')'  # *ANS85
+    | 'PI'                                                        # *MF *OC
+    | 'PRESENT-VALUE'         '(' argument ([','] argument)* ')'  # *ANS85
+    | 'RANDOM'                [ '(' argument ')' ]                # *ANS85
+    | 'RANGE'                 '(' argument ([','] argument)* ')'  # *ANS85
+    | 'REM'                   '(' argument [','] argument ')'     # *ANS85
+    | 'REVERSE'               '(' argument ')'                    # *ANS85
+    | 'SECONDS-FROM-FORMATTED-TIME'
+                            '(' argument [','] argument ')'     # *OC
+    | 'SECONDS-PAST-MIDNIGHT'                                     # *OC
+    | 'SIGN'                  '(' argument ')'                    # *ANS85
+    | 'SIN'                   '(' argument ')'                    # *ANS85
+    | 'SQRT'                  '(' argument ')'                    # *ANS85
+    | 'STANDARD-DEVIATION'    '(' argument ([','] argument)* ')'  # *ANS85
+    | 'STORED-CHAR-LENGTH'    '(' argument ')'                    # *OC
+    | 'SUBSTITUTE'            '(' argument ([','] argument)* ')'  # *OC
+    | 'SUBSTITUTE-CASE'       '(' argument ([','] argument)* ')'  # *OC
+    | 'SUM'                   '(' argument ([','] argument)* ')'  # *ANS85
+    | 'TAN'                   '(' argument ')'                    # *ANS85
+    | 'TEST-DATE-YYYYMMDD'    '(' argument ')'                    # *OC
+    | 'TEST-DAY-YYYYDDD'      '(' argument ')'                    # *OC
+    | 'TRIM'                  '(' argument [LEADING|TRAILING] ')' # *OC
+    | 'UPPER-CASE'            '(' argument ')'                    # *ANS85
+    | 'VARIANCE'              '(' argument ([','] argument)* ')'  # *ANS85
+    | 'WHEN-COMPILED'                                             # *ANS85
+    | 'YEAR-TO-YYYY'          '(' argument [[','] argument] ')'   # *ANS85
+    | functionName          [ '(' argument ([','] argument)* ')' ]
     )
 end
 
@@ -4456,8 +4460,8 @@ end
 
 def argument =
     ( arithmeticExpression
-    | identifier
     | literal
+    | identifier
     )
 end
 
@@ -4571,7 +4575,6 @@ end
 def condition =
 	[NOT] (
 	  conditionStart
-	| '(' condition ')'
 	)
 	(furtherCondition)*
 end
@@ -4580,6 +4583,7 @@ def conditionStart =
 	(
 	  TRUE
 	| FALSE
+	| '(' condition ')'
 	| operand
 	)
 end
@@ -4590,8 +4594,8 @@ def furtherCondition =
 	| [IS] [NOT] OMITTED
 	| [IS] [NOT] classType
 	| [IS] [NOT] signType
-	| [AND | OR] [IS] [NOT] [relop] operand
 	| [AND | OR] [IS] [NOT] [relop] '(' condition ')'
+	| [AND | OR] [IS] [NOT] [relop] operand
 	)
 end
 
@@ -4711,7 +4715,10 @@ end
 # be qualified) or a section-name."
 # -- ISO/IEC 1989:20xx FCD 1.0 (E); section 14.4
 def procedureName =
-    name [ ( IN | OF ) sectionName	]
+    ( 'COMMIT'                         # Issue 51, by Inaki GE
+    | name
+    )
+    [ ( IN | OF ) sectionName	]
 end
 
 def name =
@@ -4986,25 +4993,3 @@ end
 def alphanumericConstant =
     cobolWord
 end
-
-# -----------------------------------------------------------------------------
-# Decimals
-#
-# Whether we're working on a decimal is something which can only be decided at
-# parsing time. But it does require some lexer info.
-#
-# TODO Allow ",2"; which is still tricky.
-def decimal =
-    ( intgr %noskip ( (',' | '.') uintgr )
-    | '.' %noskip uintgr
-    )
-end
-
-def intgr =
-    @INTEGER_LITERAL _
-end
-
-def uintgr =
-    @UNSIGNED @INTEGER_LITERAL _
-end
-

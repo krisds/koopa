@@ -91,6 +91,8 @@ apply(bind, native_code, unbind) ::= <<apply(new Block() {
 
 token(text) ::= <<token("$text$")>>
 
+literal(text) ::= <<literal("$text$")>>
+
 call(name) ::= <<$name$()>>
 
 star(body) ::= <<star(

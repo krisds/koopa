@@ -806,7 +806,7 @@ public class KGGenerator extends TreeParser {
 
 
 	// $ANTLR start "body"
-	// src/core/koopa/core/grammars/generator/KGGenerator.g:144:1: body[ List<String> bindings, List<String> unbindings ] : ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps)| ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings)|t= TAG -> tag(text=name)| ANY -> any(|l= LITERAL -> token(text=unquoted)|n= NUMBER -> token(text=n)|i= IDENTIFIER -> call(name=i)|t= TOKEN -> token(text=t)|d= DOT -> token(text=d)| ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER |t= TOKEN |n= NUMBER |d= DOT ) ) -> assign(name=lvalue=body)| ^( STAR b= body[bindings, unbindings] ) -> star(body=b)| ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b)| ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps)| ^( DISPATCHED (c= caze )+ ) -> dispatched(keys=keysrules=rules)| ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b)| ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b)| ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices)| ^( NOT b= body[bindings, unbindings] ) -> not(body=b)| ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b)| ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l)| ^( AS i= IDENTIFIER b= body[bindings, unbindings] ) -> as(name=ibody=b));
+	// src/core/koopa/core/grammars/generator/KGGenerator.g:144:1: body[ List<String> bindings, List<String> unbindings ] : ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps)| ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings)|t= TAG -> tag(text=name)| ANY -> any(|l= LITERAL -> literal(text=unquoted)|n= NUMBER -> token(text=n)|i= IDENTIFIER -> call(name=i)|t= TOKEN -> token(text=t)|d= DOT -> literal(text=d)| ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER |t= TOKEN |n= NUMBER |d= DOT ) ) -> assign(name=lvalue=body)| ^( STAR b= body[bindings, unbindings] ) -> star(body=b)| ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b)| ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps)| ^( DISPATCHED (c= caze )+ ) -> dispatched(keys=keysrules=rules)| ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b)| ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b)| ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices)| ^( NOT b= body[bindings, unbindings] ) -> not(body=b)| ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b)| ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l)| ^( AS i= IDENTIFIER b= body[bindings, unbindings] ) -> as(name=ibody=b));
 	public final KGGenerator.body_return body(List<String> bindings, List<String> unbindings) throws RecognitionException {
 		KGGenerator.body_return retval = new KGGenerator.body_return();
 		retval.start = input.LT(1);
@@ -822,7 +822,7 @@ public class KGGenerator extends TreeParser {
 		TreeRuleReturnScope b_l =null;
 
 		try {
-			// src/core/koopa/core/grammars/generator/KGGenerator.g:145:3: ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps)| ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings)|t= TAG -> tag(text=name)| ANY -> any(|l= LITERAL -> token(text=unquoted)|n= NUMBER -> token(text=n)|i= IDENTIFIER -> call(name=i)|t= TOKEN -> token(text=t)|d= DOT -> token(text=d)| ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER |t= TOKEN |n= NUMBER |d= DOT ) ) -> assign(name=lvalue=body)| ^( STAR b= body[bindings, unbindings] ) -> star(body=b)| ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b)| ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps)| ^( DISPATCHED (c= caze )+ ) -> dispatched(keys=keysrules=rules)| ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b)| ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b)| ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices)| ^( NOT b= body[bindings, unbindings] ) -> not(body=b)| ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b)| ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l)| ^( AS i= IDENTIFIER b= body[bindings, unbindings] ) -> as(name=ibody=b))
+			// src/core/koopa/core/grammars/generator/KGGenerator.g:145:3: ( ^( SEQUENCE (b= body[bindings, unbindings] )+ ) -> sequence(step=steps)| ^( ACT n= NATIVE_CODE ) -> apply(bind=bindingsnative_code=nunbind=unbindings)|t= TAG -> tag(text=name)| ANY -> any(|l= LITERAL -> literal(text=unquoted)|n= NUMBER -> token(text=n)|i= IDENTIFIER -> call(name=i)|t= TOKEN -> token(text=t)|d= DOT -> literal(text=d)| ^( ASSIGN l= IDENTIFIER (i= IDENTIFIER |t= TOKEN |n= NUMBER |d= DOT ) ) -> assign(name=lvalue=body)| ^( STAR b= body[bindings, unbindings] ) -> star(body=b)| ^( PLUS b= body[bindings, unbindings] ) -> plus(body=b)| ^( CHOICE (b= body[bindings, unbindings] )+ ) -> choice(step=steps)| ^( DISPATCHED (c= caze )+ ) -> dispatched(keys=keysrules=rules)| ^( OPTIONAL b= body[bindings, unbindings] ) -> optional(body=b)| ^( SKIP_TO b= body[bindings, unbindings] ) -> skipto(body=b)| ^( PERMUTED (b= body[bindings, unbindings] )+ ) -> permuted(choice=choices)| ^( NOT b= body[bindings, unbindings] ) -> not(body=b)| ^( NOSKIP b= body[bindings, unbindings] ) -> opt(option=optionbody=b)| ^( LIMIT b_t= body[bindings, unbindings] b_l= body[bindings, unbindings] ) -> limit(target=b_tlimiter=b_l)| ^( AS i= IDENTIFIER b= body[bindings, unbindings] ) -> as(name=ibody=b))
 			int alt16=21;
 			switch ( input.LA(1) ) {
 			case SEQUENCE:
@@ -1041,9 +1041,9 @@ public class KGGenerator extends TreeParser {
 					      unquoted = unquoted.substring(1, unquoted.length() - 1); 
 					    
 					// TEMPLATE REWRITE
-					// 184:5: -> token(text=unquoted)
+					// 184:5: -> literal(text=unquoted)
 					{
-						retval.st = templateLib.getInstanceOf("token",new STAttrMap().put("text", unquoted));
+						retval.st = templateLib.getInstanceOf("literal",new STAttrMap().put("text", unquoted));
 					}
 
 
@@ -1097,9 +1097,9 @@ public class KGGenerator extends TreeParser {
 					{
 					d=(CommonTree)match(input,DOT,FOLLOW_DOT_in_body1108); 
 					// TEMPLATE REWRITE
-					// 208:5: -> token(text=d)
+					// 208:5: -> literal(text=d)
 					{
-						retval.st = templateLib.getInstanceOf("token",new STAttrMap().put("text", d));
+						retval.st = templateLib.getInstanceOf("literal",new STAttrMap().put("text", d));
 					}
 
 

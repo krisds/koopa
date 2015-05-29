@@ -126,6 +126,44 @@ public class Tree {
 		return null;
 	}
 
+	/**
+	 * Searches the tree for the first known start position.
+	 */
+	public Position getRawStart() {
+		if (data instanceof Token) {
+			Token token = (Token) data;
+			return token.getStart();
+		}
+
+		for (int i = 0; i < children.size(); i++) {
+			Position position = children.get(i).getRawStart();
+
+			if (position != null)
+				return position;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Searches the tree for the last known end position.
+	 */
+	public Position getRawEnd() {
+		if (data instanceof Token) {
+			Token token = (Token) data;
+			return token.getEnd();
+		}
+
+		for (int i = children.size() - 1; i >= 0; i--) {
+			Position position = children.get(i).getRawEnd();
+
+			if (position != null)
+				return position;
+		}
+
+		return null;
+	}
+
 	public void addChild(Tree child) {
 		child.childIndex = children.size();
 		children.add(child);

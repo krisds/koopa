@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
@@ -34,8 +36,8 @@ public class ApplicationSupport {
 
 	private static JFileChooser chooser = null;
 
-	public static File askUserForFile(boolean openFile, String key,
-			FileFilter filter, Component parent) {
+	public static File askUserForFile(final boolean openFile, String key,
+			FileFilter filter, final Component parent) {
 
 		File start = null;
 		try {
@@ -67,10 +69,22 @@ public class ApplicationSupport {
 		if (filter != null)
 			chooser.setFileFilter(filter);
 
-		int returnVal = openFile ? chooser.showOpenDialog(parent) : chooser
-				.showSaveDialog(parent);
+		final int[] returnVal = new int[] { -1 };
 
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					returnVal[0] = openFile ? chooser.showOpenDialog(parent)
+							: chooser.showSaveDialog(parent);
+				}
+			});
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		if (returnVal[0] == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
 
 			try {
@@ -86,7 +100,7 @@ public class ApplicationSupport {
 			return null;
 	}
 
-	public static File askUserForFolder(String key, Component parent) {
+	public static File askUserForFolder(String key, final Component parent) {
 
 		File start = null;
 		try {
@@ -115,9 +129,21 @@ public class ApplicationSupport {
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
 
-		int returnVal = chooser.showOpenDialog(parent);
+		final int[] returnVal = new int[] { -1 };
 
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					returnVal[0] = chooser.showOpenDialog(parent);
+				}
+			});
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		if (returnVal[0] == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();
 
 			try {

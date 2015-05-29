@@ -73,4 +73,9 @@ public interface ParseStream {
 	 * far, which means pushing all tokens to that given {@linkplain Target}.
 	 */
 	void commit();
+
+	/**
+	 * The stack of currently active parsers.
+	 */
+	ParseStack getStack();
 }

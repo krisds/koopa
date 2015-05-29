@@ -55,10 +55,10 @@ target setStatement;
 +[ SET foo TO NOT READING CONVERTING FROM BROWSING ]
 +[ SET foo TO NOT WRITING CONVERTING FROM WRITING ]
 
-+[ SET foo TO UP BY 1 ]
-+[ SET foo TO DOWN BY 1 ]
-+[ SET foo TO UP BY bar ]
-+[ SET foo bar TO DOWN BY baz ]
++[ SET foo      UP   BY  1 ]
++[ SET foo      DOWN BY  1 ]
++[ SET foo      UP   BY  bar ]
++[ SET foo bar  DOWN BY  baz ]
 
 # Sample from OpenJensen:
 +[ SET ENVIRONMENT "OJ_DBG" TO "1" ]

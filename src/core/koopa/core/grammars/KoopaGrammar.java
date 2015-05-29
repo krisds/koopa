@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import koopa.core.data.Token;
@@ -14,6 +15,8 @@ import koopa.core.data.markers.OnLand;
 import koopa.core.data.markers.Start;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.LimitedParseStream;
+import koopa.core.parsers.ParseStack;
+import koopa.core.parsers.ParseStack.Frame;
 import koopa.core.parsers.ParseStream;
 import koopa.core.parsers.Parser;
 import koopa.core.util.Tuple;
@@ -99,7 +102,7 @@ public abstract class KoopaGrammar {
 		final WeakSet<Token> failures = new WeakSet<Token>();
 
 		return new FutureParser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				Token peek = stream.peek();
 
 				if (LOGGER.isTraceEnabled())
@@ -150,12 +153,50 @@ public abstract class KoopaGrammar {
 
 				return accepts;
 			}
+
+			/**
+			 * It's subtle, but when asking a scoped parser for all keywords
+			 * "in scope", we're asking for all keywords in the scope it's being
+			 * referenced from.
+			 * <p>
+			 * If we were to add all keywords within its own scope, then the
+			 * keywords list for the root scope would end up containing all
+			 * keywords in the grammar. For instance, a Cobol program would know
+			 * about all SQL-related keywords found in an EXEC SQL. This is not
+			 * what we want.
+			 * <p>
+			 * Instead what we need is to add all leading keywords of our own
+			 * scope. This should give the parent scope just enough information
+			 * about tokens it probably should know about, without telling it
+			 * about all tokens. Taking the Cobol program example again, it
+			 * would now only know about the markers for the overall structure
+			 * of the program, and little else.
+			 */
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return parser.canMatchEmptyInputs();
+			}
+
+			public boolean isMatching(String n) {
+				return name.equals(n);
+			}
+
+			public String toString() {
+				return "def " + name;
+			}
 		};
 	}
 
 	protected Parser as(final String name, final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push(name + " ? " + stream.peekMore() + "...");
 
@@ -174,28 +215,56 @@ public abstract class KoopaGrammar {
 
 				return accepts;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return parser.canMatchEmptyInputs();
+			}
+
+			public boolean isMatching(String n) {
+				return name.equals(n);
+			}
+
+			public String toString() {
+				return "... %as " + name;
+			}
 		};
 	}
 
 	protected Parser assign(final String name, final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				scope().put("=", new Assign(scope(), name));
 				boolean accepts = parser.accepts(stream);
 				scope().remove("=");
 				return accepts;
+			}
+
+			public String toString() {
+				return name + " = ...";
 			}
 		};
 	}
 
 	protected Parser returning(final String name) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				Assign func = (Assign) scope().get("return");
 				if (func != null) {
 					func.apply(scope().get(name));
 				}
 				return true;
+			}
+
+			public String toString() {
+				return "return " + name;
 			}
 		};
 	}
@@ -220,16 +289,20 @@ public abstract class KoopaGrammar {
 
 	protected Parser apply(final Block func) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				func.apply();
 				return true;
+			}
+
+			public String toString() {
+				return "fn()";
 			}
 		};
 	}
 
 	protected Parser skipto(final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push("[skipto>");
 
@@ -266,12 +339,23 @@ public abstract class KoopaGrammar {
 
 				return true;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return true;
+			}
+
+			public String toString() {
+				return "--> ...";
+			}
 		};
 	}
 
 	protected Parser not(final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push("[not>");
 
@@ -284,12 +368,23 @@ public abstract class KoopaGrammar {
 
 				return !accepted;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return true;
+			}
+
+			public String toString() {
+				return "%not " + parser.toString();
+			}
 		};
 	}
 
 	protected Parser star(final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push("[star>");
 
@@ -309,12 +404,28 @@ public abstract class KoopaGrammar {
 
 				return true;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return true;
+			}
+
+			public String toString() {
+				return "...*";
+			}
 		};
 	}
 
 	protected Parser plus(final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push("[plus>");
 
@@ -347,28 +458,65 @@ public abstract class KoopaGrammar {
 
 				return true;
 			}
+
+			public boolean canMatchEmptyInputs() {
+				return parser.canMatchEmptyInputs();
+			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public String toString() {
+				return "...+";
+			}
 		};
 	}
 
 	protected Parser sequence(final Parser... parsers) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				for (Parser parser : parsers)
 					if (!parser.accepts(stream))
 						return false;
 
 				return true;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				for (Parser parser : parsers)
+					parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				for (int i = 0; i < parsers.length; i++) {
+					parsers[i].addAllLeadingKeywordsTo(keywords);
+					if (!parsers[i].canMatchEmptyInputs())
+						break;
+				}
+			}
+
+			public boolean canMatchEmptyInputs() {
+				for (Parser parser : parsers)
+					if (!parser.canMatchEmptyInputs())
+						return false;
+
+				return true;
+			}
+
+			public String toString() {
+				return "(...)";
+			}
 		};
 	};
 
 	protected Parser choice(final Parser... parsers) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
-				// if (LOGGER.isTraceEnabled()) {
-				// push("[choice>");
-				// }
-
+			public boolean matches(ParseStream stream) {
 				for (int i = 0; i < parsers.length; i++) {
 					final Parser parser = parsers[i];
 
@@ -385,11 +533,29 @@ public abstract class KoopaGrammar {
 					}
 				}
 
-				// if (LOGGER.isTraceEnabled()) {
-				// pop("<choice]");
-				// }
+				return false;
+			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				for (Parser parser : parsers)
+					parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				for (Parser parser : parsers)
+					parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				for (Parser parser : parsers)
+					if (parser.canMatchEmptyInputs())
+						return true;
 
 				return false;
+			}
+
+			public String toString() {
+				return "...|...";
 			}
 		};
 	};
@@ -401,7 +567,7 @@ public abstract class KoopaGrammar {
 		}
 
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push("[permuted>");
 
@@ -429,12 +595,34 @@ public abstract class KoopaGrammar {
 
 				return accepts;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				for (Parser parser : parsers)
+					parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				for (Parser parser : parsers)
+					parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				for (Parser parser : parsers)
+					if (parser.canMatchEmptyInputs())
+						return true;
+
+				return false;
+			}
+
+			public String toString() {
+				return "!(...|...)";
+			}
 		};
 	};
 
 	protected Parser optional(final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (LOGGER.isTraceEnabled())
 					push("[optional>");
 
@@ -453,21 +641,46 @@ public abstract class KoopaGrammar {
 
 				return true;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return true;
+			}
+
+			public String toString() {
+				return "[...]";
+			}
 		};
+	}
+
+	protected Parser token(final String text) {
+		return token(text, true);
+	}
+
+	protected Parser literal(final String text) {
+		return token(text, false);
 	}
 
 	/**
 	 * Accepts a single token if its text matches the given text.
 	 * <p>
-	 * This will skip all intermediate separators, unless the given text is a
-	 * separator.
+	 * This will skip all intermediate separators, other than the text itself.
 	 */
-	protected Parser token(final String text) {
+	protected Parser token(final String text, final boolean isKeyword) {
 		final boolean isSeparator = isSeparator(text);
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				if (!isSeparator)
 					skipSeparators(stream);
+				else
+					skipOtherSeparators(stream, text);
 
 				final Token token = stream.forward();
 
@@ -487,6 +700,23 @@ public abstract class KoopaGrammar {
 					return false;
 				}
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				if (isKeyword)
+					keywords.add(text);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				keywords.add(text);
+			}
+
+			public boolean isKeyword(String word, Frame frame) {
+				return frame.up().isKeyword(word);
+			}
+
+			public String toString() {
+				return "'" + text + "'";
+			}
 		};
 	}
 
@@ -498,7 +728,7 @@ public abstract class KoopaGrammar {
 	 */
 	protected Parser any() {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				skipSeparators(stream);
 
 				final Token token = stream.forward();
@@ -519,6 +749,13 @@ public abstract class KoopaGrammar {
 					return false;
 				}
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+			}
+
+			public String toString() {
+				return "_";
+			}
 		};
 	}
 
@@ -530,7 +767,7 @@ public abstract class KoopaGrammar {
 	 */
 	protected Parser tagged(final Object tag) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				skipSeparators(stream);
 
 				final Token token = stream.forward();
@@ -557,12 +794,23 @@ public abstract class KoopaGrammar {
 					return false;
 				}
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return true;
+			}
+
+			public String toString() {
+				return "@" + tag.toString();
+			}
 		};
 	}
 
 	protected Parser opt(final Opt opt, final Parser parser) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				boolean prv = false;
 
 				switch (opt) {
@@ -586,13 +834,46 @@ public abstract class KoopaGrammar {
 
 				return accepts;
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				parser.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return parser.canMatchEmptyInputs();
+			}
+
+			public String toString() {
+				return "%" + opt.toString();
+			}
 		};
 	}
 
 	protected Parser limited(final Parser target, final Parser limiter) {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				return target.accepts(new LimitedParseStream(stream, limiter));
+			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				target.addAllKeywordsInScopeTo(keywords);
+				// Not: limiter.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				target.addAllLeadingKeywordsTo(keywords);
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return target.canMatchEmptyInputs();
+			}
+
+			public String toString() {
+				return "%limit " + target + " %by " + limiter;
 			}
 		};
 	}
@@ -605,7 +886,7 @@ public abstract class KoopaGrammar {
 			lookupTable.put(keys[i].toUpperCase(), parsers[i]);
 
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				skipSeparators(stream);
 
 				Token peek = stream.peek();
@@ -627,6 +908,20 @@ public abstract class KoopaGrammar {
 				Parser parser = lookupTable.get(text);
 				return parser.accepts(stream);
 			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+				for (Parser parser : parsers)
+					parser.addAllKeywordsInScopeTo(keywords);
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+				for (String key : keys)
+					keywords.add(key);
+			}
+
+			public String toString() {
+				return "$(...|...)";
+			}
 		};
 	}
 
@@ -638,7 +933,7 @@ public abstract class KoopaGrammar {
 	 */
 	protected Parser eof() {
 		return new Parser() {
-			public boolean accepts(ParseStream stream) {
+			public boolean matches(ParseStream stream) {
 				skipSeparators(stream);
 
 				final Token token = stream.forward();
@@ -648,6 +943,20 @@ public abstract class KoopaGrammar {
 					trace(token + " == null : " + atEndOfFile);
 
 				return atEndOfFile;
+			}
+
+			public void addAllKeywordsInScopeTo(Set<String> keywords) {
+			}
+
+			public void addAllLeadingKeywordsTo(Set<String> keywords) {
+			}
+
+			public boolean canMatchEmptyInputs() {
+				return true;
+			}
+
+			public String toString() {
+				return "eof";
 			}
 		};
 	}
@@ -694,7 +1003,7 @@ public abstract class KoopaGrammar {
 	 * By default this delegates to
 	 * {@linkplain KoopaGrammar#isSeparator(String)}.
 	 */
-	public boolean isSeparator(Token token) {
+	public boolean isSeparator(Token token, ParseStack parseStack) {
 		return isSeparator(token.getText());
 	}
 
@@ -708,6 +1017,19 @@ public abstract class KoopaGrammar {
 	 * Subclasses may use this as needed in custom parsers.
 	 */
 	protected void skipSeparators(ParseStream stream) {
+		skipOtherSeparators(stream, null);
+	}
+
+	/**
+	 * Skips all tokens which are either not program text, or which are
+	 * separators other than the given one.
+	 * <p>
+	 * If the {@linkplain #noskip} option is active then this will only skip
+	 * tokens which are not program text.
+	 * <p>
+	 * Subclasses may use this as needed in custom parsers.
+	 */
+	protected void skipOtherSeparators(ParseStream stream, String sep) {
 		while (true) {
 			Token token = stream.forward();
 
@@ -722,7 +1044,12 @@ public abstract class KoopaGrammar {
 				return;
 			}
 
-			if (isSeparator(token))
+			if (sep != null && sep.equals(token.getText())) {
+				stream.rewind(token);
+				return;
+			}
+
+			if (isSeparator(token, stream.getStack()))
 				continue;
 
 			stream.rewind(token);

@@ -96,7 +96,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                sequence(
                    token("DECLARE"),
                    token("SESSION"),
-                   token("."),
+                   literal("."),
                    name(),
                    token("TABLE"),
                    star(
@@ -167,7 +167,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                    optional(
                        sequence(
                            schemaName(),
-                           token(".")
+                           literal(".")
                        )
                    ),
                    tableName()
@@ -197,7 +197,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                    optional(
                        sequence(
                            schemaName(),
-                           token(".")
+                           literal(".")
                        )
                    ),
                    tableName()
@@ -226,7 +226,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                    optional(
                        sequence(
                            schemaName(),
-                           token(".")
+                           literal(".")
                        )
                    ),
                    tableName()
@@ -256,7 +256,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                    optional(
                        sequence(
                            schemaName(),
-                           token(".")
+                           literal(".")
                        )
                    ),
                    tableName()

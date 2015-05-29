@@ -2,11 +2,15 @@ package koopa.core.parsers;
 
 import static koopa.core.data.tags.IslandTag.LAND;
 import static koopa.core.data.tags.IslandTag.WATER;
+
+import java.util.Set;
+
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.data.markers.OnLand;
 import koopa.core.data.markers.InWater;
+import koopa.core.data.markers.OnLand;
 import koopa.core.data.tags.IslandTag;
+import koopa.core.parsers.ParseStack.Frame;
 import koopa.core.sources.Source;
 import koopa.core.targets.NullTarget;
 import koopa.core.targets.Target;
@@ -21,19 +25,63 @@ public abstract class Parser {
 		assert (tokenizer != null);
 		assert (sink != null);
 
-		ParseStream stream = new BasicParseStream(tokenizer, new WaterTagger(sink));
+		ParseStream stream = new BasicParseStream(tokenizer, new WaterTagger(
+				sink));
 		boolean accepted = accepts(stream);
 		stream.commit();
 		return accepted;
 	}
 
 	/**
-	 * Actual parser combinators must implement this according to whatever logic
-	 * they need. This method should, however, <b>not</b> get called directly by
-	 * clients! They should use the one of the forms which accepts a
-	 * {@linkplain Source}.
+	 * This method should <b>not</b> get called directly by clients! They should
+	 * use {@linkplain #accepts(Source, Target)} instead.
 	 */
-	public abstract boolean accepts(ParseStream stream);
+	public final boolean accepts(ParseStream stream) {
+		stream.getStack().push(this);
+		try {
+			return matches(stream);
+
+		} finally {
+			stream.getStack().pop();
+		}
+	}
+
+	/**
+	 * Actual parser combinators must implement this according to whatever logic
+	 * they need.
+	 */
+	protected abstract boolean matches(ParseStream stream);
+
+	// ------------------------------------------------------------------------
+
+	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	}
+
+	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	}
+
+	/**
+	 * Whether or not this parser can say that it
+	 * {@linkplain #accepts(ParseStream)} without actually having consumed
+	 * anything from the stream.
+	 * <p>
+	 * <b>By default this answers <code>false</code>.</b> So it's saying it will
+	 * consume a token, which seems a reasonable thing for a parser to do.
+	 */
+	public boolean canMatchEmptyInputs() {
+		return false;
+	}
+
+	public boolean isKeyword(String word, Frame frame) {
+		return frame.up().isKeyword(word);
+	}
+
+	/**
+	 * Is this parser matching a rule with the given name ?
+	 */
+	public boolean isMatching(String name) {
+		return false;
+	}
 
 	// ------------------------------------------------------------------------
 

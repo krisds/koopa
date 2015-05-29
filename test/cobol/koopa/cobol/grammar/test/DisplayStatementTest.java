@@ -637,13 +637,4 @@ public class DisplayStatementTest extends TestCase {
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
-
-    @Test
-    public void testDisplayStatement_70() {
-      Parser parser = grammar.displayStatement();
-      assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DISPLAY ERASE "));
-      assertTrue(parser.accepts(tokenizer));
-      assertTrue(tokenizer.isWhereExpected());
-    }
 }

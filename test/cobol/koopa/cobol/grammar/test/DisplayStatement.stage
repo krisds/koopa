@@ -107,4 +107,3 @@ target displayStatement;
    END-DISPLAY ]
 
 +[ DISPLAY " " AT 2401 ERASE ]
-+[ DISPLAY ERASE ]

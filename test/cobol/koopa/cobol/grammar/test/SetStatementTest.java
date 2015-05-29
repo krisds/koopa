@@ -405,7 +405,7 @@ public class SetStatementTest extends TestCase {
     public void testSetStatement_44() {
       Parser parser = grammar.setStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo TO UP BY 1 "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo      UP   BY  1 "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -414,7 +414,7 @@ public class SetStatementTest extends TestCase {
     public void testSetStatement_45() {
       Parser parser = grammar.setStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo TO DOWN BY 1 "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo      DOWN BY  1 "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -423,7 +423,7 @@ public class SetStatementTest extends TestCase {
     public void testSetStatement_46() {
       Parser parser = grammar.setStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo TO UP BY bar "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo      UP   BY  bar "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -432,7 +432,7 @@ public class SetStatementTest extends TestCase {
     public void testSetStatement_47() {
       Parser parser = grammar.setStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo bar TO DOWN BY baz "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SET foo bar  DOWN BY  baz "));
       assertTrue(parser.accepts(tokenizer));
       assertTrue(tokenizer.isWhereExpected());
     }

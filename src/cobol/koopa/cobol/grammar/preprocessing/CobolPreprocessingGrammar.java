@@ -109,7 +109,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
                    optional(
                        copyReplacingPhrase()
                    ),
-                   token(".")
+                   literal(".")
                )
            );
         }
@@ -344,23 +344,15 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
            future.setParser(
                choice(
                    sequence(
-                       intgr(),
+                       choice(
+                           literal("+"),
+                           literal("-")
+                       ),
                        opt(NOSKIP,
-                           sequence(
-                               choice(
-                                   token(","),
-                                   token(".")
-                               ),
-                               uintgr()
-                           )
+                           unsigned_decimal()
                        )
                    ),
-                   sequence(
-                       token("."),
-                       opt(NOSKIP,
-                           uintgr()
-                       )
-                   )
+                   unsigned_decimal()
                )
            );
         }
@@ -369,16 +361,51 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
 
     // ========================================================
+    // unsigned_decimal
+    // ........................................................
+
+    private Parser unsigned_decimalParser = null;
+
+    private Parser unsigned_decimal() {
+        if (unsigned_decimalParser == null) {
+           FutureParser future = scoped("unsigned_decimal", false);
+           unsigned_decimalParser = future;
+           future.setParser(
+               choice(
+                   sequence(
+                       intgr(),
+                       opt(NOSKIP,
+                           sequence(
+                               choice(
+                                   literal(","),
+                                   literal(".")
+                               ),
+                               uintgr()
+                           )
+                       )
+                   ),
+                   sequence(
+                       literal("."),
+                       opt(NOSKIP,
+                           uintgr()
+                       )
+                   )
+               )
+           );
+        }
+
+        return unsigned_decimalParser;
+    }
+
+    // ========================================================
     // intgr
     // ........................................................
 
     private Parser intgrParser = null;
 
-    public final Start intgr = Start.on(getNamespace(), "intgr");
-
-    public Parser intgr() {
+    private Parser intgr() {
         if (intgrParser == null) {
-           FutureParser future = scoped("intgr", true);
+           FutureParser future = scoped("intgr", false);
            intgrParser = future;
            future.setParser(
                sequence(
@@ -397,11 +424,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
 
     private Parser uintgrParser = null;
 
-    public final Start uintgr = Start.on(getNamespace(), "uintgr");
-
-    public Parser uintgr() {
+    private Parser uintgr() {
         if (uintgrParser == null) {
-           FutureParser future = scoped("uintgr", true);
+           FutureParser future = scoped("uintgr", false);
            uintgrParser = future;
            future.setParser(
                sequence(

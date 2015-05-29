@@ -184,9 +184,9 @@ public class CICSGrammar extends CICSBaseGrammar {
                    name(),
                    optional(
                        sequence(
-                           token("("),
+                           literal("("),
                            value(),
-                           token(")")
+                           literal(")")
                        )
                    )
                )
@@ -211,10 +211,10 @@ public class CICSGrammar extends CICSBaseGrammar {
            future.setParser(
                sequence(
                    not(
-                       token("(")
+                       literal("(")
                    ),
                    not(
-                       token(")")
+                       literal(")")
                    ),
                    any()
                )
@@ -259,18 +259,18 @@ public class CICSGrammar extends CICSBaseGrammar {
            future.setParser(
                choice(
                    sequence(
-                       token("("),
+                       literal("("),
                        plus(
                            param()
                        ),
-                       token(")")
+                       literal(")")
                    ),
                    sequence(
                        not(
-                           token("(")
+                           literal("(")
                        ),
                        not(
-                           token(")")
+                           literal(")")
                        ),
                        any()
                    )

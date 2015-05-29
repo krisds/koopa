@@ -164,7 +164,7 @@ public class CobolParser implements ParserConfiguration {
 				if (!grammar.isProgramText(t))
 					continue;
 
-				if (grammar.isSeparator(t))
+				if (grammar.isSeparator(t, null))
 					continue;
 
 				LOGGER.info("Not all input was consumed.");

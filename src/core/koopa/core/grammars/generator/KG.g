@@ -226,6 +226,7 @@ NOSKIP  : '%noskip' ;
 LIMIT   : '%limit'  ;
 BY      : '%by'     ;
 AS      : '%as'     ;
+NOT     : '%not'    ;
 
 ARROW   : '=>'      ;
 
@@ -272,8 +273,6 @@ COMMA : ',' ;
 BANG : '!' ;
 
 DOLLAR : '$' ;
-
-NOT : '-' ;
 
 fragment LETTER    : LOWERCASE | UPPERCASE ;
 fragment LOWERCASE : 'a'..'z' ;

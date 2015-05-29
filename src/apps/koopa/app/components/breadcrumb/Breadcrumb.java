@@ -159,13 +159,14 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		for (int i = 0; i < tree.getChildCount(); i++) {
 			Tree child = tree.getChild(i);
 
-			Position start = child.getStart();
-			Position end = child.getEnd();
+			Position start = child.getRawStart();
+			Position end = child.getRawEnd();
 
-			if (token.getStart().getPositionInFile() >= start
-					.getPositionInFile()
-					&& token.getEnd().getPositionInFile() <= end
-							.getPositionInFile()) {
+			Position tokenStart = token.getStart();
+			Position tokenEnd = token.getEnd();
+
+			if (tokenStart.getPositionInFile() >= start.getPositionInFile()
+					&& tokenEnd.getPositionInFile() <= end.getPositionInFile()) {
 				find(token, child, breadcrumb);
 				break;
 			}

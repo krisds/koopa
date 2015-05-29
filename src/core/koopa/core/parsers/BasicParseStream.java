@@ -38,6 +38,8 @@ public class BasicParseStream implements ParseStream {
 	// Bookmarks govern rewind/commit semantics.
 	private final Stack<Integer> bookmarks;
 
+	private final ParseStack stack;
+
 	public BasicParseStream(Source<Token> source, Target<Data> target) {
 		assert (source != null);
 		assert (target != null);
@@ -48,6 +50,8 @@ public class BasicParseStream implements ParseStream {
 		this.seen = new LinkedList<Data>();
 
 		this.bookmarks = new Stack<Integer>();
+
+		this.stack = new ParseStack();
 	}
 
 	/**
@@ -132,12 +136,12 @@ public class BasicParseStream implements ParseStream {
 		bookmark();
 
 		StringBuilder builder = new StringBuilder();
-		
+
 		for (int i = 0; i < 5; i++) {
 			Token t = forward();
 			if (t == null)
 				break;
-		
+
 			builder.append("[");
 			builder.append(t.getText());
 			builder.append("]");
@@ -210,5 +214,9 @@ public class BasicParseStream implements ParseStream {
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("!! " + bookmark);
 		}
+	}
+
+	public ParseStack getStack() {
+		return stack;
 	}
 }

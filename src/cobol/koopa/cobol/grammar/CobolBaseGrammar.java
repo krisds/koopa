@@ -33,7 +33,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			FutureParser future = scoped("pictureString");
 			pictureStringParser = future;
 			future.setParser(new Parser() {
-				public boolean accepts(ParseStream stream) {
+				public boolean matches(ParseStream stream) {
 					skipSeparators(stream);
 
 					int numberOfTokens = 0;
@@ -51,7 +51,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 							break;
 						}
 
-						if (isSeparator(token)
+						if (isSeparator(token, stream.getStack())
 								&& token.getText().trim().length() == 0) {
 							stream.rewind(token);
 							break;
@@ -91,7 +91,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			FutureParser future = scoped("levelNumber");
 			levelNumberParser = future;
 			future.setParser(new Parser() {
-				public boolean accepts(ParseStream stream) {
+				public boolean matches(ParseStream stream) {
 					skipSeparators(stream);
 
 					Token token = stream.forward();
@@ -188,7 +188,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			FutureParser future = scoped("commentEntry");
 			commentEntryParser = future;
 			future.setParser(new Parser() {
-				public boolean accepts(ParseStream stream) {
+				public boolean matches(ParseStream stream) {
 					boolean sawSomething = false;
 
 					while (true) {
@@ -205,13 +205,13 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
 						if (token.getText().trim().length() == 0)
 							continue;
-						
+
 						// Area B = 12..72, or 11-71 when zero-based.
 						if (token.getStart().getPositionInLine() < 11) {
 							stream.rewind(token);
 							return sawSomething;
 						}
-						
+
 						sawSomething = true;
 					}
 				}

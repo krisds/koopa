@@ -181,7 +181,7 @@ body [ List<String> bindings, List<String> unbindings ]
       unquoted = unquoted.substring(1, unquoted.length() - 1); 
     }
   
-    -> token(
+    -> literal(
       text = {unquoted}
     )
   
@@ -205,7 +205,7 @@ body [ List<String> bindings, List<String> unbindings ]
   
   | d=DOT
   
-    -> token(
+    -> literal(
       text = {d}
     )
   

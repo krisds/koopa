@@ -92,7 +92,8 @@ target chainStatement;
      BY VALUE 100 SIZE 200
      BY VALUE LENGTH OF bar
    END-CHAIN ]
-     
--[ CHAIN foo
-     USING BY REFERENCE bar
-     USING BY CONTENT bar ]
+ 
+# Auto keywords allows seeing the second USING as an identifier...
+#-[ CHAIN foo
+#     USING BY REFERENCE bar
+#     USING BY CONTENT bar ]

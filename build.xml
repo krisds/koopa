@@ -91,9 +91,11 @@
 			<test name="koopa.core.data.test.TokenTest" />
 			<test name="koopa.core.data.test.TokensTest" />
 
+			<test name="koopa.core.parsers.test.ParseStackTest" />
 			<test name="koopa.core.parsers.test.ParseStreamTest" />
 
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
+			<test name="koopa.core.grammars.test.AutomaticKeywordsTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
 
 			<test name="koopa.core.treeparsers.test.TreeWalkerTest" />

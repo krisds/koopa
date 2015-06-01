@@ -2,7 +2,8 @@
 
 package koopa.examples.treegrammars;
 
-import koopa.core.grammars.Block;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.TreeParser;
@@ -26,7 +27,7 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	           sequence(
 	               compilationUnit(),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       { reportWordFrequencies(); }
 	                   }
 	               })
@@ -77,7 +78,7 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	           sequence(
 	               assign("name", sectionName()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       String name = (String) scope.get("name");
 	                       { process("SECTION", name); }
 	                       scope.set("name", name);
@@ -107,7 +108,7 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	           sequence(
 	               assign("t", paragraphName()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree t = (Tree) scope.get("t");
 	                       { process("PARAGRAPH", t.getProgramText()); }
 	                       scope.set("t", t);
@@ -134,7 +135,7 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	           sequence(
 	               assign("t", any()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree t = (Tree) scope.get("t");
 	                       { process("PROGRAM", t.getProgramText()); }
 	                       scope.set("t", t);
@@ -162,7 +163,7 @@ public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
 	               sequence(
 	                   assign("t", any()),
 	                   apply(new Block() {
-	                       public void apply() {
+	                       public void apply(Parse parse) {
 	                           Tree t = (Tree) scope.get("t");
 	                           String name = (String) scope.get("name");
 	                           { name = t.getProgramText(); }

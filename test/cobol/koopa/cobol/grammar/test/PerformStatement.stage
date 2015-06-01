@@ -22,6 +22,8 @@ target until;
 +[ WITH TEST AFTER UNTIL MY-COUNT > 42 # . ]
 +[ TEST AFTER UNTIL MY-COUNT > 42 # . ]
 
++[ UNTIL EXIT ]
++[ FOREVER ]
 
 
 target varying;
@@ -154,6 +156,9 @@ target performStatement;
      DISPLAY 3
    END-PERFORM ]
 
++[ PERFORM FOREVER
+     DISPLAY "."
+   END-PERFORM ]
  
 # Issue 51, by Inaki GE:
 +[ PERFORM COMMIT THRU COMMIT-EXIT ]

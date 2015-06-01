@@ -3,14 +3,14 @@ package koopa.core.parsers;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import koopa.core.data.Marker;
 import koopa.core.data.Data;
+import koopa.core.data.Marker;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.targets.Target;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  * This is not so much a stream, as a parse in progress. It holds on to all
@@ -20,12 +20,11 @@ import koopa.core.targets.Target;
  * {@linkplain Target}.
  * <p>
  * When the parse is complete (either successfully or not) the
- * {@linkplain BasicParseStream} will no longer be holding on to any
- * {@linkplain Data} itself. In particular, any {@linkplain Token}s which were
- * consumed but did not match will have been returned to their
- * {@linkplain Source}.
+ * {@linkplain BaseStream} will no longer be holding on to any {@linkplain Data}
+ * itself. In particular, any {@linkplain Token}s which were consumed but did
+ * not match will have been returned to their {@linkplain Source}.
  */
-public class BasicParseStream implements ParseStream {
+public class BaseStream implements Stream {
 
 	private static final Logger LOGGER = Logger.getLogger("parse.stream");
 
@@ -38,9 +37,9 @@ public class BasicParseStream implements ParseStream {
 	// Bookmarks govern rewind/commit semantics.
 	private final Stack<Integer> bookmarks;
 
-	private final ParseStack stack;
+	private Parse parse = null;
 
-	public BasicParseStream(Source<Token> source, Target<Data> target) {
+	public BaseStream(Source<Token> source, Target<Data> target) {
 		assert (source != null);
 		assert (target != null);
 
@@ -50,8 +49,6 @@ public class BasicParseStream implements ParseStream {
 		this.seen = new LinkedList<Data>();
 
 		this.bookmarks = new Stack<Integer>();
-
-		this.stack = new ParseStack();
 	}
 
 	/**
@@ -155,8 +152,8 @@ public class BasicParseStream implements ParseStream {
 
 	/**
 	 * Bookmark the current position in the stream. This will impact the
-	 * behaviour of {@linkplain BasicParseStream#rewind()} and
-	 * {@linkplain BasicParseStream#commit()}.
+	 * behaviour of {@linkplain BaseStream#rewind()} and
+	 * {@linkplain BaseStream#commit()}.
 	 */
 	public void bookmark() {
 		if (LOGGER.isTraceEnabled())
@@ -216,7 +213,11 @@ public class BasicParseStream implements ParseStream {
 		}
 	}
 
-	public ParseStack getStack() {
-		return stack;
+	public Parse getParse() {
+		return parse;
+	}
+
+	public void setParse(Parse parse) {
+		this.parse = parse;
 	}
 }

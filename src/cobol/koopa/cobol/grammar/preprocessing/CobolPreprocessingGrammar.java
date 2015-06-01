@@ -7,13 +7,14 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.grammars.Block;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStream;
+import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.Opt.NOSKIP;
+import static koopa.core.grammars.combinators.Opt.NOSKIP;
 
 import koopa.core.data.tags.AreaTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
@@ -35,11 +36,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // preprocessing
     // ........................................................
 
-    private Parser preprocessingParser = null;
+    private ParserCombinator preprocessingParser = null;
 
     public final Start preprocessing = Start.on(getNamespace(), "preprocessing");
 
-    public Parser preprocessing() {
+    public ParserCombinator preprocessing() {
         if (preprocessingParser == null) {
            FutureParser future = scoped("preprocessing", true);
            preprocessingParser = future;
@@ -62,11 +63,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // preprocessingDirective
     // ........................................................
 
-    private Parser preprocessingDirectiveParser = null;
+    private ParserCombinator preprocessingDirectiveParser = null;
 
     public final Start preprocessingDirective = Start.on(getNamespace(), "preprocessingDirective");
 
-    public Parser preprocessingDirective() {
+    public ParserCombinator preprocessingDirective() {
         if (preprocessingDirectiveParser == null) {
            FutureParser future = scoped("preprocessingDirective", true);
            preprocessingDirectiveParser = future;
@@ -82,11 +83,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // copyStatement
     // ........................................................
 
-    private Parser copyStatementParser = null;
+    private ParserCombinator copyStatementParser = null;
 
     public final Start copyStatement = Start.on(getNamespace(), "copyStatement");
 
-    public Parser copyStatement() {
+    public ParserCombinator copyStatement() {
         if (copyStatementParser == null) {
            FutureParser future = scoped("copyStatement", true);
            copyStatementParser = future;
@@ -121,11 +122,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // copyReplacingPhrase
     // ........................................................
 
-    private Parser copyReplacingPhraseParser = null;
+    private ParserCombinator copyReplacingPhraseParser = null;
 
     public final Start copyReplacingPhrase = Start.on(getNamespace(), "copyReplacingPhrase");
 
-    public Parser copyReplacingPhrase() {
+    public ParserCombinator copyReplacingPhrase() {
         if (copyReplacingPhraseParser == null) {
            FutureParser future = scoped("copyReplacingPhrase", true);
            copyReplacingPhraseParser = future;
@@ -146,11 +147,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // copyReplacementInstruction
     // ........................................................
 
-    private Parser copyReplacementInstructionParser = null;
+    private ParserCombinator copyReplacementInstructionParser = null;
 
     public final Start copyReplacementInstruction = Start.on(getNamespace(), "copyReplacementInstruction");
 
-    public Parser copyReplacementInstruction() {
+    public ParserCombinator copyReplacementInstruction() {
         if (copyReplacementInstructionParser == null) {
            FutureParser future = scoped("copyReplacementInstruction", true);
            copyReplacementInstructionParser = future;
@@ -176,11 +177,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // leading
     // ........................................................
 
-    private Parser leadingParser = null;
+    private ParserCombinator leadingParser = null;
 
     public final Start leading = Start.on(getNamespace(), "leading");
 
-    public Parser leading() {
+    public ParserCombinator leading() {
         if (leadingParser == null) {
            FutureParser future = scoped("leading", true);
            leadingParser = future;
@@ -196,11 +197,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // trailing
     // ........................................................
 
-    private Parser trailingParser = null;
+    private ParserCombinator trailingParser = null;
 
     public final Start trailing = Start.on(getNamespace(), "trailing");
 
-    public Parser trailing() {
+    public ParserCombinator trailing() {
         if (trailingParser == null) {
            FutureParser future = scoped("trailing", true);
            trailingParser = future;
@@ -216,11 +217,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // copyOperandName
     // ........................................................
 
-    private Parser copyOperandNameParser = null;
+    private ParserCombinator copyOperandNameParser = null;
 
     public final Start copyOperandName = Start.on(getNamespace(), "copyOperandName");
 
-    public Parser copyOperandName() {
+    public ParserCombinator copyOperandName() {
         if (copyOperandNameParser == null) {
            FutureParser future = scoped("copyOperandName", true);
            copyOperandNameParser = future;
@@ -240,11 +241,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // textName
     // ........................................................
 
-    private Parser textNameParser = null;
+    private ParserCombinator textNameParser = null;
 
     public final Start textName = Start.on(getNamespace(), "textName");
 
-    public Parser textName() {
+    public ParserCombinator textName() {
         if (textNameParser == null) {
            FutureParser future = scoped("textName", true);
            textNameParser = future;
@@ -263,11 +264,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // libraryName
     // ........................................................
 
-    private Parser libraryNameParser = null;
+    private ParserCombinator libraryNameParser = null;
 
     public final Start libraryName = Start.on(getNamespace(), "libraryName");
 
-    public Parser libraryName() {
+    public ParserCombinator libraryName() {
         if (libraryNameParser == null) {
            FutureParser future = scoped("libraryName", true);
            libraryNameParser = future;
@@ -286,11 +287,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // literal
     // ........................................................
 
-    private Parser literalParser = null;
+    private ParserCombinator literalParser = null;
 
     public final Start literal = Start.on(getNamespace(), "literal");
 
-    public Parser literal() {
+    public ParserCombinator literal() {
         if (literalParser == null) {
            FutureParser future = scoped("literal", true);
            literalParser = future;
@@ -309,11 +310,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // numeric
     // ........................................................
 
-    private Parser numericParser = null;
+    private ParserCombinator numericParser = null;
 
     public final Start numeric = Start.on(getNamespace(), "numeric");
 
-    public Parser numeric() {
+    public ParserCombinator numeric() {
         if (numericParser == null) {
            FutureParser future = scoped("numeric", true);
            numericParser = future;
@@ -333,11 +334,11 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // decimal
     // ........................................................
 
-    private Parser decimalParser = null;
+    private ParserCombinator decimalParser = null;
 
     public final Start decimal = Start.on(getNamespace(), "decimal");
 
-    public Parser decimal() {
+    public ParserCombinator decimal() {
         if (decimalParser == null) {
            FutureParser future = scoped("decimal", true);
            decimalParser = future;
@@ -364,9 +365,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // unsigned_decimal
     // ........................................................
 
-    private Parser unsigned_decimalParser = null;
+    private ParserCombinator unsigned_decimalParser = null;
 
-    private Parser unsigned_decimal() {
+    private ParserCombinator unsigned_decimal() {
         if (unsigned_decimalParser == null) {
            FutureParser future = scoped("unsigned_decimal", false);
            unsigned_decimalParser = future;
@@ -401,9 +402,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // intgr
     // ........................................................
 
-    private Parser intgrParser = null;
+    private ParserCombinator intgrParser = null;
 
-    private Parser intgr() {
+    private ParserCombinator intgr() {
         if (intgrParser == null) {
            FutureParser future = scoped("intgr", false);
            intgrParser = future;
@@ -422,9 +423,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     // uintgr
     // ........................................................
 
-    private Parser uintgrParser = null;
+    private ParserCombinator uintgrParser = null;
 
-    private Parser uintgr() {
+    private ParserCombinator uintgr() {
         if (uintgrParser == null) {
            FutureParser future = scoped("uintgr", false);
            uintgrParser = future;

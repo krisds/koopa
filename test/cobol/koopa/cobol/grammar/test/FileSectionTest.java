@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,10 +20,10 @@ public class FileSectionTest extends TestCase {
 
     @Test
     public void testFileSection_1() {
-      Parser parser = grammar.fileSection();
+      ParserCombinator parser = grammar.fileSection();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer("\n       FILE SECTION.\n\n       FD  FPM203S1\n           BLOCK CONTAINS 0 RECORDS\n           RECORDING MODE IS F\n           LABEL RECORDS ARE STANDARD.\n       01  REG-SALIDA                     PIC X(200).\n\n       FD  FGRERROR\n           BLOCK CONTAINS 0 RECORDS\n           RECORDING MODE IS F\n           LABEL RECORDS ARE STANDARD.\n       01  REG-FGRERROR                     PIC X(402).\n"));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

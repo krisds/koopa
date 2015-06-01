@@ -1,18 +1,18 @@
 package koopa.core.parsers;
 
-import org.apache.log4j.Logger;
-
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
 
-public class LimitedParseStream implements ParseStream {
+import org.apache.log4j.Logger;
+
+public class LimitedStream implements Stream {
 
 	private static final Logger LOGGER = Logger.getLogger("parse.stream");
 
-	private final ParseStream stream;
-	private final Parser limiter;
+	private final Stream stream;
+	private final ParserCombinator limiter;
 
-	public LimitedParseStream(ParseStream stream, Parser limiter) {
+	public LimitedStream(Stream stream, ParserCombinator limiter) {
 		assert (stream != null);
 		assert (limiter != null);
 
@@ -26,7 +26,11 @@ public class LimitedParseStream implements ParseStream {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("%limited ?");
 
-		boolean hitLimit = limiter.accepts(stream);
+		// TODO This twiddling ain't great...
+		Parse parse = stream.getParse();
+		parse.setStream(stream);
+		boolean hitLimit = limiter.accepts(parse);
+		parse.setStream(this);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("%limited ? " + hitLimit);
@@ -67,7 +71,11 @@ public class LimitedParseStream implements ParseStream {
 		stream.commit();
 	}
 
-	public ParseStack getStack() {
-		return stream.getStack();
+	public Parse getParse() {
+		return stream.getParse();
+	}
+
+	public void setParse(Parse parse) {
+		stream.setParse(parse);
 	}
 }

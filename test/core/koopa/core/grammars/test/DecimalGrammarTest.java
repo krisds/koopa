@@ -6,8 +6,8 @@ import static koopa.core.grammars.test.TestTag.UNSIGNED;
 
 import java.util.List;
 
-import koopa.core.grammars.Opt;
-import koopa.core.parsers.Parser;
+import koopa.core.grammars.combinators.Opt;
+import koopa.core.parsers.ParserCombinator;
 
 import org.junit.Test;
 
@@ -30,12 +30,12 @@ public class DecimalGrammarTest extends GrammarTest {
 	 *  integer %noskip ((','|'.') unsignedInteger)
 	 * </pre>
 	 */
-	private Parser decimal() {
-		final Parser integer = G.sequence(G.tagged(INTEGER_LITERAL), G.any());
+	private ParserCombinator decimal() {
+		final ParserCombinator integer = G.sequence(G.tagged(INTEGER_LITERAL), G.any());
 
-		final Parser comma = G.choice(G.token(","), G.token("."));
+		final ParserCombinator comma = G.choice(G.token(","), G.token("."));
 
-		final Parser unsignedInteger = G.sequence(G.tagged(INTEGER_LITERAL),
+		final ParserCombinator unsignedInteger = G.sequence(G.tagged(INTEGER_LITERAL),
 				G.tagged(UNSIGNED), G.any());
 
 		return G.sequence(integer,
@@ -49,7 +49,7 @@ public class DecimalGrammarTest extends GrammarTest {
 	 *  integer*
 	 * </pre>
 	 */
-	private Parser list() {
+	private ParserCombinator list() {
 		return G.plus(G.sequence(G.tagged(INTEGER_LITERAL), G.any()));
 	}
 

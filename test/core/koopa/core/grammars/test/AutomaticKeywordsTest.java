@@ -2,10 +2,10 @@ package koopa.core.grammars.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import koopa.core.grammars.Opt;
+import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStack;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.Stack;
 
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class AutomaticKeywordsTest extends GrammarTest {
 	@Test
 	public void testBasicScope() {
 		// This is a pretty complete list of all possible parsers.
-		Parser[] differentPossibleParsers = new Parser[] {
+		ParserCombinator[] differentPossibleParsers = new ParserCombinator[] {
 				G.choice(G.token("CHOICE_ONE"), G.token("CHOICE_TWO")),
 				G.tagged("COBOL"),
 				G.optional(G.token("OPTIONAL")),
@@ -55,7 +55,7 @@ public class AutomaticKeywordsTest extends GrammarTest {
 				G.as("name", G.token("AS")),
 				G.dispatched(
 						new String[] { "LEADING_ONE", "LEADING_TWO" },
-						new Parser[] { G.token("LEADING_ONE"),
+						new ParserCombinator[] { G.token("LEADING_ONE"),
 								G.token("LEADING_TWO") }), G.eof(),
 				G.limited(G.token("LIMITED"), G.token("LIMITER")),
 				G.not(G.token("NOT")), //
@@ -68,7 +68,7 @@ public class AutomaticKeywordsTest extends GrammarTest {
 				"LEADING_ONE", "LEADING_TWO", "LIMITED", "OPT" };
 
 		// This combines all parsers into one sequence.
-		Parser sequence = G.sequence(differentPossibleParsers);
+		ParserCombinator sequence = G.sequence(differentPossibleParsers);
 
 		// And this gives them a well-defined scope.
 		FutureParser scoped = G.scoped("name");
@@ -191,23 +191,23 @@ public class AutomaticKeywordsTest extends GrammarTest {
 
 	// ------------------------------------------
 
-	private ParseStack stack(Parser... context) {
-		ParseStack stack = new ParseStack();
+	private Stack stack(ParserCombinator... context) {
+		Stack stack = new Stack();
 		for (int i = context.length - 1; i >= 0; i--)
 			stack.push(context[i]);
 		return stack;
 	}
 
-	private StackAssertions whileMatching(Parser... context) {
+	private StackAssertions whileMatching(ParserCombinator... context) {
 		return new StackAssertions(stack(context));
 	}
 
 	private class StackAssertions {
-		private ParseStack stack;
+		private Stack stack;
 
 		public StackAssertions and = this;
 
-		public StackAssertions(ParseStack stack) {
+		public StackAssertions(Stack stack) {
 			this.stack = stack;
 		}
 

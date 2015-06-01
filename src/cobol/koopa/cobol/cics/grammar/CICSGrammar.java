@@ -7,13 +7,14 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.grammars.Block;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStream;
+import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.Opt.NOSKIP;
+import static koopa.core.grammars.combinators.Opt.NOSKIP;
 
 import koopa.cobol.cics.grammar.CICSBaseGrammar;
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
@@ -31,11 +32,11 @@ public class CICSGrammar extends CICSBaseGrammar {
     // cicsStatement
     // ........................................................
 
-    private Parser cicsStatementParser = null;
+    private ParserCombinator cicsStatementParser = null;
 
     public final Start cicsStatement = Start.on(getNamespace(), "cicsStatement");
 
-    public Parser cicsStatement() {
+    public ParserCombinator cicsStatement() {
         if (cicsStatementParser == null) {
            FutureParser future = scoped("cicsStatement", true);
            cicsStatementParser = future;
@@ -56,11 +57,11 @@ public class CICSGrammar extends CICSBaseGrammar {
     // command
     // ........................................................
 
-    private Parser commandParser = null;
+    private ParserCombinator commandParser = null;
 
     public final Start command = Start.on(getNamespace(), "command");
 
-    public Parser command() {
+    public ParserCombinator command() {
         if (commandParser == null) {
            FutureParser future = scoped("command", true);
            commandParser = future;
@@ -171,11 +172,11 @@ public class CICSGrammar extends CICSBaseGrammar {
     // option
     // ........................................................
 
-    private Parser optionParser = null;
+    private ParserCombinator optionParser = null;
 
     public final Start option = Start.on(getNamespace(), "option");
 
-    public Parser option() {
+    public ParserCombinator option() {
         if (optionParser == null) {
            FutureParser future = scoped("option", true);
            optionParser = future;
@@ -200,11 +201,11 @@ public class CICSGrammar extends CICSBaseGrammar {
     // name
     // ........................................................
 
-    private Parser nameParser = null;
+    private ParserCombinator nameParser = null;
 
     public final Start name = Start.on(getNamespace(), "name");
 
-    public Parser name() {
+    public ParserCombinator name() {
         if (nameParser == null) {
            FutureParser future = scoped("name", true);
            nameParser = future;
@@ -228,11 +229,11 @@ public class CICSGrammar extends CICSBaseGrammar {
     // value
     // ........................................................
 
-    private Parser valueParser = null;
+    private ParserCombinator valueParser = null;
 
     public final Start value = Start.on(getNamespace(), "value");
 
-    public Parser value() {
+    public ParserCombinator value() {
         if (valueParser == null) {
            FutureParser future = scoped("value", true);
            valueParser = future;
@@ -250,9 +251,9 @@ public class CICSGrammar extends CICSBaseGrammar {
     // param
     // ........................................................
 
-    private Parser paramParser = null;
+    private ParserCombinator paramParser = null;
 
-    private Parser param() {
+    private ParserCombinator param() {
         if (paramParser == null) {
            FutureParser future = scoped("param", false);
            paramParser = future;

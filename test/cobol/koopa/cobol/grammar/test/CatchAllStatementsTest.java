@@ -6,7 +6,8 @@ import java.util.List;
 import junit.framework.TestCase;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.test.CobolTestSource;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.test.TestTokenizer;
 
 import org.junit.Test;
@@ -62,12 +63,12 @@ public class CatchAllStatementsTest extends TestCase {
 	@Test
 	public void testSoloVerbs() {
 		for (String verb : VERBS) {
-			Parser parser = grammar.statement();
+			ParserCombinator parser = grammar.statement();
 			assertNotNull(parser);
 			// TODO Get rid of ".".
 			TestTokenizer tokenizer = new TestTokenizer(
 					CobolTestSource.forSample(verb + "."));
-			assertTrue(verb, parser.accepts(tokenizer));
+			assertTrue(verb, parser.accepts(Parse.of(tokenizer)));
 			// TODO assertNull(tokenizer.nextToken());
 		}
 	}
@@ -75,14 +76,14 @@ public class CatchAllStatementsTest extends TestCase {
 	@Test
 	public void testVerbsWithStuff() {
 		for (String verb : VERBS) {
-			Parser parser = grammar.statement();
+			ParserCombinator parser = grammar.statement();
 			assertNotNull(parser);
 			// TODO Get rid of ".".
 			TestTokenizer tokenizer = new TestTokenizer(
 					CobolTestSource
 							.forSample(verb
 									+ " Thank you Mario but our Princess is in another castle ."));
-			assertTrue(verb, parser.accepts(tokenizer));
+			assertTrue(verb, parser.accepts(Parse.of(tokenizer)));
 			// TODO assertNull(tokenizer.nextToken());
 		}
 	}

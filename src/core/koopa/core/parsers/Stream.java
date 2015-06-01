@@ -14,12 +14,12 @@ import koopa.core.targets.Target;
  * {@linkplain Target}.
  * <p>
  * When the parse is complete (either successfully or not) the
- * {@linkplain ParseStream} will no longer be holding on to any
+ * {@linkplain Stream} will no longer be holding on to any
  * {@linkplain Data} itself. In particular, any {@linkplain Token}s which were
  * consumed but did not match will have been returned to their
  * {@linkplain Source}.
  */
-public interface ParseStream {
+public interface Stream {
 
 	/**
 	 * Get the next token in the stream.
@@ -53,8 +53,8 @@ public interface ParseStream {
 
 	/**
 	 * Bookmark the current position in the stream. This will impact the
-	 * behaviour of {@linkplain BasicParseStream#rewind()} and
-	 * {@linkplain BasicParseStream#commit()}.
+	 * behaviour of {@linkplain BaseStream#rewind()} and
+	 * {@linkplain BaseStream#commit()}.
 	 */
 	void bookmark();
 
@@ -75,7 +75,9 @@ public interface ParseStream {
 	void commit();
 
 	/**
-	 * The stack of currently active parsers.
+	 * The currently active parser.
 	 */
-	ParseStack getStack();
+	Parse getParse();
+
+	void setParse(Parse parse);
 }

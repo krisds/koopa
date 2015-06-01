@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,27 +20,27 @@ public class DeleteFileStatementTest extends TestCase {
 
     @Test
     public void testDeleteFileStatement_1() {
-      Parser parser = grammar.deleteFileStatement();
+      ParserCombinator parser = grammar.deleteFileStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DELETE FILE "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDeleteFileStatement_2() {
-      Parser parser = grammar.deleteFileStatement();
+      ParserCombinator parser = grammar.deleteFileStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DELETE FILE \"foo\" "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDeleteFileStatement_3() {
-      Parser parser = grammar.deleteFileStatement();
+      ParserCombinator parser = grammar.deleteFileStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DELETE FILE \"foo\" \"bar\" baz "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

@@ -3,15 +3,15 @@ package koopa.core.parsers.test;
 import junit.framework.TestCase;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.parsers.BasicParseStream;
-import koopa.core.parsers.ParseStream;
+import koopa.core.parsers.BaseStream;
+import koopa.core.parsers.Stream;
 import koopa.core.sources.test.HardcodedSource;
 import koopa.core.targets.ListTarget;
 
 import org.junit.Test;
 
 /**
- * Tests the core operations which make up a {@linkplain ParseStream}.
+ * Tests the core operations which make up a {@linkplain Stream}.
  */
 public class ParseStreamTest extends TestCase {
 
@@ -23,7 +23,7 @@ public class ParseStreamTest extends TestCase {
 		HardcodedSource source = HardcodedSource.from(WORDS);
 		ListTarget target = new ListTarget();
 
-		ParseStream stream = new BasicParseStream(source, target);
+		Stream stream = new BaseStream(source, target);
 
 		// We just step through all words, until there are no more.
 		for (int i = 0; i < WORDS.length; i++)
@@ -44,7 +44,7 @@ public class ParseStreamTest extends TestCase {
 		HardcodedSource source = HardcodedSource.from(WORDS);
 		ListTarget target = new ListTarget();
 
-		ParseStream stream = new BasicParseStream(source, target);
+		Stream stream = new BaseStream(source, target);
 
 		// Each loop we step through all words and rewind all of them. But
 		// before the next loop we push one token to the target, so each
@@ -77,7 +77,7 @@ public class ParseStreamTest extends TestCase {
 		HardcodedSource source = HardcodedSource.from(WORDS);
 		ListTarget target = new ListTarget();
 
-		ParseStream stream = new BasicParseStream(source, target);
+		Stream stream = new BaseStream(source, target);
 
 		// Each loop we step through all words and rewind all of them. But
 		// before the next loop we push one token to the target, so each
@@ -117,14 +117,14 @@ public class ParseStreamTest extends TestCase {
 
 	// =========================================================================
 
-	private Token assertNextTokenMatchesWord(ParseStream stream, Object text) {
+	private Token assertNextTokenMatchesWord(Stream stream, Object text) {
 		Token token = stream.forward();
 		assertNotNull(token);
 		token.getText().equals(text);
 		return token;
 	}
 
-	private void assertNoMoreTokens(ParseStream stream) {
+	private void assertNoMoreTokens(Stream stream) {
 		assertNull(stream.forward());
 	}
 

@@ -12,13 +12,13 @@ import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStream;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.Stream;
 
 public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
-	@Override
-	protected String getNamespace() {
+	public String getNamespace() {
 		return "cobol";
 	}
 
@@ -26,15 +26,17 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	// pictureString
 	// ............................................................................
 
-	private Parser pictureStringParser = null;
+	private ParserCombinator pictureStringParser = null;
 
-	public Parser pictureString() {
+	public ParserCombinator pictureString() {
 		if (pictureStringParser == null) {
 			FutureParser future = scoped("pictureString");
 			pictureStringParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					int numberOfTokens = 0;
 					List<Token> picture = new ArrayList<Token>();
@@ -51,7 +53,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 							break;
 						}
 
-						if (isSeparator(token, stream.getStack())
+						if (isSeparator(token, stream.getParse())
 								&& token.getText().trim().length() == 0) {
 							stream.rewind(token);
 							break;
@@ -72,7 +74,10 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						stream.rewind(lastToken);
 					}
 
+					parse.getStack().getScope().setRValue(new Token(picture));
+/*
 					returnToken(new Token(picture));
+*/
 					return true;
 				}
 			});
@@ -84,15 +89,17 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	// levelNumber
 	// ............................................................................
 
-	private Parser levelNumberParser = null;
+	private ParserCombinator levelNumberParser = null;
 
-	public Parser levelNumber() {
+	public ParserCombinator levelNumber() {
 		if (levelNumberParser == null) {
 			FutureParser future = scoped("levelNumber");
 			levelNumberParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					Token token = stream.forward();
 
@@ -100,7 +107,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
 							&& isLevelNumber(token.getText())) {
 
-						returnToken(token);
+						parse.getStack().getScope().setRValue(token);
 						return true;
 
 					} else
@@ -150,7 +157,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	private SQLGrammar sqlGrammar = null;
 
 	// TODO This is a poor man's version of grammar composition...
-	public Parser sqlStatement() {
+	public ParserCombinator sqlStatement() {
 		if (sqlGrammar == null)
 			sqlGrammar = new SQLGrammar();
 
@@ -164,7 +171,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	private CICSGrammar cicsGrammar = null;
 
 	// TODO This is a poor man's version of grammar composition...
-	public Parser cicsStatement() {
+	public ParserCombinator cicsStatement() {
 		if (cicsGrammar == null)
 			cicsGrammar = new CICSGrammar();
 
@@ -181,14 +188,16 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	// Following is based on a description found here:
 	// http://supportline.microfocus.com/documentation/books/sx20books/lrpdfx.htm
 
-	private Parser commentEntryParser = null;
+	private ParserCombinator commentEntryParser = null;
 
-	public Parser commentEntry() {
+	public ParserCombinator commentEntry() {
 		if (commentEntryParser == null) {
 			FutureParser future = scoped("commentEntry");
 			commentEntryParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
 					boolean sawSomething = false;
 
 					while (true) {

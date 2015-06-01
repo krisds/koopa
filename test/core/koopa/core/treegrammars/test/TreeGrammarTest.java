@@ -7,8 +7,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import koopa.core.grammars.Block;
-import koopa.core.grammars.Opt;
+import koopa.core.grammars.combinators.Opt;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.FutureTreeParser;
@@ -236,7 +237,7 @@ public class TreeGrammarTest {
 		final List<String> list = new ArrayList<String>();
 
 		TreeParser application = G.apply(new Block() {
-			public void apply() {
+			public void apply(Parse parse) {
 				list.add("Stop bashing Cobol");
 			}
 		});
@@ -259,7 +260,7 @@ public class TreeGrammarTest {
 
 		TreeParser cobolCounter = G.star(G.sequence(G.token("Cobol"),
 				G.apply(new Block() {
-					public void apply() {
+					public void apply(Parse parse) {
 						// System.out.println("FOUND ONE");
 						count[0]++;
 					}
@@ -321,7 +322,7 @@ public class TreeGrammarTest {
 
 		TreeParser cobolCounter = G.star(G.sequence(G.token("Cobol"),
 				G.apply(new Block() {
-					public void apply() {
+					public void apply(Parse parse) {
 						// System.out.println("FOUND ONE");
 						count[0]++;
 					}

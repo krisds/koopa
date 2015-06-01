@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,10 +20,10 @@ public class KeywordsTest extends TestCase {
 
     @Test
     public void testCallStatement_1() {
-      Parser parser = grammar.callStatement();
+      ParserCombinator parser = grammar.callStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CALL MQ-OPEN-PGM USING\n     HCONN\n     OBJECT-DESCRIPTOR\n     OPTIONS\n     REPLY-HANDLE\n     OPEN-CODE2\n     REASON\n   END-CALL "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

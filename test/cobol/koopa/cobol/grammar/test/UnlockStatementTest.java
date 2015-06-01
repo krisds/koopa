@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,28 +20,28 @@ public class UnlockStatementTest extends TestCase {
 
     @Test
     public void testUnlockStatement_1() {
-      Parser parser = grammar.unlockStatement();
+      ParserCombinator parser = grammar.unlockStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" UNLOCK foo "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUnlockStatement_2() {
-      Parser parser = grammar.unlockStatement();
+      ParserCombinator parser = grammar.unlockStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" UNLOCK foo RECORD "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUnlockStatement_3() {
-      Parser parser = grammar.unlockStatement();
+      ParserCombinator parser = grammar.unlockStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" UNLOCK foo RECORDS "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

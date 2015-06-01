@@ -1,7 +1,8 @@
 package koopa.cobol.sql.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,10 +20,10 @@ public class OpenStatementTest extends TestCase {
 
     @Test
     public void testOpenStatement_1() {
-      Parser parser = grammar.openStatement();
+      ParserCombinator parser = grammar.openStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" OPEN CD05 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

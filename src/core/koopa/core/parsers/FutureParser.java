@@ -3,8 +3,6 @@ package koopa.core.parsers;
 import java.util.HashSet;
 import java.util.Set;
 
-import koopa.core.parsers.ParseStack.Frame;
-
 /**
  * This is a parser combinator whose internal parser can be set at a later time.
  * This is needed by grammars which have parser definitions which refer to each
@@ -13,12 +11,12 @@ import koopa.core.parsers.ParseStack.Frame;
  * definitions later.
  */
 // TODO Rename to ScopedParser ?
-public abstract class FutureParser extends Parser {
+public abstract class FutureParser extends ParserCombinator {
 
-	protected Parser parser = null;
+	protected ParserCombinator parser = null;
 	private Set<String> allKeywords;
 
-	public void setParser(Parser parser) {
+	public void setParser(ParserCombinator parser) {
 		assert (this.parser == null);
 		assert (parser != null);
 
@@ -34,7 +32,7 @@ public abstract class FutureParser extends Parser {
 		return allKeywords;
 	}
 
-	public boolean isKeyword(String word, Frame frame) {
+	public boolean isKeyword(String word, Stack.Frame frame) {
 		if (getAllKeywordsInScope().contains(word))
 			return true;
 

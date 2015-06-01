@@ -1,7 +1,8 @@
 package koopa.cobol.sql.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,10 +20,10 @@ public class DeclareCursorStatementTest extends TestCase {
 
     @Test
     public void testDeclareCursorStatement_1() {
-      Parser parser = grammar.declareCursorStatement();
+      ParserCombinator parser = grammar.declareCursorStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DECLARE AB05 CURSOR WITH RETURN FOR                 \n   SELECT                                                       \n      PPPPPPP_CODE                                            \n     ,RRRRRRR_DESC                                            \n     ,IIPACT_CONDITION                                        \n     ,VVVVVV_ID                                               \n     ,CARR_ID                                              \n   FROM SESSION.AB05 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

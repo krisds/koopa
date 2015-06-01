@@ -194,9 +194,9 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		bar.add(file);
 
-		// --- Parser settings ------------------------------------------------
+		// --- ParserCombinator settings ------------------------------------------------
 
-		parserSettings = new JMenu("Parser settings");
+		parserSettings = new JMenu("ParserCombinator settings");
 
 		sourceFormat = new JMenu("Source format");
 		parserSettings.add(sourceFormat);

@@ -10,13 +10,14 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.grammars.Block;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStream;
+import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.Opt.NOSKIP;
+import static koopa.core.grammars.combinators.Opt.NOSKIP;
 
 $if(imports)$
 $imports$
@@ -47,15 +48,15 @@ rule(publik, name, body) ::= <<
 // $name$
 // ........................................................
 
-private Parser $name$Parser = null;
+private ParserCombinator $name$Parser = null;
 
 $if(publik)$
 public final Start $name$ = Start.on(getNamespace(), "$name$");
 
-public Parser $name$() {
+public ParserCombinator $name$() {
 
 $else$
-private Parser $name$() {
+private ParserCombinator $name$() {
 
 $endif$
     if ($name$Parser == null) {
@@ -77,12 +78,12 @@ sequence(step) ::= <<sequence(
 )
 >>
 
-bind(type, name) ::= <<$type$ $name$ = ($type$) scope().get("$name$");>>
+bind(type, name) ::= <<$type$ $name$ = ($type$) parse.getStack().getScope().getValue("$name$");>>
 
-unbind(name) ::= <<scope().put("$name$", $name$);>>
+unbind(name) ::= <<parse.getStack().getScope().setValue("$name$", $name$);>>
 
 apply(bind, native_code, unbind) ::= <<apply(new Block() {
-    public void apply() {
+    public void apply(Parse parse) {
         $bind; separator="\n"$
         $native_code$
         $unbind; separator="\n"$
@@ -147,7 +148,7 @@ dispatched(keys, rules) ::= <<dispatched(
     new String[]{
       "$keys; separator="\",\n\""$"
     },
-    new Parser[]{
+    new ParserCombinator[]{
       $rules; separator=",\n"$
     }
 )>>

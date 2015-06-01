@@ -15,7 +15,8 @@ import koopa.cobol.sources.LOCCount;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
 import koopa.core.targets.CompositeTarget;
@@ -79,7 +80,7 @@ public class CobolParser implements ParserConfiguration {
 
 		// Depending on the type of file we ask the grammar for the right
 		// parser.
-		Parser parser = null;
+		ParserCombinator parser = null;
 		if (isCopybook)
 			parser = grammar.copybook();
 		else
@@ -96,7 +97,9 @@ public class CobolParser implements ParserConfiguration {
 			ct.addTarget(tokenTracker);
 		}
 
+		Parse parse = Parse.of(source, ct);
 		boolean accepts = false;
+		
 		if (!buildTrees()) {
 			if (this.tokenSinks.size() > 0)
 				for (Target<Data> next : this.tokenSinks)
@@ -104,7 +107,7 @@ public class CobolParser implements ParserConfiguration {
 
 			// Here we ask the grammar if the tokens can be parsed as a
 			// compilation group.
-			accepts = parser.accepts(source, ct);
+			accepts = parser.accepts(parse);
 
 		} else {
 			// These objects take care of building an ANTLR tree out of the
@@ -124,7 +127,7 @@ public class CobolParser implements ParserConfiguration {
 			// Here we ask the grammar if the tokens can be parsed as a
 			// compilation group. In addition, we direct the parser to build an
 			// ast out of the parsed tokens.
-			accepts = parser.accepts(source, ct);
+			accepts = parser.accepts(parse);
 		}
 
 		if (accepts) {
@@ -136,10 +139,10 @@ public class CobolParser implements ParserConfiguration {
 			results.setValidInput(false);
 		}
 
-		if (grammar.hasWarnings()) {
+		if (parse.hasWarnings()) {
 			LOGGER.info("There were warnings from the grammar:");
 
-			final List<Tuple<Token, String>> warnings = grammar.getWarnings();
+			final List<Tuple<Token, String>> warnings = parse.getWarnings();
 
 			for (Tuple<Token, String> warning : warnings) {
 				LOGGER.info("  " + warning.getFirst() + ": "

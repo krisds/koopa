@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,19 +20,19 @@ public class TransactionStatementsTest extends TestCase {
 
     @Test
     public void testCommitStatement_1() {
-      Parser parser = grammar.commitStatement();
+      ParserCombinator parser = grammar.commitStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" COMMIT "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testRollbackStatement_2() {
-      Parser parser = grammar.rollbackStatement();
+      ParserCombinator parser = grammar.rollbackStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ROLLBACK "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

@@ -4,22 +4,22 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import koopa.core.parsers.ParseStack;
-import koopa.core.parsers.ParseStream;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.Stack;
 
 import org.junit.Test;
 
 public class ParseStackTest {
 
-	private static final class Named extends Parser {
+	private static final class Named extends ParserCombinator {
 		private final String name;
 
 		public Named(String name) {
 			this.name = name;
 		}
 
-		public boolean matches(ParseStream stream) {
+		public boolean matches(Parse parse) {
 			return false;
 		}
 
@@ -28,13 +28,13 @@ public class ParseStackTest {
 		}
 	}
 
-	private static final Parser X = new Named("X");
-	private static final Parser Y = new Named("Y");
-	private static final Parser Z = new Named("Z");
+	private static final ParserCombinator X = new Named("X");
+	private static final ParserCombinator Y = new Named("Y");
+	private static final ParserCombinator Z = new Named("Z");
 
 	@Test
 	public void testBasicStackOperations() {
-		ParseStack stack = new ParseStack();
+		Stack stack = new Stack();
 
 		assertTrue(stack.isEmpty());
 		assertNull(stack.peek());
@@ -52,7 +52,7 @@ public class ParseStackTest {
 
 	@Test
 	public void testIsMatching() {
-		ParseStack stack = new ParseStack();
+		Stack stack = new Stack();
 
 		stack.push(X);
 		assertTrue(stack.isMatching("X"));

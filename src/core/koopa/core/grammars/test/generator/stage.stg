@@ -4,7 +4,8 @@ stage(name, date, package, grammah, tokenizer, test) ::= <<
 package $package$;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -27,10 +28,10 @@ public class $name$Test extends TestCase {
 accept(name, number, target, token) ::= <<
   @Test
   public void test$name$_$number$() {
-    Parser parser = grammar.$target$();
+    ParserCombinator parser = grammar.$target$();
     assertNotNull(parser);
     TestTokenizer tokenizer = new TestTokenizer(getTokenizer("$token$"));
-    assertTrue(parser.accepts(tokenizer));
+    assertTrue(parser.accepts(Parse.of(tokenizer)));
     assertTrue(tokenizer.isWhereExpected());
   }
 >>
@@ -38,9 +39,9 @@ accept(name, number, target, token) ::= <<
 reject(name, number, target, token) ::= <<
   @Test
   public void test$name$_$number$() {
-    Parser parser = grammar.$target$();
+    ParserCombinator parser = grammar.$target$();
     assertNotNull(parser);
     TestTokenizer tokenizer = new TestTokenizer(getTokenizer("$token$"));
-    assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+    assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
   }
 >>

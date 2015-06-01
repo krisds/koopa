@@ -19,7 +19,8 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.IslandTag;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 import koopa.core.treeparsers.Tree;
@@ -39,7 +40,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private Source<Token> sourceTokenizer = null;
 	private QueueingTokenSink sourceSink = null;
 
-	private Parser preprocessingParser = null;
+	private ParserCombinator preprocessingParser = null;
 
 	private Source<Token> copybookTokenizer = null;
 
@@ -76,8 +77,8 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			preprocessingParser = new CobolPreprocessingGrammar()
 					.preprocessing();
 
-			boolean accepts = preprocessingParser.accepts(sourceTokenizer,
-					sourceSink);
+			boolean accepts = preprocessingParser.accepts(Parse.of(
+					sourceTokenizer, sourceSink));
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace(hashCode() + " PREPROCESSING GRAMMAR ACCEPTED ? "

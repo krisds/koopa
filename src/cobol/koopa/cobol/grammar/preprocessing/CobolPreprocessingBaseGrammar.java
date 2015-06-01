@@ -11,14 +11,13 @@ import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStack;
-import koopa.core.parsers.ParseStream;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.Stream;
 
 public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 
-	@Override
-	protected String getNamespace() {
+	public String getNamespace() {
 		return "cobol-pp";
 	}
 
@@ -56,12 +55,12 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 				&& !token.hasTag(AreaTag.COMMENT);
 	}
 
-	protected boolean isSeparator(String text) {
+	public boolean isSeparator(String text) {
 		return text.equals(",") || text.equals(";")
 				|| text.trim().length() == 0;
 	}
 
-	public boolean isSeparator(Token token, ParseStack stack) {
+	public boolean isSeparator(Token token, Parse parse) {
 		if (!token.hasTag(SyntacticTag.SEPARATOR))
 			return false;
 
@@ -77,7 +76,8 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		// The testsuite has an example in which this is relevant. Unfortunately
 		// I could not find the explanation for this in the standard. The above
 		// quote made the difference clear though.
-		if (stack != null && ",".equals(text) && stack.isMatching("function"))
+		if (parse != null && ",".equals(text)
+				&& parse.getStack().isMatching("function"))
 			return false;
 
 		return isSeparator(text);
@@ -87,7 +87,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// cobolWord
 	// ............................................................................
 
-	private Parser cobolWordParser = null;
+	private ParserCombinator cobolWordParser = null;
 
 	/*
 	 * "A COBOL word is a character-string of not more than 31 characters that
@@ -108,13 +108,15 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	 * Description from: HP COBOL Reference Manual http://h71000.
 	 * www7.hp.com/doc/82final/6296/6296pro_002.html
 	 */
-	public Parser cobolWord() {
+	public ParserCombinator cobolWord() {
 		if (cobolWordParser == null) {
 			FutureParser future = scoped("cobolWord");
 			cobolWordParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					List<Token> parts = new LinkedList<Token>();
 					while (true) {
@@ -143,10 +145,10 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 					if (!isCobolWord(cobolWord.getText()))
 						return false;
 
-					if (stream.getStack().isKeyword(text))
+					if (parse.getStack().isKeyword(text))
 						return false;
 
-					returnToken(cobolWord);
+					parse.getStack().getScope().setReturnValue(cobolWord);
 					return true;
 				}
 
@@ -208,27 +210,26 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// integerLiteral
 	// ............................................................................
 
-	private Parser integerLiteralParser = null;
+	private ParserCombinator integerLiteralParser = null;
 
-	public Parser integerLiteral() {
+	public ParserCombinator integerLiteral() {
 		if (integerLiteralParser == null) {
 			FutureParser future = scoped("integerLiteral");
 			integerLiteralParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					Token token = stream.forward();
 
 					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
-						if (token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
+							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
+							&& token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
 
-							returnToken(token);
-							return true;
-
-						} else
-							return false;
+						parse.getStack().getScope().setReturnValue(token);
+						return true;
 
 					} else
 						return false;
@@ -242,27 +243,26 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// booleanLiteral
 	// ............................................................................
 
-	private Parser booleanLiteralParser = null;
+	private ParserCombinator booleanLiteralParser = null;
 
-	public Parser booleanLiteral() {
+	public ParserCombinator booleanLiteral() {
 		if (booleanLiteralParser == null) {
 			FutureParser future = scoped("booleanLiteral");
 			booleanLiteralParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					Token token = stream.forward();
 
 					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
-						if (token.hasTag(SyntacticTag.BOOLEAN_LITERAL)) {
+							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
+							&& token.hasTag(SyntacticTag.BOOLEAN_LITERAL)) {
 
-							returnToken(token);
-							return true;
-
-						} else
-							return false;
+						parse.getStack().getScope().setReturnValue(token);
+						return true;
 
 					} else
 						return false;
@@ -276,27 +276,26 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// hexadecimal
 	// ............................................................................
 
-	private Parser hexadecimalParser = null;
+	private ParserCombinator hexadecimalParser = null;
 
-	public Parser hexadecimal() {
+	public ParserCombinator hexadecimal() {
 		if (hexadecimalParser == null) {
 			FutureParser future = scoped("hexadecimal");
 			hexadecimalParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					Token token = stream.forward();
 
 					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
-						if (token.hasTag(SyntacticTag.HEXADECIMAL_LITERAL)) {
+							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
+							&& token.hasTag(SyntacticTag.HEXADECIMAL_LITERAL)) {
 
-							returnToken(token);
-							return true;
-
-						} else
-							return false;
+						parse.getStack().getScope().setReturnValue(token);
+						return true;
 
 					} else
 						return false;
@@ -310,27 +309,26 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// alphanumericLiteral
 	// ............................................................................
 
-	private Parser alphanumericLiteralParser = null;
+	private ParserCombinator alphanumericLiteralParser = null;
 
-	public Parser alphanumericLiteral() {
+	public ParserCombinator alphanumericLiteral() {
 		if (alphanumericLiteralParser == null) {
 			FutureParser future = scoped("alphanumericLiteral");
 			alphanumericLiteralParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					Token token = stream.forward();
 
 					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
-						if (token.hasTag(SyntacticTag.STRING_LITERAL)) {
+							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
+							&& token.hasTag(SyntacticTag.STRING_LITERAL)) {
 
-							returnToken(token);
-							return true;
-
-						} else
-							return false;
+						parse.getStack().getScope().setReturnValue(token);
+						return true;
 
 					} else
 						return false;
@@ -344,27 +342,26 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// pseudo literal
 	// ............................................................................
 
-	private Parser pseudoLiteralParser = null;
+	private ParserCombinator pseudoLiteralParser = null;
 
-	public Parser pseudoLiteral() {
+	public ParserCombinator pseudoLiteral() {
 		if (pseudoLiteralParser == null) {
 			FutureParser future = scoped("pseudoLiteral");
 			pseudoLiteralParser = future;
-			future.setParser(new Parser() {
-				public boolean matches(ParseStream stream) {
-					skipSeparators(stream);
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					Stream stream = parse.getStream();
+
+					skipSeparators(parse);
 
 					Token token = stream.forward();
 
 					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)) {
-						if (token.hasTag(SyntacticTag.PSEUDO_LITERAL)) {
+							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
+							&& token.hasTag(SyntacticTag.PSEUDO_LITERAL)) {
 
-							returnToken(token);
-							return true;
-
-						} else
-							return false;
+						parse.getStack().getScope().setReturnValue(token);
+						return true;
 
 					} else
 						return false;
@@ -373,5 +370,4 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		}
 		return pseudoLiteralParser;
 	}
-
 }

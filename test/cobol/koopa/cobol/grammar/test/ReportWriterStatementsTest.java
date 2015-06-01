@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,106 +20,106 @@ public class ReportWriterStatementsTest extends TestCase {
 
     @Test
     public void testGenerateStatement_1() {
-      Parser parser = grammar.generateStatement();
+      ParserCombinator parser = grammar.generateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" GENERATE "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testGenerateStatement_2() {
-      Parser parser = grammar.generateStatement();
+      ParserCombinator parser = grammar.generateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" GENERATE foo "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testInitiateStatement_3() {
-      Parser parser = grammar.initiateStatement();
+      ParserCombinator parser = grammar.initiateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" INITIATE "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testInitiateStatement_4() {
-      Parser parser = grammar.initiateStatement();
+      ParserCombinator parser = grammar.initiateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" INITIATE foo "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testInitiateStatement_5() {
-      Parser parser = grammar.initiateStatement();
+      ParserCombinator parser = grammar.initiateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" INITIATE foo bar "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSuppressStatement_6() {
-      Parser parser = grammar.suppressStatement();
+      ParserCombinator parser = grammar.suppressStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUPPRESS "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSuppressStatement_7() {
-      Parser parser = grammar.suppressStatement();
+      ParserCombinator parser = grammar.suppressStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUPPRESS PRINTING "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testTerminateStatement_8() {
-      Parser parser = grammar.terminateStatement();
+      ParserCombinator parser = grammar.terminateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" TERMINATE "));
-      assertFalse(parser.accepts(tokenizer) && tokenizer.isWhereExpected());
+      assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
     public void testTerminateStatement_9() {
-      Parser parser = grammar.terminateStatement();
+      ParserCombinator parser = grammar.terminateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" TERMINATE foo "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testTerminateStatement_10() {
-      Parser parser = grammar.terminateStatement();
+      ParserCombinator parser = grammar.terminateStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" TERMINATE foo bar "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUseStatement_11() {
-      Parser parser = grammar.useStatement();
+      ParserCombinator parser = grammar.useStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE BEFORE REPORTING foo "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testUseStatement_12() {
-      Parser parser = grammar.useStatement();
+      ParserCombinator parser = grammar.useStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" USE GLOBAL BEFORE REPORTING foo "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

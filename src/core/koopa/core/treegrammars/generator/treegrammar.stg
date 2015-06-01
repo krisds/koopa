@@ -5,7 +5,8 @@ treegrammar(name, extending, package, imports, rule) ::= <<
 
 package $package$;
 
-import koopa.core.grammars.Block;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.TreeParser;
@@ -84,7 +85,7 @@ unbind(name) ::= <<scope.set("$name$", $name$);>>
 returning(name) ::= <<returning("$name$")>>
 
 apply(bind, native_code, unbind) ::= <<apply(new Block() {
-    public void apply() {
+    public void apply(Parse parse) {
         $bind; separator="\n"$
         $native_code$
         $unbind; separator="\n"$

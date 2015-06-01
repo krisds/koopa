@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import koopa.core.data.Token;
-import koopa.core.grammars.Block;
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.grammars.Opt;
+import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.combinators.Block;
 
 /**
  * This class exposes all parser combinator methods for testing. It can be
@@ -46,102 +46,102 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public Parser apply(Block func) {
+	public ParserCombinator apply(Block func) {
 		return super.apply(func);
 	}
 
 	@Override
-	public Parser assign(String name, Parser parser) {
+	public ParserCombinator assign(String name, ParserCombinator parser) {
 		return super.assign(name, parser);
 	}
 
 	@Override
-	public Parser choice(Parser... parsers) {
+	public ParserCombinator choice(ParserCombinator... parsers) {
 		return super.choice(parsers);
 	}
 
 	@Override
-	public Parser star(Parser parser) {
+	public ParserCombinator star(ParserCombinator parser) {
 		return super.star(parser);
 	}
 
 	@Override
-	public Parser plus(Parser parser) {
+	public ParserCombinator plus(ParserCombinator parser) {
 		return super.plus(parser);
 	}
 
 	@Override
-	public Parser optional(Parser parser) {
+	public ParserCombinator optional(ParserCombinator parser) {
 		return super.optional(parser);
 	}
 
 	@Override
-	public Parser permuted(Parser... parsers) {
+	public ParserCombinator permuted(ParserCombinator... parsers) {
 		return super.permuted(parsers);
 	}
 
 	@Override
-	public Parser returning(String name) {
+	public ParserCombinator returning(String name) {
 		return super.returning(name);
 	}
 
 	@Override
-	public Parser token(String text) {
+	public ParserCombinator token(String text) {
 		return super.token(text);
 	}
 
 	@Override
-	public Parser sequence(Parser... parsers) {
+	public ParserCombinator sequence(ParserCombinator... parsers) {
 		return super.sequence(parsers);
 	}
 
 	@Override
-	public Parser skipto(Parser parser) {
+	public ParserCombinator skipto(ParserCombinator parser) {
 		return super.skipto(parser);
 	}
 
 	@Override
-	public Parser not(Parser parser) {
+	public ParserCombinator not(ParserCombinator parser) {
 		return super.not(parser);
 	}
 
 	@Override
-	public Parser any() {
+	public ParserCombinator any() {
 		return super.any();
 	}
 
 	@Override
-	public Parser tagged(Object tag) {
+	public ParserCombinator tagged(Object tag) {
 		return super.tagged(tag);
 	}
 
 	@Override
-	public Parser opt(Opt opt, Parser parser) {
+	public ParserCombinator opt(Opt opt, ParserCombinator parser) {
 		return super.opt(opt, parser);
 	}
 
 	@Override
-	public Parser limited(Parser target, Parser limiter) {
+	public ParserCombinator limited(ParserCombinator target, ParserCombinator limiter) {
 		return super.limited(target, limiter);
 	}
 
 	@Override
-	public Parser dispatched(String[] keys, Parser[] parsers) {
+	public ParserCombinator dispatched(String[] keys, ParserCombinator[] parsers) {
 		return super.dispatched(keys, parsers);
 	}
 
 	@Override
-	public Parser as(String name, Parser parser) {
+	public ParserCombinator as(String name, ParserCombinator parser) {
 		return super.as(name, parser);
 	}
 
 	@Override
-	public Parser eof() {
+	public ParserCombinator eof() {
 		return super.eof();
 	}
 
 	@Override
-	protected Parser literal(String text) {
+	protected ParserCombinator literal(String text) {
 		return super.literal(text);
 	}
 }

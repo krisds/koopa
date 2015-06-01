@@ -2,7 +2,8 @@
 
 package koopa.app.components.outline;
 
-import koopa.core.grammars.Block;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.TreeParser;
@@ -74,7 +75,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	           sequence(
 	               assign("name", programName()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { push(new Reference(getCurrentTree(), name.getProgramText(), PROGRAM_ICON)); }
 	                       scope.set("name", name);
@@ -98,7 +99,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	                   paragraph()
 	               ),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { pop(); }
 	                       scope.set("name", name);
@@ -124,7 +125,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	       future.setParser(
 	           sequence(
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       { push(new Reference(getCurrentTree(), "DECLARATIVES", DECLARATIVES_ICON)); }
 	                   }
 	               }),
@@ -132,7 +133,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	                   declarativeSection()
 	               ),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       { pop(); }
 	                   }
 	               })
@@ -157,7 +158,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	           sequence(
 	               assign("name", sectionName()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { push(new Reference(getCurrentTree(), name.getProgramText(), SECTION_ICON)); }
 	                       scope.set("name", name);
@@ -167,7 +168,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	                   paragraph()
 	               ),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { pop(); }
 	                       scope.set("name", name);
@@ -194,7 +195,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	           sequence(
 	               assign("name", sectionName()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { push(new Reference(getCurrentTree(), name.getProgramText(), SECTION_ICON)); }
 	                       scope.set("name", name);
@@ -204,7 +205,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	                   paragraph()
 	               ),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { pop(); }
 	                       scope.set("name", name);
@@ -231,7 +232,7 @@ public class CobolOutlineTreeGrammar extends CobolOutlineBaseGrammar {
 	           sequence(
 	               assign("name", paragraphName()),
 	               apply(new Block() {
-	                   public void apply() {
+	                   public void apply(Parse parse) {
 	                       Tree name = (Tree) scope.get("name");
 	                       { push(new Reference(getCurrentTree(), name.getProgramText(), PARAGRAPH_ICON));
 	                             pop(); }

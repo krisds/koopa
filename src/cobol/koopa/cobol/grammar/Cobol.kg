@@ -2199,11 +2199,11 @@ end
 
 def continuationOfStatement (Token t) =
     ( t=eventPhrase 
-      { warn(t, "Nested statement found out of line."); }
+      { parse.warn(t, "Nested statement found out of line."); }
       statement
 
     | t=endOfStatementMarker
-      { warn(t, "Loose end of statement."); }
+      { parse.warn(t, "Loose end of statement."); }
     )
 end
 
@@ -3534,7 +3534,9 @@ end
 
 def until =
     [testPosition]
-    UNTIL (condition | EXIT)
+    ( UNTIL (condition | EXIT)
+    | FOREVER                          # GNU Cobol
+    )
 end
 
 # The documentation also explicitly mentions indices. Matching these, however,

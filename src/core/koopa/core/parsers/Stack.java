@@ -1,27 +1,41 @@
 package koopa.core.parsers;
 
-public class ParseStack {
+import java.util.HashMap;
+import java.util.Map;
+
+import koopa.core.data.Token;
+
+public class Stack {
 
 	private Frame head;
 
-	public ParseStack() {
+	public Stack() {
 		head = new Frame();
+		head.makeScoped();
 	}
 
 	public boolean isEmpty() {
 		return head.parser == null;
 	}
 
-	public void push(Parser parser) {
+	public Frame getHead() {
+		return head;
+	}
+
+	public Scope getScope() {
+		return head.getScope();
+	}
+
+	public void push(ParserCombinator parser) {
 		head = head.push(parser);
 	}
 
-	public Parser peek() {
+	public ParserCombinator peek() {
 		return head.parser;
 	}
 
-	public Parser pop() {
-		Parser p = head.parser;
+	public ParserCombinator pop() {
+		ParserCombinator p = head.parser;
 		head = head.pop();
 		return p;
 	}
@@ -63,7 +77,7 @@ public class ParseStack {
 	}
 
 	public class Frame {
-		private Parser parser = null;
+		private ParserCombinator parser = null;
 
 		/** "Up" = towards the root of the stack. */
 		private Frame up = null;
@@ -71,7 +85,9 @@ public class ParseStack {
 		/** "Down" = away from the root of the stack. */
 		private Frame down = null;
 
-		private Frame push(Parser p) {
+		private Scope scope = null;
+
+		private Frame push(ParserCombinator p) {
 			// We try to reuse existing frames before creating new ones.
 			if (down == null) {
 				down = new Frame();
@@ -79,6 +95,7 @@ public class ParseStack {
 			}
 
 			down.parser = p;
+			down.scope = null;
 			return down;
 		}
 
@@ -93,12 +110,56 @@ public class ParseStack {
 			if (up == null)
 				return null;
 
+			if (scope != null)
+				up.getScope().setRValue(scope.returnValue);
+
 			parser = null;
 			return up;
 		}
 
 		public Frame up() {
 			return up;
+		}
+
+		public void makeScoped() {
+			if (this.scope == null)
+				this.scope = new Scope();
+		}
+
+		public Scope getScope() {
+			if (scope != null || up == null)
+				return scope;
+			else
+				return up.getScope();
+		}
+	}
+
+	public class Scope {
+		private Map<String, Object> values = new HashMap<String, Object>();
+		private Object returnValue = null;
+		private String lvalue;
+
+		public Object getValue(String name) {
+			return values.get(name);
+		}
+
+		public void setReturnValue(Object returnValue) {
+			this.returnValue = returnValue;
+		}
+
+		public void setLValue(String name) {
+			this.lvalue = name;
+		}
+
+		public void setRValue(Object rvalue) {
+			if (lvalue == null)
+				return;
+
+			values.put(lvalue, rvalue);
+		}
+
+		public void setValue(String name, Token value) {
+			values.put(name, value);
 		}
 	}
 }

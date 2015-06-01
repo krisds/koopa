@@ -6,8 +6,8 @@ import java.util.List;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.grammars.Block;
-import koopa.core.grammars.Opt;
+import koopa.core.grammars.combinators.Opt;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.LimitedTreeStream;
 import koopa.core.treeparsers.Tree;
@@ -387,7 +387,8 @@ public class TreeGrammar {
 	public TreeParser apply(final Block func) {
 		return new TreeParser() {
 			public boolean accepts(TreeStream stream) {
-				func.apply();
+				// TODO Tree parsers will need a variation on Block.
+				func.apply(null);
 				return true;
 			}
 		};

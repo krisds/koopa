@@ -1,7 +1,8 @@
 package koopa.cobol.grammar.test;
 
 import junit.framework.TestCase;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
@@ -19,217 +20,217 @@ public class CommunicationStatementsTest extends TestCase {
 
     @Test
     public void testDisableStatement_1() {
-      Parser parser = grammar.disableStatement();
+      ParserCombinator parser = grammar.disableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DISABLE INPUT          CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDisableStatement_2() {
-      Parser parser = grammar.disableStatement();
+      ParserCombinator parser = grammar.disableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DISABLE INPUT TERMINAL CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDisableStatement_3() {
-      Parser parser = grammar.disableStatement();
+      ParserCombinator parser = grammar.disableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DISABLE I-O TERMINAL   CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDisableStatement_4() {
-      Parser parser = grammar.disableStatement();
+      ParserCombinator parser = grammar.disableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DISABLE OUTPUT         CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testDisableStatement_5() {
-      Parser parser = grammar.disableStatement();
+      ParserCombinator parser = grammar.disableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DISABLE INPUT          CM-INQUE-1      KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnableStatement_6() {
-      Parser parser = grammar.enableStatement();
+      ParserCombinator parser = grammar.enableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENABLE INPUT          CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnableStatement_7() {
-      Parser parser = grammar.enableStatement();
+      ParserCombinator parser = grammar.enableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENABLE INPUT TERMINAL CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnableStatement_8() {
-      Parser parser = grammar.enableStatement();
+      ParserCombinator parser = grammar.enableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENABLE I-O TERMINAL   CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnableStatement_9() {
-      Parser parser = grammar.enableStatement();
+      ParserCombinator parser = grammar.enableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENABLE OUTPUT         CM-INQUE-1 WITH KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testEnableStatement_10() {
-      Parser parser = grammar.enableStatement();
+      ParserCombinator parser = grammar.enableStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENABLE INPUT          CM-INQUE-1      KEY XXXXX031 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testPurgeStatement_11() {
-      Parser parser = grammar.purgeStatement();
+      ParserCombinator parser = grammar.purgeStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PURGE CM-INQUE-1 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testReceiveStatement_12() {
-      Parser parser = grammar.receiveStatement();
+      ParserCombinator parser = grammar.receiveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECEIVE CM-INQUE-1 MESSAGE INTO MSG "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testReceiveStatement_13() {
-      Parser parser = grammar.receiveStatement();
+      ParserCombinator parser = grammar.receiveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECEIVE CM-INQUE-1 MESSAGE INTO INCOMING-MSG\n     NO DATA PERFORM INCREMENT-POLL-COUNT GO TO LOG-MSG "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testReceiveStatement_14() {
-      Parser parser = grammar.receiveStatement();
+      ParserCombinator parser = grammar.receiveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECEIVE CM-INQUE-1 MESSAGE INTO INCOMING-MSG\n     WITH DATA PERFORM INCREMENT-POLL-COUNT GO TO LOG-MSG "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testReceiveStatement_15() {
-      Parser parser = grammar.receiveStatement();
+      ParserCombinator parser = grammar.receiveStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" RECEIVE CM-INQUE-1 MESSAGE INTO INCOMING-MSG\n     NO DATA PERFORM INCREMENT-POLL-COUNT GO TO LOG-MSG\n     WITH DATA PERFORM INCREMENT-POLL-COUNT GO TO LOG-MSG "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_16() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-70 WITH EMI "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_17() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EGI "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_18() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EMI AFTER PAGE "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_19() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-70 WITH EMI AFTER ADVANCING PAGE "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_20() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EMI AFTER ADVANCING 3 LINES "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_21() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EMI AFTER ADVANCING THREE LINES "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_22() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EMI AFTER COMP-THREE "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_23() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EMI BEFORE 2 "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
     public void testSendStatement_24() {
-      Parser parser = grammar.sendStatement();
+      ParserCombinator parser = grammar.sendStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SEND CM-OUTQUE-1 FROM MSG-OUT WITH EMI BEFORE ZERO LINES "));
-      assertTrue(parser.accepts(tokenizer));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 }

@@ -7,13 +7,14 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.grammars.Block;
+import koopa.core.parsers.combinators.Block;
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.parsers.Parser;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.ParseStream;
+import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.Opt.NOSKIP;
+import static koopa.core.grammars.combinators.Opt.NOSKIP;
 
 import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import koopa.cobol.sql.grammar.SQLBaseGrammar;
@@ -32,11 +33,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // sqlStatement
     // ........................................................
 
-    private Parser sqlStatementParser = null;
+    private ParserCombinator sqlStatementParser = null;
 
     public final Start sqlStatement = Start.on(getNamespace(), "sqlStatement");
 
-    public Parser sqlStatement() {
+    public ParserCombinator sqlStatement() {
         if (sqlStatementParser == null) {
            FutureParser future = scoped("sqlStatement", true);
            sqlStatementParser = future;
@@ -61,11 +62,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // includeStatement
     // ........................................................
 
-    private Parser includeStatementParser = null;
+    private ParserCombinator includeStatementParser = null;
 
     public final Start includeStatement = Start.on(getNamespace(), "includeStatement");
 
-    public Parser includeStatement() {
+    public ParserCombinator includeStatement() {
         if (includeStatementParser == null) {
            FutureParser future = scoped("includeStatement", true);
            includeStatementParser = future;
@@ -84,11 +85,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // declareSessionStatement
     // ........................................................
 
-    private Parser declareSessionStatementParser = null;
+    private ParserCombinator declareSessionStatementParser = null;
 
     public final Start declareSessionStatement = Start.on(getNamespace(), "declareSessionStatement");
 
-    public Parser declareSessionStatement() {
+    public ParserCombinator declareSessionStatement() {
         if (declareSessionStatementParser == null) {
            FutureParser future = scoped("declareSessionStatement", true);
            declareSessionStatementParser = future;
@@ -113,11 +114,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // declareCursorStatement
     // ........................................................
 
-    private Parser declareCursorStatementParser = null;
+    private ParserCombinator declareCursorStatementParser = null;
 
     public final Start declareCursorStatement = Start.on(getNamespace(), "declareCursorStatement");
 
-    public Parser declareCursorStatement() {
+    public ParserCombinator declareCursorStatement() {
         if (declareCursorStatementParser == null) {
            FutureParser future = scoped("declareCursorStatement", true);
            declareCursorStatementParser = future;
@@ -147,11 +148,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // selectStatement
     // ........................................................
 
-    private Parser selectStatementParser = null;
+    private ParserCombinator selectStatementParser = null;
 
     public final Start selectStatement = Start.on(getNamespace(), "selectStatement");
 
-    public Parser selectStatement() {
+    public ParserCombinator selectStatement() {
         if (selectStatementParser == null) {
            FutureParser future = scoped("selectStatement", true);
            selectStatementParser = future;
@@ -182,11 +183,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // insertStatement
     // ........................................................
 
-    private Parser insertStatementParser = null;
+    private ParserCombinator insertStatementParser = null;
 
     public final Start insertStatement = Start.on(getNamespace(), "insertStatement");
 
-    public Parser insertStatement() {
+    public ParserCombinator insertStatement() {
         if (insertStatementParser == null) {
            FutureParser future = scoped("insertStatement", true);
            insertStatementParser = future;
@@ -212,11 +213,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // updateStatement
     // ........................................................
 
-    private Parser updateStatementParser = null;
+    private ParserCombinator updateStatementParser = null;
 
     public final Start updateStatement = Start.on(getNamespace(), "updateStatement");
 
-    public Parser updateStatement() {
+    public ParserCombinator updateStatement() {
         if (updateStatementParser == null) {
            FutureParser future = scoped("updateStatement", true);
            updateStatementParser = future;
@@ -241,11 +242,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // deleteStatement
     // ........................................................
 
-    private Parser deleteStatementParser = null;
+    private ParserCombinator deleteStatementParser = null;
 
     public final Start deleteStatement = Start.on(getNamespace(), "deleteStatement");
 
-    public Parser deleteStatement() {
+    public ParserCombinator deleteStatement() {
         if (deleteStatementParser == null) {
            FutureParser future = scoped("deleteStatement", true);
            deleteStatementParser = future;
@@ -271,11 +272,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // openStatement
     // ........................................................
 
-    private Parser openStatementParser = null;
+    private ParserCombinator openStatementParser = null;
 
     public final Start openStatement = Start.on(getNamespace(), "openStatement");
 
-    public Parser openStatement() {
+    public ParserCombinator openStatement() {
         if (openStatementParser == null) {
            FutureParser future = scoped("openStatement", true);
            openStatementParser = future;
@@ -294,11 +295,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // textName
     // ........................................................
 
-    private Parser textNameParser = null;
+    private ParserCombinator textNameParser = null;
 
     public final Start textName = Start.on(getNamespace(), "textName");
 
-    public Parser textName() {
+    public ParserCombinator textName() {
         if (textNameParser == null) {
            FutureParser future = scoped("textName", true);
            textNameParser = future;
@@ -317,11 +318,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // name
     // ........................................................
 
-    private Parser nameParser = null;
+    private ParserCombinator nameParser = null;
 
     public final Start name = Start.on(getNamespace(), "name");
 
-    public Parser name() {
+    public ParserCombinator name() {
         if (nameParser == null) {
            FutureParser future = scoped("name", true);
            nameParser = future;
@@ -337,11 +338,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // schemaName
     // ........................................................
 
-    private Parser schemaNameParser = null;
+    private ParserCombinator schemaNameParser = null;
 
     public final Start schemaName = Start.on(getNamespace(), "schemaName");
 
-    public Parser schemaName() {
+    public ParserCombinator schemaName() {
         if (schemaNameParser == null) {
            FutureParser future = scoped("schemaName", true);
            schemaNameParser = future;
@@ -357,11 +358,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // tableName
     // ........................................................
 
-    private Parser tableNameParser = null;
+    private ParserCombinator tableNameParser = null;
 
     public final Start tableName = Start.on(getNamespace(), "tableName");
 
-    public Parser tableName() {
+    public ParserCombinator tableName() {
         if (tableNameParser == null) {
            FutureParser future = scoped("tableName", true);
            tableNameParser = future;
@@ -377,11 +378,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // delimitedIdentifier
     // ........................................................
 
-    private Parser delimitedIdentifierParser = null;
+    private ParserCombinator delimitedIdentifierParser = null;
 
     public final Start delimitedIdentifier = Start.on(getNamespace(), "delimitedIdentifier");
 
-    public Parser delimitedIdentifier() {
+    public ParserCombinator delimitedIdentifier() {
         if (delimitedIdentifierParser == null) {
            FutureParser future = scoped("delimitedIdentifier", true);
            delimitedIdentifierParser = future;
@@ -401,11 +402,11 @@ public class SQLGrammar extends SQLBaseGrammar {
     // identifier
     // ........................................................
 
-    private Parser identifierParser = null;
+    private ParserCombinator identifierParser = null;
 
     public final Start identifier = Start.on(getNamespace(), "identifier");
 
-    public Parser identifier() {
+    public ParserCombinator identifier() {
         if (identifierParser == null) {
            FutureParser future = scoped("identifier", true);
            identifierParser = future;

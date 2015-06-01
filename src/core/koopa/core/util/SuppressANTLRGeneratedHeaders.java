@@ -52,9 +52,9 @@ public class SuppressANTLRGeneratedHeaders {
 				return true;
 		}
 
-		if (name.endsWith("Parser.java")) {
+		if (name.endsWith("ParserCombinator.java")) {
 			String antlrSourceFileName = name.substring(0, name.length()
-					- "Parser.java".length())
+					- "ParserCombinator.java".length())
 					+ ".g";
 
 			if (new File(path.getParentFile(), antlrSourceFileName).exists())

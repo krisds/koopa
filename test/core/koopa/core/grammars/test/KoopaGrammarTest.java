@@ -6,8 +6,8 @@ import static koopa.core.data.tags.IslandTag.LAND;
 import java.util.List;
 
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.grammars.Opt;
-import koopa.core.parsers.Parser;
+import koopa.core.grammars.combinators.Opt;
+import koopa.core.parsers.ParserCombinator;
 
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchASingleToken() {
-		Parser parser = G.token("COBOL");
+		ParserCombinator parser = G.token("COBOL");
 		List<Object> input = input("COBOL");
 
 		shouldAccept(parser, input);
@@ -33,7 +33,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testTokenMustMatch() {
-		Parser parser = G.token("COBOL");
+		ParserCombinator parser = G.token("COBOL");
 
 		List<Object> input = input("PL/I");
 		shouldReject(parser, input);
@@ -41,7 +41,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanSkipSeparators() {
-		Parser parser = G.token("COBOL");
+		ParserCombinator parser = G.token("COBOL");
 
 		List<Object> input = input(SEPARATOR, SEPARATOR, "COBOL");
 		shouldAccept(parser, input);
@@ -49,7 +49,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchSeparators() {
-		Parser parser = G.token(SEPARATOR);
+		ParserCombinator parser = G.token(SEPARATOR);
 
 		List<Object> input = input(SEPARATOR);
 		shouldAccept(parser, input);
@@ -57,7 +57,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanPreventSkippingSeparators() {
-		Parser parser = G.opt(Opt.NOSKIP, G.token("COBOL"));
+		ParserCombinator parser = G.opt(Opt.NOSKIP, G.token("COBOL"));
 
 		shouldAccept(parser, input("COBOL"));
 		shouldReject(parser, input(SEPARATOR, "COBOL"));
@@ -66,7 +66,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanStillMatchSeparatorsWhenNotSkippingThem() {
-		Parser parser = G.opt(Opt.NOSKIP,
+		ParserCombinator parser = G.opt(Opt.NOSKIP,
 				G.sequence(G.token(SEPARATOR), G.token("COBOL")));
 
 		shouldReject(parser, input("COBOL"));
@@ -76,7 +76,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchAnyToken() {
-		Parser parser = G.any();
+		ParserCombinator parser = G.any();
 
 		// Any token will do.
 		shouldAccept(parser, input("COBOL"));
@@ -91,7 +91,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchASequenceOfTokens() {
-		Parser parser = G.sequence(G.token("COmmon"), G.token("Business"),
+		ParserCombinator parser = G.sequence(G.token("COmmon"), G.token("Business"),
 				G.token("Oriented"), G.token("Language"));
 
 		List<Object> input = input("COmmon", "Business", "Oriented", "Language");
@@ -101,7 +101,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testSequenceOfTokensMustBeInOrder() {
-		Parser parser = G.sequence(G.token("COmmon"), G.token("Business"),
+		ParserCombinator parser = G.sequence(G.token("COmmon"), G.token("Business"),
 				G.token("Oriented"), G.token("Language"));
 
 		List<Object> input = input("Oriented", "Language", "COmmon", "Business");
@@ -111,7 +111,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchPermutationsOfTokens() {
-		Parser parser = G.permuted(G.token("COmmon"), G.token("Business"),
+		ParserCombinator parser = G.permuted(G.token("COmmon"), G.token("Business"),
 				G.token("Oriented"), G.token("Language"));
 
 		// Any order of tokens will do.
@@ -131,7 +131,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testPermutationsMatchEachItemAtMostOnce() {
-		Parser parser = G.permuted(G.token("COmmon"), G.token("Business"),
+		ParserCombinator parser = G.permuted(G.token("COmmon"), G.token("Business"),
 				G.token("Oriented"), G.token("Language"));
 
 		shouldReject(parser, input("COmmon", "Business", "COmmon", "Language"));
@@ -139,7 +139,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchOneOf() {
-		Parser parser = G.choice(G.token("COmmon"), G.token("Business"),
+		ParserCombinator parser = G.choice(G.token("COmmon"), G.token("Business"),
 				G.token("Oriented"), G.token("Language"));
 
 		shouldAccept(parser, input("COmmon"));
@@ -152,7 +152,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchZeroOrMore() {
-		Parser parser = G.star(G.token("Developers!"));
+		ParserCombinator parser = G.star(G.token("Developers!"));
 
 		shouldAccept(parser, input());
 		shouldAccept(parser, input("Developers!"));
@@ -162,7 +162,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchOneOrMore() {
-		Parser parser = G.plus(G.token("Developers!"));
+		ParserCombinator parser = G.plus(G.token("Developers!"));
 
 		shouldAccept(parser, input("Developers!"));
 		shouldAccept(parser, input("Developers!", "Developers!"));
@@ -173,7 +173,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchOptional() {
-		Parser parser = G.optional(G.token("Grace"));
+		ParserCombinator parser = G.optional(G.token("Grace"));
 
 		shouldAccept(parser, input("Grace"));
 		shouldAccept(parser, input());
@@ -181,7 +181,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanHandleNegation() {
-		Parser parser = G.sequence(G.token("Grace"), G.not(G.token("Kelly")),
+		ParserCombinator parser = G.sequence(G.token("Grace"), G.not(G.token("Kelly")),
 				G.any());
 
 		shouldAccept(parser, input("Grace", "Hopper"));
@@ -192,7 +192,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanSkipTokens() {
-		Parser parser = G.sequence(G.token("COmmon"),
+		ParserCombinator parser = G.sequence(G.token("COmmon"),
 				G.skipto(G.token("Language")), G.token("Language"));
 
 		shouldAccept(parser, input("COmmon", "Language"));
@@ -205,7 +205,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchOneTag() {
-		Parser parser = G.sequence(G.tagged(CHARACTER_STRING), G.any());
+		ParserCombinator parser = G.sequence(G.tagged(CHARACTER_STRING), G.any());
 
 		shouldAccept(parser, input(CHARACTER_STRING, "COBOL"));
 		shouldAccept(parser, input(CHARACTER_STRING, "PL/I"));
@@ -215,7 +215,7 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchMultipleTags() {
-		Parser parser = G.sequence(G.tagged(CHARACTER_STRING), G.tagged(LAND),
+		ParserCombinator parser = G.sequence(G.tagged(CHARACTER_STRING), G.tagged(LAND),
 				G.any());
 
 		shouldAccept(parser, input(CHARACTER_STRING, LAND, "COBOL"));
@@ -229,9 +229,9 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchWithLimit() {
-		Parser unlimited = G.sequence(G.skipto(G.token("COBOL")),
+		ParserCombinator unlimited = G.sequence(G.skipto(G.token("COBOL")),
 				G.token("COBOL"));
-		Parser limited = G.limited(unlimited, G.token("."));
+		ParserCombinator limited = G.limited(unlimited, G.token("."));
 
 		shouldAccept(unlimited, input("COBOL"));
 		shouldAccept(limited, input("COBOL"));
@@ -248,9 +248,9 @@ public class KoopaGrammarTest extends GrammarTest {
 
 	@Test
 	public void testCanMatchWithDispatch() {
-		Parser parser = G.dispatched(
+		ParserCombinator parser = G.dispatched(
 				new String[] { "ADD", "SUBTRACT", "MULTIPLY", "DIVIDE" },
-				new Parser[] { G.sequence(G.token("ADD"), G.token("ONE")),
+				new ParserCombinator[] { G.sequence(G.token("ADD"), G.token("ONE")),
 						G.sequence(G.token("SUBTRACT"), G.token("TWO")),
 						G.sequence(G.token("MULTIPLY"), G.token("THIS")),
 						G.sequence(G.token("DIVIDE"), G.token("THAT")), });

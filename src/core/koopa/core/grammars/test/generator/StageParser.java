@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 src/core/koopa/core/grammars/test/generator/Stage.g 2015-06-01 13:11:08
+// $ANTLR 3.5.2 src/core/koopa/core/grammars/test/generator/Stage.g
 
   package koopa.core.grammars.test.generator;
 

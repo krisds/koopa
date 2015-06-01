@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 src/core/koopa/core/grammars/generator/KG.g 2015-06-01 13:11:02
+// $ANTLR 3.5.2 src/core/koopa/core/grammars/generator/KG.g
 
   package koopa.core.grammars.generator;
 
@@ -181,7 +181,7 @@ public class KGParser extends Parser {
 			stream_EOF.add(EOF3);
 
 			// AST REWRITE
-			// elements: rule, meta
+			// elements: meta, rule
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -322,7 +322,7 @@ public class KGParser extends Parser {
 			stream_DOT.add(DOT6);
 
 			// AST REWRITE
-			// elements: n, s, n, n, n, s
+			// elements: s, n, n, n, s, n
 			// token labels: 
 			// rule labels: retval, s, n
 			// token list labels: 
@@ -819,7 +819,7 @@ public class KGParser extends Parser {
 			stream_59.add(string_literal17);
 
 			// AST REWRITE
-			// elements: r, locals, v, sequence, r, sequence, v, locals, i, r, sequence, i, v, r, i, i, sequence, locals, sequence, i, i, sequence, i, i, sequence, sequence, locals, v
+			// elements: v, i, i, locals, locals, i, i, r, v, sequence, v, sequence, sequence, sequence, i, r, sequence, locals, sequence, i, r, i, sequence, i, r, v, sequence, locals
 			// token labels: r, i
 			// rule labels: v, retval
 			// token list labels: 
@@ -1375,7 +1375,7 @@ public class KGParser extends Parser {
 			}
 
 			// AST REWRITE
-			// elements: n, part, part
+			// elements: part, part, n
 			// token labels: 
 			// rule labels: retval, n
 			// token list labels: 
@@ -1979,7 +1979,7 @@ public class KGParser extends Parser {
 					}
 
 					// AST REWRITE
-					// elements: r, sequence, sequence, r, sequence, more, sequence, more
+					// elements: sequence, sequence, r, more, more, sequence, sequence, r
 					// token labels: r
 					// rule labels: retval
 					// token list labels: 
@@ -2127,7 +2127,7 @@ public class KGParser extends Parser {
 					}
 
 					// AST REWRITE
-					// elements: r, more, sequence, sequence, sequence, more, sequence, r
+					// elements: sequence, more, sequence, r, sequence, more, r, sequence
 					// token labels: r
 					// rule labels: retval
 					// token list labels: 
@@ -2250,7 +2250,7 @@ public class KGParser extends Parser {
 
 					stream_part.add(part35.getTree());
 					// AST REWRITE
-					// elements: SKIP_TO, part
+					// elements: part, SKIP_TO
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2505,7 +2505,7 @@ public class KGParser extends Parser {
 					stream_CLOSE_PAREN.add(CLOSE_PAREN47);
 
 					// AST REWRITE
-					// elements: dispatch, more_dispatch, dispatch
+					// elements: dispatch, dispatch, more_dispatch
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2601,7 +2601,7 @@ public class KGParser extends Parser {
 
 					stream_part.add(part51.getTree());
 					// AST REWRITE
-					// elements: NOSKIP, part
+					// elements: part, NOSKIP
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2648,7 +2648,7 @@ public class KGParser extends Parser {
 
 					stream_part.add(part55.getTree());
 					// AST REWRITE
-					// elements: part, LIMIT, part
+					// elements: part, part, LIMIT
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2696,7 +2696,7 @@ public class KGParser extends Parser {
 
 					stream_part.add(q.getTree());
 					// AST REWRITE
-					// elements: SKIP_TO, q, p, q
+					// elements: q, SKIP_TO, p, q
 					// token labels: 
 					// rule labels: retval, q, p
 					// token list labels: 

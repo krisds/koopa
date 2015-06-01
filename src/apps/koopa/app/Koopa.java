@@ -2,8 +2,7 @@ package koopa.app;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -67,13 +66,16 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		final URL resource = Detail.class.getResource("/log4j.properties");
 		PropertyConfigurator.configure(resource);
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Koopa().setVisible(true);
+				Koopa koopa = new Koopa();
+				koopa.setVisible(true);
+				if (args.length > 0)
+					koopa.openFile(new File(args[0]).getAbsoluteFile());
 			}
 		});
 	}
@@ -138,7 +140,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		setupDragAndDropOfFiles();
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Rectangle screenSize = getGraphicsConfiguration().getBounds();
 		setSize(screenSize.width - 100, screenSize.height - 100);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -194,9 +196,9 @@ public class Koopa extends JFrame implements Application, Configurable {
 
 		bar.add(file);
 
-		// --- ParserCombinator settings ------------------------------------------------
+		// --- Parser settings ------------------------------------------------
 
-		parserSettings = new JMenu("ParserCombinator settings");
+		parserSettings = new JMenu("Parser settings");
 
 		sourceFormat = new JMenu("Source format");
 		parserSettings.add(sourceFormat);

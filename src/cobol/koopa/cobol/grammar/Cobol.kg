@@ -1733,27 +1733,37 @@ end
 def occursClause =
     OCCURS
     ( ( # dynamic-capacity-table
-        DYNAMIC
-        [CAPACITY [IN] dataName]
-        [FROM integer]
-        [TO integer]
-        [INITIALIZED]
+        ( DYNAMIC
+          [CAPACITY [IN] dataName]
+          [FROM integer]
+          [TO integer]
+          [INITIALIZED]
+        ) %as dynamic
         
       | # fixed-table, occurs-depending-table, report-writer
-        [integer TO] integer [TIMES]
+        ( [integer TO] integer [TIMES]
+        ) %as fixed
       )
     
-        # occurs-depending-table, report-writer
-        [ DEPENDING [ON] qualifiedDataName ]
+      # occurs-depending-table, report-writer
+      [( DEPENDING [ON] qualifiedDataName
+       ) %as dependingOn ]
         
-        # report-writer
-        [ STEP integer ]
+      # report-writer
+      [( STEP integer ) %as step]
         
-        # fixed-table, occurs-depending-table, dynamic-capacity-table
-        ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )*
-        ( INDEXED [BY] (indexName)+ )*
+      # fixed-table, occurs-depending-table, dynamic-capacity-table
+      ((
+        ( ASCENDING %as ascending
+        | DESCENDING %as descending
+        )
+        [KEY] [IS] (qualifiedDataName)+ 
+      ) %as keyIs )*
+      
+      (( INDEXED [BY] (indexName)+ 
+      ) %as indexedBy )*
         
-    | ANY
+    | ANY %as any
     )
 end
 
@@ -3405,12 +3415,13 @@ end
 ## -----------------------------------------------------------------------------
 
 def moveStatement =
-    MOVE 
-      ( LENGTH [ OF ] identifier
-      | [CORRESPONDING | CORR] identifier
+    MOVE
+      ( ((CORRESPONDING | CORR) identifier %as corresponding)
+      | identifier %as sending
       | literal
       )
-    TO (identifier)+
+    TO
+      (identifier)+
     [--> (. | endOfStatement)]
 end
 

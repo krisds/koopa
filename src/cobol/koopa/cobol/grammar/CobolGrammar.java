@@ -7732,91 +7732,109 @@ public class CobolGrammar extends CobolBaseGrammar {
                    choice(
                        sequence(
                            choice(
-                               sequence(
-                                   token("DYNAMIC"),
-                                   optional(
-                                       sequence(
-                                           token("CAPACITY"),
-                                           optional(
-                                               token("IN")
-                                           ),
-                                           dataName()
+                               as("dynamic",
+                                   sequence(
+                                       token("DYNAMIC"),
+                                       optional(
+                                           sequence(
+                                               token("CAPACITY"),
+                                               optional(
+                                                   token("IN")
+                                               ),
+                                               dataName()
+                                           )
+                                       ),
+                                       optional(
+                                           sequence(
+                                               token("FROM"),
+                                               integer()
+                                           )
+                                       ),
+                                       optional(
+                                           sequence(
+                                               token("TO"),
+                                               integer()
+                                           )
+                                       ),
+                                       optional(
+                                           token("INITIALIZED")
                                        )
-                                   ),
-                                   optional(
-                                       sequence(
-                                           token("FROM"),
-                                           integer()
-                                       )
-                                   ),
-                                   optional(
-                                       sequence(
-                                           token("TO"),
-                                           integer()
-                                       )
-                                   ),
-                                   optional(
-                                       token("INITIALIZED")
                                    )
                                ),
-                               sequence(
-                                   optional(
-                                       sequence(
-                                           integer(),
-                                           token("TO")
+                               as("fixed",
+                                   sequence(
+                                       optional(
+                                           sequence(
+                                               integer(),
+                                               token("TO")
+                                           )
+                                       ),
+                                       integer(),
+                                       optional(
+                                           token("TIMES")
                                        )
-                                   ),
-                                   integer(),
-                                   optional(
-                                       token("TIMES")
                                    )
                                )
                            ),
                            optional(
-                               sequence(
-                                   token("DEPENDING"),
-                                   optional(
-                                       token("ON")
-                                   ),
-                                   qualifiedDataName()
-                               )
-                           ),
-                           optional(
-                               sequence(
-                                   token("STEP"),
-                                   integer()
-                               )
-                           ),
-                           star(
-                               sequence(
-                                   choice(
-                                       token("ASCENDING"),
-                                       token("DESCENDING")
-                                   ),
-                                   optional(
-                                       token("KEY")
-                                   ),
-                                   optional(
-                                       token("IS")
-                                   ),
-                                   plus(
+                               as("dependingOn",
+                                   sequence(
+                                       token("DEPENDING"),
+                                       optional(
+                                           token("ON")
+                                       ),
                                        qualifiedDataName()
                                    )
                                )
                            ),
+                           optional(
+                               as("step",
+                                   sequence(
+                                       token("STEP"),
+                                       integer()
+                                   )
+                               )
+                           ),
                            star(
-                               sequence(
-                                   token("INDEXED"),
-                                   optional(
-                                       token("BY")
-                                   ),
-                                   plus(
-                                       indexName()
+                               as("keyIs",
+                                   sequence(
+                                       choice(
+                                           as("ascending",
+                                               token("ASCENDING")
+                                           ),
+                                           as("descending",
+                                               token("DESCENDING")
+                                           )
+                                       ),
+                                       optional(
+                                           token("KEY")
+                                       ),
+                                       optional(
+                                           token("IS")
+                                       ),
+                                       plus(
+                                           qualifiedDataName()
+                                       )
+                                   )
+                               )
+                           ),
+                           star(
+                               as("indexedBy",
+                                   sequence(
+                                       token("INDEXED"),
+                                       optional(
+                                           token("BY")
+                                       ),
+                                       plus(
+                                           indexName()
+                                       )
                                    )
                                )
                            )
                        ),
-                       token("ANY")
+                       as("any",
+                           token("ANY")
+                       )
                    )
                )
            );
@@ -14856,19 +14874,15 @@ public class CobolGrammar extends CobolBaseGrammar {
                    token("MOVE"),
                    choice(
                        sequence(
-                           token("LENGTH"),
-                           optional(
-                               token("OF")
+                           choice(
+                               token("CORRESPONDING"),
+                               token("CORR")
                            ),
-                           identifier()
+                           as("corresponding",
+                               identifier()
+                           )
                        ),
-                       sequence(
-                           optional(
-                               choice(
-                                   token("CORRESPONDING"),
-                                   token("CORR")
-                               )
-                           ),
+                       as("sending",
                            identifier()
                        ),
                        literal()

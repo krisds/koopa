@@ -1,12 +1,13 @@
 package koopa.cobol.grammar;
 
+import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
+import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import koopa.cobol.cics.grammar.CICSGrammar;
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
@@ -44,40 +45,42 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 					while (true) {
 						final Token token = stream.forward();
 
-						if (token == null) {
+						if (token == null)
 							break;
-						}
 
 						if (!isProgramText(token)) {
 							stream.rewind(token);
 							break;
 						}
 
-						if (isSeparator(token, stream.getParse())
-								&& token.getText().trim().length() == 0) {
-							stream.rewind(token);
-							break;
+						String text = token.getText();
+						if (isSeparator(token, stream.getParse())) {
+							// Semicolons are not legal picture characters.
+							// Neither is whitespace.
+							if (";".equals(text) || text.trim().length() == 0) {
+								stream.rewind(token);
+								break;
+							}
 						}
 
 						picture.add(token);
 						numberOfTokens += 1;
 					}
 
-					if (numberOfTokens == 0) {
+					if (numberOfTokens == 0)
 						return false;
-					}
 
 					final Token lastToken = picture.get(numberOfTokens - 1);
-					if (lastToken.hasTag(SyntacticTag.SEPARATOR)
+					if (lastToken.hasTag(SEPARATOR)
 							&& lastToken.getText().equals(".")) {
 						picture.remove(numberOfTokens - 1);
 						stream.rewind(lastToken);
 					}
 
 					parse.getStack().getScope().setRValue(new Token(picture));
-/*
-					returnToken(new Token(picture));
-*/
+					/*
+					 * returnToken(new Token(picture));
+					 */
 					return true;
 				}
 			});
@@ -103,8 +106,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
 					Token token = stream.forward();
 
-					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
+					if (token != null && token.hasTag(CHARACTER_STRING)
 							&& isLevelNumber(token.getText())) {
 
 						parse.getStack().getScope().setRValue(token);

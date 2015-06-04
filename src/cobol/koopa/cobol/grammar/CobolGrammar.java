@@ -3753,6 +3753,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                                alternateRecordKeyClause()
                            ),
                            fileStatusClause(),
+                           sortStatusClause(),
                            sharingClause(),
                            paddingClause()
                        )
@@ -4399,24 +4400,45 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    optional(
-                       choice(
-                           token("FILE"),
-                           token("SORT")
-                       )
+                       token("FILE")
                    ),
                    token("STATUS"),
                    optional(
                        token("IS")
                    ),
-                   qualifiedDataName(),
-                   optional(
-                       qualifiedDataName()
-                   )
+                   qualifiedDataName()
                )
            );
         }
 
         return fileStatusClauseParser;
+    }
+
+    // ========================================================
+    // sortStatusClause
+    // ........................................................
+
+    private ParserCombinator sortStatusClauseParser = null;
+
+    public final Start sortStatusClause = Start.on(getNamespace(), "sortStatusClause");
+
+    public ParserCombinator sortStatusClause() {
+        if (sortStatusClauseParser == null) {
+           FutureParser future = scoped("sortStatusClause", true);
+           sortStatusClauseParser = future;
+           future.setParser(
+               sequence(
+                   token("SORT"),
+                   token("STATUS"),
+                   optional(
+                       token("IS")
+                   ),
+                   qualifiedDataName()
+               )
+           );
+        }
+
+        return sortStatusClauseParser;
     }
 
     // ========================================================

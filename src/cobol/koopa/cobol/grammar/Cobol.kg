@@ -858,6 +858,7 @@ def selectStatement =
      | recordKeyClause
      | (alternateRecordKeyClause)+
      | fileStatusClause
+     | sortStatusClause
      | sharingClause
      | paddingClause
      ]
@@ -961,7 +962,11 @@ def recordKeyDefinition =
 end
 
 def fileStatusClause =
-	[FILE | SORT] STATUS [IS] qualifiedDataName [qualifiedDataName]
+	[FILE] STATUS [IS] qualifiedDataName
+end
+
+def sortStatusClause =
+	SORT STATUS [IS] qualifiedDataName
 end
 
 def passwordClause =

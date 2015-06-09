@@ -104,17 +104,12 @@ declaration
   ;
 
 sequence
-  : p+=possibly_renamed_part+
-
-    -> { $p.size() > 1 }? ^(SEQUENCE possibly_renamed_part+)
-    -> possibly_renamed_part+
-  ;
-
-possibly_renamed_part
-  : part (n=rename)?
+  : (i=IDENTIFIER COLON)? p+=part+
   
-    -> { n != null }? ^(AS $n part)
-    -> part
+    -> { i != null && $p.size() > 1  }? ^(AS $i ^(SEQUENCE part+))
+    -> { i != null && $p.size() == 1 }? ^(AS $i            part+ )
+    -> { i == null && $p.size() > 1  }?         ^(SEQUENCE part+)
+    ->                                                     part+
   ;
 
 part
@@ -189,11 +184,6 @@ part
   -> ^(SEQUENCE
        ^(LIMIT $p $q)
        ^(SKIP_TO $q))
-  ;
-
-rename
-  : AS IDENTIFIER
-    -> IDENTIFIER
   ;
 
 more
@@ -273,6 +263,8 @@ COMMA : ',' ;
 BANG : '!' ;
 
 DOLLAR : '$' ;
+
+COLON : ':' ;
 
 fragment LETTER    : LOWERCASE | UPPERCASE ;
 fragment LOWERCASE : 'a'..'z' ;

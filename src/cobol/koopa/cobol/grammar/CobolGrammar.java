@@ -5995,14 +5995,14 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("88")
                    ),
                    optional(
-                       sequence(
-                           not(
-                               choice(
-                                   token("VALUE"),
-                                   token("VALUES")
-                               )
-                           ),
-                           as("entryName",
+                       as("entryName",
+                           sequence(
+                               not(
+                                   choice(
+                                       token("VALUE"),
+                                       token("VALUES")
+                                   )
+                               ),
                                conditionName()
                            )
                        )
@@ -10709,23 +10709,31 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator addition_format1Parser = null;
 
-    public final Start addition_format1 = Start.on(getNamespace(), "addition_format1");
-
-    public ParserCombinator addition_format1() {
+    private ParserCombinator addition_format1() {
         if (addition_format1Parser == null) {
-           FutureParser future = scoped("addition_format1", true);
+           FutureParser future = scoped("addition_format1", false);
            addition_format1Parser = future;
            future.setParser(
                sequence(
-                   choice(
-                       token("CORRESPONDING"),
-                       token("CORR")
+                   as("corresponding",
+                       sequence(
+                           choice(
+                               token("CORRESPONDING"),
+                               token("CORR")
+                           ),
+                           as("identifier",
+                               qualifiedDataName()
+                           )
+                       )
                    ),
-                   qualifiedDataName(),
-                   token("TO"),
-                   qualifiedDataName(),
-                   optional(
-                       token("ROUNDED")
+                   as("to",
+                       sequence(
+                           token("TO"),
+                           qualifiedDataName(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
                    )
                )
            );
@@ -10740,11 +10748,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator addition_format2Parser = null;
 
-    public final Start addition_format2 = Start.on(getNamespace(), "addition_format2");
-
-    public ParserCombinator addition_format2() {
+    private ParserCombinator addition_format2() {
         if (addition_format2Parser == null) {
-           FutureParser future = scoped("addition_format2", true);
+           FutureParser future = scoped("addition_format2", false);
            addition_format2Parser = future;
            future.setParser(
                sequence(
@@ -10755,20 +10761,26 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           token("TO"),
-                           choice(
-                               identifier(),
-                               literal()
+                       as("to",
+                           sequence(
+                               token("TO"),
+                               choice(
+                                   identifier(),
+                                   literal()
+                               )
                            )
                        )
                    ),
-                   token("GIVING"),
-                   plus(
+                   as("giving",
                        sequence(
-                           qualifiedDataName(),
-                           optional(
-                               token("ROUNDED")
+                           token("GIVING"),
+                           plus(
+                               sequence(
+                                   identifier(),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -10785,11 +10797,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator addition_format3Parser = null;
 
-    public final Start addition_format3 = Start.on(getNamespace(), "addition_format3");
-
-    public ParserCombinator addition_format3() {
+    private ParserCombinator addition_format3() {
         if (addition_format3Parser == null) {
-           FutureParser future = scoped("addition_format3", true);
+           FutureParser future = scoped("addition_format3", false);
            addition_format3Parser = future;
            future.setParser(
                sequence(
@@ -10799,12 +10809,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                            literal()
                        )
                    ),
-                   token("TO"),
-                   plus(
+                   as("to",
                        sequence(
-                           identifier(),
-                           optional(
-                               token("ROUNDED")
+                           token("TO"),
+                           plus(
+                               sequence(
+                                   identifier(),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -13145,11 +13159,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator division_format1Parser = null;
 
-    public final Start division_format1 = Start.on(getNamespace(), "division_format1");
-
-    public ParserCombinator division_format1() {
+    private ParserCombinator division_format1() {
         if (division_format1Parser == null) {
-           FutureParser future = scoped("division_format1", true);
+           FutureParser future = scoped("division_format1", false);
            division_format1Parser = future;
            future.setParser(
                sequence(
@@ -13157,21 +13169,33 @@ public class CobolGrammar extends CobolBaseGrammar {
                        identifier(),
                        literal()
                    ),
-                   choice(
-                       token("INTO"),
-                       token("BY")
+                   as("into",
+                       sequence(
+                           choice(
+                               token("INTO"),
+                               token("BY")
+                           ),
+                           choice(
+                               identifier(),
+                               literal()
+                           )
+                       )
                    ),
-                   choice(
-                       identifier(),
-                       literal()
+                   as("giving",
+                       sequence(
+                           token("GIVING"),
+                           assign("identifier", qualifiedDataName()),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
                    ),
-                   token("GIVING"),
-                   qualifiedDataName(),
-                   optional(
-                       token("ROUNDED")
-                   ),
-                   token("REMAINDER"),
-                   qualifiedDataName()
+                   as("remainder",
+                       sequence(
+                           token("REMAINDER"),
+                           qualifiedDataName()
+                       )
+                   )
                )
            );
         }
@@ -13185,11 +13209,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator division_format2Parser = null;
 
-    public final Start division_format2 = Start.on(getNamespace(), "division_format2");
-
-    public ParserCombinator division_format2() {
+    private ParserCombinator division_format2() {
         if (division_format2Parser == null) {
-           FutureParser future = scoped("division_format2", true);
+           FutureParser future = scoped("division_format2", false);
            division_format2Parser = future;
            future.setParser(
                sequence(
@@ -13197,20 +13219,30 @@ public class CobolGrammar extends CobolBaseGrammar {
                        identifier(),
                        literal()
                    ),
-                   choice(
-                       token("INTO"),
-                       token("BY")
-                   ),
-                   choice(
-                       identifier(),
-                       literal()
-                   ),
-                   token("GIVING"),
-                   plus(
+                   as("into",
                        sequence(
-                           qualifiedDataName(),
-                           optional(
-                               token("ROUNDED")
+                           choice(
+                               token("INTO"),
+                               token("BY")
+                           ),
+                           choice(
+                               identifier(),
+                               literal()
+                           )
+                       )
+                   ),
+                   as("giving",
+                       sequence(
+                           token("GIVING"),
+                           plus(
+                               sequence(
+                                   as("identifier",
+                                       qualifiedDataName()
+                                   ),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -13227,11 +13259,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator division_format3Parser = null;
 
-    public final Start division_format3 = Start.on(getNamespace(), "division_format3");
-
-    public ParserCombinator division_format3() {
+    private ParserCombinator division_format3() {
         if (division_format3Parser == null) {
-           FutureParser future = scoped("division_format3", true);
+           FutureParser future = scoped("division_format3", false);
            division_format3Parser = future;
            future.setParser(
                sequence(
@@ -13239,12 +13269,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                        identifier(),
                        literal()
                    ),
-                   token("INTO"),
-                   plus(
+                   as("into",
                        sequence(
-                           qualifiedDataName(),
-                           optional(
-                               token("ROUNDED")
+                           token("INTO"),
+                           plus(
+                               sequence(
+                                   qualifiedDataName(),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -14895,12 +14929,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    token("MOVE"),
                    choice(
-                       sequence(
-                           choice(
-                               token("CORRESPONDING"),
-                               token("CORR")
-                           ),
-                           as("corresponding",
+                       as("corresponding",
+                           sequence(
+                               choice(
+                                   token("CORRESPONDING"),
+                                   token("CORR")
+                               ),
                                identifier()
                            )
                        ),
@@ -14969,11 +15003,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator multiplication_format1Parser = null;
 
-    public final Start multiplication_format1 = Start.on(getNamespace(), "multiplication_format1");
-
-    public ParserCombinator multiplication_format1() {
+    private ParserCombinator multiplication_format1() {
         if (multiplication_format1Parser == null) {
-           FutureParser future = scoped("multiplication_format1", true);
+           FutureParser future = scoped("multiplication_format1", false);
            multiplication_format1Parser = future;
            future.setParser(
                sequence(
@@ -14981,17 +15013,27 @@ public class CobolGrammar extends CobolBaseGrammar {
                        identifier(),
                        literal()
                    ),
-                   token("BY"),
-                   choice(
-                       identifier(),
-                       literal()
-                   ),
-                   token("GIVING"),
-                   plus(
+                   as("by",
                        sequence(
-                           qualifiedDataName(),
-                           optional(
-                               token("ROUNDED")
+                           token("BY"),
+                           choice(
+                               identifier(),
+                               literal()
+                           )
+                       )
+                   ),
+                   as("giving",
+                       sequence(
+                           token("GIVING"),
+                           plus(
+                               sequence(
+                                   as("identifier",
+                                       qualifiedDataName()
+                                   ),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -15008,11 +15050,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator multiplication_format2Parser = null;
 
-    public final Start multiplication_format2 = Start.on(getNamespace(), "multiplication_format2");
-
-    public ParserCombinator multiplication_format2() {
+    private ParserCombinator multiplication_format2() {
         if (multiplication_format2Parser == null) {
-           FutureParser future = scoped("multiplication_format2", true);
+           FutureParser future = scoped("multiplication_format2", false);
            multiplication_format2Parser = future;
            future.setParser(
                sequence(
@@ -15020,12 +15060,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                        identifier(),
                        literal()
                    ),
-                   token("BY"),
-                   plus(
+                   as("by",
                        sequence(
-                           qualifiedDataName(),
-                           optional(
-                               token("ROUNDED")
+                           token("BY"),
+                           plus(
+                               sequence(
+                                   qualifiedDataName(),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -15233,15 +15277,15 @@ public class CobolGrammar extends CobolBaseGrammar {
                                    nestedStatements(),
                                    token("END-PERFORM")
                                ),
-                               sequence(
-                                   as("nestedStatements",
-                                       statement()
-                                   ),
-                                   not(
-                                       token("THRU")
-                                   ),
-                                   not(
-                                       token("THROUGH")
+                               as("nestedStatements",
+                                   sequence(
+                                       statement(),
+                                       not(
+                                           token("THRU")
+                                       ),
+                                       not(
+                                           token("THROUGH")
+                                       )
                                    )
                                ),
                                token("END-PERFORM")
@@ -17007,23 +17051,29 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator subtraction_format1Parser = null;
 
-    public final Start subtraction_format1 = Start.on(getNamespace(), "subtraction_format1");
-
-    public ParserCombinator subtraction_format1() {
+    private ParserCombinator subtraction_format1() {
         if (subtraction_format1Parser == null) {
-           FutureParser future = scoped("subtraction_format1", true);
+           FutureParser future = scoped("subtraction_format1", false);
            subtraction_format1Parser = future;
            future.setParser(
                sequence(
-                   choice(
-                       token("CORRESPONDING"),
-                       token("CORR")
+                   as("corresponding",
+                       sequence(
+                           choice(
+                               token("CORRESPONDING"),
+                               token("CORR")
+                           ),
+                           identifier()
+                       )
                    ),
-                   identifier(),
-                   token("FROM"),
-                   identifier(),
-                   optional(
-                       token("ROUNDED")
+                   as("from",
+                       sequence(
+                           token("FROM"),
+                           identifier(),
+                           optional(
+                               token("ROUNDED")
+                           )
+                       )
                    )
                )
            );
@@ -17038,11 +17088,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator subtraction_format2Parser = null;
 
-    public final Start subtraction_format2 = Start.on(getNamespace(), "subtraction_format2");
-
-    public ParserCombinator subtraction_format2() {
+    private ParserCombinator subtraction_format2() {
         if (subtraction_format2Parser == null) {
-           FutureParser future = scoped("subtraction_format2", true);
+           FutureParser future = scoped("subtraction_format2", false);
            subtraction_format2Parser = future;
            future.setParser(
                sequence(
@@ -17053,20 +17101,26 @@ public class CobolGrammar extends CobolBaseGrammar {
                        )
                    ),
                    optional(
-                       sequence(
-                           token("FROM"),
-                           choice(
-                               identifier(),
-                               literal()
+                       as("from",
+                           sequence(
+                               token("FROM"),
+                               choice(
+                                   identifier(),
+                                   literal()
+                               )
                            )
                        )
                    ),
-                   token("GIVING"),
-                   plus(
+                   as("giving",
                        sequence(
-                           identifier(),
-                           optional(
-                               token("ROUNDED")
+                           token("GIVING"),
+                           plus(
+                               sequence(
+                                   identifier(),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )
@@ -17083,11 +17137,9 @@ public class CobolGrammar extends CobolBaseGrammar {
 
     private ParserCombinator subtraction_format3Parser = null;
 
-    public final Start subtraction_format3 = Start.on(getNamespace(), "subtraction_format3");
-
-    public ParserCombinator subtraction_format3() {
+    private ParserCombinator subtraction_format3() {
         if (subtraction_format3Parser == null) {
-           FutureParser future = scoped("subtraction_format3", true);
+           FutureParser future = scoped("subtraction_format3", false);
            subtraction_format3Parser = future;
            future.setParser(
                sequence(
@@ -17097,12 +17149,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                            literal()
                        )
                    ),
-                   token("FROM"),
-                   plus(
+                   as("from",
                        sequence(
-                           identifier(),
-                           optional(
-                               token("ROUNDED")
+                           token("FROM"),
+                           plus(
+                               sequence(
+                                   identifier(),
+                                   optional(
+                                       token("ROUNDED")
+                                   )
+                               )
                            )
                        )
                    )

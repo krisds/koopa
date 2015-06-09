@@ -19,172 +19,172 @@ public class SubtractStatementTest extends TestCase {
   }
 
     @Test
-    public void testSubtraction_format1_1() {
-      ParserCombinator parser = grammar.subtraction_format1();
+    public void testSubtractStatement_1() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A FROM B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT CORRESPONDING A FROM B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format1_2() {
-      ParserCombinator parser = grammar.subtraction_format1();
+    public void testSubtractStatement_2() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORR A FROM B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT CORR A FROM B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format1_3() {
-      ParserCombinator parser = grammar.subtraction_format1();
+    public void testSubtractStatement_3() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A FROM B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT CORRESPONDING A FROM B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format1_4() {
-      ParserCombinator parser = grammar.subtraction_format1();
+    public void testSubtractStatement_4() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORR A FROM B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT CORR A FROM B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_5() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_5() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A FROM B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A FROM B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_6() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_6() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A FROM B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A FROM B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_7() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_7() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B FROM C GIVING D E "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B FROM C GIVING D E "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_8() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_8() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B FROM C GIVING D ROUNDED E ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B FROM C GIVING D ROUNDED E ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_9() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_9() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_10() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_10() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_11() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_11() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B C GIVING D E "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B C GIVING D E "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_12() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_12() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B C GIVING D ROUNDED E ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B C GIVING D ROUNDED E ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_13() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_13() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO FROM B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT ZERO FROM B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format2_14() {
-      ParserCombinator parser = grammar.subtraction_format2();
+    public void testSubtractStatement_14() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A FROM ZERO GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A FROM ZERO GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format3_15() {
-      ParserCombinator parser = grammar.subtraction_format3();
+    public void testSubtractStatement_15() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A FROM B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A FROM B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format3_16() {
-      ParserCombinator parser = grammar.subtraction_format3();
+    public void testSubtractStatement_16() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A FROM B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A FROM B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format3_17() {
-      ParserCombinator parser = grammar.subtraction_format3();
+    public void testSubtractStatement_17() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B FROM C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B FROM C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format3_18() {
-      ParserCombinator parser = grammar.subtraction_format3();
+    public void testSubtractStatement_18() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B FROM C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A B FROM C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testSubtraction_format3_19() {
-      ParserCombinator parser = grammar.subtraction_format3();
+    public void testSubtractStatement_19() {
+      ParserCombinator parser = grammar.subtractStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A ZERO FROM C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" SUBTRACT A ZERO FROM C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }

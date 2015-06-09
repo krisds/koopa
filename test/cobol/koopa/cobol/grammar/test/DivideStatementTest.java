@@ -19,514 +19,514 @@ public class DivideStatementTest extends TestCase {
   }
 
     @Test
-    public void testDivision_format1_1() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_1() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_2() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_2() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C ROUNDED REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C ROUNDED REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_3() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_3() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A BY B GIVING C REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_4() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_4() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C ROUNDED REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A BY B GIVING C ROUNDED REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_5() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_5() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO 2 GIVING C REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO 2 GIVING C REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_6() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_6() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO 2 GIVING C ROUNDED REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO 2 GIVING C ROUNDED REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_7() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_7() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO BY 2 GIVING C REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO BY 2 GIVING C REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_8() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_8() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO BY 2 GIVING C ROUNDED REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO BY 2 GIVING C ROUNDED REMAINDER D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_9() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_9() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING FUNCTION FN ( X ) REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING FUNCTION FN ( X ) REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_10() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_10() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER FUNCTION FN ( X ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_11() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_11() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING EXCEPTION-OBJECT REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING EXCEPTION-OBJECT REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_12() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_12() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER EXCEPTION-OBJECT "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_13() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_13() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING NULL REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING NULL REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_14() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_14() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER NULL "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_15() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_15() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING SELF REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING SELF REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_16() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_16() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER SELF "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER SELF "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_17() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_17() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING SUPER REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING SUPER REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_18() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_18() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_19() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_19() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING MY-CLASS-NAME OF SUPER REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING MY-CLASS-NAME OF SUPER REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_20() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_20() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER MY-CLASS-NAME OF SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_21() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_21() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING ADDRESS OF SOMETHING REMAINDER D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING ADDRESS OF SOMETHING REMAINDER D "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format1_22() {
-      ParserCombinator parser = grammar.division_format1();
+    public void testDivideStatement_22() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C REMAINDER ADDRESS OF SOMETHING "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C REMAINDER ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_23() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_23() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_24() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_24() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_25() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_25() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A BY B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_26() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_26() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A BY B GIVING C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_27() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_27() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_28() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_28() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_29() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_29() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A BY B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_30() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_30() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A BY B GIVING C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_31() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_31() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO 2 GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO 2 GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_32() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_32() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO 2 GIVING C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO 2 GIVING C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_33() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_33() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO BY 2 GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO BY 2 GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_34() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_34() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO BY 2 GIVING C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO BY 2 GIVING C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_35() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_35() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO 2 GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO 2 GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_36() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_36() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO 2 GIVING C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO 2 GIVING C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_37() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_37() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO BY 2 GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO BY 2 GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_38() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_38() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO BY 2 GIVING C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO BY 2 GIVING C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_39() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_39() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING FUNCTION FN ( X ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_40() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_40() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING EXCEPTION-OBJECT "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_41() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_41() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING NULL "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_42() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_42() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING SELF "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING SELF "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_43() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_43() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_44() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_44() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING MY-CLASS-NAME OF SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format2_45() {
-      ParserCombinator parser = grammar.division_format2();
+    public void testDivideStatement_45() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B GIVING ADDRESS OF SOMETHING "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B GIVING ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_46() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_46() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_47() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_47() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_48() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_48() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_49() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_49() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO B ROUNDED C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO B ROUNDED C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_50() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_50() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_51() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_51() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO B C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO B C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_52() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_52() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_53() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_53() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO INTO B ROUNDED C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE ZERO INTO B ROUNDED C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_54() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_54() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO FUNCTION FN ( X ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_55() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_55() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO EXCEPTION-OBJECT "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_56() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_56() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO NULL "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_57() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_57() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO SELF "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO SELF "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_58() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_58() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_59() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_59() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO MY-CLASS-NAME OF SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testDivision_format3_60() {
-      ParserCombinator parser = grammar.division_format3();
+    public void testDivideStatement_60() {
+      ParserCombinator parser = grammar.divideStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A INTO ADDRESS OF SOMETHING "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" DIVIDE A INTO ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 

@@ -19,188 +19,188 @@ public class AddStatementTest extends TestCase {
   }
 
     @Test
-    public void testAddition_format1_1() {
-      ParserCombinator parser = grammar.addition_format1();
+    public void testAddStatement_1() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD CORRESPONDING A TO B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format1_2() {
-      ParserCombinator parser = grammar.addition_format1();
+    public void testAddStatement_2() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORR A TO B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD CORR A TO B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format1_3() {
-      ParserCombinator parser = grammar.addition_format1();
+    public void testAddStatement_3() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD CORRESPONDING A TO B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format1_4() {
-      ParserCombinator parser = grammar.addition_format1();
+    public void testAddStatement_4() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORR A TO B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD CORR A TO B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format1_5() {
-      ParserCombinator parser = grammar.addition_format1();
+    public void testAddStatement_5() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING FUNCTION FN ( X ) TO B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD CORRESPONDING FUNCTION FN ( X ) TO B "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format1_6() {
-      ParserCombinator parser = grammar.addition_format1();
+    public void testAddStatement_6() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" CORRESPONDING A TO FUNCTION FN ( X ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD CORRESPONDING A TO FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_7() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_7() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_8() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_8() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_9() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_9() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C GIVING D E "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B TO C GIVING D E "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_10() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_10() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C GIVING D ROUNDED E ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B TO C GIVING D ROUNDED E ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_11() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_11() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_12() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_12() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_13() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_13() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B C GIVING D E "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B C GIVING D E "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_14() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_14() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B C GIVING D ROUNDED E ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B C GIVING D ROUNDED E ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_15() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_15() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ZERO TO B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD ZERO TO B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format2_16() {
-      ParserCombinator parser = grammar.addition_format2();
+    public void testAddStatement_16() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO ZERO GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO ZERO GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format3_17() {
-      ParserCombinator parser = grammar.addition_format3();
+    public void testAddStatement_17() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format3_18() {
-      ParserCombinator parser = grammar.addition_format3();
+    public void testAddStatement_18() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A TO B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A TO B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format3_19() {
-      ParserCombinator parser = grammar.addition_format3();
+    public void testAddStatement_19() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B TO C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format3_20() {
-      ParserCombinator parser = grammar.addition_format3();
+    public void testAddStatement_20() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A B TO C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A B TO C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testAddition_format3_21() {
-      ParserCombinator parser = grammar.addition_format3();
+    public void testAddStatement_21() {
+      ParserCombinator parser = grammar.addStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A ZERO TO C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ADD A ZERO TO C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }

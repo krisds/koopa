@@ -100,4 +100,6 @@ body
   | ^(NOSKIP body)
   
   | ^(LIMIT body body)
+
+  | ^(AS IDENTIFIER body)
   ;

@@ -2,86 +2,81 @@ package koopa.cobol.grammar.test;
 grammar koopa.cobol.grammar.CobolGrammar;
 tokenizer koopa.cobol.sources.test.CobolTestSource;
 
-target addition_format1;
-
-+[ CORRESPONDING A TO B ]
-+[ CORR A TO B ]
-
-+[ CORRESPONDING A TO B ROUNDED ]
-+[ CORR A TO B ROUNDED ]
-
-
-# Issue #28; adding extra checks for places where functions, object refs and
-# reference mods are not allowed
--[ CORRESPONDING FUNCTION FN ( X ) TO B ]
--[ CORRESPONDING A TO FUNCTION FN ( X ) ]
-
-# While the following may not be legal, because of auto-keywords, these are in
-# fact allowed syntactically.
-#-[ CORRESPONDING EXCEPTION-OBJECT TO B ]
-#-[ CORRESPONDING A TO EXCEPTION-OBJECT ]
-#
-#-[ CORRESPONDING NULL TO B ]
-#-[ CORRESPONDING A TO NULL ]
-#
-#-[ CORRESPONDING SELF TO B ]
-#-[ CORRESPONDING A TO SELF ]
-#
-#-[ CORRESPONDING SUPER TO B ]
-#-[ CORRESPONDING A TO SUPER ]
-#
-#-[ CORRESPONDING MY-CLASS-NAME OF SUPER TO B ]
-#-[ CORRESPONDING A TO MY-CLASS-NAME OF SUPER ]
-#
-#-[ CORRESPONDING ADDRESS OF SOMETHING TO B ]
-#-[ CORRESPONDING A TO ADDRESS OF SOMETHING ]
-
-
-
-target addition_format2;
-
-+[ A TO B GIVING C ]
-+[ A TO B GIVING C ROUNDED ]
-
-+[ A B TO C GIVING D E ]
-+[ A B TO C GIVING D ROUNDED E ROUNDED ]
-
-+[ A B GIVING C ]
-+[ A B GIVING C ROUNDED ]
-
-+[ A B C GIVING D E ]
-+[ A B C GIVING D ROUNDED E ROUNDED ]
-
-+[ ZERO TO B GIVING C ]
-+[ A TO ZERO GIVING C ]
-
-# Issue #28; adding extra checks for places where functions, object refs and
-# reference mods are not allowed
-# While the following may not be legal, because of auto-keywords, these are in
-# fact allowed syntactically.
-#-[ A TO B GIVING FUNCTION FN ( X ) ]
-#-[ A TO B GIVING EXCEPTION-OBJECT ]
-#-[ A TO B GIVING NULL ]
-#-[ A TO B GIVING SELF ]
-#-[ A TO B GIVING SUPER ]
-#-[ A TO B GIVING MY-CLASS-NAME OF SUPER ]
-#-[ A TO B GIVING ADDRESS OF SOMETHING ]
-
-
-
-target addition_format3;
-
-+[ A TO B ]
-+[ A TO B ROUNDED ]
-
-+[ A B TO C D ]
-+[ A B TO C ROUNDED D ROUNDED ]
-
-+[ A ZERO TO C D ]
-
-
-
 target addStatement;
+
++[ ADD CORRESPONDING A TO B ]
++[ ADD CORR A TO B ]
+
++[ ADD CORRESPONDING A TO B ROUNDED ]
++[ ADD CORR A TO B ROUNDED ]
+
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ ADD CORRESPONDING FUNCTION FN ( X ) TO B ]
+-[ ADD CORRESPONDING A TO FUNCTION FN ( X ) ]
+
+# While the following may not be legal, because of auto-keywords, these are in
+# fact allowed syntactically.
+#-[ ADD CORRESPONDING EXCEPTION-OBJECT TO B ]
+#-[ ADD CORRESPONDING A TO EXCEPTION-OBJECT ]
+#
+#-[ ADD CORRESPONDING NULL TO B ]
+#-[ ADD CORRESPONDING A TO NULL ]
+#
+#-[ ADD CORRESPONDING SELF TO B ]
+#-[ ADD CORRESPONDING A TO SELF ]
+#
+#-[ ADD CORRESPONDING SUPER TO B ]
+#-[ ADD CORRESPONDING A TO SUPER ]
+#
+#-[ ADD CORRESPONDING MY-CLASS-NAME OF SUPER TO B ]
+#-[ ADD CORRESPONDING A TO MY-CLASS-NAME OF SUPER ]
+#
+#-[ ADD CORRESPONDING ADDRESS OF SOMETHING TO B ]
+#-[ ADD CORRESPONDING A TO ADDRESS OF SOMETHING ]
+
+
+
++[ ADD A TO B GIVING C ]
++[ ADD A TO B GIVING C ROUNDED ]
+
++[ ADD A B TO C GIVING D E ]
++[ ADD A B TO C GIVING D ROUNDED E ROUNDED ]
+
++[ ADD A B GIVING C ]
++[ ADD A B GIVING C ROUNDED ]
+
++[ ADD A B C GIVING D E ]
++[ ADD A B C GIVING D ROUNDED E ROUNDED ]
+
++[ ADD ZERO TO B GIVING C ]
++[ ADD A TO ZERO GIVING C ]
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+# While the following may not be legal, because of auto-keywords, these are in
+# fact allowed syntactically.
+#-[ ADD A TO B GIVING FUNCTION FN ( X ) ]
+#-[ ADD A TO B GIVING EXCEPTION-OBJECT ]
+#-[ ADD A TO B GIVING NULL ]
+#-[ ADD A TO B GIVING SELF ]
+#-[ ADD A TO B GIVING SUPER ]
+#-[ ADD A TO B GIVING MY-CLASS-NAME OF SUPER ]
+#-[ ADD A TO B GIVING ADDRESS OF SOMETHING ]
+
+
+
++[ ADD A TO B ]
++[ ADD A TO B ROUNDED ]
+
++[ ADD A B TO C D ]
++[ ADD A B TO C ROUNDED D ROUNDED ]
+
++[ ADD A ZERO TO C D ]
+
+
+
 
 +[ ADD A TO B ]
 

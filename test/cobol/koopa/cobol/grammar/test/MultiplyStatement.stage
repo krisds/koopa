@@ -2,47 +2,41 @@ package koopa.cobol.grammar.test;
 grammar koopa.cobol.grammar.CobolGrammar;
 tokenizer koopa.cobol.sources.test.CobolTestSource;
 
-target multiplication_format1;
-
-+[ A BY B GIVING C ]
-+[ A BY B GIVING C D ]
-
-+[ A BY B GIVING C ROUNDED ]
-+[ A BY B GIVING C ROUNDED D ROUNDED ]
-
-# Issue #28; adding extra checks for places where functions, object refs and
-# reference mods are not allowed
--[ A BY B GIVING FUNCTION FN ( X ) ]
--[ A BY B GIVING EXCEPTION-OBJECT ]
--[ A BY B GIVING NULL ]
--[ A BY B GIVING SELF ]
--[ A BY B GIVING SUPER ]
--[ A BY B GIVING MY-CLASS-NAME OF SUPER ]
--[ A BY B GIVING ADDRESS OF SOMETHING ]
-
-
-
-target multiplication_format2;
-
-+[ A BY B ]
-+[ A BY B C ]
-
-+[ A BY B ROUNDED ]
-+[ A BY B ROUNDED C ROUNDED ]
-
-# Issue #28; adding extra checks for places where functions, object refs and
-# reference mods are not allowed
--[ A BY FUNCTION FN ( X ) ]
--[ A BY EXCEPTION-OBJECT ]
--[ A BY NULL ]
--[ A BY SELF ]
--[ A BY SUPER ]
--[ A BY MY-CLASS-NAME OF SUPER ]
--[ A BY ADDRESS OF SOMETHING ]
-
-
-
 target multiplyStatement;
+
++[ MULTIPLY A BY B GIVING C ]
++[ MULTIPLY A BY B GIVING C D ]
+
++[ MULTIPLY A BY B GIVING C ROUNDED ]
++[ MULTIPLY A BY B GIVING C ROUNDED D ROUNDED ]
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ MULTIPLY A BY B GIVING FUNCTION FN ( X ) ]
+-[ MULTIPLY A BY B GIVING EXCEPTION-OBJECT ]
+-[ MULTIPLY A BY B GIVING NULL ]
+-[ MULTIPLY A BY B GIVING SELF ]
+-[ MULTIPLY A BY B GIVING SUPER ]
+-[ MULTIPLY A BY B GIVING MY-CLASS-NAME OF SUPER ]
+-[ MULTIPLY A BY B GIVING ADDRESS OF SOMETHING ]
+
+
++[ MULTIPLY A BY B ]
++[ MULTIPLY A BY B C ]
+
++[ MULTIPLY A BY B ROUNDED ]
++[ MULTIPLY A BY B ROUNDED C ROUNDED ]
+
+# Issue #28; adding extra checks for places where functions, object refs and
+# reference mods are not allowed
+-[ MULTIPLY A BY FUNCTION FN ( X ) ]
+-[ MULTIPLY A BY EXCEPTION-OBJECT ]
+-[ MULTIPLY A BY NULL ]
+-[ MULTIPLY A BY SELF ]
+-[ MULTIPLY A BY SUPER ]
+-[ MULTIPLY A BY MY-CLASS-NAME OF SUPER ]
+-[ MULTIPLY A BY ADDRESS OF SOMETHING ]
+
 
 +[ MULTIPLY A BY B # . ]
 

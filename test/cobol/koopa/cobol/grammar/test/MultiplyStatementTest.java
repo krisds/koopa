@@ -19,186 +19,186 @@ public class MultiplyStatementTest extends TestCase {
   }
 
     @Test
-    public void testMultiplication_format1_1() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_1() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_2() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_2() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING C D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_3() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_3() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_4() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_4() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING C ROUNDED D ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING C ROUNDED D ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_5() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_5() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING FUNCTION FN ( X ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_6() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_6() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING EXCEPTION-OBJECT "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_7() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_7() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING NULL "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_8() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_8() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING SELF "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING SELF "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_9() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_9() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_10() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_10() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING MY-CLASS-NAME OF SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format1_11() {
-      ParserCombinator parser = grammar.multiplication_format1();
+    public void testMultiplyStatement_11() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B GIVING ADDRESS OF SOMETHING "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B GIVING ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_12() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_12() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_13() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_13() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B C "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B C "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_14() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_14() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_15() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_15() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY B ROUNDED C ROUNDED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY B ROUNDED C ROUNDED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_16() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_16() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY FUNCTION FN ( X ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY FUNCTION FN ( X ) "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_17() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_17() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY EXCEPTION-OBJECT "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY EXCEPTION-OBJECT "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_18() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_18() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY NULL "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY NULL "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_19() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_19() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY SELF "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY SELF "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_20() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_20() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_21() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_21() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY MY-CLASS-NAME OF SUPER "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY MY-CLASS-NAME OF SUPER "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testMultiplication_format2_22() {
-      ParserCombinator parser = grammar.multiplication_format2();
+    public void testMultiplyStatement_22() {
+      ParserCombinator parser = grammar.multiplyStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" A BY ADDRESS OF SOMETHING "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" MULTIPLY A BY ADDRESS OF SOMETHING "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 

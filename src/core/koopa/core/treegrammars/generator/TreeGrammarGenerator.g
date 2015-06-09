@@ -274,4 +274,6 @@ body [ List<String> bindings, List<String> unbindings ]
       target = {b_t},
       limiter = {b_l}
     )
+
+  | ^(AS IDENTIFIER b=body[bindings, unbindings])
   ;

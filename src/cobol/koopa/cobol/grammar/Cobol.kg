@@ -4385,84 +4385,113 @@ end
 
 def function = 
     FUNCTION
-    ( 'ABS'                   '(' argument ')'                    # *MF *OC
-    | 'ACOS'                  '(' argument ')'                    # *ANS85
-    | 'ANNUITY'               '(' argument [','] argument ')'     # *ANS85
-    | 'ASIN'                  '(' argument ')'                    # *ANS85
-    | 'ATAN'                  '(' argument ')'                    # *ANS85
-    | 'BOOLEAN-OF-INTEGER'    '(' argument [','] argument ')'
-    | 'BYTE-LENGTH'           '(' argument ')'                    # *OC
-    | 'CHAR'                  '(' argument ')'                    # *ANS85
-    | 'CHAR-NATIONAL'         '(' argument ')'                    # *ISO2002 *MF
-    | 'COMBINED-DATETIME'     '(' argument [','] argument ')'     # *OC
-    | 'CONCATENATE'           '(' argument ([','] argument)* ')'  # *OC
-    | 'COS'                   '(' argument ')'                    # *ANS85
-    | 'CURRENT-DATE'                                              # *OC
-    | 'DATE-OF-INTEGER'       '(' argument ')'                    # *ANS85
-    | 'DATE-TO-YYYYMMDD'      '(' argument [[','] argument] ')'   # *ANS85
-    | 'DAY-OF-INTEGER'        '(' argument ')'                    # *ANS85
-    | 'DAY-TO-YYYYDDD'        '(' argument [[','] argument] ')'   # *ANS85
-    | 'DISPLAY-OF'            '(' argument [[','] argument] ')'   # *ISO2002 *MF
-    | 'E'                                                         # *MF *OC
-    | 'EXCEPTION-FILE'                                            # *OC
-    | 'EXCEPTION-LOCATION'                                        # *OC
-    | 'EXCEPTION-STATEMENT'                                       # *OC
-    | 'EXCEPTION-STATUS'                                          # *OC
-    | 'EXP'                   '(' argument ')'                    # *MF *OC
-    | 'EXP10'                 '(' argument ')'                    # *MF *OC
-    | 'FACTORIAL'             '(' argument ')'                    # *ANS85
-    | 'FRACTION-PART'         '(' argument ')'                    # *MF *OC
-    | 'INTEGER'               '(' argument ')'                    # *ANS85
-    | 'INTEGER-OF-BOOLEAN'    '(' argument ')'
-    | 'INTEGER-OF-DATE'       '(' argument ')'                    # *ANS85
-    | 'INTEGER-OF-DAY'        '(' argument ')'                    # *ANS85
-    | 'INTEGER-PART'          '(' argument ')'                    # *ANS85
-    | 'LENGTH'                '(' argument ')'                    # *ANS85
-    | 'LENGTH-AN'             '(' argument ')'                    # *MF
-    | 'LOCALE-DATE'           '(' argument [[','] argument] ')'   # *OC
-    | 'LOCALE-TIME'           '(' argument [[','] argument] ')'   # *OC
-    | 'LOCALE-TIME-FROM-SECS' '(' argument [[','] argument] ')'   # *OC
-    | 'LOG'                   '(' argument ')'                    # *ANS85
-    | 'LOG10'                 '(' argument ')'                    # *ANS85
-    | 'LOWER-CASE'            '(' argument ')'                    # *ANS85
-    | 'MAX'                   '(' argument ([','] argument)* ')'  # *ANS85
-    | 'MEAN'                  '(' argument ([','] argument)* ')'  # *ANS85
-    | 'MEDIAN'                '(' argument ([','] argument)* ')'  # *ANS85
-    | 'MIDRANGE'              '(' argument ([','] argument)* ')'  # *ANS85
-    | 'MIN'                   '(' argument ([','] argument)* ')'  # *ANS85
-    | 'MOD'                   '(' argument [','] argument ')'     # *ANS85
-    | 'NATIONAL-OF'           '(' argument [[','] argument] ')'   # *ISO2002 *MF
-    | 'NUMVAL'                '(' argument ')'                    # *ANS85
-    | 'NUMVAL-C'              '(' argument [[','] argument] ')'   # *ANS85
-    | 'ORD'                   '(' argument ')'                    # *ANS85
-    | 'ORD-MAX'               '(' argument ([','] argument)* ')'  # *ANS85
-    | 'ORD-MIN'               '(' argument ([','] argument)* ')'  # *ANS85
-    | 'PI'                                                        # *MF *OC
-    | 'PRESENT-VALUE'         '(' argument ([','] argument)* ')'  # *ANS85
-    | 'RANDOM'                [ '(' argument ')' ]                # *ANS85
-    | 'RANGE'                 '(' argument ([','] argument)* ')'  # *ANS85
-    | 'REM'                   '(' argument [','] argument ')'     # *ANS85
-    | 'REVERSE'               '(' argument ')'                    # *ANS85
-    | 'SECONDS-FROM-FORMATTED-TIME'
-                            '(' argument [','] argument ')'     # *OC
-    | 'SECONDS-PAST-MIDNIGHT'                                     # *OC
-    | 'SIGN'                  '(' argument ')'                    # *ANS85
-    | 'SIN'                   '(' argument ')'                    # *ANS85
-    | 'SQRT'                  '(' argument ')'                    # *ANS85
-    | 'STANDARD-DEVIATION'    '(' argument ([','] argument)* ')'  # *ANS85
-    | 'STORED-CHAR-LENGTH'    '(' argument ')'                    # *OC
-    | 'SUBSTITUTE'            '(' argument ([','] argument)* ')'  # *OC
-    | 'SUBSTITUTE-CASE'       '(' argument ([','] argument)* ')'  # *OC
-    | 'SUM'                   '(' argument ([','] argument)* ')'  # *ANS85
-    | 'TAN'                   '(' argument ')'                    # *ANS85
-    | 'TEST-DATE-YYYYMMDD'    '(' argument ')'                    # *OC
-    | 'TEST-DAY-YYYYDDD'      '(' argument ')'                    # *OC
-    | 'TRIM'                  '(' argument [LEADING|TRAILING] ')' # *OC
-    | 'UPPER-CASE'            '(' argument ')'                    # *ANS85
-    | 'VARIANCE'              '(' argument ([','] argument)* ')'  # *ANS85
-    | 'WHEN-COMPILED'                                             # *ANS85
-    | 'YEAR-TO-YYYY'          '(' argument [[','] argument] ')'   # *ANS85
-    | functionName          [ '(' argument ([','] argument)* ')' ]
+    ( # fn/0
+      ( functionName :
+        ( 'CURRENT-DATE'                         # *OC
+        | 'E'                                    # *MF *OC
+        | 'EXCEPTION-FILE'                       # *OC
+        | 'EXCEPTION-LOCATION'                   # *OC
+        | 'EXCEPTION-STATEMENT'                  # *OC
+        | 'EXCEPTION-STATUS'                     # *OC
+        | 'PI'                                   # *MF *OC
+        | 'SECONDS-PAST-MIDNIGHT'                # *OC
+        | 'WHEN-COMPILED'                        # *ANS85
+        )
+      )
+
+    | # fn/1
+      ( functionName :
+        ( 'ABS'                                  # *MF *OC
+        | 'ACOS'                                 # *ANS85
+        | 'ASIN'                                 # *ANS85
+        | 'ATAN'                                 # *ANS85
+        | 'BYTE-LENGTH'                          # *OC
+        | 'CHAR'                                 # *ANS85
+        | 'CHAR-NATIONAL'                        # *ISO2002 *MF
+        | 'COS'                                  # *ANS85
+        | 'DATE-OF-INTEGER'                      # *ANS85
+        | 'DAY-OF-INTEGER'                       # *ANS85
+        | 'EXP'                                  # *MF *OC
+        | 'EXP10'                                # *MF *OC
+        | 'FACTORIAL'                            # *ANS85
+        | 'FRACTION-PART'                        # *MF *OC
+        | 'INTEGER'                              # *ANS85
+        | 'INTEGER-OF-BOOLEAN'   
+        | 'INTEGER-OF-DATE'                      # *ANS85
+        | 'INTEGER-OF-DAY'                       # *ANS85
+        | 'INTEGER-PART'                         # *ANS85
+        | 'LENGTH'                               # *ANS85
+        | 'LENGTH-AN'                            # *MF
+        | 'LOG'                                  # *ANS85
+        | 'LOG10'                                # *ANS85
+        | 'LOWER-CASE'                           # *ANS85
+        | 'NUMVAL'                               # *ANS85
+        | 'ORD'                                  # *ANS85
+        | 'REVERSE'                              # *ANS85
+        | 'SIGN'                                 # *ANS85
+        | 'SIN'                                  # *ANS85
+        | 'SQRT'                                 # *ANS85
+        | 'STORED-CHAR-LENGTH'                   # *OC
+        | 'TAN'                                  # *ANS85
+        | 'TEST-DATE-YYYYMMDD'                   # *OC
+        | 'TEST-DAY-YYYYDDD'                     # *OC
+        | 'UPPER-CASE'                           # *ANS85
+        )
+      ) '(' argument ')'
+
+    | # fn/0..1
+      ( functionName : 'RANDOM' ) [ '(' [argument] ')' ]              # *ANS85
+
+    | # fn/1'
+      ( functionName : 'TRIM'   ) '(' argument [LEADING|TRAILING] ')' # *OC
+
+    | # fn/2
+      ( functionName :
+        ( 'ANNUITY'                              # *ANS85
+        | 'BOOLEAN-OF-INTEGER'
+        | 'COMBINED-DATETIME'                    # *OC
+        | 'MOD'                                  # *ANS85
+        | 'REM'                                  # *ANS85
+        | 'SECONDS-FROM-FORMATTED-TIME'          # *OC
+        )
+      ) '(' argument [','] argument ')'
+
+    | # fn/1..2
+      ( functionName :
+        ( 'DATE-TO-YYYYMMDD'                     # *ANS85
+        | 'DAY-TO-YYYYDDD'                       # *ANS85
+        | 'DISPLAY-OF'                           # *ISO2002 *MF
+        | 'LOCALE-DATE'                          # *OC
+        | 'LOCALE-TIME'                          # *OC
+        | 'LOCALE-TIME-FROM-SECS'                # *OC
+        | 'NATIONAL-OF'                          # *ISO2002 *MF
+        | 'NUMVAL-C'                             # *ANS85
+        | 'YEAR-TO-YYYY'                         # *ANS85
+        )
+      ) '(' argument [[','] argument] ')'
+
+    | # fn/1..*
+      ( functionName :
+        ( 'CONCATENATE'                          # *OC
+        | 'MAX'                                  # *ANS85
+        | 'MEAN'                                 # *ANS85
+        | 'MEDIAN'                               # *ANS85
+        | 'MIDRANGE'                             # *ANS85
+        | 'MIN'                                  # *ANS85
+        | 'ORD-MAX'                              # *ANS85
+        | 'ORD-MIN'                              # *ANS85
+        | 'PRESENT-VALUE'                        # *ANS85
+        | 'RANGE'                                # *ANS85
+        | 'STANDARD-DEVIATION'                   # *ANS85
+        | 'SUBSTITUTE'                           # *OC
+        | 'SUBSTITUTE-CASE'                      # *OC
+        | 'SUM'                                  # *ANS85
+        | 'VARIANCE'                             # *ANS85
+        )
+      ) '(' argument ([','] argument)* ')'
+
+    | # Other fn...
+      functionName          [ '(' argument ([','] argument)* ')' ]
     )
 end
 

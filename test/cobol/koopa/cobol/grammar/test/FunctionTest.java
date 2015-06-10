@@ -805,7 +805,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_88() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION RANDOM ( seed ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION RANDOM ( ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -814,7 +814,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_89() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( 11 5 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION RANDOM ( seed ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -823,7 +823,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_90() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( -11 5 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( 11 5 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -832,7 +832,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_91() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( 11 -5 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( -11 5 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -841,7 +841,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_92() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( -11 -5 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( 11 -5 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -850,7 +850,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_93() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REVERSE ( \"oof\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REM ( -11 -5 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -859,7 +859,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_94() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REVERSE ( n\"rab\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REVERSE ( \"oof\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -868,7 +868,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_95() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SIGN ( -5 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION REVERSE ( n\"rab\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -877,7 +877,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_96() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SIGN ( 0 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SIGN ( -5 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -886,7 +886,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_97() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SIGN ( 5 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SIGN ( 0 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -895,7 +895,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_98() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SQRT ( 2 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SIGN ( 5 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -904,7 +904,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_99() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SQRT ( 2 * FUNCTION PI ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SQRT ( 2 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -913,7 +913,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_100() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION STANDARD-DEVIATION ( 5.4 -2.1 -14.7 0.2 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SQRT ( 2 * FUNCTION PI ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -922,7 +922,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_101() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION VARIANCE ( 5.4 -2.1 -14.7 0.2 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION STANDARD-DEVIATION ( 5.4 -2.1 -14.7 0.2 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -931,7 +931,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_102() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SUM ( 5 -2 -14 0 ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION VARIANCE ( 5.4 -2.1 -14.7 0.2 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -940,7 +940,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_103() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION LOWER-CASE ( \"FOO\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION SUM ( 5 -2 -14 0 ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -949,7 +949,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_104() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION LOWER-CASE ( n\"FOO\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION LOWER-CASE ( \"FOO\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -958,7 +958,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_105() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION UPPER-CASE ( \"bar\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION LOWER-CASE ( n\"FOO\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -967,7 +967,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_106() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION UPPER-CASE ( n\"bar\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION UPPER-CASE ( \"bar\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -976,7 +976,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_107() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION WHEN-COMPILED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION UPPER-CASE ( n\"bar\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -985,7 +985,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_108() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION foo "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION WHEN-COMPILED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -994,12 +994,21 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_109() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION foo "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_format1_110() {
+      ParserCombinator parser = grammar.identifier_format1();
+      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION foo () "));
       assertFalse(parser.accepts(Parse.of(tokenizer)) && tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testIdentifier_format1_110() {
+    public void testIdentifier_format1_111() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION foo ( bar ) "));
@@ -1008,7 +1017,7 @@ public class FunctionTest extends TestCase {
     }
 
     @Test
-    public void testIdentifier_format1_111() {
+    public void testIdentifier_format1_112() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION foo ( bar baz ) "));

@@ -113,6 +113,7 @@ target identifier_format1;
 +[ FUNCTION PRESENT-VALUE ( 5 100 200 300 foo ) ]
 
 +[ FUNCTION RANDOM ]
++[ FUNCTION RANDOM ( ) ]
 +[ FUNCTION RANDOM ( seed ) ]
 
 +[ FUNCTION REM ( 11 5 ) ]

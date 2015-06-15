@@ -31,7 +31,12 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 
 	@Override
 	protected Token nxt1() {
-		return source.next();
+		Token next = source.next();
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("%% " + next);
+
+		return next;
 	}
 
 	@Override
@@ -47,7 +52,7 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("+> MARKER ");
 
-			token = source.next();
+			token = super.next();
 		}
 
 		if (marker != null && token != null)
@@ -85,11 +90,10 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 	}
 
 	public boolean isWhereExpected() {
-		if (marker == null) {
+		if (marker == null)
 			return isAtMarkerOrEndOfSource();
-		} else {
+		else
 			return isAtMarker();
-		}
 	}
 
 	private boolean isAtMarkerOrEndOfSource() {
@@ -97,7 +101,10 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 			Token token = next();
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("@ " + token);
+				LOGGER.trace("@ " + (marker == null ? "" : "#") + token);
+
+			if (marker != null)
+				return true;
 
 			if (token == null)
 				return true;
@@ -109,7 +116,8 @@ public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
 				continue;
 
 			final String text = token.getText();
-			if (!MARKER_TEXT.equals(text) && text.trim().length() > 0)
+
+			if (text.trim().length() > 0)
 				return false;
 		}
 	}

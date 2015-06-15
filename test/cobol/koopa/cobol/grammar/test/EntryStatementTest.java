@@ -75,7 +75,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_7() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         # FIELD-A "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         # USING FIELD-B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -84,7 +84,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_8() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         # USING FIELD-B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         REFERENCE FIELD-A "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -93,7 +93,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_9() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         REFERENCE FIELD-A "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -102,7 +102,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_10() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A DELIMITED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -111,7 +111,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_11() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A DELIMITED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A DELIMITED BY SIZE "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -120,7 +120,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_12() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A DELIMITED BY SIZE "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE ANY "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -129,7 +129,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_13() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE ANY "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         VALUE FIELD-A "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -138,7 +138,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_14() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         VALUE FIELD-A "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY VALUE FIELD-A "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -147,7 +147,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_15() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY VALUE FIELD-A "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY VALUE ANY "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -156,7 +156,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_16() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY VALUE ANY "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A FIELD-B\n         BY VALUE FIELD-C FIELD-D "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -165,7 +165,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_17() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" USING\n         BY REFERENCE FIELD-A FIELD-B\n         BY VALUE FIELD-C FIELD-D "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" \n         USING FIELD-A\n         REPEATED "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -174,7 +174,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_18() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\" \n         USING FIELD-A\n         REPEATED "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         REPEATED 1 TO 100 "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -183,7 +183,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_19() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         REPEATED 1 TO 100 "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         GIVING FIELD-B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -192,7 +192,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_20() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         GIVING FIELD-B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         GIVING FIELD-A "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -201,7 +201,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_21() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         GIVING FIELD-A "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         RETURNING FIELD-B "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -210,7 +210,7 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_22() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         RETURNING FIELD-B "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         RETURNING FIELD-A "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
@@ -219,22 +219,13 @@ public class EntryStatementTest extends TestCase {
     public void testEntryStatement_23() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         RETURNING FIELD-A "));
-      assertTrue(parser.accepts(Parse.of(tokenizer)));
-      assertTrue(tokenizer.isWhereExpected());
-    }
-
-    @Test
-    public void testEntryStatement_24() {
-      ParserCombinator parser = grammar.entryStatement();
-      assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         REPEATED 1 TO 100 "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
 
     @Test
-    public void testEntryStatement_25() {
+    public void testEntryStatement_24() {
       ParserCombinator parser = grammar.entryStatement();
       assertNotNull(parser);
       TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" ENTRY \"MAIN-ENTRANCE\"\n         USING FIELD-A\n         REPEATED 1 TO 100\n         GIVING FIELD-B "));

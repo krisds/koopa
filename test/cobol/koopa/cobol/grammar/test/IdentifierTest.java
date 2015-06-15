@@ -391,4 +391,85 @@ public class IdentifierTest extends TestCase {
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }
+
+    @Test
+    public void testIdentifier_43() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE-COUNTER "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_44() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE-COUNTER IN FOO "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_45() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINAGE-COUNTER OF FOO "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_46() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PAGE-COUNTER "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_47() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PAGE-COUNTER IN FOO "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_48() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" PAGE-COUNTER OF FOO "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_49() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE-COUNTER "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_50() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE-COUNTER IN FOO "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
+
+    @Test
+    public void testIdentifier_51() {
+      ParserCombinator parser = grammar.identifier();
+      assertNotNull(parser);
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" LINE-COUNTER OF FOO "));
+      assertTrue(parser.accepts(Parse.of(tokenizer)));
+      assertTrue(tokenizer.isWhereExpected());
+    }
 }

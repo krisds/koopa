@@ -69,3 +69,17 @@ target identifier;
 
 # Reported by FrankTheTank
 +[ ROLLBACK ]
+
+
++[ LINAGE-COUNTER ]
++[ LINAGE-COUNTER IN FOO ]
++[ LINAGE-COUNTER OF FOO ]
+
++[ PAGE-COUNTER ]
++[ PAGE-COUNTER IN FOO ]
++[ PAGE-COUNTER OF FOO ]
+
++[ LINE-COUNTER ]
++[ LINE-COUNTER IN FOO ]
++[ LINE-COUNTER OF FOO ]
+

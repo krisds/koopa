@@ -45,6 +45,21 @@ public final class End extends Marker {
 		return this.name;
 	}
 
+	@Override
+	public int hashCode() {
+		return (namespace + ":" + name).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof End) {
+			End end = (End) obj;
+			return name.equals(end.name) && namespace.equals(end.namespace);
+		}
+
+		return false;
+	}
+
 	public String toString() {
 		return "</" + namespace + ":" + name + ">";
 	}

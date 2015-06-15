@@ -18721,6 +18721,8 @@ public class CobolGrammar extends CobolBaseGrammar {
            identifierParser = future;
            future.setParser(
                choice(
+                   qualifiedLinageCounter(),
+                   qualifiedReportCounter(),
                    identifier_format6(),
                    identifier_format1(),
                    identifier_format2(),
@@ -18839,6 +18841,79 @@ public class CobolGrammar extends CobolBaseGrammar {
         }
 
         return dataAddressIdentifierParser;
+    }
+
+    // ========================================================
+    // qualifiedLinageCounter
+    // ........................................................
+
+    private ParserCombinator qualifiedLinageCounterParser = null;
+
+    public final Start qualifiedLinageCounter = Start.on(getNamespace(), "qualifiedLinageCounter");
+
+    public ParserCombinator qualifiedLinageCounter() {
+        if (qualifiedLinageCounterParser == null) {
+           FutureParser future = scoped("qualifiedLinageCounter", true);
+           qualifiedLinageCounterParser = future;
+           future.setParser(
+               sequence(
+                   token("LINAGE-COUNTER"),
+                   optional(
+                       sequence(
+                           choice(
+                               token("IN"),
+                               token("OF")
+                           ),
+                           as("fileName",
+                               name()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return qualifiedLinageCounterParser;
+    }
+
+    // ========================================================
+    // qualifiedReportCounter
+    // ........................................................
+
+    private ParserCombinator qualifiedReportCounterParser = null;
+
+    public final Start qualifiedReportCounter = Start.on(getNamespace(), "qualifiedReportCounter");
+
+    public ParserCombinator qualifiedReportCounter() {
+        if (qualifiedReportCounterParser == null) {
+           FutureParser future = scoped("qualifiedReportCounter", true);
+           qualifiedReportCounterParser = future;
+           future.setParser(
+               sequence(
+                   choice(
+                       as("pageCounter",
+                           token("PAGE-COUNTER")
+                       ),
+                       as("lineCounter",
+                           token("LINE-COUNTER")
+                       )
+                   ),
+                   optional(
+                       sequence(
+                           choice(
+                               token("IN"),
+                               token("OF")
+                           ),
+                           as("reportName",
+                               name()
+                           )
+                       )
+                   )
+               )
+           );
+        }
+
+        return qualifiedReportCounterParser;
     }
 
     // ========================================================

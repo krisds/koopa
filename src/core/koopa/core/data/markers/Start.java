@@ -45,6 +45,21 @@ public final class Start extends Marker {
 		return this.name;
 	}
 
+	@Override
+	public int hashCode() {
+		return (namespace + ":" + name).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Start) {
+			Start start = (Start) obj;
+			return name.equals(start.name) && namespace.equals(start.namespace);
+		}
+
+		return false;
+	}
+
 	public String toString() {
 		return "<" + namespace + ":" + name + ">";
 	}

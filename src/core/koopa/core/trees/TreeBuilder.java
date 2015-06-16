@@ -7,13 +7,28 @@ import koopa.core.data.markers.Start;
 
 public interface TreeBuilder {
 
-	void down(Start token);
+	/**
+	 * Start of a tree.
+	 */
+	void down(Start start);
 
-	void up(End token);
+	/**
+	 * End of a tree.
+	 */
+	void up(End end);
 
+	/**
+	 * Leaf of a tree.
+	 */
 	void leaf(Token token);
 
-	void water(InWater token);
+	/**
+	 * States that we're processing water.
+	 */
+	void water(InWater water);
 
+	/**
+	 * States that we're processing land.
+	 */
 	void land();
 }

@@ -1,14 +1,11 @@
 package koopa.core.grammars;
 
+import static koopa.core.grammars.combinators.Opt.NOSKIP;
 import koopa.core.data.Token;
-import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.Stream;
 
 public abstract class Grammar {
-
-	public Grammar() {
-	}
 
 	/**
 	 * Whether or not a token contributes to program text.
@@ -58,28 +55,27 @@ public abstract class Grammar {
 	public void skipOtherSeparators(Parse parse, String sep) {
 		while (true) {
 			Stream stream = parse.getStream();
-			Token token = stream.forward();
+			Token token = stream.peek();
 
 			if (token == null)
 				return;
 
-			if (!isProgramText(token))
+			if (!isProgramText(token)) {
+				stream.skip();
 				continue;
-
-			if (parse.isSet(Opt.NOSKIP)) {
-				stream.rewind(token);
-				return;
 			}
 
-			if (sep != null && sep.equals(token.getText())) {
-				stream.rewind(token);
+			if (parse.isSet(NOSKIP))
 				return;
+
+			if (sep != null && sep.equals(token.getText()))
+				return;
+
+			if (isSeparator(token, stream.getParse())) {
+				stream.skip();
+				continue;
 			}
 
-			if (isSeparator(token, stream.getParse()))
-				continue;
-
-			stream.rewind(token);
 			return;
 		}
 	}

@@ -13,7 +13,20 @@ import koopa.core.treeparsers.Tree;
 
 public class KoopaTreeBuilder implements TreeBuilder {
 
+	/**
+	 * Any leaves preceding the first tree get tracked here. They will be added
+	 * to the first tree once we get it.
+	 */
+	private LinkedList<Tree> leading = new LinkedList<Tree>();
+
+	/**
+	 * Tree being built.
+	 */
 	private Stack<Tree> treeparts = new Stack<Tree>();
+
+	/**
+	 * Trees which have been built.
+	 */
 	private List<Tree> trees = new LinkedList<Tree>();
 
 	public KoopaTreeBuilder() {
@@ -23,15 +36,20 @@ public class KoopaTreeBuilder implements TreeBuilder {
 		return this.trees;
 	}
 
+	/** {@inheritDoc} */
 	public void down(Start start) {
 		Tree tree = new Tree(start);
 
 		if (!this.treeparts.isEmpty())
 			this.treeparts.peek().addChild(tree);
+		else
+			while (!leading.isEmpty())
+				tree.addChild(leading.removeFirst());
 
 		this.treeparts.push(tree);
 	}
 
+	/** {@inheritDoc} */
 	public void leaf(Token token) {
 		if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
 				&& !token.hasTag(AreaTag.COMMENT))
@@ -45,9 +63,14 @@ public class KoopaTreeBuilder implements TreeBuilder {
 			return;
 
 		Tree tree = new Tree(token);
-		this.treeparts.peek().addChild(tree);
+
+		if (!this.treeparts.isEmpty())
+			this.treeparts.peek().addChild(tree);
+		else
+			leading.add(tree);
 	}
 
+	/** {@inheritDoc} */
 	public void up(End end) {
 		assert (!this.treeparts.isEmpty());
 
@@ -57,6 +80,7 @@ public class KoopaTreeBuilder implements TreeBuilder {
 			this.trees.add(tree);
 	}
 
+	/** {@inheritDoc} */
 	public void water(InWater water) {
 		Tree tree = new Tree(water);
 
@@ -66,6 +90,7 @@ public class KoopaTreeBuilder implements TreeBuilder {
 		this.treeparts.push(tree);
 	}
 
+	/** {@inheritDoc} */
 	public void land() {
 		assert (!this.treeparts.isEmpty());
 

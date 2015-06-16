@@ -6,10 +6,10 @@ import java.util.Stack;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
+import koopa.core.data.markers.Start;
 import koopa.core.sources.Source;
 import koopa.core.targets.Target;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -31,12 +31,16 @@ public class BaseStream implements Stream {
 	private final Source<Token> source;
 	private final Target<Data> target;
 
-	// Tokens in either of these lists are always in reading order.
+	// Tokens this list are always in reading order.
 	private final LinkedList<Data> seen;
 
-	// Bookmarks govern rewind/commit semantics.
-	private final Stack<Integer> bookmarks;
+	// Markers which are waiting to get pushed.
+	private LinkedList<Marker> delayedMarkers;
 
+	// Bookmarks govern rewind/commit semantics.
+	private final Stack<Bookmark> bookmarks;
+
+	// The active parse.
 	private Parse parse = null;
 
 	public BaseStream(Source<Token> source, Target<Data> target) {
@@ -47,21 +51,35 @@ public class BaseStream implements Stream {
 		this.target = target;
 
 		this.seen = new LinkedList<Data>();
+		this.delayedMarkers = new LinkedList<Marker>();
 
-		this.bookmarks = new Stack<Integer>();
+		this.bookmarks = new Stack<Bookmark>();
 	}
 
-	/**
-	 * Get the next token in the stream.
-	 */
+	/** {@inheritDoc} */
 	public Token forward() {
+		return forwardOne(false);
+	}
+
+	/** {@inheritDoc} */
+	public Token skip() {
+		return forwardOne(true);
+	}
+
+	private Token forwardOne(boolean skipped) {
+		if (!skipped)
+			insertDelayedMarkers();
+
 		while (true) {
 			Data packet = source.next();
 
 			if (packet == null)
 				return null;
 
-			seen.addLast(packet);
+			if (packet instanceof Marker)
+				insert((Marker) packet);
+			else
+				seen.addLast(packet);
 
 			if (packet instanceof Token) {
 				if (LOGGER.isTraceEnabled())
@@ -72,23 +90,55 @@ public class BaseStream implements Stream {
 		}
 	}
 
-	/**
-	 * This inserts a given marker at the current position. When the stream gets
-	 * committed the marker will be sent along to the target. When the stream
-	 * gets rollbacked the marker will be removed instead.
-	 */
+	/** {@inheritDoc} */
 	public void insert(Marker marker) {
-		seen.addLast(marker);
+		if (weShouldDelay(marker)) {
+			delay(marker);
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("+> " + marker);
+		} else {
+			insertDelayedMarkers();
+			seen.addLast(marker);
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("+> " + marker);
+		}
 	}
 
 	/**
-	 * Move the stream back towards where we're just about to see this token.
+	 * Should we delay a certain marker before inserting it into the
+	 * {@linkplain #seen} list ? Delaying it makes it possible for "skipped"
+	 * tokens to move in front of these markers.
 	 * <p>
-	 * We expect tokens to be rewound in the order in which they were given.
+	 * Right now all {@linkplain Start} markers may be delayed. This way any
+	 * skipped tokens which come right after a {@linkplain Start} marker end up
+	 * before it, which means they won't become part of the subtree being
+	 * marked.
 	 */
+	private boolean weShouldDelay(Marker marker) {
+		return marker instanceof Start;
+	}
+
+	/**
+	 * Delay the given marker.
+	 * <p>
+	 * It is assumed the given marker has passed the tests in
+	 * {@linkplain #weShouldDelay(Marker)}.
+	 */
+	private void delay(Marker marker) {
+		delayedMarkers.addLast(marker);
+	}
+
+	/**
+	 * Add all delayed markers to the {@linkplain #seen} list.
+	 */
+	private void insertDelayedMarkers() {
+		while (!delayedMarkers.isEmpty()) {
+			Marker delayedMarker = delayedMarkers.removeFirst();
+			seen.addLast(delayedMarker);
+		}
+	}
+
+	/** {@inheritDoc} */
 	public void rewind(Token token) {
 		while (true) {
 			Data packet = seen.removeLast();
@@ -101,79 +151,88 @@ public class BaseStream implements Stream {
 
 			assert (packet == token);
 
-			// unseen.addFirst((Token) packet);
 			source.unshift((Token) packet);
 			break;
 		}
 	}
 
-	/**
-	 * Basically a {@linkplain #forward()}, followed by an immediate
-	 * {@linkplain #rewind(Token)}.
-	 */
+	/** {@inheritDoc} */
 	public Token peek() {
-		Level level = LOGGER.getLevel();
-		LOGGER.setLevel(Level.FATAL);
+		Token peeked = source.next();
 
-		Token t = forward();
-		if (t != null)
-			rewind(t);
+		if (peeked == null)
+			return null;
 
-		LOGGER.setLevel(level);
-		return t;
+		source.unshift(peeked);
+		return peeked;
 	}
 
-	/**
-	 * This is for tracing purposes. Gives up to five tokens worth of text.
-	 */
+	/** {@inheritDoc} */
 	public String peekMore() {
-		Level level = LOGGER.getLevel();
-		LOGGER.setLevel(Level.FATAL);
+		Token[] peeked = new Token[5];
+		int p = 0;
 
-		bookmark();
+		while (p < peeked.length) {
+			peeked[p] = source.next();
+
+			if (peeked[p] == null)
+				break;
+
+			p += 1;
+		}
+
+		if (p == 0)
+			return "[EOF]";
 
 		StringBuilder builder = new StringBuilder();
 
-		for (int i = 0; i < 5; i++) {
-			Token t = forward();
-			if (t == null)
-				break;
-
-			builder.append("[");
-			builder.append(t.getText());
-			builder.append("]");
+		for (int i = 0; i < p; i++) {
+			if (i == 0)
+				builder.append("[" + peeked[i].getStart() + "|");
+			builder.append(//
+			peeked[i].getText() //
+					.replaceAll("\n", "\\\\n")//
+					.replaceAll("\r", "\\\\r"));
 		}
 
-		rewind();
+		builder.append("]");
 
-		LOGGER.setLevel(level);
+		for (int i = p - 1; i >= 0; i--)
+			source.unshift(peeked[i]);
+
 		return builder.toString();
 	}
 
-	/**
-	 * Bookmark the current position in the stream. This will impact the
-	 * behaviour of {@linkplain BaseStream#rewind()} and
-	 * {@linkplain BaseStream#commit()}.
-	 */
+	/** {@inheritDoc} */
 	public void bookmark() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("!+ " + seen.size());
 
-		bookmarks.push(seen.size());
+		bookmarks.push(new Bookmark(this));
 	}
 
-	/**
-	 * Moves the stream back towards the last bookmark, or to the last commit.
-	 * <p>
-	 * Anything that's not a {@linkplain Token} will get removed again.
-	 */
+	/** {@inheritDoc} */
 	public void rewind() {
-		int bookmark = bookmarks.empty() ? 0 : bookmarks.pop();
+		final int position;
+
+		if (bookmarks.empty()) {
+			position = 0;
+			delayedMarkers.clear();
+
+		} else {
+			Bookmark bookmark = bookmarks.pop();
+			position = bookmark.position;
+
+			if (bookmark.delayedMarkers == null)
+				delayedMarkers.clear();
+			else
+				delayedMarkers = bookmark.delayedMarkers;
+		}
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("!- " + bookmark);
+			LOGGER.trace("!- " + position);
 
-		while (seen.size() > bookmark) {
+		while (seen.size() > position) {
 			Data packet = seen.removeLast();
 
 			if (LOGGER.isTraceEnabled())
@@ -187,13 +246,7 @@ public class BaseStream implements Stream {
 		}
 	}
 
-	/**
-	 * Commit all {@linkplain Data}s the latest bookmark (in effect removing
-	 * it). You won't be able to rewind beyond this point again.
-	 * <p>
-	 * If there was no bookmark then this will committing the entire stream so
-	 * far, which means pushing all tokens to that given {@linkplain Target}.
-	 */
+	/** {@inheritDoc} */
 	public void commit() {
 		if (bookmarks.isEmpty()) {
 			while (!seen.isEmpty()) {
@@ -206,18 +259,34 @@ public class BaseStream implements Stream {
 			}
 
 		} else {
-			int bookmark = bookmarks.pop();
+			Bookmark bookmark = bookmarks.pop();
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("!! " + bookmark);
+				LOGGER.trace("!! " + bookmark.position);
 		}
 	}
 
+	/** {@inheritDoc} */
 	public Parse getParse() {
 		return parse;
 	}
 
+	/** {@inheritDoc} */
 	public void setParse(Parse parse) {
 		this.parse = parse;
+	}
+
+	private final class Bookmark {
+		private final int position;
+		private final LinkedList<Marker> delayedMarkers;
+
+		public Bookmark(BaseStream stream) {
+			position = stream.seen.size();
+
+			if (stream.delayedMarkers.isEmpty())
+				delayedMarkers = null;
+			else
+				delayedMarkers = new LinkedList<Marker>(stream.delayedMarkers);
+		}
 	}
 }

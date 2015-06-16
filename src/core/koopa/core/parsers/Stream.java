@@ -3,6 +3,7 @@ package koopa.core.parsers;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
+import koopa.core.data.markers.Start;
 import koopa.core.sources.Source;
 import koopa.core.targets.Target;
 
@@ -14,22 +15,39 @@ import koopa.core.targets.Target;
  * {@linkplain Target}.
  * <p>
  * When the parse is complete (either successfully or not) the
- * {@linkplain Stream} will no longer be holding on to any
- * {@linkplain Data} itself. In particular, any {@linkplain Token}s which were
- * consumed but did not match will have been returned to their
- * {@linkplain Source}.
+ * {@linkplain Stream} will no longer be holding on to any {@linkplain Data}
+ * itself. In particular, any {@linkplain Token}s which were consumed but did
+ * not match will have been returned to their {@linkplain Source}.
  */
 public interface Stream {
 
 	/**
 	 * Get the next token in the stream.
+	 * <p>
+	 * This will force any delayed markers. Cfr. {@linkplain #insert(Marker)}.
 	 */
 	Token forward();
+
+	/**
+	 * Get the next token in the stream.
+	 * <p>
+	 * This will <b>not</b> force any delayed markers. Cfr.
+	 * {@linkplain #insert(Marker)}.
+	 */
+	Token skip();
 
 	/**
 	 * This inserts a given marker at the current position. When the stream gets
 	 * committed the marker will be sent along to the target. When the stream
 	 * gets rollbacked the marker will be removed instead.
+	 * <p>
+	 * Certain markers may get "delayed". This means they don't get pushed to
+	 * the target until something else comes along which forces it to.
+	 * <p>
+	 * Right now all {@linkplain Start} markers may be delayed. This way any
+	 * skipped tokens which come right after a {@linkplain Start} marker end up
+	 * before it, which means they won't become part of the subtree being
+	 * marked.
 	 */
 	void insert(Marker marker);
 
@@ -41,13 +59,14 @@ public interface Stream {
 	void rewind(Token token);
 
 	/**
-	 * Basically a {@linkplain #forward()}, followed by an immediate
-	 * {@linkplain #rewind(Token)}.
+	 * Get a look at the next upcoming {@linkplain Token} without it actually
+	 * getting consumed.
 	 */
 	Token peek();
 
 	/**
-	 * This is for tracing purposes. Gives up to five tokens worth of text.
+	 * This is for tracing purposes. Gives a textual representation of up to
+	 * five upcoming tokens.
 	 */
 	String peekMore();
 
@@ -75,9 +94,12 @@ public interface Stream {
 	void commit();
 
 	/**
-	 * The currently active parser.
+	 * The currently active {@linkplain Parse}.
 	 */
 	Parse getParse();
 
+	/**
+	 * Set the active {@linkplain Parse}.
+	 */
 	void setParse(Parse parse);
 }

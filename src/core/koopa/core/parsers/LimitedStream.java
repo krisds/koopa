@@ -20,6 +20,7 @@ public class LimitedStream implements Stream {
 		this.limiter = limiter;
 	}
 
+	/** {@inheritDoc} */
 	public Token forward() {
 		stream.bookmark();
 
@@ -43,38 +44,52 @@ public class LimitedStream implements Stream {
 			return stream.forward();
 	}
 
+	/** {@inheritDoc} */
+	public Token skip() {
+		return stream.skip();
+	}
+	
+	/** {@inheritDoc} */
 	public void insert(Marker marker) {
 		stream.insert(marker);
 	}
 
+	/** {@inheritDoc} */
 	public void rewind(Token token) {
 		stream.rewind(token);
 	}
 
+	/** {@inheritDoc} */
 	public Token peek() {
 		return stream.peek();
 	}
 
+	/** {@inheritDoc} */
 	public String peekMore() {
 		return stream.peekMore();
 	}
 
+	/** {@inheritDoc} */
 	public void bookmark() {
 		stream.bookmark();
 	}
 
+	/** {@inheritDoc} */
 	public void rewind() {
 		stream.rewind();
 	}
 
+	/** {@inheritDoc} */
 	public void commit() {
 		stream.commit();
 	}
 
+	/** {@inheritDoc} */
 	public Parse getParse() {
 		return stream.getParse();
 	}
 
+	/** {@inheritDoc} */
 	public void setParse(Parse parse) {
 		stream.setParse(parse);
 	}

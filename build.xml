@@ -103,6 +103,7 @@
 			<test name="koopa.core.treegrammars.test.TreeGrammarTest" />
 
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
+			<test name="koopa.core.sources.test.TestTokenizerTest" />
 
 			<test name="koopa.core.trees.test.TreePositionsTest" />
 			<test name="koopa.core.trees.test.ProgramTextTest" />

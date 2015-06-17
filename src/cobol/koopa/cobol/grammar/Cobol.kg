@@ -1900,7 +1900,9 @@ end
 
 def sourceClause =
     (SOURCE [IS] | SOURCES [ARE])
-    (arithmeticExpression | identifier)+
+    ( identifier (%not moreArithmeticOp)
+    | arithmeticExpression
+    )+
     [roundedPhrase]
 end
 
@@ -2553,15 +2555,15 @@ def callUsing =
                              | literal
                              )
           | [BY] CONTENT     ( LENGTH OF identifier
+                             | identifier (%not moreArithmeticOp)
+                             | literal    (%not moreArithmeticOp)
                              | arithmeticExpression
-                             | identifier
-                             | literal
                              )
           | [BY] VALUE       ( LENGTH OF identifier [ SIZE [IS] [LENGTH OF identifier | integer] ]
                              | integer SIZE [IS] [LENGTH OF identifier | integer]
+                             | identifier (%not moreArithmeticOp)
+                             | literal    (%not moreArithmeticOp)
                              | arithmeticExpression
-                             | identifier
-                             | literal
                              )
           )+
 end
@@ -3054,7 +3056,11 @@ def evaluateStatement =
 end
 
 def subject =
-	(condition | arithmeticExpression | identifier | literal)
+	( condition
+	| literal    (%not moreArithmeticOp)
+	| identifier (%not moreArithmeticOp)
+	| arithmeticExpression
+	)
 	
 	# TODO Condition may be the start of an arithmetic expression. If so it
 	# may match that expression incompletely, and cause the matching of the
@@ -3092,24 +3098,25 @@ def object =
 	| FALSE
     | condition
     
-    | [NOT] ( arithmeticExpression
-            | identifier
-            | literal
-            )
+    | [NOT]
+      ( identifier (%not moreArithmeticOp)
+      | literal    (%not moreArithmeticOp)
+      | arithmeticExpression
+      )
     | '(' object ')'
     )
 end
 
 def rangeExpression =
   [NOT] 
-  ( arithmeticExpression
-  | identifier
-  | literal
+  ( literal    (%not moreArithmeticOp)
+  | identifier (%not moreArithmeticOp)
+  | arithmeticExpression
   )
   ( THROUGH | THRU )
-  ( arithmeticExpression
-  | identifier
-  | literal
+  ( literal    (%not moreArithmeticOp)
+  | identifier (%not moreArithmeticOp)
+  | arithmeticExpression
   )
 end
 
@@ -3290,10 +3297,22 @@ end
 def invokeStatement =
     INVOKE identifier [AS (OBJECT | identifier)] (literal | identifier)
     
-    [ USING ( [[BY] REFERENCE] ( ADDRESS OF identifier | OMITTED | literal | identifier )
-            | [BY] CONTENT ( LENGTH OF identifier | arithmeticExpression | literal | identifier )
-            | [BY] VALUE ( LENGTH OF identifier | integer SIZE [IS] integer | arithmeticExpression | integer | identifier )
-            )+
+    [ USING
+      ( [[BY] REFERENCE] ( ADDRESS OF identifier | OMITTED | literal | identifier )
+      | [BY] CONTENT
+        ( LENGTH OF identifier
+        | literal    (%not moreArithmeticOp)
+        | identifier (%not moreArithmeticOp)
+        | arithmeticExpression
+        )
+      | [BY] VALUE
+        ( LENGTH OF identifier
+        | integer SIZE [IS] integer
+        | integer    (%not moreArithmeticOp)
+        | identifier (%not moreArithmeticOp)
+        | arithmeticExpression
+        )
+      )+
     ]
 
     [ (GIVING | RETURNING) [INTO | ADDRESS OF] identifier ]
@@ -4540,9 +4559,9 @@ def qualifiedReportCounter =
 end
 
 def argument =
-    ( arithmeticExpression
-    | literal
-    | identifier
+    ( literal     (%not moreArithmeticOp)
+    | identifier  (%not moreArithmeticOp)
+    | arithmeticExpression
     )
 end
 
@@ -4581,47 +4600,77 @@ def referenceModifier =
 end
 
 ## #############################################################################
-## Arithmetic expressions. Rewritten Adrian Noguero
+## Arithmetic expressions.
 ## -----------------------------------------------------------------------------
 
 # FIXME: A single numeric/identifier is considered an arithmeticExpression by this grammar.
 
+# TODO The binary operators also have internal precedence relationships. Cfr:
+# http://supportline.microfocus.com/documentation/books/sx51/lhpdf603.htm
+
 def arithmeticExpression =
-    bitwiseOperand (bitwiseOperator bitwiseOperand)*
+    expression (bitwiseOp expression)*
 end
 
-def bitwiseOperator =
-    (B-AND | B-OR | B-XOR | B-EXOR)
+private def bitwiseOp =
+    ( bAND : B-AND
+    | bOR  : B-OR
+    | bXOR : (B-XOR | B-EXOR)
+    )
 end
 
-def bitwiseOperand =
-    summand (signDef summand)*
+def expression =
+    term (addingOp term)*
 end
 
-def signDef =
-	('+' | '-')
+private def addingOp =
+	( add      : '+'
+	| subtract : '-'
+	)
 end
 
-def summand =
+def term =
     factor (('*' | '/') factor)*
 end
 
-def unaryOperator =
-    ('+' | '-' | B-NOT)
+private def multiplyingOp =
+	( multiply : '*'
+	| divide   : '/'
+	)
 end
 
 def factor =
-    [unaryOperator] atomicExpression ('**' [unaryOperator] atomicExpression)*
+    [unaryOp] atom (exponentiationOp [unaryOp] atom)*
+end
+
+private def unaryOp =
+    ( pos  : '+'
+    | neg  : '-'
+    | bNOT : B-NOT
+    )
+end
+
+private def exponentiationOp =
+    ( exp: '**' )
 end
 
 # TODO: Check sources for use of ZERO in this case.
-def atomicExpression =
+private def atom =
     ( zero
     | identifier
     | numeric
     | '(' arithmeticExpression ')'
     )
 end
+
+private def moreArithmeticOp =
+    ( bitwiseOp
+    | addingOp
+    | multiplyingOp
+    | exponentiationOp
+    )
+end
+
 
 ## #############################################################################
 ## Conditions.
@@ -4817,10 +4866,10 @@ end
 # TODO Arithmetic expression will (likely) capture all other cases as well. Can
 # we disambiguate this further ? 
 def operand =
-	( arithmeticExpression
-	| identifier
-	| literal
-	| indexName
+	( identifier (%not moreArithmeticOp)
+	| literal    (%not moreArithmeticOp)
+	| indexName  (%not moreArithmeticOp)
+	| arithmeticExpression
 	)
 end
 

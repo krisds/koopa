@@ -8719,8 +8719,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                    ),
                    plus(
                        choice(
-                           arithmeticExpression(),
-                           identifier()
+                           sequence(
+                               identifier(),
+                               not(
+                                   moreArithmeticOp()
+                               )
+                           ),
+                           arithmeticExpression()
                        )
                    ),
                    optional(
@@ -11035,9 +11040,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                                        token("OF"),
                                        identifier()
                                    ),
-                                   arithmeticExpression(),
-                                   identifier(),
-                                   literal()
+                                   sequence(
+                                       identifier(),
+                                       not(
+                                           moreArithmeticOp()
+                                       )
+                                   ),
+                                   sequence(
+                                       literal(),
+                                       not(
+                                           moreArithmeticOp()
+                                       )
+                                   ),
+                                   arithmeticExpression()
                                )
                            ),
                            sequence(
@@ -11086,9 +11101,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                                            )
                                        )
                                    ),
-                                   arithmeticExpression(),
-                                   identifier(),
-                                   literal()
+                                   sequence(
+                                       identifier(),
+                                       not(
+                                           moreArithmeticOp()
+                                       )
+                                   ),
+                                   sequence(
+                                       literal(),
+                                       not(
+                                           moreArithmeticOp()
+                                       )
+                                   ),
+                                   arithmeticExpression()
                                )
                            )
                        )
@@ -13471,9 +13496,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                sequence(
                    choice(
                        condition(),
-                       arithmeticExpression(),
-                       identifier(),
-                       literal()
+                       sequence(
+                           literal(),
+                           not(
+                               moreArithmeticOp()
+                           )
+                       ),
+                       sequence(
+                           identifier(),
+                           not(
+                               moreArithmeticOp()
+                           )
+                       ),
+                       arithmeticExpression()
                    ),
                    skipto(
                        choice(
@@ -13573,9 +13608,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                            token("NOT")
                        ),
                        choice(
-                           arithmeticExpression(),
-                           identifier(),
-                           literal()
+                           sequence(
+                               identifier(),
+                               not(
+                                   moreArithmeticOp()
+                               )
+                           ),
+                           sequence(
+                               literal(),
+                               not(
+                                   moreArithmeticOp()
+                               )
+                           ),
+                           arithmeticExpression()
                        )
                    ),
                    sequence(
@@ -13608,18 +13653,38 @@ public class CobolGrammar extends CobolBaseGrammar {
                        token("NOT")
                    ),
                    choice(
-                       arithmeticExpression(),
-                       identifier(),
-                       literal()
+                       sequence(
+                           literal(),
+                           not(
+                               moreArithmeticOp()
+                           )
+                       ),
+                       sequence(
+                           identifier(),
+                           not(
+                               moreArithmeticOp()
+                           )
+                       ),
+                       arithmeticExpression()
                    ),
                    choice(
                        token("THROUGH"),
                        token("THRU")
                    ),
                    choice(
-                       arithmeticExpression(),
-                       identifier(),
-                       literal()
+                       sequence(
+                           literal(),
+                           not(
+                               moreArithmeticOp()
+                           )
+                       ),
+                       sequence(
+                           identifier(),
+                           not(
+                               moreArithmeticOp()
+                           )
+                       ),
+                       arithmeticExpression()
                    )
                )
            );
@@ -14301,9 +14366,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                                                token("OF"),
                                                identifier()
                                            ),
-                                           arithmeticExpression(),
-                                           literal(),
-                                           identifier()
+                                           sequence(
+                                               literal(),
+                                               not(
+                                                   moreArithmeticOp()
+                                               )
+                                           ),
+                                           sequence(
+                                               identifier(),
+                                               not(
+                                                   moreArithmeticOp()
+                                               )
+                                           ),
+                                           arithmeticExpression()
                                        )
                                    ),
                                    sequence(
@@ -14325,9 +14400,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                                                ),
                                                integer()
                                            ),
-                                           arithmeticExpression(),
-                                           integer(),
-                                           identifier()
+                                           sequence(
+                                               integer(),
+                                               not(
+                                                   moreArithmeticOp()
+                                               )
+                                           ),
+                                           sequence(
+                                               identifier(),
+                                               not(
+                                                   moreArithmeticOp()
+                                               )
+                                           ),
+                                           arithmeticExpression()
                                        )
                                    )
                                )
@@ -18930,9 +19015,19 @@ public class CobolGrammar extends CobolBaseGrammar {
            argumentParser = future;
            future.setParser(
                choice(
-                   arithmeticExpression(),
-                   literal(),
-                   identifier()
+                   sequence(
+                       literal(),
+                       not(
+                           moreArithmeticOp()
+                       )
+                   ),
+                   sequence(
+                       identifier(),
+                       not(
+                           moreArithmeticOp()
+                       )
+                   ),
+                   arithmeticExpression()
                )
            );
         }
@@ -19084,11 +19179,11 @@ public class CobolGrammar extends CobolBaseGrammar {
            arithmeticExpressionParser = future;
            future.setParser(
                sequence(
-                   bitwiseOperand(),
+                   expression(),
                    star(
                        sequence(
-                           bitwiseOperator(),
-                           bitwiseOperand()
+                           bitwiseOp(),
+                           expression()
                        )
                    )
                )
@@ -19099,93 +19194,101 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // bitwiseOperator
+    // bitwiseOp
     // ........................................................
 
-    private ParserCombinator bitwiseOperatorParser = null;
+    private ParserCombinator bitwiseOpParser = null;
 
-    public final Start bitwiseOperator = Start.on(getNamespace(), "bitwiseOperator");
-
-    public ParserCombinator bitwiseOperator() {
-        if (bitwiseOperatorParser == null) {
-           FutureParser future = scoped("bitwiseOperator", true);
-           bitwiseOperatorParser = future;
+    private ParserCombinator bitwiseOp() {
+        if (bitwiseOpParser == null) {
+           FutureParser future = scoped("bitwiseOp", false);
+           bitwiseOpParser = future;
            future.setParser(
                choice(
-                   token("B-AND"),
-                   token("B-OR"),
-                   token("B-XOR"),
-                   token("B-EXOR")
-               )
-           );
-        }
-
-        return bitwiseOperatorParser;
-    }
-
-    // ========================================================
-    // bitwiseOperand
-    // ........................................................
-
-    private ParserCombinator bitwiseOperandParser = null;
-
-    public final Start bitwiseOperand = Start.on(getNamespace(), "bitwiseOperand");
-
-    public ParserCombinator bitwiseOperand() {
-        if (bitwiseOperandParser == null) {
-           FutureParser future = scoped("bitwiseOperand", true);
-           bitwiseOperandParser = future;
-           future.setParser(
-               sequence(
-                   summand(),
-                   star(
-                       sequence(
-                           signDef(),
-                           summand()
+                   as("bAND",
+                       token("B-AND")
+                   ),
+                   as("bOR",
+                       token("B-OR")
+                   ),
+                   as("bXOR",
+                       choice(
+                           token("B-XOR"),
+                           token("B-EXOR")
                        )
                    )
                )
            );
         }
 
-        return bitwiseOperandParser;
+        return bitwiseOpParser;
     }
 
     // ========================================================
-    // signDef
+    // expression
     // ........................................................
 
-    private ParserCombinator signDefParser = null;
+    private ParserCombinator expressionParser = null;
 
-    public final Start signDef = Start.on(getNamespace(), "signDef");
+    public final Start expression = Start.on(getNamespace(), "expression");
 
-    public ParserCombinator signDef() {
-        if (signDefParser == null) {
-           FutureParser future = scoped("signDef", true);
-           signDefParser = future;
+    public ParserCombinator expression() {
+        if (expressionParser == null) {
+           FutureParser future = scoped("expression", true);
+           expressionParser = future;
            future.setParser(
-               choice(
-                   literal("+"),
-                   literal("-")
+               sequence(
+                   term(),
+                   star(
+                       sequence(
+                           addingOp(),
+                           term()
+                       )
+                   )
                )
            );
         }
 
-        return signDefParser;
+        return expressionParser;
     }
 
     // ========================================================
-    // summand
+    // addingOp
     // ........................................................
 
-    private ParserCombinator summandParser = null;
+    private ParserCombinator addingOpParser = null;
 
-    public final Start summand = Start.on(getNamespace(), "summand");
+    private ParserCombinator addingOp() {
+        if (addingOpParser == null) {
+           FutureParser future = scoped("addingOp", false);
+           addingOpParser = future;
+           future.setParser(
+               choice(
+                   as("add",
+                       literal("+")
+                   ),
+                   as("subtract",
+                       literal("-")
+                   )
+               )
+           );
+        }
 
-    public ParserCombinator summand() {
-        if (summandParser == null) {
-           FutureParser future = scoped("summand", true);
-           summandParser = future;
+        return addingOpParser;
+    }
+
+    // ========================================================
+    // term
+    // ........................................................
+
+    private ParserCombinator termParser = null;
+
+    public final Start term = Start.on(getNamespace(), "term");
+
+    public ParserCombinator term() {
+        if (termParser == null) {
+           FutureParser future = scoped("term", true);
+           termParser = future;
            future.setParser(
                sequence(
                    factor(),
@@ -19202,31 +19305,32 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return summandParser;
+        return termParser;
     }
 
     // ========================================================
-    // unaryOperator
+    // multiplyingOp
     // ........................................................
 
-    private ParserCombinator unaryOperatorParser = null;
+    private ParserCombinator multiplyingOpParser = null;
 
-    public final Start unaryOperator = Start.on(getNamespace(), "unaryOperator");
-
-    public ParserCombinator unaryOperator() {
-        if (unaryOperatorParser == null) {
-           FutureParser future = scoped("unaryOperator", true);
-           unaryOperatorParser = future;
+    private ParserCombinator multiplyingOp() {
+        if (multiplyingOpParser == null) {
+           FutureParser future = scoped("multiplyingOp", false);
+           multiplyingOpParser = future;
            future.setParser(
                choice(
-                   literal("+"),
-                   literal("-"),
-                   token("B-NOT")
+                   as("multiply",
+                       literal("*")
+                   ),
+                   as("divide",
+                       literal("/")
+                   )
                )
            );
         }
 
-        return unaryOperatorParser;
+        return multiplyingOpParser;
     }
 
     // ========================================================
@@ -19244,16 +19348,16 @@ public class CobolGrammar extends CobolBaseGrammar {
            future.setParser(
                sequence(
                    optional(
-                       unaryOperator()
+                       unaryOp()
                    ),
-                   atomicExpression(),
+                   atom(),
                    star(
                        sequence(
-                           literal("**"),
+                           exponentiationOp(),
                            optional(
-                               unaryOperator()
+                               unaryOp()
                            ),
-                           atomicExpression()
+                           atom()
                        )
                    )
                )
@@ -19264,17 +19368,63 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
 
     // ========================================================
-    // atomicExpression
+    // unaryOp
     // ........................................................
 
-    private ParserCombinator atomicExpressionParser = null;
+    private ParserCombinator unaryOpParser = null;
 
-    public final Start atomicExpression = Start.on(getNamespace(), "atomicExpression");
+    private ParserCombinator unaryOp() {
+        if (unaryOpParser == null) {
+           FutureParser future = scoped("unaryOp", false);
+           unaryOpParser = future;
+           future.setParser(
+               choice(
+                   as("pos",
+                       literal("+")
+                   ),
+                   as("neg",
+                       literal("-")
+                   ),
+                   as("bNOT",
+                       token("B-NOT")
+                   )
+               )
+           );
+        }
 
-    public ParserCombinator atomicExpression() {
-        if (atomicExpressionParser == null) {
-           FutureParser future = scoped("atomicExpression", true);
-           atomicExpressionParser = future;
+        return unaryOpParser;
+    }
+
+    // ========================================================
+    // exponentiationOp
+    // ........................................................
+
+    private ParserCombinator exponentiationOpParser = null;
+
+    private ParserCombinator exponentiationOp() {
+        if (exponentiationOpParser == null) {
+           FutureParser future = scoped("exponentiationOp", false);
+           exponentiationOpParser = future;
+           future.setParser(
+               as("exp",
+                   literal("**")
+               )
+           );
+        }
+
+        return exponentiationOpParser;
+    }
+
+    // ========================================================
+    // atom
+    // ........................................................
+
+    private ParserCombinator atomParser = null;
+
+    private ParserCombinator atom() {
+        if (atomParser == null) {
+           FutureParser future = scoped("atom", false);
+           atomParser = future;
            future.setParser(
                choice(
                    zero(),
@@ -19289,7 +19439,30 @@ public class CobolGrammar extends CobolBaseGrammar {
            );
         }
 
-        return atomicExpressionParser;
+        return atomParser;
+    }
+
+    // ========================================================
+    // moreArithmeticOp
+    // ........................................................
+
+    private ParserCombinator moreArithmeticOpParser = null;
+
+    private ParserCombinator moreArithmeticOp() {
+        if (moreArithmeticOpParser == null) {
+           FutureParser future = scoped("moreArithmeticOp", false);
+           moreArithmeticOpParser = future;
+           future.setParser(
+               choice(
+                   bitwiseOp(),
+                   addingOp(),
+                   multiplyingOp(),
+                   exponentiationOp()
+               )
+           );
+        }
+
+        return moreArithmeticOpParser;
     }
 
     // ========================================================
@@ -19999,10 +20172,25 @@ public class CobolGrammar extends CobolBaseGrammar {
            operandParser = future;
            future.setParser(
                choice(
-                   arithmeticExpression(),
-                   identifier(),
-                   literal(),
-                   indexName()
+                   sequence(
+                       identifier(),
+                       not(
+                           moreArithmeticOp()
+                       )
+                   ),
+                   sequence(
+                       literal(),
+                       not(
+                           moreArithmeticOp()
+                       )
+                   ),
+                   sequence(
+                       indexName(),
+                       not(
+                           moreArithmeticOp()
+                       )
+                   ),
+                   arithmeticExpression()
                )
            );
         }

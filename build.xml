@@ -264,6 +264,25 @@
 		</jar>
 	</target>
 
+	<target name="dist-lite" depends="revision-number">
+		<jar destfile="koopa-r${revision}-lite.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="koopa.app.cli.ToXml" />
+				<attribute name="Class-Path" value="." />
+			</manifest>
+			<fileset dir="build">
+				<exclude name="koopa/app/" />
+			</fileset>
+			<fileset dir="build">
+				<include name="koopa/app/cli/" />
+			</fileset>
+			<!-- zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" / -->
+			<zipfileset excludes="META-INF/*.SF" src="lib/antlr-3.5.2-complete.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
+		</jar>
+	</target>
+
 	<target name="jar">
 		<jar destfile="koopa.jar" filesetmanifest="mergewithoutmain">
 			<manifest>

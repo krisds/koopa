@@ -85,16 +85,16 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		AnnotatedSourceSample sample = new AnnotatedSourceSample(
 				new FileReader(file));
 
-		Source<Token> source = getSource(sample, FIXED);
+		Source<Token> source = getSource(file.getAbsolutePath(), sample, FIXED);
 
 		sample.assertOutputIsAsExpected(source, this);
 	}
 
-	private Source<Token> getSource(AnnotatedSourceSample sample,
-			SourceFormat format) {
+	private Source<Token> getSource(String resourceName,
+			AnnotatedSourceSample sample, SourceFormat format) {
 		Source<Token> source = null;
 
-		source = new LineSplitter(sample.getReader());
+		source = new LineSplitter(resourceName, sample.getReader());
 
 		// TODO Get source format from file name as well, somehow.
 		source = new CompilerDirectives(source, format);

@@ -661,7 +661,7 @@ public class FunctionTest extends TestCase {
     public void testIdentifier_format1_72() {
       ParserCombinator parser = grammar.identifier_format1();
       assertNotNull(parser);
-      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION NUMVAL-C ( \"3.14\" \"£\" ) "));
+      TestTokenizer tokenizer = new TestTokenizer(getTokenizer(" FUNCTION NUMVAL-C ( \"3.14\" \"??\" ) "));
       assertTrue(parser.accepts(Parse.of(tokenizer)));
       assertTrue(tokenizer.isWhereExpected());
     }

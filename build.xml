@@ -88,6 +88,7 @@
 
 			<formatter type="brief" usefile="no" />
 
+			<test name="koopa.core.data.test.PositionTest" />
 			<test name="koopa.core.data.test.TokenTest" />
 			<test name="koopa.core.data.test.TokensTest" />
 

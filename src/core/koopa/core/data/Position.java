@@ -9,16 +9,27 @@ package koopa.core.data;
  */
 public final class Position {
 
-	public static final Position ZERO = new Position(0, 0, 0);
+	public static final Position ZERO = new Position(null, 0, 0, 0);
 
+	private final String resourceName;
 	private final int linenumber;
 	private final int positionInFile;
 	private final int positionInLine;
 
 	public Position(int positionInFile, int linenumber, int positionInLine) {
+		this(null, positionInFile, linenumber, positionInLine);
+	}
+
+	public Position(String filename, int positionInFile, int linenumber,
+			int positionInLine) {
+		this.resourceName = filename;
 		this.positionInFile = positionInFile;
 		this.linenumber = linenumber;
 		this.positionInLine = positionInLine;
+	}
+
+	public String getResourceName() {
+		return resourceName;
 	}
 
 	public int getLinenumber() {
@@ -34,12 +45,15 @@ public final class Position {
 	}
 
 	public Position offsetBy(int offset) {
-		return new Position(positionInFile + offset, linenumber, positionInLine
-				+ offset);
+		return new Position(resourceName, positionInFile + offset, linenumber,
+				positionInLine + offset);
 	}
 
 	public String toString() {
-		return linenumber + ":" + positionInLine;
+		if (resourceName != null)
+			return resourceName + "@" + linenumber + ":" + positionInLine;
+		else
+			return linenumber + ":" + positionInLine;
 	}
 
 	@Override
@@ -53,6 +67,9 @@ public final class Position {
 			return false;
 
 		Position other = (Position) obj;
+		if (resourceName != null && !resourceName.equals(other.resourceName))
+			return false;
+
 		return positionInFile == other.positionInFile;
 	}
 }

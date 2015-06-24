@@ -69,7 +69,8 @@ public class CobolParser implements ParserConfiguration {
 		final boolean isCopybook = CobolFiles.isCopybook(file);
 
 		// Build the tokenisation stage.
-		Source<Token> source = CobolTokens.getNewSource(reader, format,
+		Source<Token> source = CobolTokens.getNewSource(
+				file.getCanonicalPath(), reader, format,
 				intermediateTokenizers, preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
@@ -99,7 +100,7 @@ public class CobolParser implements ParserConfiguration {
 
 		Parse parse = Parse.of(source, ct);
 		boolean accepts = false;
-		
+
 		if (!buildTrees()) {
 			if (this.tokenSinks.size() > 0)
 				for (Target<Data> next : this.tokenSinks)

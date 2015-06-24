@@ -60,15 +60,16 @@ public class CoreSourcesValidationTest implements FileBasedTest, TokenValidator 
 		AnnotatedSourceSample sample = new AnnotatedSourceSample(
 				new FileReader(file));
 
-		Source<Token> source = getSource(sample);
+		Source<Token> source = getSource(file.getAbsolutePath(), sample);
 
 		sample.assertOutputIsAsExpected(source, this);
 	}
 
-	private Source<Token> getSource(AnnotatedSourceSample sample) {
+	private Source<Token> getSource(String resourceName,
+			AnnotatedSourceSample sample) {
 		Source<Token> source = null;
 
-		source = new LineSplitter(sample.getReader());
+		source = new LineSplitter(resourceName, sample.getReader());
 		if (file.getName().startsWith("LineSplitter"))
 			return source;
 

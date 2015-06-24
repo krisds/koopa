@@ -156,8 +156,10 @@ public class PreprocessingSource extends BasicSource<Token> implements
 					}
 
 					try {
-						copybookTokenizer = CobolTokens.getNewSource(
-								new FileReader(copybook), format, copybooks);
+						copybookTokenizer = CobolTokens.getNewSource(//
+								copybook.getAbsolutePath(), //
+								new FileReader(copybook), //
+								format, copybooks);
 
 						if (replacing != null) {
 							replacing.setSource(copybookTokenizer);

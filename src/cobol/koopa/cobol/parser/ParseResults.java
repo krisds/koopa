@@ -43,8 +43,10 @@ public class ParseResults {
 		if (msg == null)
 			return;
 
-		if (t == null)
-			t = new Token("", new Position(0, 0, 0), new Position(0, 0, 0));
+		if (t == null) {
+			Position p = new Position(file.getAbsolutePath(), 0, 0, 0);
+			t = new Token("", p, p);
+		}
 
 		this.warnings.add(new Tuple<Token, String>(t, msg));
 	}
@@ -53,8 +55,10 @@ public class ParseResults {
 		if (msg == null)
 			return;
 
-		if (t == null)
-			t = new Token("", new Position(0, 0, 0), new Position(0, 0, 0));
+		if (t == null) {
+			Position p = new Position(file.getAbsolutePath(), 0, 0, 0);
+			t = new Token("", p, p);
+		}
 
 		this.errors.add(new Tuple<Token, String>(t, msg));
 	}

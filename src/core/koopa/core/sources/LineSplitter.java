@@ -17,6 +17,7 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 
 	private static final int NO_CHARACTER = -2;
 
+	private final String resourceName;
 	private BufferedReader reader = null;
 
 	private int linenumber = 1;
@@ -30,7 +31,13 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 	private StringBuffer buffer = null;
 
 	public LineSplitter(Reader reader) {
+		this(null, reader);
+	}
+
+	public LineSplitter(String resourceName, Reader reader) {
 		assert (reader != null);
+
+		this.resourceName = resourceName;
 
 		if (reader instanceof BufferedReader)
 			this.reader = (BufferedReader) reader;
@@ -161,11 +168,13 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 	}
 
 	private void markStart() {
-		start = new Position(positionInFile, linenumber, positionInLine);
+		start = new Position(resourceName, positionInFile, linenumber,
+				positionInLine);
 	}
 
 	private void markEnd() {
-		end = new Position(positionInFile - 1, linenumber, positionInLine - 1);
+		end = new Position(resourceName, positionInFile - 1, linenumber,
+				positionInLine - 1);
 	}
 
 	public void close() {

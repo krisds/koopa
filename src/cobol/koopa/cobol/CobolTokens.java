@@ -21,8 +21,8 @@ import koopa.core.sources.Source;
 // TODO Make it so that CobolParser can reuse this. --> 
 // We'll need support for intermediate tokenizers and copybook lookup.
 public class CobolTokens {
-	public static Source<Token> getNewSource(Reader reader,
-			SourceFormat format,
+	public static Source<Token> getNewSource(String resourceName,
+			Reader reader, SourceFormat format,
 			List<ChainableSource<Token>> intermediateSources,
 			Copybooks copybooks) {
 
@@ -31,7 +31,7 @@ public class CobolTokens {
 		Source<Token> tokenizer;
 
 		// Split the input into lines.
-		tokenizer = new LineSplitter(new BufferedReader(reader));
+		tokenizer = new LineSplitter(resourceName, new BufferedReader(reader));
 		// Filter out some compiler directives.
 		tokenizer = new CompilerDirectives(tokenizer, format);
 		// Split up the different areas of each line.
@@ -68,12 +68,22 @@ public class CobolTokens {
 		return tokenizer;
 	}
 
+	public static Source<Token> getNewSource(String resourceName,
+			Reader reader, SourceFormat format, Copybooks copybooks) {
+		return getNewSource(resourceName, reader, format, null, copybooks);
+	}
+
 	public static Source<Token> getNewSource(Reader reader,
 			SourceFormat format, Copybooks copybooks) {
-		return getNewSource(reader, format, null, copybooks);
+		return getNewSource(null, reader, format, null, copybooks);
+	}
+
+	public static Source<Token> getNewSource(String resourceName,
+			Reader reader, SourceFormat format) {
+		return getNewSource(resourceName, reader, format, null, null);
 	}
 
 	public static Source<Token> getNewSource(Reader reader, SourceFormat format) {
-		return getNewSource(reader, format, null, null);
+		return getNewSource(null, reader, format, null, null);
 	}
 }

@@ -131,17 +131,7 @@ public class ApplicationSupport {
 
 		final int[] returnVal = new int[] { -1 };
 
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-					returnVal[0] = chooser.showOpenDialog(parent);
-				}
-			});
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		returnVal[0] = chooser.showOpenDialog(parent);
 
 		if (returnVal[0] == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = chooser.getSelectedFile();

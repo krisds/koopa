@@ -177,8 +177,8 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 			if (match instanceof Tree) {
 				final Tree tree = (Tree) match;
 
-				Position start = tree.getStart();
-				Position end = tree.getEnd();
+				Position start = tree.getStartPosition();
+				Position end = tree.getEndPosition();
 
 				// TODO Should highlight indivual ranges instead ?
 				highlights.addHighlight(start, end, HIGHLIGHT_COLOR);

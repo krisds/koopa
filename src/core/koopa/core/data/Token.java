@@ -21,6 +21,8 @@ public class Token implements Data {
 	private final List<Range> ranges;
 	private final Set<Object> tags;
 
+	private final Token replacing;
+
 	/**
 	 * Creates a new token from the given text, boundaries and tags.
 	 * <p>
@@ -43,13 +45,15 @@ public class Token implements Data {
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections.unmodifiableSet(new HashSet<Object>(Arrays
 				.asList(tags)));
+
+		this.replacing = null;
 	}
 
 	/**
 	 * <b>NOTE</b> This is package scoped on purpose. Intended for use by
 	 * {@linkplain Tokens} only.
 	 */
-	Token(String text, List<Range> ranges, Set<Object> tags) {
+	Token(String text, List<Range> ranges, Set<Object> tags, Token replacing) {
 		assert (ranges != null);
 		assert (ranges.size() > 0);
 
@@ -57,6 +61,8 @@ public class Token implements Data {
 
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections.unmodifiableSet(tags);
+
+		this.replacing = replacing;
 	}
 
 	/**
@@ -68,6 +74,9 @@ public class Token implements Data {
 	 * <p>
 	 * The {@linkplain Range}s of the original tokens, however, do get
 	 * aggregated into the new one.
+	 * <p>
+	 * The new token will not be seen as replacing some other token, despite
+	 * what any of the given tokens may say.
 	 * <p>
 	 * <b>NOTE</b> This is package scoped on purpose. Please use the
 	 * {@linkplain Tokens#join(List, Object...)} method instead.
@@ -89,6 +98,22 @@ public class Token implements Data {
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections.unmodifiableSet(new HashSet<Object>(Arrays
 				.asList(tags)));
+
+		this.replacing = null;
+	}
+
+	/**
+	 * Create a copy of one token, and register the copy as being a replacement
+	 * for another one.
+	 */
+	private Token(Token token, Token replacing) {
+		assert (token != null);
+		assert (replacing != null);
+
+		this.text = token.text;
+		this.ranges = token.ranges;
+		this.tags = token.tags;
+		this.replacing = replacing;
 	}
 
 	public String getText() {
@@ -134,7 +159,7 @@ public class Token implements Data {
 
 		Set<Object> newTags = new HashSet<Object>(tags);
 		newTags.addAll(Arrays.asList(additionalTags));
-		return new Token(text, ranges, newTags);
+		return new Token(text, ranges, newTags, replacing);
 	}
 
 	/**
@@ -148,7 +173,7 @@ public class Token implements Data {
 
 		Set<Object> newTags = new HashSet<Object>(tags);
 		newTags.removeAll(Arrays.asList(theseTags));
-		return new Token(text, ranges, newTags);
+		return new Token(text, ranges, newTags, replacing);
 	}
 
 	/**
@@ -159,17 +184,35 @@ public class Token implements Data {
 		Set<Object> newTags = new HashSet<Object>(tags);
 		newTags.remove(oldTag);
 		newTags.add(newTag);
-		return new Token(text, ranges, newTags);
+		return new Token(text, ranges, newTags, replacing);
+	}
+
+	/**
+	 * Creates a copy of this token, while linking it to another one by saying
+	 * that this token replaces it, either completely or in part.
+	 */
+	public Token asReplacing(Token replacing) {
+		if (replacing == null)
+			return this;
+		else
+			return new Token(this, replacing);
+	}
+
+	public Token getReplacing() {
+		return replacing;
 	}
 
 	@Override
 	public String toString() {
-		String s = "[" + getStart() + "|" + text + "|" + getEnd() + "]";
+		String s = null;
+		if (replacing == null)
+			s = "[" + getStart() + "|" + text + "|" + getEnd() + "]";
+		else
+			s = "{" + getStart() + "|" + text + "|" + getEnd() + "}";
 
-		if (!tags.isEmpty()) {
+		if (!tags.isEmpty())
 			for (Object tag : tags)
 				s += " @" + tag;
-		}
 
 		return s;
 	}

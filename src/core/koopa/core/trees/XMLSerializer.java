@@ -125,8 +125,8 @@ public class XMLSerializer {
 		if (!INCLUDE_POSITIONING)
 			return;
 
-		final Position start = tree.getStart();
-		final Position end = tree.getEnd();
+		final Position start = tree.getStartPosition();
+		final Position end = tree.getEndPosition();
 
 		if (start != null) {
 			writer.append(" from=\"" + start.getPositionInFile() + "\"");

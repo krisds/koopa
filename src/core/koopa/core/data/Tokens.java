@@ -58,7 +58,7 @@ public final class Tokens {
 		assert (!ranges.isEmpty());
 
 		final Token sub = new Token(text, Collections.unmodifiableList(ranges),
-				token.getTags());
+				token.getTags(), token.getReplacing());
 
 		return sub;
 	}
@@ -134,7 +134,7 @@ public final class Tokens {
 		assert (!ranges.isEmpty());
 
 		final Token sub = new Token(text, Collections.unmodifiableList(ranges),
-				token.getTags());
+				token.getTags(), token.getReplacing());
 
 		return sub;
 	}

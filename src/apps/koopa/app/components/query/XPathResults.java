@@ -94,7 +94,7 @@ public class XPathResults extends AbstractTableModel {
 				else
 					this.types.add(XPathResultType.TOKEN);
 
-				this.positions.add(tree.getStart());
+				this.positions.add(tree.getStartPosition());
 
 			} else if (value instanceof TreeAttribute) {
 				this.types.add(XPathResultType.ATTRIBUTE);

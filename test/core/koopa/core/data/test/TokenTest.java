@@ -70,9 +70,27 @@ public class TokenTest extends TestCase {
 		final Token t = new Token(TEXT, START, STOP, "Quote", "Grace Hopper");
 
 		assertSame(t, t.withTags());
-		// assertSame(t, t.withTags("Quote"));
-
 		assertSame(t, t.withoutTags());
-		// assertSame(t, t.withoutTags("Murray"));
+	}
+
+	@Test
+	public void canBeReplacingAToken() {
+		final Token r = new Token(TEXT, START, STOP, "Quote", "Grace Hopper");
+
+		final String text = "It is often easier to ask for forgiveness "
+				+ "than to ask for permission.";
+		final Position start = Position.ZERO;
+		final Position end = start.offsetBy(text.length());
+		final Token t = new Token(text, start, end);
+
+		assertNull(t.getReplacing());
+		assertSame(t, t.asReplacing(null));
+
+		final Token s = t.asReplacing(r);
+
+		assertEquals(text, s.getText());
+		assertEquals(start, s.getStart());
+		assertEquals(end, s.getEnd());
+		assertSame(r, s.getReplacing());
 	}
 }

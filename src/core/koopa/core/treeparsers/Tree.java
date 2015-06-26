@@ -80,27 +80,45 @@ public class Tree {
 		return data;
 	}
 
+	@Deprecated
+	public Position getStart() {
+		return getStartPosition();
+	}
+
 	/**
 	 * Searches the tree for the first known start position.
 	 * <p>
 	 * This does not take {@linkplain AreaTag#COMMENT}s into account.
 	 */
-	public Position getStart() {
+	public Position getStartPosition() {
+		Token start = getStartToken();
+		return start == null ? null : start.getStart();
+	}
+
+	/**
+	 * Searches the tree for the first non-{@linkplain AreaTag#COMMENT} token.
+	 */
+	public Token getStartToken() {
 		if (data instanceof Token) {
 			Token token = (Token) data;
 
 			if (!(token.hasTag(COMMENT)))
-				return token.getStart();
+				return token;
 		}
 
 		for (int i = 0; i < children.size(); i++) {
-			Position position = children.get(i).getStart();
+			Token token = children.get(i).getStartToken();
 
-			if (position != null)
-				return position;
+			if (token != null)
+				return token;
 		}
 
 		return null;
+	}
+
+	@Deprecated
+	public Position getEnd() {
+		return getEndPosition();
 	}
 
 	/**
@@ -108,19 +126,28 @@ public class Tree {
 	 * <p>
 	 * This does not take {@linkplain AreaTag#COMMENT}s into account.
 	 */
-	public Position getEnd() {
+	public Position getEndPosition() {
+		Token end = getEndToken();
+		return end == null ? null : end.getEnd();
+	}
+
+	/**
+	 * Searches the tree for the last known end non-{@linkplain AreaTag#COMMENT}
+	 * token.
+	 */
+	public Token getEndToken() {
 		if (data instanceof Token) {
 			Token token = (Token) data;
 
 			if (!(token.hasTag(COMMENT)))
-				return token.getEnd();
+				return token;
 		}
 
 		for (int i = children.size() - 1; i >= 0; i--) {
-			Position position = children.get(i).getEnd();
+			Token token = children.get(i).getEndToken();
 
-			if (position != null)
-				return position;
+			if (token != null)
+				return token;
 		}
 
 		return null;
@@ -210,7 +237,7 @@ public class Tree {
 	}
 
 	public int getLine() {
-		return getStart().getLinenumber();
+		return getStartPosition().getLinenumber();
 	}
 
 	@Override

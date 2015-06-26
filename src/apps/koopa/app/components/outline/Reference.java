@@ -26,7 +26,7 @@ public class Reference {
 	}
 
 	public int getPositionInFile() {
-		final Position start = tree.getStart();
+		final Position start = tree.getStartPosition();
 		return start != null ? start.getPositionInFile() : -1;
 	}
 

@@ -44,6 +44,8 @@ public class PreprocessingSource extends BasicSource<Token> implements
 
 	private Source<Token> copybookTokenizer = null;
 
+	private Token activeCopyStatement = null;
+
 	private LinkedList<Data> unsupportedDirective = null;
 
 	private SourceFormat format = null;
@@ -166,10 +168,14 @@ public class PreprocessingSource extends BasicSource<Token> implements
 							copybookTokenizer = replacing;
 						}
 
+						activeCopyStatement = new Token(tree.getProgramText(),
+								tree.getStartPosition(), tree.getEndPosition());
+
 					} catch (FileNotFoundException e) {
 						LOGGER.error("Problem while reading copybook: "
 								+ copybook, e);
 						unsupportedDirective = directive;
+						activeCopyStatement = null;
 					}
 				}
 
@@ -230,40 +236,36 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	 * @return The next available token.
 	 */
 	private Data nextOne() {
-		Data token = null;
-
 		if (unsupportedDirective != null) {
 			while (unsupportedDirective.size() > 0) {
-				token = unsupportedDirective.removeFirst();
-				if (!(token instanceof Marker))
-					return token;
+				Data data = unsupportedDirective.removeFirst();
+				if (!(data instanceof Marker))
+					return data;
 			}
 
 			unsupportedDirective = null;
 		}
 
 		if (copybookTokenizer != null) {
-			token = copybookTokenizer.next();
+			Token token = copybookTokenizer.next();
 
 			if (token != null)
-				return token;
+				return token.asReplacing(activeCopyStatement);
 
 			copybookTokenizer.close();
 			copybookTokenizer = null;
 		}
 
 		if (sourceSink != null) {
-			token = sourceSink.next();
+			Data data = sourceSink.next();
 
-			if (token != null)
-				return token;
+			if (data != null)
+				return data;
 
 			sourceSink = null;
 		}
 
-		token = sourceTokenizer.next();
-
-		return token;
+		return sourceTokenizer.next();
 	}
 
 	public void close() {

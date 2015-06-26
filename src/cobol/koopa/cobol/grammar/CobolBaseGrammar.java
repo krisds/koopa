@@ -11,6 +11,7 @@ import koopa.cobol.cics.grammar.CICSGrammar;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
+import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
@@ -77,10 +78,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						stream.rewind(lastToken);
 					}
 
-					parse.getStack().getScope().setRValue(new Token(picture));
-					/*
-					 * returnToken(new Token(picture));
-					 */
+					parse.getStack().getScope().setRValue(Tokens.join(picture));
 					return true;
 				}
 			});

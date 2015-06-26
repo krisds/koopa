@@ -21,10 +21,20 @@ public class Token implements Data {
 	private final List<Range> ranges;
 	private final Set<Object> tags;
 
+	/**
+	 * Creates a new token from the given text, boundaries and tags.
+	 * <p>
+	 * Start and end positions should belong to the same resource. I.e.
+	 * <code>start.getResourceName()</code> and
+	 * <code>(end.getResourceName())</code> are both null, or are equal.
+	 */
 	public Token(String text, Position start, Position end, Object... tags) {
-		assert(start != null);
-		assert(end != null);
-		
+		assert (start != null);
+		assert (end != null);
+		assert (start.getResourceName() == null
+				&& end.getResourceName() == null || start.getResourceName() != null
+				&& start.getResourceName().equals(end.getResourceName()));
+
 		this.text = text;
 
 		List<Range> ranges = new ArrayList<Range>(1);
@@ -35,20 +45,14 @@ public class Token implements Data {
 				.asList(tags)));
 	}
 
-	public Token(String text, List<Range> ranges, Object... tags) {
-		assert(ranges != null);
-		assert(ranges.size() > 0);
-		
-		this.text = text;
-		this.ranges = Collections.unmodifiableList(ranges);
-		this.tags = Collections.unmodifiableSet(new HashSet<Object>(Arrays
-				.asList(tags)));
-	}
+	/**
+	 * <b>NOTE</b> This is package scoped on purpose. Intended for use by
+	 * {@linkplain Tokens} only.
+	 */
+	Token(String text, List<Range> ranges, Set<Object> tags) {
+		assert (ranges != null);
+		assert (ranges.size() > 0);
 
-	public Token(String text, List<Range> ranges, Set<Object> tags) {
-		assert(ranges != null);
-		assert(ranges.size() > 0);
-		
 		this.text = text;
 
 		this.ranges = Collections.unmodifiableList(ranges);
@@ -64,8 +68,11 @@ public class Token implements Data {
 	 * <p>
 	 * The {@linkplain Range}s of the original tokens, however, do get
 	 * aggregated into the new one.
+	 * <p>
+	 * <b>NOTE</b> This is package scoped on purpose. Please use the
+	 * {@linkplain Tokens#join(List, Object...)} method instead.
 	 */
-	public Token(List<Token> tokens, Object... tags) {
+	Token(List<Token> tokens, Object... tags) {
 		StringBuffer buffer = new StringBuffer();
 
 		for (Token token : tokens)
@@ -76,8 +83,8 @@ public class Token implements Data {
 		List<Range> ranges = new ArrayList<Range>();
 		for (Token token : tokens)
 			ranges.addAll(token.ranges);
-		
-		assert(ranges.size() > 0);
+
+		assert (ranges.size() > 0);
 
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections.unmodifiableSet(new HashSet<Object>(Arrays

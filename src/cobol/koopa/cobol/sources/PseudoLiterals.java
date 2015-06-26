@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import koopa.core.data.Token;
+import koopa.core.data.Tokens;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 
@@ -57,7 +58,7 @@ public class PseudoLiterals extends ThreadedSource<Token> implements
 			next = source.next();
 		}
 
-		Token pseudoliteral = new Token(tokens, PROGRAM_TEXT_AREA,
+		Token pseudoliteral = Tokens.join(tokens, PROGRAM_TEXT_AREA,
 				CHARACTER_STRING, PSEUDO_LITERAL);
 
 		enqueue(pseudoliteral);

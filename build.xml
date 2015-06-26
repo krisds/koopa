@@ -86,6 +86,10 @@
 				</fileset>
 			</classpath>
 
+			<assertions>
+				<enable />
+			</assertions>
+
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.core.data.test.PositionTest" />
@@ -166,6 +170,10 @@
 				</fileset>
 			</classpath>
 
+			<assertions>
+				<enable />
+			</assertions>
+
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
@@ -184,6 +192,10 @@
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
+
+			<assertions>
+				<enable />
+			</assertions>
 
 			<formatter type="brief" usefile="no" />
 

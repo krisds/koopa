@@ -94,7 +94,8 @@ public class ContinuationWelding extends BasicSource<Token> implements
 				tokens.add(token);
 		}
 
-		final Token composedToken = new Token(tokens, PROGRAM_TEXT_AREA, FIXED);
+		final Token composedToken = Tokens.join(tokens, PROGRAM_TEXT_AREA,
+				FIXED);
 
 		// Add the composed token.
 		buffer.addLast(composedToken);

@@ -165,4 +165,18 @@ public final class Tokens {
 		return new Token[] { subtoken(token, 0, cutIndex),
 				subtoken(token, cutIndex) };
 	}
+
+	/**
+	 * Creates a new token which is equivalent to the composition of the given
+	 * ones, except for their tags.
+	 * <p>
+	 * <b>The tags of the original tokens are not aggregated.</b> Instead you
+	 * can specify whatever tags the new token should have as extra parameters.
+	 * <p>
+	 * The {@linkplain Range}s of the original tokens, however, do get
+	 * aggregated into the new one.
+	 */
+	public static Token join(List<Token> tokens, Object... tags) {
+		return new Token(tokens, tags);
+	}
 }

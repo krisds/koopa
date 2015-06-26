@@ -8,6 +8,7 @@ import java.util.List;
 
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
+import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.FutureParser;
@@ -138,7 +139,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 					if (parts.isEmpty())
 						return false;
 
-					Token cobolWord = new Token(parts, CHARACTER_STRING,
+					Token cobolWord = Tokens.join(parts, CHARACTER_STRING,
 							PROGRAM_TEXT_AREA);
 
 					String text = cobolWord.getText();

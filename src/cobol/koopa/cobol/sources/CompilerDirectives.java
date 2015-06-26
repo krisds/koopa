@@ -276,9 +276,8 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		// statement. We now prepare all tokens.
 
 		if (startOfToken > 0) {
-			final Token sequenceNumber = new Token(text.substring(0,
-					startOfToken), token.getStart(), token.getStart().offsetBy(
-					5), SEQUENCE_NUMBER_AREA, referenceFormat);
+			final Token sequenceNumber = Tokens.subtoken(token, 0, 6) //
+					.withTags(SEQUENCE_NUMBER_AREA, referenceFormat);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Sequence number: " + sequenceNumber);
@@ -287,10 +286,9 @@ public class CompilerDirectives extends BasicSource<Token> implements
 		}
 
 		final int endOfToken = Math.min(text.length(), 72);
-		final Token directive = new Token(text.substring(startOfToken,
-				endOfToken), token.getStart().offsetBy(startOfToken), token
-				.getStart().offsetBy(endOfToken - 1), COMPILER_DIRECTIVE,
-				referenceFormat);
+		final Token directive = Tokens
+				.subtoken(token, startOfToken, endOfToken) //
+				.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("CBL (PROCESS) statement: " + directive);
@@ -299,9 +297,8 @@ public class CompilerDirectives extends BasicSource<Token> implements
 
 		if (endOfToken < text.length()) {
 			// Extra identification area.
-			final Token identification = new Token(text.substring(72), token
-					.getStart().offsetBy(endOfToken), token.getEnd(),
-					INDICATOR_AREA, referenceFormat);
+			final Token identification = Tokens.subtoken(token, 72, endOfToken)
+					.withTags(INDICATOR_AREA, referenceFormat);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Identification: " + identification);

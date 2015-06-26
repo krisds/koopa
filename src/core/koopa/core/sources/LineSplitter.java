@@ -1,5 +1,7 @@
 package koopa.core.sources;
 
+import static koopa.core.data.tags.AreaTag.END_OF_LINE;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -93,7 +95,7 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 				nextPosition();
 				markEnd();
 
-				final Token token = produceToken("\n", AreaTag.END_OF_LINE);
+				final Token token = produceToken("\n", END_OF_LINE);
 
 				newLine();
 
@@ -116,8 +118,7 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 					nextPosition();
 					markEnd();
 
-					final Token token = produceToken("\r\n",
-							AreaTag.END_OF_LINE);
+					final Token token = produceToken("\r\n", END_OF_LINE);
 
 					newLine();
 
@@ -128,7 +129,7 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 				} else {
 					markEnd();
 
-					final Token token = produceToken("\r", AreaTag.END_OF_LINE);
+					final Token token = produceToken("\r", END_OF_LINE);
 
 					newLine();
 

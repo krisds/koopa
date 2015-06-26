@@ -41,8 +41,6 @@ public class TreeWalker {
 	private Tree current = null;
 
 	public TreeWalker(Tree scope) {
-		assert (scope != null);
-
 		this.scope = scope;
 	}
 

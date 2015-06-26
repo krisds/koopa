@@ -1,6 +1,11 @@
 package koopa.core.data.test;
 
 import static koopa.core.util.test.Util.asListOfRanges;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import junit.framework.TestCase;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
@@ -18,6 +23,8 @@ public class TokensTest extends TestCase {
 
 	private static final Position START = new Position(0, 0, 0);
 	private static final Position STOP = START.offsetBy(LENGTH - 1);
+
+	private static final Token TOKEN = new Token(TEXT, START, STOP);
 
 	@Test
 	public void testFullSubtokenIsSameAsOriginal() {
@@ -71,11 +78,17 @@ public class TokensTest extends TestCase {
 		assertEquals(t.getTags(), sub.getTags());
 	}
 
+	private Token tokenFromRanges(int... positions) {
+		List<Token> parts = new ArrayList<Token>(positions.length / 2);
+		for (int i = 0; i < positions.length; i += 2)
+			parts.add(Tokens.subtoken(TOKEN, positions[i], positions[i + 1]));
+		return Tokens.join(parts);
+	}
+
 	@Test
 	public void testSubtokenToEndSplitsRanges1() {
 		final int mid = LENGTH / 2;
-		final Token t = new Token(TEXT, asListOfRanges(0, mid - 1, mid,
-				LENGTH - 1));
+		final Token t = tokenFromRanges(0, mid, mid, LENGTH);
 
 		final int from = mid / 2;
 
@@ -92,8 +105,7 @@ public class TokensTest extends TestCase {
 	@Test
 	public void testSubtokenToEndSplitsRanges2() {
 		final int mid = LENGTH / 2;
-		final Token t = new Token(TEXT, asListOfRanges(0, mid - 1, mid,
-				LENGTH - 1));
+		final Token t = tokenFromRanges(0, mid, mid, LENGTH);
 
 		final int from = mid + mid / 2;
 
@@ -109,8 +121,7 @@ public class TokensTest extends TestCase {
 	@Test
 	public void testSubtokenSplitsRanges() {
 		final int mid = LENGTH / 2;
-		final Token t = new Token(TEXT, asListOfRanges(0, mid - 1, mid,
-				LENGTH - 1));
+		final Token t = tokenFromRanges(0, mid, mid, LENGTH);
 
 		final int from = mid / 2;
 		final int to = mid + mid / 2;
@@ -127,7 +138,7 @@ public class TokensTest extends TestCase {
 
 	@Test
 	public void testCanSplitToken() {
-		final Token t = new Token(TEXT, asListOfRanges(0, LENGTH - 1));
+		final Token t = tokenFromRanges(0, LENGTH);
 
 		final int mid = LENGTH / 2;
 		Token[] tokens = Tokens.split(t, mid);
@@ -144,4 +155,29 @@ public class TokensTest extends TestCase {
 		assertEquals(asListOfRanges(mid, LENGTH - 1), second.getRanges());
 	}
 
+	@Test
+	public void testCanJoinTokens() {
+		final Token t1 = new Token(TEXT, START, STOP, "Quote", "Grace Hopper");
+
+		final String text = "From then on, when anything went wrong with a computer, "
+				+ "we said it had bugs in it.";
+
+		final int length = text.length();
+		Position start = STOP.offsetBy(1);
+		Position end = start.offsetBy(length - 1);
+		final Token t2 = new Token(text, start, end, "Cobol");
+
+		final Token t = Tokens.join(Arrays.asList(new Token[] { t1, t2 }));
+
+		final String expected = TEXT + text;
+		assertEquals(expected, t.getText());
+		assertEquals(expected.length(), t.getLength());
+
+		// The combined token does not inherit the tags from its parts.
+		assertEquals(0, t.getTags().size());
+
+		assertEquals(
+				asListOfRanges(0, LENGTH - 1, LENGTH, LENGTH + length - 1),
+				t.getRanges());
+	}
 }

@@ -12,8 +12,8 @@ import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
 
 import java.io.IOException;
 
-import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.data.Tokens;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 
@@ -210,12 +210,6 @@ public class ProgramArea extends ThreadedSource<Token> implements Source<Token> 
 	}
 
 	private Token tokenizeArea(Token token, int begin, int end, Object... tags) {
-		final String text = token.getText().substring(begin, end);
-
-		final Position start = token.getStart();
-		final Token newToken = new Token(text, start.offsetBy(begin),
-				start.offsetBy(end - 1), tags);
-
-		return newToken;
+		return Tokens.subtoken(token, begin, end).withTags(tags);
 	}
 }

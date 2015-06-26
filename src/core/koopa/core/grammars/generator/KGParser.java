@@ -140,8 +140,8 @@ public class KGParser extends Parser {
 
 		CommonTree EOF3_tree=null;
 		RewriteRuleTokenStream stream_EOF=new RewriteRuleTokenStream(adaptor,"token EOF");
-		RewriteRuleSubtreeStream stream_rule=new RewriteRuleSubtreeStream(adaptor,"rule rule");
 		RewriteRuleSubtreeStream stream_meta=new RewriteRuleSubtreeStream(adaptor,"rule meta");
+		RewriteRuleSubtreeStream stream_rule=new RewriteRuleSubtreeStream(adaptor,"rule rule");
 
 		try {
 			// src/core/koopa/core/grammars/generator/KG.g:44:3: ( meta ( rule )* EOF -> ^( GRAMMAR meta ( rule )* ) )
@@ -182,7 +182,7 @@ public class KGParser extends Parser {
 			stream_EOF.add(EOF3);
 
 			// AST REWRITE
-			// elements: rule, meta
+			// elements: meta, rule
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -260,10 +260,10 @@ public class KGParser extends Parser {
 		CommonTree string_literal4_tree=null;
 		CommonTree string_literal5_tree=null;
 		CommonTree DOT6_tree=null;
-		RewriteRuleTokenStream stream_64=new RewriteRuleTokenStream(adaptor,"token 64");
 		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
-		RewriteRuleTokenStream stream_62=new RewriteRuleTokenStream(adaptor,"token 62");
 		RewriteRuleTokenStream stream_61=new RewriteRuleTokenStream(adaptor,"token 61");
+		RewriteRuleTokenStream stream_62=new RewriteRuleTokenStream(adaptor,"token 62");
+		RewriteRuleTokenStream stream_64=new RewriteRuleTokenStream(adaptor,"token 64");
 		RewriteRuleSubtreeStream stream_name=new RewriteRuleSubtreeStream(adaptor,"rule name");
 
 		try {
@@ -323,16 +323,16 @@ public class KGParser extends Parser {
 			stream_DOT.add(DOT6);
 
 			// AST REWRITE
-			// elements: n, s, n, n, n, s
+			// elements: n, n, n, s, n, s
 			// token labels: 
-			// rule labels: retval, s, n
+			// rule labels: s, n, retval
 			// token list labels: 
 			// rule list labels: 
 			// wildcard labels: 
 			retval.tree = root_0;
-			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 			RewriteRuleSubtreeStream stream_s=new RewriteRuleSubtreeStream(adaptor,"rule s",s!=null?s.getTree():null);
 			RewriteRuleSubtreeStream stream_n=new RewriteRuleSubtreeStream(adaptor,"rule n",n!=null?n.getTree():null);
+			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
 			// 56:5: -> { t == null && s == null }? ^( META ^( NAMED $n) )
@@ -589,8 +589,8 @@ public class KGParser extends Parser {
 
 		CommonTree PUBLIC9_tree=null;
 		CommonTree PRIVATE10_tree=null;
-		RewriteRuleTokenStream stream_PRIVATE=new RewriteRuleTokenStream(adaptor,"token PRIVATE");
 		RewriteRuleTokenStream stream_PUBLIC=new RewriteRuleTokenStream(adaptor,"token PUBLIC");
+		RewriteRuleTokenStream stream_PRIVATE=new RewriteRuleTokenStream(adaptor,"token PRIVATE");
 
 		try {
 			// src/core/koopa/core/grammars/generator/KG.g:68:3: ( PUBLIC -> PUBLIC | PRIVATE -> PRIVATE )
@@ -721,15 +721,15 @@ public class KGParser extends Parser {
 		CommonTree EQUALS15_tree=null;
 		CommonTree string_literal17_tree=null;
 		RewriteRuleTokenStream stream_OPEN_PAREN=new RewriteRuleTokenStream(adaptor,"token OPEN_PAREN");
-		RewriteRuleTokenStream stream_59=new RewriteRuleTokenStream(adaptor,"token 59");
 		RewriteRuleTokenStream stream_EQUALS=new RewriteRuleTokenStream(adaptor,"token EQUALS");
-		RewriteRuleTokenStream stream_CLOSE_PAREN=new RewriteRuleTokenStream(adaptor,"token CLOSE_PAREN");
-		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
-		RewriteRuleTokenStream stream_63=new RewriteRuleTokenStream(adaptor,"token 63");
+		RewriteRuleTokenStream stream_59=new RewriteRuleTokenStream(adaptor,"token 59");
 		RewriteRuleTokenStream stream_60=new RewriteRuleTokenStream(adaptor,"token 60");
+		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
+		RewriteRuleTokenStream stream_CLOSE_PAREN=new RewriteRuleTokenStream(adaptor,"token CLOSE_PAREN");
+		RewriteRuleTokenStream stream_63=new RewriteRuleTokenStream(adaptor,"token 63");
+		RewriteRuleSubtreeStream stream_sequence=new RewriteRuleSubtreeStream(adaptor,"rule sequence");
 		RewriteRuleSubtreeStream stream_modifier=new RewriteRuleSubtreeStream(adaptor,"rule modifier");
 		RewriteRuleSubtreeStream stream_locals=new RewriteRuleSubtreeStream(adaptor,"rule locals");
-		RewriteRuleSubtreeStream stream_sequence=new RewriteRuleSubtreeStream(adaptor,"rule sequence");
 
 		try {
 			// src/core/koopa/core/grammars/generator/KG.g:73:3: ( (v= modifier )? 'def' i= IDENTIFIER ( OPEN_PAREN l= locals CLOSE_PAREN )? ( 'returns' r= IDENTIFIER )? EQUALS sequence 'end' -> { v != null && l != null && r != null }? ^( RULE $v $i locals ^( RETURNS $r) sequence ) -> { v != null && l != null && r == null }? ^( RULE $v $i locals sequence ) -> { v != null && l == null && r != null }? ^( RULE $v $i ^( RETURNS $r) sequence ) -> { v != null && l == null && r == null }? ^( RULE $v $i sequence ) -> { v == null && l != null && r != null }? ^( RULE PUBLIC $i locals ^( RETURNS $r) sequence ) -> { v == null && l != null && r == null }? ^( RULE PUBLIC $i locals sequence ) -> { v == null && l == null && r != null }? ^( RULE PUBLIC $i ^( RETURNS $r) sequence ) -> ^( RULE PUBLIC $i sequence ) )
@@ -820,7 +820,7 @@ public class KGParser extends Parser {
 			stream_60.add(string_literal17);
 
 			// AST REWRITE
-			// elements: r, locals, v, sequence, r, sequence, v, locals, i, r, sequence, i, v, r, i, i, sequence, locals, sequence, i, i, sequence, i, i, sequence, sequence, locals, v
+			// elements: v, r, i, locals, sequence, sequence, sequence, i, i, sequence, i, r, locals, locals, i, sequence, sequence, r, i, i, locals, i, sequence, r, v, v, sequence, v
 			// token labels: r, i
 			// rule labels: v, retval
 			// token list labels: 
@@ -1157,14 +1157,14 @@ public class KGParser extends Parser {
 			// AST REWRITE
 			// elements: n, type
 			// token labels: 
-			// rule labels: retval, n, type
+			// rule labels: type, n, retval
 			// token list labels: 
 			// rule list labels: 
 			// wildcard labels: 
 			retval.tree = root_0;
-			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
-			RewriteRuleSubtreeStream stream_n=new RewriteRuleSubtreeStream(adaptor,"rule n",n!=null?n.getTree():null);
 			RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type",type!=null?type.getTree():null);
+			RewriteRuleSubtreeStream stream_n=new RewriteRuleSubtreeStream(adaptor,"rule n",n!=null?n.getTree():null);
+			RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 			root_0 = (CommonTree)adaptor.nil();
 			// 103:5: -> ^( DECLARATION $type $n)
@@ -1494,31 +1494,31 @@ public class KGParser extends Parser {
 		CommonTree BY54_tree=null;
 		CommonTree WITH56_tree=null;
 		CommonTree SKIP_TO57_tree=null;
-		RewriteRuleTokenStream stream_DOLLAR=new RewriteRuleTokenStream(adaptor,"token DOLLAR");
-		RewriteRuleTokenStream stream_SKIP_TO=new RewriteRuleTokenStream(adaptor,"token SKIP_TO");
+		RewriteRuleTokenStream stream_NUMBER=new RewriteRuleTokenStream(adaptor,"token NUMBER");
+		RewriteRuleTokenStream stream_EQUALS=new RewriteRuleTokenStream(adaptor,"token EQUALS");
+		RewriteRuleTokenStream stream_BANG=new RewriteRuleTokenStream(adaptor,"token BANG");
+		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
 		RewriteRuleTokenStream stream_OPEN_BRACKET=new RewriteRuleTokenStream(adaptor,"token OPEN_BRACKET");
+		RewriteRuleTokenStream stream_CLOSE_BRACKET=new RewriteRuleTokenStream(adaptor,"token CLOSE_BRACKET");
+		RewriteRuleTokenStream stream_LIMIT=new RewriteRuleTokenStream(adaptor,"token LIMIT");
+		RewriteRuleTokenStream stream_ANY=new RewriteRuleTokenStream(adaptor,"token ANY");
+		RewriteRuleTokenStream stream_WITH=new RewriteRuleTokenStream(adaptor,"token WITH");
+		RewriteRuleTokenStream stream_SKIP_TO=new RewriteRuleTokenStream(adaptor,"token SKIP_TO");
+		RewriteRuleTokenStream stream_NOT=new RewriteRuleTokenStream(adaptor,"token NOT");
+		RewriteRuleTokenStream stream_OPEN_PAREN=new RewriteRuleTokenStream(adaptor,"token OPEN_PAREN");
+		RewriteRuleTokenStream stream_STAR=new RewriteRuleTokenStream(adaptor,"token STAR");
 		RewriteRuleTokenStream stream_BY=new RewriteRuleTokenStream(adaptor,"token BY");
 		RewriteRuleTokenStream stream_NATIVE_CODE=new RewriteRuleTokenStream(adaptor,"token NATIVE_CODE");
-		RewriteRuleTokenStream stream_ANY=new RewriteRuleTokenStream(adaptor,"token ANY");
-		RewriteRuleTokenStream stream_STAR=new RewriteRuleTokenStream(adaptor,"token STAR");
-		RewriteRuleTokenStream stream_LIMIT=new RewriteRuleTokenStream(adaptor,"token LIMIT");
-		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
-		RewriteRuleTokenStream stream_NUMBER=new RewriteRuleTokenStream(adaptor,"token NUMBER");
-		RewriteRuleTokenStream stream_OPEN_PAREN=new RewriteRuleTokenStream(adaptor,"token OPEN_PAREN");
-		RewriteRuleTokenStream stream_PLUS=new RewriteRuleTokenStream(adaptor,"token PLUS");
-		RewriteRuleTokenStream stream_BANG=new RewriteRuleTokenStream(adaptor,"token BANG");
-		RewriteRuleTokenStream stream_EQUALS=new RewriteRuleTokenStream(adaptor,"token EQUALS");
-		RewriteRuleTokenStream stream_CLOSE_PAREN=new RewriteRuleTokenStream(adaptor,"token CLOSE_PAREN");
-		RewriteRuleTokenStream stream_NOT=new RewriteRuleTokenStream(adaptor,"token NOT");
+		RewriteRuleTokenStream stream_DOLLAR=new RewriteRuleTokenStream(adaptor,"token DOLLAR");
 		RewriteRuleTokenStream stream_NOSKIP=new RewriteRuleTokenStream(adaptor,"token NOSKIP");
-		RewriteRuleTokenStream stream_DOT=new RewriteRuleTokenStream(adaptor,"token DOT");
-		RewriteRuleTokenStream stream_WITH=new RewriteRuleTokenStream(adaptor,"token WITH");
-		RewriteRuleTokenStream stream_CLOSE_BRACKET=new RewriteRuleTokenStream(adaptor,"token CLOSE_BRACKET");
+		RewriteRuleTokenStream stream_IDENTIFIER=new RewriteRuleTokenStream(adaptor,"token IDENTIFIER");
+		RewriteRuleTokenStream stream_CLOSE_PAREN=new RewriteRuleTokenStream(adaptor,"token CLOSE_PAREN");
 		RewriteRuleTokenStream stream_TOKEN=new RewriteRuleTokenStream(adaptor,"token TOKEN");
-		RewriteRuleSubtreeStream stream_more=new RewriteRuleSubtreeStream(adaptor,"rule more");
+		RewriteRuleTokenStream stream_PLUS=new RewriteRuleTokenStream(adaptor,"token PLUS");
 		RewriteRuleSubtreeStream stream_sequence=new RewriteRuleSubtreeStream(adaptor,"rule sequence");
 		RewriteRuleSubtreeStream stream_dispatch=new RewriteRuleSubtreeStream(adaptor,"rule dispatch");
 		RewriteRuleSubtreeStream stream_more_dispatch=new RewriteRuleSubtreeStream(adaptor,"rule more_dispatch");
+		RewriteRuleSubtreeStream stream_more=new RewriteRuleSubtreeStream(adaptor,"rule more");
 		RewriteRuleSubtreeStream stream_part=new RewriteRuleSubtreeStream(adaptor,"rule part");
 
 		try {
@@ -1823,15 +1823,15 @@ public class KGParser extends Parser {
 					}
 
 					// AST REWRITE
-					// elements: b, a, IDENTIFIER
-					// token labels: b, a
+					// elements: a, b, IDENTIFIER
+					// token labels: a, b
 					// rule labels: retval
 					// token list labels: 
 					// rule list labels: 
 					// wildcard labels: 
 					retval.tree = root_0;
-					RewriteRuleTokenStream stream_b=new RewriteRuleTokenStream(adaptor,"token b",b);
 					RewriteRuleTokenStream stream_a=new RewriteRuleTokenStream(adaptor,"token a",a);
+					RewriteRuleTokenStream stream_b=new RewriteRuleTokenStream(adaptor,"token b",b);
 					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
@@ -1954,7 +1954,7 @@ public class KGParser extends Parser {
 					}
 
 					// AST REWRITE
-					// elements: more, r, r, more, sequence, sequence, sequence, sequence
+					// elements: r, sequence, sequence, more, r, sequence, sequence, more
 					// token labels: r
 					// rule labels: retval
 					// token list labels: 
@@ -2102,7 +2102,7 @@ public class KGParser extends Parser {
 					}
 
 					// AST REWRITE
-					// elements: sequence, sequence, r, r, sequence, sequence, more, more
+					// elements: r, r, more, more, sequence, sequence, sequence, sequence
 					// token labels: r
 					// rule labels: retval
 					// token list labels: 
@@ -2298,7 +2298,7 @@ public class KGParser extends Parser {
 					stream_CLOSE_BRACKET.add(CLOSE_BRACKET39);
 
 					// AST REWRITE
-					// elements: sequence, sequence, more
+					// elements: sequence, more, sequence
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2396,7 +2396,7 @@ public class KGParser extends Parser {
 					stream_CLOSE_PAREN.add(CLOSE_PAREN43);
 
 					// AST REWRITE
-					// elements: sequence, sequence, more
+					// elements: sequence, more, sequence
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2623,7 +2623,7 @@ public class KGParser extends Parser {
 
 					stream_part.add(part55.getTree());
 					// AST REWRITE
-					// elements: part, LIMIT, part
+					// elements: part, part, LIMIT
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -2671,16 +2671,16 @@ public class KGParser extends Parser {
 
 					stream_part.add(q.getTree());
 					// AST REWRITE
-					// elements: q, p, SKIP_TO, q
+					// elements: q, q, SKIP_TO, p
 					// token labels: 
-					// rule labels: retval, q, p
+					// rule labels: p, q, retval
 					// token list labels: 
 					// rule list labels: 
 					// wildcard labels: 
 					retval.tree = root_0;
-					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
-					RewriteRuleSubtreeStream stream_q=new RewriteRuleSubtreeStream(adaptor,"rule q",q!=null?q.getTree():null);
 					RewriteRuleSubtreeStream stream_p=new RewriteRuleSubtreeStream(adaptor,"rule p",p!=null?p.getTree():null);
+					RewriteRuleSubtreeStream stream_q=new RewriteRuleSubtreeStream(adaptor,"rule q",q!=null?q.getTree():null);
+					RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.getTree():null);
 
 					root_0 = (CommonTree)adaptor.nil();
 					// 184:3: -> ^( SEQUENCE ^( LIMIT $p $q) ^( SKIP_TO $q) )

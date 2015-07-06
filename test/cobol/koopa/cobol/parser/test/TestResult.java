@@ -19,15 +19,34 @@ import koopa.core.util.Tuple;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
-public class TargetResult {
+public class TestResult {
 
 	private String name = null;
 	private boolean valid = false;
 	private int tokenCount = 0;
 	private float coverage = 0;
+
 	private int errorCount = 0;
-	// String errors = entries[5];
+	private List<Tuple<Token, String>> errors = null;
+
 	private int warningCount = 0;
+	private List<Tuple<Token, String>> warnings = null;
+
+	public static TestResult from(ParseResults parseResults) {
+		TestResult result = new TestResult();
+
+		result.name = parseResults.getFile().getName();
+		result.valid = parseResults.isValidInput();
+		result.tokenCount = Metrics.getSignificantTokenCount(parseResults);
+		result.coverage = Metrics.getCoverage(parseResults);
+		result.errorCount = parseResults.getParse().getErrorCount();
+		result.warningCount = parseResults.getParse().getWarningCount();
+
+		result.errors = parseResults.getParse().getErrors();
+		result.warnings = parseResults.getParse().getWarnings();
+
+		return result;
+	}
 
 	// String warnings = entries[7];
 	public String getName() {
@@ -78,65 +97,59 @@ public class TargetResult {
 		this.warningCount = warningCount;
 	}
 
-	public List<String> getComparison(ParseResults result) {
+	public List<String> getComparison(TestResult actual) {
 		final List<String> messages = new ArrayList<String>();
-		if (result.isValidInput() != this.valid) {
-			if (this.valid) {
+		if (actual.valid != this.valid) {
+			if (this.valid)
 				messages.add("- This file used to parse. It no longer does.");
-			} else {
+			else
 				messages.add("+ This file used to fail parsing. It is now valid.");
-			}
 		}
 
-		final int tokenCount = Metrics.getSignificantTokenCount(result);
-		if (tokenCount != this.tokenCount) {
+		if (actual.tokenCount != this.tokenCount) {
 			// Positive case: when valid and count went up ?
-			if (tokenCount < this.tokenCount) {
+			if (actual.tokenCount < this.tokenCount) {
 				messages.add("  Number of tokens went down from "
-						+ this.tokenCount + " to " + tokenCount + ".");
+						+ this.tokenCount + " to " + actual.tokenCount + ".");
 
 			} else {
 				messages.add("  Number of tokens went up from "
-						+ this.tokenCount + " to " + tokenCount + ".");
+						+ this.tokenCount + " to " + actual.tokenCount + ".");
 			}
 		}
 
-		final float coverage = Metrics.getCoverage(result);
-		if (coverage != this.coverage) {
-			if (coverage < this.coverage) {
+		if (actual.coverage != this.coverage) {
+			if (actual.coverage < this.coverage) {
 				messages.add("- Coverage went down from " + this.coverage
-						+ " to " + coverage + ".");
+						+ " to " + actual.coverage + ".");
 
 			} else {
 				messages.add("+ Coverage went up from " + this.coverage
-						+ " to " + coverage + ".");
+						+ " to " + actual.coverage + ".");
 			}
 		}
 
-		if (result.getErrorCount() != this.errorCount) {
-			if (result.getErrorCount() < this.errorCount) {
+		if (actual.errorCount != this.errorCount) {
+			if (actual.errorCount < this.errorCount)
 				messages.add("+ Error count went down from " + this.errorCount
-						+ " to " + result.getErrorCount() + ".");
-
-			} else {
+						+ " to " + actual.errorCount + ".");
+			else
 				messages.add("- Error count went up from " + this.errorCount
-						+ " to " + result.getErrorCount() + ".");
-			}
+						+ " to " + actual.errorCount + ".");
 		}
 
 		// TODO Errors.
 
-		if (result.getWarningCount() != this.warningCount) {
-			if (result.getWarningCount() < this.warningCount) {
+		if (actual.warningCount != this.warningCount) {
+			if (actual.warningCount < this.warningCount)
 				messages.add("+ Warning count went down from "
-						+ this.warningCount + " to " + result.getWarningCount()
+						+ this.warningCount + " to " + actual.warningCount
 						+ ".");
 
-			} else {
+			else
 				messages.add("- Warning count went up from "
-						+ this.warningCount + " to " + result.getWarningCount()
+						+ this.warningCount + " to " + actual.warningCount
 						+ ".");
-			}
 		}
 
 		// TODO Warnings.
@@ -144,7 +157,7 @@ public class TargetResult {
 		return messages;
 	}
 
-	public static Map<String, TargetResult> loadFromFile(File expectedFile)
+	public static Map<String, TestResult> loadFromFile(File expectedFile)
 			throws IOException {
 		CSVReader reader = null;
 		try {
@@ -156,7 +169,7 @@ public class TargetResult {
 				return null;
 			}
 
-			final Map<String, TargetResult> targets = new HashMap<String, TargetResult>();
+			final Map<String, TestResult> targets = new HashMap<String, TestResult>();
 
 			// Entries.
 			while ((entries = reader.readNext()) != null) {
@@ -169,7 +182,7 @@ public class TargetResult {
 				final String warningCount = entries[6];
 				// final String warnings = entries[7];
 
-				TargetResult results = new TargetResult();
+				TestResult results = new TestResult();
 				results.setName(name);
 				results.setValid("true".equalsIgnoreCase(valid));
 				results.setTokenCount(Integer.parseInt(tokenCount));
@@ -194,7 +207,7 @@ public class TargetResult {
 		}
 	}
 
-	public static void saveToFile(Map<String, ParseResults> results,
+	public static void saveToFile(Map<String, TestResult> results,
 			File targetFile) throws IOException {
 
 		final FileWriter fw = new FileWriter(targetFile);
@@ -228,40 +241,32 @@ public class TargetResult {
 	}
 
 	private static void writeNextResult(CSVWriter writer, String name,
-			ParseResults results) throws IOException {
+			TestResult results) throws IOException {
 		final String[] entries = new String[8];
-		final boolean valid = results.isValidInput();
-		final float coverage = Metrics.getCoverage(results);
-		final int tokenCount = Metrics.getSignificantTokenCount(results);
 
-		final int errorCount = results.getErrorCount();
 		String errors = "";
-		for (int i = 0; i < errorCount; i++) {
-			if (i > 0) {
+		for (Tuple<Token, String> error : results.errors) {
+			if (errors.length() > 0)
 				errors += "\n";
-			}
-			final Tuple<Token, String> error = results.getError(i);
+
 			errors += error.getFirst() + " " + error.getSecond();
 		}
 
-		final int warningCount = results.getWarningCount();
 		String warnings = "";
-		for (int i = 0; i < warningCount; i++) {
-			if (i > 0) {
+		for (Tuple<Token, String> warning : results.warnings) {
+			if (warnings.length() > 0)
 				warnings += "\n";
-			}
-			final Tuple<Token, String> warning = results.getWarning(i);
+
 			warnings += warning.getFirst() + " " + warning.getSecond();
 		}
 
-		// TODO Output results.
 		entries[0] = name;
-		entries[1] = "" + valid;
-		entries[2] = "" + tokenCount;
-		entries[3] = "" + coverage;
-		entries[4] = "" + errorCount;
+		entries[1] = "" + results.valid;
+		entries[2] = "" + results.tokenCount;
+		entries[3] = "" + results.coverage;
+		entries[4] = "" + results.errorCount;
 		entries[5] = "" + errors;
-		entries[6] = "" + warningCount;
+		entries[6] = "" + results.warningCount;
 		entries[7] = "" + warnings;
 		writer.writeNext(entries);
 		writer.flush();

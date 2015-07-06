@@ -40,28 +40,23 @@ import javax.swing.text.StyledDocument;
 import koopa.app.components.highlights.Highlights;
 import koopa.app.components.highlights.SquiggleUnderlineHighlightPainter;
 import koopa.app.listeners.TokenSelectionListener;
-import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
-import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
+import koopa.core.parsers.Parse;
 import koopa.core.targets.TokenTracker;
+import koopa.core.util.Tuple;
 
 @SuppressWarnings("serial")
-public class SourceView extends JPanel implements ParsingListener {
+public class SourceView extends JPanel {
 
 	private JTextPane pane = null;
 
 	private JScrollPane scroll = null;
 
-	// private SourceViewIntermediateTokenizer tokenizer = null;
-
 	private List<Integer> lineOffsets = new ArrayList<Integer>();
 
 	private TokenTracker tokenTracker = null;
-
-	private SourceViewSink sink = null;
 
 	private Token selectedToken = null;
 
@@ -71,10 +66,8 @@ public class SourceView extends JPanel implements ParsingListener {
 	private List<Integer> matchingStartPositions = null;
 	private List<Integer> matchingEndPositions = null;
 
-	public SourceView(ParsingCoordinator coordinator) {
+	public SourceView() {
 		setupComponents();
-
-		coordinator.addParsingListener(this);
 	}
 
 	private void setupComponents() {
@@ -126,7 +119,7 @@ public class SourceView extends JPanel implements ParsingListener {
 		add(scroll, BorderLayout.CENTER);
 	}
 
-	private static Style getDefaultStyle(StyledDocument document) {
+	private static Style getWaterStyle(StyledDocument document) {
 		Style style = document.getStyle("water");
 		if (style == null) {
 			style = document.addStyle("water", null);
@@ -289,118 +282,11 @@ public class SourceView extends JPanel implements ParsingListener {
 		}
 	}
 
-	public void beforeParsing(File file, CobolParser config) {
-		pane.setText("");
-		pane.getHighlighter().removeAllHighlights();
-
-		// this.tokenizer = new SourceViewIntermediateTokenizer();
-		this.sink = new SourceViewSink();
-
-		// config.addIntermediateTokenizer(this.tokenizer);
-		config.addTokenSink(this.sink);
-	}
-
-	public void afterParsing(File file, ParseResults results) {
-		try {
-			final StyledDocument document = new DefaultStyledDocument();
-
-			document.insertString(0, getContents(file),
-					getDefaultStyle(document));
-
-			this.tokenTracker = results.getTokenTracker();
-
-			for (Token token : this.tokenTracker.getTokens()) {
-				if (token.hasTag(PROGRAM_TEXT_AREA) && !token.hasTag(COMMENT))
-					continue;
-
-				final int start = token.getStart().getPositionInFile() - 1;
-				final int end = token.getEnd().getPositionInFile();
-				final int len = end - start;
-
-				if (token.hasTag(COMPILER_DIRECTIVE))
-					document.setCharacterAttributes(start, len,
-							getCompilerDirectiveStyle(document), false);
-				else
-					document.setCharacterAttributes(start, len,
-							getCommentStyle(document), false);
-			}
-
-			final List<List<Token>> lines = sink.getLines();
-			for (List<Token> line : lines) {
-				for (Token token : line) {
-
-					final Style style;
-					if (token.hasTag(STRING_LITERAL)) {
-						style = getStringStyle(document);
-
-					} else if (token.hasTag(PROGRAM_TEXT_AREA)
-							&& token.hasTag(LAND) && !token.hasTag(COMMENT)) {
-						style = getLandStyle(document);
-
-					} else {
-						continue;
-					}
-
-					for (Range range : token.getRanges()) {
-						final int start = range.getStart().getPositionInFile() - 1;
-						final int end = range.getEnd().getPositionInFile();
-						final int len = end - start;
-						document.setCharacterAttributes(start, len, style,
-								false);
-					}
-				}
-			}
-
-			final Highlighter highlighter = pane.getHighlighter();
-			final HighlightPainter warningPainter = new SquiggleUnderlineHighlightPainter(
-					Color.ORANGE);
-			final HighlightPainter errorPainter = new SquiggleUnderlineHighlightPainter(
-					Color.RED);
-
-			for (int i = 0; i < results.getWarningCount(); i++) {
-				final Token token = results.getWarning(i).getFirst();
-				final int start = token.getStart().getPositionInFile() - 1;
-				final int end = token.getEnd().getPositionInFile();
-				final int len = end - start;
-
-				// document.setCharacterAttributes(start, len,
-				// getWarningStyle(document), false);
-				highlighter.addHighlight(start, start + len, warningPainter);
-			}
-
-			for (int i = 0; i < results.getErrorCount(); i++) {
-				final Token token = results.getError(i).getFirst();
-				if (token == null)
-					continue;
-				final int start = token.getStart().getPositionInFile() - 1;
-				final int end = token.getEnd().getPositionInFile();
-				final int len = end - start;
-
-				// document.setCharacterAttributes(start, len,
-				// getErrorStyle(document), false);
-				highlighter.addHighlight(start, start + len, errorPainter);
-			}
-
-			pane.setDocument(document);
-			pane.setCaretPosition(0);
-
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	public Token getTokenAt(int position) {
-		if (this.tokenTracker == null) {
+		if (tokenTracker == null)
 			return null;
-
-		} else {
-			return this.tokenTracker.getTokenAt(position);
-		}
+		else
+			return tokenTracker.getTokenAt(position);
 	}
 
 	public void addTokenSelectionListener(TokenSelectionListener listener) {
@@ -457,5 +343,80 @@ public class SourceView extends JPanel implements ParsingListener {
 
 	public Highlights getNewHighlights() {
 		return new Highlights(pane);
+	}
+
+	public void setParseResults(ParseResults results) {
+		pane.setText("");
+		pane.getHighlighter().removeAllHighlights();
+
+		try {
+			final StyledDocument document = new DefaultStyledDocument();
+
+			document.insertString(0, getContents(results.getFile()),
+					getWaterStyle(document));
+
+			tokenTracker = results.getParse().getTarget(TokenTracker.class);
+			for (Token token : tokenTracker.getTokens()) {
+				final Style style;
+
+				if (token.hasTag(COMPILER_DIRECTIVE))
+					style = getCompilerDirectiveStyle(document);
+				else if (!token.hasTag(PROGRAM_TEXT_AREA))
+					style = getCommentStyle(document);
+				else if (token.hasTag(COMMENT))
+					style = getCommentStyle(document);
+				else if (token.hasTag(STRING_LITERAL))
+					style = getStringStyle(document);
+				else if (token.hasTag(PROGRAM_TEXT_AREA) && token.hasTag(LAND))
+					style = getLandStyle(document);
+				else
+					continue;
+
+				for (Range range : token.getRanges()) {
+					final int start = range.getStart().getPositionInFile() - 1;
+					final int end = range.getEnd().getPositionInFile();
+					final int len = end - start;
+					document.setCharacterAttributes(start, len, style, false);
+				}
+			}
+
+			final Highlighter highlighter = pane.getHighlighter();
+			final HighlightPainter warningPainter = new SquiggleUnderlineHighlightPainter(
+					Color.ORANGE);
+			final HighlightPainter errorPainter = new SquiggleUnderlineHighlightPainter(
+					Color.RED);
+
+			final Parse parse = results.getParse();
+			for (Tuple<Token, String> warning : parse.getWarnings()) {
+				final Token token = warning.getFirst();
+				final int start = token.getStart().getPositionInFile() - 1;
+				final int end = token.getEnd().getPositionInFile();
+				final int len = end - start;
+				highlighter.addHighlight(start, start + len, warningPainter);
+			}
+
+			for (Tuple<Token, String> error : parse.getErrors()) {
+				final Token token = error.getFirst();
+				if (token == null)
+					continue;
+				final int start = token.getStart().getPositionInFile() - 1;
+				final int end = token.getEnd().getPositionInFile();
+				final int len = end - start;
+
+				highlighter.addHighlight(start, start + len, errorPainter);
+			}
+
+			pane.setDocument(document);
+			pane.setCaretPosition(0);
+
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

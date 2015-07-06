@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,10 +14,6 @@ import javax.swing.JPanel;
 
 import koopa.app.Application;
 import koopa.app.listeners.TokenSelectionListener;
-import koopa.cobol.parser.CobolParser;
-import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
-import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
@@ -27,8 +22,7 @@ import koopa.core.treeparsers.Tree;
 
 // TODO Style this a bit better.
 @SuppressWarnings("serial")
-public class Breadcrumb extends JPanel implements ParsingListener,
-		TokenSelectionListener {
+public class Breadcrumb extends JPanel implements TokenSelectionListener {
 
 	private static final Font FONT = new Font("Courier", Font.PLAIN, 10);
 
@@ -48,11 +42,8 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		}
 	};
 
-	public Breadcrumb(Application application, ParsingCoordinator coordinator) {
+	public Breadcrumb(Application application) {
 		this.application = application;
-
-		coordinator.addParsingListener(this);
-
 		setupComponents();
 	}
 
@@ -63,20 +54,6 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		noSelection.setFont(FONT);
 
 		add(noSelection);
-	}
-
-	public void beforeParsing(File file, CobolParser config) {
-		while (index > 0)
-			remove(labels.get(--index));
-
-		add(noSelection);
-
-		validate();
-		repaint();
-	}
-
-	public void afterParsing(File file, ParseResults results) {
-		this.parseTree = results.getTree();
 	}
 
 	public void selectedToken(Token token) {
@@ -173,5 +150,17 @@ public class Breadcrumb extends JPanel implements ParsingListener,
 		}
 
 		return breadcrumb;
+	}
+
+	public void setParseTree(Tree tree) {
+		while (index > 0)
+			remove(labels.get(--index));
+
+		add(noSelection);
+
+		this.parseTree = tree;
+
+		validate();
+		repaint();
 	}
 }

@@ -1,8 +1,6 @@
 package koopa.app.components.outline;
 
-
 import java.awt.BorderLayout;
-import java.io.File;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,24 +10,19 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
-import koopa.cobol.parser.ParsingListener;
+import koopa.core.trees.KoopaTreeBuilder;
 
-@SuppressWarnings("serial")
-public class CobolOutline extends JPanel implements ParsingListener {
+public class CobolOutline extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	private JTree tree = null;
 
 	private DefaultMutableTreeNode root = null;
 
-	private CobolOutlineTreeProcessor outliner = null;
-
-	public CobolOutline(ParsingCoordinator coordinator) {
+	public CobolOutline() {
 		setupComponents();
-
-		coordinator.addParsingListener(this);
 	}
 
 	private void setupComponents() {
@@ -51,35 +44,26 @@ public class CobolOutline extends JPanel implements ParsingListener {
 
 	public void addTreeSelectionListener(
 			TreeSelectionListener treeSelectionListener) {
-		this.tree.addTreeSelectionListener(treeSelectionListener);
+		tree.addTreeSelectionListener(treeSelectionListener);
 	}
 
 	public DefaultMutableTreeNode getSelected() {
 		return (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 	}
 
-	public void beforeParsing(File file, CobolParser config) {
-		this.root.removeAllChildren();
-		this.root.setUserObject(file);
+	public void setParseResults(ParseResults results) {
+		root.removeAllChildren();
+		root.setUserObject(results);
 
-		final DefaultTreeModel model = (DefaultTreeModel) this.tree.getModel();
+		CobolOutlineTreeProcessor outliner = new CobolOutlineTreeProcessor();
+		outliner.processes(results.getParse().getTarget(KoopaTreeBuilder.class)
+				.getTree(), results.getFile());
 
-		model.nodeStructureChanged(this.root);
+		if (outliner.hasTrees())
+			for (DefaultMutableTreeNode node : outliner.getTrees())
+				root.add(node);
 
-		this.outliner = new CobolOutlineTreeProcessor();
-		config.addTreeProcessor(this.outliner);
-	}
-
-	public void afterParsing(File file, ParseResults results) {
-		this.root.setUserObject(results);
-
-		if (this.outliner.hasTrees()) {
-			for (DefaultMutableTreeNode node : this.outliner.getTrees()) {
-				this.root.add(node);
-			}
-		}
-
-		final DefaultTreeModel model = (DefaultTreeModel) this.tree.getModel();
-		model.nodeStructureChanged(this.root);
+		final DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+		model.nodeStructureChanged(root);
 	}
 }

@@ -1,5 +1,6 @@
 package koopa.core.parsers;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import koopa.core.data.Token;
 import koopa.core.grammars.combinators.Opt;
 import koopa.core.sources.NullSource;
 import koopa.core.sources.Source;
+import koopa.core.targets.CompositeTarget;
 import koopa.core.targets.NullTarget;
 import koopa.core.targets.Target;
 import koopa.core.targets.WaterTagger;
@@ -21,12 +23,13 @@ public class Parse {
 	private Stack stack;
 
 	private Source<Token> source = new NullSource<Token>();
-	private Target<Data> target = new NullTarget<Data>();
+	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
 	private Stream stream = null;
 
 	private Set<Opt> options = new HashSet<Opt>();
 
 	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
+	private List<Tuple<Token, String>> errors = new LinkedList<Tuple<Token, String>>();
 
 	private Trace trace = new Trace();
 
@@ -35,13 +38,8 @@ public class Parse {
 	}
 
 	public static Parse of(Source<Token> source) {
-		return of(source, null);
-	}
-
-	public static Parse of(Source<Token> source, Target<Data> target) {
 		Parse parse = new Parse();
 		parse.setSource(source);
-		parse.setTarget(target);
 		return parse;
 	}
 
@@ -56,11 +54,14 @@ public class Parse {
 		this.source = source;
 	}
 
-	public void setTarget(Target<Data> target) {
-		if (target == null)
-			target = new NullTarget<Data>();
+	public void addTarget(Target<Data> target) {
+		if (target != null)
+			targets.add(target);
+	}
 
-		this.target = target;
+	public Parse to(Target<Data> target) {
+		addTarget(target);
+		return this;
 	}
 
 	public void setStream(Stream stream) {
@@ -69,10 +70,24 @@ public class Parse {
 	}
 
 	public Stream getStream() {
-		if (stream == null)
-			setStream(new BaseStream(source, new WaterTagger(target)));
+		if (stream == null) {
+			if (targets.isEmpty())
+				setStream(new BaseStream(source, new NullTarget<Data>()));
+			else
+				setStream(new BaseStream(source, new WaterTagger(all(targets))));
+		}
 
 		return stream;
+	}
+
+	private Target<Data> all(List<Target<Data>> targets) {
+		if (targets.size() == 1)
+			return targets.get(0);
+
+		CompositeTarget<Data> composite = new CompositeTarget<Data>();
+		for (Target<Data> target : targets)
+			composite.addTarget(target);
+		return composite;
 	}
 
 	public Trace getTrace() {
@@ -95,17 +110,59 @@ public class Parse {
 	}
 
 	public void warn(Token t, String msg) {
-		if (msg != null) {
-			this.warnings.add(new Tuple<Token, String>(t, msg));
-		}
+		if (msg != null)
+			warnings.add(new Tuple<Token, String>(t, msg));
 	}
 
 	public boolean hasWarnings() {
-		return !this.warnings.isEmpty();
+		return !warnings.isEmpty();
 	}
 
 	public List<Tuple<Token, String>> getWarnings() {
-		return this.warnings;
+		return Collections.unmodifiableList(warnings);
 	}
 
+	public int getWarningCount() {
+		return warnings.size();
+	}
+
+	public Tuple<Token, String> getWarning(int index) {
+		return warnings.get(index);
+	}
+
+	public void error(Token t, String msg) {
+		if (msg != null)
+			errors.add(new Tuple<Token, String>(t, msg));
+	}
+
+	public boolean hasErrors() {
+		return !errors.isEmpty();
+	}
+
+	public List<Tuple<Token, String>> getErrors() {
+		return Collections.unmodifiableList(errors);
+	}
+
+	public int getErrorCount() {
+		return errors.size();
+	}
+
+	public Tuple<Token, String> getError(int index) {
+		return errors.get(index);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
+		for (Target<Data> target : targets)
+			if (clazz.isInstance(target))
+				return (T) target;
+
+		return null;
+	}
+
+	public void removeTarget(Class<? extends Target<Data>> clazz) {
+		Target<Data> target = getTarget(clazz);
+		if (target != null)
+			targets.remove(target);
+	}
 }

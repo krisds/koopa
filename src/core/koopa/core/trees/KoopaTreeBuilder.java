@@ -11,7 +11,7 @@ import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.treeparsers.Tree;
 
-public class KoopaTreeBuilder implements TreeBuilder {
+public class KoopaTreeBuilder extends TreeBuildingTarget {
 
 	/**
 	 * Any leaves preceding the first tree get tracked here. They will be added
@@ -30,10 +30,22 @@ public class KoopaTreeBuilder implements TreeBuilder {
 	private List<Tree> trees = new LinkedList<Tree>();
 
 	public KoopaTreeBuilder() {
+		this(false);
+	}
+
+	public KoopaTreeBuilder(boolean hideWater) {
+		super(hideWater);
 	}
 
 	public List<Tree> getTrees() {
 		return this.trees;
+	}
+
+	public Tree getTree() {
+		if (trees.isEmpty())
+			return null;
+		else
+			return trees.get(0);
 	}
 
 	/** {@inheritDoc} */
@@ -98,9 +110,5 @@ public class KoopaTreeBuilder implements TreeBuilder {
 
 		if (this.treeparts.isEmpty())
 			this.trees.add(tree);
-	}
-
-	public TreeBuildDirectingSink getTarget() {
-		return new TreeBuildDirectingSink(this, false);
 	}
 }

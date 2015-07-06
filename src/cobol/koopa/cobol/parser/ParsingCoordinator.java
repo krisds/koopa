@@ -2,20 +2,15 @@ package koopa.cobol.parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.Copybooks;
 import koopa.cobol.sources.SourceFormat;
-import koopa.core.data.Token;
-import koopa.core.sources.ChainableSource;
 
 public class ParsingCoordinator {
-	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
-
-	private List<ParsingListener> parsingListeners = new LinkedList<ParsingListener>();
 
 	private boolean keepingTrackOfTokens = false;
+	// TODO buildTrees option ?
 
 	private SourceFormat format = SourceFormat.FIXED;
 
@@ -23,7 +18,7 @@ public class ParsingCoordinator {
 	private boolean preprocessing = false;
 
 	/** EXPERIMENTAL */
-	private List<File> copybookPaths = new ArrayList<File>();
+	private Copybooks copybooks = new Copybooks();
 
 	public ParsingCoordinator() {
 	}
@@ -37,7 +32,7 @@ public class ParsingCoordinator {
 		this.keepingTrackOfTokens = parsingCoordinator.keepingTrackOfTokens;
 		this.format = parsingCoordinator.format;
 		this.preprocessing = parsingCoordinator.preprocessing;
-		this.copybookPaths.addAll(parsingCoordinator.copybookPaths);
+		this.copybooks.addAllFrom(parsingCoordinator.copybooks);
 	}
 
 	public SourceFormat getFormat() {
@@ -48,47 +43,19 @@ public class ParsingCoordinator {
 		this.format = format;
 	}
 
-	public void addParsingListener(ParsingListener listener) {
-		this.parsingListeners.add(listener);
-	}
-
 	public ParseResults parse(File file) throws IOException {
 		CobolParser parser = new CobolParser();
 
-		parser.setFormat(this.format);
+		parser.setFormat(format);
 		parser.setKeepingTrackOfTokens(keepingTrackOfTokens);
 
-		for (ChainableSource<Token> intermediateTokenizer : this.intermediateTokenizers) {
-			parser.addIntermediateTokenizer(intermediateTokenizer);
-		}
-
-		parser.setPreprocessing(this.preprocessing);
-		parser.setCopybookPath(this.copybookPaths);
-
-		fireBeforeParsing(file, parser);
+		parser.setPreprocessing(preprocessing);
+		parser.setCopybooks(copybooks);
 
 		parser.setBuildTrees(true);
 		ParseResults results = parser.parse(file);
 
-		fireAfterParsing(file, results);
-
 		return results;
-	}
-
-	private void fireBeforeParsing(File file, CobolParser config) {
-		for (ParsingListener listener : this.parsingListeners) {
-			listener.beforeParsing(file, config);
-		}
-	}
-
-	private void fireAfterParsing(File file, ParseResults results) {
-		for (ParsingListener listener : this.parsingListeners) {
-			listener.afterParsing(file, results);
-		}
-	}
-
-	public void addIntermediateTokenizer(ChainableSource<Token> tokenizer) {
-		this.intermediateTokenizers.add(tokenizer);
 	}
 
 	public boolean isKeepingTrackOfTokens() {
@@ -114,16 +81,16 @@ public class ParsingCoordinator {
 		if (path == null)
 			return;
 
-		this.copybookPaths.add(path);
+		this.copybooks.addPath(path);
 	}
 
 	/** EXPERIMENTAL ! */
 	public List<File> getCopybookPaths() {
-		return new ArrayList<File>(copybookPaths);
+		return copybooks.getPaths();
 	}
 
 	/** EXPERIMENTAL ! */
 	public void removeCopybookPath(File path) {
-		copybookPaths.remove(path);
+		copybooks.removePath(path);
 	}
 }

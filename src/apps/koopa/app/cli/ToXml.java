@@ -10,7 +10,9 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
+import koopa.core.parsers.Parse;
 import koopa.core.treeparsers.Tree;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.XMLSerializer;
 import koopa.core.util.Tuple;
 
@@ -138,28 +140,25 @@ public class ToXml {
 			System.exit(IOEXCEPTION);
 		}
 
-		if (results.getErrorCount() > 0) {
-			for (int i = 0; i < results.getErrorCount(); i++) {
-				final Tuple<Token, String> error = results.getError(i);
+		Parse parse = results.getParse();
+
+		if (parse.hasErrors())
+			for (Tuple<Token, String> error : parse.getErrors())
 				System.out.println("Error: " + error.getFirst() + " "
 						+ error.getSecond());
-			}
-		}
 
-		if (results.getWarningCount() > 0) {
-			for (int i = 0; i < results.getWarningCount(); i++) {
-				final Tuple<Token, String> warning = results.getWarning(i);
+		if (parse.hasWarnings())
+			for (Tuple<Token, String> warning : parse.getWarnings())
 				System.out.println("Warning: " + warning.getFirst() + " "
 						+ warning.getSecond());
-			}
-		}
 
 		if (!results.isValidInput()) {
 			System.out.println("Could not parse " + source);
 			return;
 		}
 
-		final Tree ast = results.getTree();
+		final Tree ast = results.getParse().getTarget(KoopaTreeBuilder.class)
+				.getTree();
 
 		try {
 			XMLSerializer.serialize(ast, target);

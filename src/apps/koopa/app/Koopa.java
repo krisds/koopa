@@ -58,11 +58,12 @@ import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.treeparsers.Tree;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.util.Tuple;
 
 import org.apache.log4j.PropertyConfigurator;
 
-public class Koopa extends JFrame implements Application, Configurable {
+public class Koopa extends JFrame implements Application {
 
 	private static final long serialVersionUID = 1L;
 
@@ -131,8 +132,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 	public Koopa() {
 		super("Koopa - revision " + ApplicationSupport.getRevision());
 
-		ApplicationSupport.configureFromProperties("koopa.properties", this);
-
 		setupComponents();
 		setupMenuBar();
 
@@ -144,9 +143,6 @@ public class Koopa extends JFrame implements Application, Configurable {
 		setSize(screenSize.width - 100, screenSize.height - 100);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-	}
-
-	public void setOption(String name, String value) {
 	}
 
 	private void setupMenuBar() {
@@ -658,7 +654,7 @@ public class Koopa extends JFrame implements Application, Configurable {
 		if (view == overview)
 			return null;
 		else
-			return ((Detail) view).getParseResults().getTree();
+			return ((Detail) view).getTree();
 	}
 
 	public Component getView() {

@@ -13,6 +13,7 @@ import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
+import koopa.core.trees.KoopaTreeBuilder;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -51,7 +52,8 @@ public class CobolStructureSample {
 			final ParseResults parseResults = parser.parse(file);
 			if (parseResults.isValidInput()) {
 
-				if (acceptedByCobolStructureTreeParser(parseResults.getTree())) {
+				if (acceptedByCobolStructureTreeParser(parseResults.getParse()
+						.getTarget(KoopaTreeBuilder.class).getTree())) {
 					System.out
 							.println("Tree parser match was successful as well.");
 					acceptedByTreeParser += 1;

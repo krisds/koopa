@@ -3,6 +3,7 @@ package koopa.cobol;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import koopa.core.util.Files;
@@ -17,10 +18,10 @@ public class Copybooks {
 
 	// TODO Take library name into account.
 	public File lookup(final String textName, final String libraryName) {
-		if (this.copybookPaths == null)
+		if (copybookPaths == null)
 			return null;
 
-		for (File path : this.copybookPaths) {
+		for (File path : copybookPaths) {
 			File[] matches = path.listFiles(new FilenameFilter() {
 				public boolean accept(File path, String name) {
 					return CobolFiles.isCopybook(name)
@@ -35,4 +36,20 @@ public class Copybooks {
 		return null;
 	}
 
+	public void addAllFrom(Copybooks copybooks) {
+		copybookPaths.addAll(copybooks.copybookPaths);
+
+	}
+
+	public void addPath(File path) {
+		copybookPaths.add(path);
+	}
+
+	public void removePath(File path) {
+		copybookPaths.remove(path);
+	}
+
+	public List<File> getPaths() {
+		return Collections.unmodifiableList(copybookPaths);
+	}
 }

@@ -203,43 +203,6 @@ public class ApplicationSupport {
 				defaultValue).trim();
 	}
 
-	public static void configureFromProperties(String filename, Configurable app) {
-		FileInputStream stream = null;
-
-		try {
-			LOGGER.info("Loading configuration options from \"" + filename
-					+ "\".");
-
-			Properties properties = new Properties();
-			stream = new FileInputStream(new File(filename));
-			properties.load(stream);
-
-			for (Object key : properties.keySet()) {
-				final String name = (String) key;
-				final String value = properties.getProperty(name);
-				app.setOption(name, value);
-			}
-
-			LOGGER.info("Configuration loaded.");
-
-		} catch (FileNotFoundException e) {
-			LOGGER.info("Could not find \"" + filename
-					+ "\". Going with defaults.");
-
-		} catch (IOException e) {
-			LOGGER.error("IOException while reading \"" + filename + "\".", e);
-
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException e) {
-				LOGGER.error("IOException while closing \"" + filename + "\".",
-						e);
-			}
-		}
-	}
-
 	public static JFrame inFrame(String title, Component component) {
 		JFrame frame = new JFrame(title);
 

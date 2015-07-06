@@ -10,6 +10,9 @@ import javax.swing.table.AbstractTableModel;
 import koopa.app.ApplicationSupport;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
+import koopa.core.parsers.Parse;
+import koopa.core.targets.TokenTracker;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.trees.jaxen.XPathException;
 
@@ -47,9 +50,8 @@ public class BatchResults extends AbstractTableModel {
 		customKeys = ApplicationSupport.getCustomColumnKeys();
 
 		// Create value lists:
-		for (String key : customKeys) {
-			this.custom.put(key, new ArrayList<Object>());
-		}
+		for (String key : customKeys)
+			custom.put(key, new ArrayList<Object>());
 	}
 
 	public int getColumnCount() {
@@ -102,51 +104,49 @@ public class BatchResults extends AbstractTableModel {
 	}
 
 	public int getRowCount() {
-		return this.files.size();
+		return files.size();
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN: {
-			ParseResults results = this.parseResults.get(rowIndex);
-			if (!results.isValidInput() || results.getErrorCount() > 0) {
+			final ParseResults results = parseResults.get(rowIndex);
+			final Parse parse = results.getParse();
+
+			if (!results.isValidInput() || parse.hasErrors())
 				return Status.ERROR;
-
-			} else if (results.getWarningCount() > 0) {
+			else if (parse.hasWarnings())
 				return Status.WARNING;
-
-			} else {
+			else
 				return Status.OK;
-			}
 		}
 
 		case FILE_COLUMN:
-			return this.files.get(rowIndex).getName();
+			return files.get(rowIndex).getName();
 
 		case PATH_COLUMN:
-			return this.files.get(rowIndex).getParent();
+			return files.get(rowIndex).getParent();
 
 		case WARNINGS_COLUMN:
-			return this.parseResults.get(rowIndex).getWarningCount();
+			return parseResults.get(rowIndex).getParse().getWarningCount();
 
 		case ERRORS_COLUMN:
-			return this.parseResults.get(rowIndex).getErrorCount();
+			return parseResults.get(rowIndex).getParse().getErrorCount();
 
 		case COVERAGE_COLUMN:
-			return this.coverage.get(rowIndex);
+			return coverage.get(rowIndex);
 
 		case TOKEN_COUNT_COLUMN:
-			return this.tokenCount.get(rowIndex);
+			return tokenCount.get(rowIndex);
 
 		case LINES_COLUMN:
-			return this.parseResults.get(rowIndex).getNumberOfLines();
+			return parseResults.get(rowIndex).getNumberOfLines();
 
 		case CODE_COLUMN:
-			return this.parseResults.get(rowIndex).getNumberOfLinesWithCode();
+			return parseResults.get(rowIndex).getNumberOfLinesWithCode();
 
 		case COMMENTS_COLUMN:
-			return this.parseResults.get(rowIndex)
-					.getNumberOfLinesWithComments();
+			return parseResults.get(rowIndex).getNumberOfLinesWithComments();
 
 		default:
 			// Get values from each custom report column key:
@@ -155,9 +155,8 @@ public class BatchResults extends AbstractTableModel {
 
 			if (customColumnIndex < customKeys.size()) {
 				String key = customKeys.get(customColumnIndex);
-				if (rowIndex < this.custom.get(key).size()) {
-					return this.custom.get(key).get(rowIndex);
-				}
+				if (rowIndex < custom.get(key).size())
+					return custom.get(key).get(rowIndex);
 			}
 
 			return false;
@@ -165,7 +164,6 @@ public class BatchResults extends AbstractTableModel {
 	}
 
 	private void add(ParseResults results, String customColumnKey, int index) {
-
 		String customXPathQuery = ApplicationSupport.getCustomColumnProperty(
 				customColumnKey, "xpath", null);
 
@@ -173,16 +171,17 @@ public class BatchResults extends AbstractTableModel {
 
 		if (customXPathQuery != null) {
 			try {
-				List<?> matches = Jaxen.evaluate(results.getTree(),
-						customXPathQuery);
+				List<?> matches = Jaxen.evaluate(
+						results.getParse().getTarget(KoopaTreeBuilder.class)
+								.getTree(), customXPathQuery);
 
-				if (matches != null) {
-					if (matches.size() > 1) {
-						value = matches.toString();
-					} else if (matches.size() == 1) {
-						value = matches.get(0).toString();
-					}
-				}
+				if (matches == null)
+					value = null;
+				else if (matches.size() > 1)
+					value = matches.toString();
+				else if (matches.size() == 1)
+					value = matches.get(0).toString();
+
 			} catch (NullPointerException e) {
 				// Ignore
 			} catch (XPathException e) {
@@ -190,41 +189,35 @@ public class BatchResults extends AbstractTableModel {
 			}
 		}
 
-		if (index >= 0) {
-			this.custom.get(customColumnKey).set(index, value);
-
-		} else {
-			this.custom.get(customColumnKey).add(value);
-		}
+		if (index >= 0)
+			custom.get(customColumnKey).set(index, value);
+		else
+			custom.get(customColumnKey).add(value);
 	}
 
 	public void add(ParseResults results) {
 		final File file = results.getFile();
 
-		int index = this.files.indexOf(file);
+		int index = files.indexOf(file);
 
 		if (index >= 0) {
-			this.parseResults.set(index, results);
-			this.coverage.set(index, Metrics.getCoverage(results));
-			this.tokenCount.set(index,
-					Metrics.getSignificantTokenCount(results));
+			parseResults.set(index, results);
+			coverage.set(index, Metrics.getCoverage(results));
+			tokenCount.set(index, Metrics.getSignificantTokenCount(results));
 
-			for (String key : customKeys) {
-				this.add(results, key, index);
-			}
+			for (String key : customKeys)
+				add(results, key, index);
 
 			fireTableRowsUpdated(index, index);
 
 		} else {
+			files.add(file);
+			parseResults.add(results);
+			coverage.add(Metrics.getCoverage(results));
+			tokenCount.add(Metrics.getSignificantTokenCount(results));
 
-			this.files.add(file);
-			this.parseResults.add(results);
-			this.coverage.add(Metrics.getCoverage(results));
-			this.tokenCount.add(Metrics.getSignificantTokenCount(results));
-
-			for (String key : customKeys) {
-				this.add(results, key, index);
-			}
+			for (String key : customKeys)
+				add(results, key, index);
 
 			index = files.size() - 1;
 			fireTableRowsInserted(index, index);
@@ -233,24 +226,23 @@ public class BatchResults extends AbstractTableModel {
 		// TODO Nicer way to do the following ?
 		// Clear these as they can take up a lot of memory, and are not needed
 		// here anymore.
-		results.clearTree();
-		results.clearTokens();
+		results.getParse().removeTarget(KoopaTreeBuilder.class);
+		results.getParse().removeTarget(TokenTracker.class);
 	}
 
 	public ParseResults getResults(int i) {
-		return this.parseResults.get(i);
+		return parseResults.get(i);
 	}
 
 	public void clear() {
-		this.files.clear();
-		this.parseResults.clear();
-		this.tokenCount.clear();
-		this.coverage.clear();
+		files.clear();
+		parseResults.clear();
+		tokenCount.clear();
+		coverage.clear();
 
 		// Clear custom column values:
-		for (String key : customKeys) {
-			this.custom.get(key).clear();
-		}
+		for (String key : customKeys)
+			custom.get(key).clear();
 
 		fireTableDataChanged();
 	}

@@ -6,14 +6,16 @@ import java.util.List;
 
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
+import koopa.core.parsers.Parse;
 import koopa.core.treeparsers.Tree;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.jaxen.Jaxen;
 
 public class JaxenSample {
 
 	public static void main(String[] args) throws IOException {
-		ParsingCoordinator coordinator = new ParsingCoordinator();
-		ParseResults result = coordinator.parse(new File(
+		final ParsingCoordinator coordinator = new ParsingCoordinator();
+		final ParseResults result = coordinator.parse(new File(
 				"testsuite/cobol85/CM101M.CBL"));
 
 		if (result.isValidInput())
@@ -21,10 +23,12 @@ public class JaxenSample {
 		else
 			System.out.println("Input is faulty.");
 
-		System.out.println("  " + result.getErrorCount() + " error(s).");
-		System.out.println("  " + result.getWarningCount() + " warning(s).");
+		final Parse parse = result.getParse();
+		System.out.println("  " + parse.getErrorCount() + " error(s).");
+		System.out.println("  " + parse.getWarningCount() + " warning(s).");
 
-		Tree tree = result.getTree();
+		Tree tree = result.getParse().getTarget(KoopaTreeBuilder.class)
+				.getTree();
 
 		jax(tree, "/compilationUnit");
 		jax(tree, "//compilationUnit");

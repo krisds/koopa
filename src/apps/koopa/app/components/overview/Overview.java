@@ -19,8 +19,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import koopa.app.Application;
-import koopa.app.ApplicationSupport;
-import koopa.app.Configurable;
 import koopa.app.actions.ParsingProvider;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ParseDetails;
@@ -31,16 +29,15 @@ import koopa.app.components.misc.StatusRenderer;
 import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
-import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Token;
-import koopa.core.sources.ChainableSource;
+import koopa.core.parsers.Parse;
 import koopa.core.util.Tuple;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 @SuppressWarnings("serial")
-public class Overview extends JPanel implements ParsingProvider, Configurable {
+public class Overview extends JPanel implements ParsingProvider {
 
 	private Application application = null;
 
@@ -60,9 +57,6 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		this.application = application;
 		coordinator = new ParsingCoordinator();
 		coordinator.setKeepingTrackOfTokens(true);
-
-		// TODO Can do this better, I think.
-		ApplicationSupport.configureFromProperties("batching.properties", this);
 
 		setLayout(new BorderLayout());
 		setupComponents();
@@ -200,10 +194,11 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 
 			for (File target : targets) {
 				ParseResults results = parse(target);
+				Parse parse = results.getParse();
 
-				if (results.getErrorCount() > 0)
+				if (parse.hasErrors())
 					withError += 1;
-				else if (results.getWarningCount() > 0)
+				else if (parse.hasWarnings())
 					withWarning += 1;
 				else
 					ok += 1;
@@ -260,7 +255,7 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 		} catch (IOException e) {
 			ParseResults failed = new ParseResults(file);
 			failed.setValidInput(false);
-			failed.addError(null, e.getMessage());
+			failed.getParse().error(null, e.getMessage());
 			results.add(failed);
 			e.printStackTrace();
 			return failed;
@@ -273,56 +268,6 @@ public class Overview extends JPanel implements ParsingProvider, Configurable {
 
 	public Component getGUI() {
 		return this;
-	}
-
-	public void setOption(String name, String value) {
-		if (name.startsWith("parsing-listener")) {
-			installParsingListener(value);
-
-		} else if (name.startsWith("intermediate-tokenizer")) {
-			installIntermediateTokenizer(value);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void installIntermediateTokenizer(String classname) {
-		try {
-			Class<?> clazz = Class.forName(classname);
-			Object o = clazz.newInstance();
-			if (o instanceof ChainableSource<?>)
-				coordinator
-						.addIntermediateTokenizer((ChainableSource<Token>) o);
-
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void installParsingListener(String classname) {
-		try {
-			Class<?> clazz = Class.forName(classname);
-			Object o = clazz.newInstance();
-			if (o instanceof ParsingListener) {
-				coordinator.addParsingListener((ParsingListener) o);
-			}
-
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void clearResults() {

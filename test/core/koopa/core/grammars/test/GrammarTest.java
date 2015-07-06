@@ -36,7 +36,7 @@ public abstract class GrammarTest {
 		HardcodedSource source = new HardcodedSource(taggedWords);
 		ListTarget target = new ListTarget();
 
-		Assert.assertFalse(p.accepts(Parse.of(source, target)));
+		Assert.assertFalse(p.accepts(Parse.of(source).to(target)));
 	}
 
 	protected void shouldAccept(ParserCombinator parser,
@@ -47,7 +47,7 @@ public abstract class GrammarTest {
 		HardcodedSource source = new HardcodedSource(taggedWords);
 		ListTarget target = new ListTarget();
 
-		Assert.assertTrue(p.accepts(Parse.of(source, target)));
+		Assert.assertTrue(p.accepts(Parse.of(source).to(target)));
 		Assert.assertTrue(target.size() > 0);
 		final Data packet = target.get(target.size() - 1);
 		Assert.assertTrue(packet instanceof Token);

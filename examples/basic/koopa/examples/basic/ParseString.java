@@ -7,12 +7,10 @@ import koopa.app.components.astview.ASTFrame;
 import koopa.cobol.CobolTokens;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.SourceFormat;
-import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.Source;
-import koopa.core.targets.Target;
 import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
 
@@ -36,15 +34,13 @@ public class ParseString {
 
 		Source<Token> source = CobolTokens.getNewSource(reader, format);
 
-		KoopaTreeBuilder builder = new KoopaTreeBuilder();
-		Target<Data> target = builder.getTarget();
+		Parse parse = Parse.of(source).to(new KoopaTreeBuilder());
+		boolean accepts = identifier.accepts(parse);
 
-		boolean accepts = identifier.accepts(Parse.of(source, target));
-
-		if (accepts)
-			return builder.getTrees();
-		else
+		if (!accepts)
 			return null;
-	}
 
+		KoopaTreeBuilder builder = parse.getTarget(KoopaTreeBuilder.class);
+		return builder.getTrees();
+	}
 }

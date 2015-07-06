@@ -16,13 +16,11 @@ public class ShowASTAction extends AbstractAction implements Action {
 
 	private static final long serialVersionUID = 1L;
 
-	private Component parent = null;
 	private Application application = null;
 
 	public ShowASTAction(Application application, Component parent) {
 		super("Show AST...");
 		this.application = application;
-		this.parent = parent;
 	}
 
 	public void actionPerformed(ActionEvent ae) {

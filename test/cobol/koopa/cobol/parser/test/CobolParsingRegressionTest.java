@@ -26,8 +26,8 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 	// overriding of class methods ?
 	private static File targetResultsFile = null;
 	private static File actualResultsFile = null;
-	private static Map<String, TargetResult> targetResults = null;
-	private static Map<String, ParseResults> actualResults = null;
+	private static Map<String, TestResult> targetResults = null;
+	private static Map<String, TestResult> actualResults = null;
 
 	public CobolParsingRegressionTest() throws IOException {
 		targetResultsFile = getTargetResultsFile();
@@ -57,11 +57,12 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		configure(coordinator);
 		coordinator.setKeepingTrackOfTokens(true);
 
-		final TargetResult target = getTargetResult(file);
+		final TestResult target = getTargetResult(file);
 
 		// Parse the file...
 		final ParseResults result = coordinator.parse(file);
-		addActualResult(result);
+		final TestResult actual = TestResult.from(result);
+		addActualResult(actual);
 
 		if (target == null) {
 			// Unknown test file. We will evaluate this on its overall
@@ -71,7 +72,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 		} else {
 			// We have previous test results, which we'll now compare...
-			final List<String> messages = target.getComparison(result);
+			final List<String> messages = target.getComparison(actual);
 
 			StringBuilder info = new StringBuilder();
 			if (messages != null && messages.size() > 0) {
@@ -86,26 +87,26 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		}
 	}
 
-	private TargetResult getTargetResult(File source) {
+	private TestResult getTargetResult(File source) {
 		if (targetResults != null)
 			return targetResults.get(source.getName());
 		else
 			return null;
 	}
 
-	private void addActualResult(ParseResults result) {
+	private void addActualResult(TestResult result) {
 		if (actualResults != null)
-			actualResults.put(result.getFile().getName(), result);
+			actualResults.put(result.getName(), result);
 	}
 
 	public static void testRunStarted() throws IOException {
 		if (targetResultsFile != null && targetResultsFile.exists())
-			targetResults = TargetResult.loadFromFile(targetResultsFile);
+			targetResults = TestResult.loadFromFile(targetResultsFile);
 		else
 			targetResults = null;
 
 		if (actualResultsFile != null)
-			actualResults = new HashMap<String, ParseResults>();
+			actualResults = new HashMap<String, TestResult>();
 		else
 			actualResults = null;
 	}
@@ -113,7 +114,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 	public static void testRunFinished() {
 		try {
 			if (actualResultsFile != null)
-				TargetResult.saveToFile(actualResults, actualResultsFile);
+				TestResult.saveToFile(actualResults, actualResultsFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

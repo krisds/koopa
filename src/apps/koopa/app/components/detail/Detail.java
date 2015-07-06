@@ -13,8 +13,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.app.Application;
-import koopa.app.ApplicationSupport;
-import koopa.app.Configurable;
 import koopa.app.batchit.ParseDetails;
 import koopa.app.components.breadcrumb.Breadcrumb;
 import koopa.app.components.detailstable.DetailsTable;
@@ -25,13 +23,13 @@ import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
-import koopa.cobol.parser.ParsingListener;
 import koopa.core.data.Token;
-import koopa.core.sources.ChainableSource;
+import koopa.core.treeparsers.Tree;
+import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.util.Tuple;
 
 // TODO Extract commonalities with Overview into a common superclass ?
-public class Detail extends JPanel implements Configurable {
+public class Detail extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private Application application = null;
@@ -45,14 +43,13 @@ public class Detail extends JPanel implements Configurable {
 	private Breadcrumb breadcrumb = null;
 	private boolean parsing = false;
 
+	private Tree tree = null;
+
 	public Detail(Application application, File file,
 			ParsingCoordinator parsingCoordinator) {
 		this.application = application;
 		this.coordinator = new ParsingCoordinator(parsingCoordinator);
-
-		// TODO Can do this better, I think.
-		ApplicationSupport
-				.configureFromProperties("detailing.properties", this);
+		this.coordinator.setKeepingTrackOfTokens(true);
 
 		setLayout(new BorderLayout());
 		setupComponents();
@@ -60,60 +57,9 @@ public class Detail extends JPanel implements Configurable {
 		setBorder(null);
 	}
 
-	public void setOption(String name, String value) {
-		if (name.startsWith("parsing-listener")) {
-			installParsingListener(value);
-
-		} else if (name.startsWith("intermediate-tokenizer")) {
-			installIntermediateTokenizer(value);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void installIntermediateTokenizer(String classname) {
-		try {
-			Class<?> clazz = Class.forName(classname);
-			Object o = clazz.newInstance();
-			if (o instanceof ChainableSource<?>) {
-				this.coordinator
-						.addIntermediateTokenizer((ChainableSource<Token>) o);
-			}
-
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private void installParsingListener(String classname) {
-		try {
-			Class<?> clazz = Class.forName(classname);
-			Object o = clazz.newInstance();
-			if (o instanceof ParsingListener)
-				this.coordinator.addParsingListener((ParsingListener) o);
-
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	private void setupComponents() {
-		sourceView = new SourceView(this.coordinator);
-
-		outline = new CobolOutline(this.coordinator);
+		sourceView = new SourceView();
+		outline = new CobolOutline();
 
 		outline.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
@@ -132,7 +78,7 @@ public class Detail extends JPanel implements Configurable {
 			}
 		});
 
-		breadcrumb = new Breadcrumb(application, coordinator);
+		breadcrumb = new Breadcrumb(application);
 		sourceView.addTokenSelectionListener(breadcrumb);
 
 		detailsTable = new DetailsTable(parseDetails);
@@ -155,7 +101,8 @@ public class Detail extends JPanel implements Configurable {
 		x.setLayout(new BorderLayout());
 		x.add(horizontalSplit, BorderLayout.CENTER);
 		JScrollPane scrollingBreadcrumb = new JScrollPane(breadcrumb);
-		scrollingBreadcrumb.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollingBreadcrumb
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		x.add(scrollingBreadcrumb, BorderLayout.SOUTH);
 
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, x,
@@ -179,7 +126,14 @@ public class Detail extends JPanel implements Configurable {
 
 			results = this.coordinator.parse(this.cobolFile);
 
+			tree = results.getParse().getTarget(KoopaTreeBuilder.class)
+					.getTree();
+
+			breadcrumb.setParseTree(tree);
+
+			outline.setParseResults(results);
 			parseDetails.setParseResults(results);
+			sourceView.setParseResults(results);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -217,7 +171,7 @@ public class Detail extends JPanel implements Configurable {
 	}
 
 	public boolean hasSyntaxTree() {
-		return results.getErrorCount() == 0 && results.getTree() != null;
+		return tree != null;
 	}
 
 	public File getFile() {
@@ -238,5 +192,9 @@ public class Detail extends JPanel implements Configurable {
 
 	public Highlights getNewHighlights() {
 		return sourceView.getNewHighlights();
+	}
+
+	public Tree getTree() {
+		return tree;
 	}
 }

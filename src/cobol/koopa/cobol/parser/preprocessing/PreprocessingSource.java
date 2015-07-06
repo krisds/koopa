@@ -25,7 +25,6 @@ import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
-import koopa.core.trees.TreeBuildDirectingSink;
 
 import org.apache.log4j.Logger;
 
@@ -44,11 +43,14 @@ public class PreprocessingSource extends BasicSource<Token> implements
 
 	private Source<Token> copybookTokenizer = null;
 
+	private Tree tree = null;
 	private Token activeCopyStatement = null;
 
 	private LinkedList<Data> unsupportedDirective = null;
 
 	private SourceFormat format = null;
+
+	private PreprocessingListener listener = null;
 
 	public PreprocessingSource(Source<Token> sourceTokenizer,
 			SourceFormat format, Copybooks copybooks) {
@@ -80,7 +82,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 					.preprocessing();
 
 			boolean accepts = preprocessingParser.accepts(Parse.of(
-					sourceTokenizer, sourceSink));
+					sourceTokenizer).to(sourceSink));
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace(hashCode() + " PREPROCESSING GRAMMAR ACCEPTED ? "
@@ -107,7 +109,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 								+ data);
 
 					LinkedList<Data> directive = getPreprocessingDirective();
-					final Tree tree = getSyntaxTree(directive);
+					tree = getSyntaxTree(directive);
 
 					if (!isCopyStatement(tree)) {
 						if (LOGGER.isInfoEnabled())
@@ -158,6 +160,9 @@ public class PreprocessingSource extends BasicSource<Token> implements
 					}
 
 					try {
+						if (listener != null)
+							listener.startCopying(tree);
+
 						copybookTokenizer = CobolTokens.getNewSource(//
 								copybook.getAbsolutePath(), //
 								new FileReader(copybook), //
@@ -213,12 +218,10 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	// TODO Move this to a utility class; I'm sure this will come in handy
 	// again.
 	private Tree getSyntaxTree(List<Data> directive) {
-		KoopaTreeBuilder builder = new KoopaTreeBuilder();
-		TreeBuildDirectingSink director = new TreeBuildDirectingSink(builder,
-				true);
+		KoopaTreeBuilder builder = new KoopaTreeBuilder(true);
 
 		for (Data token : directive)
-			director.push(token);
+			builder.push(token);
 
 		final List<Tree> trees = builder.getTrees();
 		return trees == null || trees.size() != 1 ? null : trees.get(0);
@@ -251,6 +254,9 @@ public class PreprocessingSource extends BasicSource<Token> implements
 
 			if (token != null)
 				return token.asReplacing(activeCopyStatement);
+
+			if (listener != null)
+				listener.stopCopying(tree);
 
 			copybookTokenizer.close();
 			copybookTokenizer = null;

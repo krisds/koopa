@@ -7,6 +7,7 @@ import koopa.app.Icons;
 import koopa.cobol.parser.ParseResults;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.parsers.Parse;
 import koopa.core.util.Tuple;
 
 @SuppressWarnings("serial")
@@ -53,11 +54,11 @@ public class ParseDetails extends AbstractTableModel {
 	}
 
 	public int getRowCount() {
-		if (parseResults == null) {
+		if (parseResults == null)
 			return 0;
-		}
 
-		return parseResults.getErrorCount() + parseResults.getWarningCount();
+		Parse parse = parseResults.getParse();
+		return parse.getErrorCount() + parse.getWarningCount();
 	}
 
 	public Class<?> getColumnClass(int columnIndex) {
@@ -73,11 +74,10 @@ public class ParseDetails extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN: {
-			if (rowIndex < parseResults.getErrorCount()) {
+			if (rowIndex < parseResults.getParse().getErrorCount())
 				return ERROR;
-			} else {
+			else
 				return WARNING;
-			}
 		}
 
 		case MESSAGE_COLUMN:
@@ -115,30 +115,33 @@ public class ParseDetails extends AbstractTableModel {
 	}
 
 	public Tuple<Token, String> getDetails(int i) {
-		if (i < parseResults.getErrorCount()) {
-			return parseResults.getError(i);
+		final Parse parse = parseResults.getParse();
+		final int errorCount = parse.getErrorCount();
 
-		} else {
-			return parseResults.getWarning(i - parseResults.getErrorCount());
-		}
+		if (i < errorCount)
+			return parse.getError(i);
+		else
+			return parse.getWarning(i - errorCount);
 	}
 
 	public int getIndex(Tuple<Token, String> detail) {
 		final Position end = detail.getFirst().getEnd();
 		final Position start = detail.getFirst().getStart();
+		final Parse parse = parseResults.getParse();
+		final int errorCount = parse.getErrorCount();
 
-		for (int i = 0; i < parseResults.getErrorCount(); i++) {
-			final Tuple<Token, String> error = parseResults.getError(i);
+		for (int i = 0; i < errorCount; i++) {
+			final Tuple<Token, String> error = parse.getError(i);
 			if (error.getFirst().getStart().equals(start)
 					&& error.getFirst().getEnd().equals(end))
 				return i;
 		}
 
-		for (int i = 0; i < parseResults.getWarningCount(); i++) {
-			final Tuple<Token, String> warning = parseResults.getWarning(i);
+		for (int i = 0; i < parse.getWarningCount(); i++) {
+			final Tuple<Token, String> warning = parse.getWarning(i);
 			if (warning.getFirst().getStart().equals(start)
 					&& warning.getFirst().getEnd().equals(end))
-				return i + parseResults.getErrorCount();
+				return i + errorCount;
 		}
 
 		return -1;

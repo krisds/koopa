@@ -3,7 +3,6 @@ package koopa.cobol.parser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,24 +18,19 @@ import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
-import koopa.core.targets.CompositeTarget;
 import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
-import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
-import koopa.core.trees.TreeBuildDirectingSink;
-import koopa.core.trees.TreeProcessor;
 import koopa.core.util.Tuple;
 
 import org.apache.log4j.Logger;
 
-public class CobolParser implements ParserConfiguration {
+public class CobolParser {
 
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
 	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
-	private List<Target<Data>> tokenSinks = new LinkedList<Target<Data>>();
-	private List<TreeProcessor> treeProcessors = null;
+	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
 
 	private boolean keepingTrackOfTokens = false;
 
@@ -50,7 +44,8 @@ public class CobolParser implements ParserConfiguration {
 	private boolean preprocessing = false;
 
 	public ParseResults parse(File file) throws IOException {
-		LOGGER.info("Parsing " + file);
+		if (LOGGER.isInfoEnabled())
+			LOGGER.info("Parsing " + file);
 
 		FileReader reader = null;
 		try {
@@ -64,8 +59,6 @@ public class CobolParser implements ParserConfiguration {
 	}
 
 	private ParseResults parse(File file, FileReader reader) throws IOException {
-		ParseResults results = new ParseResults(file);
-
 		final boolean isCopybook = CobolFiles.isCopybook(file);
 
 		// Build the tokenisation stage.
@@ -87,69 +80,37 @@ public class CobolParser implements ParserConfiguration {
 		else
 			parser = grammar.compilationGroup();
 
-		KoopaTreeBuilder builder = null;
-
-		CompositeTarget<Data> ct = new CompositeTarget<Data>();
-
-		// Keep track of all tokens passing through here, if so requested.
-		if (this.keepingTrackOfTokens && results != null) {
-			final TokenTracker tokenTracker = new TokenTracker();
-			results.setTokenTracker(tokenTracker);
-			ct.addTarget(tokenTracker);
-		}
-
-		Parse parse = Parse.of(source, ct);
+		Parse parse = Parse.of(source);
 		boolean accepts = false;
 
-		if (!buildTrees()) {
-			if (this.tokenSinks.size() > 0)
-				for (Target<Data> next : this.tokenSinks)
-					ct.addTarget(next);
-
-			// Here we ask the grammar if the tokens can be parsed as a
-			// compilation group.
-			accepts = parser.accepts(parse);
-
-		} else {
-			// These objects take care of building an ANTLR tree out of the
-			// results from the grammar.
-			builder = new KoopaTreeBuilder();
-			TreeBuildDirectingSink treeBuilder = new TreeBuildDirectingSink(
-					builder, false);
-
-			ct.addTarget(treeBuilder);
-
-			if (this.tokenSinks.size() > 0) {
-				for (Target<Data> next : this.tokenSinks) {
-					ct.addTarget(next);
-				}
-			}
-
-			// Here we ask the grammar if the tokens can be parsed as a
-			// compilation group. In addition, we direct the parser to build an
-			// ast out of the parsed tokens.
-			accepts = parser.accepts(parse);
+		// Keep track of all tokens passing through here, if so requested.
+		if (keepingTrackOfTokens) {
+			final TokenTracker tokenTracker = new TokenTracker();
+			parse.addTarget(tokenTracker);
 		}
 
-		if (accepts) {
-			LOGGER.info("Valid file: " + file);
-			results.setValidInput(true);
+		if (buildTrees)
+			parse.addTarget(new KoopaTreeBuilder(false));
 
-		} else {
-			LOGGER.info("Invalid file: " + file);
-			results.setValidInput(false);
-		}
+		if (!targets.isEmpty())
+			for (Target<Data> next : targets)
+				parse.addTarget(next);
 
-		if (parse.hasWarnings()) {
-			LOGGER.info("There were warnings from the grammar:");
+		accepts = parser.accepts(parse);
 
-			final List<Tuple<Token, String>> warnings = parse.getWarnings();
+		ParseResults results = new ParseResults(file);
+		results.setValidInput(accepts);
+		results.setParse(parse);
 
-			for (Tuple<Token, String> warning : warnings) {
-				LOGGER.info("  " + warning.getFirst() + ": "
-						+ warning.getSecond());
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info((accepts ? "Valid file: " : "Invalid file: ") + file);
 
-				results.addWarning(warning.getFirst(), warning.getSecond());
+			if (parse.hasWarnings()) {
+				LOGGER.info("There were warnings from the grammar:");
+
+				for (Tuple<Token, String> warning : parse.getWarnings())
+					LOGGER.info("  " + warning.getFirst() + ": "
+							+ warning.getSecond());
 			}
 		}
 
@@ -171,19 +132,19 @@ public class CobolParser implements ParserConfiguration {
 				if (grammar.isSeparator(t, null))
 					continue;
 
-				LOGGER.info("Not all input was consumed.");
-
 				results.setValidInput(false);
-				results.addError(t, "Not all input was consumed.");
+				parse.error(t, "Not all input was consumed.");
 
-				int count = 0;
-				do {
-					LOGGER.info("-> " + t);
-					count++;
-				} while (count < 5 && (t = source.next()) != null);
+				if (LOGGER.isInfoEnabled()) {
+					LOGGER.info("Not all input was consumed.");
+					int count = 0;
+					do {
+						LOGGER.info("-> " + t);
+						count++;
+					} while (count < 5 && (t = source.next()) != null);
 
-				if (t != null) {
-					LOGGER.info("-> ...");
+					if (t != null)
+						LOGGER.info("-> ...");
 				}
 
 				accepts = false;
@@ -198,92 +159,19 @@ public class CobolParser implements ParserConfiguration {
 		source.close();
 
 		// It is now safe to quit the method if we want/need to.
-		if (!accepts) {
+		if (!accepts)
 			return results;
-		}
 
 		// Grab the LOC statistics.
 		results.setNumberOfLines(loc.getNumberOfLines());
 		results.setNumberOfLinesWithCode(loc.getNumberOfLinesWithCode());
 		results.setNumberOfLinesWithComments(loc.getNumberOfLinesWithComments());
 
-		// If we built trees during parsing, here is where we allow further
-		// processing of those trees.
-		if (builder != null) {
-			for (Tree tree : builder.getTrees()) {
-				// ------------------------------------------------------------
-				// This used to validate the tree against the full Cobol
-				// grammar. In short, this made sure that the tree conforms to
-				// the input grammar.
-				// We don't do this anymore because I was getting compilation
-				// problems with the class which got generated for the full
-				// CobolTreeParser.
-				//
-				// boolean acceptableTree = acceptedByCobolTreeParser(tree,
-				// isCopybook);
-				//
-				// if (acceptableTree) {
-				// LOGGER.info("The constructed tree is valid.");
-				//
-				// } else {
-				// LOGGER.info("The constructed tree, however, is invalid.");
-				//
-				// results.setValidInput(false);
-				// results.addError(null, "Constructed tree is invalid.");
-				// return results;
-				// }
-				// ------------------------------------------------------------
-
-				results.setTree(tree);
-
-				// We then allow all tree processors to have a go at the tree.
-				for (TreeProcessor processor : getTreeProcessors()) {
-					if (processor.processes(tree, file)) {
-						LOGGER.info("Adaptive match ("
-								+ processor.getClass().getSimpleName()
-								+ ") was successful as well.");
-
-					} else {
-						LOGGER.info("Adaptive match ("
-								+ processor.getClass().getSimpleName()
-								+ "), however, was NOT successful.");
-
-						results.setValidInput(false);
-						results.addError(null, "Adaptive match ("
-								+ processor.getClass().getSimpleName()
-								+ ") failed.");
-						return results;
-					}
-				}
-			}
-		}
-
 		return results;
 	}
 
-	private boolean buildTrees() {
-		return this.buildTrees
-				|| (this.treeProcessors != null && this.treeProcessors.size() > 0);
-	}
-
-	private List<TreeProcessor> getTreeProcessors() {
-		if (this.treeProcessors == null) {
-			this.treeProcessors = new ArrayList<TreeProcessor>();
-		}
-
-		return this.treeProcessors;
-	}
-
-	public void addTreeProcessor(TreeProcessor treeProcessor) {
-		if (this.treeProcessors == null) {
-			this.treeProcessors = new ArrayList<TreeProcessor>();
-		}
-
-		this.treeProcessors.add(treeProcessor);
-	}
-
-	public void addTokenSink(Target<Data> sink) {
-		this.tokenSinks.add(sink);
+	public void addTarget(Target<Data> target) {
+		this.targets.add(target);
 	}
 
 	public void addIntermediateTokenizer(ChainableSource<Token> tokenizer) {
@@ -320,7 +208,7 @@ public class CobolParser implements ParserConfiguration {
 		this.preprocessing = preprocessing;
 	}
 
-	public void setCopybookPath(List<File> paths) {
-		this.copybooks.setLookupPaths(paths);
+	public void setCopybooks(Copybooks copybooks) {
+		this.copybooks = copybooks;
 	}
 }

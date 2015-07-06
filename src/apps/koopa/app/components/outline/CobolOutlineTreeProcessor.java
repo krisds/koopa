@@ -10,9 +10,8 @@ import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
-import koopa.core.trees.TreeProcessor;
 
-public class CobolOutlineTreeProcessor implements TreeProcessor {
+public class CobolOutlineTreeProcessor {
 	private List<DefaultMutableTreeNode> trees = null;
 
 	public boolean processes(Tree tree, File file) {

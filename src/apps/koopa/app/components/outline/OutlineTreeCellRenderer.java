@@ -1,6 +1,5 @@
 package koopa.app.components.outline;
 
-
 import java.awt.Component;
 import java.io.File;
 
@@ -12,6 +11,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import koopa.app.Icons;
 import koopa.cobol.parser.ParseResults;
+import koopa.core.parsers.Parse;
 
 @SuppressWarnings("serial")
 public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -42,9 +42,8 @@ public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (object instanceof Reference) {
 			final Icon icon = ((Reference) object).getIcon();
-			if (icon != null) {
+			if (icon != null)
 				setIcon(icon);
-			}
 
 		} else if (object instanceof File) {
 			final File file = (File) object;
@@ -54,16 +53,16 @@ public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		} else if (object instanceof ParseResults) {
 			final ParseResults results = (ParseResults) object;
+			final Parse parse = results.getParse();
 			final File file = results.getFile();
 
 			setText(file.getName());
-			if (results.getErrorCount() > 0) {
+			if (parse.hasErrors())
 				setIcon(ERROR);
-			} else if (results.getWarningCount() > 0) {
+			else if (parse.hasWarnings())
 				setIcon(WARNING);
-			} else {
+			else
 				setIcon(OK);
-			}
 		}
 
 		return this;

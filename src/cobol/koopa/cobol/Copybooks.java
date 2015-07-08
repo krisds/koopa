@@ -20,12 +20,16 @@ public class Copybooks {
 		this.copybookPaths = copybookPaths;
 	}
 
-	// TODO Take library name into account.
 	public File lookup(String textName, final String libraryName) {
+		return lookup(textName, libraryName, null);
+	}
+
+	// TODO Take library name into account.
+	public File lookup(final String textName, final String libraryName,
+			File currentPath) {
+
 		// Were we given a literal name ?
-		final boolean isLiteralTextName = (textName.startsWith("\"") && textName
-				.endsWith("\""))
-				|| (textName.startsWith("'") && textName.endsWith("'"));
+		final boolean isLiteralTextName = isLiteral(textName);
 
 		// So what are we looking for ?
 		final String fileName;
@@ -34,52 +38,90 @@ public class Copybooks {
 		else
 			fileName = textName;
 
-		if (copybookPaths == null) {
-			if (LOGGER.isInfoEnabled())
-				LOGGER.info("Lookup of copybook " + textName + " in "
-						+ libraryName + " failed: no copybook paths were set.");
-			return null;
-		}
+		// Where are we looking for it ?
+		final String relativePathName;
+		if (libraryName == null)
+			relativePathName = ".";
+		else if (isLiteral(libraryName))
+			relativePathName = libraryName.substring(1,
+					libraryName.length() - 1);
+		else
+			relativePathName = libraryName;
 
-		for (File path : copybookPaths) {
-			File[] matches = path.listFiles(new FilenameFilter() {
-				public boolean accept(File path, String name) {
-					if (isLiteralTextName && fileName.equalsIgnoreCase(name)) {
-						if (LOGGER.isTraceEnabled())
-							LOGGER.info("Lookup of copybook " + fileName
-									+ " in " + libraryName + "; testing "
-									+ name + "; names match exactly.");
-
-						return true;
-					}
-
-					final boolean isCopybook = CobolFiles.isCopybook(name);
-					final boolean namesMatch = Files.getName(name)
-							.equalsIgnoreCase(Files.getName(fileName));
-
+		// How do we match candidate files ?
+		final FilenameFilter filter = new FilenameFilter() {
+			public boolean accept(File path, String name) {
+				// LOGGER.trace("<" + name + "> <" + path + ">");
+				
+				if (isLiteralTextName && fileName.equalsIgnoreCase(name)) {
 					if (LOGGER.isTraceEnabled())
-						LOGGER.info("Lookup of copybook " + fileName + " in "
-								+ libraryName + "; testing " + name
-								+ "; copybook: " + isCopybook
-								+ "; names match: " + namesMatch);
+						LOGGER.trace("- " + name + " ? Yes, exact match.");
 
-					return isCopybook && namesMatch;
+					return true;
 				}
-			});
+
+				final boolean isCopybook = CobolFiles.isCopybook(name);
+				final boolean namesMatch = Files.getName(name)
+						.equalsIgnoreCase(Files.getName(fileName));
+				final boolean isMatch = isCopybook && namesMatch;
+
+				LOGGER.trace("- "
+						+ name
+						+ " ? "
+						+ (isMatch ? "Yes." : "No. Names match: " + namesMatch
+								+ "; is copybook: " + isCopybook));
+
+				return isMatch;
+			}
+		};
+
+		if (currentPath != null) {
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("Looking for " + fileName + " in " + libraryName
+						+ " on current path: " + currentPath);
+
+			File[] matches = new File(currentPath, relativePathName)
+					.listFiles(filter);
 
 			if (matches != null && matches.length > 0) {
 				if (LOGGER.isInfoEnabled())
-					LOGGER.info("Lookup of copybook " + textName + " in "
-							+ libraryName + " successfull; found " + matches[0]);
+					LOGGER.info("Looking for " + fileName + " in "
+							+ libraryName + " on current path; found "
+							+ matches[0]);
 
 				return matches[0];
 			}
 		}
 
+		if (copybookPaths != null) {
+			for (File path : copybookPaths) {
+				if (LOGGER.isTraceEnabled())
+					LOGGER.trace("Looking for " + fileName + " in "
+							+ libraryName + " on copybook path: " + path);
+
+				File[] matches = new File(path, relativePathName)
+						.listFiles(filter);
+
+				if (matches != null && matches.length > 0) {
+					if (LOGGER.isInfoEnabled())
+						LOGGER.info("Looking for " + fileName + " in "
+								+ libraryName + " on copybook path; found "
+								+ matches[0]);
+
+					return matches[0];
+				}
+			}
+		}
+
 		if (LOGGER.isInfoEnabled())
 			LOGGER.info("Lookup of copybook " + textName + " in " + libraryName
-					+ " failed: not found in " + copybookPaths);
+					+ " failed: not found.");
 		return null;
+	}
+
+	private boolean isLiteral(final String name) {
+		return (name.startsWith("\"") && name.endsWith("\""))
+				|| (name.startsWith("'") && name.endsWith("'"));
 	}
 
 	public void addAllFrom(Copybooks copybooks) {

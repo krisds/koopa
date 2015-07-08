@@ -34,8 +34,6 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.preprocessing");
 
-	private Copybooks copybooks = null;
-
 	private Source<Token> sourceTokenizer = null;
 	private QueueingTokenSink sourceSink = null;
 
@@ -48,21 +46,20 @@ public class PreprocessingSource extends BasicSource<Token> implements
 
 	private LinkedList<Data> unsupportedDirective = null;
 
-	private SourceFormat format = null;
-
 	private PreprocessingListener listener = null;
 
+	private final SourceFormat format;
+	private final File path;
+	private final Copybooks copybooks;
+
 	public PreprocessingSource(Source<Token> sourceTokenizer,
-			SourceFormat format, Copybooks copybooks) {
+			SourceFormat format, File path, Copybooks copybooks) {
 		assert (sourceTokenizer != null);
 
 		this.sourceTokenizer = sourceTokenizer;
-		this.copybooks = copybooks;
 		this.format = format;
-
-		// TODO Token tracking and this ? (Cfr.
-		// CobolParser.keepingTrackOfTokens)
-		// TODO Token sinks and this ? (Cfr. CobolParser.intermediateTokenizers)
+		this.path = path;
+		this.copybooks = copybooks;
 	}
 
 	@Override
@@ -134,7 +131,8 @@ public class PreprocessingSource extends BasicSource<Token> implements
 									+ " in library " + libraryName);
 					}
 
-					File copybook = copybooks.lookup(textName, libraryName);
+					File copybook = copybooks.lookup(textName, libraryName,
+							path);
 					if (copybook == null) {
 						LOGGER.error("Missing copybook " + textName + " in "
 								+ libraryName);
@@ -166,7 +164,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 						copybookTokenizer = CobolTokens.getNewSource(//
 								copybook.getAbsolutePath(), //
 								new FileReader(copybook), //
-								format, copybooks);
+								format, copybook.getParentFile(), copybooks);
 
 						if (replacing != null) {
 							replacing.setSource(copybookTokenizer);

@@ -64,7 +64,8 @@ public class CobolParser {
 		// Build the tokenisation stage.
 		Source<Token> source = CobolTokens.getNewSource(
 				file.getCanonicalPath(), reader, format,
-				intermediateTokenizers, preprocessing ? copybooks : null);
+				intermediateTokenizers, file.getParentFile(),
+				preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
 

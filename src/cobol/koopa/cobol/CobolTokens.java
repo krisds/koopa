@@ -1,6 +1,7 @@
 package koopa.cobol;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.Reader;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import koopa.core.sources.Source;
 public class CobolTokens {
 	public static Source<Token> getNewSource(String resourceName,
 			Reader reader, SourceFormat format,
-			List<ChainableSource<Token>> intermediateSources,
+			List<ChainableSource<Token>> intermediateSources, File path,
 			Copybooks copybooks) {
 
 		// We will be building up our tokenization stage in several steps. Each
@@ -63,27 +64,18 @@ public class CobolTokens {
 		// EXPERIMENTAL: optional preprocessing stage.
 		// TODO Work on this stage.
 		if (copybooks != null)
-			tokenizer = new PreprocessingSource(tokenizer, format, copybooks);
+			tokenizer = new PreprocessingSource(tokenizer, format, path,
+					copybooks);
 
 		return tokenizer;
 	}
 
 	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, SourceFormat format, Copybooks copybooks) {
-		return getNewSource(resourceName, reader, format, null, copybooks);
-	}
-
-	public static Source<Token> getNewSource(Reader reader,
-			SourceFormat format, Copybooks copybooks) {
-		return getNewSource(null, reader, format, null, copybooks);
-	}
-
-	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, SourceFormat format) {
-		return getNewSource(resourceName, reader, format, null, null);
+			Reader reader, SourceFormat format, File path, Copybooks copybooks) {
+		return getNewSource(resourceName, reader, format, null, path, copybooks);
 	}
 
 	public static Source<Token> getNewSource(Reader reader, SourceFormat format) {
-		return getNewSource(null, reader, format, null, null);
+		return getNewSource(null, reader, format, null, null, null);
 	}
 }

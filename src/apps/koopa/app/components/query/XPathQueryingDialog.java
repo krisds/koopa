@@ -172,13 +172,12 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		highlights = detail.getNewHighlights();
 
 		// Highlight all matches in the source view...
-		List<?> results = selectedResults.getResults();
-		for (Object match : results) {
+		for (Object match : selectedResults.getResults()) {
 			if (match instanceof Tree) {
 				final Tree tree = (Tree) match;
 
-				Position start = tree.getStartPosition();
-				Position end = tree.getEndPosition();
+				final Position start = tree.getRawStart();
+				final Position end = tree.getRawEnd();
 
 				// TODO Should highlight indivual ranges instead ?
 				highlights.addHighlight(start, end, HIGHLIGHT_COLOR);

@@ -237,7 +237,11 @@ public class Tree {
 	}
 
 	public int getLine() {
-		return getStartPosition().getLinenumber();
+		final Position startPosition = getStartPosition();
+		if (startPosition != null)
+			return startPosition.getLinenumber();
+		else
+			return 0;
 	}
 
 	@Override

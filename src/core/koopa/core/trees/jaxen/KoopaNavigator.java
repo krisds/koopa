@@ -6,7 +6,7 @@ import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 import org.jaxen.DefaultNavigator;

@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.TreeAttribute;
 
 @SuppressWarnings("serial")

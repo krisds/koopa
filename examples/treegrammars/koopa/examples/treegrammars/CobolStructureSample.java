@@ -10,10 +10,10 @@ import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
 import koopa.core.treeparsers.BasicTreeStream;
-import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

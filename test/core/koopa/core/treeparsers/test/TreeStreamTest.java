@@ -6,8 +6,8 @@ import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.treeparsers.BasicTreeStream;
-import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeStream;
+import koopa.core.trees.Tree;
 
 import org.junit.Assert;
 import org.junit.Test;

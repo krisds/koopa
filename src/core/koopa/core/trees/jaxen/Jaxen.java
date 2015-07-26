@@ -3,7 +3,7 @@ package koopa.core.trees.jaxen;
 import java.util.ArrayList;
 import java.util.List;
 
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 import org.jaxen.JaxenException;

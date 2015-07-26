@@ -1,5 +1,7 @@
 package koopa.core.treeparsers;
 
+import koopa.core.trees.Tree;
+
 import org.apache.log4j.Logger;
 
 // TODO Rework TreeStream to make use of this class.
@@ -53,7 +55,6 @@ public class TreeWalker {
 
 			current = null;
 			return current;
-
 		}
 
 		if (done() || start() || down() || right() || upAndRight())

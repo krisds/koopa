@@ -2,8 +2,8 @@ package koopa.core.treeparsers.test;
 
 import static koopa.core.util.test.Util.token;
 import static koopa.core.util.test.Util.tree;
-import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeWalker;
+import koopa.core.trees.Tree;
 
 import org.junit.Assert;
 import org.junit.Test;

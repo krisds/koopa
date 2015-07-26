@@ -9,7 +9,7 @@ import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 
 import org.junit.Test;

@@ -4,7 +4,7 @@ import javax.swing.Icon;
 
 import koopa.core.data.Data;
 import koopa.core.data.Position;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class Reference {
 	private Tree tree = null;

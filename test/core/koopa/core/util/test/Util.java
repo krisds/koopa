@@ -13,7 +13,7 @@ import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.HardcodedSource;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public final class Util {
 	public static List<Range> asListOfRanges(int... positions) {

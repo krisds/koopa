@@ -7,9 +7,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.cobol.CobolFiles;
 import koopa.core.treeparsers.BasicTreeStream;
-import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
+import koopa.core.trees.Tree;
 
 public class CobolOutlineTreeProcessor {
 	private List<DefaultMutableTreeNode> trees = null;

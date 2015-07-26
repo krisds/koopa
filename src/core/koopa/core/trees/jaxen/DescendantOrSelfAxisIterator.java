@@ -2,7 +2,7 @@ package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
 
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class DescendantOrSelfAxisIterator implements Iterator<Tree> {
 

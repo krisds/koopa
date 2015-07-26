@@ -23,6 +23,11 @@ public abstract class FutureParser extends ParserCombinator {
 		this.parser = parser;
 	}
 
+	public FutureParser with(ParserCombinator parser) {
+		setParser(parser);
+		return this;
+	}
+
 	private Set<String> getAllKeywordsInScope() {
 		if (allKeywords == null) {
 			allKeywords = new HashSet<String>();

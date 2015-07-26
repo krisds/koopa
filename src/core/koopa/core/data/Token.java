@@ -120,6 +120,10 @@ public class Token implements Data {
 		return this.text;
 	}
 
+	public char charAt(int index) {
+		return text.charAt(index);
+	}
+
 	public int getLength() {
 		return text.length();
 	}

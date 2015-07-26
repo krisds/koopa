@@ -8,7 +8,7 @@ import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 

@@ -10,9 +10,9 @@ import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.combinators.Block;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.LimitedTreeStream;
-import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 

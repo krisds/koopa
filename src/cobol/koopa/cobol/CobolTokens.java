@@ -15,6 +15,7 @@ import koopa.cobol.sources.Separators;
 import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
+import koopa.core.grammars.Grammar;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
@@ -23,7 +24,7 @@ import koopa.core.sources.Source;
 // We'll need support for intermediate tokenizers and copybook lookup.
 public class CobolTokens {
 	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, SourceFormat format,
+			Reader reader, Grammar grammar, SourceFormat format,
 			List<ChainableSource<Token>> intermediateSources, File path,
 			Copybooks copybooks) {
 
@@ -64,18 +65,21 @@ public class CobolTokens {
 		// EXPERIMENTAL: optional preprocessing stage.
 		// TODO Work on this stage.
 		if (copybooks != null)
-			tokenizer = new PreprocessingSource(tokenizer, format, path,
-					copybooks);
+			tokenizer = new PreprocessingSource(tokenizer, grammar, format,
+					path, copybooks);
 
 		return tokenizer;
 	}
 
 	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, SourceFormat format, File path, Copybooks copybooks) {
-		return getNewSource(resourceName, reader, format, null, path, copybooks);
+			Reader reader, Grammar grammar, SourceFormat format, File path,
+			Copybooks copybooks) {
+		return getNewSource(resourceName, reader, grammar, format, null, path,
+				copybooks);
 	}
 
-	public static Source<Token> getNewSource(Reader reader, SourceFormat format) {
-		return getNewSource(null, reader, format, null, null, null);
+	public static Source<Token> getNewSource(Reader reader, Grammar grammar,
+			SourceFormat format) {
+		return getNewSource(null, reader, grammar, format, null, null, null);
 	}
 }

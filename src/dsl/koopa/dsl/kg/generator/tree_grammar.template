@@ -1,0 +1,175 @@
+# Template for expanded Koopa grammars.
+
+def grammar
+    package #package#;
+    
+    import koopa.core.parsers.Parse;
+    import koopa.core.parsers.combinators.Block;
+    import koopa.core.treegrammars.TreeGrammar;
+    import koopa.core.treeparsers.FutureTreeParser;
+    import koopa.core.treeparsers.TreeParser;
+    
+>   user_imports
+    
+    public class #name#TreeGrammar extends #extending#Grammar {
+        public #name#TreeGrammar() {
+        }
+        
+>       rules
+    }
+end
+
+def rule
+    // ========================================================
+    // #name#
+    // ........................................................
+    
+    private TreeParser #name#Parser = null;
+    
+    #modifier# TreeParser #name#() {
+      if (#name#Parser == null) {
+        FutureTreeParser future = scoped("#name#");
+        #name#Parser = future;
+        future.setParser(
+>         body
+        );
+      }
+    
+      return #name#Parser;
+    }
+    
+end
+
+def binding
+    #type# #name# = (#type#) scope.get("#name#");
+end
+
+def unbinding
+    scope.set("#name#", #name#);
+end
+
+def return_value
+    returning("#text_of_identifier#")
+end
+
+def sequence
+    sequence(
+>     all_part
+    )
+end
+
+def star
+    star(
+>     first_part
+    )
+end
+
+def plus
+    plus(
+>     first_part
+    )
+end
+
+def identifier
+    #text#()
+end
+
+def literal
+    token("#text#")
+end
+
+def quoted_literal
+    literal("#unquoted_text#")
+end
+
+def number
+    token("#text#")
+end
+
+def dot
+    literal(".")
+end
+
+def any
+    any()
+end
+
+def nested
+    choice(
+>     all_part
+    )
+end
+
+def optional
+    optional(
+>     all_part
+    )
+end
+
+def permutation
+    permuted(
+>     all_part
+    )
+end
+
+def as
+    as("#text_of_identifier#",
+>     last_part
+    )
+end
+
+def skip_to
+    skipto(
+>     limiter
+    )
+end
+
+def limited
+    limited(
+>     limited_and_comma
+>     limiter
+    )
+end
+
+def negation
+    not(
+>     first_part
+    )
+end
+
+def dispatched
+    dispatched(
+      new String[]{
+>       all_dispatch_literal
+      },
+      new ParserCombinator[]{
+>       all_dispatch_sequence
+      }
+    )
+end
+
+def assign
+    assign("#text_of_identifier#",
+>     last_part
+    )
+end
+
+def native_code
+    apply(new Block() {
+      public void apply(Parse parse) {
+>       all_binding
+        #text#
+>       all_unbinding
+      }
+    })
+end
+
+def tagged
+    tagged(#text_of_name#)
+end
+
+def noskip
+    opt(NOSKIP,
+>     all_part
+    )
+end

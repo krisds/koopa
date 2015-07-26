@@ -13,7 +13,6 @@ import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.treeparsers.Tree;
 
 import org.apache.log4j.Logger;
 

@@ -31,8 +31,18 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
+	public boolean isCaseSensitive() {
+		return false;
+	}
+
+	@Override
 	public boolean isSeparator(String text) {
 		return separators.contains(text);
+	}
+
+	@Override
+	public boolean isComment(Token token) {
+		return false;
 	}
 
 	@Override
@@ -121,7 +131,8 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public ParserCombinator limited(ParserCombinator target, ParserCombinator limiter) {
+	public ParserCombinator limited(ParserCombinator target,
+			ParserCombinator limiter) {
 		return super.limited(target, limiter);
 	}
 

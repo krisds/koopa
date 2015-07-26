@@ -19,12 +19,13 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.IslandTag;
+import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
-import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 
@@ -34,6 +35,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.preprocessing");
 
+	private Grammar grammar = null;
 	private Source<Token> sourceTokenizer = null;
 	private QueueingTokenSink sourceSink = null;
 
@@ -52,10 +54,11 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private final File path;
 	private final Copybooks copybooks;
 
-	public PreprocessingSource(Source<Token> sourceTokenizer,
+	public PreprocessingSource(Source<Token> sourceTokenizer, Grammar grammar,
 			SourceFormat format, File path, Copybooks copybooks) {
 		assert (sourceTokenizer != null);
 
+		this.grammar = grammar;
 		this.sourceTokenizer = sourceTokenizer;
 		this.format = format;
 		this.path = path;
@@ -161,10 +164,11 @@ public class PreprocessingSource extends BasicSource<Token> implements
 						if (listener != null)
 							listener.startCopying(tree);
 
-						copybookTokenizer = CobolTokens.getNewSource(//
+						copybookTokenizer = CobolTokens.getNewSource(
 								copybook.getAbsolutePath(), //
 								new FileReader(copybook), //
-								format, copybook.getParentFile(), copybooks);
+								grammar, format, copybook.getParentFile(),
+								copybooks);
 
 						if (replacing != null) {
 							replacing.setSource(copybookTokenizer);
@@ -216,7 +220,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	// TODO Move this to a utility class; I'm sure this will come in handy
 	// again.
 	private Tree getSyntaxTree(List<Data> directive) {
-		KoopaTreeBuilder builder = new KoopaTreeBuilder(true);
+		KoopaTreeBuilder builder = new KoopaTreeBuilder(grammar, true);
 
 		for (Data token : directive)
 			builder.push(token);

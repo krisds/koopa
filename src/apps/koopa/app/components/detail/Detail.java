@@ -24,8 +24,8 @@ import koopa.app.components.sourceview.SourceView;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
-import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
 // TODO Extract commonalities with Overview into a common superclass ?

@@ -26,7 +26,7 @@ import koopa.app.components.detail.Detail;
 import koopa.app.components.highlights.Highlights;
 import koopa.app.components.overview.Overview;
 import koopa.core.data.Position;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.trees.jaxen.XPathException;
 

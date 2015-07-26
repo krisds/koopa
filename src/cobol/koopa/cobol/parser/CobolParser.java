@@ -61,17 +61,17 @@ public class CobolParser {
 	private ParseResults parse(File file, FileReader reader) throws IOException {
 		final boolean isCopybook = CobolFiles.isCopybook(file);
 
+		// This object holds all grammar productions. It is not thread-safe,
+		// meaning that you can only ask it to parse one thing at a time.
+		CobolGrammar grammar = new CobolGrammar();
+
 		// Build the tokenisation stage.
 		Source<Token> source = CobolTokens.getNewSource(
-				file.getCanonicalPath(), reader, format,
+				file.getCanonicalPath(), reader, grammar, format,
 				intermediateTokenizers, file.getParentFile(),
 				preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
-
-		// This object holds all grammar productions. It is not thread-safe,
-		// meaning that you can only ask it to parse one thing at a time.
-		CobolGrammar grammar = new CobolGrammar();
 
 		// Depending on the type of file we ask the grammar for the right
 		// parser.
@@ -91,7 +91,7 @@ public class CobolParser {
 		}
 
 		if (buildTrees)
-			parse.addTarget(new KoopaTreeBuilder(false));
+			parse.addTarget(new KoopaTreeBuilder(grammar, false));
 
 		if (!targets.isEmpty())
 			for (Target<Data> next : targets)

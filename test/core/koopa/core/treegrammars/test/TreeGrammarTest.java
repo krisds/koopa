@@ -13,9 +13,9 @@ import koopa.core.parsers.combinators.Block;
 import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.BasicTreeStream;
 import koopa.core.treeparsers.FutureTreeParser;
-import koopa.core.treeparsers.Tree;
 import koopa.core.treeparsers.TreeParser;
 import koopa.core.treeparsers.TreeStream;
+import koopa.core.trees.Tree;
 
 import org.junit.Assert;
 import org.junit.Test;

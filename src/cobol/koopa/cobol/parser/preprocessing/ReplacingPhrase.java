@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class ReplacingPhrase {
 

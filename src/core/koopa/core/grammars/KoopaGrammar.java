@@ -100,6 +100,10 @@ public abstract class KoopaGrammar extends Grammar {
 		return new Optional(parser);
 	}
 
+	protected ParserCombinator optional(final ParserCombinator... parsers) {
+		return new Optional(sequence(parsers));
+	}
+
 	protected ParserCombinator literal(final String text) {
 		return new MatchLiteral(this, text);
 	}

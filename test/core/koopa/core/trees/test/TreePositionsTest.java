@@ -7,7 +7,7 @@ import static koopa.core.util.test.Util.tree;
 import java.io.IOException;
 
 import junit.framework.TestCase;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 import org.junit.Test;
 

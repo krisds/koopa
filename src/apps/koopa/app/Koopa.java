@@ -57,8 +57,8 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
-import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
 import org.apache.log4j.PropertyConfigurator;

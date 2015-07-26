@@ -11,8 +11,8 @@ import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
-import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 import koopa.core.trees.XMLSerializer;
 import koopa.core.util.Tuple;
 

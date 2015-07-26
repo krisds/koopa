@@ -22,6 +22,10 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 		return "cobol-pp";
 	}
 
+	public boolean isCaseSensitive() {
+		return false;
+	}
+
 	private static final int DEFAULT_MAX_COBOL_WORD_LENGTH = 31;
 	private static final int MAX_COBOL_WORD_LENGTH;
 
@@ -54,6 +58,10 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	public boolean isProgramText(Token token) {
 		return token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
 				&& !token.hasTag(AreaTag.COMMENT);
+	}
+
+	public boolean isComment(Token token) {
+		return token.hasTag(AreaTag.COMMENT);
 	}
 
 	public boolean isSeparator(String text) {

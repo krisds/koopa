@@ -7,8 +7,8 @@ import java.util.List;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.parsers.Parse;
-import koopa.core.treeparsers.Tree;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 
 public class JaxenSample {

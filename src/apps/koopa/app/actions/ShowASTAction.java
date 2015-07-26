@@ -8,9 +8,9 @@ import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
 import koopa.app.Application;
-import koopa.app.components.astview.ASTFrame;
 import koopa.app.components.detail.Detail;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
+import koopa.core.trees.ui.TreeFrame;
 
 public class ShowASTAction extends AbstractAction implements Action {
 
@@ -29,7 +29,7 @@ public class ShowASTAction extends AbstractAction implements Action {
 				final Tree tree = application.getSyntaxTree();
 				String filename = ((Detail) application.getView()).getFile()
 						.getName();
-				new ASTFrame(filename + " - AST", tree).setVisible(true);
+				new TreeFrame(filename + " - AST", tree).setVisible(true);
 			}
 		});
 	}

@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileFilter;
 
 import koopa.app.Application;
 import koopa.app.ApplicationSupport;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 import koopa.core.trees.XMLSerializer;
 
 @SuppressWarnings("serial")

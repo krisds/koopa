@@ -1,6 +1,6 @@
 package koopa.core.trees.jaxen;
 
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class TreeAttribute {
 

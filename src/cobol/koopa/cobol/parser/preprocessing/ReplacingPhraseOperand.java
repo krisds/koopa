@@ -14,7 +14,7 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class ReplacingPhraseOperand {
 	private static final Logger LOGGER = Logger

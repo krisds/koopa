@@ -57,8 +57,7 @@ end
 def paragraph (Tree name) =
     name=paragraphName
     
-    { push(new Reference(getCurrentTree(), name.getProgramText(), PARAGRAPH_ICON));
-      pop(); }
+    { push(new Reference(getCurrentTree(), name.getProgramText(), PARAGRAPH_ICON)); pop(); }
 end
 
 def programName =

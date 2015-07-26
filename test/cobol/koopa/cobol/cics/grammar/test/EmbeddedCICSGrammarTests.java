@@ -1,20 +1,19 @@
 package koopa.cobol.cics.grammar.test;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import java.io.File;
+
+import koopa.dsl.stage.runtime.AllStagesTest;
+import koopa.dsl.stage.util.StageUtil;
 
 /**
- * Triggers all grammar unit tests.
+ * Triggers all CICS grammar unit tests.
  * <p>
  * <b>When adding a new stage you must also include the compiled results in the
  * overall test suite defined here !</b>
  */
-public class EmbeddedCICSGrammarTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Embedded CICS Grammar test suite.");
-
-		suite.addTestSuite(StatementTest.class);
-		return suite;
+public class EmbeddedCICSGrammarTests extends AllStagesTest {
+	public File[] getFiles() {
+		return new File("test/cobol/koopa/cobol/cics/grammar/test/")
+				.listFiles(StageUtil.getFilenameFilter());
 	}
 }

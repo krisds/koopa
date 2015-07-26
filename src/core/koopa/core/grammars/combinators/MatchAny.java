@@ -17,9 +17,15 @@ import koopa.core.parsers.Stream;
 public class MatchAny extends ParserCombinator {
 
 	private final Grammar grammar;
+	private final boolean testForKeywords;
 
 	public MatchAny(Grammar grammar) {
+		this(grammar, false);
+	}
+
+	public MatchAny(Grammar grammar, boolean testForKeywords) {
 		this.grammar = grammar;
+		this.testForKeywords = testForKeywords;
 	}
 
 	public boolean matches(Parse parse) {
@@ -29,18 +35,25 @@ public class MatchAny extends ParserCombinator {
 
 		final Token token = stream.forward();
 
-		if (token != null) {
+		if (token == null) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " != null : yes");
+				parse.getTrace().add(token + " is any : no");
 
-			parse.getStack().getScope().setRValue(token);
-			return true;
+			return false;
+
+		} else if (testForKeywords
+				&& parse.getStack().isKeyword(token.getText())) {
+			if (parse.getTrace().isEnabled())
+				parse.getTrace().add(token + " is any : no, it's a keyword");
+
+			return false;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " != null : no");
+				parse.getTrace().add(token + " is any : yes");
 
-			return false;
+			parse.getStack().getScope().setRValue(token);
+			return true;
 		}
 	}
 

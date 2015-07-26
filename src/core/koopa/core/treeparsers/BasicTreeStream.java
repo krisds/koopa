@@ -3,6 +3,7 @@ package koopa.core.treeparsers;
 import java.util.Stack;
 
 import koopa.core.data.Data;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 

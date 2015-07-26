@@ -1,6 +1,7 @@
 package koopa.core.treeparsers;
 
 import koopa.core.data.Data;
+import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
 

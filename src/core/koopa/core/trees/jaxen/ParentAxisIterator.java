@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class ParentAxisIterator implements Iterator<Tree> {
 

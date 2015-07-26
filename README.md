@@ -50,7 +50,7 @@ Complex XPath query results should be presented in serialized form.
 
 ### Parser Generation
 
-Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.core.KGG class. You can pass it one of the following:
+Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.dsl.kg.KGG class. You can pass it one of the following:
 
   1. A path to a specific .kg file, which it will then translate.
   2. A path to a folder, which will then be searched for .kg files, all of which will get translated.

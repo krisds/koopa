@@ -5,7 +5,7 @@ import java.io.File;
 
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
 public interface Application {

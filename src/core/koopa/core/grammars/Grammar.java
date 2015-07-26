@@ -8,11 +8,23 @@ import koopa.core.parsers.Stream;
 public abstract class Grammar {
 
 	/**
+	 * What is this grammar's namespace ? This will help separate grammar rules
+	 * with matching names from different grammars, which is of importance when
+	 * composing grammars.
+	 */
+	public abstract String getNamespace();
+
+	/**
 	 * Whether or not a token contributes to program text.
 	 * <p>
 	 * It is up to actual grammars to override this and implement as needed.
 	 */
 	public abstract boolean isProgramText(Token token);
+
+	/**
+	 * Whether or not a token counts as a comment.
+	 */
+	public abstract boolean isComment(Token token);
 
 	/**
 	 * Whether or not a piece of text represents a separator (or whitespace).
@@ -29,6 +41,11 @@ public abstract class Grammar {
 	public boolean isSeparator(Token token, Parse parseStack) {
 		return isSeparator(token.getText());
 	}
+
+	/**
+	 * Should matching be case sensitive or not ?
+	 */
+	public abstract boolean isCaseSensitive();
 
 	/**
 	 * Skips all tokens which are either not program text, or which are
@@ -79,11 +96,4 @@ public abstract class Grammar {
 			return;
 		}
 	}
-
-	/**
-	 * What is this grammar's namespace ? This will help separate grammar rules
-	 * with matching names from different grammars, which is of importance when
-	 * composing grammars.
-	 */
-	public abstract String getNamespace();
 }

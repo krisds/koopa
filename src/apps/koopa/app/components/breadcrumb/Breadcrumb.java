@@ -18,7 +18,7 @@ import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 // TODO Style this a bit better.
 @SuppressWarnings("serial")

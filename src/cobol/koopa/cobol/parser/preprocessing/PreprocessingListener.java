@@ -1,6 +1,6 @@
 package koopa.cobol.parser.preprocessing;
 
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public interface PreprocessingListener {
 

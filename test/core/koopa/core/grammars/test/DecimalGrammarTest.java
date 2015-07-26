@@ -14,7 +14,7 @@ import org.junit.Test;
 /**
  * This class tests a possible fix for issue #48
  * "Delay categorization of decimals". It let's the parser define decimals based
- * on {@linkplain SyntacticTag#INTEGER_LITERAL}, separators, and
+ * on {@linkplain KGTag#INTEGER_LITERAL}, separators, and
  * {@linkplain ContextTag}s.
  */
 public class DecimalGrammarTest extends GrammarTest {

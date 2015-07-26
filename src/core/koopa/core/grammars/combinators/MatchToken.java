@@ -36,7 +36,7 @@ public class MatchToken extends ParserCombinator {
 
 		final Token token = stream.forward();
 
-		if (token != null && token.getText().equalsIgnoreCase(text)) {
+		if (token != null && matchesText(token)) {
 
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(token + " =~ " + text + " : yes");
@@ -50,6 +50,13 @@ public class MatchToken extends ParserCombinator {
 
 			return false;
 		}
+	}
+
+	private boolean matchesText(final Token token) {
+		if (grammar.isCaseSensitive())
+			return token.getText().equals(text);
+		else
+			return token.getText().equalsIgnoreCase(text);
 	}
 
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {

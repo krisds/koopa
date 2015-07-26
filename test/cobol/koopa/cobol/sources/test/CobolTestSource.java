@@ -13,15 +13,16 @@ import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
+import koopa.dsl.stage.runtime.TestSource;
 
-public class CobolTestSource {
+public class CobolTestSource implements TestSource {
 
-	public static Source<Token> forSample(String data) {
+	public Source<Token> forSample(String sample) {
 		SourceFormat initialReferenceFormat = SourceFormat.FREE;
 
 		// The tokenizers in this sequence should generate the expected tokens.
 		// TODO Reuse setup from CobolParser somehow ?
-		Source<Token> source = new LineSplitter(new StringReader(data));
+		Source<Token> source = new LineSplitter(new StringReader(sample));
 		source = new CompilerDirectives(source, initialReferenceFormat);
 		source = new ProgramArea(source);
 		source = new SourceFormattingDirectives(source);

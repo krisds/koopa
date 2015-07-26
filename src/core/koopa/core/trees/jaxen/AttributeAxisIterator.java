@@ -7,7 +7,7 @@ import java.util.Set;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.treeparsers.Tree;
+import koopa.core.trees.Tree;
 
 public class AttributeAxisIterator implements Iterator<TreeAttribute> {
 

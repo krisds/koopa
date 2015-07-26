@@ -2,8 +2,6 @@ package koopa.cobol.grammar.test;
 grammar koopa.cobol.grammar.CobolGrammar;
 tokenizer koopa.cobol.sources.test.CobolTestSource;
 
-target execStatement;
-
 target execSQLStatement;
 
 # -[ EXEC SQL END-EXEC ]

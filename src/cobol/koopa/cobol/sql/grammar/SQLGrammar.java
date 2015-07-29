@@ -123,8 +123,10 @@ public class SQLGrammar extends SQLBaseGrammar {
             name(),
             token("CURSOR"),
             optional(
-              skipto(
-                token("FOR")
+              as("unknown",
+                skipto(
+                  token("FOR")
+                )
               )
             ),
             token("FOR"),
@@ -155,8 +157,10 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             token("SELECT"),
             optional(
-              skipto(
-                token("FROM")
+              as("unknown",
+                skipto(
+                  token("FROM")
+                )
               )
             ),
             token("FROM"),

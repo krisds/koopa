@@ -2,7 +2,6 @@ package koopa.app.cli;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import koopa.cobol.CobolFiles;
@@ -19,70 +18,34 @@ import koopa.core.util.Tuple;
 public class ToXml {
 
 	private static final int BAD_USAGE = -1;
-	private static final int SOURCE_DOES_NOT_EXIST = -2;
 
 	private static final int IOEXCEPTION = -10;
 
 	public static void main(String[] args) {
 
-		SourceFormat format = SourceFormat.FIXED;
-		boolean preprocess = false;
-		List<String> copybookPaths = new LinkedList<String>();
+		final CommandLineOptions options;
+		try {
+			options = new CommandLineOptions(args);
 
-		File source = null;
-		File target = null;
-
-		for (int i = 0; i < args.length; i++) {
-			String option = args[i];
-
-			if (option.startsWith("--")) {
-				if (option.equals("--free-format")) {
-					format = SourceFormat.FREE;
-
-				} else if (option.equals("--preprocess")) {
-					preprocess = true;
-
-				} else {
-					System.out.println("Unknown option: " + option);
-					System.exit(BAD_USAGE);
-				}
-
-			} else if (option.startsWith("-")) {
-				if (option.equals("-I")) {
-
-					i += 1;
-					if (i >= args.length) {
-						System.out.println("Missing copybook path definition.");
-						System.exit(BAD_USAGE);
-					}
-
-					copybookPaths.add(args[i]);
-
-				} else {
-					System.out.println("Unknown option: " + option);
-					System.exit(BAD_USAGE);
-				}
-
-			} else if (source == null) {
-				source = new File(option);
-
-				if (!source.exists()) {
-					System.out.println("Source path does not exist: " + source);
-					System.exit(SOURCE_DOES_NOT_EXIST);
-				}
-
-			} else if (target == null) {
-				target = new File(option);
-
-			} else {
-				System.out.println("Usage: ToXml [--free-format] "
-						+ "[--preprocess -I <copyboopath>] "
-						+ "<source-path> <target-path>");
-				System.exit(BAD_USAGE);
-			}
+		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
+			System.exit(BAD_USAGE);
+			return;
 		}
 
-		ToXml toXml = new ToXml(format, preprocess, copybookPaths);
+		ToXml toXml = new ToXml(options.getFormat(), options.isPreprocess(),
+				options.getCopybookPaths());
+
+		List<String> other = options.getOther();
+		if (other.size() != 2) {
+			System.err.println("Usage: [--free-format] "
+					+ "[--preprocess -I <copyboopath>] <source> <target>");
+			System.exit(BAD_USAGE);
+			return;
+		}
+
+		File source = new File(other.get(0));
+		File target = new File(other.get(1));
 		toXml.process(source, target);
 	}
 

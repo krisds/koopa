@@ -100,7 +100,12 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
               )
             ),
             optional(
-              token("SUPPRESS")
+              sequence(
+                token("SUPPRESS"),
+                optional(
+                  token("PRINTING")
+                )
+              )
             ),
             optional(
               copyReplacingPhrase()

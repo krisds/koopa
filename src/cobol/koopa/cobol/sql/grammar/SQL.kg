@@ -23,13 +23,13 @@ end
 
 def declareCursorStatement =
    DECLARE name CURSOR
-   [--> FOR] FOR selectStatement
+   [unknown: --> FOR] FOR selectStatement
    (_)*
 end
 
 def selectStatement =
    SELECT
-   [--> FROM] FROM [schemaName '.'] tableName   
+   [unknown: --> FROM] FROM [schemaName '.'] tableName   
 end
 
 def insertStatement =

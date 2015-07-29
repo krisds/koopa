@@ -1,15 +1,21 @@
 package koopa.dsl.stage.runtime;
 
+import static koopa.core.data.tags.IslandTag.WATER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import koopa.core.data.Data;
+import koopa.core.data.Token;
+import koopa.core.data.markers.End;
+import koopa.core.data.markers.Start;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.test.TestTokenizer;
+import koopa.core.targets.ListTarget;
 import koopa.core.util.Reflect;
 
 import org.junit.Test;
@@ -49,12 +55,35 @@ public abstract class AllStagesTest implements SampleBasedTest {
 				testSource.forSample(sample));
 
 		if (shouldAccept) {
-			assertTrue(target.accepts(Parse.of(source)));
-			assertTrue(source.isWhereExpected());
+			ListTarget resultingData = new ListTarget();
+			Parse parse = Parse.of(source).to(resultingData);
+			assertTrue(targetName + " should accept [" + sample + "]",
+					target.accepts(parse));
+			assertTrue(targetName + " should accept [" + sample
+					+ "] up to the expected point", source.isWhereExpected());
+
+			int inUnknown = 0;
+			for (Data data : resultingData) {
+				if (data instanceof Start) {
+					Start start = (Start) data;
+					if ("unknown".equals(start.getName()))
+						inUnknown += 1;
+
+				} else if (data instanceof End) {
+					End end = (End) data;
+					if ("unknown".equals(end.getName()))
+						inUnknown -= 1;
+
+				} else if (inUnknown == 0 && data instanceof Token) {
+					Token token = (Token) data;
+					assertFalse(targetName + " should find no water in ["
+							+ sample + "]", token.hasTag(WATER));
+				}
+			}
 
 		} else {
-			assertFalse(target.accepts(Parse.of(source))
-					&& source.isWhereExpected());
+			Parse parse = Parse.of(source);
+			assertFalse(target.accepts(parse) && source.isWhereExpected());
 		}
 	}
 }

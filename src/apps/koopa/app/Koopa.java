@@ -45,6 +45,7 @@ import koopa.app.actions.ShowASTAction;
 import koopa.app.actions.ShowGrammarAction;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
+import koopa.app.cli.CommandLineOptions;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
@@ -57,7 +58,6 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
-import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
@@ -71,12 +71,31 @@ public class Koopa extends JFrame implements Application {
 		final URL resource = Detail.class.getResource("/log4j.properties");
 		PropertyConfigurator.configure(resource);
 
+		final CommandLineOptions options;
+		try {
+			options = new CommandLineOptions(args);
+
+		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
+
+		final List<String> other = options.getOther();
+		if (other.size() > 1) {
+			System.err.println("Usage: [--free-format] "
+					+ "[--preprocess -I <copyboopath>] [source]");
+			return;
+		}
+
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Koopa koopa = new Koopa();
+				koopa.setSourceFormat(options.getFormat());
+				koopa.setPreprocessing(options.isPreprocess());
+				koopa.setCopybookPaths(options.getCopybookPaths());
 				koopa.setVisible(true);
-				if (args.length > 0)
-					koopa.openFile(new File(args[0]).getAbsoluteFile());
+				if (other.size() == 1)
+					koopa.openFile(new File(other.get(0)).getAbsoluteFile());
 			}
 		});
 	}
@@ -714,5 +733,21 @@ public class Koopa extends JFrame implements Application {
 
 	public void quitParsing() {
 		overview.quitParsing();
+	}
+
+	public void setCopybookPaths(List<String> copybookPaths) {
+		for (String path : copybookPaths)
+			overview.getParsingCoordinator().addCopybookPath(new File(path));
+		updateMenus();
+	}
+
+	public void setPreprocessing(boolean preprocessing) {
+		overview.getParsingCoordinator().setPreprocessing(preprocessing);
+		updateMenus();
+	}
+
+	public void setSourceFormat(SourceFormat format) {
+		overview.getParsingCoordinator().setFormat(format);
+		updateMenus();
 	}
 }

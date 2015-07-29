@@ -10,7 +10,7 @@ import koopa.cobol.sources.SourceFormat;
 public class ParsingCoordinator {
 
 	private boolean keepingTrackOfTokens = false;
-	// TODO buildTrees option ?
+	private boolean buildTrees = true;
 
 	private SourceFormat format = SourceFormat.FIXED;
 
@@ -52,7 +52,7 @@ public class ParsingCoordinator {
 		parser.setPreprocessing(preprocessing);
 		parser.setCopybooks(copybooks);
 
-		parser.setBuildTrees(true);
+		parser.setBuildTrees(buildTrees);
 		ParseResults results = parser.parse(file);
 
 		return results;
@@ -64,6 +64,10 @@ public class ParsingCoordinator {
 
 	public void setKeepingTrackOfTokens(boolean keepingTrackOfTokens) {
 		this.keepingTrackOfTokens = keepingTrackOfTokens;
+	}
+
+	public void setBuildTrees(boolean buildTrees) {
+		this.buildTrees = buildTrees;
 	}
 
 	/** EXPERIMENTAL ! */

@@ -341,3 +341,6 @@ target acceptStatement;
 
 # Sample from ACAS.
 +[ accept   ws-env-lines   from lines ]
+
+# Sample from Cobol Unit Test
++[ accept args from command-line end-accept ]

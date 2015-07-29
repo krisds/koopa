@@ -29,7 +29,6 @@ public class StageGrammar extends FluentGrammar {
 		define("accept").as("==+==");
 		define("reject").as("==-==");
 
-		// TODO noskip
 		define("qualified_name").as(alternating("identifier", "==.=="));
 		define("identifier").as(tagged(IDENTIFIER), any());
 		define("sample").as(tagged(SAMPLE), any());

@@ -57,6 +57,7 @@ public class Overview extends JPanel implements ParsingProvider {
 		this.application = application;
 		coordinator = new ParsingCoordinator();
 		coordinator.setKeepingTrackOfTokens(true);
+		coordinator.setBuildTrees(false);
 
 		setLayout(new BorderLayout());
 		setupComponents();

@@ -20,7 +20,7 @@ end
 
 def copyStatement =
     COPY textName [ (OF | IN) libraryName ]
-    [SUPPRESS]
+    [SUPPRESS [PRINTING]]
     [copyReplacingPhrase]
     .
 end

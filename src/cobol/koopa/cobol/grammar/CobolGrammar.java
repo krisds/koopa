@@ -5575,11 +5575,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 justifiedClause(),
                 blankWhenZeroClause(),
                 columnClause(),
-                choice(
-                  sourceClause(),
-                  reportSectionValueClause(),
-                  sumClause()
-                ),
+                sourceClause(),
+                reportSectionValueClause(),
+                sumClause(),
+                presentWhenClause(),
                 groupIndicateClause(),
                 occursClause(),
                 varyingClause()
@@ -5942,8 +5941,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 literal()
               )
             ),
-            skipto(
-              literal(".")
+            as("unknown",
+              skipto(
+                literal(".")
+              )
             ),
             literal(".")
           )
@@ -8435,7 +8436,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             plus(
-              literal()
+              choice(
+                literal(),
+                figurativeConstant()
+              )
             )
           )
         );
@@ -9876,10 +9880,8 @@ public class CobolGrammar extends CobolBaseGrammar {
               optional(
                 skipto(
                   choice(
-                    literal("."),
-                    endOfStatement(),
-                    verb(),
-                    subStatementMarker()
+                    endOfStatementMarker(),
+                    somethingFollowingAStatement()
                   )
                 )
               )
@@ -9889,112 +9891,6 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return statementParser;
-    }
-    
-    // ========================================================
-    // subStatementMarker
-    // ........................................................
-    
-    private ParserCombinator subStatementMarkerParser = null;
-    
-    public final Start subStatementMarker = Start.on(getNamespace(), "subStatementMarker");
-    
-    public ParserCombinator subStatementMarker() {
-      if (subStatementMarkerParser == null) {
-        FutureParser future = scoped("subStatementMarker", true);
-        subStatementMarkerParser = future;
-        future.setParser(
-          choice(
-            token("ELSE"),
-            token("WHEN"),
-            sequence(
-              token("NOT"),
-              token("INVALID")
-            ),
-            token("INVALID"),
-            sequence(
-              token("NOT"),
-              optional(
-                token("ON")
-              ),
-              token("SIZE")
-            ),
-            sequence(
-              optional(
-                token("ON")
-              ),
-              token("SIZE")
-            ),
-            sequence(
-              token("NOT"),
-              optional(
-                token("ON")
-              ),
-              token("OVERFLOW")
-            ),
-            sequence(
-              optional(
-                token("ON")
-              ),
-              token("OVERFLOW")
-            ),
-            sequence(
-              token("NOT"),
-              optional(
-                token("ON")
-              ),
-              token("EXCEPTION")
-            ),
-            sequence(
-              optional(
-                token("ON")
-              ),
-              token("EXCEPTION")
-            ),
-            sequence(
-              token("NOT"),
-              optional(
-                token("AT")
-              ),
-              token("END")
-            ),
-            sequence(
-              optional(
-                token("AT")
-              ),
-              token("END")
-            ),
-            sequence(
-              token("NOT"),
-              optional(
-                token("AT")
-              ),
-              token("END-OF-PAGE")
-            ),
-            sequence(
-              token("NOT"),
-              optional(
-                token("AT")
-              ),
-              token("EOP")
-            ),
-            sequence(
-              optional(
-                token("AT")
-              ),
-              token("END-OF-PAGE")
-            ),
-            sequence(
-              optional(
-                token("AT")
-              ),
-              token("EOP")
-            )
-          )
-        );
-      }
-    
-      return subStatementMarkerParser;
     }
     
     // ========================================================
@@ -10198,11 +10094,11 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator endOfStatementMarkerParser = null;
     
-    public final Start endOfStatementMarker = Start.on(getNamespace(), "endOfStatementMarker");
+    private final Start endOfStatementMarker = Start.on(getNamespace(), "endOfStatementMarker");
     
-    public ParserCombinator endOfStatementMarker() {
+    private ParserCombinator endOfStatementMarker() {
       if (endOfStatementMarkerParser == null) {
-        FutureParser future = scoped("endOfStatementMarker", true);
+        FutureParser future = scoped("endOfStatementMarker", false);
         endOfStatementMarkerParser = future;
         future.setParser(
           sequence(
@@ -10280,6 +10176,116 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return endOfStatementMarkerParser;
+    }
+    
+    // ========================================================
+    // somethingFollowingAStatement
+    // ........................................................
+    
+    private ParserCombinator somethingFollowingAStatementParser = null;
+    
+    private final Start somethingFollowingAStatement = Start.on(getNamespace(), "somethingFollowingAStatement");
+    
+    private ParserCombinator somethingFollowingAStatement() {
+      if (somethingFollowingAStatementParser == null) {
+        FutureParser future = scoped("somethingFollowingAStatement", false);
+        somethingFollowingAStatementParser = future;
+        future.setParser(
+          choice(
+            literal("."),
+            verb(),
+            token("ELSE"),
+            token("WHEN"),
+            token("END-ACCEPT"),
+            token("END-ADD"),
+            token("END-CALL"),
+            token("END-CHAIN"),
+            token("END-COMPUTE"),
+            token("END-DELETE"),
+            token("END-DISPLAY"),
+            token("END-DIVIDE"),
+            token("END-EVALUATE"),
+            token("END-EXEC"),
+            token("END-IF"),
+            token("END-MULTIPLY"),
+            token("END-PERFORM"),
+            token("END-READ"),
+            token("END-RECEIVE"),
+            token("END-RETURN"),
+            token("END-REWRITE"),
+            token("END-SEARCH"),
+            token("END-START"),
+            token("END-STRING"),
+            token("END-SUBTRACT"),
+            token("END-UNSTRING"),
+            token("END-WAIT"),
+            token("END-WRITE"),
+            token("END-XML"),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              token("INVALID")
+            ),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              optional(
+                token("ON")
+              ),
+              token("SIZE")
+            ),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              optional(
+                token("ON")
+              ),
+              token("OVERFLOW")
+            ),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              optional(
+                token("ON")
+              ),
+              token("EXCEPTION")
+            ),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              optional(
+                token("AT")
+              ),
+              token("END")
+            ),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              optional(
+                token("AT")
+              ),
+              token("END-OF-PAGE")
+            ),
+            sequence(
+              optional(
+                token("NOT")
+              ),
+              optional(
+                token("AT")
+              ),
+              token("EOP")
+            )
+          )
+        );
+      }
+    
+      return somethingFollowingAStatementParser;
     }
     
     // ========================================================
@@ -10406,10 +10412,16 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               acceptFromDate(),
               acceptScreenSizeData(),
+              acceptFromCommandLine(),
               acceptFromOther(),
               acceptFromMnemonic(),
               acceptMessageCount(),
-              acceptScreenFormat()
+              acceptScreenFormat(),
+              as("unknown",
+                skipto(
+                  somethingFollowingAStatement()
+                )
+              )
             ),
             optional(
               token("END-ACCEPT")
@@ -10744,6 +10756,34 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
+    // acceptFromCommandLine
+    // ........................................................
+    
+    private ParserCombinator acceptFromCommandLineParser = null;
+    
+    public final Start acceptFromCommandLine = Start.on(getNamespace(), "acceptFromCommandLine");
+    
+    public ParserCombinator acceptFromCommandLine() {
+      if (acceptFromCommandLineParser == null) {
+        FutureParser future = scoped("acceptFromCommandLine", true);
+        acceptFromCommandLineParser = future;
+        future.setParser(
+          sequence(
+            identifier(),
+            token("FROM"),
+            choice(
+              token("COMMAND-LINE"),
+              token("ARGUMENT-NUMBER"),
+              token("ARGUMENT-VALUE")
+            )
+          )
+        );
+      }
+    
+      return acceptFromCommandLineParser;
+    }
+    
+    // ========================================================
     // addStatement
     // ........................................................
     
@@ -11046,6 +11086,13 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               callGivingOrReturning()
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  somethingFollowingAStatement()
+                )
+              )
             ),
             optional(
               choice(
@@ -12021,7 +12068,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             token("DISPLAY"),
             choice(
               displayTerminalFormat(),
-              displayDeviceFormat()
+              displayDeviceFormat(),
+              as("unknown",
+                skipto(
+                  somethingFollowingAStatement()
+                )
+              )
             ),
             optional(
               token("END-DISPLAY")
@@ -13949,8 +14001,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             token("DLI"),
             optional(
-              skipto(
-                token("END-EXEC")
+              as("unknown",
+                skipto(
+                  token("END-EXEC")
+                )
               )
             ),
             token("END-EXEC")
@@ -13981,8 +14035,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             token("HTML"),
             optional(
-              skipto(
-                token("END-EXEC")
+              as("unknown",
+                skipto(
+                  token("END-EXEC")
+                )
               )
             ),
             token("END-EXEC")
@@ -14013,8 +14069,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             textName(),
             optional(
-              skipto(
-                token("END-EXEC")
+              as("unknown",
+                skipto(
+                  token("END-EXEC")
+                )
               )
             ),
             token("END-EXEC")
@@ -14614,10 +14672,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               replacingInitClause()
             ),
             optional(
-              skipto(
-                choice(
-                  literal("."),
-                  endOfStatement()
+              as("unknown",
+                skipto(
+                  somethingFollowingAStatement()
                 )
               )
             )
@@ -15110,10 +15167,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               identifier()
             ),
             optional(
-              skipto(
-                choice(
-                  literal("."),
-                  endOfStatement()
+              as("unknown",
+                skipto(
+                  somethingFollowingAStatement()
                 )
               )
             )
@@ -16635,10 +16691,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               setOther()
             ),
             optional(
-              skipto(
-                choice(
-                  literal("."),
-                  endOfStatement()
+              as("unknown",
+                skipto(
+                  somethingFollowingAStatement()
                 )
               )
             )
@@ -16697,7 +16752,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   ),
                   identifier()
                 ),
-                name(),
+                qualifiedDataName(),
                 identifier()
               )
             ),
@@ -16745,6 +16800,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   ),
                   token("NULL"),
                   token("NULLS"),
+                  figurativeConstant(),
                   name(),
                   identifier(),
                   integer()
@@ -18596,83 +18652,6 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return paragraphStartParser;
-    }
-    
-    // ========================================================
-    // endOfStatement
-    // ........................................................
-    
-    private ParserCombinator endOfStatementParser = null;
-    
-    public final Start endOfStatement = Start.on(getNamespace(), "endOfStatement");
-    
-    public ParserCombinator endOfStatement() {
-      if (endOfStatementParser == null) {
-        FutureParser future = scoped("endOfStatement", true);
-        endOfStatementParser = future;
-        future.setParser(
-          choice(
-            verb(),
-            token("ELSE"),
-            token("WHEN"),
-            token("END-ACCEPT"),
-            token("END-ADD"),
-            token("END-CALL"),
-            token("END-CHAIN"),
-            token("END-COMPUTE"),
-            token("END-DELETE"),
-            token("END-DISPLAY"),
-            token("END-DIVIDE"),
-            token("END-EVALUATE"),
-            token("END-EXEC"),
-            token("END-IF"),
-            token("END-MULTIPLY"),
-            token("END-PERFORM"),
-            token("END-READ"),
-            token("END-RECEIVE"),
-            token("END-RETURN"),
-            token("END-REWRITE"),
-            token("END-SEARCH"),
-            token("END-START"),
-            token("END-STRING"),
-            token("END-SUBTRACT"),
-            token("END-UNSTRING"),
-            token("END-WAIT"),
-            token("END-WRITE"),
-            token("END-XML"),
-            sequence(
-              optional(
-                token("NOT")
-              ),
-              optional(
-                choice(
-                  token("ON"),
-                  token("AT")
-                )
-              ),
-              choice(
-                token("OVERFLOW"),
-                token("EXCEPTION"),
-                sequence(
-                  token("SIZE"),
-                  token("ERROR")
-                ),
-                sequence(
-                  token("INVALID"),
-                  optional(
-                    token("KEY")
-                  )
-                ),
-                token("END"),
-                token("END-OF-PAGE"),
-                token("EOP")
-              )
-            )
-          )
-        );
-      }
-    
-      return endOfStatementParser;
     }
     
     // ========================================================

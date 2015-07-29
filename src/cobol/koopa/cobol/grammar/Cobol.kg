@@ -1269,10 +1269,10 @@ def reportGroupDescriptionEntry =
      | justifiedClause                 # STD.BK
      | blankWhenZeroClause             # STD.BK
      | columnClause                    # STD.BK
-     | ( sourceClause                  # STD.BK
-       | reportSectionValueClause      # STD.BK
-       | sumClause                     # STD.BK
-       )
+     | sourceClause                    # STD.BK
+     | reportSectionValueClause        # STD.BK
+     | sumClause                       # STD.BK
+     | presentWhenClause               # STD.BK
      | groupIndicateClause             # STD.BK
      | occursClause                    # STD.BK
      | varyingClause                   # STD.BK
@@ -1430,7 +1430,7 @@ private def dataDescriptionEntry_format1 =
     | usageClause      # STD.BK -- Note: This has some catch-alls in it.
     | literal
     ]
-    (--> .)  # TODO Handle skipped.
+    (unknown: --> .)  # TODO Handle skipped.
     .
 end
 
@@ -1503,7 +1503,7 @@ def justified =
     [OUTPUT] (JUSTIFIED | JUST) [LEFT | RIGHT | CENTERED]
 end
 
-# TODO The recurring negations in here (-FALSE) are pretty ugly...
+# TODO The recurring negations in here (%not ...) are pretty ugly...
 def valueClause =
     ( VALUE [IS] | VALUES [ARE] )
     
@@ -1854,7 +1854,7 @@ def reportGroupUsageClause =
 end
 
 def reportSectionValueClause =
-    (VALUE [IS] | VALUES [ARE]) (literal)+
+    (VALUE [IS] | VALUES [ARE]) (literal | figurativeConstant)+
 end
 
 def reverseVideoClause =
@@ -2204,27 +2204,8 @@ def statement =
       )
     
     | verb
-      [--> ( . | endOfStatement | verb | subStatementMarker)]
+      [--> ( endOfStatementMarker | somethingFollowingAStatement )]
     )
-end
-
-def subStatementMarker =
-	( ELSE 
-	| WHEN
-	| NOT INVALID
-	| INVALID
-	| NOT [ON] SIZE
-	| [ON] SIZE
-	| NOT [ON] OVERFLOW
-	| [ON] OVERFLOW
-	| NOT [ON] EXCEPTION
-	| [ON] EXCEPTION
-	| NOT [AT] END
-	| [AT] END
-	| NOT [AT] END-OF-PAGE
-	| NOT [AT] EOP
-	| [AT] END-OF-PAGE
-	| [AT] EOP )
 end
 
 def continuationOfStatement (Token t) =
@@ -2264,7 +2245,7 @@ def retryPhrase =
     )
 end
 
-def endOfStatementMarker (Token t) returns t =
+private def endOfStatementMarker (Token t) returns t =
     ( t=END-ACCEPT
     | t=END-ADD
     | t=END-CALL
@@ -2288,6 +2269,49 @@ def endOfStatementMarker (Token t) returns t =
     | t=END-WAIT        # *MF
     | t=END-WRITE
     )
+end
+
+private def somethingFollowingAStatement =
+    ( . 
+    | verb
+
+	| ELSE 
+	| WHEN
+	
+    | END-ACCEPT
+    | END-ADD
+    | END-CALL
+    | END-CHAIN        # *MF
+    | END-COMPUTE
+    | END-DELETE
+    | END-DISPLAY
+    | END-DIVIDE
+    | END-EVALUATE
+    | END-EXEC
+    | END-IF
+    | END-MULTIPLY
+    | END-PERFORM
+    | END-READ
+    | END-RECEIVE
+    | END-RETURN
+    | END-REWRITE
+    | END-SEARCH
+    | END-START
+    | END-STRING
+    | END-SUBTRACT
+    | END-UNSTRING
+    | END-WAIT          # *MF
+    | END-WRITE
+    | END-XML           # *MF
+
+	| [NOT] INVALID
+	| [NOT] [ON] SIZE
+	| [NOT] [ON] OVERFLOW
+	| [NOT] [ON] EXCEPTION
+	| [NOT] [AT] END
+	| [NOT] [AT] END-OF-PAGE
+	| [NOT] [AT] EOP
+	)
 end
 
 def verb =
@@ -2379,13 +2403,14 @@ def acceptStatement =
     ACCEPT 
     ( acceptFromDate
     | acceptScreenSizeData             # GNUCobol
+    | acceptFromCommandLine            # GNUCobol
     | acceptFromOther
     | acceptFromMnemonic
     | acceptMessageCount
     | acceptScreenFormat
     
     # Catch all.
-    # | (--> endOfStatement)
+    | unknown: --> somethingFollowingAStatement
     )
         
     [END-ACCEPT]
@@ -2457,6 +2482,10 @@ end
 
 def acceptScreenSizeData =
     identifier FROM (LINES | COLUMNS)
+end
+
+def acceptFromCommandLine =
+    identifier FROM (COMMAND-LINE | ARGUMENT-NUMBER | ARGUMENT-VALUE)
 end
 
 
@@ -2533,6 +2562,8 @@ def callStatement =
     
     [ callUsing ]
     [ callGivingOrReturning ]
+
+    [unknown: --> somethingFollowingAStatement]
 
     [ # Call statement format 1.
       onOverflow
@@ -2750,7 +2781,8 @@ def displayStatement__ =
 	DISPLAY 
 	( displayTerminalFormat
 	| displayDeviceFormat
-##   | --> (. | endOfStatement)
+
+    | unknown: --> somethingFollowingAStatement
 	)
 	[END-DISPLAY]
 end
@@ -3168,7 +3200,7 @@ end
 
 def execDLIStatement =
     (EXEC | EXECUTE) DLI
-    [--> END-EXEC]
+    [unknown: --> END-EXEC]
     END-EXEC
 end
 
@@ -3176,7 +3208,7 @@ end
 
 def execHTMLStatement =
     (EXEC | EXECUTE) HTML
-    [--> END-EXEC]
+    [unknown: --> END-EXEC]
     END-EXEC
 end
 
@@ -3184,7 +3216,7 @@ end
 
 def execTextDataStatement =
     (EXEC | EXECUTE) textName
-    [--> END-EXEC]
+    [unknown: --> END-EXEC]
     END-EXEC
 end
 
@@ -3345,7 +3377,8 @@ def initializeStatement =
 	INITIALIZE
 	(identifier)+
 	[replacingInitClause]
-	[--> (. | endOfStatement)]
+
+	[unknown: --> somethingFollowingAStatement]
 end
 
 def replacingInitClause =
@@ -3356,15 +3389,16 @@ def replacingInitClause =
 end
 
 def replacementTarget =
-	(ALPHABETIC 
-	|ALPHANUMERIC
-	|ALPHANUMERIC-EDITED
-	|NATIONAL
-	|NATIONAL-EDITED
-	|NUMERIC
-	|NUMERIC-EDITED
-	|DBCS
-	|EGCS)
+	( ALPHABETIC 
+	| ALPHANUMERIC
+	| ALPHANUMERIC-EDITED
+	| NATIONAL
+	| NATIONAL-EDITED
+	| NUMERIC
+	| NUMERIC-EDITED
+	| DBCS
+	| EGCS
+	)
 end
 
 ## #############################################################################
@@ -3465,7 +3499,8 @@ def moveStatement =
       )
     TO
       (identifier)+
-    [--> (. | endOfStatement)]
+
+    [unknown: --> somethingFollowingAStatement]
 end
 
 ## #############################################################################
@@ -3863,7 +3898,7 @@ def setStatement =
     ( setEnvironmentVariable
     | setOther
     )
-    [--> (. | endOfStatement)]
+    [unknown: --> somethingFollowingAStatement]
 end
 
 # Based on a sample found in the wild...
@@ -3873,7 +3908,7 @@ end
 
 def setOther =
     ( ADDRESS [OF] identifier
-    | name
+    | qualifiedDataName
     | identifier
     )+
     
@@ -3896,6 +3931,7 @@ def setOther =
 	  | NULL
 	  | NULLS
 	
+	  | figurativeConstant
 	  | name
       | identifier
       | integer
@@ -4351,50 +4387,6 @@ def paragraphStart =
     ) .
 end
 
-# End of a (nested) statement.
-def endOfStatement =
-    ( verb
-    
-    | ELSE             # IF statement
-    | WHEN             # SEARCH, EVALUATE statement
-
-    | END-ACCEPT
-    | END-ADD
-    | END-CALL
-    | END-CHAIN        # *MF
-    | END-COMPUTE
-    | END-DELETE
-    | END-DISPLAY
-    | END-DIVIDE
-    | END-EVALUATE
-    | END-EXEC
-    | END-IF
-    | END-MULTIPLY
-    | END-PERFORM
-    | END-READ
-    | END-RECEIVE
-    | END-RETURN
-    | END-REWRITE
-    | END-SEARCH
-    | END-START
-    | END-STRING
-    | END-SUBTRACT
-    | END-UNSTRING
-    | END-WAIT          # *MF
-    | END-WRITE
-    | END-XML           # *MF
-
-    | [NOT] [ON | AT]
-      ( OVERFLOW       # CALL statement
-      | EXCEPTION      # CALL statement
-      | SIZE ERROR
-      | INVALID [KEY]
-      | END            # RETURN statement
-      | END-OF-PAGE
-      | EOP
-      )
-    )
-end
 
 ## #############################################################################
 ## Identifiers.

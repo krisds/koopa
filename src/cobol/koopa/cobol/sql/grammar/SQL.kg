@@ -1,51 +1,61 @@
 grammar SQL extends SQLBase.
 
 def sqlStatement =
-   ( includeStatement
-   | declareSessionStatement
-   | declareCursorStatement
-   | selectStatement
-   | insertStatement
-   | updateStatement
-   | deleteStatement
-   | openStatement
-   )
+    ( includeStatement
+    | declareSessionStatement
+    | declareCursorStatement
+    | selectStatement
+    | insertStatement
+    | updateStatement
+    | deleteStatement
+    | openStatement
+    | rollbackStatement
+    )
 end
 
 def includeStatement =
-   INCLUDE textName
+    INCLUDE textName
 end
 
 def declareSessionStatement =
-   DECLARE SESSION . name
-   TABLE (_)*
+    DECLARE SESSION . name
+    TABLE
+    [unknown: --> eof]
 end
 
 def declareCursorStatement =
-   DECLARE name CURSOR
-   [unknown: --> FOR] FOR selectStatement
-   (_)*
+    DECLARE name CURSOR
+    [unknown: --> FOR] FOR selectStatement
+    [unknown: --> eof]
 end
 
 def selectStatement =
-   SELECT
-   [unknown: --> FROM] FROM [schemaName '.'] tableName   
+    SELECT
+    [unknown: --> FROM] FROM [schemaName '.'] tableName   
+    [unknown: --> eof]
 end
 
 def insertStatement =
-   INSERT INTO [schemaName '.'] tableName
+    INSERT INTO [schemaName '.'] tableName
+    [unknown: --> eof]
 end
 
 def updateStatement =
-   UPDATE [schemaName '.'] tableName
+    UPDATE [schemaName '.'] tableName
+    [unknown: --> eof]
 end
 
 def deleteStatement = 
-   DELETE FROM [schemaName '.'] tableName
+    DELETE FROM [schemaName '.'] tableName
+    [--> eof]
 end
 
 def openStatement =
-   OPEN name
+    OPEN name
+end
+
+def rollbackStatement =
+    ROLLBACK
 end
 
 # -----------------------------------------------------------------------------

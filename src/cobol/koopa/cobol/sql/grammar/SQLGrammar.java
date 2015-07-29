@@ -45,7 +45,8 @@ public class SQLGrammar extends SQLBaseGrammar {
             insertStatement(),
             updateStatement(),
             deleteStatement(),
-            openStatement()
+            openStatement(),
+            rollbackStatement()
           )
         );
       }
@@ -95,8 +96,12 @@ public class SQLGrammar extends SQLBaseGrammar {
             literal("."),
             name(),
             token("TABLE"),
-            star(
-              any()
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
             )
           )
         );
@@ -131,8 +136,12 @@ public class SQLGrammar extends SQLBaseGrammar {
             ),
             token("FOR"),
             selectStatement(),
-            star(
-              any()
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
             )
           )
         );
@@ -170,7 +179,14 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal(".")
               )
             ),
-            tableName()
+            tableName(),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
           )
         );
       }
@@ -200,7 +216,14 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal(".")
               )
             ),
-            tableName()
+            tableName(),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
           )
         );
       }
@@ -229,7 +252,14 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal(".")
               )
             ),
-            tableName()
+            tableName(),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
           )
         );
       }
@@ -259,7 +289,12 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal(".")
               )
             ),
-            tableName()
+            tableName(),
+            optional(
+              skipto(
+                eof()
+              )
+            )
           )
         );
       }
@@ -288,6 +323,26 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return openStatementParser;
+    }
+    
+    // ========================================================
+    // rollbackStatement
+    // ........................................................
+    
+    private ParserCombinator rollbackStatementParser = null;
+    
+    public final Start rollbackStatement = Start.on(getNamespace(), "rollbackStatement");
+    
+    public ParserCombinator rollbackStatement() {
+      if (rollbackStatementParser == null) {
+        FutureParser future = scoped("rollbackStatement", true);
+        rollbackStatementParser = future;
+        future.setParser(
+          token("ROLLBACK")
+        );
+      }
+    
+      return rollbackStatementParser;
     }
     
     // ========================================================

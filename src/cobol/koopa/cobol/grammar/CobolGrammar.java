@@ -2219,13 +2219,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("configurationSection", true);
         configurationSectionParser = future;
         future.setParser(
-          sequence(
-            token("CONFIGURATION"),
-            token("SECTION"),
-            literal("."),
-            optional(
-              configurationSectionBody()
-            )
+          choice(
+            sequence(
+              token("CONFIGURATION"),
+              token("SECTION"),
+              literal("."),
+              optional(
+                configurationSectionBody()
+              )
+            ),
+            configurationSectionBody()
           )
         );
       }
@@ -2239,11 +2242,11 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator configurationSectionBodyParser = null;
     
-    public final Start configurationSectionBody = Start.on(getNamespace(), "configurationSectionBody");
+    private final Start configurationSectionBody = Start.on(getNamespace(), "configurationSectionBody");
     
-    public ParserCombinator configurationSectionBody() {
+    private ParserCombinator configurationSectionBody() {
       if (configurationSectionBodyParser == null) {
-        FutureParser future = scoped("configurationSectionBody", true);
+        FutureParser future = scoped("configurationSectionBody", false);
         configurationSectionBodyParser = future;
         future.setParser(
           sequence(
@@ -3617,13 +3620,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("ioSection", true);
         ioSectionParser = future;
         future.setParser(
-          sequence(
-            token("INPUT-OUTPUT"),
-            token("SECTION"),
-            literal("."),
-            optional(
-              ioSectionBody()
-            )
+          choice(
+            sequence(
+              token("INPUT-OUTPUT"),
+              token("SECTION"),
+              literal("."),
+              optional(
+                ioSectionBody()
+              )
+            ),
+            ioSectionBody()
           )
         );
       }
@@ -3637,11 +3643,11 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator ioSectionBodyParser = null;
     
-    public final Start ioSectionBody = Start.on(getNamespace(), "ioSectionBody");
+    private final Start ioSectionBody = Start.on(getNamespace(), "ioSectionBody");
     
-    public ParserCombinator ioSectionBody() {
+    private ParserCombinator ioSectionBody() {
       if (ioSectionBodyParser == null) {
-        FutureParser future = scoped("ioSectionBody", true);
+        FutureParser future = scoped("ioSectionBody", false);
         ioSectionBodyParser = future;
         future.setParser(
           sequence(
@@ -3680,12 +3686,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("fileControlParagraph", true);
         fileControlParagraphParser = future;
         future.setParser(
-          sequence(
-            token("FILE-CONTROL"),
-            literal("."),
-            optional(
-              fileControlEntry()
-            )
+          choice(
+            sequence(
+              token("FILE-CONTROL"),
+              literal("."),
+              optional(
+                fileControlEntry()
+              )
+            ),
+            fileControlEntry()
           )
         );
       }
@@ -4770,19 +4779,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         fileSectionParser = future;
         future.setParser(
           sequence(
-            token("FILE"),
-            token("SECTION"),
-            literal("."),
-            star(
-              choice(
-                copyStatement(),
-                sequence(
-                  fileDescriptionEntry(),
-                  star(
-                    recordDescriptionEntry()
-                  )
+            choice(
+              sequence(
+                token("FILE"),
+                token("SECTION"),
+                literal("."),
+                optional(
+                  fileSectionContents()
                 )
-              )
+              ),
+              fileSectionContents()
             ),
             optional(
               skipto(
@@ -4798,6 +4804,36 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return fileSectionParser;
+    }
+    
+    // ========================================================
+    // fileSectionContents
+    // ........................................................
+    
+    private ParserCombinator fileSectionContentsParser = null;
+    
+    private final Start fileSectionContents = Start.on(getNamespace(), "fileSectionContents");
+    
+    private ParserCombinator fileSectionContents() {
+      if (fileSectionContentsParser == null) {
+        FutureParser future = scoped("fileSectionContents", false);
+        fileSectionContentsParser = future;
+        future.setParser(
+          plus(
+            choice(
+              copyStatement(),
+              sequence(
+                fileDescriptionEntry(),
+                star(
+                  recordDescriptionEntry()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return fileSectionContentsParser;
     }
     
     // ========================================================

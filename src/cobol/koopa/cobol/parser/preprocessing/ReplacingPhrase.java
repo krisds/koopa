@@ -2,13 +2,16 @@ package koopa.cobol.parser.preprocessing;
 
 import static koopa.core.trees.jaxen.Jaxen.getMatch;
 
-import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Stack;
 
+import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.trees.Tree;
 
-public class ReplacingPhrase {
+public abstract class ReplacingPhrase {
 
 	public static enum Mode {
 		MATCHING, LEADING, TRAILING;
@@ -23,36 +26,75 @@ public class ReplacingPhrase {
 		}
 	}
 
-	private final Mode mode;
-	private final ReplacingPhraseOperand replacing;
-	private final ReplacingPhraseOperand by;
+	protected final ReplacingPhraseOperand replacing;
+	protected final ReplacingPhraseOperand by;
 
-	public ReplacingPhrase(Tree instruction) {
-		this.mode = Mode.from(instruction);
-		this.replacing = ReplacingPhraseOperand.from(getMatch(instruction,
-				"copyOperandName[1]"));
-		this.by = ReplacingPhraseOperand.from(getMatch(instruction,
-				"copyOperandName[2]"));
+	public ReplacingPhrase(ReplacingPhraseOperand replacing,
+			ReplacingPhraseOperand by) {
+		this.replacing = replacing;
+		this.by = by;
 	}
 
-	public boolean matches(Source<Token> source) {
-		return replacing.matches(source, mode);
-	}
-
-	public ReplacingPhraseOperand getOperand() {
+	public ReplacingPhraseOperand getReplacing() {
 		return replacing;
 	}
 
-	public ReplacingPhraseOperand getCorrespondingOperand() {
+	public ReplacingPhraseOperand getBy() {
 		return by;
 	}
 
-	public Collection<? extends Token> getCorrespondingTokens() {
-		return by.getTokens();
+	public abstract boolean appliedTo(Source<Token> source,
+			LinkedList<Token> newTokens);
+
+	protected Token nextTextWord(Source<Token> library, Stack<Token> seen) {
+		while (true) {
+			final Token textWord = library.next();
+
+			if (textWord == null)
+				return null;
+
+			seen.add(textWord);
+
+			if (!textWord.hasTag(AreaTag.PROGRAM_TEXT_AREA))
+				continue;
+
+			final String text = textWord.getText();
+			if ("\n".equals(text) || "\r\n".equals(text))
+				continue;
+
+			return textWord;
+		}
 	}
 
-	@Override
-	public String toString() {
-		return "REPLACING " + mode + " " + replacing + " BY " + by;
+	protected void unshiftStack(Source<Token> library, Stack<Token> seen) {
+		while (!seen.isEmpty())
+			library.unshift(seen.pop());
+	}
+
+	public static boolean isConsideredSingleSpace(Token textWord) {
+		// "Each occurrence of a separator comma, semicolon, or space in
+		// pseudo-text-1 or in the library text is considered to be a single
+		// space."
+
+		if (!textWord.hasTag(SyntacticTag.SEPARATOR))
+			return false;
+
+		final String text = textWord.getText();
+
+		if (",".equals(text))
+			return true;
+
+		if (";".equals(text))
+			return true;
+
+		if (text.trim().isEmpty())
+			return true;
+
+		return false;
+	}
+
+	protected boolean isNewline(Token token) {
+		final String text = token.getText();
+		return "\n".equals(text) || "\r\n".equals(text);
 	}
 }

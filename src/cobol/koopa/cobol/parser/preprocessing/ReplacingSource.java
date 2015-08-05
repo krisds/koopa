@@ -1,10 +1,14 @@
 package koopa.cobol.parser.preprocessing;
 
+import static koopa.core.trees.jaxen.Jaxen.getMatch;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import koopa.cobol.data.tags.SyntacticTag;
+import koopa.cobol.parser.preprocessing.ReplacingPhrase.Mode;
+import koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
@@ -25,11 +29,35 @@ public class ReplacingSource extends ChainableSource<Token> implements
 		replacingPhrases = new ArrayList<ReplacingPhrase>(replacements.size());
 
 		for (Tree replacement : replacements) {
-			ReplacingPhrase replacingPhrase = new ReplacingPhrase(replacement);
+			ReplacingPhrase replacingPhrase = getPhrase(replacement);
 
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("* " + replacingPhrase);
 			replacingPhrases.add(replacingPhrase);
+		}
+	}
+
+	private static ReplacingPhrase getPhrase(Tree instruction) {
+		Mode mode = Mode.from(instruction);
+
+		ReplacingPhraseOperand replacing = ReplacingPhraseOperand
+				.from(getMatch(instruction, "copyOperandName[1]"));
+		ReplacingPhraseOperand by = ReplacingPhraseOperand.from(getMatch(
+				instruction, "copyOperandName[2]"));
+
+		// TODO Support literal matching as well.
+		if (replacing.getType() == Type.LITERAL)
+			return new ReplaceNone();
+
+		switch (mode) {
+		case MATCHING:
+			return new ReplaceMatching(replacing, by);
+		case LEADING:
+			return new ReplaceLeading(replacing, by);
+		case TRAILING:
+			return new ReplaceTrailing(replacing, by);
+		default:
+			return new ReplaceNone();
 		}
 	}
 
@@ -64,24 +92,7 @@ public class ReplacingSource extends ChainableSource<Token> implements
 			// text-words."
 
 			for (ReplacingPhrase replacingPhrase : replacingPhrases) {
-				if (replacingPhrase.matches(source)) {
-					if (LOGGER.isTraceEnabled()) {
-						LOGGER.trace("Matched " + replacingPhrase.getOperand());
-						LOGGER.trace("   From " + leftmost);
-					}
-
-					// "When a match occurs between pseudo-text-1, text-1,
-					// word-1, or literal-3 and the library text, the
-					// corresponding pseudo-text-2, text-2, word-2, or
-					// literal-4 is placed into the resultant text."
-
-					replacementTokens.addAll(replacingPhrase
-							.getCorrespondingTokens());
-
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("  Replaced with "
-								+ replacingPhrase.getCorrespondingOperand());
-
+				if (replacingPhrase.appliedTo(source, replacementTokens)) {
 					// TODO This:
 					// "When a match occurs between partial-word-1 and the
 					// library text-word, the library text-word is placed

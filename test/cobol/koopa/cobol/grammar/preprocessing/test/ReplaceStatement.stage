@@ -1,0 +1,41 @@
+package koopa.cobol.grammar.preprocessing.test;
+grammar koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target replaceStatement;
+
++[ REPLACE      OFF . ]
++[ REPLACE LAST OFF . ]
+
++[ REPLACE               ==foo bar== BY ==baz== . ]
++[ REPLACE               ==foo bar== BY ====    . ]
+
++[ REPLACE               ==foo bar== BY ==baz==
+                         ==foo bar== BY ====    . ]
+
++[ REPLACE      LEADING  ==foo==     BY ==bar== . ]
++[ REPLACE      LEADING  ==foo==     BY ====    . ]
+
++[ REPLACE      TRAILING ==foo==     BY ==bar== . ]
++[ REPLACE      TRAILING ==foo==     BY ====    . ]
+
++[ REPLACE ALSO          ==foo bar== BY ==baz== . ]
++[ REPLACE ALSO          ==foo bar== BY ====    . ]
+
++[ REPLACE ALSO          ==foo bar== BY ==baz==
+                         ==foo bar== BY ====    . ]
+
++[ REPLACE ALSO LEADING  ==foo==     BY ==bar== . ]
++[ REPLACE ALSO LEADING  ==foo==     BY ====    . ]
+
++[ REPLACE ALSO TRAILING ==foo==     BY ==bar== . ]
++[ REPLACE ALSO TRAILING ==foo==     BY ====    . ]
+
+
+# TODO: Partial-word-1 must consist of one text-word.
+# -[ REPLACE LEADING  ==foo bar== BY ==== . ]
+# -[ REPLACE TRAILING ==foo bar== BY ==== . ]
+
+# TODO: Partial-word-2 must consist of zero or one text-word.
+# -[ REPLACE LEADING  ==foo==     BY ==bar baz== . ]
+# -[ REPLACE TRAILING ==foo==     BY ==bar baz== . ]

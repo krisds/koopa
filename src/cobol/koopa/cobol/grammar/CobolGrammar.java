@@ -18421,52 +18421,6 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // replaceStatement
-    // ........................................................
-    
-    private ParserCombinator replaceStatementParser = null;
-    
-    public final Start replaceStatement = Start.on(getNamespace(), "replaceStatement");
-    
-    public ParserCombinator replaceStatement() {
-      if (replaceStatementParser == null) {
-        FutureParser future = scoped("replaceStatement", true);
-        replaceStatementParser = future;
-        future.setParser(
-          sequence(
-            token("REPLACE"),
-            choice(
-              token("OFF"),
-              plus(
-                choice(
-                  sequence(
-                    pseudoLiteral(),
-                    token("BY"),
-                    pseudoLiteral()
-                  ),
-                  sequence(
-                    choice(
-                      token("LEADING"),
-                      token("TRAILING")
-                    ),
-                    pseudoLiteral(),
-                    token("BY"),
-                    pseudoLiteral()
-                  )
-                )
-              )
-            ),
-            optional(
-              literal(".")
-            )
-          )
-        );
-      }
-    
-      return replaceStatementParser;
-    }
-    
-    // ========================================================
     // sourceFormattingDirective
     // ........................................................
     

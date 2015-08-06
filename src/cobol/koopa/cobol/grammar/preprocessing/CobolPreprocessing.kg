@@ -10,7 +10,9 @@ def preprocessing =
 end
 
 def preprocessingDirective =
-	copyStatement
+	( copyStatement
+	| replaceStatement
+	)
 end
 
 
@@ -39,6 +41,29 @@ def trailing =  TRAILING  end
 
 def copyOperandName =
 	(pseudoLiteral | literal | cobolWord)
+end
+
+
+## #############################################################################
+## REPLACE statement.
+## -----------------------------------------------------------------------------
+
+def replaceStatement =
+    ( replaceStatement_format1
+    | replaceStatement_format2
+    )
+end
+
+private def replaceStatement_format1 =
+    REPLACE [ALSO]
+    ( pseudoLiteral BY pseudoLiteral
+    | (LEADING | TRAILING) pseudoLiteral BY pseudoLiteral
+    )+
+    .
+end
+
+private def replaceStatement_format2 =
+    REPLACE [LAST] OFF .
 end
 
 

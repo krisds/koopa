@@ -31,6 +31,11 @@ public class Stages extends Suite {
 					.newInstance();
 			final File[] sources = provider.getFiles();
 
+			if (sources == null) {
+				System.out.println("[WARN] No stages found.");
+				return runners;
+			}
+
 			for (File source : sources) {
 				try {
 					final Tree ast = StageUtil.getAST(source);

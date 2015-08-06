@@ -1,5 +1,6 @@
 package koopa.cobol.parser.preprocessing;
 
+import static koopa.core.trees.Trees.getTree;
 import static koopa.core.trees.jaxen.Jaxen.getMatches;
 import static koopa.core.trees.jaxen.Jaxen.getText;
 
@@ -24,7 +25,6 @@ import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
-import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 
 import org.apache.log4j.Logger;
@@ -35,62 +35,39 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.preprocessing");
 
-	private Grammar grammar = null;
-	private Source<Token> sourceTokenizer = null;
-	private QueueingTokenSink sourceSink = null;
+	private static final ParserCombinator PPP = new CobolPreprocessingGrammar()
+			.preprocessing();
 
-	private ParserCombinator preprocessingParser = null;
-
-	private Source<Token> copybookTokenizer = null;
-
-	private Tree tree = null;
-	private Token activeCopyStatement = null;
-
-	private LinkedList<Data> unsupportedDirective = null;
-
-	private PreprocessingListener listener = null;
-
+	private final Grammar grammar;
 	private final SourceFormat format;
-	private final File path;
 	private final Copybooks copybooks;
 
-	public PreprocessingSource(Source<Token> sourceTokenizer, Grammar grammar,
+	/**
+	 * The stack of inputs tracks the open source files. Initially there will be
+	 * only one, that for the main file. Upon encountering COPY statements new
+	 * inputs will be opened and take place on top of the stack. The idea is
+	 * that we always prioritize the top most input as the one to be read from.
+	 */
+	private Input inputs = null;
+
+	private LinkedList<Data> unsupportedDirective = null;
+	private PreprocessingListener listener = null;
+
+	public PreprocessingSource(Source<Token> source, Grammar grammar,
 			SourceFormat format, File path, Copybooks copybooks) {
-		assert (sourceTokenizer != null);
+		assert (source != null);
 
 		this.grammar = grammar;
-		this.sourceTokenizer = sourceTokenizer;
 		this.format = format;
-		this.path = path;
 		this.copybooks = copybooks;
+
+		this.inputs = new Input(path, source);
 	}
 
 	@Override
 	protected Token nxt1() {
-		if (preprocessingParser == null) {
-			// We pass the stream from out parent tokenizer through a
-			// specialized parser. The parser is also built on Koopa grammars,
-			// which means we can reuse the existing infrastructure. We also
-			// don't have to re-implement the grammar rules for these
-			// directives; though for now we do have to do some copy-pasting...
-			//
-			// The tokens coming out of the parser will be captured in a sink.
-			// The logic in this tokenizer then works on the results from that
-			// sink.
-			sourceSink = new QueueingTokenSink();
-			preprocessingParser = new CobolPreprocessingGrammar()
-					.preprocessing();
-
-			boolean accepts = preprocessingParser.accepts(Parse.of(
-					sourceTokenizer).to(sourceSink));
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(hashCode() + " PREPROCESSING GRAMMAR ACCEPTED ? "
-						+ accepts);
-		}
-
 		while (true) {
-			Data data = nextOne();
+			final Data data = nextFromInput();
 
 			if (data == null) {
 				// End of input.
@@ -109,80 +86,20 @@ public class PreprocessingSource extends BasicSource<Token> implements
 								+ data);
 
 					LinkedList<Data> directive = getPreprocessingDirective();
-					tree = getSyntaxTree(directive);
+					Tree tree = getTree(grammar, directive);
 
-					if (!isCopyStatement(tree)) {
+					if (tree != null && tree.isNode("copyStatement"))
+						configureHandlingOfCopyStatement(tree, directive);
+
+					else if (tree != null && tree.isNode("replaceStatement")) {
+						// TODO Handle them. Here ?
+						unsupportedDirective = directive;
+
+					} else {
 						if (LOGGER.isInfoEnabled())
 							LOGGER.info("Unsupported preprocessing directive: "
 									+ tree);
 						unsupportedDirective = directive;
-						continue;
-					}
-
-					if (LOGGER.isDebugEnabled())
-						LOGGER.debug("Processing a COPY statement");
-
-					final String textName = getText(tree, "//textName//text()");
-					final String libraryName = getText(tree,
-							"//libraryName//text()");
-
-					if (LOGGER.isDebugEnabled()) {
-						if (libraryName == null)
-							LOGGER.debug("Looking for copybook " + textName);
-						else
-							LOGGER.debug("Looking for copybook " + textName
-									+ " in library " + libraryName);
-					}
-
-					File copybook = copybooks.lookup(textName, libraryName,
-							path);
-					if (copybook == null) {
-						LOGGER.error("Missing copybook " + textName + " in "
-								+ libraryName);
-
-						unsupportedDirective = directive;
-						continue;
-					}
-
-					if (LOGGER.isDebugEnabled())
-						LOGGER.debug("Found copybook at " + copybook);
-
-					@SuppressWarnings("unchecked")
-					List<Tree> replacementInstructions = (List<Tree>) getMatches(
-							tree,
-							"copyReplacingPhrase/copyReplacementInstruction");
-
-					ReplacingSource replacing = null;
-					if (!replacementInstructions.isEmpty()) {
-						if (LOGGER.isDebugEnabled())
-							LOGGER.debug("Copy statement defines replacements.");
-
-						replacing = new ReplacingSource(replacementInstructions);
-					}
-
-					try {
-						if (listener != null)
-							listener.startCopying(tree);
-
-						copybookTokenizer = CobolTokens.getNewSource(
-								copybook.getAbsolutePath(), //
-								new FileReader(copybook), //
-								grammar, format, copybook.getParentFile(),
-								copybooks);
-
-						if (replacing != null) {
-							replacing.setSource(copybookTokenizer);
-							copybookTokenizer = replacing;
-						}
-
-						activeCopyStatement = new Token(tree.getProgramText(),
-								tree.getStartPosition(), tree.getEndPosition());
-
-					} catch (FileNotFoundException e) {
-						LOGGER.error("Problem while reading copybook: "
-								+ copybook, e);
-						unsupportedDirective = directive;
-						activeCopyStatement = null;
 					}
 				}
 
@@ -198,49 +115,130 @@ public class PreprocessingSource extends BasicSource<Token> implements
 		}
 	}
 
+	private void configureHandlingOfCopyStatement(Tree tree,
+			LinkedList<Data> directive) {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug("Processing a COPY statement");
+
+		final String textName = getText(tree, "//textName//text()");
+		final String libraryName = getText(tree, "//libraryName//text()");
+
+		if (LOGGER.isDebugEnabled()) {
+			if (libraryName == null)
+				LOGGER.debug("Looking for copybook " + textName);
+			else
+				LOGGER.debug("Looking for copybook " + textName
+						+ " in library " + libraryName);
+		}
+
+		File copybook = copybooks.lookup(textName, libraryName, inputs.path);
+		if (copybook == null) {
+			LOGGER.error("Missing copybook " + textName + " in " + libraryName);
+			unsupportedDirective = directive;
+			return;
+		}
+
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug("Found copybook at " + copybook);
+
+		final ReplacingSource replacing = getOptionalSourceForReplacements(tree);
+		trySettingUpCopybookTokenizer(copybook, replacing, tree, directive);
+	}
+
+	/**
+	 * Checks if the COPY statement defines replacements, and returns a new
+	 * {@linkplain Source} to handle them if it did.
+	 */
+	private ReplacingSource getOptionalSourceForReplacements(Tree tree) {
+		ReplacingSource replacing = null;
+
+		@SuppressWarnings("unchecked")
+		List<Tree> replacementInstructions = (List<Tree>) getMatches(tree,
+				"copyReplacingPhrase/copyReplacementInstruction");
+
+		if (!replacementInstructions.isEmpty()) {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("Copy statement defines replacements.");
+
+			replacing = new ReplacingSource(replacementInstructions);
+		}
+
+		return replacing;
+	}
+
+	/**
+	 * Try to establish the given copybook file as a new source of tokens.
+	 */
+	private void trySettingUpCopybookTokenizer(File copybook,
+			ReplacingSource replacing, Tree tree,
+			LinkedList<Data> originalDirective) {
+		try {
+			if (listener != null)
+				listener.startCopying(tree);
+
+			Source<Token> newSource = CobolTokens
+					.getNewSource(
+							copybook.getAbsolutePath(), //
+							new FileReader(copybook), //
+							grammar, format, copybook.getParentFile(),
+							(Copybooks) null);
+
+			// Note that we don't pass the Copybooks instance when asking for a
+			// new source. This will prevent the generation of an extra
+			// PreprocessingSource, keeping this one as the only one in the
+			// entire configuration of Sources.
+
+			if (replacing != null) {
+				replacing.setSource(newSource);
+				newSource = replacing;
+			}
+
+			// Each input tracks the COPY statement which triggered it. In
+			// addition, each token will get linked to the COPY statement it's
+			// replacing. The same is true for the COPY statement itself.
+			final Token activeCopyStatement = (Token) inputs.asReplacing( //
+					new Token(//
+							tree.getProgramText(), //
+							tree.getStartPosition(), //
+							tree.getEndPosition()));
+
+			inputs = inputs.push(new Input(newSource, copybook,
+					activeCopyStatement));
+
+		} catch (FileNotFoundException e) {
+			LOGGER.error("Problem while reading copybook: " + copybook, e);
+			unsupportedDirective = originalDirective;
+		}
+	}
+
 	private LinkedList<Data> getPreprocessingDirective() {
-		Data token;
 		LinkedList<Data> directive = new LinkedList<Data>();
 
 		int depth = 0;
 		do {
-			token = nextOne();
-			directive.add(token);
+			final Data data = nextFromInput();
+			directive.add(data);
 
-			if (token instanceof Start)
+			if (data == null)
+				return directive;
+			else if (data instanceof Start)
 				depth += 1;
-			else if (token instanceof End)
+			else if (data instanceof End)
 				depth -= 1;
 
-		} while (token != null && depth > 0);
+		} while (depth > 0);
 
 		return directive;
-	}
-
-	// TODO Move this to a utility class; I'm sure this will come in handy
-	// again.
-	private Tree getSyntaxTree(List<Data> directive) {
-		KoopaTreeBuilder builder = new KoopaTreeBuilder(grammar, true);
-
-		for (Data token : directive)
-			builder.push(token);
-
-		final List<Tree> trees = builder.getTrees();
-		return trees == null || trees.size() != 1 ? null : trees.get(0);
 	}
 
 	/**
 	 * Tries the following sources of tokens in turn until it gets a token:
 	 * <ol>
 	 * <li>The tokens from an unsupported preprocessing directive.</li>
-	 * <li>The tokens from a copybook.</li>
-	 * <li>The tokens from the preprocessor grammar.</li>
-	 * <li>The parent tokenizer.</li>
+	 * <li>The tokens from one of the inputs (in reverse order).</li>
 	 * </ol>
-	 * 
-	 * @return The next available token.
 	 */
-	private Data nextOne() {
+	private Data nextFromInput() {
 		if (unsupportedDirective != null) {
 			while (unsupportedDirective.size() > 0) {
 				Data data = unsupportedDirective.removeFirst();
@@ -251,47 +249,110 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			unsupportedDirective = null;
 		}
 
-		if (copybookTokenizer != null) {
-			Token token = copybookTokenizer.next();
-
-			if (token != null)
-				return token.asReplacing(activeCopyStatement);
-
-			if (listener != null)
-				listener.stopCopying(tree);
-
-			copybookTokenizer.close();
-			copybookTokenizer = null;
-		}
-
-		if (sourceSink != null) {
-			Data data = sourceSink.next();
+		while (inputs != null) {
+			final Data data = inputs.next();
 
 			if (data != null)
 				return data;
 
-			sourceSink = null;
+			inputs = inputs.pop();
 		}
 
-		return sourceTokenizer.next();
+		return null;
 	}
 
 	public void close() {
-		sourceTokenizer.close();
+		while (inputs != null) {
+			inputs.close();
+			inputs = inputs.pop();
+		}
 	}
 
-	private boolean isCopyStatement(Tree tree) {
-		if (tree == null)
-			return false;
+	/**
+	 * An {@linkplain Input} tracks a {@linkplain Source} and any COPY statement
+	 * which may have activated it.
+	 */
+	private static class Input {
+		public final Source<Token> source;
+		public final File path;
+		private final Token activeCopyStatement;
 
-		Data data2 = tree.getData();
-		if (!(data2 instanceof Start))
-			return false;
+		private QueueingTokenSink buffer = null;
+		private boolean bufferReady = false;
+		private Input nextInput = null;
 
-		Start start = (Start) data2;
-		if (!"copyStatement".equals(start.getName()))
-			return false;
+		public Input(File path, Source<Token> source) {
+			this(source, path, null);
+		}
 
-		return true;
+		public Input push(Input input) {
+			input.nextInput = this;
+			return input;
+		}
+
+		public Input pop() {
+			return nextInput;
+		}
+
+		public Input(Source<Token> source, File path, Token activeCopyStatement) {
+			this.source = source;
+			this.path = path;
+			this.activeCopyStatement = activeCopyStatement;
+		}
+
+		/**
+		 * We pass the stream from our source through a specialized parser. The
+		 * parser is also built on Koopa grammars, which means we can reuse the
+		 * existing infrastructure.
+		 * <p>
+		 * The tokens coming out of the parser will be captured in a buffer. Our
+		 * logic then works on the results from that buffer.
+		 */
+		private void ensureBufferIsReady() {
+			if (bufferReady)
+				return;
+
+			buffer = new QueueingTokenSink();
+
+			final boolean accepts = PPP.accepts( //
+					Parse.of(source).to(buffer));
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("PREPROCESSING GRAMMAR ACCEPTED " + path + " ? "
+						+ accepts);
+
+			bufferReady = true;
+		}
+
+		public Data next() {
+			ensureBufferIsReady();
+			return asReplacing(next1());
+		}
+
+		private Data asReplacing(Data data) {
+			if (data == null)
+				return null;
+			else if (activeCopyStatement != null && data instanceof Token)
+				return ((Token) data).asReplacing(activeCopyStatement);
+			else
+				return data;
+		}
+
+		private Data next1() {
+			if (buffer != null) {
+				Data data = buffer.next();
+
+				if (data != null)
+					return data;
+
+				buffer = null;
+			}
+
+			return source.next();
+		}
+
+		public void close() {
+			source.close();
+		}
 	}
 }

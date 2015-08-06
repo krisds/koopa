@@ -4334,15 +4334,6 @@ def copyOperandName =
 	([LEADING | TRAILING] pseudoLiteral | verb | literal | identifier | cobolWord)
 end
 
-def replaceStatement =
-    REPLACE
-    ( OFF
-    | ( pseudoLiteral BY pseudoLiteral
-      | (LEADING | TRAILING) pseudoLiteral BY pseudoLiteral
-      )+
-    ) [.]
-end
-
 
 ## #############################################################################
 ## Source formatting directives.

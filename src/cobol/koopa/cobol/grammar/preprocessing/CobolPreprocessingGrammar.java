@@ -67,7 +67,10 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         FutureParser future = scoped("preprocessingDirective", true);
         preprocessingDirectiveParser = future;
         future.setParser(
-          copyStatement()
+          choice(
+            copyStatement(),
+            replaceStatement()
+          )
         );
       }
     
@@ -235,6 +238,100 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
       }
     
       return copyOperandNameParser;
+    }
+    
+    // ========================================================
+    // replaceStatement
+    // ........................................................
+    
+    private ParserCombinator replaceStatementParser = null;
+    
+    public final Start replaceStatement = Start.on(getNamespace(), "replaceStatement");
+    
+    public ParserCombinator replaceStatement() {
+      if (replaceStatementParser == null) {
+        FutureParser future = scoped("replaceStatement", true);
+        replaceStatementParser = future;
+        future.setParser(
+          choice(
+            replaceStatement_format1(),
+            replaceStatement_format2()
+          )
+        );
+      }
+    
+      return replaceStatementParser;
+    }
+    
+    // ========================================================
+    // replaceStatement_format1
+    // ........................................................
+    
+    private ParserCombinator replaceStatement_format1Parser = null;
+    
+    private final Start replaceStatement_format1 = Start.on(getNamespace(), "replaceStatement_format1");
+    
+    private ParserCombinator replaceStatement_format1() {
+      if (replaceStatement_format1Parser == null) {
+        FutureParser future = scoped("replaceStatement_format1", false);
+        replaceStatement_format1Parser = future;
+        future.setParser(
+          sequence(
+            token("REPLACE"),
+            optional(
+              token("ALSO")
+            ),
+            plus(
+              choice(
+                sequence(
+                  pseudoLiteral(),
+                  token("BY"),
+                  pseudoLiteral()
+                ),
+                sequence(
+                  choice(
+                    token("LEADING"),
+                    token("TRAILING")
+                  ),
+                  pseudoLiteral(),
+                  token("BY"),
+                  pseudoLiteral()
+                )
+              )
+            ),
+            literal(".")
+          )
+        );
+      }
+    
+      return replaceStatement_format1Parser;
+    }
+    
+    // ========================================================
+    // replaceStatement_format2
+    // ........................................................
+    
+    private ParserCombinator replaceStatement_format2Parser = null;
+    
+    private final Start replaceStatement_format2 = Start.on(getNamespace(), "replaceStatement_format2");
+    
+    private ParserCombinator replaceStatement_format2() {
+      if (replaceStatement_format2Parser == null) {
+        FutureParser future = scoped("replaceStatement_format2", false);
+        replaceStatement_format2Parser = future;
+        future.setParser(
+          sequence(
+            token("REPLACE"),
+            optional(
+              token("LAST")
+            ),
+            token("OFF"),
+            literal(".")
+          )
+        );
+      }
+    
+      return replaceStatement_format2Parser;
     }
     
     // ========================================================

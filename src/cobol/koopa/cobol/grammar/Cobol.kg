@@ -2129,7 +2129,7 @@ end
 def declarativeSection =
     sectionName SECTION .
     ( sentence :
-      ( statement : useStatement . ))
+      ( statement : useStatement ) . )
     (sentence)*
     (paragraph)*
 end

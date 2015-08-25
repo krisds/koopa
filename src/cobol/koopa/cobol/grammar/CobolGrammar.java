@@ -9640,11 +9640,11 @@ public class CobolGrammar extends CobolBaseGrammar {
             token("SECTION"),
             literal("."),
             as("sentence",
-              as("statement",
-                sequence(
-                  useStatement(),
-                  literal(".")
-                )
+              sequence(
+                as("statement",
+                  useStatement()
+                ),
+                literal(".")
               )
             ),
             star(
@@ -15567,14 +15567,6 @@ public class CobolGrammar extends CobolBaseGrammar {
                     varying()
                   )
                 )
-              ),
-              sequence(
-                token("VARYING"),
-                identifier(),
-                token("THROUGH"),
-                identifier(),
-                nestedStatements(),
-                token("END-PERFORM")
               )
             )
           )
@@ -15692,34 +15684,60 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             token("VARYING"),
             identifier(),
-            token("FROM"),
-            choice(
-              literal(),
-              identifier()
-            ),
-            token("BY"),
-            choice(
-              literal(),
-              identifier()
-            ),
-            token("UNTIL"),
-            condition(),
-            star(
+            as("from",
               sequence(
-                token("AFTER"),
-                identifier(),
                 token("FROM"),
                 choice(
                   literal(),
                   identifier()
-                ),
+                )
+              )
+            ),
+            as("by",
+              sequence(
                 token("BY"),
                 choice(
                   literal(),
                   identifier()
-                ),
+                )
+              )
+            ),
+            as("until",
+              sequence(
                 token("UNTIL"),
                 condition()
+              )
+            ),
+            star(
+              as("after",
+                sequence(
+                  token("AFTER"),
+                  identifier(),
+                  as("from",
+                    sequence(
+                      token("FROM"),
+                      choice(
+                        literal(),
+                        identifier()
+                      )
+                    )
+                  ),
+                  as("by",
+                    sequence(
+                      token("BY"),
+                      choice(
+                        literal(),
+                        identifier()
+                      )
+                    )
+                  ),
+                  as("until",
+                    sequence(
+                      token("UNTIL"),
+                      condition()
+                    )
+                  )
+                )
               )
             )
           )

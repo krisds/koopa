@@ -3627,11 +3627,6 @@ def performStatement =
         | until
         | varying
         ]
-        
-    | # Perform inline with VARYING
-        VARYING identifier THROUGH identifier
-        nestedStatements
-        END-PERFORM
     )
 end
 
@@ -3663,14 +3658,14 @@ def varying =
     [testPosition]
     
     VARYING (identifier)
-        FROM (literal | identifier)
-        BY (literal | identifier)
-        UNTIL condition
+        (from:  FROM  (literal | identifier))
+        (by:    BY    (literal | identifier))
+        (until: UNTIL condition             )
     
-    (AFTER (identifier)
-        FROM (literal | identifier)
-        BY (literal | identifier)
-        UNTIL condition
+    (after: AFTER (identifier)
+        (from:  FROM  (literal | identifier))
+        (by:    BY    (literal | identifier))
+        (until: UNTIL condition             )
     )*
 end
 

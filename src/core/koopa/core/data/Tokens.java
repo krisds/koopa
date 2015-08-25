@@ -177,6 +177,9 @@ public final class Tokens {
 	 * aggregated into the new one.
 	 */
 	public static Token join(List<Token> tokens, Object... tags) {
-		return new Token(tokens, tags);
+		if (tokens.size() == 1)
+			return tokens.get(0).withTags(tags);
+		else
+			return new Token(tokens, tags);
 	}
 }

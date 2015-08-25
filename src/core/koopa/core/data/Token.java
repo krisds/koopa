@@ -144,6 +144,14 @@ public class Token implements Data {
 		return tags.contains(tag);
 	}
 
+	public boolean hasTags(Object[] tags) {
+		for (Object tag : tags)
+			if (!hasTag(tag))
+				return false;
+
+		return true;
+	}
+
 	public int tagCount() {
 		return tags.size();
 	}
@@ -154,11 +162,14 @@ public class Token implements Data {
 
 	/**
 	 * Creates a new token which is a copy of this one, with the addition of the
-	 * given tags. If there are no tags given, returns <code>this</code>
-	 * instead.
+	 * given tags. If there are no tags given, or they are all already there,
+	 * returns <code>this</code> instead.
 	 */
 	public Token withTags(Object... additionalTags) {
 		if (additionalTags.length == 0)
+			return this;
+
+		if (hasTags(additionalTags))
 			return this;
 
 		Set<Object> newTags = new HashSet<Object>(tags);
@@ -168,11 +179,14 @@ public class Token implements Data {
 
 	/**
 	 * Creates a new token which is a copy of this one, with the exception of
-	 * the given tags. If there are no tags given, returns <code>this</code>
-	 * instead.
+	 * the given tags. If there are no tags given, or none of them are found
+	 * here, returns <code>this</code> instead.
 	 */
 	public Token withoutTags(Object... theseTags) {
 		if (theseTags.length == 0)
+			return this;
+
+		if (!hasTags(theseTags))
 			return this;
 
 		Set<Object> newTags = new HashSet<Object>(tags);

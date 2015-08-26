@@ -1,21 +1,11 @@
 package koopa.app.components.sourceview;
 
-import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
-import static koopa.core.data.tags.AreaTag.COMMENT;
-import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.IslandTag.LAND;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,33 +20,27 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
-import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import koopa.app.components.highlights.Highlights;
 import koopa.app.components.highlights.SquiggleUnderlineHighlightPainter;
 import koopa.app.listeners.TokenSelectionListener;
 import koopa.cobol.parser.ParseResults;
-import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
-import koopa.core.targets.TokenTracker;
+import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
 @SuppressWarnings("serial")
 public class SourceView extends JPanel {
 
+	private TreeBasedDocument document = null;
+
 	private JTextPane pane = null;
 
 	private JScrollPane scroll = null;
-
-	private List<Integer> lineOffsets = new ArrayList<Integer>();
-
-	private TokenTracker tokenTracker = null;
 
 	private Token selectedToken = null;
 
@@ -84,17 +68,15 @@ public class SourceView extends JPanel {
 		pane.addCaretListener(new CaretListener() {
 			public void caretUpdate(CaretEvent e) {
 				final Caret caret = pane.getCaret();
-				if (!caret.isVisible() && pane.getDocument().getLength() > 0) {
+				if (!caret.isVisible() && pane.getDocument().getLength() > 0)
 					caret.setVisible(true);
-				}
 
 				// TODO Add support for Token selection listeners.
-				Token token = getTokenAt(e.getDot() + 1);
+				final Token token = document.getTokenAt(e.getDot());
 				if (token != selectedToken) {
 					selectedToken = token;
-					for (TokenSelectionListener listener : tokenSelectionListeners) {
+					for (TokenSelectionListener listener : tokenSelectionListeners)
 						listener.selectedToken(selectedToken);
-					}
 				}
 			}
 		});
@@ -119,125 +101,6 @@ public class SourceView extends JPanel {
 		add(scroll, BorderLayout.CENTER);
 	}
 
-	private static Style getWaterStyle(StyledDocument document) {
-		Style style = document.getStyle("water");
-		if (style == null) {
-			style = document.addStyle("water", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBackground(style, new Color(192, 238, 250));
-			StyleConstants.setForeground(style, Color.GRAY);
-		}
-
-		return style;
-	}
-
-	private static Style getLandStyle(StyledDocument document) {
-		Style style = document.getStyle("land");
-		if (style == null) {
-			style = document.addStyle("land", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBackground(style, Color.WHITE);
-			StyleConstants.setForeground(style, Color.BLACK);
-		}
-
-		return style;
-	}
-
-	private static Style getCommentStyle(StyledDocument document) {
-		Style style = document.getStyle("comment");
-		if (style == null) {
-			style = document.addStyle("comment", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBackground(style, Color.WHITE);
-			StyleConstants.setForeground(style, new Color(77, 144, 114));
-		}
-
-		return style;
-	}
-
-	private static Style getCompilerDirectiveStyle(StyledDocument document) {
-		Style style = document.getStyle("compilerDirective");
-		if (style == null) {
-			style = document.addStyle("compilerDirective", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBackground(style, new Color(77, 144, 114));
-			StyleConstants.setForeground(style, Color.WHITE);
-		}
-
-		return style;
-	}
-
-	private static Style getStringStyle(StyledDocument document) {
-		Style style = document.getStyle("string");
-		if (style == null) {
-			style = document.addStyle("string", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			StyleConstants.setBackground(style, Color.WHITE);
-			StyleConstants.setForeground(style, new Color(59, 49, 255));
-		}
-
-		return style;
-	}
-
-	private String getContents(File file) throws IOException {
-		StringBuilder builder = new StringBuilder();
-
-		BufferedReader br = null;
-
-		lineOffsets.clear();
-
-		int offset = 0;
-		lineOffsets.add(offset);
-
-		try {
-			br = new BufferedReader(new FileReader(file));
-
-			char[] buffer = new char[1024];
-			int len;
-
-			while ((len = br.read(buffer)) > 0) {
-				builder.append(buffer, 0, len);
-
-				for (int i = 0; i < len; i++) {
-					if (buffer[i] == '\n') {
-						if (buffer[i] == '\r')
-							lineOffsets.add(offset + i + 3);
-						else
-							lineOffsets.add(offset + i + 2);
-					}
-				}
-
-				offset += len;
-			}
-
-			return builder.toString();
-
-		} finally {
-			if (br != null)
-				br.close();
-		}
-	}
-
 	public void scrollTo(int positionInFile) {
 		if (positionInFile > 0) {
 			pane.setCaretPosition(positionInFile - 1);
@@ -250,11 +113,22 @@ public class SourceView extends JPanel {
 		pane.requestFocus();
 	}
 
-	public void scrollToLine(int line) {
-		if (line < 0 || line >= lineOffsets.size())
-			throw new IllegalArgumentException("No such line number: " + line);
+	public void scrollToStart() {
+		scrollTo(0);
+	}
 
-		scrollTo(lineOffsets.get(line));
+	public void scrollToToken(Token token) {
+		final int offset = document.getOffset(token);
+
+		if (offset >= 0)
+			scrollTo(offset + 1);
+	}
+
+	public void scrollToLine(int line) {
+		final int offset = document.getOffsetForLine(line);
+
+		if (offset >= 0)
+			scrollTo(offset + 1);
 	}
 
 	private void centerLineWithCaretInScrollPane() {
@@ -282,19 +156,8 @@ public class SourceView extends JPanel {
 		}
 	}
 
-	public Token getTokenAt(int position) {
-		if (tokenTracker == null)
-			return null;
-		else
-			return tokenTracker.getTokenAt(position);
-	}
-
-	public void addTokenSelectionListener(TokenSelectionListener listener) {
-		this.tokenSelectionListeners.add(listener);
-	}
-
 	public int getNumberOfLines() {
-		return lineOffsets.size();
+		return document.getNumberOfLines();
 	}
 
 	public boolean find(String search) throws PatternSyntaxException {
@@ -342,49 +205,32 @@ public class SourceView extends JPanel {
 	}
 
 	public Highlights getNewHighlights() {
-		return new Highlights(pane);
+		return new Highlights(this);
 	}
 
 	public void setParseResults(ParseResults results) {
-		pane.setText("");
+		final Tree tree = results.getParse().getTarget(KoopaTreeBuilder.class)
+				.getTree();
+
+		document = new TreeBasedDocument();
+		document.setContents(tree);
+
 		pane.getHighlighter().removeAllHighlights();
+		pane.setDocument(document);
+		addHighlights(results);
+		pane.setCaretPosition(0);
+	}
 
+	private void addHighlights(ParseResults results) {
 		try {
-			final StyledDocument document = new DefaultStyledDocument();
-
-			document.insertString(0, getContents(results.getFile()),
-					getWaterStyle(document));
-
-			tokenTracker = results.getParse().getTarget(TokenTracker.class);
-			for (Token token : tokenTracker.getTokens()) {
-				final Style style;
-
-				if (token.hasTag(COMPILER_DIRECTIVE))
-					style = getCompilerDirectiveStyle(document);
-				else if (!token.hasTag(PROGRAM_TEXT_AREA))
-					style = getCommentStyle(document);
-				else if (token.hasTag(COMMENT))
-					style = getCommentStyle(document);
-				else if (token.hasTag(STRING_LITERAL))
-					style = getStringStyle(document);
-				else if (token.hasTag(PROGRAM_TEXT_AREA) && token.hasTag(LAND))
-					style = getLandStyle(document);
-				else
-					continue;
-
-				for (Range range : token.getRanges()) {
-					final int start = range.getStart().getPositionInFile() - 1;
-					final int end = range.getEnd().getPositionInFile();
-					final int len = end - start;
-					document.setCharacterAttributes(start, len, style, false);
-				}
-			}
-
 			final Highlighter highlighter = pane.getHighlighter();
 			final HighlightPainter warningPainter = new SquiggleUnderlineHighlightPainter(
 					Color.ORANGE);
 			final HighlightPainter errorPainter = new SquiggleUnderlineHighlightPainter(
 					Color.RED);
+
+			// TODO Positions here are off when there are replacements.
+			// TODO Also, text may be missing, as it's based on the AST...
 
 			final Parse parse = results.getParse();
 			for (Tuple<Token, String> warning : parse.getWarnings()) {
@@ -405,18 +251,25 @@ public class SourceView extends JPanel {
 
 				highlighter.addHighlight(start, start + len, errorPainter);
 			}
-
-			pane.setDocument(document);
-			pane.setCaretPosition(0);
-
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+	}
 
+	public TreeBasedDocument getDocument() {
+		return document;
+	}
+
+	public Highlighter getHighlighter() {
+		return pane.getHighlighter();
+	}
+
+	public void addTokenSelectionListener(TokenSelectionListener listener) {
+		tokenSelectionListeners.add(listener);
+	}
+
+	public void removeTokenSelectionListener(TokenSelectionListener listener) {
+		tokenSelectionListeners.remove(listener);
 	}
 }

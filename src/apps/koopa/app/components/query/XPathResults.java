@@ -1,7 +1,12 @@
 package koopa.app.components.query;
 
+import static java.util.Collections.EMPTY_LIST;
+import static koopa.app.components.query.XPathResultType.ATTRIBUTE;
+import static koopa.app.components.query.XPathResultType.NODE;
+import static koopa.app.components.query.XPathResultType.OTHER;
+import static koopa.app.components.query.XPathResultType.TOKEN;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -9,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Position;
+import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.TreeAttribute;
 
@@ -19,13 +25,14 @@ public class XPathResults extends AbstractTableModel {
 	public static final int TEXT_COLUMN = 1;
 	public static final int LINE_COLUMN = 2;
 	public static final int COLUMN_COLUMN = 3;
+	public static final int RESOURCE_COLUMN = 4;
 
 	private List<?> results = null;
 	private List<XPathResultType> types = null;
-	private List<Position> positions = null;
+	private List<Token> startTokens = null;
 
 	public int getColumnCount() {
-		return 4;
+		return 5;
 	}
 
 	public String getColumnName(int columnIndex) {
@@ -42,6 +49,9 @@ public class XPathResults extends AbstractTableModel {
 		case COLUMN_COLUMN:
 			return "Column";
 
+		case RESOURCE_COLUMN:
+			return "Resource";
+
 		default:
 			return "????";
 		}
@@ -54,19 +64,24 @@ public class XPathResults extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case TYPE_COLUMN:
-			return this.types.get(rowIndex);
+			return types.get(rowIndex);
 
 		case TEXT_COLUMN:
-			return this.results.get(rowIndex).toString();
+			return results.get(rowIndex).toString();
 
 		case LINE_COLUMN: {
-			final Position position = this.positions.get(rowIndex);
+			final Position position = startTokens.get(rowIndex).getStart();
 			return position != null ? position.getLinenumber() : null;
 		}
 
 		case COLUMN_COLUMN: {
-			final Position position = this.positions.get(rowIndex);
+			final Position position = startTokens.get(rowIndex).getStart();
 			return position != null ? position.getPositionInLine() : null;
+		}
+
+		case RESOURCE_COLUMN: {
+			final Position position = startTokens.get(rowIndex).getStart();
+			return position.getResourceName();
 		}
 
 		default:
@@ -78,10 +93,10 @@ public class XPathResults extends AbstractTableModel {
 		this.results = results;
 
 		if (results == null)
-			results = Collections.EMPTY_LIST;
+			results = EMPTY_LIST;
 
-		this.types = new ArrayList<XPathResultType>(results.size());
-		this.positions = new ArrayList<Position>(results.size());
+		types = new ArrayList<XPathResultType>(results.size());
+		startTokens = new ArrayList<Token>(results.size());
 
 		for (Object value : results) {
 			if (value instanceof Tree) {
@@ -89,20 +104,19 @@ public class XPathResults extends AbstractTableModel {
 				final Data token = tree.getData();
 
 				if (token instanceof Marker)
-					this.types.add(XPathResultType.NODE);
-
+					types.add(NODE);
 				else
-					this.types.add(XPathResultType.TOKEN);
+					types.add(TOKEN);
 
-				this.positions.add(tree.getStartPosition());
+				startTokens.add(tree.getStartToken());
 
 			} else if (value instanceof TreeAttribute) {
-				this.types.add(XPathResultType.ATTRIBUTE);
-				this.positions.add(null);
+				types.add(ATTRIBUTE);
+				startTokens.add(null);
 
 			} else {
-				this.types.add(XPathResultType.OTHER);
-				this.positions.add(null);
+				types.add(OTHER);
+				startTokens.add(null);
 			}
 		}
 
@@ -113,8 +127,10 @@ public class XPathResults extends AbstractTableModel {
 		return results;
 	}
 
-	public int getPositionInFile(int row) {
-		final Position position = this.positions.get(row);
-		return position != null ? position.getPositionInFile() : -1;
+	public Token getToken(int row) {
+		if (row < startTokens.size())
+			return startTokens.get(row);
+		else
+			return null;
 	}
 }

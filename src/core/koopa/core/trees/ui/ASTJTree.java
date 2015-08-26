@@ -1,6 +1,9 @@
 package koopa.core.trees.ui;
 
+import java.util.LinkedList;
+
 import javax.swing.JTree;
+import javax.swing.tree.TreePath;
 
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
@@ -9,8 +12,11 @@ public class ASTJTree extends JTree {
 
 	private static final long serialVersionUID = 1L;
 
-	public ASTJTree(Tree t) {
-		super(new ASTtoTreeModelAdapter(t));
+	private final Tree tree;
+
+	public ASTJTree(Tree tree) {
+		super(new ASTtoTreeModelAdapter(tree));
+		this.tree = tree;
 	}
 
 	public String convertValueToText(Object value, boolean selected,
@@ -31,5 +37,28 @@ public class ASTJTree extends JTree {
 		}
 
 		return node.toString();
+	}
+
+	public void select(Token token) {
+		Tree node = tree.find(token);
+
+		if (node == null)
+			return;
+
+		final TreePath treePath = getTreePathToNode(node);
+		setSelectionPath(treePath);
+		scrollPathToVisible(treePath);
+	}
+
+	private TreePath getTreePathToNode(Tree node) {
+		final LinkedList<Tree> path = new LinkedList<Tree>();
+		while (node != null) {
+			path.addFirst(node);
+			node = node.getParent();
+		}
+
+		final TreePath treePath = new TreePath(path.toArray(new Object[path
+				.size()]));
+		return treePath;
 	}
 }

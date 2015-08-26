@@ -14,9 +14,6 @@ import javax.swing.JPanel;
 
 import koopa.app.Application;
 import koopa.app.listeners.TokenSelectionListener;
-import koopa.core.data.Data;
-import koopa.core.data.Marker;
-import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 
@@ -68,10 +65,23 @@ public class Breadcrumb extends JPanel implements TokenSelectionListener {
 			return;
 		}
 
-		List<String> breadcrumb = find(token, parseTree,
-				new LinkedList<String>());
+		Tree node = parseTree.find(token);
 
-		if (breadcrumb == null || breadcrumb.isEmpty()) {
+		if (node == null) {
+			validate();
+			repaint();
+			return;
+		}
+
+		LinkedList<String> breadcrumb = new LinkedList<String>();
+		while (node != null) {
+			if (node.isNode())
+				breadcrumb.add(node.getName());
+
+			node = node.getParent();
+		}
+
+		if (breadcrumb.isEmpty()) {
 			validate();
 			repaint();
 			return;
@@ -81,12 +91,13 @@ public class Breadcrumb extends JPanel implements TokenSelectionListener {
 
 		for (String crumb : breadcrumb) {
 			if (index > 0)
-				add(getLabel("/"));
+				add(getLabel("<"));
 
 			add(getLabel(crumb));
 		}
 
 		validate();
+		getParent().validate();
 		repaint();
 	}
 
@@ -111,45 +122,6 @@ public class Breadcrumb extends JPanel implements TokenSelectionListener {
 
 		index += 1;
 		return label;
-	}
-
-	private List<String> find(Token token, Tree tree, List<String> breadcrumb) {
-
-		if (token == null)
-			return breadcrumb;
-
-		if (tree == null)
-			return breadcrumb;
-
-		Data node = tree.getData();
-
-		if (node == null)
-			return breadcrumb;
-
-		// TODO Really found it ?
-		if (!(node instanceof Marker))
-			return breadcrumb;
-
-		breadcrumb.add(((Marker) node).getName());
-
-		// TODO Binary search instead.
-		for (int i = 0; i < tree.getChildCount(); i++) {
-			Tree child = tree.getChild(i);
-
-			Position start = child.getRawStart();
-			Position end = child.getRawEnd();
-
-			Position tokenStart = token.getStart();
-			Position tokenEnd = token.getEnd();
-
-			if (tokenStart.getPositionInFile() >= start.getPositionInFile()
-					&& tokenEnd.getPositionInFile() <= end.getPositionInFile()) {
-				find(token, child, breadcrumb);
-				break;
-			}
-		}
-
-		return breadcrumb;
 	}
 
 	public void setParseTree(Tree tree) {

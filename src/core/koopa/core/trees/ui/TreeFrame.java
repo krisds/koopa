@@ -8,22 +8,24 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 
+import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 
 public class TreeFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	private final ASTJTree jTree;
+
 	public TreeFrame(String title, Tree t) {
 		super(title);
 
-		JTree tree = new ASTJTree(t);
+		this.jTree = new ASTJTree(t);
 
-		JScrollPane scroll = new JScrollPane(tree);
+		final JScrollPane scroll = new JScrollPane(jTree);
 
-		Container content = getContentPane();
+		final Container content = getContentPane();
 		content.add(scroll, BorderLayout.CENTER);
 
 		addWindowListener(new WindowAdapter() {
@@ -35,5 +37,9 @@ public class TreeFrame extends JFrame {
 		});
 
 		pack();
+	}
+
+	public void select(Token token) {
+		jTree.select(token);
 	}
 }

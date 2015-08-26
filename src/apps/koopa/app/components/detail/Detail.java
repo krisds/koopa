@@ -21,6 +21,7 @@ import koopa.app.components.highlights.Highlights;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
+import koopa.app.listeners.TokenSelectionListener;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
@@ -67,13 +68,11 @@ public class Detail extends JPanel {
 
 				if (node == null)
 					return;
-
-				if (!node.isRoot()) {
+				else if (node.isRoot())
+					sourceView.scrollToStart();
+				else {
 					final Reference ref = (Reference) node.getUserObject();
-					sourceView.scrollTo(ref.getPositionInFile());
-
-				} else {
-					sourceView.scrollTo(0);
+					sourceView.scrollToToken(ref.getTree().getStartToken());
 				}
 			}
 		});
@@ -85,8 +84,7 @@ public class Detail extends JPanel {
 
 		detailsTable.addListener(new DetailsTableListener() {
 			public void userSelectedDetail(Tuple<Token, String> detail) {
-				final Token token = detail.getFirst();
-				sourceView.scrollTo(token.getStart().getPositionInFile());
+				sourceView.scrollToToken(detail.getFirst());
 			}
 		});
 
@@ -147,9 +145,9 @@ public class Detail extends JPanel {
 		openFile(this.cobolFile);
 	}
 
-	public void scrollTo(int position) {
+	public void scrollToToken(Token token) {
 		if (sourceView != null)
-			sourceView.scrollTo(position);
+			sourceView.scrollToToken(token);
 	}
 
 	public void scrollToLine(int line) {
@@ -196,5 +194,13 @@ public class Detail extends JPanel {
 
 	public Tree getTree() {
 		return tree;
+	}
+
+	public void addTokenSelectionListener(TokenSelectionListener listener) {
+		sourceView.addTokenSelectionListener(listener);
+	}
+
+	public void removeTokenSelectionListener(TokenSelectionListener listener) {
+		sourceView.removeTokenSelectionListener(listener);
 	}
 }

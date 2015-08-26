@@ -25,7 +25,7 @@ import koopa.app.ApplicationListener;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.highlights.Highlights;
 import koopa.app.components.overview.Overview;
-import koopa.core.data.Position;
+import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.trees.jaxen.XPathException;
@@ -125,6 +125,8 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 				.setPreferredWidth(40);
 		resultsTable.getColumnModel().getColumn(XPathResults.COLUMN_COLUMN)
 				.setPreferredWidth(40);
+		resultsTable.getColumnModel().getColumn(XPathResults.RESOURCE_COLUMN)
+				.setPreferredWidth(100);
 
 		resultsTable.getColumnModel().getColumn(XPathResults.TYPE_COLUMN)
 				.setCellRenderer(new XPathResultTypeRenderer());
@@ -138,10 +140,9 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					final int row = resultsTable.rowAtPoint(e.getPoint());
-					final int pos = selectedResults.getPositionInFile(row);
-					if (pos >= 0) {
-						application.scrollTo(pos);
-					}
+					final Token token = selectedResults.getToken(row);
+					if (token != null)
+						application.scrollTo(token);
 				}
 			}
 		});
@@ -175,12 +176,8 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		for (Object match : selectedResults.getResults()) {
 			if (match instanceof Tree) {
 				final Tree tree = (Tree) match;
-
-				final Position start = tree.getRawStart();
-				final Position end = tree.getRawEnd();
-
-				// TODO Should highlight indivual ranges instead ?
-				highlights.addHighlight(start, end, HIGHLIGHT_COLOR);
+				for (Token t : tree.allTokens())
+					highlights.addHighlight(t, HIGHLIGHT_COLOR);
 			}
 		}
 	}

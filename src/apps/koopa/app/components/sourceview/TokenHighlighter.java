@@ -27,10 +27,11 @@ public class TokenHighlighter implements CaretListener {
 		if (e.getDot() != e.getMark())
 			return;
 
-		final Token token = view.getTokenAt(e.getDot() + 1);
+		final Token token = view.getDocument().getTokenAt(e.getDot());
+		if (token == null)
+			return;
 
-		if (token != null)
-			highlights.addHighlight(token, colorFor(token));
+		highlights.addHighlight(token, colorFor(token));
 	}
 
 	private Color colorFor(Token token) {

@@ -220,6 +220,10 @@ public class Token implements Data {
 		return replacing;
 	}
 
+	public boolean isReplacement() {
+		return replacing != null;
+	}
+
 	@Override
 	public String toString() {
 		String s = null;

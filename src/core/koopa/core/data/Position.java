@@ -12,6 +12,7 @@ public final class Position {
 	public static final Position ZERO = new Position(null, 0, 0, 0);
 
 	private final String resourceName;
+	private final String toStringPrefix;
 	private final int linenumber;
 	private final int positionInFile;
 	private final int positionInLine;
@@ -23,6 +24,15 @@ public final class Position {
 	public Position(String filename, int positionInFile, int linenumber,
 			int positionInLine) {
 		this.resourceName = filename;
+
+		if (resourceName == null)
+			this.toStringPrefix = "";
+		else if (resourceName.length() <= 12)
+			this.toStringPrefix = resourceName + "@";
+		else
+			this.toStringPrefix = resourceName
+					.substring(resourceName.length() - 12) + "@";
+
 		this.positionInFile = positionInFile;
 		this.linenumber = linenumber;
 		this.positionInLine = positionInLine;
@@ -50,10 +60,7 @@ public final class Position {
 	}
 
 	public String toString() {
-		if (resourceName != null)
-			return resourceName + "@" + linenumber + ":" + positionInLine;
-		else
-			return linenumber + ":" + positionInLine;
+		return toStringPrefix + linenumber + ":" + positionInLine;
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.InWater;
 import koopa.core.data.markers.Start;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.grammars.Grammar;
 
 public class KoopaTreeBuilder extends TreeBuildingTarget {
@@ -29,15 +28,12 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	 */
 	private List<Tree> trees = new LinkedList<Tree>();
 
-	private Grammar grammar;
-
 	public KoopaTreeBuilder(Grammar grammar) {
 		this(grammar, false);
 	}
 
 	public KoopaTreeBuilder(Grammar grammar, boolean hideWater) {
 		super(hideWater);
-		this.grammar = grammar;
 	}
 
 	public List<Tree> getTrees() {
@@ -66,16 +62,6 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 
 	/** {@inheritDoc} */
 	public void leaf(Token token) {
-		if (!grammar.isProgramText(token) && !grammar.isComment(token))
-			return;
-
-		// We want to ignore all whitespace in the code, as it just makes the
-		// tree much bigger than it needs to be. Comments, however, are kept
-		// intact.
-		if (!token.hasTag(AreaTag.COMMENT)
-				&& token.getText().trim().length() == 0)
-			return;
-
 		Tree tree = new Tree(token);
 
 		if (!this.treeparts.isEmpty())

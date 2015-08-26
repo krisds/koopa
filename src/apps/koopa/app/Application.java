@@ -21,7 +21,7 @@ public interface Application {
 
 	void closeView();
 
-	void scrollTo(int position);
+	void scrollTo(Token token);
 
 	void resultsWereCleared();
 

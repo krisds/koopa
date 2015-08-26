@@ -637,12 +637,12 @@ public class Koopa extends JFrame implements Application {
 		}
 	}
 
-	public void scrollTo(int position) {
+	public void scrollTo(Token token) {
 		Component view = getView();
 
 		if (view instanceof Detail) {
 			Detail detail = (Detail) view;
-			detail.scrollTo(position);
+			detail.scrollToToken(token);
 		}
 	}
 

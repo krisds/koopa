@@ -336,4 +336,20 @@ public class Tree {
 
 		return current;
 	}
+
+	public Tree find(Token token) {
+		if (token == null)
+			return null;
+
+		if (data == token)
+			return this;
+
+		for (Tree child : children) {
+			Tree matching = child.find(token);
+			if (matching != null)
+				return matching;
+		}
+
+		return null;
+	}
 }

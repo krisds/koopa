@@ -31,6 +31,7 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
+import koopa.core.targets.TokenTracker;
 import koopa.core.util.Tuple;
 
 import org.jdesktop.swingx.JXTable;
@@ -251,6 +252,7 @@ public class Overview extends JPanel implements ParsingProvider {
 		try {
 			final ParseResults parseResults = coordinator.parse(file);
 			results.add(parseResults);
+			parseResults.getParse().removeTarget(TokenTracker.class);
 			return parseResults;
 
 		} catch (IOException e) {

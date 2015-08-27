@@ -1,6 +1,7 @@
 package koopa.core.targets;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import koopa.core.data.Data;
@@ -64,5 +65,19 @@ public class TokenTracker implements Target<Data> {
 
 	public int getTokenCount() {
 		return tokens.size();
+	}
+
+	public List<Token> getTokensAfter(Token last) {
+		final List<Token> additionalTokens = new LinkedList<Token>();
+
+		boolean foundLast = false;
+		for (Token token : tokens) {
+			if (foundLast)
+				additionalTokens.add(token);
+			else if (token == last)
+				foundLast = true;
+		}
+
+		return additionalTokens;
 	}
 }

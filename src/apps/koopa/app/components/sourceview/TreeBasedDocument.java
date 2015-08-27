@@ -1,6 +1,7 @@
 package koopa.app.components.sourceview;
 
 import static koopa.app.components.sourceview.GetStyle.forTokenInDocument;
+import static koopa.app.components.sourceview.GetStyle.forUnparsed;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,10 @@ public class TreeBasedDocument extends DefaultStyledDocument implements
 	private Map<Integer, Token> tokensForOffsets = new HashMap<Integer, Token>();
 
 	public void setContents(Tree tree) {
+		setContents(tree, null);
+	}
+
+	public void setContents(Tree tree, List<Token> additionalTokens) {
 		try {
 			clear();
 
@@ -42,6 +47,20 @@ public class TreeBasedDocument extends DefaultStyledDocument implements
 
 				if (token.hasTag(AreaTag.END_OF_LINE))
 					offsetsForLines.add(offset);
+			}
+
+			if (additionalTokens != null && additionalTokens.size() > 0) {
+				final AttributeSet unparsed = forUnparsed(this);
+				for (Token token : additionalTokens) {
+					insertString(offset, token.getText(), unparsed);
+					offsetsForTokens.put(token, offset);
+					tokensForOffsets.put(offset, token);
+
+					offset += token.getLength();
+
+					if (token.hasTag(AreaTag.END_OF_LINE))
+						offsetsForLines.add(offset);
+				}
 			}
 
 		} catch (BadLocationException e) {

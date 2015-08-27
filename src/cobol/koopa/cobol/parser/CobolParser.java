@@ -3,6 +3,7 @@ package koopa.cobol.parser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,8 +86,9 @@ public class CobolParser {
 		boolean accepts = false;
 
 		// Keep track of all tokens passing through here, if so requested.
+		TokenTracker tokenTracker = null;
 		if (keepingTrackOfTokens) {
-			final TokenTracker tokenTracker = new TokenTracker();
+			tokenTracker = new TokenTracker();
 			parse.addTarget(tokenTracker);
 		}
 
@@ -115,41 +117,50 @@ public class CobolParser {
 			}
 		}
 
+		// Check if we have consumed all program text.
+		List<Token> following = new ArrayList<Token>(5);
+		boolean sawMoreProgramText = false;
+		while (true) {
+			final Token t = source.next();
+
+			// End-of-input ?
+			if (t == null)
+				break;
+
+			// If we're tracking tokens, push them to the tracker.
+			if (tokenTracker != null)
+				tokenTracker.push(t);
+
+			// Have we found more program text ?
+			if (!sawMoreProgramText && grammar.isProgramText(t)
+					&& !grammar.isSeparator(t, null))
+				sawMoreProgramText = true;
+
+			// Stop after a few tokens have been seen, unless we're tracking
+			// them all.
+			if (sawMoreProgramText) {
+				if (following.size() < 5)
+					following.add(t);
+				else if (tokenTracker == null)
+					break;
+			}
+		}
+
 		// Here we check if the parser really consumed all input. If it didn't
 		// we show a glimpse of the next few tokens that should have been
 		// consumed.
 		if (accepts) {
-			while (true) {
-				// TODO This logic gets replicated a bit in other places (e.g.
-				// TestTokenizer)...
-				Token t = source.next();
-
-				if (t == null)
-					break;
-
-				if (!grammar.isProgramText(t))
-					continue;
-
-				if (grammar.isSeparator(t, null))
-					continue;
-
+			if (sawMoreProgramText) {
+				accepts = false;
 				results.setValidInput(false);
-				parse.error(t, "Not all input was consumed.");
+				parse.error(following.get(0), "Not all input was consumed.");
 
 				if (LOGGER.isInfoEnabled()) {
 					LOGGER.info("Not all input was consumed.");
-					int count = 0;
-					do {
-						LOGGER.info("-> " + t);
-						count++;
-					} while (count < 5 && (t = source.next()) != null);
-
-					if (t != null)
-						LOGGER.info("-> ...");
+					for (Token f : following)
+						LOGGER.info("-> " + f);
+					LOGGER.info("-> ...");
 				}
-
-				accepts = false;
-				break;
 			}
 		}
 

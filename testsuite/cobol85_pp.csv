@@ -330,7 +330,7 @@
 "SM205A.CBL","true","2821","100.0","0","","0",""
 "SM206A.CBL","true","2764","100.0","0","","0",""
 "SM207A.CBL","true","1744","100.0","0","","0",""
-"SM208A.CBL","false","1793","0.0","1","[/Users/krisdeschutter/Development/koopa-workspaces/koopa/testsuite/cobol85/SM208A.CBL@343:12|IE|/Users/krisdeschutter/Development/koopa-workspaces/koopa/testsuite/cobol85/SM208A.CBL@343:13] @CHARACTER_STRING @PROGRAM_TEXT_AREA @FIXED @WATER Not all input was consumed.","0",""
+"SM208A.CBL","false","2569","0.0","1","[SM208A.CBL343:12|IE|SM208A.CBL343:13] @CHARACTER_STRING @FIXED @WATER @PROGRAM_TEXT_AREA Not all input was consumed.","0",""
 "SM301M.CBL","true","40","100.0","0","","0",""
 "SM401M.CBL","true","47","100.0","0","","0",""
 "SQ101M.CBL","true","6607","100.0","0","","0",""

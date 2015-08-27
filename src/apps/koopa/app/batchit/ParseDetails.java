@@ -8,6 +8,7 @@ import koopa.cobol.parser.ParseResults;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
+import koopa.core.util.Files;
 import koopa.core.util.Tuple;
 
 @SuppressWarnings("serial")
@@ -18,6 +19,7 @@ public class ParseDetails extends AbstractTableModel {
 	private static final int CHAR_COLUMN = 2;
 	private static final int TOKEN_COLUMN = 3;
 	private static final int MESSAGE_COLUMN = 4;
+	private static final int RESOURCE_COLUMN = 5;
 
 	private ParseResults parseResults = null;
 
@@ -28,7 +30,7 @@ public class ParseDetails extends AbstractTableModel {
 			.getIcon("/koopa/app/resources/splashy/warning_triangle.png");
 
 	public int getColumnCount() {
-		return 5;
+		return 6;
 	}
 
 	public String getColumnName(int columnIndex) {
@@ -47,6 +49,9 @@ public class ParseDetails extends AbstractTableModel {
 
 		case CHAR_COLUMN:
 			return "Char";
+
+		case RESOURCE_COLUMN:
+			return "Resource";
 
 		default:
 			return "????";
@@ -104,6 +109,14 @@ public class ParseDetails extends AbstractTableModel {
 				return "-";
 			}
 
+		case RESOURCE_COLUMN:
+			try {
+				return Files.getFilename(getDetails(rowIndex).getFirst()
+						.getStart().getResourceName());
+
+			} catch (NullPointerException e) {
+				return "-";
+			}
 		default:
 			return true;
 		}

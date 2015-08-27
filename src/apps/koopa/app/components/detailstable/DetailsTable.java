@@ -39,6 +39,7 @@ public class DetailsTable extends JXTable {
 		getColumnModel().getColumn(2).setPreferredWidth(40);
 		getColumnModel().getColumn(3).setPreferredWidth(150);
 		getColumnModel().getColumn(4).setPreferredWidth(600);
+		getColumnModel().getColumn(5).setPreferredWidth(600);
 
 		addMouseListener(new MouseAdapter() {
 			@Override

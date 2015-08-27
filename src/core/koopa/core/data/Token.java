@@ -224,6 +224,13 @@ public class Token implements Data {
 		return replacing != null;
 	}
 
+	public Token getOriginal() {
+		if (isReplacement())
+			return replacing.getOriginal();
+		else
+			return this;
+	}
+
 	@Override
 	public String toString() {
 		String s = null;

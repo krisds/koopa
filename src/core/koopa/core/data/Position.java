@@ -1,5 +1,7 @@
 package koopa.core.data;
 
+import koopa.core.util.Files;
+
 /**
  * Representation of a position in a file. This tracks both overall position in
  * the file, as well as a position relative to a linenumber. All values are
@@ -27,11 +29,8 @@ public final class Position {
 
 		if (resourceName == null)
 			this.toStringPrefix = "";
-		else if (resourceName.length() <= 12)
-			this.toStringPrefix = resourceName + "@";
 		else
-			this.toStringPrefix = resourceName
-					.substring(resourceName.length() - 12) + "@";
+			this.toStringPrefix = Files.getFilename(resourceName);
 
 		this.positionInFile = positionInFile;
 		this.linenumber = linenumber;

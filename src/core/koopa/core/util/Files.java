@@ -43,6 +43,14 @@ public final class Files {
 		}
 	}
 
+	public static String getFilename(String path) {
+		int sep = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+		if (sep < 0)
+			return path;
+
+		return path.substring(sep + 1, path.length());
+	}
+
 	public static String getName(String filename) {
 		int dot = filename.lastIndexOf(".");
 

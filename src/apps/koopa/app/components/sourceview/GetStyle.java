@@ -21,6 +21,22 @@ public class GetStyle {
 	private static final Color FG_STRING = new Color(98, 40, 110);
 	private static final Color FG_WATER = new Color(6, 71, 128);
 
+	public static AttributeSet forUnparsed(StyledDocument document) {
+		Style style = getStyle(document, "unparsed", false);
+		if (style == null) {
+			style = addStyle(document, "unparsed", false);
+
+			StyleConstants.setItalic(style, false);
+			StyleConstants.setBold(style, false);
+			StyleConstants.setFontFamily(style, "Courier");
+			StyleConstants.setFontSize(style, 14);
+			StyleConstants.setBackground(style, Color.WHITE);
+			StyleConstants.setForeground(style, Color.GRAY);
+		}
+
+		return style;
+	}
+
 	public static AttributeSet forTokenInDocument(Token token,
 			StyledDocument document) {
 

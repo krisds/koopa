@@ -175,6 +175,24 @@ public class Tree {
 	}
 
 	/**
+	 * Searches the tree for the last known end token.
+	 */
+	// TODO Combine this with getEndToken and TokenFilters.
+	public Token getRawEndToken() {
+		if (data instanceof Token)
+			return (Token) data;
+
+		for (int i = children.size() - 1; i >= 0; i--) {
+			final Token token = children.get(i).getRawEndToken();
+
+			if (token != null)
+				return token;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Searches the tree for the first known start position.
 	 */
 	public Position getRawStart() {

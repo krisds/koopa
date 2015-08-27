@@ -29,6 +29,7 @@ import koopa.app.listeners.TokenSelectionListener;
 import koopa.cobol.parser.ParseResults;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
+import koopa.core.targets.TokenTracker;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
@@ -209,11 +210,24 @@ public class SourceView extends JPanel {
 	}
 
 	public void setParseResults(ParseResults results) {
-		final Tree tree = results.getParse().getTarget(KoopaTreeBuilder.class)
-				.getTree();
+		final Parse parse = results.getParse();
 
+		// This is the syntax tree which got built.
+		final Tree tree = parse.getTarget(KoopaTreeBuilder.class).getTree();
+
+		// The syntax tree may not be capturing the full source file. There may
+		// be more whitespace, for instance. Or the parse may have been
+		// incomplete. So we check the token tracker for any tokens after the
+		// last one in the tree.
+		final Token last = tree.getRawEndToken();
+		final List<Token> additionalTokens = parse
+				.getTarget(TokenTracker.class).getTokensAfter(last);
+
+		// Based on the syntax tree and the additional tokens we can now build
+		// up the final document. This should be the same as the original file,
+		// unless there was some preprocessing going on.
 		document = new TreeBasedDocument();
-		document.setContents(tree);
+		document.setContents(tree, additionalTokens);
 
 		pane.getHighlighter().removeAllHighlights();
 		pane.setDocument(document);
@@ -229,27 +243,42 @@ public class SourceView extends JPanel {
 			final HighlightPainter errorPainter = new SquiggleUnderlineHighlightPainter(
 					Color.RED);
 
-			// TODO Positions here are off when there are replacements.
-			// TODO Also, text may be missing, as it's based on the AST...
-
 			final Parse parse = results.getParse();
 			for (Tuple<Token, String> warning : parse.getWarnings()) {
 				final Token token = warning.getFirst();
-				final int start = token.getStart().getPositionInFile() - 1;
-				final int end = token.getEnd().getPositionInFile();
+				if (token == null)
+					continue;
+
+				int offset = document.getOffset(token);
+				if (offset < 0)
+					return;
+
+				final int delta = offset - token.getStart().getPositionInFile();
+
+				final int start = token.getStart().getPositionInFile();
+				final int end = token.getEnd().getPositionInFile() + 1;
 				final int len = end - start;
-				highlighter.addHighlight(start, start + len, warningPainter);
+				highlighter.addHighlight(start + delta, start + delta + len,
+						warningPainter);
 			}
 
 			for (Tuple<Token, String> error : parse.getErrors()) {
 				final Token token = error.getFirst();
 				if (token == null)
 					continue;
-				final int start = token.getStart().getPositionInFile() - 1;
-				final int end = token.getEnd().getPositionInFile();
+
+				int offset = document.getOffset(token);
+				if (offset < 0)
+					return;
+
+				final int delta = offset - token.getStart().getPositionInFile();
+
+				final int start = token.getStart().getPositionInFile();
+				final int end = token.getEnd().getPositionInFile() + 1;
 				final int len = end - start;
 
-				highlighter.addHighlight(start, start + len, errorPainter);
+				highlighter.addHighlight(start + delta, start + delta + len,
+						errorPainter);
 			}
 		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block

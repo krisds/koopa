@@ -149,6 +149,12 @@ def negation
     )
 end
 
+def lookahead
+    at(
+>     first_part
+    )
+end
+
 def dispatched
     dispatched(
       new String[]{

@@ -17,6 +17,7 @@ import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.ApplyBlock;
 import koopa.core.parsers.combinators.AssignResultTo;
+import koopa.core.parsers.combinators.At;
 import koopa.core.parsers.combinators.Block;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.LimitedTo;
@@ -74,6 +75,10 @@ public abstract class KoopaGrammar extends Grammar {
 
 	protected ParserCombinator not(final ParserCombinator parser) {
 		return new Not(parser);
+	}
+
+	protected ParserCombinator at(final ParserCombinator parser) {
+		return new At(parser);
 	}
 
 	protected ParserCombinator star(final ParserCombinator parser) {

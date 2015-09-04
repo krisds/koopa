@@ -7,14 +7,14 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
 /**
- * This checks whether the stream is in a position where we can expect to not
- * match a given thing. It's basically a negative lookahead.
+ * This checks whether the stream is in a position where we can expect to match
+ * a given thing. It's basically a positive lookahead.
  */
-public class Not extends ParserCombinator {
+public class At extends ParserCombinator {
 
 	private final ParserCombinator parser;
 
-	public Not(ParserCombinator parser) {
+	public At(ParserCombinator parser) {
 		this.parser = parser;
 	}
 
@@ -22,16 +22,16 @@ public class Not extends ParserCombinator {
 		Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent("[not>");
+			parse.getTrace().indent("[at>");
 
 		stream.bookmark();
 		final boolean accepted = parser.accepts(parse);
 		stream.rewind();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent("<not]");
+			parse.getTrace().dedent("<at]");
 
-		return !accepted;
+		return accepted;
 	}
 
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
@@ -42,6 +42,6 @@ public class Not extends ParserCombinator {
 	}
 
 	public String toString() {
-		return "%not " + parser.toString();
+		return "%at " + parser.toString();
 	}
 }

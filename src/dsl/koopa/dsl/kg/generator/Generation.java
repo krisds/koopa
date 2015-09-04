@@ -350,6 +350,7 @@ public class Generation {
 		PART_NAMES.add("optional");
 		PART_NAMES.add("skipping");
 		PART_NAMES.add("negation");
+		PART_NAMES.add("lookahead");
 		PART_NAMES.add("limited");
 		PART_NAMES.add("noskip");
 		PART_NAMES.add("tagged");

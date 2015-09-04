@@ -4866,8 +4866,13 @@ def relationCondition =
 
     # This is the basic relation condition, except that we allow the object
     # of the relation to be an abbreviation.
-    relationSubject relop abbreviatedDisjunction
-    # TODO Turning  ^^^^^  into a positive guard would maker for cleaner ASTs.
+    
+    relationSubject (%at relop) abbreviatedDisjunction
+    
+    # Note that this ^^^^^^^^^ is a positive lookahead. This makes sure we're
+    # matching an actual relation condition, while leaving the initial relop
+    # available for the relationObject to match. This way all relational
+    # operators will always be found in the same place in the tree.
 end
 
 # This matches abbreviated conditions objects in a way similar to normal
@@ -4886,8 +4891,8 @@ private def abbreviatedConjunction =
 end
 
 private def abbreviatedNegation =
-    ( negation: NOT [relop] relationObject
-    |               [relop] relationObject
+    ( negation: NOT relationObject
+    |               relationObject
     )
 end
 
@@ -4897,6 +4902,8 @@ def relationSubject =
 end
 
 def relationObject =
+    [relop]
+
     ( relationOperand
 
     | # This is a weird one, but it allows for objects which are themselves

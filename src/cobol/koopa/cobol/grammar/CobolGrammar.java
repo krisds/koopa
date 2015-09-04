@@ -19903,7 +19903,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             relationSubject(),
-            relop(),
+            at(
+              relop()
+            ),
             abbreviatedDisjunction()
           )
         );
@@ -19995,18 +19997,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("negation",
               sequence(
                 token("NOT"),
-                optional(
-                  relop()
-                ),
                 relationObject()
               )
             ),
-            sequence(
-              optional(
-                relop()
-              ),
-              relationObject()
-            )
+            relationObject()
           )
         );
       }
@@ -20048,6 +20042,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         relationObjectParser = future;
         future.setParser(
           sequence(
+            optional(
+              relop()
+            ),
             choice(
               relationOperand(),
               sequence(

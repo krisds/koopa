@@ -67,6 +67,7 @@ public class KGGrammar extends FluentGrammar {
 				"optional", //
 				"skipping", //
 				"negation", //
+				"lookahead", //
 				"noskip", //
 				"tagged", //
 
@@ -133,6 +134,9 @@ public class KGGrammar extends FluentGrammar {
 		// '%not' part
 		define("negation").as("==%==", noskip("==not=="), "part");
 
+		// '%at' part
+		define("lookahead").as("==%==", noskip("==at=="), "part");
+		
 		// '%noskip' part
 		define("noskip").as("==%==", noskip("==noskip=="), "part");
 

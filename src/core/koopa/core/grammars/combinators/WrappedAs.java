@@ -40,6 +40,10 @@ public class WrappedAs extends ParserCombinator {
 			stream.rewind();
 		}
 
+		if (parse.getTrace().isEnabled())
+			parse.getTrace().dedent(
+					name + " ? " + (accepts ? ": yes " : ": no "));
+
 		return accepts;
 	}
 

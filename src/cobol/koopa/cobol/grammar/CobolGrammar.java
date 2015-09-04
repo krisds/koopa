@@ -19566,15 +19566,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("condition", true);
         conditionParser = future;
         future.setParser(
-          sequence(
-            optional(
-              token("NOT")
-            ),
-            conditionStart(),
-            star(
-              furtherCondition()
-            )
-          )
+          disjunction()
         );
       }
     
@@ -19582,120 +19574,192 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // conditionStart
+    // disjunction
     // ........................................................
     
-    private ParserCombinator conditionStartParser = null;
+    private ParserCombinator disjunctionParser = null;
     
-    public final Start conditionStart = Start.on(getNamespace(), "conditionStart");
+    private final Start disjunction = Start.on(getNamespace(), "disjunction");
     
-    public ParserCombinator conditionStart() {
-      if (conditionStartParser == null) {
-        FutureParser future = scoped("conditionStart", true);
-        conditionStartParser = future;
+    private ParserCombinator disjunction() {
+      if (disjunctionParser == null) {
+        FutureParser future = scoped("disjunction", false);
+        disjunctionParser = future;
         future.setParser(
           choice(
-            token("TRUE"),
-            token("FALSE"),
-            sequence(
-              literal("("),
-              condition(),
-              literal(")")
+            as("disjunction",
+              sequence(
+                conjunction(),
+                plus(
+                  sequence(
+                    token("OR"),
+                    conjunction()
+                  )
+                )
+              )
             ),
-            operand()
+            conjunction()
           )
         );
       }
     
-      return conditionStartParser;
+      return disjunctionParser;
     }
     
     // ========================================================
-    // furtherCondition
+    // conjunction
     // ........................................................
     
-    private ParserCombinator furtherConditionParser = null;
+    private ParserCombinator conjunctionParser = null;
     
-    public final Start furtherCondition = Start.on(getNamespace(), "furtherCondition");
+    private final Start conjunction = Start.on(getNamespace(), "conjunction");
     
-    public ParserCombinator furtherCondition() {
-      if (furtherConditionParser == null) {
-        FutureParser future = scoped("furtherCondition", true);
-        furtherConditionParser = future;
+    private ParserCombinator conjunction() {
+      if (conjunctionParser == null) {
+        FutureParser future = scoped("conjunction", false);
+        conjunctionParser = future;
         future.setParser(
           choice(
-            token("TRUE"),
-            token("FALSE"),
-            sequence(
-              optional(
-                token("IS")
-              ),
-              optional(
-                token("NOT")
-              ),
-              token("OMITTED")
-            ),
-            sequence(
-              optional(
-                token("IS")
-              ),
-              optional(
-                token("NOT")
-              ),
-              classType()
-            ),
-            sequence(
-              optional(
-                token("IS")
-              ),
-              optional(
-                token("NOT")
-              ),
-              signType()
-            ),
-            sequence(
-              optional(
-                choice(
-                  token("AND"),
-                  token("OR")
+            as("conjunction",
+              sequence(
+                negation(),
+                plus(
+                  sequence(
+                    token("AND"),
+                    negation()
+                  )
                 )
-              ),
-              optional(
-                token("IS")
-              ),
-              optional(
-                token("NOT")
-              ),
-              optional(
-                relop()
-              ),
-              literal("("),
-              condition(),
-              literal(")")
+              )
             ),
-            sequence(
-              optional(
-                choice(
-                  token("AND"),
-                  token("OR")
-                )
-              ),
-              optional(
-                token("IS")
-              ),
-              optional(
-                token("NOT")
-              ),
-              optional(
-                relop()
-              ),
-              operand()
+            negation()
+          )
+        );
+      }
+    
+      return conjunctionParser;
+    }
+    
+    // ========================================================
+    // negation
+    // ........................................................
+    
+    private ParserCombinator negationParser = null;
+    
+    private final Start negation = Start.on(getNamespace(), "negation");
+    
+    private ParserCombinator negation() {
+      if (negationParser == null) {
+        FutureParser future = scoped("negation", false);
+        negationParser = future;
+        future.setParser(
+          choice(
+            as("negation",
+              sequence(
+                token("NOT"),
+                simpleCondition()
+              )
+            ),
+            simpleCondition()
+          )
+        );
+      }
+    
+      return negationParser;
+    }
+    
+    // ========================================================
+    // simpleCondition
+    // ........................................................
+    
+    private ParserCombinator simpleConditionParser = null;
+    
+    private final Start simpleCondition = Start.on(getNamespace(), "simpleCondition");
+    
+    private ParserCombinator simpleCondition() {
+      if (simpleConditionParser == null) {
+        FutureParser future = scoped("simpleCondition", false);
+        simpleConditionParser = future;
+        future.setParser(
+          choice(
+            as("true",
+              token("TRUE")
+            ),
+            as("false",
+              token("FALSE")
+            ),
+            parenthesizedCondition(),
+            classCondition(),
+            signCondition(),
+            omittedArgumentCondition(),
+            relationCondition(),
+            conditionNameCondition()
+          )
+        );
+      }
+    
+      return simpleConditionParser;
+    }
+    
+    // ========================================================
+    // parenthesizedCondition
+    // ........................................................
+    
+    private ParserCombinator parenthesizedConditionParser = null;
+    
+    public final Start parenthesizedCondition = Start.on(getNamespace(), "parenthesizedCondition");
+    
+    public ParserCombinator parenthesizedCondition() {
+      if (parenthesizedConditionParser == null) {
+        FutureParser future = scoped("parenthesizedCondition", true);
+        parenthesizedConditionParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            disjunction(),
+            literal(")"),
+            not(
+              choice(
+                relop(),
+                moreArithmeticOp()
+              )
             )
           )
         );
       }
     
-      return furtherConditionParser;
+      return parenthesizedConditionParser;
+    }
+    
+    // ========================================================
+    // classCondition
+    // ........................................................
+    
+    private ParserCombinator classConditionParser = null;
+    
+    public final Start classCondition = Start.on(getNamespace(), "classCondition");
+    
+    public ParserCombinator classCondition() {
+      if (classConditionParser == null) {
+        FutureParser future = scoped("classCondition", true);
+        classConditionParser = future;
+        future.setParser(
+          sequence(
+            identifier(),
+            not(
+              relop()
+            ),
+            optional(
+              token("IS")
+            ),
+            optional(
+              token("NOT")
+            ),
+            classType()
+          )
+        );
+      }
+    
+      return classConditionParser;
     }
     
     // ========================================================
@@ -19720,12 +19784,50 @@ public class CobolGrammar extends CobolBaseGrammar {
             token("KANJI"),
             token("BOOLEAN"),
             token("INFINITY"),
-            token("REPRESENTS-NOT-A-NUMBER")
+            token("REPRESENTS-NOT-A-NUMBER"),
+            name()
           )
         );
       }
     
       return classTypeParser;
+    }
+    
+    // ========================================================
+    // signCondition
+    // ........................................................
+    
+    private ParserCombinator signConditionParser = null;
+    
+    public final Start signCondition = Start.on(getNamespace(), "signCondition");
+    
+    public ParserCombinator signCondition() {
+      if (signConditionParser == null) {
+        FutureParser future = scoped("signCondition", true);
+        signConditionParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              sequence(
+                identifier(),
+                not(
+                  moreArithmeticOp()
+                )
+              ),
+              arithmeticExpression()
+            ),
+            optional(
+              token("IS")
+            ),
+            optional(
+              token("NOT")
+            ),
+            signType()
+          )
+        );
+      }
+    
+      return signConditionParser;
     }
     
     // ========================================================
@@ -19753,6 +19855,268 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
+    // omittedArgumentCondition
+    // ........................................................
+    
+    private ParserCombinator omittedArgumentConditionParser = null;
+    
+    public final Start omittedArgumentCondition = Start.on(getNamespace(), "omittedArgumentCondition");
+    
+    public ParserCombinator omittedArgumentCondition() {
+      if (omittedArgumentConditionParser == null) {
+        FutureParser future = scoped("omittedArgumentCondition", true);
+        omittedArgumentConditionParser = future;
+        future.setParser(
+          sequence(
+            dataName(),
+            optional(
+              token("IS")
+            ),
+            optional(
+              token("NOT")
+            ),
+            token("OMITTED")
+          )
+        );
+      }
+    
+      return omittedArgumentConditionParser;
+    }
+    
+    // ========================================================
+    // relationCondition
+    // ........................................................
+    
+    private ParserCombinator relationConditionParser = null;
+    
+    public final Start relationCondition = Start.on(getNamespace(), "relationCondition");
+    
+    public ParserCombinator relationCondition() {
+      if (relationConditionParser == null) {
+        FutureParser future = scoped("relationCondition", true);
+        relationConditionParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              as("not",
+                token("NOT")
+              )
+            ),
+            relationSubject(),
+            relop(),
+            abbreviatedDisjunction()
+          )
+        );
+      }
+    
+      return relationConditionParser;
+    }
+    
+    // ========================================================
+    // abbreviatedDisjunction
+    // ........................................................
+    
+    private ParserCombinator abbreviatedDisjunctionParser = null;
+    
+    private final Start abbreviatedDisjunction = Start.on(getNamespace(), "abbreviatedDisjunction");
+    
+    private ParserCombinator abbreviatedDisjunction() {
+      if (abbreviatedDisjunctionParser == null) {
+        FutureParser future = scoped("abbreviatedDisjunction", false);
+        abbreviatedDisjunctionParser = future;
+        future.setParser(
+          choice(
+            as("disjunction",
+              sequence(
+                abbreviatedConjunction(),
+                plus(
+                  sequence(
+                    token("OR"),
+                    abbreviatedConjunction()
+                  )
+                )
+              )
+            ),
+            abbreviatedConjunction()
+          )
+        );
+      }
+    
+      return abbreviatedDisjunctionParser;
+    }
+    
+    // ========================================================
+    // abbreviatedConjunction
+    // ........................................................
+    
+    private ParserCombinator abbreviatedConjunctionParser = null;
+    
+    private final Start abbreviatedConjunction = Start.on(getNamespace(), "abbreviatedConjunction");
+    
+    private ParserCombinator abbreviatedConjunction() {
+      if (abbreviatedConjunctionParser == null) {
+        FutureParser future = scoped("abbreviatedConjunction", false);
+        abbreviatedConjunctionParser = future;
+        future.setParser(
+          choice(
+            as("conjunction",
+              sequence(
+                abbreviatedNegation(),
+                plus(
+                  sequence(
+                    token("AND"),
+                    abbreviatedNegation()
+                  )
+                )
+              )
+            ),
+            abbreviatedNegation()
+          )
+        );
+      }
+    
+      return abbreviatedConjunctionParser;
+    }
+    
+    // ========================================================
+    // abbreviatedNegation
+    // ........................................................
+    
+    private ParserCombinator abbreviatedNegationParser = null;
+    
+    private final Start abbreviatedNegation = Start.on(getNamespace(), "abbreviatedNegation");
+    
+    private ParserCombinator abbreviatedNegation() {
+      if (abbreviatedNegationParser == null) {
+        FutureParser future = scoped("abbreviatedNegation", false);
+        abbreviatedNegationParser = future;
+        future.setParser(
+          choice(
+            as("negation",
+              sequence(
+                token("NOT"),
+                optional(
+                  relop()
+                ),
+                relationObject()
+              )
+            ),
+            sequence(
+              optional(
+                relop()
+              ),
+              relationObject()
+            )
+          )
+        );
+      }
+    
+      return abbreviatedNegationParser;
+    }
+    
+    // ========================================================
+    // relationSubject
+    // ........................................................
+    
+    private ParserCombinator relationSubjectParser = null;
+    
+    public final Start relationSubject = Start.on(getNamespace(), "relationSubject");
+    
+    public ParserCombinator relationSubject() {
+      if (relationSubjectParser == null) {
+        FutureParser future = scoped("relationSubject", true);
+        relationSubjectParser = future;
+        future.setParser(
+          relationOperand()
+        );
+      }
+    
+      return relationSubjectParser;
+    }
+    
+    // ========================================================
+    // relationObject
+    // ........................................................
+    
+    private ParserCombinator relationObjectParser = null;
+    
+    public final Start relationObject = Start.on(getNamespace(), "relationObject");
+    
+    public ParserCombinator relationObject() {
+      if (relationObjectParser == null) {
+        FutureParser future = scoped("relationObject", true);
+        relationObjectParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              relationOperand(),
+              sequence(
+                literal("("),
+                abbreviatedDisjunction(),
+                literal(")")
+              )
+            ),
+            not(
+              choice(
+                literal("("),
+                token("IS"),
+                token("NOT"),
+                token("OMITTED"),
+                relop(),
+                classType(),
+                signType()
+              )
+            )
+          )
+        );
+      }
+    
+      return relationObjectParser;
+    }
+    
+    // ========================================================
+    // relationOperand
+    // ........................................................
+    
+    private ParserCombinator relationOperandParser = null;
+    
+    private final Start relationOperand = Start.on(getNamespace(), "relationOperand");
+    
+    private ParserCombinator relationOperand() {
+      if (relationOperandParser == null) {
+        FutureParser future = scoped("relationOperand", false);
+        relationOperandParser = future;
+        future.setParser(
+          choice(
+            token("SELF"),
+            token("NULL"),
+            token("NULLS"),
+            sequence(
+              token("ADDRESS"),
+              token("OF"),
+              identifier()
+            ),
+            sequence(
+              literal(),
+              not(
+                moreArithmeticOp()
+              )
+            ),
+            sequence(
+              identifier(),
+              not(
+                moreArithmeticOp()
+              )
+            ),
+            arithmeticExpression()
+          )
+        );
+      }
+    
+      return relationOperandParser;
+    }
+    
+    // ========================================================
     // relop
     // ........................................................
     
@@ -19775,31 +20139,41 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               sequence(
                 optional(
-                  token("NOT")
+                  as("not",
+                    token("NOT")
+                  )
                 ),
                 greaterOrEqualOp()
               ),
               sequence(
                 optional(
-                  token("NOT")
+                  as("not",
+                    token("NOT")
+                  )
                 ),
                 lessOrEqualOp()
               ),
               sequence(
                 optional(
-                  token("NOT")
+                  as("not",
+                    token("NOT")
+                  )
                 ),
                 greaterThanOp()
               ),
               sequence(
                 optional(
-                  token("NOT")
+                  as("not",
+                    token("NOT")
+                  )
                 ),
                 lessThanOp()
               ),
               sequence(
                 optional(
-                  token("NOT")
+                  as("not",
+                    token("NOT")
+                  )
                 ),
                 equalToOp()
               ),
@@ -20030,6 +20404,34 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return lessOrEqualOpParser;
+    }
+    
+    // ========================================================
+    // conditionNameCondition
+    // ........................................................
+    
+    private ParserCombinator conditionNameConditionParser = null;
+    
+    public final Start conditionNameCondition = Start.on(getNamespace(), "conditionNameCondition");
+    
+    public ParserCombinator conditionNameCondition() {
+      if (conditionNameConditionParser == null) {
+        FutureParser future = scoped("conditionNameCondition", true);
+        conditionNameConditionParser = future;
+        future.setParser(
+          sequence(
+            conditionName(),
+            not(
+              choice(
+                literal("("),
+                relop()
+              )
+            )
+          )
+        );
+      }
+    
+      return conditionNameConditionParser;
     }
     
     // ========================================================

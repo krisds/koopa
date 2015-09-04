@@ -19,12 +19,18 @@ public final class StageUtil {
 	}
 
 	public static Tree getAST(File input) throws IOException {
+		return getAST(input, false);
+
+	}
+
+	public static Tree getAST(File input, boolean quiet) throws IOException {
 		final Source<Token> source = StageTokens.getNewSource(//
 				input.getName(), new FileReader(input));
 
 		final StageGrammar kg = new StageGrammar();
 
 		final Parse parse = Parse.of(source).to(new KoopaTreeBuilder(kg));
+		parse.getTrace().quiet(quiet);
 
 		boolean accepts = kg.stage().accepts(parse);
 

@@ -205,13 +205,19 @@ target condition;
 
 
 # Reported by FrankTheTank
-+[ x = (1) ]
-+[ x = 1 or 2 ]
++[ x = (1     ) ]
++[ x =  1 or 2  ]
 +[ x = (1 or 2) ]
-+[ MYSTRING NOT SPECIAL-CHAR ]
++[ MYSTRING    NOT SPECIAL-CHAR ]  # This is a class condition.
 +[ MYSTRING IS NOT SPECIAL-CHAR ]
 
 +[ Operator = "+" ]
 
-
+# From NC211A.CBL
++[ TWO > DOS
+   OR
+   NOT ( THREE-SEVENTHS ) EQUAL TO FIVE
+   AND
+   MINUS-ONE = ONE
+]
 

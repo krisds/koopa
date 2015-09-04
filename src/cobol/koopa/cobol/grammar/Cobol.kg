@@ -4679,57 +4679,128 @@ end
 ## Conditions.
 ## -----------------------------------------------------------------------------
 
-# The parsing of conditions does not try to build correct parse trees; well,
-# "not correct" in the sense that you get something immediately usable for
-# analysis or intepretation/compilation.
+# [SPEC-XX] 8.8.4 Conditional expressions
 #
-# Here is an example of what I mean. Given following condition:
+# Getting the grammar for conditions right is a bit of a challenge. The version
+# below is probably the fourth or fifth attempt at it.
 #
-#     A < B AND C < D
+# One difficulty lies in dealing with the ambiguity of tokens. Because we're
+# *not* maintaining symbol tables we don't know the intended uses of certain
+# names. In class conditions, for instance, the code may have specified custom 
+# alphabet or class names we don't know about at that point. Which means we
+# have to kind of allow any name at that point, as long as we suspect that it
+# in fact is encoding a class condition...
 #
-# Ideally you want a parse tree which looks like this:
+# Another big difficulty lies with abbreviated combined relation conditions,
+# which can include keywords (AND, OR, NOT) which are also found in higher
+# level grammar rules. Disambiguating the right level the keyword is
+# participating in is tricky.
 #
-#     _   AND   _
-#   _ < _     _ < _
-#   A   B     C   D
+# Similar to the abbreviated conditions, arithmetic expressions can also muddy
+# the waters by overlapping with other possible parses.
 #
-# Instead what we do is something like:
-#
-#   A   ___    _____    ___
-#       < B    AND C    < D
-#
-# So you get a series of parts which make up the condition.
-#
-# Why do it this way ? Because without type information and lookup tables we
-# can only guess at the semantics of some identifiers. This makes the structure
-# of conditions a mess of ambiguity, and the grammar to match conditions
-# equally so.
+# This version of parsing conditions tries to resolve all that by relying on a
+# few "tricks":
+# * Copious use of "%not" guards to make sure we don't accept parses which may
+#   overlap with others.
+# * Combining the abbreviated relation conditions into generic relation
+#   conditions. Specs typically define the abbreviated version separately, but
+#   it seems easier to just combine them.
 
+# "The order of precedence of logical operators is 'NOT', 'AND', 'OR'. Explicit
+#  parentheses in a complex condition alter the order of evaluation of the
+#  conditions, as described in 8.8.4.3, Order of evaluation of conditions."
+# - [SPEC-XX] 8.8.4.2.3 Precedence of logical operators and the use of parentheses
+#
+# So the first part of the condition grammar encodes the precedence of the NOT,
+# AND and OR operators. This is pretty straightforward, except that we play a
+# bit with the use of private rules and named branches to get a cleaner syntax
+# tree.
 def condition =
-	[NOT] (
-	  conditionStart
-	)
-	(furtherCondition)*
+    disjunction
 end
 
-def conditionStart =
-	(
-	  TRUE
-	| FALSE
-	| '(' condition ')'
-	| operand
-	)
+private def disjunction =
+    ( disjunction: conjunction (OR conjunction)+
+    |              conjunction
+    )
 end
 
-def furtherCondition =
-	( TRUE
-	| FALSE
-	| [IS] [NOT] OMITTED
-	| [IS] [NOT] classType
-	| [IS] [NOT] signType
-	| [AND | OR] [IS] [NOT] [relop] '(' condition ')'
-	| [AND | OR] [IS] [NOT] [relop] operand
-	)
+private def conjunction =
+    ( conjunction: negation (AND negation)+
+    |              negation
+    )
+end
+
+private def negation =
+    ( negation: NOT simpleCondition
+    |               simpleCondition
+    )
+end
+
+# Now for the atoms which can make up a complex condition. These come pretty
+# much straight from the spec ([SPEC-XX] 8.8.4.1 Simple conditions).
+private def simpleCondition =
+    ( # TRUE and FALSE are actually specified for the EVALUATE statement (see 
+      # [SPEC-XX] 14.9.12 EVALUATE statement), but it felt right to me to
+      # include them here. 
+      true:  TRUE
+    | false: FALSE
+    
+    | parenthesizedCondition
+    | classCondition
+    | signCondition
+    | omittedArgumentCondition
+    | relationCondition
+    | conditionNameCondition      #< Last, for good reason. See rule for more.
+    )
+end
+
+
+# "Parentheses, both explicit and implicit, denote a level of inclusiveness 
+#  within a complex condition. Two or more conditions connected by only the
+#  logical operator 'AND' or only the logical operator 'OR' at the same level 
+#  of inclusiveness establish a hierarchical level within a complex condition. 
+#  An entire complex condition can be considered to be a nested structure of
+#  hierarchical levels with the entire complex condition itself being the most
+#  inclusive hierarchical level.
+# - [SPEC-XX] 8.8.4.3 Order of evaluation of conditions
+def parenthesizedCondition =
+    '(' disjunction ')'       #< Not "condition", for nicer syntax tree. 
+
+    # Parenthesized conditions may match the start of relation conditions or 
+    # arithmetic expressions. Following guard tries to make sure we don't break
+    # those matches inadvertently.
+    (%not ( relop             #< Indicates we're in a relation condition.
+          | moreArithmeticOp  #< Indicates we're in an arithmetic expression.
+          ))
+end
+
+
+# "The class condition determines whether an operand is numeric, alphabetic, 
+#  alphabetic-lower, alphabetic-upper, boolean, contains a numeric 
+#  representation of infinity, or contains only the characters in the set of
+#  characters specified by the ALPHABET or CLASS clause as defined in the
+#  SPECIAL-NAMES paragraph of the environment division."
+# - [SPEC-XX] 8.8.4.1.3 Class condition
+#
+# Now, as said in the intro of this section we don't maintain a symbol table.
+# Which means we don't know the relevant names specified in the SPECIAL-NAMES
+# paragraph. That can cause a problem where we may match the start of a
+# relation condition. E.g.
+#
+#    FOO        IS GREATER  THAN 5
+#    ^^^        ^^ ^^^^^^^  
+#    identifier IS classType
+#
+# Yes, GREATER is a legal class type, because we do not expect it here as a
+# keyword. And Koopa tries not to enforce keywords in places where they're not
+# expected.
+#
+# We overcome this problem by making sure we're not possibly mismatching a
+# relation operator. 
+def classCondition =
+    identifier  (%not relop)  [IS] [NOT] classType
 end
 
 def classType =
@@ -4742,7 +4813,31 @@ def classType =
 	| BOOLEAN
 	| INFINITY
 	| REPRESENTS-NOT-A-NUMBER
+	
+	| # "If alphabet-name-1 is specified, the condition is true if the content
+	  #  of the data item referenced by identifier-1 consists entirely of
+	  #  characters in the coded character set identified by alphabet-name-1 in
+	  #  the SPECIAL-NAMES paragraph."
+	  # "If class-name is specified, the condition is true if the content of
+	  #  the data item referenced by identifier-1 consists entirely of the
+	  #  characters listed in the definition of class-name-1 in the 
+	  #  SPECIAL-NAMES paragraph."
+	  # - [SPEC-XX] 8.8.4.1.3.3 Class condition, General Rules
+	  name
 	)
+end
+
+
+# "The sign condition determines whether or not the algebraic value of an
+#  arithmetic expression is less than, greater than, or equal to zero."
+# - [SPEC-XX] 8.8.4.1.6 Sign condition
+def signCondition =
+    # The guard here is to get simpler syntax trees in case the arithmetic
+    # expression is nothing more than a simple identifier.
+    ( identifier  (%not moreArithmeticOp)
+    | arithmeticExpression
+    )
+    [IS] [NOT] signType
 end
 
 def signType =
@@ -4752,51 +4847,141 @@ def signType =
 	)
 end
 
-def relop =
-	[IS | ARE]
-	( [NOT] greaterOrEqualOp
-	| [NOT] lessOrEqualOp
-	| [NOT] greaterThanOp
-	| [NOT] lessThanOp
-	| [NOT] equalToOp
-    | exceedsOp
-    | equalsOp
-	| unequalToOp)
+
+# "The omitted-argument condition determines whether an argument was provided
+#  to a function, method, or program."
+# - [SPEC-XX] 8.8.4.1.7 Omitted-argument condition
+def omittedArgumentCondition =
+    dataName [IS] [NOT] OMITTED
 end
 
-def greaterThanOp =
-	(GREATER [THAN] | '>')
+
+# Now for the big one: relation conditions. The spec defines these pretty much
+# as you'd expect ([SPEC-XX] 8.8.4.1.1 Relation conditions). The rules here, 
+# however, merge this with abbreviated combined relation conditions. The 
+# reasoning roughly being that it is easier that way as the abbreviated kind
+# always start with a regular condition.
+def relationCondition =
+    [not: NOT]
+
+    # This is the basic relation condition, except that we allow the object
+    # of the relation to be an abbreviation.
+    relationSubject relop abbreviatedDisjunction
+    # TODO Turning  ^^^^^  into a positive guard would maker for cleaner ASTs.
 end
 
-def lessThanOp =
-	(LESS [THAN] | '<')
-end
-
-def equalToOp =
-	(EQUAL [TO] | '=')
-end
-
-def exceedsOp =
-    EXCEEDS
-end
-
-def equalsOp =
-    EQUALS
-end
-
-def unequalToOp =
-	( UNEQUAL [TO]
-    | '<>'
+# This matches abbreviated conditions objects in a way similar to normal
+# conditions. It encodes the precedence of the AND, OR and NOT operators, but
+# plays with private rules and named branches to keep the syntax tree clean.
+private def abbreviatedDisjunction =
+    ( disjunction: abbreviatedConjunction (OR abbreviatedConjunction)+
+    |              abbreviatedConjunction
     )
 end
 
-def greaterOrEqualOp =
-	(GREATER [THAN] OR EQUAL [TO] | '>=')
+private def abbreviatedConjunction =
+    ( conjunction: abbreviatedNegation (AND abbreviatedNegation)+
+    |              abbreviatedNegation
+    )
 end
 
-def lessOrEqualOp =
-	(LESS [THAN] OR EQUAL [TO] | '<=')
-end 
+private def abbreviatedNegation =
+    ( negation: NOT [relop] relationObject
+    |               [relop] relationObject
+    )
+end
+
+
+def relationSubject =
+    relationOperand
+end
+
+def relationObject =
+    ( relationOperand
+
+    | # This is a weird one, but it allows for objects which are themselves
+      # abbreviated conditions. E.g.
+      #
+      #    FOO IS ( 1 OR 2 )
+      #           ^^^^^^^^^^
+      #
+      # The marked section will get matched as an object, but really is an
+      # abbreviated combination of objects.
+      # (This is probably the most iffy part to the entire condition grammar.)
+      '(' abbreviatedDisjunction ')'
+    )
+    
+    # Because abbreviated combined conditions also relies on AND, OR and NOT,
+    # we may be mistakingly matching the start of a simple condition. E.g.
+    #
+    #    FOO < A OR B > 3
+    #    ^^^^^^^^^^^^
+    #
+    # The marked section is a valid abbreviated combined condition. But we
+    # should still reject that match. Which is what we're using these guards
+    # for.
+    (%not ( '('
+          | IS
+          | NOT
+          | OMITTED    #< We're in an omitted argument condition.
+          | relop      #< We're in a full (non-abbreviated) relation condition.
+          | classType  #< We're in a class condition.
+          | signType   #< We're in sign condition.
+          ))
+end
+
+private def relationOperand =
+    ( SELF
+    | NULL
+    | NULLS
+    | ADDRESS OF identifier
+    | literal     (%not moreArithmeticOp)
+    | identifier  (%not moreArithmeticOp)
+    | arithmeticExpression
+    )
+end
+
+def relop =
+	[IS | ARE]
+	( [not: NOT] greaterOrEqualOp
+	| [not: NOT] lessOrEqualOp
+	| [not: NOT] greaterThanOp
+	| [not: NOT] lessThanOp
+	| [not: NOT] equalToOp
+    | exceedsOp
+    | equalsOp
+	| unequalToOp
+	)
+end
+
+def greaterThanOp    = (GREATER [THAN]               | '>' )  end
+def lessThanOp       = (LESS [THAN]                  | '<' )  end
+def equalToOp        = (EQUAL [TO]                   | '=' )  end
+def exceedsOp        = EXCEEDS                                end
+def equalsOp         = EQUALS                                 end
+def unequalToOp      = (UNEQUAL [TO]                 | '<>')  end
+def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>=')  end
+def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<=')  end 
+
+# "In a condition-name condition, a conditional variable is tested to determine
+#  whether or not its value is equal to one of the values associated with
+#  condition-name-1."
+# - [SPEC-XX] 8.8.4.1.4 Condition-name condition (condition variable)
+#
+# Here again our lack of symbol tables makes things harder. We don't know which
+# names have been defined as condition names, so we accept them all. We
+# counteract this uncertainty by checking that we're not mismatching the start
+# of something bigger with some basic guards. But we also make sure that we
+# only consider the option of condition names as a last resort; which is why it
+# should be the last option in simple conditions.
+def conditionNameCondition =
+    conditionName
+    
+    (%not ( '(' 
+          | relop
+          ))
+end
+
 
 
 ## #############################################################################

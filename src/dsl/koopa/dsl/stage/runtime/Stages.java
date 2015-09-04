@@ -38,7 +38,7 @@ public class Stages extends Suite {
 
 			for (File source : sources) {
 				try {
-					final Tree ast = StageUtil.getAST(source);
+					final Tree ast = StageUtil.getAST(source, true);
 
 					final String grammarName = ast.getDescendant("grammar",
 							"qualified_name").getAllText();

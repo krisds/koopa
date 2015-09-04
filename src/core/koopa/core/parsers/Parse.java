@@ -31,10 +31,11 @@ public class Parse {
 	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
 	private List<Tuple<Token, String>> errors = new LinkedList<Tuple<Token, String>>();
 
-	private Trace trace = new Trace();
+	private Trace trace;
 
 	private Parse() {
 		this.stack = new Stack();
+		this.trace = new Trace();
 	}
 
 	public static Parse of(Source<Token> source) {

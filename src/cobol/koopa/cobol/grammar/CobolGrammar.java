@@ -19688,10 +19688,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               token("FALSE")
             ),
             parenthesizedCondition(),
-            classCondition(),
             signCondition(),
             omittedArgumentCondition(),
             relationCondition(),
+            classCondition(),
             conditionNameCondition()
           )
         );
@@ -19752,7 +19752,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               token("IS")
             ),
             optional(
-              token("NOT")
+              as("not",
+                token("NOT")
+              )
             ),
             classType()
           )
@@ -19807,20 +19809,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         signConditionParser = future;
         future.setParser(
           sequence(
-            choice(
-              sequence(
-                identifier(),
-                not(
-                  moreArithmeticOp()
-                )
-              ),
-              arithmeticExpression()
-            ),
+            arithmeticExpression(),
             optional(
               token("IS")
             ),
             optional(
-              token("NOT")
+              as("not",
+                token("NOT")
+              )
             ),
             signType()
           )
@@ -19873,7 +19869,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               token("IS")
             ),
             optional(
-              token("NOT")
+              as("not",
+                token("NOT")
+              )
             ),
             token("OMITTED")
           )
@@ -19897,14 +19895,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         relationConditionParser = future;
         future.setParser(
           sequence(
-            optional(
-              as("not",
-                token("NOT")
-              )
-            ),
             relationSubject(),
             at(
-              relop()
+              sequence(
+                optional(
+                  token("NOT")
+                ),
+                relop()
+              )
             ),
             abbreviatedDisjunction()
           )
@@ -20046,7 +20044,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               relop()
             ),
             choice(
-              relationOperand(),
+              as("operand",
+                relationOperand()
+              ),
               sequence(
                 literal("("),
                 abbreviatedDisjunction(),
@@ -20085,13 +20085,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         relationOperandParser = future;
         future.setParser(
           choice(
-            token("SELF"),
-            token("NULL"),
-            token("NULLS"),
-            sequence(
-              token("ADDRESS"),
-              token("OF"),
-              identifier()
+            as("figurativeConstant",
+              choice(
+                token("NULL"),
+                token("NULLS")
+              )
+            ),
+            as("addressOf",
+              sequence(
+                token("ADDRESS"),
+                token("OF"),
+                identifier()
+              )
             ),
             sequence(
               literal(),

@@ -4748,11 +4748,11 @@ private def simpleCondition =
     | false: FALSE
     
     | parenthesizedCondition
-    | classCondition
     | signCondition
     | omittedArgumentCondition
     | relationCondition
-    | conditionNameCondition      #< Last, for good reason. See rule for more.
+    | classCondition            #< After relationCondition, to avoid overlap.
+    | conditionNameCondition    #< Last, for good reason. See rule for more.
     )
 end
 
@@ -4800,7 +4800,7 @@ end
 # We overcome this problem by making sure we're not possibly mismatching a
 # relation operator. 
 def classCondition =
-    identifier  (%not relop)  [IS] [NOT] classType
+    identifier  (%not relop)  [IS] [not: NOT] classType
 end
 
 def classType =
@@ -4832,12 +4832,7 @@ end
 #  arithmetic expression is less than, greater than, or equal to zero."
 # - [SPEC-XX] 8.8.4.1.6 Sign condition
 def signCondition =
-    # The guard here is to get simpler syntax trees in case the arithmetic
-    # expression is nothing more than a simple identifier.
-    ( identifier  (%not moreArithmeticOp)
-    | arithmeticExpression
-    )
-    [IS] [NOT] signType
+    arithmeticExpression [IS] [not: NOT] signType
 end
 
 def signType =
@@ -4852,7 +4847,7 @@ end
 #  to a function, method, or program."
 # - [SPEC-XX] 8.8.4.1.7 Omitted-argument condition
 def omittedArgumentCondition =
-    dataName [IS] [NOT] OMITTED
+    dataName [IS] [not: NOT] OMITTED
 end
 
 
@@ -4862,16 +4857,14 @@ end
 # reasoning roughly being that it is easier that way as the abbreviated kind
 # always start with a regular condition.
 def relationCondition =
-    [not: NOT]
-
     # This is the basic relation condition, except that we allow the object
     # of the relation to be an abbreviation.
     
-    relationSubject (%at relop) abbreviatedDisjunction
+    relationSubject (%at ([NOT] relop)) abbreviatedDisjunction
     
-    # Note that this ^^^^^^^^^ is a positive lookahead. This makes sure we're
-    # matching an actual relation condition, while leaving the initial relop
-    # available for the relationObject to match. This way all relational
+    # Note that this ^^^^^^^^^^^^^^^^^ is a positive lookahead. This makes sure
+    # we're matching an actual relation condition, while leaving the initial 
+    # relop available for the relationObject to match. This way all relational
     # operators will always be found in the same place in the tree.
 end
 
@@ -4904,13 +4897,13 @@ end
 def relationObject =
     [relop]
 
-    ( relationOperand
+    ( operand: relationOperand
 
     | # This is a weird one, but it allows for objects which are themselves
       # abbreviated conditions. E.g.
       #
-      #    FOO IS ( 1 OR 2 )
-      #           ^^^^^^^^^^
+      #    FOO IS EQUAL TO ( 1 OR 2 )
+      #                    ^^^^^^^^^^
       #
       # The marked section will get matched as an object, but really is an
       # abbreviated combination of objects.
@@ -4938,10 +4931,8 @@ def relationObject =
 end
 
 private def relationOperand =
-    ( SELF
-    | NULL
-    | NULLS
-    | ADDRESS OF identifier
+    ( figurativeConstant: (NULL | NULLS)
+    | addressOf: ADDRESS OF identifier
     | literal     (%not moreArithmeticOp)
     | identifier  (%not moreArithmeticOp)
     | arithmeticExpression

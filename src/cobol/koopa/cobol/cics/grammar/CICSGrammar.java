@@ -15,6 +15,9 @@ import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Stream;
 
 import static koopa.core.grammars.combinators.Opt.NOSKIP;
+import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
+import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
+import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 import koopa.cobol.cics.grammar.CICSBaseGrammar;
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
@@ -33,7 +36,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator cicsStatement() {
       if (cicsStatementParser == null) {
-        FutureParser future = scoped("cicsStatement", true);
+        FutureParser future = scoped("cicsStatement", PUBLIC);
         cicsStatementParser = future;
         future.setParser(
           sequence(
@@ -58,7 +61,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator command() {
       if (commandParser == null) {
-        FutureParser future = scoped("command", true);
+        FutureParser future = scoped("command", PUBLIC);
         commandParser = future;
         future.setParser(
           choice(
@@ -173,7 +176,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator option() {
       if (optionParser == null) {
-        FutureParser future = scoped("option", true);
+        FutureParser future = scoped("option", PUBLIC);
         optionParser = future;
         future.setParser(
           sequence(
@@ -202,7 +205,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator name() {
       if (nameParser == null) {
-        FutureParser future = scoped("name", true);
+        FutureParser future = scoped("name", PUBLIC);
         nameParser = future;
         future.setParser(
           sequence(
@@ -230,7 +233,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator value() {
       if (valueParser == null) {
-        FutureParser future = scoped("value", true);
+        FutureParser future = scoped("value", PUBLIC);
         valueParser = future;
         future.setParser(
           plus(
@@ -252,7 +255,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     private ParserCombinator param() {
       if (paramParser == null) {
-        FutureParser future = scoped("param", false);
+        FutureParser future = scoped("param", PRIVATE);
         paramParser = future;
         future.setParser(
           choice(

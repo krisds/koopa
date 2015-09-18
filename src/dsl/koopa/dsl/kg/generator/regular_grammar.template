@@ -18,6 +18,9 @@ def grammar
     import koopa.core.parsers.Stream;
     
     import static koopa.core.grammars.combinators.Opt.NOSKIP;
+    import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
+    import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
+    import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
     
 >   user_imports
     
@@ -40,7 +43,7 @@ def rule
     
     #modifier# ParserCombinator #name#() {
       if (#name#Parser == null) {
-        FutureParser future = scoped("#name#", #publik#);
+        FutureParser future = scoped("#name#", #visibility#);
         #name#Parser = future;
         future.setParser(
 >         body

@@ -4606,55 +4606,92 @@ end
 ## Arithmetic expressions.
 ## -----------------------------------------------------------------------------
 
-# FIXME: A single numeric/identifier is considered an arithmeticExpression by this grammar.
+# FIXME ? A single numeric/identifier is considered an arithmeticExpression by this grammar.
 
-# TODO The binary operators also have internal precedence relationships. Cfr:
-# http://supportline.microfocus.com/documentation/books/sx51/lhpdf603.htm
+# The spec defines precedence of arithmetic and bitwise operators:
+#
+# "When operands are at the same level of inclusiveness, the following 
+#  hierarchical order of execution is implied:
+#  1st — Unary plus and minus
+#  2nd — Exponentiation 
+#  3rd — Multiplication and division 
+#  4th — Addition and subtraction"
+# - [SPEC-XX] 8.8.1.1 Native, standard, standard-binary, and standard-decimal 
+#   arithmetic
+#
+# "The precedence of operations at the same level of inclusiveness, is:
+#  1st — negation (B-NOT)
+#  2nd — conjunction (B-AND)
+#  3rd — exclusive disjunction (B-XOR)
+#  4th — inclusive disjunction (B-OR)"
+# - [SPEC-XX] 8.8.2 Boolean expressions
+#
+# Sadly I couldn't find how both interact in the spec. Luckily I did find this
+# ordering by MicroFocus:
+#
+# "Parentheses can be used in arithmetic expressions to specify the order in
+#  which elements are to be evaluated. Expressions within parentheses are
+#  evaluated first, and within nested parentheses, evaluation proceeds from the
+#  least inclusive set to the most inclusive set. When parentheses are not 
+#  used, or parenthesized expressions are at the same level of inclusiveness, 
+#  the following hierarchical order of execution is implied:
+#  1st - Unary plus and minus, B-NOT
+#  2nd - Exponentiation
+#  3rd - Multiplication and division
+#  4th - Addition and subtraction
+#  5th - B-AND
+#  6th - B-XOR and B-EXOR
+#  7th - B-OR""
+# - [http://supportline.microfocus.com/documentation/books/sx51/lhpdf603.htm]
+#
+# As for things on the same level of precedence, the spec at least is clear:
+#
+# "When the sequence of execution is not specified by parentheses, the order of
+#  execution of consecutive operations of the same hierarchical level is from
+#  left to right."
+# - [SPEC-XX] 8.8.1.1 Native, standard, standard-binary, and standard-decimal
+#   arithmetic
 
 def arithmeticExpression =
-    expression (bitwiseOp expression)*
+    bitwiseInclusiveDisjunction
 end
 
-private def bitwiseOp =
-    ( bAND : B-AND
-    | bOR  : B-OR
-    | bXOR : (B-XOR | B-EXOR)
-    )
+hiding def bitwiseInclusiveDisjunction =
+    bitwiseExclusiveDisjunction (B-OR bitwiseExclusiveDisjunction)*
 end
 
-def expression =
-    term (addingOp term)*
+hiding def bitwiseExclusiveDisjunction =
+    bitwiseConjunction ((B-XOR | B-EXOR) bitwiseConjunction)*
 end
 
-private def addingOp =
-	( add      : '+'
-	| subtract : '-'
-	)
+hiding def bitwiseConjunction =
+    expression (B-AND expression)*
 end
 
-def term =
-    factor (('*' | '/') factor)*
+hiding def expression = 
+    term
+    ( add:      '+' term
+    | subtract: '-' term
+    )*
 end
 
-private def multiplyingOp =
-	( multiply : '*'
-	| divide   : '/'
-	)
+hiding def term =
+    factor 
+    ( multiply : '*' factor
+    | divide   : '/' factor
+    )*
 end
 
-def factor =
-    [unaryOp] atom (exponentiationOp [unaryOp] atom)*
+hiding def factor =
+    base ('**' base)* 
 end
 
-private def unaryOp =
-    ( pos  : '+'
+hiding def base =
+    [ pos  : '+'
     | neg  : '-'
     | bNOT : B-NOT
-    )
-end
-
-private def exponentiationOp =
-    ( exp: '**' )
+    ]
+    atom
 end
 
 # TODO: Check sources for use of ZERO in this case.
@@ -4662,15 +4699,14 @@ private def atom =
     ( zero
     | identifier
     | numeric
-    | '(' arithmeticExpression ')'
+    | nested: '(' bitwiseInclusiveDisjunction ')'
     )
 end
 
+# This is a helper for use in other rules.
 private def moreArithmeticOp =
-    ( bitwiseOp
-    | addingOp
-    | multiplyingOp
-    | exponentiationOp
+    ( B-AND | B-OR | B-XOR | B-EXOR
+    | '+' | '-' | '*' | '/' | '**'
     )
 end
 
@@ -4713,30 +4749,14 @@ end
 # - [SPEC-XX] 8.8.4.2.3 Precedence of logical operators and the use of parentheses
 #
 # So the first part of the condition grammar encodes the precedence of the NOT,
-# AND and OR operators. This is pretty straightforward, except that we play a
-# bit with the use of private rules and named branches to get a cleaner syntax
-# tree.
-def condition =
+# AND and OR operators. This is pretty straightforward.
+def condition = 
     disjunction
 end
 
-private def disjunction =
-    ( disjunction: conjunction (OR conjunction)+
-    |              conjunction
-    )
-end
-
-private def conjunction =
-    ( conjunction: negation (AND negation)+
-    |              negation
-    )
-end
-
-private def negation =
-    ( negation: NOT simpleCondition
-    |               simpleCondition
-    )
-end
+hiding def disjunction = conjunction (OR conjunction)*  end
+hiding def conjunction = negation (AND negation)*       end
+hiding def negation    = [NOT] simpleCondition          end
 
 # Now for the atoms which can make up a complex condition. These come pretty
 # much straight from the spec ([SPEC-XX] 8.8.4.1 Simple conditions).
@@ -4869,24 +4889,17 @@ def relationCondition =
 end
 
 # This matches abbreviated conditions objects in a way similar to normal
-# conditions. It encodes the precedence of the AND, OR and NOT operators, but
-# plays with private rules and named branches to keep the syntax tree clean.
-private def abbreviatedDisjunction =
-    ( disjunction: abbreviatedConjunction (OR abbreviatedConjunction)+
-    |              abbreviatedConjunction
-    )
+# conditions. It encodes the precedence of the AND, OR and NOT operators.
+hiding def abbreviatedDisjunction =
+    abbreviatedConjunction (OR abbreviatedConjunction)*
 end
 
-private def abbreviatedConjunction =
-    ( conjunction: abbreviatedNegation (AND abbreviatedNegation)+
-    |              abbreviatedNegation
-    )
+hiding def abbreviatedConjunction =
+    abbreviatedNegation (AND abbreviatedNegation)*
 end
 
-private def abbreviatedNegation =
-    ( negation: NOT relationObject
-    |               relationObject
-    )
+hiding def abbreviatedNegation =
+    [NOT] relationObject
 end
 
 

@@ -1,5 +1,7 @@
 package koopa.core.parsers;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -135,6 +137,9 @@ public class BaseStream implements Stream {
 		while (!delayedMarkers.isEmpty()) {
 			Marker delayedMarker = delayedMarkers.removeFirst();
 			seen.addLast(delayedMarker);
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("+D " + delayedMarker);
 		}
 	}
 
@@ -274,6 +279,40 @@ public class BaseStream implements Stream {
 	/** {@inheritDoc} */
 	public void setParse(Parse parse) {
 		this.parse = parse;
+	}
+
+	/** {@inheritDoc} */
+	public Iterator<Data> backToBookmarkIterator() {
+		if (bookmarks.isEmpty())
+			return Collections.emptyIterator();
+
+		final Bookmark bookmark = bookmarks.peek();
+		final int numberOfDelayedMarkers = bookmark.delayedMarkers == null ? 0
+				: bookmark.delayedMarkers.size();
+		final int positionOfBookmark = bookmark.position
+				+ numberOfDelayedMarkers;
+
+		return new Iterator<Data>() {
+			int currentPosition = seen.size();
+			Iterator<Data> reverseIterator = null;
+
+			public boolean hasNext() {
+				return currentPosition > positionOfBookmark;
+			}
+
+			public Data next() {
+				if (reverseIterator == null)
+					reverseIterator = seen.descendingIterator();
+
+				currentPosition -= 1;
+				return reverseIterator.next();
+			}
+
+			public void remove() {
+				if (reverseIterator != null)
+					reverseIterator.remove();
+			}
+		};
 	}
 
 	private final class Bookmark {

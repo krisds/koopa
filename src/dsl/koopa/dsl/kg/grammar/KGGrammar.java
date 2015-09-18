@@ -42,7 +42,8 @@ public class KGGrammar extends FluentGrammar {
 
 		define("modifier").as(oneOf( //
 				with("public").as("==public=="), //
-				with("private").as("==private==")));
+				with("private").as("==private=="), //
+				with("hiding").as("==hiding==")));
 		define("local-variables").as( //
 				"==(==", alternating("declaration", "==,=="), "==)==");
 		define("declaration").as("type", "name");

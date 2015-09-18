@@ -1,5 +1,8 @@
 package koopa.core.parsers;
 
+import java.util.Iterator;
+
+import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
 
@@ -92,5 +95,10 @@ public class LimitedStream implements Stream {
 	/** {@inheritDoc} */
 	public void setParse(Parse parse) {
 		stream.setParse(parse);
+	}
+	
+	/** {@inheritDoc} */
+	public Iterator<Data> backToBookmarkIterator() {
+		return stream.backToBookmarkIterator();
 	}
 }

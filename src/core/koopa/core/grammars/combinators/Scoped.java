@@ -1,7 +1,10 @@
 package koopa.core.grammars.combinators;
 
+import java.util.Iterator;
 import java.util.Set;
 
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
 import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.Start;
@@ -20,14 +23,41 @@ public class Scoped extends FutureParser {
 	// enough that the same grammar rule gets evaluated on the same token.
 	// If we already know it has failed before then we can shortcircuit a
 	// lot of duplicate work.
+	// TODO Should track this on the Parse instance instead...
 	private final WeakSet<Token> failures;
-	private final boolean publik;
 
-	public Scoped(Grammar grammar, String name, boolean publik) {
+	/**
+	 * Choices for visibility of {@linkplain Marker}s.
+	 */
+	public enum Visibility {
+		/** Always present in the stream. */
+		PUBLIC,
+
+		/**
+		 * Present when there is more than one (non-separator, non-comment)
+		 * child.
+		 */
+		HIDING,
+
+		/** Never present in the stream. */
+		PRIVATE;
+
+		public boolean addsMarkers() {
+			return this != PRIVATE;
+		}
+
+		public boolean allowsMarkersToBeHidden() {
+			return this == HIDING;
+		}
+	}
+
+	private final Visibility visibility;
+
+	public Scoped(Grammar grammar, String name, Visibility visibility) {
 		this.grammar = grammar;
 		this.name = name;
 		this.failures = new WeakSet<Token>();
-		this.publik = publik;
+		this.visibility = visibility;
 	}
 
 	public boolean matches(Parse parse) {
@@ -47,13 +77,17 @@ public class Scoped extends FutureParser {
 		parse.getStack().getHead().makeScoped();
 
 		stream.bookmark();
-		if (publik)
+		if (visibility.addsMarkers())
 			stream.insert(Start.on(grammar.getNamespace(), name));
 
 		boolean accepts = parser.accepts(parse);
 
 		if (accepts) {
-			if (publik)
+			if (visibility.allowsMarkersToBeHidden()) {
+				if (!markerBecomesHidden(parse))
+					stream.insert(End.on(grammar.getNamespace(), name));
+
+			} else if (visibility.addsMarkers())
 				stream.insert(End.on(grammar.getNamespace(), name));
 
 			stream.commit();
@@ -69,6 +103,46 @@ public class Scoped extends FutureParser {
 							+ stream.peekMore() + "...");
 
 		return accepts;
+	}
+
+	private boolean markerBecomesHidden(Parse parse) {
+		final Stream stream = parse.getStream();
+		final Iterator<Data> it = stream.backToBookmarkIterator();
+
+		int depth = 0;
+		int count = 0;
+
+		while (it.hasNext()) {
+			final Data next = it.next();
+
+			if (next instanceof End) {
+				depth += 1;
+
+			} else if (next instanceof Start) {
+				depth -= 1;
+
+				if (depth < 0) {
+					if (count != 1)
+						return false;
+
+					it.remove();
+					return true;
+
+				} else if (depth == 0)
+					count += 1;
+
+			} else if (depth == 0) {
+				if (next instanceof Token) {
+					Token token = (Token) next;
+					if (grammar.isProgramText(token)
+							&& !grammar.isSeparator(token, parse)
+							&& !grammar.isComment(token))
+						count += 1;
+				}
+			}
+		}
+
+		return count == 1;
 	}
 
 	/**

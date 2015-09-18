@@ -1,5 +1,7 @@
 package koopa.core.parsers;
 
+import java.util.Iterator;
+
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
@@ -102,4 +104,10 @@ public interface Stream {
 	 * Set the active {@linkplain Parse}.
 	 */
 	void setParse(Parse parse);
+
+	/**
+	 * Get an iterator which walks the stream in reverse up to the latest
+	 * bookmark.
+	 */
+	Iterator<Data> backToBookmarkIterator();
 }

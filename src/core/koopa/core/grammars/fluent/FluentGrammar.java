@@ -1,5 +1,7 @@
 package koopa.core.grammars.fluent;
 
+import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -242,7 +244,7 @@ public abstract class FluentGrammar extends Grammar {
 		@Override
 		public ParserCombinator asParser() {
 			if (parser == null) {
-				parser = new Scoped(FluentGrammar.this, name, true);
+				parser = new Scoped(FluentGrammar.this, name, PUBLIC);
 				parser.setParser(super.asParser());
 			}
 			return parser;

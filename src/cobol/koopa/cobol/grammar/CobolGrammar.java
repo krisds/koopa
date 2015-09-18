@@ -15,6 +15,9 @@ import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Stream;
 
 import static koopa.core.grammars.combinators.Opt.NOSKIP;
+import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
+import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
+import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 import koopa.core.data.tags.AreaTag;
 import koopa.cobol.data.tags.SyntacticTag;
@@ -37,7 +40,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator compilationGroup() {
       if (compilationGroupParser == null) {
-        FutureParser future = scoped("compilationGroup", true);
+        FutureParser future = scoped("compilationGroup", PUBLIC);
         compilationGroupParser = future;
         future.setParser(
           sequence(
@@ -67,7 +70,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator copybook() {
       if (copybookParser == null) {
-        FutureParser future = scoped("copybook", true);
+        FutureParser future = scoped("copybook", PUBLIC);
         copybookParser = future;
         future.setParser(
           sequence(
@@ -98,7 +101,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator copybookHoldingData() {
       if (copybookHoldingDataParser == null) {
-        FutureParser future = scoped("copybookHoldingData", true);
+        FutureParser future = scoped("copybookHoldingData", PUBLIC);
         copybookHoldingDataParser = future;
         future.setParser(
           plus(
@@ -144,7 +147,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator copybookHoldingBehaviour() {
       if (copybookHoldingBehaviourParser == null) {
-        FutureParser future = scoped("copybookHoldingBehaviour", true);
+        FutureParser future = scoped("copybookHoldingBehaviour", PUBLIC);
         copybookHoldingBehaviourParser = future;
         future.setParser(
           sequence(
@@ -177,7 +180,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sourceUnit() {
       if (sourceUnitParser == null) {
-        FutureParser future = scoped("sourceUnit", true);
+        FutureParser future = scoped("sourceUnit", PUBLIC);
         sourceUnitParser = future;
         future.setParser(
           choice(
@@ -212,7 +215,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programPrototype() {
       if (programPrototypeParser == null) {
-        FutureParser future = scoped("programPrototype", true);
+        FutureParser future = scoped("programPrototype", PUBLIC);
         programPrototypeParser = future;
         future.setParser(
           sequence(
@@ -264,7 +267,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programPrototypeIdParagraph() {
       if (programPrototypeIdParagraphParser == null) {
-        FutureParser future = scoped("programPrototypeIdParagraph", true);
+        FutureParser future = scoped("programPrototypeIdParagraph", PUBLIC);
         programPrototypeIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -303,7 +306,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator functionPrototype() {
       if (functionPrototypeParser == null) {
-        FutureParser future = scoped("functionPrototype", true);
+        FutureParser future = scoped("functionPrototype", PUBLIC);
         functionPrototypeParser = future;
         future.setParser(
           sequence(
@@ -355,7 +358,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator functionPrototypeIdParagraph() {
       if (functionPrototypeIdParagraphParser == null) {
-        FutureParser future = scoped("functionPrototypeIdParagraph", true);
+        FutureParser future = scoped("functionPrototypeIdParagraph", PUBLIC);
         functionPrototypeIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -394,7 +397,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programDefinition() {
       if (programDefinitionParser == null) {
-        FutureParser future = scoped("programDefinition", true);
+        FutureParser future = scoped("programDefinition", PUBLIC);
         programDefinitionParser = future;
         future.setParser(
           sequence(
@@ -463,7 +466,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programIdParagraph() {
       if (programIdParagraphParser == null) {
-        FutureParser future = scoped("programIdParagraph", true);
+        FutureParser future = scoped("programIdParagraph", PUBLIC);
         programIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -515,7 +518,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator functionDefinition() {
       if (functionDefinitionParser == null) {
-        FutureParser future = scoped("functionDefinition", true);
+        FutureParser future = scoped("functionDefinition", PUBLIC);
         functionDefinitionParser = future;
         future.setParser(
           sequence(
@@ -567,7 +570,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator functionIdParagraph() {
       if (functionIdParagraphParser == null) {
-        FutureParser future = scoped("functionIdParagraph", true);
+        FutureParser future = scoped("functionIdParagraph", PUBLIC);
         functionIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -602,7 +605,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classDefinition() {
       if (classDefinitionParser == null) {
-        FutureParser future = scoped("classDefinition", true);
+        FutureParser future = scoped("classDefinition", PUBLIC);
         classDefinitionParser = future;
         future.setParser(
           sequence(
@@ -654,7 +657,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classIdParagraph() {
       if (classIdParagraphParser == null) {
-        FutureParser future = scoped("classIdParagraph", true);
+        FutureParser future = scoped("classIdParagraph", PUBLIC);
         classIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -752,7 +755,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator attributeClause() {
       if (attributeClauseParser == null) {
-        FutureParser future = scoped("attributeClause", true);
+        FutureParser future = scoped("attributeClause", PUBLIC);
         attributeClauseParser = future;
         future.setParser(
           plus(
@@ -813,7 +816,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator factoryDefinition() {
       if (factoryDefinitionParser == null) {
-        FutureParser future = scoped("factoryDefinition", true);
+        FutureParser future = scoped("factoryDefinition", PUBLIC);
         factoryDefinitionParser = future;
         future.setParser(
           sequence(
@@ -864,7 +867,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator factoryParagraph() {
       if (factoryParagraphParser == null) {
-        FutureParser future = scoped("factoryParagraph", true);
+        FutureParser future = scoped("factoryParagraph", PUBLIC);
         factoryParagraphParser = future;
         future.setParser(
           sequence(
@@ -898,7 +901,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator instanceDefinition() {
       if (instanceDefinitionParser == null) {
-        FutureParser future = scoped("instanceDefinition", true);
+        FutureParser future = scoped("instanceDefinition", PUBLIC);
         instanceDefinitionParser = future;
         future.setParser(
           sequence(
@@ -949,7 +952,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator objectParagraph() {
       if (objectParagraphParser == null) {
-        FutureParser future = scoped("objectParagraph", true);
+        FutureParser future = scoped("objectParagraph", PUBLIC);
         objectParagraphParser = future;
         future.setParser(
           sequence(
@@ -985,7 +988,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator interfaceDefinition() {
       if (interfaceDefinitionParser == null) {
-        FutureParser future = scoped("interfaceDefinition", true);
+        FutureParser future = scoped("interfaceDefinition", PUBLIC);
         interfaceDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1034,7 +1037,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator interfaceIdParagraph() {
       if (interfaceIdParagraphParser == null) {
-        FutureParser future = scoped("interfaceIdParagraph", true);
+        FutureParser future = scoped("interfaceIdParagraph", PUBLIC);
         interfaceIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1091,7 +1094,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator methodDefinition() {
       if (methodDefinitionParser == null) {
-        FutureParser future = scoped("methodDefinition", true);
+        FutureParser future = scoped("methodDefinition", PUBLIC);
         methodDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1145,7 +1148,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator methodIdParagraph() {
       if (methodIdParagraphParser == null) {
-        FutureParser future = scoped("methodIdParagraph", true);
+        FutureParser future = scoped("methodIdParagraph", PUBLIC);
         methodIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1203,7 +1206,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator callPrototypeDefinition() {
       if (callPrototypeDefinitionParser == null) {
-        FutureParser future = scoped("callPrototypeDefinition", true);
+        FutureParser future = scoped("callPrototypeDefinition", PUBLIC);
         callPrototypeDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1259,7 +1262,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator callPrototypeIdParagraph() {
       if (callPrototypeIdParagraphParser == null) {
-        FutureParser future = scoped("callPrototypeIdParagraph", true);
+        FutureParser future = scoped("callPrototypeIdParagraph", PUBLIC);
         callPrototypeIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1295,7 +1298,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator delegateDefinition() {
       if (delegateDefinitionParser == null) {
-        FutureParser future = scoped("delegateDefinition", true);
+        FutureParser future = scoped("delegateDefinition", PUBLIC);
         delegateDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1335,7 +1338,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator delegateIdParagraph() {
       if (delegateIdParagraphParser == null) {
-        FutureParser future = scoped("delegateIdParagraph", true);
+        FutureParser future = scoped("delegateIdParagraph", PUBLIC);
         delegateIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1388,7 +1391,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator enumDefinition() {
       if (enumDefinitionParser == null) {
-        FutureParser future = scoped("enumDefinition", true);
+        FutureParser future = scoped("enumDefinition", PUBLIC);
         enumDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1436,7 +1439,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator enumIdParagraph() {
       if (enumIdParagraphParser == null) {
-        FutureParser future = scoped("enumIdParagraph", true);
+        FutureParser future = scoped("enumIdParagraph", PUBLIC);
         enumIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1489,7 +1492,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator iteratorDefinition() {
       if (iteratorDefinitionParser == null) {
-        FutureParser future = scoped("iteratorDefinition", true);
+        FutureParser future = scoped("iteratorDefinition", PUBLIC);
         iteratorDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1537,7 +1540,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator iteratorIdParagraph() {
       if (iteratorIdParagraphParser == null) {
-        FutureParser future = scoped("iteratorIdParagraph", true);
+        FutureParser future = scoped("iteratorIdParagraph", PUBLIC);
         iteratorIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1590,7 +1593,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator operatorDefinition() {
       if (operatorDefinitionParser == null) {
-        FutureParser future = scoped("operatorDefinition", true);
+        FutureParser future = scoped("operatorDefinition", PUBLIC);
         operatorDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1638,7 +1641,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator operatorIdParagraph() {
       if (operatorIdParagraphParser == null) {
-        FutureParser future = scoped("operatorIdParagraph", true);
+        FutureParser future = scoped("operatorIdParagraph", PUBLIC);
         operatorIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1691,7 +1694,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator valueTypeDefinition() {
       if (valueTypeDefinitionParser == null) {
-        FutureParser future = scoped("valueTypeDefinition", true);
+        FutureParser future = scoped("valueTypeDefinition", PUBLIC);
         valueTypeDefinitionParser = future;
         future.setParser(
           sequence(
@@ -1739,7 +1742,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator valueTypeIdParagraph() {
       if (valueTypeIdParagraphParser == null) {
-        FutureParser future = scoped("valueTypeIdParagraph", true);
+        FutureParser future = scoped("valueTypeIdParagraph", PUBLIC);
         valueTypeIdParagraphParser = future;
         future.setParser(
           sequence(
@@ -1808,7 +1811,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator endMarker() {
       if (endMarkerParser == null) {
-        FutureParser future = scoped("endMarker", true);
+        FutureParser future = scoped("endMarker", PUBLIC);
         endMarkerParser = future;
         future.setParser(
           sequence(
@@ -1876,7 +1879,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator optionsParagraph() {
       if (optionsParagraphParser == null) {
-        FutureParser future = scoped("optionsParagraph", true);
+        FutureParser future = scoped("optionsParagraph", PUBLIC);
         optionsParagraphParser = future;
         future.setParser(
           sequence(
@@ -1912,7 +1915,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator arithmeticClause() {
       if (arithmeticClauseParser == null) {
-        FutureParser future = scoped("arithmeticClause", true);
+        FutureParser future = scoped("arithmeticClause", PUBLIC);
         arithmeticClauseParser = future;
         future.setParser(
           sequence(
@@ -1943,7 +1946,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator defaultRoundedClause() {
       if (defaultRoundedClauseParser == null) {
-        FutureParser future = scoped("defaultRoundedClause", true);
+        FutureParser future = scoped("defaultRoundedClause", PUBLIC);
         defaultRoundedClauseParser = future;
         future.setParser(
           sequence(
@@ -1982,7 +1985,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator entryConventionClause() {
       if (entryConventionClauseParser == null) {
-        FutureParser future = scoped("entryConventionClause", true);
+        FutureParser future = scoped("entryConventionClause", PUBLIC);
         entryConventionClauseParser = future;
         future.setParser(
           sequence(
@@ -2011,7 +2014,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator intermediateRoundingClause() {
       if (intermediateRoundingClauseParser == null) {
-        FutureParser future = scoped("intermediateRoundingClause", true);
+        FutureParser future = scoped("intermediateRoundingClause", PUBLIC);
         intermediateRoundingClauseParser = future;
         future.setParser(
           sequence(
@@ -2043,7 +2046,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator metadata() {
       if (metadataParser == null) {
-        FutureParser future = scoped("metadata", true);
+        FutureParser future = scoped("metadata", PUBLIC);
         metadataParser = future;
         future.setParser(
           sequence(
@@ -2119,7 +2122,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator environmentDivision() {
       if (environmentDivisionParser == null) {
-        FutureParser future = scoped("environmentDivision", true);
+        FutureParser future = scoped("environmentDivision", PUBLIC);
         environmentDivisionParser = future;
         future.setParser(
           choice(
@@ -2179,7 +2182,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator environmentDivisionBody() {
       if (environmentDivisionBodyParser == null) {
-        FutureParser future = scoped("environmentDivisionBody", true);
+        FutureParser future = scoped("environmentDivisionBody", PUBLIC);
         environmentDivisionBodyParser = future;
         future.setParser(
           sequence(
@@ -2216,7 +2219,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator configurationSection() {
       if (configurationSectionParser == null) {
-        FutureParser future = scoped("configurationSection", true);
+        FutureParser future = scoped("configurationSection", PUBLIC);
         configurationSectionParser = future;
         future.setParser(
           choice(
@@ -2246,7 +2249,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator configurationSectionBody() {
       if (configurationSectionBodyParser == null) {
-        FutureParser future = scoped("configurationSectionBody", false);
+        FutureParser future = scoped("configurationSectionBody", PRIVATE);
         configurationSectionBodyParser = future;
         future.setParser(
           sequence(
@@ -2287,7 +2290,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sourceComputerParagraph() {
       if (sourceComputerParagraphParser == null) {
-        FutureParser future = scoped("sourceComputerParagraph", true);
+        FutureParser future = scoped("sourceComputerParagraph", PUBLIC);
         sourceComputerParagraphParser = future;
         future.setParser(
           sequence(
@@ -2328,7 +2331,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator withDebuggingMode() {
       if (withDebuggingModeParser == null) {
-        FutureParser future = scoped("withDebuggingMode", true);
+        FutureParser future = scoped("withDebuggingMode", PUBLIC);
         withDebuggingModeParser = future;
         future.setParser(
           sequence(
@@ -2354,7 +2357,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator objectComputerParagraph() {
       if (objectComputerParagraphParser == null) {
-        FutureParser future = scoped("objectComputerParagraph", true);
+        FutureParser future = scoped("objectComputerParagraph", PUBLIC);
         objectComputerParagraphParser = future;
         future.setParser(
           sequence(
@@ -2397,7 +2400,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator constraintsParagraph() {
       if (constraintsParagraphParser == null) {
-        FutureParser future = scoped("constraintsParagraph", true);
+        FutureParser future = scoped("constraintsParagraph", PUBLIC);
         constraintsParagraphParser = future;
         future.setParser(
           sequence(
@@ -2429,7 +2432,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classAttributesParagraph() {
       if (classAttributesParagraphParser == null) {
-        FutureParser future = scoped("classAttributesParagraph", true);
+        FutureParser future = scoped("classAttributesParagraph", PUBLIC);
         classAttributesParagraphParser = future;
         future.setParser(
           sequence(
@@ -2461,7 +2464,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator assemblyAttributesParagraph() {
       if (assemblyAttributesParagraphParser == null) {
-        FutureParser future = scoped("assemblyAttributesParagraph", true);
+        FutureParser future = scoped("assemblyAttributesParagraph", PUBLIC);
         assemblyAttributesParagraphParser = future;
         future.setParser(
           sequence(
@@ -2493,7 +2496,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator genericStringDef() {
       if (genericStringDefParser == null) {
-        FutureParser future = scoped("genericStringDef", true);
+        FutureParser future = scoped("genericStringDef", PUBLIC);
         genericStringDefParser = future;
         future.setParser(
           sequence(
@@ -2526,7 +2529,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator specialNamesParagraph() {
       if (specialNamesParagraphParser == null) {
-        FutureParser future = scoped("specialNamesParagraph", true);
+        FutureParser future = scoped("specialNamesParagraph", PUBLIC);
         specialNamesParagraphParser = future;
         future.setParser(
           sequence(
@@ -2567,7 +2570,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator specialNameStatement() {
       if (specialNameStatementParser == null) {
-        FutureParser future = scoped("specialNameStatement", true);
+        FutureParser future = scoped("specialNameStatement", PUBLIC);
         specialNameStatementParser = future;
         future.setParser(
           choice(
@@ -2627,7 +2630,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator consoleIsCRT() {
       if (consoleIsCRTParser == null) {
-        FutureParser future = scoped("consoleIsCRT", true);
+        FutureParser future = scoped("consoleIsCRT", PUBLIC);
         consoleIsCRTParser = future;
         future.setParser(
           sequence(
@@ -2653,7 +2656,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cobolDevice() {
       if (cobolDeviceParser == null) {
-        FutureParser future = scoped("cobolDevice", true);
+        FutureParser future = scoped("cobolDevice", PUBLIC);
         cobolDeviceParser = future;
         future.setParser(
           choice(
@@ -2710,7 +2713,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cobolSwitch() {
       if (cobolSwitchParser == null) {
-        FutureParser future = scoped("cobolSwitch", true);
+        FutureParser future = scoped("cobolSwitch", PUBLIC);
         cobolSwitchParser = future;
         future.setParser(
           choice(
@@ -2740,7 +2743,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alphabetIs() {
       if (alphabetIsParser == null) {
-        FutureParser future = scoped("alphabetIs", true);
+        FutureParser future = scoped("alphabetIs", PUBLIC);
         alphabetIsParser = future;
         future.setParser(
           sequence(
@@ -2767,7 +2770,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alphabetType() {
       if (alphabetTypeParser == null) {
-        FutureParser future = scoped("alphabetType", true);
+        FutureParser future = scoped("alphabetType", PUBLIC);
         alphabetTypeParser = future;
         future.setParser(
           choice(
@@ -2795,7 +2798,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator standard1AlphabetType() {
       if (standard1AlphabetTypeParser == null) {
-        FutureParser future = scoped("standard1AlphabetType", true);
+        FutureParser future = scoped("standard1AlphabetType", PUBLIC);
         standard1AlphabetTypeParser = future;
         future.setParser(
           token("STANDARD-1")
@@ -2815,7 +2818,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator standard2AlphabetType() {
       if (standard2AlphabetTypeParser == null) {
-        FutureParser future = scoped("standard2AlphabetType", true);
+        FutureParser future = scoped("standard2AlphabetType", PUBLIC);
         standard2AlphabetTypeParser = future;
         future.setParser(
           token("STANDARD-2")
@@ -2835,7 +2838,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator nativeAlphabetType() {
       if (nativeAlphabetTypeParser == null) {
-        FutureParser future = scoped("nativeAlphabetType", true);
+        FutureParser future = scoped("nativeAlphabetType", PUBLIC);
         nativeAlphabetTypeParser = future;
         future.setParser(
           token("NATIVE")
@@ -2855,7 +2858,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator asciiAlphabetType() {
       if (asciiAlphabetTypeParser == null) {
-        FutureParser future = scoped("asciiAlphabetType", true);
+        FutureParser future = scoped("asciiAlphabetType", PUBLIC);
         asciiAlphabetTypeParser = future;
         future.setParser(
           token("ASCII")
@@ -2875,7 +2878,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator ebcdicAlphabetType() {
       if (ebcdicAlphabetTypeParser == null) {
-        FutureParser future = scoped("ebcdicAlphabetType", true);
+        FutureParser future = scoped("ebcdicAlphabetType", PUBLIC);
         ebcdicAlphabetTypeParser = future;
         future.setParser(
           token("EBCDIC")
@@ -2895,7 +2898,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator explicitAlphabetType() {
       if (explicitAlphabetTypeParser == null) {
-        FutureParser future = scoped("explicitAlphabetType", true);
+        FutureParser future = scoped("explicitAlphabetType", PUBLIC);
         explicitAlphabetTypeParser = future;
         future.setParser(
           sequence(
@@ -2929,7 +2932,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator codeNameAlphabetType() {
       if (codeNameAlphabetTypeParser == null) {
-        FutureParser future = scoped("codeNameAlphabetType", true);
+        FutureParser future = scoped("codeNameAlphabetType", PUBLIC);
         codeNameAlphabetTypeParser = future;
         future.setParser(
           cobolWord()
@@ -2949,7 +2952,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator literalRange() {
       if (literalRangeParser == null) {
-        FutureParser future = scoped("literalRange", true);
+        FutureParser future = scoped("literalRange", PUBLIC);
         literalRangeParser = future;
         future.setParser(
           sequence(
@@ -2976,7 +2979,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator symbolicChars() {
       if (symbolicCharsParser == null) {
-        FutureParser future = scoped("symbolicChars", true);
+        FutureParser future = scoped("symbolicChars", PUBLIC);
         symbolicCharsParser = future;
         future.setParser(
           sequence(
@@ -3026,7 +3029,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classIs() {
       if (classIsParser == null) {
-        FutureParser future = scoped("classIs", true);
+        FutureParser future = scoped("classIs", PUBLIC);
         classIsParser = future;
         future.setParser(
           sequence(
@@ -3058,7 +3061,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator localeIs() {
       if (localeIsParser == null) {
-        FutureParser future = scoped("localeIs", true);
+        FutureParser future = scoped("localeIs", PUBLIC);
         localeIsParser = future;
         future.setParser(
           sequence(
@@ -3085,7 +3088,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator currencySignIs() {
       if (currencySignIsParser == null) {
-        FutureParser future = scoped("currencySignIs", true);
+        FutureParser future = scoped("currencySignIs", PUBLIC);
         currencySignIsParser = future;
         future.setParser(
           sequence(
@@ -3114,7 +3117,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator decimalIsComma() {
       if (decimalIsCommaParser == null) {
-        FutureParser future = scoped("decimalIsComma", true);
+        FutureParser future = scoped("decimalIsComma", PUBLIC);
         decimalIsCommaParser = future;
         future.setParser(
           sequence(
@@ -3140,7 +3143,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator numericSignIs() {
       if (numericSignIsParser == null) {
-        FutureParser future = scoped("numericSignIs", true);
+        FutureParser future = scoped("numericSignIs", PUBLIC);
         numericSignIsParser = future;
         future.setParser(
           sequence(
@@ -3178,7 +3181,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator callConvention() {
       if (callConventionParser == null) {
-        FutureParser future = scoped("callConvention", true);
+        FutureParser future = scoped("callConvention", PUBLIC);
         callConventionParser = future;
         future.setParser(
           sequence(
@@ -3205,7 +3208,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cursorIs() {
       if (cursorIsParser == null) {
-        FutureParser future = scoped("cursorIs", true);
+        FutureParser future = scoped("cursorIs", PUBLIC);
         cursorIsParser = future;
         future.setParser(
           sequence(
@@ -3231,7 +3234,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator crtStatusIs() {
       if (crtStatusIsParser == null) {
-        FutureParser future = scoped("crtStatusIs", true);
+        FutureParser future = scoped("crtStatusIs", PUBLIC);
         crtStatusIsParser = future;
         future.setParser(
           sequence(
@@ -3258,7 +3261,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator xmlSchemaIs() {
       if (xmlSchemaIsParser == null) {
-        FutureParser future = scoped("xmlSchemaIs", true);
+        FutureParser future = scoped("xmlSchemaIs", PUBLIC);
         xmlSchemaIsParser = future;
         future.setParser(
           sequence(
@@ -3288,7 +3291,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenControlIs() {
       if (screenControlIsParser == null) {
-        FutureParser future = scoped("screenControlIs", true);
+        FutureParser future = scoped("screenControlIs", PUBLIC);
         screenControlIsParser = future;
         future.setParser(
           sequence(
@@ -3315,7 +3318,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator eventStatusIs() {
       if (eventStatusIsParser == null) {
-        FutureParser future = scoped("eventStatusIs", true);
+        FutureParser future = scoped("eventStatusIs", PUBLIC);
         eventStatusIsParser = future;
         future.setParser(
           sequence(
@@ -3342,7 +3345,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator repositoryParagraph() {
       if (repositoryParagraphParser == null) {
-        FutureParser future = scoped("repositoryParagraph", true);
+        FutureParser future = scoped("repositoryParagraph", PUBLIC);
         repositoryParagraphParser = future;
         future.setParser(
           sequence(
@@ -3381,7 +3384,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classSpecifier() {
       if (classSpecifierParser == null) {
-        FutureParser future = scoped("classSpecifier", true);
+        FutureParser future = scoped("classSpecifier", PUBLIC);
         classSpecifierParser = future;
         future.setParser(
           sequence(
@@ -3421,7 +3424,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator interfaceSpecifier() {
       if (interfaceSpecifierParser == null) {
-        FutureParser future = scoped("interfaceSpecifier", true);
+        FutureParser future = scoped("interfaceSpecifier", PUBLIC);
         interfaceSpecifierParser = future;
         future.setParser(
           sequence(
@@ -3461,7 +3464,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programSpecifier() {
       if (programSpecifierParser == null) {
-        FutureParser future = scoped("programSpecifier", true);
+        FutureParser future = scoped("programSpecifier", PUBLIC);
         programSpecifierParser = future;
         future.setParser(
           sequence(
@@ -3490,7 +3493,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator propertySpecifier() {
       if (propertySpecifierParser == null) {
-        FutureParser future = scoped("propertySpecifier", true);
+        FutureParser future = scoped("propertySpecifier", PUBLIC);
         propertySpecifierParser = future;
         future.setParser(
           sequence(
@@ -3519,7 +3522,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator functionSpecifier() {
       if (functionSpecifierParser == null) {
-        FutureParser future = scoped("functionSpecifier", true);
+        FutureParser future = scoped("functionSpecifier", PUBLIC);
         functionSpecifierParser = future;
         future.setParser(
           sequence(
@@ -3559,7 +3562,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator delegateSpecifier() {
       if (delegateSpecifierParser == null) {
-        FutureParser future = scoped("delegateSpecifier", true);
+        FutureParser future = scoped("delegateSpecifier", PUBLIC);
         delegateSpecifierParser = future;
         future.setParser(
           sequence(
@@ -3588,7 +3591,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator enumSpecifier() {
       if (enumSpecifierParser == null) {
-        FutureParser future = scoped("enumSpecifier", true);
+        FutureParser future = scoped("enumSpecifier", PUBLIC);
         enumSpecifierParser = future;
         future.setParser(
           sequence(
@@ -3617,7 +3620,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator ioSection() {
       if (ioSectionParser == null) {
-        FutureParser future = scoped("ioSection", true);
+        FutureParser future = scoped("ioSection", PUBLIC);
         ioSectionParser = future;
         future.setParser(
           choice(
@@ -3647,7 +3650,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator ioSectionBody() {
       if (ioSectionBodyParser == null) {
-        FutureParser future = scoped("ioSectionBody", false);
+        FutureParser future = scoped("ioSectionBody", PRIVATE);
         ioSectionBodyParser = future;
         future.setParser(
           sequence(
@@ -3683,7 +3686,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fileControlParagraph() {
       if (fileControlParagraphParser == null) {
-        FutureParser future = scoped("fileControlParagraph", true);
+        FutureParser future = scoped("fileControlParagraph", PUBLIC);
         fileControlParagraphParser = future;
         future.setParser(
           choice(
@@ -3712,7 +3715,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fileControlEntry() {
       if (fileControlEntryParser == null) {
-        FutureParser future = scoped("fileControlEntry", true);
+        FutureParser future = scoped("fileControlEntry", PUBLIC);
         fileControlEntryParser = future;
         future.setParser(
           plus(
@@ -3737,7 +3740,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator selectStatement() {
       if (selectStatementParser == null) {
-        FutureParser future = scoped("selectStatement", true);
+        FutureParser future = scoped("selectStatement", PUBLIC);
         selectStatementParser = future;
         future.setParser(
           sequence(
@@ -3780,7 +3783,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator selectClause() {
       if (selectClauseParser == null) {
-        FutureParser future = scoped("selectClause", true);
+        FutureParser future = scoped("selectClause", PUBLIC);
         selectClauseParser = future;
         future.setParser(
           sequence(
@@ -3812,7 +3815,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator assignClause() {
       if (assignClauseParser == null) {
-        FutureParser future = scoped("assignClause", true);
+        FutureParser future = scoped("assignClause", PUBLIC);
         assignClauseParser = future;
         future.setParser(
           sequence(
@@ -3838,7 +3841,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator assignUsingClause() {
       if (assignUsingClauseParser == null) {
-        FutureParser future = scoped("assignUsingClause", true);
+        FutureParser future = scoped("assignUsingClause", PUBLIC);
         assignUsingClauseParser = future;
         future.setParser(
           sequence(
@@ -3861,7 +3864,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator assignToClause() {
       if (assignToClauseParser == null) {
-        FutureParser future = scoped("assignToClause", true);
+        FutureParser future = scoped("assignToClause", PUBLIC);
         assignToClauseParser = future;
         future.setParser(
           sequence(
@@ -3896,7 +3899,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator diskClause() {
       if (diskClauseParser == null) {
-        FutureParser future = scoped("diskClause", true);
+        FutureParser future = scoped("diskClause", PUBLIC);
         diskClauseParser = future;
         future.setParser(
           choice(
@@ -3987,7 +3990,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator collationClause() {
       if (collationClauseParser == null) {
-        FutureParser future = scoped("collationClause", true);
+        FutureParser future = scoped("collationClause", PUBLIC);
         collationClauseParser = future;
         future.setParser(
           sequence(
@@ -4016,7 +4019,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordDelimiterClause() {
       if (recordDelimiterClauseParser == null) {
-        FutureParser future = scoped("recordDelimiterClause", true);
+        FutureParser future = scoped("recordDelimiterClause", PUBLIC);
         recordDelimiterClauseParser = future;
         future.setParser(
           sequence(
@@ -4047,7 +4050,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reserveClause() {
       if (reserveClauseParser == null) {
-        FutureParser future = scoped("reserveClause", true);
+        FutureParser future = scoped("reserveClause", PUBLIC);
         reserveClauseParser = future;
         future.setParser(
           sequence(
@@ -4082,7 +4085,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator organizationClause() {
       if (organizationClauseParser == null) {
-        FutureParser future = scoped("organizationClause", true);
+        FutureParser future = scoped("organizationClause", PUBLIC);
         organizationClauseParser = future;
         future.setParser(
           sequence(
@@ -4127,7 +4130,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator accessModeClause() {
       if (accessModeClauseParser == null) {
-        FutureParser future = scoped("accessModeClause", true);
+        FutureParser future = scoped("accessModeClause", PUBLIC);
         accessModeClauseParser = future;
         future.setParser(
           sequence(
@@ -4173,7 +4176,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator lockModeClause() {
       if (lockModeClauseParser == null) {
-        FutureParser future = scoped("lockModeClause", true);
+        FutureParser future = scoped("lockModeClause", PUBLIC);
         lockModeClauseParser = future;
         future.setParser(
           sequence(
@@ -4216,7 +4219,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator lockModeWithClause() {
       if (lockModeWithClauseParser == null) {
-        FutureParser future = scoped("lockModeWithClause", true);
+        FutureParser future = scoped("lockModeWithClause", PUBLIC);
         lockModeWithClauseParser = future;
         future.setParser(
           sequence(
@@ -4254,7 +4257,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator relativeKeyClause() {
       if (relativeKeyClauseParser == null) {
-        FutureParser future = scoped("relativeKeyClause", true);
+        FutureParser future = scoped("relativeKeyClause", PUBLIC);
         relativeKeyClauseParser = future;
         future.setParser(
           sequence(
@@ -4283,7 +4286,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordKeyClause() {
       if (recordKeyClauseParser == null) {
-        FutureParser future = scoped("recordKeyClause", true);
+        FutureParser future = scoped("recordKeyClause", PUBLIC);
         recordKeyClauseParser = future;
         future.setParser(
           sequence(
@@ -4315,7 +4318,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alternateRecordKeyClause() {
       if (alternateRecordKeyClauseParser == null) {
-        FutureParser future = scoped("alternateRecordKeyClause", true);
+        FutureParser future = scoped("alternateRecordKeyClause", PUBLIC);
         alternateRecordKeyClauseParser = future;
         future.setParser(
           sequence(
@@ -4359,7 +4362,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordKeyDefinition() {
       if (recordKeyDefinitionParser == null) {
-        FutureParser future = scoped("recordKeyDefinition", true);
+        FutureParser future = scoped("recordKeyDefinition", PUBLIC);
         recordKeyDefinitionParser = future;
         future.setParser(
           choice(
@@ -4399,7 +4402,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fileStatusClause() {
       if (fileStatusClauseParser == null) {
-        FutureParser future = scoped("fileStatusClause", true);
+        FutureParser future = scoped("fileStatusClause", PUBLIC);
         fileStatusClauseParser = future;
         future.setParser(
           sequence(
@@ -4428,7 +4431,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sortStatusClause() {
       if (sortStatusClauseParser == null) {
-        FutureParser future = scoped("sortStatusClause", true);
+        FutureParser future = scoped("sortStatusClause", PUBLIC);
         sortStatusClauseParser = future;
         future.setParser(
           sequence(
@@ -4455,7 +4458,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator passwordClause() {
       if (passwordClauseParser == null) {
-        FutureParser future = scoped("passwordClause", true);
+        FutureParser future = scoped("passwordClause", PUBLIC);
         passwordClauseParser = future;
         future.setParser(
           sequence(
@@ -4481,7 +4484,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator suppressClause() {
       if (suppressClauseParser == null) {
-        FutureParser future = scoped("suppressClause", true);
+        FutureParser future = scoped("suppressClause", PUBLIC);
         suppressClauseParser = future;
         future.setParser(
           sequence(
@@ -4516,7 +4519,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sharingClause() {
       if (sharingClauseParser == null) {
-        FutureParser future = scoped("sharingClause", true);
+        FutureParser future = scoped("sharingClause", PUBLIC);
         sharingClauseParser = future;
         future.setParser(
           sequence(
@@ -4556,7 +4559,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator paddingClause() {
       if (paddingClauseParser == null) {
-        FutureParser future = scoped("paddingClause", true);
+        FutureParser future = scoped("paddingClause", PUBLIC);
         paddingClauseParser = future;
         future.setParser(
           sequence(
@@ -4588,7 +4591,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator ioControlParagraph() {
       if (ioControlParagraphParser == null) {
-        FutureParser future = scoped("ioControlParagraph", true);
+        FutureParser future = scoped("ioControlParagraph", PUBLIC);
         ioControlParagraphParser = future;
         future.setParser(
           sequence(
@@ -4620,7 +4623,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator objectSection() {
       if (objectSectionParser == null) {
-        FutureParser future = scoped("objectSection", true);
+        FutureParser future = scoped("objectSection", PUBLIC);
         objectSectionParser = future;
         future.setParser(
           choice(
@@ -4650,7 +4653,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator objectSectionBody() {
       if (objectSectionBodyParser == null) {
-        FutureParser future = scoped("objectSectionBody", true);
+        FutureParser future = scoped("objectSectionBody", PUBLIC);
         objectSectionBodyParser = future;
         future.setParser(
           plus(
@@ -4675,7 +4678,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classControlParagraph() {
       if (classControlParagraphParser == null) {
-        FutureParser future = scoped("classControlParagraph", true);
+        FutureParser future = scoped("classControlParagraph", PUBLIC);
         classControlParagraphParser = future;
         future.setParser(
           sequence(
@@ -4712,7 +4715,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataDivision() {
       if (dataDivisionParser == null) {
-        FutureParser future = scoped("dataDivision", true);
+        FutureParser future = scoped("dataDivision", PUBLIC);
         dataDivisionParser = future;
         future.setParser(
           choice(
@@ -4742,7 +4745,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataDivisionBody() {
       if (dataDivisionBodyParser == null) {
-        FutureParser future = scoped("dataDivisionBody", true);
+        FutureParser future = scoped("dataDivisionBody", PUBLIC);
         dataDivisionBodyParser = future;
         future.setParser(
           plus(
@@ -4775,7 +4778,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fileSection() {
       if (fileSectionParser == null) {
-        FutureParser future = scoped("fileSection", true);
+        FutureParser future = scoped("fileSection", PUBLIC);
         fileSectionParser = future;
         future.setParser(
           sequence(
@@ -4816,7 +4819,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator fileSectionContents() {
       if (fileSectionContentsParser == null) {
-        FutureParser future = scoped("fileSectionContents", false);
+        FutureParser future = scoped("fileSectionContents", PRIVATE);
         fileSectionContentsParser = future;
         future.setParser(
           plus(
@@ -4846,7 +4849,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fileDescriptionEntry() {
       if (fileDescriptionEntryParser == null) {
-        FutureParser future = scoped("fileDescriptionEntry", true);
+        FutureParser future = scoped("fileDescriptionEntry", PUBLIC);
         fileDescriptionEntryParser = future;
         future.setParser(
           choice(
@@ -4869,7 +4872,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fdFileDescriptionEntry() {
       if (fdFileDescriptionEntryParser == null) {
-        FutureParser future = scoped("fdFileDescriptionEntry", true);
+        FutureParser future = scoped("fdFileDescriptionEntry", PUBLIC);
         fdFileDescriptionEntryParser = future;
         future.setParser(
           sequence(
@@ -4914,7 +4917,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sdFileDescriptionEntry() {
       if (sdFileDescriptionEntryParser == null) {
-        FutureParser future = scoped("sdFileDescriptionEntry", true);
+        FutureParser future = scoped("sdFileDescriptionEntry", PUBLIC);
         sdFileDescriptionEntryParser = future;
         future.setParser(
           sequence(
@@ -4951,7 +4954,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator workingStorageSection() {
       if (workingStorageSectionParser == null) {
-        FutureParser future = scoped("workingStorageSection", true);
+        FutureParser future = scoped("workingStorageSection", PUBLIC);
         workingStorageSectionParser = future;
         future.setParser(
           sequence(
@@ -4987,7 +4990,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator threadLocalStorageSection() {
       if (threadLocalStorageSectionParser == null) {
-        FutureParser future = scoped("threadLocalStorageSection", true);
+        FutureParser future = scoped("threadLocalStorageSection", PUBLIC);
         threadLocalStorageSectionParser = future;
         future.setParser(
           sequence(
@@ -5023,7 +5026,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator objectStorageSection() {
       if (objectStorageSectionParser == null) {
-        FutureParser future = scoped("objectStorageSection", true);
+        FutureParser future = scoped("objectStorageSection", PUBLIC);
         objectStorageSectionParser = future;
         future.setParser(
           sequence(
@@ -5059,7 +5062,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator localStorageSection() {
       if (localStorageSectionParser == null) {
-        FutureParser future = scoped("localStorageSection", true);
+        FutureParser future = scoped("localStorageSection", PUBLIC);
         localStorageSectionParser = future;
         future.setParser(
           sequence(
@@ -5095,7 +5098,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator linkageSection() {
       if (linkageSectionParser == null) {
-        FutureParser future = scoped("linkageSection", true);
+        FutureParser future = scoped("linkageSection", PUBLIC);
         linkageSectionParser = future;
         future.setParser(
           sequence(
@@ -5131,7 +5134,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator communicationSection() {
       if (communicationSectionParser == null) {
-        FutureParser future = scoped("communicationSection", true);
+        FutureParser future = scoped("communicationSection", PUBLIC);
         communicationSectionParser = future;
         future.setParser(
           sequence(
@@ -5161,7 +5164,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator communicationDescriptionEntry() {
       if (communicationDescriptionEntryParser == null) {
-        FutureParser future = scoped("communicationDescriptionEntry", true);
+        FutureParser future = scoped("communicationDescriptionEntry", PUBLIC);
         communicationDescriptionEntryParser = future;
         future.setParser(
           choice(
@@ -5185,7 +5188,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator communicationDescriptionEntry_format1() {
       if (communicationDescriptionEntry_format1Parser == null) {
-        FutureParser future = scoped("communicationDescriptionEntry_format1", true);
+        FutureParser future = scoped("communicationDescriptionEntry_format1", PUBLIC);
         communicationDescriptionEntry_format1Parser = future;
         future.setParser(
           sequence(
@@ -5333,7 +5336,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator communicationDescriptionEntry_format2() {
       if (communicationDescriptionEntry_format2Parser == null) {
-        FutureParser future = scoped("communicationDescriptionEntry_format2", true);
+        FutureParser future = scoped("communicationDescriptionEntry_format2", PUBLIC);
         communicationDescriptionEntry_format2Parser = future;
         future.setParser(
           sequence(
@@ -5435,7 +5438,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator communicationDescriptionEntry_format3() {
       if (communicationDescriptionEntry_format3Parser == null) {
-        FutureParser future = scoped("communicationDescriptionEntry_format3", true);
+        FutureParser future = scoped("communicationDescriptionEntry_format3", PUBLIC);
         communicationDescriptionEntry_format3Parser = future;
         future.setParser(
           sequence(
@@ -5528,7 +5531,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportSection() {
       if (reportSectionParser == null) {
-        FutureParser future = scoped("reportSection", true);
+        FutureParser future = scoped("reportSection", PUBLIC);
         reportSectionParser = future;
         future.setParser(
           sequence(
@@ -5560,7 +5563,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportDescriptionEntry() {
       if (reportDescriptionEntryParser == null) {
-        FutureParser future = scoped("reportDescriptionEntry", true);
+        FutureParser future = scoped("reportDescriptionEntry", PUBLIC);
         reportDescriptionEntryParser = future;
         future.setParser(
           sequence(
@@ -5592,7 +5595,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportGroupDescriptionEntry() {
       if (reportGroupDescriptionEntryParser == null) {
-        FutureParser future = scoped("reportGroupDescriptionEntry", true);
+        FutureParser future = scoped("reportGroupDescriptionEntry", PUBLIC);
         reportGroupDescriptionEntryParser = future;
         future.setParser(
           sequence(
@@ -5638,7 +5641,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenSection() {
       if (screenSectionParser == null) {
-        FutureParser future = scoped("screenSection", true);
+        FutureParser future = scoped("screenSection", PUBLIC);
         screenSectionParser = future;
         future.setParser(
           sequence(
@@ -5674,7 +5677,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenDescriptionEntry() {
       if (screenDescriptionEntryParser == null) {
-        FutureParser future = scoped("screenDescriptionEntry", true);
+        FutureParser future = scoped("screenDescriptionEntry", PUBLIC);
         screenDescriptionEntryParser = future;
         future.setParser(
           sequence(
@@ -5735,7 +5738,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordDescriptionEntry() {
       if (recordDescriptionEntryParser == null) {
-        FutureParser future = scoped("recordDescriptionEntry", true);
+        FutureParser future = scoped("recordDescriptionEntry", PUBLIC);
         recordDescriptionEntryParser = future;
         future.setParser(
           choice(
@@ -5759,7 +5762,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataDescriptionEntry() {
       if (dataDescriptionEntryParser == null) {
-        FutureParser future = scoped("dataDescriptionEntry", true);
+        FutureParser future = scoped("dataDescriptionEntry", PUBLIC);
         dataDescriptionEntryParser = future;
         future.setParser(
           choice(
@@ -5783,7 +5786,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator constantEntry() {
       if (constantEntryParser == null) {
-        FutureParser future = scoped("constantEntry", true);
+        FutureParser future = scoped("constantEntry", PUBLIC);
         constantEntryParser = future;
         future.setParser(
           choice(
@@ -5806,7 +5809,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator constantEntry_level01() {
       if (constantEntry_level01Parser == null) {
-        FutureParser future = scoped("constantEntry_level01", false);
+        FutureParser future = scoped("constantEntry_level01", PRIVATE);
         constantEntry_level01Parser = future;
         future.setParser(
           sequence(
@@ -5856,7 +5859,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator constantEntry_level78() {
       if (constantEntry_level78Parser == null) {
-        FutureParser future = scoped("constantEntry_level78", false);
+        FutureParser future = scoped("constantEntry_level78", PRIVATE);
         constantEntry_level78Parser = future;
         future.setParser(
           sequence(
@@ -5885,7 +5888,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator dataDescriptionEntry_format1() {
       if (dataDescriptionEntry_format1Parser == null) {
-        FutureParser future = scoped("dataDescriptionEntry_format1", false);
+        FutureParser future = scoped("dataDescriptionEntry_format1", PRIVATE);
         dataDescriptionEntry_format1Parser = future;
         future.setParser(
           sequence(
@@ -6000,7 +6003,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator dataDescriptionEntry_format2() {
       if (dataDescriptionEntry_format2Parser == null) {
-        FutureParser future = scoped("dataDescriptionEntry_format2", false);
+        FutureParser future = scoped("dataDescriptionEntry_format2", PRIVATE);
         dataDescriptionEntry_format2Parser = future;
         future.setParser(
           sequence(
@@ -6029,7 +6032,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator dataDescriptionEntry_format3_and_4() {
       if (dataDescriptionEntry_format3_and_4Parser == null) {
-        FutureParser future = scoped("dataDescriptionEntry_format3_and_4", false);
+        FutureParser future = scoped("dataDescriptionEntry_format3_and_4", PRIVATE);
         dataDescriptionEntry_format3_and_4Parser = future;
         future.setParser(
           sequence(
@@ -6068,7 +6071,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataRecords() {
       if (dataRecordsParser == null) {
-        FutureParser future = scoped("dataRecords", true);
+        FutureParser future = scoped("dataRecords", PUBLIC);
         dataRecordsParser = future;
         future.setParser(
           sequence(
@@ -6109,7 +6112,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator labelRecords() {
       if (labelRecordsParser == null) {
-        FutureParser future = scoped("labelRecords", true);
+        FutureParser future = scoped("labelRecords", PUBLIC);
         labelRecordsParser = future;
         future.setParser(
           sequence(
@@ -6152,7 +6155,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordingMode() {
       if (recordingModeParser == null) {
-        FutureParser future = scoped("recordingMode", true);
+        FutureParser future = scoped("recordingMode", PUBLIC);
         recordingModeParser = future;
         future.setParser(
           sequence(
@@ -6188,7 +6191,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator valueOfFileId() {
       if (valueOfFileIdParser == null) {
-        FutureParser future = scoped("valueOfFileId", true);
+        FutureParser future = scoped("valueOfFileId", PUBLIC);
         valueOfFileIdParser = future;
         future.setParser(
           sequence(
@@ -6219,7 +6222,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator valueOf() {
       if (valueOfParser == null) {
-        FutureParser future = scoped("valueOf", true);
+        FutureParser future = scoped("valueOf", PUBLIC);
         valueOfParser = future;
         future.setParser(
           sequence(
@@ -6258,7 +6261,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cicsValue() {
       if (cicsValueParser == null) {
-        FutureParser future = scoped("cicsValue", true);
+        FutureParser future = scoped("cicsValue", PUBLIC);
         cicsValueParser = future;
         future.setParser(
           sequence(
@@ -6286,7 +6289,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator whenSetToFalseClause() {
       if (whenSetToFalseClauseParser == null) {
-        FutureParser future = scoped("whenSetToFalseClause", true);
+        FutureParser future = scoped("whenSetToFalseClause", PUBLIC);
         whenSetToFalseClauseParser = future;
         future.setParser(
           sequence(
@@ -6321,7 +6324,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blankWhenZero() {
       if (blankWhenZeroParser == null) {
-        FutureParser future = scoped("blankWhenZero", true);
+        FutureParser future = scoped("blankWhenZero", PUBLIC);
         blankWhenZeroParser = future;
         future.setParser(
           sequence(
@@ -6347,7 +6350,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator threadLocalClause() {
       if (threadLocalClauseParser == null) {
-        FutureParser future = scoped("threadLocalClause", true);
+        FutureParser future = scoped("threadLocalClause", PUBLIC);
         threadLocalClauseParser = future;
         future.setParser(
           sequence(
@@ -6372,7 +6375,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator zero() {
       if (zeroParser == null) {
-        FutureParser future = scoped("zero", true);
+        FutureParser future = scoped("zero", PUBLIC);
         zeroParser = future;
         future.setParser(
           choice(
@@ -6396,7 +6399,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator space() {
       if (spaceParser == null) {
-        FutureParser future = scoped("space", true);
+        FutureParser future = scoped("space", PUBLIC);
         spaceParser = future;
         future.setParser(
           choice(
@@ -6419,7 +6422,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator justified() {
       if (justifiedParser == null) {
-        FutureParser future = scoped("justified", true);
+        FutureParser future = scoped("justified", PUBLIC);
         justifiedParser = future;
         future.setParser(
           sequence(
@@ -6454,7 +6457,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator valueClause() {
       if (valueClauseParser == null) {
-        FutureParser future = scoped("valueClause", true);
+        FutureParser future = scoped("valueClause", PUBLIC);
         valueClauseParser = future;
         future.setParser(
           sequence(
@@ -6596,7 +6599,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alignedClause() {
       if (alignedClauseParser == null) {
-        FutureParser future = scoped("alignedClause", true);
+        FutureParser future = scoped("alignedClause", PUBLIC);
         alignedClauseParser = future;
         future.setParser(
           token("ALIGNED")
@@ -6616,7 +6619,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator anyLengthClause() {
       if (anyLengthClauseParser == null) {
-        FutureParser future = scoped("anyLengthClause", true);
+        FutureParser future = scoped("anyLengthClause", PUBLIC);
         anyLengthClauseParser = future;
         future.setParser(
           sequence(
@@ -6639,7 +6642,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator autoClause() {
       if (autoClauseParser == null) {
-        FutureParser future = scoped("autoClause", true);
+        FutureParser future = scoped("autoClause", PUBLIC);
         autoClauseParser = future;
         future.setParser(
           choice(
@@ -6662,7 +6665,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator backgroundColorClause() {
       if (backgroundColorClauseParser == null) {
-        FutureParser future = scoped("backgroundColorClause", true);
+        FutureParser future = scoped("backgroundColorClause", PUBLIC);
         backgroundColorClauseParser = future;
         future.setParser(
           sequence(
@@ -6691,7 +6694,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator basedClause() {
       if (basedClauseParser == null) {
-        FutureParser future = scoped("basedClause", true);
+        FutureParser future = scoped("basedClause", PUBLIC);
         basedClauseParser = future;
         future.setParser(
           token("BASED")
@@ -6711,7 +6714,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator bellClause() {
       if (bellClauseParser == null) {
-        FutureParser future = scoped("bellClause", true);
+        FutureParser future = scoped("bellClause", PUBLIC);
         bellClauseParser = future;
         future.setParser(
           token("BELL")
@@ -6731,7 +6734,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blankClause() {
       if (blankClauseParser == null) {
-        FutureParser future = scoped("blankClause", true);
+        FutureParser future = scoped("blankClause", PUBLIC);
         blankClauseParser = future;
         future.setParser(
           sequence(
@@ -6757,7 +6760,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blankWhenZeroClause() {
       if (blankWhenZeroClauseParser == null) {
-        FutureParser future = scoped("blankWhenZeroClause", true);
+        FutureParser future = scoped("blankWhenZeroClause", PUBLIC);
         blankWhenZeroClauseParser = future;
         future.setParser(
           sequence(
@@ -6783,7 +6786,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blinkClause() {
       if (blinkClauseParser == null) {
-        FutureParser future = scoped("blinkClause", true);
+        FutureParser future = scoped("blinkClause", PUBLIC);
         blinkClauseParser = future;
         future.setParser(
           token("BLINK")
@@ -6803,7 +6806,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blockContainsClause() {
       if (blockContainsClauseParser == null) {
-        FutureParser future = scoped("blockContainsClause", true);
+        FutureParser future = scoped("blockContainsClause", PUBLIC);
         blockContainsClauseParser = future;
         future.setParser(
           sequence(
@@ -6841,7 +6844,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classClause() {
       if (classClauseParser == null) {
-        FutureParser future = scoped("classClause", true);
+        FutureParser future = scoped("classClause", PUBLIC);
         classClauseParser = future;
         future.setParser(
           sequence(
@@ -6874,7 +6877,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator codeClause() {
       if (codeClauseParser == null) {
-        FutureParser future = scoped("codeClause", true);
+        FutureParser future = scoped("codeClause", PUBLIC);
         codeClauseParser = future;
         future.setParser(
           sequence(
@@ -6903,7 +6906,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator codeSetClause() {
       if (codeSetClauseParser == null) {
-        FutureParser future = scoped("codeSetClause", true);
+        FutureParser future = scoped("codeSetClause", PUBLIC);
         codeSetClauseParser = future;
         future.setParser(
           sequence(
@@ -6937,7 +6940,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator columnClause() {
       if (columnClauseParser == null) {
-        FutureParser future = scoped("columnClause", true);
+        FutureParser future = scoped("columnClause", PUBLIC);
         columnClauseParser = future;
         future.setParser(
           sequence(
@@ -7000,7 +7003,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator constantRecordClause() {
       if (constantRecordClauseParser == null) {
-        FutureParser future = scoped("constantRecordClause", true);
+        FutureParser future = scoped("constantRecordClause", PUBLIC);
         constantRecordClauseParser = future;
         future.setParser(
           sequence(
@@ -7023,7 +7026,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator constantValueClause() {
       if (constantValueClauseParser == null) {
-        FutureParser future = scoped("constantValueClause", true);
+        FutureParser future = scoped("constantValueClause", PUBLIC);
         constantValueClauseParser = future;
         future.setParser(
           sequence(
@@ -7097,7 +7100,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator controlClause() {
       if (controlClauseParser == null) {
-        FutureParser future = scoped("controlClause", true);
+        FutureParser future = scoped("controlClause", PUBLIC);
         controlClauseParser = future;
         future.setParser(
           sequence(
@@ -7143,7 +7146,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator defaultClause() {
       if (defaultClauseParser == null) {
-        FutureParser future = scoped("defaultClause", true);
+        FutureParser future = scoped("defaultClause", PUBLIC);
         defaultClauseParser = future;
         future.setParser(
           sequence(
@@ -7173,7 +7176,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator destinationClause() {
       if (destinationClauseParser == null) {
-        FutureParser future = scoped("destinationClause", true);
+        FutureParser future = scoped("destinationClause", PUBLIC);
         destinationClauseParser = future;
         future.setParser(
           sequence(
@@ -7201,7 +7204,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator eraseClause() {
       if (eraseClauseParser == null) {
-        FutureParser future = scoped("eraseClause", true);
+        FutureParser future = scoped("eraseClause", PUBLIC);
         eraseClauseParser = future;
         future.setParser(
           sequence(
@@ -7247,7 +7250,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator externalClause() {
       if (externalClauseParser == null) {
-        FutureParser future = scoped("externalClause", true);
+        FutureParser future = scoped("externalClause", PUBLIC);
         externalClauseParser = future;
         future.setParser(
           sequence(
@@ -7281,7 +7284,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator foregroundColorClause() {
       if (foregroundColorClauseParser == null) {
-        FutureParser future = scoped("foregroundColorClause", true);
+        FutureParser future = scoped("foregroundColorClause", PUBLIC);
         foregroundColorClauseParser = future;
         future.setParser(
           sequence(
@@ -7313,7 +7316,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator formatClause() {
       if (formatClauseParser == null) {
-        FutureParser future = scoped("formatClause", true);
+        FutureParser future = scoped("formatClause", PUBLIC);
         formatClauseParser = future;
         future.setParser(
           sequence(
@@ -7341,7 +7344,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fullClause() {
       if (fullClauseParser == null) {
-        FutureParser future = scoped("fullClause", true);
+        FutureParser future = scoped("fullClause", PUBLIC);
         fullClauseParser = future;
         future.setParser(
           token("FULL")
@@ -7361,7 +7364,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator globalClause() {
       if (globalClauseParser == null) {
-        FutureParser future = scoped("globalClause", true);
+        FutureParser future = scoped("globalClause", PUBLIC);
         globalClauseParser = future;
         future.setParser(
           sequence(
@@ -7386,7 +7389,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator groupIndicateClause() {
       if (groupIndicateClauseParser == null) {
-        FutureParser future = scoped("groupIndicateClause", true);
+        FutureParser future = scoped("groupIndicateClause", PUBLIC);
         groupIndicateClauseParser = future;
         future.setParser(
           sequence(
@@ -7411,7 +7414,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator groupUsageClause() {
       if (groupUsageClauseParser == null) {
-        FutureParser future = scoped("groupUsageClause", true);
+        FutureParser future = scoped("groupUsageClause", PUBLIC);
         groupUsageClauseParser = future;
         future.setParser(
           sequence(
@@ -7440,7 +7443,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator highlightClause() {
       if (highlightClauseParser == null) {
-        FutureParser future = scoped("highlightClause", true);
+        FutureParser future = scoped("highlightClause", PUBLIC);
         highlightClauseParser = future;
         future.setParser(
           choice(
@@ -7463,7 +7466,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator invalidClause() {
       if (invalidClauseParser == null) {
-        FutureParser future = scoped("invalidClause", true);
+        FutureParser future = scoped("invalidClause", PUBLIC);
         invalidClauseParser = future;
         future.setParser(
           sequence(
@@ -7487,7 +7490,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator justifiedClause() {
       if (justifiedClauseParser == null) {
-        FutureParser future = scoped("justifiedClause", true);
+        FutureParser future = scoped("justifiedClause", PUBLIC);
         justifiedClauseParser = future;
         future.setParser(
           sequence(
@@ -7515,7 +7518,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator linageClause() {
       if (linageClauseParser == null) {
-        FutureParser future = scoped("linageClause", true);
+        FutureParser future = scoped("linageClause", PUBLIC);
         linageClauseParser = future;
         future.setParser(
           sequence(
@@ -7556,7 +7559,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator footingClause() {
       if (footingClauseParser == null) {
-        FutureParser future = scoped("footingClause", true);
+        FutureParser future = scoped("footingClause", PUBLIC);
         footingClauseParser = future;
         future.setParser(
           sequence(
@@ -7588,7 +7591,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator linesAtTopClause() {
       if (linesAtTopClauseParser == null) {
-        FutureParser future = scoped("linesAtTopClause", true);
+        FutureParser future = scoped("linesAtTopClause", PUBLIC);
         linesAtTopClauseParser = future;
         future.setParser(
           sequence(
@@ -7620,7 +7623,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator linesAtBottomClause() {
       if (linesAtBottomClauseParser == null) {
-        FutureParser future = scoped("linesAtBottomClause", true);
+        FutureParser future = scoped("linesAtBottomClause", PUBLIC);
         linesAtBottomClauseParser = future;
         future.setParser(
           sequence(
@@ -7652,7 +7655,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator lineClause() {
       if (lineClauseParser == null) {
-        FutureParser future = scoped("lineClause", true);
+        FutureParser future = scoped("lineClause", PUBLIC);
         lineClauseParser = future;
         future.setParser(
           sequence(
@@ -7743,7 +7746,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator nextGroupClause() {
       if (nextGroupClauseParser == null) {
-        FutureParser future = scoped("nextGroupClause", true);
+        FutureParser future = scoped("nextGroupClause", PUBLIC);
         nextGroupClauseParser = future;
         future.setParser(
           sequence(
@@ -7788,7 +7791,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator occursClause() {
       if (occursClauseParser == null) {
-        FutureParser future = scoped("occursClause", true);
+        FutureParser future = scoped("occursClause", PUBLIC);
         occursClauseParser = future;
         future.setParser(
           sequence(
@@ -7917,7 +7920,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator pageClause() {
       if (pageClauseParser == null) {
-        FutureParser future = scoped("pageClause", true);
+        FutureParser future = scoped("pageClause", PUBLIC);
         pageClauseParser = future;
         future.setParser(
           sequence(
@@ -7984,7 +7987,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator pictureClause() {
       if (pictureClauseParser == null) {
-        FutureParser future = scoped("pictureClause", true);
+        FutureParser future = scoped("pictureClause", PUBLIC);
         pictureClauseParser = future;
         future.setParser(
           sequence(
@@ -8016,7 +8019,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator pictureLocaleClause() {
       if (pictureLocaleClauseParser == null) {
-        FutureParser future = scoped("pictureLocaleClause", true);
+        FutureParser future = scoped("pictureLocaleClause", PUBLIC);
         pictureLocaleClauseParser = future;
         future.setParser(
           sequence(
@@ -8051,7 +8054,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator presentWhenClause() {
       if (presentWhenClauseParser == null) {
-        FutureParser future = scoped("presentWhenClause", true);
+        FutureParser future = scoped("presentWhenClause", PUBLIC);
         presentWhenClauseParser = future;
         future.setParser(
           sequence(
@@ -8075,7 +8078,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator propertyClause() {
       if (propertyClauseParser == null) {
-        FutureParser future = scoped("propertyClause", true);
+        FutureParser future = scoped("propertyClause", PUBLIC);
         propertyClauseParser = future;
         future.setParser(
           sequence(
@@ -8117,7 +8120,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordClause() {
       if (recordClauseParser == null) {
-        FutureParser future = scoped("recordClause", true);
+        FutureParser future = scoped("recordClause", PUBLIC);
         recordClauseParser = future;
         future.setParser(
           sequence(
@@ -8143,7 +8146,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordContainsClause() {
       if (recordContainsClauseParser == null) {
-        FutureParser future = scoped("recordContainsClause", true);
+        FutureParser future = scoped("recordContainsClause", PUBLIC);
         recordContainsClauseParser = future;
         future.setParser(
           sequence(
@@ -8177,7 +8180,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordIsVaryingClause() {
       if (recordIsVaryingClauseParser == null) {
-        FutureParser future = scoped("recordIsVaryingClause", true);
+        FutureParser future = scoped("recordIsVaryingClause", PUBLIC);
         recordIsVaryingClauseParser = future;
         future.setParser(
           sequence(
@@ -8234,7 +8237,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator redefinesClause() {
       if (redefinesClauseParser == null) {
-        FutureParser future = scoped("redefinesClause", true);
+        FutureParser future = scoped("redefinesClause", PUBLIC);
         redefinesClauseParser = future;
         future.setParser(
           sequence(
@@ -8257,7 +8260,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator renamesClause() {
       if (renamesClauseParser == null) {
-        FutureParser future = scoped("renamesClause", true);
+        FutureParser future = scoped("renamesClause", PUBLIC);
         renamesClauseParser = future;
         future.setParser(
           sequence(
@@ -8289,7 +8292,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportClause() {
       if (reportClauseParser == null) {
-        FutureParser future = scoped("reportClause", true);
+        FutureParser future = scoped("reportClause", PUBLIC);
         reportClauseParser = future;
         future.setParser(
           sequence(
@@ -8327,7 +8330,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportGroupTypeClause() {
       if (reportGroupTypeClauseParser == null) {
-        FutureParser future = scoped("reportGroupTypeClause", true);
+        FutureParser future = scoped("reportGroupTypeClause", PUBLIC);
         reportGroupTypeClauseParser = future;
         future.setParser(
           sequence(
@@ -8424,7 +8427,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportGroupUsageClause() {
       if (reportGroupUsageClauseParser == null) {
-        FutureParser future = scoped("reportGroupUsageClause", true);
+        FutureParser future = scoped("reportGroupUsageClause", PUBLIC);
         reportGroupUsageClauseParser = future;
         future.setParser(
           sequence(
@@ -8453,7 +8456,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportSectionValueClause() {
       if (reportSectionValueClauseParser == null) {
-        FutureParser future = scoped("reportSectionValueClause", true);
+        FutureParser future = scoped("reportSectionValueClause", PUBLIC);
         reportSectionValueClauseParser = future;
         future.setParser(
           sequence(
@@ -8494,7 +8497,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reverseVideoClause() {
       if (reverseVideoClauseParser == null) {
-        FutureParser future = scoped("reverseVideoClause", true);
+        FutureParser future = scoped("reverseVideoClause", PUBLIC);
         reverseVideoClauseParser = future;
         future.setParser(
           token("REVERSE-VIDEO")
@@ -8514,7 +8517,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator requiredClause() {
       if (requiredClauseParser == null) {
-        FutureParser future = scoped("requiredClause", true);
+        FutureParser future = scoped("requiredClause", PUBLIC);
         requiredClauseParser = future;
         future.setParser(
           token("REQUIRED")
@@ -8534,7 +8537,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sameAsClause() {
       if (sameAsClauseParser == null) {
-        FutureParser future = scoped("sameAsClause", true);
+        FutureParser future = scoped("sameAsClause", PUBLIC);
         sameAsClauseParser = future;
         future.setParser(
           sequence(
@@ -8558,7 +8561,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenFromClause() {
       if (screenFromClauseParser == null) {
-        FutureParser future = scoped("screenFromClause", true);
+        FutureParser future = scoped("screenFromClause", PUBLIC);
         screenFromClauseParser = future;
         future.setParser(
           sequence(
@@ -8584,7 +8587,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenToClause() {
       if (screenToClauseParser == null) {
-        FutureParser future = scoped("screenToClause", true);
+        FutureParser future = scoped("screenToClause", PUBLIC);
         screenToClauseParser = future;
         future.setParser(
           sequence(
@@ -8607,7 +8610,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenUsingClause() {
       if (screenUsingClauseParser == null) {
-        FutureParser future = scoped("screenUsingClause", true);
+        FutureParser future = scoped("screenUsingClause", PUBLIC);
         screenUsingClauseParser = future;
         future.setParser(
           sequence(
@@ -8630,7 +8633,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenValueClause() {
       if (screenValueClauseParser == null) {
-        FutureParser future = scoped("screenValueClause", true);
+        FutureParser future = scoped("screenValueClause", PUBLIC);
         screenValueClauseParser = future;
         future.setParser(
           sequence(
@@ -8656,7 +8659,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator secureClause() {
       if (secureClauseParser == null) {
-        FutureParser future = scoped("secureClause", true);
+        FutureParser future = scoped("secureClause", PUBLIC);
         secureClauseParser = future;
         future.setParser(
           token("SECURE")
@@ -8676,7 +8679,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator selectWhenClause() {
       if (selectWhenClauseParser == null) {
-        FutureParser future = scoped("selectWhenClause", true);
+        FutureParser future = scoped("selectWhenClause", PUBLIC);
         selectWhenClauseParser = future;
         future.setParser(
           sequence(
@@ -8703,7 +8706,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator signClause() {
       if (signClauseParser == null) {
-        FutureParser future = scoped("signClause", true);
+        FutureParser future = scoped("signClause", PUBLIC);
         signClauseParser = future;
         future.setParser(
           sequence(
@@ -8744,7 +8747,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sourceClause() {
       if (sourceClauseParser == null) {
-        FutureParser future = scoped("sourceClause", true);
+        FutureParser future = scoped("sourceClause", PUBLIC);
         sourceClauseParser = future;
         future.setParser(
           sequence(
@@ -8793,7 +8796,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sumClause() {
       if (sumClauseParser == null) {
-        FutureParser future = scoped("sumClause", true);
+        FutureParser future = scoped("sumClause", PUBLIC);
         sumClauseParser = future;
         future.setParser(
           sequence(
@@ -8850,7 +8853,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator synchronizedClause() {
       if (synchronizedClauseParser == null) {
-        FutureParser future = scoped("synchronizedClause", true);
+        FutureParser future = scoped("synchronizedClause", PUBLIC);
         synchronizedClauseParser = future;
         future.setParser(
           sequence(
@@ -8881,7 +8884,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator typedefClause() {
       if (typedefClauseParser == null) {
-        FutureParser future = scoped("typedefClause", true);
+        FutureParser future = scoped("typedefClause", PUBLIC);
         typedefClauseParser = future;
         future.setParser(
           sequence(
@@ -8909,7 +8912,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator typeNameTypeClause() {
       if (typeNameTypeClauseParser == null) {
-        FutureParser future = scoped("typeNameTypeClause", true);
+        FutureParser future = scoped("typeNameTypeClause", PUBLIC);
         typeNameTypeClauseParser = future;
         future.setParser(
           sequence(
@@ -8935,7 +8938,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator underlineClause() {
       if (underlineClauseParser == null) {
-        FutureParser future = scoped("underlineClause", true);
+        FutureParser future = scoped("underlineClause", PUBLIC);
         underlineClauseParser = future;
         future.setParser(
           token("UNDERLINE")
@@ -8955,7 +8958,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator usageClause() {
       if (usageClauseParser == null) {
-        FutureParser future = scoped("usageClause", true);
+        FutureParser future = scoped("usageClause", PUBLIC);
         usageClauseParser = future;
         future.setParser(
           sequence(
@@ -8985,7 +8988,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator usageOperand() {
       if (usageOperandParser == null) {
-        FutureParser future = scoped("usageOperand", true);
+        FutureParser future = scoped("usageOperand", PUBLIC);
         usageOperandParser = future;
         future.setParser(
           choice(
@@ -9164,7 +9167,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator validateStatusClause() {
       if (validateStatusClauseParser == null) {
-        FutureParser future = scoped("validateStatusClause", true);
+        FutureParser future = scoped("validateStatusClause", PUBLIC);
         validateStatusClauseParser = future;
         future.setParser(
           sequence(
@@ -9217,7 +9220,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator varyingClause() {
       if (varyingClauseParser == null) {
-        FutureParser future = scoped("varyingClause", true);
+        FutureParser future = scoped("varyingClause", PUBLIC);
         varyingClauseParser = future;
         future.setParser(
           sequence(
@@ -9256,7 +9259,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator procedureDivision() {
       if (procedureDivisionParser == null) {
-        FutureParser future = scoped("procedureDivision", true);
+        FutureParser future = scoped("procedureDivision", PUBLIC);
         procedureDivisionParser = future;
         future.setParser(
           sequence(
@@ -9290,7 +9293,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator procedureDivisionHeader() {
       if (procedureDivisionHeaderParser == null) {
-        FutureParser future = scoped("procedureDivisionHeader", true);
+        FutureParser future = scoped("procedureDivisionHeader", PUBLIC);
         procedureDivisionHeaderParser = future;
         future.setParser(
           sequence(
@@ -9323,7 +9326,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator usingOrChainingPhrase() {
       if (usingOrChainingPhraseParser == null) {
-        FutureParser future = scoped("usingOrChainingPhrase", true);
+        FutureParser future = scoped("usingOrChainingPhrase", PUBLIC);
         usingOrChainingPhraseParser = future;
         future.setParser(
           sequence(
@@ -9359,7 +9362,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataReference() {
       if (dataReferenceParser == null) {
-        FutureParser future = scoped("dataReference", true);
+        FutureParser future = scoped("dataReference", PUBLIC);
         dataReferenceParser = future;
         future.setParser(
           sequence(
@@ -9420,7 +9423,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataValue() {
       if (dataValueParser == null) {
-        FutureParser future = scoped("dataValue", true);
+        FutureParser future = scoped("dataValue", PUBLIC);
         dataValueParser = future;
         future.setParser(
           sequence(
@@ -9463,7 +9466,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataOutput() {
       if (dataOutputParser == null) {
-        FutureParser future = scoped("dataOutput", true);
+        FutureParser future = scoped("dataOutput", PUBLIC);
         dataOutputParser = future;
         future.setParser(
           sequence(
@@ -9498,7 +9501,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator repeatedPhrase() {
       if (repeatedPhraseParser == null) {
-        FutureParser future = scoped("repeatedPhrase", true);
+        FutureParser future = scoped("repeatedPhrase", PUBLIC);
         repeatedPhraseParser = future;
         future.setParser(
           sequence(
@@ -9527,7 +9530,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator returningProcedurePhrase() {
       if (returningProcedurePhraseParser == null) {
-        FutureParser future = scoped("returningProcedurePhrase", true);
+        FutureParser future = scoped("returningProcedurePhrase", PUBLIC);
         returningProcedurePhraseParser = future;
         future.setParser(
           sequence(
@@ -9563,7 +9566,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator roundedPhrase() {
       if (roundedPhraseParser == null) {
-        FutureParser future = scoped("roundedPhrase", true);
+        FutureParser future = scoped("roundedPhrase", PUBLIC);
         roundedPhraseParser = future;
         future.setParser(
           sequence(
@@ -9603,7 +9606,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator declaratives() {
       if (declarativesParser == null) {
-        FutureParser future = scoped("declaratives", true);
+        FutureParser future = scoped("declaratives", PUBLIC);
         declarativesParser = future;
         future.setParser(
           sequence(
@@ -9632,7 +9635,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator declarativeSection() {
       if (declarativeSectionParser == null) {
-        FutureParser future = scoped("declarativeSection", true);
+        FutureParser future = scoped("declarativeSection", PUBLIC);
         declarativeSectionParser = future;
         future.setParser(
           sequence(
@@ -9670,7 +9673,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator section() {
       if (sectionParser == null) {
-        FutureParser future = scoped("section", true);
+        FutureParser future = scoped("section", PUBLIC);
         sectionParser = future;
         future.setParser(
           sequence(
@@ -9703,7 +9706,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator paragraph() {
       if (paragraphParser == null) {
-        FutureParser future = scoped("paragraph", true);
+        FutureParser future = scoped("paragraph", PUBLIC);
         paragraphParser = future;
         future.setParser(
           sequence(
@@ -9729,7 +9732,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sentence() {
       if (sentenceParser == null) {
-        FutureParser future = scoped("sentence", true);
+        FutureParser future = scoped("sentence", PUBLIC);
         sentenceParser = future;
         future.setParser(
           choice(
@@ -9763,7 +9766,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator statement() {
       if (statementParser == null) {
-        FutureParser future = scoped("statement", true);
+        FutureParser future = scoped("statement", PUBLIC);
         statementParser = future;
         future.setParser(
           choice(
@@ -9939,7 +9942,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator continuationOfStatement() {
       if (continuationOfStatementParser == null) {
-        FutureParser future = scoped("continuationOfStatement", true);
+        FutureParser future = scoped("continuationOfStatement", PUBLIC);
         continuationOfStatementParser = future;
         future.setParser(
           choice(
@@ -9985,7 +9988,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator nestedStatements() {
       if (nestedStatementsParser == null) {
-        FutureParser future = scoped("nestedStatements", true);
+        FutureParser future = scoped("nestedStatements", PUBLIC);
         nestedStatementsParser = future;
         future.setParser(
           plus(
@@ -10007,7 +10010,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator eventPhrase() {
       if (eventPhraseParser == null) {
-        FutureParser future = scoped("eventPhrase", false);
+        FutureParser future = scoped("eventPhrase", PRIVATE);
         eventPhraseParser = future;
         future.setParser(
           sequence(
@@ -10041,7 +10044,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator eventType() {
       if (eventTypeParser == null) {
-        FutureParser future = scoped("eventType", false);
+        FutureParser future = scoped("eventType", PRIVATE);
         eventTypeParser = future;
         future.setParser(
           sequence(
@@ -10094,7 +10097,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator retryPhrase() {
       if (retryPhraseParser == null) {
-        FutureParser future = scoped("retryPhrase", true);
+        FutureParser future = scoped("retryPhrase", PUBLIC);
         retryPhraseParser = future;
         future.setParser(
           sequence(
@@ -10134,7 +10137,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator endOfStatementMarker() {
       if (endOfStatementMarkerParser == null) {
-        FutureParser future = scoped("endOfStatementMarker", false);
+        FutureParser future = scoped("endOfStatementMarker", PRIVATE);
         endOfStatementMarkerParser = future;
         future.setParser(
           sequence(
@@ -10224,7 +10227,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator somethingFollowingAStatement() {
       if (somethingFollowingAStatementParser == null) {
-        FutureParser future = scoped("somethingFollowingAStatement", false);
+        FutureParser future = scoped("somethingFollowingAStatement", PRIVATE);
         somethingFollowingAStatementParser = future;
         future.setParser(
           choice(
@@ -10334,7 +10337,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator verb() {
       if (verbParser == null) {
-        FutureParser future = scoped("verb", true);
+        FutureParser future = scoped("verb", PUBLIC);
         verbParser = future;
         future.setParser(
           choice(
@@ -10440,7 +10443,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptStatement() {
       if (acceptStatementParser == null) {
-        FutureParser future = scoped("acceptStatement", true);
+        FutureParser future = scoped("acceptStatement", PUBLIC);
         acceptStatementParser = future;
         future.setParser(
           sequence(
@@ -10479,7 +10482,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptFromMnemonic() {
       if (acceptFromMnemonicParser == null) {
-        FutureParser future = scoped("acceptFromMnemonic", true);
+        FutureParser future = scoped("acceptFromMnemonic", PUBLIC);
         acceptFromMnemonicParser = future;
         future.setParser(
           sequence(
@@ -10515,7 +10518,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptFromOther() {
       if (acceptFromOtherParser == null) {
-        FutureParser future = scoped("acceptFromOther", true);
+        FutureParser future = scoped("acceptFromOther", PUBLIC);
         acceptFromOtherParser = future;
         future.setParser(
           sequence(
@@ -10583,7 +10586,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptScreenFormat() {
       if (acceptScreenFormatParser == null) {
-        FutureParser future = scoped("acceptScreenFormat", true);
+        FutureParser future = scoped("acceptScreenFormat", PUBLIC);
         acceptScreenFormatParser = future;
         future.setParser(
           sequence(
@@ -10646,7 +10649,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptFromDate() {
       if (acceptFromDateParser == null) {
-        FutureParser future = scoped("acceptFromDate", true);
+        FutureParser future = scoped("acceptFromDate", PUBLIC);
         acceptFromDateParser = future;
         future.setParser(
           sequence(
@@ -10696,7 +10699,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptMessageCount() {
       if (acceptMessageCountParser == null) {
-        FutureParser future = scoped("acceptMessageCount", true);
+        FutureParser future = scoped("acceptMessageCount", PUBLIC);
         acceptMessageCountParser = future;
         future.setParser(
           sequence(
@@ -10722,7 +10725,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator unitPhrase() {
       if (unitPhraseParser == null) {
-        FutureParser future = scoped("unitPhrase", true);
+        FutureParser future = scoped("unitPhrase", PUBLIC);
         unitPhraseParser = future;
         future.setParser(
           sequence(
@@ -10748,7 +10751,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator modeIsBlockPhrase() {
       if (modeIsBlockPhraseParser == null) {
-        FutureParser future = scoped("modeIsBlockPhrase", true);
+        FutureParser future = scoped("modeIsBlockPhrase", PUBLIC);
         modeIsBlockPhraseParser = future;
         future.setParser(
           sequence(
@@ -10774,7 +10777,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptScreenSizeData() {
       if (acceptScreenSizeDataParser == null) {
-        FutureParser future = scoped("acceptScreenSizeData", true);
+        FutureParser future = scoped("acceptScreenSizeData", PUBLIC);
         acceptScreenSizeDataParser = future;
         future.setParser(
           sequence(
@@ -10801,7 +10804,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator acceptFromCommandLine() {
       if (acceptFromCommandLineParser == null) {
-        FutureParser future = scoped("acceptFromCommandLine", true);
+        FutureParser future = scoped("acceptFromCommandLine", PUBLIC);
         acceptFromCommandLineParser = future;
         future.setParser(
           sequence(
@@ -10829,7 +10832,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator addStatement() {
       if (addStatementParser == null) {
-        FutureParser future = scoped("addStatement", true);
+        FutureParser future = scoped("addStatement", PUBLIC);
         addStatementParser = future;
         future.setParser(
           sequence(
@@ -10865,7 +10868,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator addition_format1() {
       if (addition_format1Parser == null) {
-        FutureParser future = scoped("addition_format1", false);
+        FutureParser future = scoped("addition_format1", PRIVATE);
         addition_format1Parser = future;
         future.setParser(
           sequence(
@@ -10906,7 +10909,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator addition_format2() {
       if (addition_format2Parser == null) {
-        FutureParser future = scoped("addition_format2", false);
+        FutureParser future = scoped("addition_format2", PRIVATE);
         addition_format2Parser = future;
         future.setParser(
           sequence(
@@ -10957,7 +10960,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator addition_format3() {
       if (addition_format3Parser == null) {
-        FutureParser future = scoped("addition_format3", false);
+        FutureParser future = scoped("addition_format3", PRIVATE);
         addition_format3Parser = future;
         future.setParser(
           sequence(
@@ -10997,7 +11000,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator allocateStatement() {
       if (allocateStatementParser == null) {
-        FutureParser future = scoped("allocateStatement", true);
+        FutureParser future = scoped("allocateStatement", PUBLIC);
         allocateStatementParser = future;
         future.setParser(
           sequence(
@@ -11035,7 +11038,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alterStatement() {
       if (alterStatementParser == null) {
-        FutureParser future = scoped("alterStatement", true);
+        FutureParser future = scoped("alterStatement", PUBLIC);
         alterStatementParser = future;
         future.setParser(
           sequence(
@@ -11060,7 +11063,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alterationClause() {
       if (alterationClauseParser == null) {
-        FutureParser future = scoped("alterationClause", true);
+        FutureParser future = scoped("alterationClause", PUBLIC);
         alterationClauseParser = future;
         future.setParser(
           sequence(
@@ -11090,7 +11093,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator callStatement() {
       if (callStatementParser == null) {
-        FutureParser future = scoped("callStatement", true);
+        FutureParser future = scoped("callStatement", PUBLIC);
         callStatementParser = future;
         future.setParser(
           sequence(
@@ -11162,7 +11165,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator callUsing() {
       if (callUsingParser == null) {
-        FutureParser future = scoped("callUsing", true);
+        FutureParser future = scoped("callUsing", PUBLIC);
         callUsingParser = future;
         future.setParser(
           sequence(
@@ -11295,7 +11298,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator callGivingOrReturning() {
       if (callGivingOrReturningParser == null) {
-        FutureParser future = scoped("callGivingOrReturning", true);
+        FutureParser future = scoped("callGivingOrReturning", PUBLIC);
         callGivingOrReturningParser = future;
         future.setParser(
           sequence(
@@ -11330,7 +11333,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator onOverflow() {
       if (onOverflowParser == null) {
-        FutureParser future = scoped("onOverflow", true);
+        FutureParser future = scoped("onOverflow", PUBLIC);
         onOverflowParser = future;
         future.setParser(
           sequence(
@@ -11356,7 +11359,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notOnOverflow() {
       if (notOnOverflowParser == null) {
-        FutureParser future = scoped("notOnOverflow", true);
+        FutureParser future = scoped("notOnOverflow", PUBLIC);
         notOnOverflowParser = future;
         future.setParser(
           sequence(
@@ -11383,7 +11386,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator onException() {
       if (onExceptionParser == null) {
-        FutureParser future = scoped("onException", true);
+        FutureParser future = scoped("onException", PUBLIC);
         onExceptionParser = future;
         future.setParser(
           sequence(
@@ -11409,7 +11412,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notOnException() {
       if (notOnExceptionParser == null) {
-        FutureParser future = scoped("notOnException", true);
+        FutureParser future = scoped("notOnException", PUBLIC);
         notOnExceptionParser = future;
         future.setParser(
           sequence(
@@ -11436,7 +11439,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator onSizeError() {
       if (onSizeErrorParser == null) {
-        FutureParser future = scoped("onSizeError", true);
+        FutureParser future = scoped("onSizeError", PUBLIC);
         onSizeErrorParser = future;
         future.setParser(
           sequence(
@@ -11463,7 +11466,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notOnSizeError() {
       if (notOnSizeErrorParser == null) {
-        FutureParser future = scoped("notOnSizeError", true);
+        FutureParser future = scoped("notOnSizeError", PUBLIC);
         notOnSizeErrorParser = future;
         future.setParser(
           sequence(
@@ -11491,7 +11494,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator onEscape() {
       if (onEscapeParser == null) {
-        FutureParser future = scoped("onEscape", true);
+        FutureParser future = scoped("onEscape", PUBLIC);
         onEscapeParser = future;
         future.setParser(
           sequence(
@@ -11517,7 +11520,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notOnEscape() {
       if (notOnEscapeParser == null) {
-        FutureParser future = scoped("notOnEscape", true);
+        FutureParser future = scoped("notOnEscape", PUBLIC);
         notOnEscapeParser = future;
         future.setParser(
           sequence(
@@ -11544,7 +11547,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programID() {
       if (programIDParser == null) {
-        FutureParser future = scoped("programID", true);
+        FutureParser future = scoped("programID", PUBLIC);
         programIDParser = future;
         future.setParser(
           choice(
@@ -11567,7 +11570,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cancelStatement() {
       if (cancelStatementParser == null) {
-        FutureParser future = scoped("cancelStatement", true);
+        FutureParser future = scoped("cancelStatement", PUBLIC);
         cancelStatementParser = future;
         future.setParser(
           sequence(
@@ -11595,7 +11598,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator chainStatement() {
       if (chainStatementParser == null) {
-        FutureParser future = scoped("chainStatement", true);
+        FutureParser future = scoped("chainStatement", PUBLIC);
         chainStatementParser = future;
         future.setParser(
           sequence(
@@ -11627,7 +11630,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator chainUsing() {
       if (chainUsingParser == null) {
-        FutureParser future = scoped("chainUsing", true);
+        FutureParser future = scoped("chainUsing", PUBLIC);
         chainUsingParser = future;
         future.setParser(
           sequence(
@@ -11724,7 +11727,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator closeStatement() {
       if (closeStatementParser == null) {
-        FutureParser future = scoped("closeStatement", true);
+        FutureParser future = scoped("closeStatement", PUBLIC);
         closeStatementParser = future;
         future.setParser(
           sequence(
@@ -11787,7 +11790,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator commitStatement() {
       if (commitStatementParser == null) {
-        FutureParser future = scoped("commitStatement", true);
+        FutureParser future = scoped("commitStatement", PUBLIC);
         commitStatementParser = future;
         future.setParser(
           sequence(
@@ -11812,7 +11815,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator computeStatement() {
       if (computeStatementParser == null) {
-        FutureParser future = scoped("computeStatement", true);
+        FutureParser future = scoped("computeStatement", PUBLIC);
         computeStatementParser = future;
         future.setParser(
           sequence(
@@ -11856,7 +11859,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator continueStatement() {
       if (continueStatementParser == null) {
-        FutureParser future = scoped("continueStatement", true);
+        FutureParser future = scoped("continueStatement", PUBLIC);
         continueStatementParser = future;
         future.setParser(
           token("CONTINUE")
@@ -11876,7 +11879,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator deleteStatement() {
       if (deleteStatementParser == null) {
-        FutureParser future = scoped("deleteStatement", true);
+        FutureParser future = scoped("deleteStatement", PUBLIC);
         deleteStatementParser = future;
         future.setParser(
           sequence(
@@ -11911,7 +11914,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator invalidKey() {
       if (invalidKeyParser == null) {
-        FutureParser future = scoped("invalidKey", true);
+        FutureParser future = scoped("invalidKey", PUBLIC);
         invalidKeyParser = future;
         future.setParser(
           sequence(
@@ -11937,7 +11940,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notInvalidKey() {
       if (notInvalidKeyParser == null) {
-        FutureParser future = scoped("notInvalidKey", true);
+        FutureParser future = scoped("notInvalidKey", PUBLIC);
         notInvalidKeyParser = future;
         future.setParser(
           sequence(
@@ -11964,7 +11967,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator deleteFileStatement() {
       if (deleteFileStatementParser == null) {
-        FutureParser future = scoped("deleteFileStatement", true);
+        FutureParser future = scoped("deleteFileStatement", PUBLIC);
         deleteFileStatementParser = future;
         future.setParser(
           sequence(
@@ -11990,7 +11993,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator disableStatement() {
       if (disableStatementParser == null) {
-        FutureParser future = scoped("disableStatement", true);
+        FutureParser future = scoped("disableStatement", PUBLIC);
         disableStatementParser = future;
         future.setParser(
           sequence(
@@ -12034,7 +12037,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator displayStatement() {
       if (displayStatementParser == null) {
-        FutureParser future = scoped("displayStatement", true);
+        FutureParser future = scoped("displayStatement", PUBLIC);
         displayStatementParser = future;
         future.setParser(
           sequence(
@@ -12097,7 +12100,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator displayStatement__() {
       if (displayStatement__Parser == null) {
-        FutureParser future = scoped("displayStatement__", true);
+        FutureParser future = scoped("displayStatement__", PUBLIC);
         displayStatement__Parser = future;
         future.setParser(
           sequence(
@@ -12131,7 +12134,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator displayDeviceFormat() {
       if (displayDeviceFormatParser == null) {
-        FutureParser future = scoped("displayDeviceFormat", true);
+        FutureParser future = scoped("displayDeviceFormat", PUBLIC);
         displayDeviceFormatParser = future;
         future.setParser(
           sequence(
@@ -12170,7 +12173,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator uponClause() {
       if (uponClauseParser == null) {
-        FutureParser future = scoped("uponClause", true);
+        FutureParser future = scoped("uponClause", PUBLIC);
         uponClauseParser = future;
         future.setParser(
           sequence(
@@ -12200,7 +12203,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator withNoAdvancing() {
       if (withNoAdvancingParser == null) {
-        FutureParser future = scoped("withNoAdvancing", true);
+        FutureParser future = scoped("withNoAdvancing", PUBLIC);
         withNoAdvancingParser = future;
         future.setParser(
           sequence(
@@ -12226,7 +12229,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator displayTerminalFormat() {
       if (displayTerminalFormatParser == null) {
-        FutureParser future = scoped("displayTerminalFormat", true);
+        FutureParser future = scoped("displayTerminalFormat", PUBLIC);
         displayTerminalFormatParser = future;
         future.setParser(
           plus(
@@ -12283,7 +12286,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dtAtPositioning() {
       if (dtAtPositioningParser == null) {
-        FutureParser future = scoped("dtAtPositioning", true);
+        FutureParser future = scoped("dtAtPositioning", PUBLIC);
         dtAtPositioningParser = future;
         future.setParser(
           sequence(
@@ -12309,7 +12312,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dtLineColPositioning() {
       if (dtLineColPositioningParser == null) {
-        FutureParser future = scoped("dtLineColPositioning", true);
+        FutureParser future = scoped("dtLineColPositioning", PUBLIC);
         dtLineColPositioningParser = future;
         future.setParser(
           sequence(
@@ -12350,7 +12353,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dtLinePos() {
       if (dtLinePosParser == null) {
-        FutureParser future = scoped("dtLinePos", true);
+        FutureParser future = scoped("dtLinePos", PUBLIC);
         dtLinePosParser = future;
         future.setParser(
           sequence(
@@ -12389,7 +12392,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dtColPos() {
       if (dtColPosParser == null) {
-        FutureParser future = scoped("dtColPos", true);
+        FutureParser future = scoped("dtColPos", PUBLIC);
         dtColPosParser = future;
         future.setParser(
           sequence(
@@ -12433,7 +12436,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenEntryPhrase() {
       if (screenEntryPhraseParser == null) {
-        FutureParser future = scoped("screenEntryPhrase", true);
+        FutureParser future = scoped("screenEntryPhrase", PUBLIC);
         screenEntryPhraseParser = future;
         future.setParser(
           choice(
@@ -12490,7 +12493,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator autoPhrase() {
       if (autoPhraseParser == null) {
-        FutureParser future = scoped("autoPhrase", true);
+        FutureParser future = scoped("autoPhrase", PUBLIC);
         autoPhraseParser = future;
         future.setParser(
           choice(
@@ -12513,7 +12516,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator backgroundPhrase() {
       if (backgroundPhraseParser == null) {
-        FutureParser future = scoped("backgroundPhrase", true);
+        FutureParser future = scoped("backgroundPhrase", PUBLIC);
         backgroundPhraseParser = future;
         future.setParser(
           sequence(
@@ -12542,7 +12545,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator beepPhrase() {
       if (beepPhraseParser == null) {
-        FutureParser future = scoped("beepPhrase", true);
+        FutureParser future = scoped("beepPhrase", PUBLIC);
         beepPhraseParser = future;
         future.setParser(
           sequence(
@@ -12570,7 +12573,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blankPhrase() {
       if (blankPhraseParser == null) {
-        FutureParser future = scoped("blankPhrase", true);
+        FutureParser future = scoped("blankPhrase", PUBLIC);
         blankPhraseParser = future;
         future.setParser(
           sequence(
@@ -12596,7 +12599,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator blinkPhrase() {
       if (blinkPhraseParser == null) {
-        FutureParser future = scoped("blinkPhrase", true);
+        FutureParser future = scoped("blinkPhrase", PUBLIC);
         blinkPhraseParser = future;
         future.setParser(
           choice(
@@ -12619,7 +12622,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator boldPhrase() {
       if (boldPhraseParser == null) {
-        FutureParser future = scoped("boldPhrase", true);
+        FutureParser future = scoped("boldPhrase", PUBLIC);
         boldPhraseParser = future;
         future.setParser(
           token("BOLD")
@@ -12639,7 +12642,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator capitalizationPhrase() {
       if (capitalizationPhraseParser == null) {
-        FutureParser future = scoped("capitalizationPhrase", true);
+        FutureParser future = scoped("capitalizationPhrase", PUBLIC);
         capitalizationPhraseParser = future;
         future.setParser(
           choice(
@@ -12662,7 +12665,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator controlPhrase() {
       if (controlPhraseParser == null) {
-        FutureParser future = scoped("controlPhrase", true);
+        FutureParser future = scoped("controlPhrase", PUBLIC);
         controlPhraseParser = future;
         future.setParser(
           sequence(
@@ -12691,7 +12694,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator convertPhrase() {
       if (convertPhraseParser == null) {
-        FutureParser future = scoped("convertPhrase", true);
+        FutureParser future = scoped("convertPhrase", PUBLIC);
         convertPhraseParser = future;
         future.setParser(
           choice(
@@ -12714,7 +12717,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cursorPhrase() {
       if (cursorPhraseParser == null) {
-        FutureParser future = scoped("cursorPhrase", true);
+        FutureParser future = scoped("cursorPhrase", PUBLIC);
         cursorPhraseParser = future;
         future.setParser(
           sequence(
@@ -12740,7 +12743,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator echoPhrase() {
       if (echoPhraseParser == null) {
-        FutureParser future = scoped("echoPhrase", true);
+        FutureParser future = scoped("echoPhrase", PUBLIC);
         echoPhraseParser = future;
         future.setParser(
           token("ECHO")
@@ -12760,7 +12763,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator erasePhrase() {
       if (erasePhraseParser == null) {
-        FutureParser future = scoped("erasePhrase", true);
+        FutureParser future = scoped("erasePhrase", PUBLIC);
         erasePhraseParser = future;
         future.setParser(
           sequence(
@@ -12788,7 +12791,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator foregroundPhrase() {
       if (foregroundPhraseParser == null) {
-        FutureParser future = scoped("foregroundPhrase", true);
+        FutureParser future = scoped("foregroundPhrase", PUBLIC);
         foregroundPhraseParser = future;
         future.setParser(
           sequence(
@@ -12817,7 +12820,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fullPhrase() {
       if (fullPhraseParser == null) {
-        FutureParser future = scoped("fullPhrase", true);
+        FutureParser future = scoped("fullPhrase", PUBLIC);
         fullPhraseParser = future;
         future.setParser(
           choice(
@@ -12840,7 +12843,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator gridPhrase() {
       if (gridPhraseParser == null) {
-        FutureParser future = scoped("gridPhrase", true);
+        FutureParser future = scoped("gridPhrase", PUBLIC);
         gridPhraseParser = future;
         future.setParser(
           token("GRID")
@@ -12860,7 +12863,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator highPhrase() {
       if (highPhraseParser == null) {
-        FutureParser future = scoped("highPhrase", true);
+        FutureParser future = scoped("highPhrase", PUBLIC);
         highPhraseParser = future;
         future.setParser(
           choice(
@@ -12883,7 +12886,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator linePhrase() {
       if (linePhraseParser == null) {
-        FutureParser future = scoped("linePhrase", true);
+        FutureParser future = scoped("linePhrase", PUBLIC);
         linePhraseParser = future;
         future.setParser(
           choice(
@@ -12907,7 +12910,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator lowPhrase() {
       if (lowPhraseParser == null) {
-        FutureParser future = scoped("lowPhrase", true);
+        FutureParser future = scoped("lowPhrase", PUBLIC);
         lowPhraseParser = future;
         future.setParser(
           choice(
@@ -12930,7 +12933,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator offPhrase() {
       if (offPhraseParser == null) {
-        FutureParser future = scoped("offPhrase", true);
+        FutureParser future = scoped("offPhrase", PUBLIC);
         offPhraseParser = future;
         future.setParser(
           token("OFF")
@@ -12950,7 +12953,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator promptPhrase() {
       if (promptPhraseParser == null) {
-        FutureParser future = scoped("promptPhrase", true);
+        FutureParser future = scoped("promptPhrase", PUBLIC);
         promptPhraseParser = future;
         future.setParser(
           sequence(
@@ -12992,7 +12995,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator requiredPhrase() {
       if (requiredPhraseParser == null) {
-        FutureParser future = scoped("requiredPhrase", true);
+        FutureParser future = scoped("requiredPhrase", PUBLIC);
         requiredPhraseParser = future;
         future.setParser(
           choice(
@@ -13015,7 +13018,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reversePhrase() {
       if (reversePhraseParser == null) {
-        FutureParser future = scoped("reversePhrase", true);
+        FutureParser future = scoped("reversePhrase", PUBLIC);
         reversePhraseParser = future;
         future.setParser(
           choice(
@@ -13039,7 +13042,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator scrollPhrase() {
       if (scrollPhraseParser == null) {
-        FutureParser future = scoped("scrollPhrase", true);
+        FutureParser future = scoped("scrollPhrase", PUBLIC);
         scrollPhraseParser = future;
         future.setParser(
           sequence(
@@ -13080,7 +13083,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator securePhrase() {
       if (securePhraseParser == null) {
-        FutureParser future = scoped("securePhrase", true);
+        FutureParser future = scoped("securePhrase", PUBLIC);
         securePhraseParser = future;
         future.setParser(
           choice(
@@ -13103,7 +13106,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sizePhrase() {
       if (sizePhraseParser == null) {
-        FutureParser future = scoped("sizePhrase", true);
+        FutureParser future = scoped("sizePhrase", PUBLIC);
         sizePhraseParser = future;
         future.setParser(
           sequence(
@@ -13132,7 +13135,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator standardPhrase() {
       if (standardPhraseParser == null) {
-        FutureParser future = scoped("standardPhrase", true);
+        FutureParser future = scoped("standardPhrase", PUBLIC);
         standardPhraseParser = future;
         future.setParser(
           token("STANDARD")
@@ -13152,7 +13155,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator tabPhrase() {
       if (tabPhraseParser == null) {
-        FutureParser future = scoped("tabPhrase", true);
+        FutureParser future = scoped("tabPhrase", PUBLIC);
         tabPhraseParser = future;
         future.setParser(
           token("TAB")
@@ -13172,7 +13175,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator timePhrase() {
       if (timePhraseParser == null) {
-        FutureParser future = scoped("timePhrase", true);
+        FutureParser future = scoped("timePhrase", PUBLIC);
         timePhraseParser = future;
         future.setParser(
           sequence(
@@ -13201,7 +13204,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator timeoutPhrase() {
       if (timeoutPhraseParser == null) {
-        FutureParser future = scoped("timeoutPhrase", true);
+        FutureParser future = scoped("timeoutPhrase", PUBLIC);
         timeoutPhraseParser = future;
         future.setParser(
           sequence(
@@ -13231,7 +13234,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator justificationPhrase() {
       if (justificationPhraseParser == null) {
-        FutureParser future = scoped("justificationPhrase", true);
+        FutureParser future = scoped("justificationPhrase", PUBLIC);
         justificationPhraseParser = future;
         future.setParser(
           choice(
@@ -13254,7 +13257,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fillPhrase() {
       if (fillPhraseParser == null) {
-        FutureParser future = scoped("fillPhrase", true);
+        FutureParser future = scoped("fillPhrase", PUBLIC);
         fillPhraseParser = future;
         future.setParser(
           choice(
@@ -13277,7 +13280,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator trailingSignPhrase() {
       if (trailingSignPhraseParser == null) {
-        FutureParser future = scoped("trailingSignPhrase", true);
+        FutureParser future = scoped("trailingSignPhrase", PUBLIC);
         trailingSignPhraseParser = future;
         future.setParser(
           token("TRAILING-SIGN")
@@ -13297,7 +13300,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator updatePhrase() {
       if (updatePhraseParser == null) {
-        FutureParser future = scoped("updatePhrase", true);
+        FutureParser future = scoped("updatePhrase", PUBLIC);
         updatePhraseParser = future;
         future.setParser(
           token("UPDATE")
@@ -13317,7 +13320,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator divideStatement() {
       if (divideStatementParser == null) {
-        FutureParser future = scoped("divideStatement", true);
+        FutureParser future = scoped("divideStatement", PUBLIC);
         divideStatementParser = future;
         future.setParser(
           sequence(
@@ -13353,7 +13356,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator division_format1() {
       if (division_format1Parser == null) {
-        FutureParser future = scoped("division_format1", false);
+        FutureParser future = scoped("division_format1", PRIVATE);
         division_format1Parser = future;
         future.setParser(
           sequence(
@@ -13407,7 +13410,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator division_format2() {
       if (division_format2Parser == null) {
-        FutureParser future = scoped("division_format2", false);
+        FutureParser future = scoped("division_format2", PRIVATE);
         division_format2Parser = future;
         future.setParser(
           sequence(
@@ -13459,7 +13462,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator division_format3() {
       if (division_format3Parser == null) {
-        FutureParser future = scoped("division_format3", false);
+        FutureParser future = scoped("division_format3", PRIVATE);
         division_format3Parser = future;
         future.setParser(
           sequence(
@@ -13497,7 +13500,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator enableStatement() {
       if (enableStatementParser == null) {
-        FutureParser future = scoped("enableStatement", true);
+        FutureParser future = scoped("enableStatement", PUBLIC);
         enableStatementParser = future;
         future.setParser(
           sequence(
@@ -13541,7 +13544,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator entryStatement() {
       if (entryStatementParser == null) {
-        FutureParser future = scoped("entryStatement", true);
+        FutureParser future = scoped("entryStatement", PUBLIC);
         entryStatementParser = future;
         future.setParser(
           sequence(
@@ -13625,7 +13628,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator evaluateStatement() {
       if (evaluateStatementParser == null) {
-        FutureParser future = scoped("evaluateStatement", true);
+        FutureParser future = scoped("evaluateStatement", PUBLIC);
         evaluateStatementParser = future;
         future.setParser(
           sequence(
@@ -13663,7 +13666,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator subject() {
       if (subjectParser == null) {
-        FutureParser future = scoped("subject", true);
+        FutureParser future = scoped("subject", PUBLIC);
         subjectParser = future;
         future.setParser(
           sequence(
@@ -13706,7 +13709,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator when() {
       if (whenParser == null) {
-        FutureParser future = scoped("when", true);
+        FutureParser future = scoped("when", PUBLIC);
         whenParser = future;
         future.setParser(
           sequence(
@@ -13743,7 +13746,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator whenOther() {
       if (whenOtherParser == null) {
-        FutureParser future = scoped("whenOther", true);
+        FutureParser future = scoped("whenOther", PUBLIC);
         whenOtherParser = future;
         future.setParser(
           sequence(
@@ -13767,7 +13770,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator object() {
       if (objectParser == null) {
-        FutureParser future = scoped("object", true);
+        FutureParser future = scoped("object", PUBLIC);
         objectParser = future;
         future.setParser(
           choice(
@@ -13818,7 +13821,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator rangeExpression() {
       if (rangeExpressionParser == null) {
-        FutureParser future = scoped("rangeExpression", true);
+        FutureParser future = scoped("rangeExpression", PUBLIC);
         rangeExpressionParser = future;
         future.setParser(
           sequence(
@@ -13876,7 +13879,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator examineStatement() {
       if (examineStatementParser == null) {
-        FutureParser future = scoped("examineStatement", true);
+        FutureParser future = scoped("examineStatement", PUBLIC);
         examineStatementParser = future;
         future.setParser(
           sequence(
@@ -13935,7 +13938,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator execStatement() {
       if (execStatementParser == null) {
-        FutureParser future = scoped("execStatement", false);
+        FutureParser future = scoped("execStatement", PRIVATE);
         execStatementParser = future;
         future.setParser(
           choice(
@@ -13961,7 +13964,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator execSQLStatement() {
       if (execSQLStatementParser == null) {
-        FutureParser future = scoped("execSQLStatement", true);
+        FutureParser future = scoped("execSQLStatement", PUBLIC);
         execSQLStatementParser = future;
         future.setParser(
           sequence(
@@ -13994,7 +13997,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator execCICSStatement() {
       if (execCICSStatementParser == null) {
-        FutureParser future = scoped("execCICSStatement", true);
+        FutureParser future = scoped("execCICSStatement", PUBLIC);
         execCICSStatementParser = future;
         future.setParser(
           sequence(
@@ -14027,7 +14030,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator execDLIStatement() {
       if (execDLIStatementParser == null) {
-        FutureParser future = scoped("execDLIStatement", true);
+        FutureParser future = scoped("execDLIStatement", PUBLIC);
         execDLIStatementParser = future;
         future.setParser(
           sequence(
@@ -14061,7 +14064,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator execHTMLStatement() {
       if (execHTMLStatementParser == null) {
-        FutureParser future = scoped("execHTMLStatement", true);
+        FutureParser future = scoped("execHTMLStatement", PUBLIC);
         execHTMLStatementParser = future;
         future.setParser(
           sequence(
@@ -14095,7 +14098,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator execTextDataStatement() {
       if (execTextDataStatementParser == null) {
-        FutureParser future = scoped("execTextDataStatement", true);
+        FutureParser future = scoped("execTextDataStatement", PUBLIC);
         execTextDataStatementParser = future;
         future.setParser(
           sequence(
@@ -14129,7 +14132,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator exitStatement() {
       if (exitStatementParser == null) {
-        FutureParser future = scoped("exitStatement", true);
+        FutureParser future = scoped("exitStatement", PUBLIC);
         exitStatementParser = future;
         future.setParser(
           sequence(
@@ -14172,7 +14175,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator returningPhrase() {
       if (returningPhraseParser == null) {
-        FutureParser future = scoped("returningPhrase", true);
+        FutureParser future = scoped("returningPhrase", PUBLIC);
         returningPhraseParser = future;
         future.setParser(
           sequence(
@@ -14205,7 +14208,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator generateStatement() {
       if (generateStatementParser == null) {
-        FutureParser future = scoped("generateStatement", true);
+        FutureParser future = scoped("generateStatement", PUBLIC);
         generateStatementParser = future;
         future.setParser(
           sequence(
@@ -14231,7 +14234,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator freeStatement() {
       if (freeStatementParser == null) {
-        FutureParser future = scoped("freeStatement", true);
+        FutureParser future = scoped("freeStatement", PUBLIC);
         freeStatementParser = future;
         future.setParser(
           sequence(
@@ -14266,7 +14269,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator gobackStatement() {
       if (gobackStatementParser == null) {
-        FutureParser future = scoped("gobackStatement", true);
+        FutureParser future = scoped("gobackStatement", PUBLIC);
         gobackStatementParser = future;
         future.setParser(
           sequence(
@@ -14308,7 +14311,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator goToStatement() {
       if (goToStatementParser == null) {
-        FutureParser future = scoped("goToStatement", true);
+        FutureParser future = scoped("goToStatement", PUBLIC);
         goToStatementParser = future;
         future.setParser(
           sequence(
@@ -14339,7 +14342,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dependingOn() {
       if (dependingOnParser == null) {
-        FutureParser future = scoped("dependingOn", true);
+        FutureParser future = scoped("dependingOn", PUBLIC);
         dependingOnParser = future;
         future.setParser(
           sequence(
@@ -14365,7 +14368,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator ifStatement() {
       if (ifStatementParser == null) {
-        FutureParser future = scoped("ifStatement", true);
+        FutureParser future = scoped("ifStatement", PUBLIC);
         ifStatementParser = future;
         future.setParser(
           sequence(
@@ -14395,7 +14398,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator thenBranch() {
       if (thenBranchParser == null) {
-        FutureParser future = scoped("thenBranch", true);
+        FutureParser future = scoped("thenBranch", PUBLIC);
         thenBranchParser = future;
         future.setParser(
           sequence(
@@ -14427,7 +14430,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator elseBranch() {
       if (elseBranchParser == null) {
-        FutureParser future = scoped("elseBranch", true);
+        FutureParser future = scoped("elseBranch", PUBLIC);
         elseBranchParser = future;
         future.setParser(
           sequence(
@@ -14457,7 +14460,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator initiateStatement() {
       if (initiateStatementParser == null) {
-        FutureParser future = scoped("initiateStatement", true);
+        FutureParser future = scoped("initiateStatement", PUBLIC);
         initiateStatementParser = future;
         future.setParser(
           sequence(
@@ -14482,7 +14485,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator invokeStatement() {
       if (invokeStatementParser == null) {
-        FutureParser future = scoped("invokeStatement", true);
+        FutureParser future = scoped("invokeStatement", PUBLIC);
         invokeStatementParser = future;
         future.setParser(
           sequence(
@@ -14625,7 +14628,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator exhibitStatement() {
       if (exhibitStatementParser == null) {
-        FutureParser future = scoped("exhibitStatement", true);
+        FutureParser future = scoped("exhibitStatement", PUBLIC);
         exhibitStatementParser = future;
         future.setParser(
           sequence(
@@ -14659,7 +14662,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator identifiedByStatement() {
       if (identifiedByStatementParser == null) {
-        FutureParser future = scoped("identifiedByStatement", true);
+        FutureParser future = scoped("identifiedByStatement", PUBLIC);
         identifiedByStatementParser = future;
         future.setParser(
           sequence(
@@ -14696,7 +14699,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator initializeStatement() {
       if (initializeStatementParser == null) {
-        FutureParser future = scoped("initializeStatement", true);
+        FutureParser future = scoped("initializeStatement", PUBLIC);
         initializeStatementParser = future;
         future.setParser(
           sequence(
@@ -14731,7 +14734,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator replacingInitClause() {
       if (replacingInitClauseParser == null) {
-        FutureParser future = scoped("replacingInitClause", true);
+        FutureParser future = scoped("replacingInitClause", PUBLIC);
         replacingInitClauseParser = future;
         future.setParser(
           sequence(
@@ -14762,7 +14765,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator replacementTarget() {
       if (replacementTargetParser == null) {
-        FutureParser future = scoped("replacementTarget", true);
+        FutureParser future = scoped("replacementTarget", PUBLIC);
         replacementTargetParser = future;
         future.setParser(
           choice(
@@ -14792,7 +14795,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator inspectStatement() {
       if (inspectStatementParser == null) {
-        FutureParser future = scoped("inspectStatement", true);
+        FutureParser future = scoped("inspectStatement", PUBLIC);
         inspectStatementParser = future;
         future.setParser(
           sequence(
@@ -14825,7 +14828,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator convertingPhrase() {
       if (convertingPhraseParser == null) {
-        FutureParser future = scoped("convertingPhrase", true);
+        FutureParser future = scoped("convertingPhrase", PUBLIC);
         convertingPhraseParser = future;
         future.setParser(
           sequence(
@@ -14859,7 +14862,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator tallyingPhrase() {
       if (tallyingPhraseParser == null) {
-        FutureParser future = scoped("tallyingPhrase", true);
+        FutureParser future = scoped("tallyingPhrase", PUBLIC);
         tallyingPhraseParser = future;
         future.setParser(
           sequence(
@@ -14893,7 +14896,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator tallyingCharactersPhrase() {
       if (tallyingCharactersPhraseParser == null) {
-        FutureParser future = scoped("tallyingCharactersPhrase", true);
+        FutureParser future = scoped("tallyingCharactersPhrase", PUBLIC);
         tallyingCharactersPhraseParser = future;
         future.setParser(
           sequence(
@@ -14918,7 +14921,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator tallyingAllLeadingOrTrailingPhrase() {
       if (tallyingAllLeadingOrTrailingPhraseParser == null) {
-        FutureParser future = scoped("tallyingAllLeadingOrTrailingPhrase", true);
+        FutureParser future = scoped("tallyingAllLeadingOrTrailingPhrase", PUBLIC);
         tallyingAllLeadingOrTrailingPhraseParser = future;
         future.setParser(
           sequence(
@@ -14960,7 +14963,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator replacingPhrase() {
       if (replacingPhraseParser == null) {
-        FutureParser future = scoped("replacingPhrase", true);
+        FutureParser future = scoped("replacingPhrase", PUBLIC);
         replacingPhraseParser = future;
         future.setParser(
           sequence(
@@ -14988,7 +14991,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator replacingCharactersPhrase() {
       if (replacingCharactersPhraseParser == null) {
-        FutureParser future = scoped("replacingCharactersPhrase", true);
+        FutureParser future = scoped("replacingCharactersPhrase", PUBLIC);
         replacingCharactersPhraseParser = future;
         future.setParser(
           sequence(
@@ -15018,7 +15021,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator replacingAllLeadingFirstOrTrailingPhrase() {
       if (replacingAllLeadingFirstOrTrailingPhraseParser == null) {
-        FutureParser future = scoped("replacingAllLeadingFirstOrTrailingPhrase", true);
+        FutureParser future = scoped("replacingAllLeadingFirstOrTrailingPhrase", PUBLIC);
         replacingAllLeadingFirstOrTrailingPhraseParser = future;
         future.setParser(
           sequence(
@@ -15061,7 +15064,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator locationPhrase() {
       if (locationPhraseParser == null) {
-        FutureParser future = scoped("locationPhrase", true);
+        FutureParser future = scoped("locationPhrase", PUBLIC);
         locationPhraseParser = future;
         future.setParser(
           sequence(
@@ -15093,7 +15096,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator mergeStatement() {
       if (mergeStatementParser == null) {
-        FutureParser future = scoped("mergeStatement", true);
+        FutureParser future = scoped("mergeStatement", PUBLIC);
         mergeStatementParser = future;
         future.setParser(
           sequence(
@@ -15178,7 +15181,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator moveStatement() {
       if (moveStatementParser == null) {
-        FutureParser future = scoped("moveStatement", true);
+        FutureParser future = scoped("moveStatement", PUBLIC);
         moveStatementParser = future;
         future.setParser(
           sequence(
@@ -15226,7 +15229,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator multiplyStatement() {
       if (multiplyStatementParser == null) {
-        FutureParser future = scoped("multiplyStatement", true);
+        FutureParser future = scoped("multiplyStatement", PUBLIC);
         multiplyStatementParser = future;
         future.setParser(
           sequence(
@@ -15261,7 +15264,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator multiplication_format1() {
       if (multiplication_format1Parser == null) {
-        FutureParser future = scoped("multiplication_format1", false);
+        FutureParser future = scoped("multiplication_format1", PRIVATE);
         multiplication_format1Parser = future;
         future.setParser(
           sequence(
@@ -15310,7 +15313,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator multiplication_format2() {
       if (multiplication_format2Parser == null) {
-        FutureParser future = scoped("multiplication_format2", false);
+        FutureParser future = scoped("multiplication_format2", PRIVATE);
         multiplication_format2Parser = future;
         future.setParser(
           sequence(
@@ -15348,7 +15351,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator nextSentenceStatement() {
       if (nextSentenceStatementParser == null) {
-        FutureParser future = scoped("nextSentenceStatement", true);
+        FutureParser future = scoped("nextSentenceStatement", PUBLIC);
         nextSentenceStatementParser = future;
         future.setParser(
           sequence(
@@ -15371,7 +15374,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator onStatement() {
       if (onStatementParser == null) {
-        FutureParser future = scoped("onStatement", true);
+        FutureParser future = scoped("onStatement", PUBLIC);
         onStatementParser = future;
         future.setParser(
           sequence(
@@ -15441,7 +15444,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator openStatement() {
       if (openStatementParser == null) {
-        FutureParser future = scoped("openStatement", true);
+        FutureParser future = scoped("openStatement", PUBLIC);
         openStatementParser = future;
         future.setParser(
           sequence(
@@ -15516,7 +15519,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator performStatement() {
       if (performStatementParser == null) {
-        FutureParser future = scoped("performStatement", true);
+        FutureParser future = scoped("performStatement", PUBLIC);
         performStatementParser = future;
         future.setParser(
           sequence(
@@ -15586,7 +15589,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator times() {
       if (timesParser == null) {
-        FutureParser future = scoped("times", true);
+        FutureParser future = scoped("times", PUBLIC);
         timesParser = future;
         future.setParser(
           sequence(
@@ -15612,7 +15615,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator testPosition() {
       if (testPositionParser == null) {
-        FutureParser future = scoped("testPosition", true);
+        FutureParser future = scoped("testPosition", PUBLIC);
         testPositionParser = future;
         future.setParser(
           sequence(
@@ -15641,7 +15644,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator until() {
       if (untilParser == null) {
-        FutureParser future = scoped("until", true);
+        FutureParser future = scoped("until", PUBLIC);
         untilParser = future;
         future.setParser(
           sequence(
@@ -15675,7 +15678,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator varying() {
       if (varyingParser == null) {
-        FutureParser future = scoped("varying", true);
+        FutureParser future = scoped("varying", PUBLIC);
         varyingParser = future;
         future.setParser(
           sequence(
@@ -15757,7 +15760,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator purgeStatement() {
       if (purgeStatementParser == null) {
-        FutureParser future = scoped("purgeStatement", true);
+        FutureParser future = scoped("purgeStatement", PUBLIC);
         purgeStatementParser = future;
         future.setParser(
           sequence(
@@ -15780,7 +15783,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator raiseStatement() {
       if (raiseStatementParser == null) {
-        FutureParser future = scoped("raiseStatement", true);
+        FutureParser future = scoped("raiseStatement", PUBLIC);
         raiseStatementParser = future;
         future.setParser(
           sequence(
@@ -15805,7 +15808,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator readStatement() {
       if (readStatementParser == null) {
-        FutureParser future = scoped("readStatement", true);
+        FutureParser future = scoped("readStatement", PUBLIC);
         readStatementParser = future;
         future.setParser(
           sequence(
@@ -15901,7 +15904,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator readWithClause() {
       if (readWithClauseParser == null) {
-        FutureParser future = scoped("readWithClause", true);
+        FutureParser future = scoped("readWithClause", PUBLIC);
         readWithClauseParser = future;
         future.setParser(
           sequence(
@@ -15929,7 +15932,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator readLockClause() {
       if (readLockClauseParser == null) {
-        FutureParser future = scoped("readLockClause", true);
+        FutureParser future = scoped("readLockClause", PUBLIC);
         readLockClauseParser = future;
         future.setParser(
           sequence(
@@ -15958,7 +15961,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator readyTraceStatement() {
       if (readyTraceStatementParser == null) {
-        FutureParser future = scoped("readyTraceStatement", true);
+        FutureParser future = scoped("readyTraceStatement", PUBLIC);
         readyTraceStatementParser = future;
         future.setParser(
           sequence(
@@ -15984,7 +15987,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator receiveStatement() {
       if (receiveStatementParser == null) {
-        FutureParser future = scoped("receiveStatement", true);
+        FutureParser future = scoped("receiveStatement", PUBLIC);
         receiveStatementParser = future;
         future.setParser(
           sequence(
@@ -16096,7 +16099,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator noData() {
       if (noDataParser == null) {
-        FutureParser future = scoped("noData", true);
+        FutureParser future = scoped("noData", PUBLIC);
         noDataParser = future;
         future.setParser(
           sequence(
@@ -16120,7 +16123,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator withData() {
       if (withDataParser == null) {
-        FutureParser future = scoped("withData", true);
+        FutureParser future = scoped("withData", PUBLIC);
         withDataParser = future;
         future.setParser(
           sequence(
@@ -16144,7 +16147,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator releaseStatement() {
       if (releaseStatementParser == null) {
-        FutureParser future = scoped("releaseStatement", true);
+        FutureParser future = scoped("releaseStatement", PUBLIC);
         releaseStatementParser = future;
         future.setParser(
           sequence(
@@ -16173,7 +16176,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator resetTraceStatement() {
       if (resetTraceStatementParser == null) {
-        FutureParser future = scoped("resetTraceStatement", true);
+        FutureParser future = scoped("resetTraceStatement", PUBLIC);
         resetTraceStatementParser = future;
         future.setParser(
           sequence(
@@ -16199,7 +16202,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator returnStatement() {
       if (returnStatementParser == null) {
-        FutureParser future = scoped("returnStatement", true);
+        FutureParser future = scoped("returnStatement", PUBLIC);
         returnStatementParser = future;
         future.setParser(
           sequence(
@@ -16238,7 +16241,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator rewriteStatement() {
       if (rewriteStatementParser == null) {
-        FutureParser future = scoped("rewriteStatement", true);
+        FutureParser future = scoped("rewriteStatement", PUBLIC);
         rewriteStatementParser = future;
         future.setParser(
           sequence(
@@ -16293,7 +16296,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator rollbackStatement() {
       if (rollbackStatementParser == null) {
-        FutureParser future = scoped("rollbackStatement", true);
+        FutureParser future = scoped("rollbackStatement", PUBLIC);
         rollbackStatementParser = future;
         future.setParser(
           token("ROLLBACK")
@@ -16313,7 +16316,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator searchStatement() {
       if (searchStatementParser == null) {
-        FutureParser future = scoped("searchStatement", true);
+        FutureParser future = scoped("searchStatement", PUBLIC);
         searchStatementParser = future;
         future.setParser(
           sequence(
@@ -16374,7 +16377,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator atEnd() {
       if (atEndParser == null) {
-        FutureParser future = scoped("atEnd", true);
+        FutureParser future = scoped("atEnd", PUBLIC);
         atEndParser = future;
         future.setParser(
           sequence(
@@ -16400,7 +16403,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notAtEnd() {
       if (notAtEndParser == null) {
-        FutureParser future = scoped("notAtEnd", true);
+        FutureParser future = scoped("notAtEnd", PUBLIC);
         notAtEndParser = future;
         future.setParser(
           sequence(
@@ -16427,7 +16430,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sendStatement() {
       if (sendStatementParser == null) {
-        FutureParser future = scoped("sendStatement", true);
+        FutureParser future = scoped("sendStatement", PUBLIC);
         sendStatementParser = future;
         future.setParser(
           sequence(
@@ -16531,7 +16534,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator serviceStatement() {
       if (serviceStatementParser == null) {
-        FutureParser future = scoped("serviceStatement", true);
+        FutureParser future = scoped("serviceStatement", PUBLIC);
         serviceStatementParser = future;
         future.setParser(
           sequence(
@@ -16560,7 +16563,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sortStatement() {
       if (sortStatementParser == null) {
-        FutureParser future = scoped("sortStatement", true);
+        FutureParser future = scoped("sortStatement", PUBLIC);
         sortStatementParser = future;
         future.setParser(
           choice(
@@ -16735,7 +16738,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator setStatement() {
       if (setStatementParser == null) {
-        FutureParser future = scoped("setStatement", true);
+        FutureParser future = scoped("setStatement", PUBLIC);
         setStatementParser = future;
         future.setParser(
           sequence(
@@ -16768,7 +16771,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator setEnvironmentVariable() {
       if (setEnvironmentVariableParser == null) {
-        FutureParser future = scoped("setEnvironmentVariable", true);
+        FutureParser future = scoped("setEnvironmentVariable", PUBLIC);
         setEnvironmentVariableParser = future;
         future.setParser(
           sequence(
@@ -16793,7 +16796,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator setOther() {
       if (setOtherParser == null) {
-        FutureParser future = scoped("setOther", true);
+        FutureParser future = scoped("setOther", PUBLIC);
         setOtherParser = future;
         future.setParser(
           sequence(
@@ -16889,7 +16892,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator startStatement() {
       if (startStatementParser == null) {
-        FutureParser future = scoped("startStatement", true);
+        FutureParser future = scoped("startStatement", PUBLIC);
         startStatementParser = future;
         future.setParser(
           sequence(
@@ -16930,7 +16933,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator keyModifier() {
       if (keyModifierParser == null) {
-        FutureParser future = scoped("keyModifier", true);
+        FutureParser future = scoped("keyModifier", PUBLIC);
         keyModifierParser = future;
         future.setParser(
           sequence(
@@ -16967,7 +16970,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sizeModifier() {
       if (sizeModifierParser == null) {
-        FutureParser future = scoped("sizeModifier", true);
+        FutureParser future = scoped("sizeModifier", PUBLIC);
         sizeModifierParser = future;
         future.setParser(
           sequence(
@@ -16996,7 +16999,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator whileKeyModifier() {
       if (whileKeyModifierParser == null) {
-        FutureParser future = scoped("whileKeyModifier", true);
+        FutureParser future = scoped("whileKeyModifier", PUBLIC);
         whileKeyModifierParser = future;
         future.setParser(
           sequence(
@@ -17037,7 +17040,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator likeMods() {
       if (likeModsParser == null) {
-        FutureParser future = scoped("likeMods", true);
+        FutureParser future = scoped("likeMods", PUBLIC);
         likeModsParser = future;
         future.setParser(
           choice(
@@ -17062,7 +17065,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator trimmedRight() {
       if (trimmedRightParser == null) {
-        FutureParser future = scoped("trimmedRight", true);
+        FutureParser future = scoped("trimmedRight", PUBLIC);
         trimmedRightParser = future;
         future.setParser(
           sequence(
@@ -17085,7 +17088,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator trimmedLeft() {
       if (trimmedLeftParser == null) {
-        FutureParser future = scoped("trimmedLeft", true);
+        FutureParser future = scoped("trimmedLeft", PUBLIC);
         trimmedLeftParser = future;
         future.setParser(
           sequence(
@@ -17108,7 +17111,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator caseSensitive() {
       if (caseSensitiveParser == null) {
-        FutureParser future = scoped("caseSensitive", true);
+        FutureParser future = scoped("caseSensitive", PUBLIC);
         caseSensitiveParser = future;
         future.setParser(
           token("CASE-SENSITIVE")
@@ -17128,7 +17131,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator caseInsensitive() {
       if (caseInsensitiveParser == null) {
-        FutureParser future = scoped("caseInsensitive", true);
+        FutureParser future = scoped("caseInsensitive", PUBLIC);
         caseInsensitiveParser = future;
         future.setParser(
           token("CASE-INSENSITIVE")
@@ -17148,7 +17151,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator stopStatement() {
       if (stopStatementParser == null) {
-        FutureParser future = scoped("stopStatement", true);
+        FutureParser future = scoped("stopStatement", PUBLIC);
         stopStatementParser = future;
         future.setParser(
           sequence(
@@ -17232,7 +17235,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator stringStatement() {
       if (stringStatementParser == null) {
-        FutureParser future = scoped("stringStatement", true);
+        FutureParser future = scoped("stringStatement", PUBLIC);
         stringStatementParser = future;
         future.setParser(
           sequence(
@@ -17295,7 +17298,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator subtractStatement() {
       if (subtractStatementParser == null) {
-        FutureParser future = scoped("subtractStatement", true);
+        FutureParser future = scoped("subtractStatement", PUBLIC);
         subtractStatementParser = future;
         future.setParser(
           sequence(
@@ -17331,7 +17334,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator subtraction_format1() {
       if (subtraction_format1Parser == null) {
-        FutureParser future = scoped("subtraction_format1", false);
+        FutureParser future = scoped("subtraction_format1", PRIVATE);
         subtraction_format1Parser = future;
         future.setParser(
           sequence(
@@ -17370,7 +17373,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator subtraction_format2() {
       if (subtraction_format2Parser == null) {
-        FutureParser future = scoped("subtraction_format2", false);
+        FutureParser future = scoped("subtraction_format2", PRIVATE);
         subtraction_format2Parser = future;
         future.setParser(
           sequence(
@@ -17421,7 +17424,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator subtraction_format3() {
       if (subtraction_format3Parser == null) {
-        FutureParser future = scoped("subtraction_format3", false);
+        FutureParser future = scoped("subtraction_format3", PRIVATE);
         subtraction_format3Parser = future;
         future.setParser(
           sequence(
@@ -17461,7 +17464,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator suppressStatement() {
       if (suppressStatementParser == null) {
-        FutureParser future = scoped("suppressStatement", true);
+        FutureParser future = scoped("suppressStatement", PUBLIC);
         suppressStatementParser = future;
         future.setParser(
           sequence(
@@ -17486,7 +17489,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator terminateStatement() {
       if (terminateStatementParser == null) {
-        FutureParser future = scoped("terminateStatement", true);
+        FutureParser future = scoped("terminateStatement", PUBLIC);
         terminateStatementParser = future;
         future.setParser(
           sequence(
@@ -17511,7 +17514,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator transformStatement() {
       if (transformStatementParser == null) {
-        FutureParser future = scoped("transformStatement", true);
+        FutureParser future = scoped("transformStatement", PUBLIC);
         transformStatementParser = future;
         future.setParser(
           sequence(
@@ -17549,7 +17552,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator unlockStatement() {
       if (unlockStatementParser == null) {
-        FutureParser future = scoped("unlockStatement", true);
+        FutureParser future = scoped("unlockStatement", PUBLIC);
         unlockStatementParser = future;
         future.setParser(
           sequence(
@@ -17578,7 +17581,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator unstringStatement() {
       if (unstringStatementParser == null) {
-        FutureParser future = scoped("unstringStatement", true);
+        FutureParser future = scoped("unstringStatement", PUBLIC);
         unstringStatementParser = future;
         future.setParser(
           sequence(
@@ -17679,7 +17682,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator useStatement() {
       if (useStatementParser == null) {
-        FutureParser future = scoped("useStatement", true);
+        FutureParser future = scoped("useStatement", PUBLIC);
         useStatementParser = future;
         future.setParser(
           sequence(
@@ -17707,7 +17710,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator errorDeclarative() {
       if (errorDeclarativeParser == null) {
-        FutureParser future = scoped("errorDeclarative", true);
+        FutureParser future = scoped("errorDeclarative", PUBLIC);
         errorDeclarativeParser = future;
         future.setParser(
           sequence(
@@ -17761,7 +17764,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator debugDeclarative() {
       if (debugDeclarativeParser == null) {
-        FutureParser future = scoped("debugDeclarative", true);
+        FutureParser future = scoped("debugDeclarative", PUBLIC);
         debugDeclarativeParser = future;
         future.setParser(
           sequence(
@@ -17813,7 +17816,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator labelDeclarative() {
       if (labelDeclarativeParser == null) {
-        FutureParser future = scoped("labelDeclarative", true);
+        FutureParser future = scoped("labelDeclarative", PUBLIC);
         labelDeclarativeParser = future;
         future.setParser(
           sequence(
@@ -17868,7 +17871,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator beforeReportingDeclarative() {
       if (beforeReportingDeclarativeParser == null) {
-        FutureParser future = scoped("beforeReportingDeclarative", true);
+        FutureParser future = scoped("beforeReportingDeclarative", PUBLIC);
         beforeReportingDeclarativeParser = future;
         future.setParser(
           sequence(
@@ -17895,7 +17898,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator waitStatement() {
       if (waitStatementParser == null) {
-        FutureParser future = scoped("waitStatement", true);
+        FutureParser future = scoped("waitStatement", PUBLIC);
         waitStatementParser = future;
         future.setParser(
           choice(
@@ -17957,7 +17960,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator writeStatement() {
       if (writeStatementParser == null) {
-        FutureParser future = scoped("writeStatement", true);
+        FutureParser future = scoped("writeStatement", PUBLIC);
         writeStatementParser = future;
         future.setParser(
           sequence(
@@ -18051,7 +18054,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator atEndOfPage() {
       if (atEndOfPageParser == null) {
-        FutureParser future = scoped("atEndOfPage", true);
+        FutureParser future = scoped("atEndOfPage", PUBLIC);
         atEndOfPageParser = future;
         future.setParser(
           sequence(
@@ -18080,7 +18083,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator notAtEndOfPage() {
       if (notAtEndOfPageParser == null) {
-        FutureParser future = scoped("notAtEndOfPage", true);
+        FutureParser future = scoped("notAtEndOfPage", PUBLIC);
         notAtEndOfPageParser = future;
         future.setParser(
           sequence(
@@ -18110,7 +18113,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator xmlGenerateStatement() {
       if (xmlGenerateStatementParser == null) {
-        FutureParser future = scoped("xmlGenerateStatement", true);
+        FutureParser future = scoped("xmlGenerateStatement", PUBLIC);
         xmlGenerateStatementParser = future;
         future.setParser(
           sequence(
@@ -18203,7 +18206,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator xmlParseStatement() {
       if (xmlParseStatementParser == null) {
-        FutureParser future = scoped("xmlParseStatement", true);
+        FutureParser future = scoped("xmlParseStatement", PUBLIC);
         xmlParseStatementParser = future;
         future.setParser(
           sequence(
@@ -18255,7 +18258,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator compilerStatement() {
       if (compilerStatementParser == null) {
-        FutureParser future = scoped("compilerStatement", true);
+        FutureParser future = scoped("compilerStatement", PUBLIC);
         compilerStatementParser = future;
         future.setParser(
           choice(
@@ -18285,7 +18288,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator compilerDirective() {
       if (compilerDirectiveParser == null) {
-        FutureParser future = scoped("compilerDirective", true);
+        FutureParser future = scoped("compilerDirective", PUBLIC);
         compilerDirectiveParser = future;
         future.setParser(
           sequence(
@@ -18321,7 +18324,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator compilerIfStatement() {
       if (compilerIfStatementParser == null) {
-        FutureParser future = scoped("compilerIfStatement", true);
+        FutureParser future = scoped("compilerIfStatement", PUBLIC);
         compilerIfStatementParser = future;
         future.setParser(
           sequence(
@@ -18383,7 +18386,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator compilerDisplayStatement() {
       if (compilerDisplayStatementParser == null) {
-        FutureParser future = scoped("compilerDisplayStatement", true);
+        FutureParser future = scoped("compilerDisplayStatement", PUBLIC);
         compilerDisplayStatementParser = future;
         future.setParser(
           sequence(
@@ -18414,7 +18417,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator copyOperandName() {
       if (copyOperandNameParser == null) {
-        FutureParser future = scoped("copyOperandName", true);
+        FutureParser future = scoped("copyOperandName", PUBLIC);
         copyOperandNameParser = future;
         future.setParser(
           choice(
@@ -18448,7 +18451,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sourceFormattingDirective() {
       if (sourceFormattingDirectiveParser == null) {
-        FutureParser future = scoped("sourceFormattingDirective", true);
+        FutureParser future = scoped("sourceFormattingDirective", PUBLIC);
         sourceFormattingDirectiveParser = future;
         future.setParser(
           choice(
@@ -18472,7 +18475,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator ejectStatement() {
       if (ejectStatementParser == null) {
-        FutureParser future = scoped("ejectStatement", true);
+        FutureParser future = scoped("ejectStatement", PUBLIC);
         ejectStatementParser = future;
         future.setParser(
           sequence(
@@ -18497,7 +18500,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator skipStatement() {
       if (skipStatementParser == null) {
-        FutureParser future = scoped("skipStatement", true);
+        FutureParser future = scoped("skipStatement", PUBLIC);
         skipStatementParser = future;
         future.setParser(
           sequence(
@@ -18526,7 +18529,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator titleStatement() {
       if (titleStatementParser == null) {
-        FutureParser future = scoped("titleStatement", true);
+        FutureParser future = scoped("titleStatement", PUBLIC);
         titleStatementParser = future;
         future.setParser(
           sequence(
@@ -18552,7 +18555,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator divisionStart() {
       if (divisionStartParser == null) {
-        FutureParser future = scoped("divisionStart", true);
+        FutureParser future = scoped("divisionStart", PUBLIC);
         divisionStartParser = future;
         future.setParser(
           sequence(
@@ -18601,7 +18604,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sectionStart() {
       if (sectionStartParser == null) {
-        FutureParser future = scoped("sectionStart", true);
+        FutureParser future = scoped("sectionStart", PUBLIC);
         sectionStartParser = future;
         future.setParser(
           sequence(
@@ -18638,7 +18641,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator paragraphStart() {
       if (paragraphStartParser == null) {
-        FutureParser future = scoped("paragraphStart", true);
+        FutureParser future = scoped("paragraphStart", PUBLIC);
         paragraphStartParser = future;
         future.setParser(
           sequence(
@@ -18672,7 +18675,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator function() {
       if (functionParser == null) {
-        FutureParser future = scoped("function", true);
+        FutureParser future = scoped("function", PUBLIC);
         functionParser = future;
         future.setParser(
           sequence(
@@ -18876,7 +18879,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator identifier() {
       if (identifierParser == null) {
-        FutureParser future = scoped("identifier", true);
+        FutureParser future = scoped("identifier", PUBLIC);
         identifierParser = future;
         future.setParser(
           choice(
@@ -18903,7 +18906,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator identifier_format1() {
       if (identifier_format1Parser == null) {
-        FutureParser future = scoped("identifier_format1", true);
+        FutureParser future = scoped("identifier_format1", PUBLIC);
         identifier_format1Parser = future;
         future.setParser(
           sequence(
@@ -18928,7 +18931,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator identifier_format2() {
       if (identifier_format2Parser == null) {
-        FutureParser future = scoped("identifier_format2", true);
+        FutureParser future = scoped("identifier_format2", PUBLIC);
         identifier_format2Parser = future;
         future.setParser(
           sequence(
@@ -18953,7 +18956,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator identifier_format6() {
       if (identifier_format6Parser == null) {
-        FutureParser future = scoped("identifier_format6", true);
+        FutureParser future = scoped("identifier_format6", PUBLIC);
         identifier_format6Parser = future;
         future.setParser(
           choice(
@@ -18986,7 +18989,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataAddressIdentifier() {
       if (dataAddressIdentifierParser == null) {
-        FutureParser future = scoped("dataAddressIdentifier", true);
+        FutureParser future = scoped("dataAddressIdentifier", PUBLIC);
         dataAddressIdentifierParser = future;
         future.setParser(
           sequence(
@@ -19012,7 +19015,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator qualifiedLinageCounter() {
       if (qualifiedLinageCounterParser == null) {
-        FutureParser future = scoped("qualifiedLinageCounter", true);
+        FutureParser future = scoped("qualifiedLinageCounter", PUBLIC);
         qualifiedLinageCounterParser = future;
         future.setParser(
           sequence(
@@ -19045,7 +19048,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator qualifiedReportCounter() {
       if (qualifiedReportCounterParser == null) {
-        FutureParser future = scoped("qualifiedReportCounter", true);
+        FutureParser future = scoped("qualifiedReportCounter", PUBLIC);
         qualifiedReportCounterParser = future;
         future.setParser(
           sequence(
@@ -19085,7 +19088,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator argument() {
       if (argumentParser == null) {
-        FutureParser future = scoped("argument", true);
+        FutureParser future = scoped("argument", PUBLIC);
         argumentParser = future;
         future.setParser(
           choice(
@@ -19119,7 +19122,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator qualifier() {
       if (qualifierParser == null) {
-        FutureParser future = scoped("qualifier", true);
+        FutureParser future = scoped("qualifier", PUBLIC);
         qualifierParser = future;
         future.setParser(
           plus(
@@ -19147,7 +19150,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator subscript() {
       if (subscriptParser == null) {
-        FutureParser future = scoped("subscript", true);
+        FutureParser future = scoped("subscript", PUBLIC);
         subscriptParser = future;
         future.setParser(
           choice(
@@ -19170,7 +19173,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator directSubscript() {
       if (directSubscriptParser == null) {
-        FutureParser future = scoped("directSubscript", true);
+        FutureParser future = scoped("directSubscript", PUBLIC);
         directSubscriptParser = future;
         future.setParser(
           choice(
@@ -19194,7 +19197,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator relativeSubscript() {
       if (relativeSubscriptParser == null) {
-        FutureParser future = scoped("relativeSubscript", true);
+        FutureParser future = scoped("relativeSubscript", PUBLIC);
         relativeSubscriptParser = future;
         future.setParser(
           sequence(
@@ -19221,7 +19224,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator referenceModifier() {
       if (referenceModifierParser == null) {
-        FutureParser future = scoped("referenceModifier", true);
+        FutureParser future = scoped("referenceModifier", PUBLIC);
         referenceModifierParser = future;
         future.setParser(
           sequence(
@@ -19249,18 +19252,10 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator arithmeticExpression() {
       if (arithmeticExpressionParser == null) {
-        FutureParser future = scoped("arithmeticExpression", true);
+        FutureParser future = scoped("arithmeticExpression", PUBLIC);
         arithmeticExpressionParser = future;
         future.setParser(
-          sequence(
-            expression(),
-            star(
-              sequence(
-                bitwiseOp(),
-                expression()
-              )
-            )
-          )
+          bitwiseInclusiveDisjunction()
         );
       }
     
@@ -19268,36 +19263,90 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // bitwiseOp
+    // bitwiseInclusiveDisjunction
     // ........................................................
     
-    private ParserCombinator bitwiseOpParser = null;
+    private ParserCombinator bitwiseInclusiveDisjunctionParser = null;
     
-    private final Start bitwiseOp = Start.on(getNamespace(), "bitwiseOp");
+    public final Start bitwiseInclusiveDisjunction = Start.on(getNamespace(), "bitwiseInclusiveDisjunction");
     
-    private ParserCombinator bitwiseOp() {
-      if (bitwiseOpParser == null) {
-        FutureParser future = scoped("bitwiseOp", false);
-        bitwiseOpParser = future;
+    public ParserCombinator bitwiseInclusiveDisjunction() {
+      if (bitwiseInclusiveDisjunctionParser == null) {
+        FutureParser future = scoped("bitwiseInclusiveDisjunction", HIDING);
+        bitwiseInclusiveDisjunctionParser = future;
         future.setParser(
-          choice(
-            as("bAND",
-              token("B-AND")
-            ),
-            as("bOR",
-              token("B-OR")
-            ),
-            as("bXOR",
-              choice(
-                token("B-XOR"),
-                token("B-EXOR")
+          sequence(
+            bitwiseExclusiveDisjunction(),
+            star(
+              sequence(
+                token("B-OR"),
+                bitwiseExclusiveDisjunction()
               )
             )
           )
         );
       }
     
-      return bitwiseOpParser;
+      return bitwiseInclusiveDisjunctionParser;
+    }
+    
+    // ========================================================
+    // bitwiseExclusiveDisjunction
+    // ........................................................
+    
+    private ParserCombinator bitwiseExclusiveDisjunctionParser = null;
+    
+    public final Start bitwiseExclusiveDisjunction = Start.on(getNamespace(), "bitwiseExclusiveDisjunction");
+    
+    public ParserCombinator bitwiseExclusiveDisjunction() {
+      if (bitwiseExclusiveDisjunctionParser == null) {
+        FutureParser future = scoped("bitwiseExclusiveDisjunction", HIDING);
+        bitwiseExclusiveDisjunctionParser = future;
+        future.setParser(
+          sequence(
+            bitwiseConjunction(),
+            star(
+              sequence(
+                choice(
+                  token("B-XOR"),
+                  token("B-EXOR")
+                ),
+                bitwiseConjunction()
+              )
+            )
+          )
+        );
+      }
+    
+      return bitwiseExclusiveDisjunctionParser;
+    }
+    
+    // ========================================================
+    // bitwiseConjunction
+    // ........................................................
+    
+    private ParserCombinator bitwiseConjunctionParser = null;
+    
+    public final Start bitwiseConjunction = Start.on(getNamespace(), "bitwiseConjunction");
+    
+    public ParserCombinator bitwiseConjunction() {
+      if (bitwiseConjunctionParser == null) {
+        FutureParser future = scoped("bitwiseConjunction", HIDING);
+        bitwiseConjunctionParser = future;
+        future.setParser(
+          sequence(
+            expression(),
+            star(
+              sequence(
+                token("B-AND"),
+                expression()
+              )
+            )
+          )
+        );
+      }
+    
+      return bitwiseConjunctionParser;
     }
     
     // ========================================================
@@ -19310,15 +19359,25 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator expression() {
       if (expressionParser == null) {
-        FutureParser future = scoped("expression", true);
+        FutureParser future = scoped("expression", HIDING);
         expressionParser = future;
         future.setParser(
           sequence(
             term(),
             star(
-              sequence(
-                addingOp(),
-                term()
+              choice(
+                as("add",
+                  sequence(
+                    literal("+"),
+                    term()
+                  )
+                ),
+                as("subtract",
+                  sequence(
+                    literal("-"),
+                    term()
+                  )
+                )
               )
             )
           )
@@ -19326,33 +19385,6 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return expressionParser;
-    }
-    
-    // ========================================================
-    // addingOp
-    // ........................................................
-    
-    private ParserCombinator addingOpParser = null;
-    
-    private final Start addingOp = Start.on(getNamespace(), "addingOp");
-    
-    private ParserCombinator addingOp() {
-      if (addingOpParser == null) {
-        FutureParser future = scoped("addingOp", false);
-        addingOpParser = future;
-        future.setParser(
-          choice(
-            as("add",
-              literal("+")
-            ),
-            as("subtract",
-              literal("-")
-            )
-          )
-        );
-      }
-    
-      return addingOpParser;
     }
     
     // ========================================================
@@ -19365,18 +19397,25 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator term() {
       if (termParser == null) {
-        FutureParser future = scoped("term", true);
+        FutureParser future = scoped("term", HIDING);
         termParser = future;
         future.setParser(
           sequence(
             factor(),
             star(
-              sequence(
-                choice(
-                  literal("*"),
-                  literal("/")
+              choice(
+                as("multiply",
+                  sequence(
+                    literal("*"),
+                    factor()
+                  )
                 ),
-                factor()
+                as("divide",
+                  sequence(
+                    literal("/"),
+                    factor()
+                  )
+                )
               )
             )
           )
@@ -19384,33 +19423,6 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return termParser;
-    }
-    
-    // ========================================================
-    // multiplyingOp
-    // ........................................................
-    
-    private ParserCombinator multiplyingOpParser = null;
-    
-    private final Start multiplyingOp = Start.on(getNamespace(), "multiplyingOp");
-    
-    private ParserCombinator multiplyingOp() {
-      if (multiplyingOpParser == null) {
-        FutureParser future = scoped("multiplyingOp", false);
-        multiplyingOpParser = future;
-        future.setParser(
-          choice(
-            as("multiply",
-              literal("*")
-            ),
-            as("divide",
-              literal("/")
-            )
-          )
-        );
-      }
-    
-      return multiplyingOpParser;
     }
     
     // ========================================================
@@ -19423,21 +19435,15 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator factor() {
       if (factorParser == null) {
-        FutureParser future = scoped("factor", true);
+        FutureParser future = scoped("factor", HIDING);
         factorParser = future;
         future.setParser(
           sequence(
-            optional(
-              unaryOp()
-            ),
-            atom(),
+            base(),
             star(
               sequence(
-                exponentiationOp(),
-                optional(
-                  unaryOp()
-                ),
-                atom()
+                literal("**"),
+                base()
               )
             )
           )
@@ -19448,55 +19454,38 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // unaryOp
+    // base
     // ........................................................
     
-    private ParserCombinator unaryOpParser = null;
+    private ParserCombinator baseParser = null;
     
-    private final Start unaryOp = Start.on(getNamespace(), "unaryOp");
+    public final Start base = Start.on(getNamespace(), "base");
     
-    private ParserCombinator unaryOp() {
-      if (unaryOpParser == null) {
-        FutureParser future = scoped("unaryOp", false);
-        unaryOpParser = future;
+    public ParserCombinator base() {
+      if (baseParser == null) {
+        FutureParser future = scoped("base", HIDING);
+        baseParser = future;
         future.setParser(
-          choice(
-            as("pos",
-              literal("+")
+          sequence(
+            optional(
+              choice(
+                as("pos",
+                  literal("+")
+                ),
+                as("neg",
+                  literal("-")
+                ),
+                as("bNOT",
+                  token("B-NOT")
+                )
+              )
             ),
-            as("neg",
-              literal("-")
-            ),
-            as("bNOT",
-              token("B-NOT")
-            )
+            atom()
           )
         );
       }
     
-      return unaryOpParser;
-    }
-    
-    // ========================================================
-    // exponentiationOp
-    // ........................................................
-    
-    private ParserCombinator exponentiationOpParser = null;
-    
-    private final Start exponentiationOp = Start.on(getNamespace(), "exponentiationOp");
-    
-    private ParserCombinator exponentiationOp() {
-      if (exponentiationOpParser == null) {
-        FutureParser future = scoped("exponentiationOp", false);
-        exponentiationOpParser = future;
-        future.setParser(
-          as("exp",
-            literal("**")
-          )
-        );
-      }
-    
-      return exponentiationOpParser;
+      return baseParser;
     }
     
     // ========================================================
@@ -19509,17 +19498,19 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator atom() {
       if (atomParser == null) {
-        FutureParser future = scoped("atom", false);
+        FutureParser future = scoped("atom", PRIVATE);
         atomParser = future;
         future.setParser(
           choice(
             zero(),
             identifier(),
             numeric(),
-            sequence(
-              literal("("),
-              arithmeticExpression(),
-              literal(")")
+            as("nested",
+              sequence(
+                literal("("),
+                bitwiseInclusiveDisjunction(),
+                literal(")")
+              )
             )
           )
         );
@@ -19538,14 +19529,19 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator moreArithmeticOp() {
       if (moreArithmeticOpParser == null) {
-        FutureParser future = scoped("moreArithmeticOp", false);
+        FutureParser future = scoped("moreArithmeticOp", PRIVATE);
         moreArithmeticOpParser = future;
         future.setParser(
           choice(
-            bitwiseOp(),
-            addingOp(),
-            multiplyingOp(),
-            exponentiationOp()
+            token("B-AND"),
+            token("B-OR"),
+            token("B-XOR"),
+            token("B-EXOR"),
+            literal("+"),
+            literal("-"),
+            literal("*"),
+            literal("/"),
+            literal("**")
           )
         );
       }
@@ -19563,7 +19559,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator condition() {
       if (conditionParser == null) {
-        FutureParser future = scoped("condition", true);
+        FutureParser future = scoped("condition", PUBLIC);
         conditionParser = future;
         future.setParser(
           disjunction()
@@ -19579,26 +19575,21 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator disjunctionParser = null;
     
-    private final Start disjunction = Start.on(getNamespace(), "disjunction");
+    public final Start disjunction = Start.on(getNamespace(), "disjunction");
     
-    private ParserCombinator disjunction() {
+    public ParserCombinator disjunction() {
       if (disjunctionParser == null) {
-        FutureParser future = scoped("disjunction", false);
+        FutureParser future = scoped("disjunction", HIDING);
         disjunctionParser = future;
         future.setParser(
-          choice(
-            as("disjunction",
+          sequence(
+            conjunction(),
+            star(
               sequence(
-                conjunction(),
-                plus(
-                  sequence(
-                    token("OR"),
-                    conjunction()
-                  )
-                )
+                token("OR"),
+                conjunction()
               )
-            ),
-            conjunction()
+            )
           )
         );
       }
@@ -19612,26 +19603,21 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator conjunctionParser = null;
     
-    private final Start conjunction = Start.on(getNamespace(), "conjunction");
+    public final Start conjunction = Start.on(getNamespace(), "conjunction");
     
-    private ParserCombinator conjunction() {
+    public ParserCombinator conjunction() {
       if (conjunctionParser == null) {
-        FutureParser future = scoped("conjunction", false);
+        FutureParser future = scoped("conjunction", HIDING);
         conjunctionParser = future;
         future.setParser(
-          choice(
-            as("conjunction",
+          sequence(
+            negation(),
+            star(
               sequence(
-                negation(),
-                plus(
-                  sequence(
-                    token("AND"),
-                    negation()
-                  )
-                )
+                token("AND"),
+                negation()
               )
-            ),
-            negation()
+            )
           )
         );
       }
@@ -19645,19 +19631,16 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator negationParser = null;
     
-    private final Start negation = Start.on(getNamespace(), "negation");
+    public final Start negation = Start.on(getNamespace(), "negation");
     
-    private ParserCombinator negation() {
+    public ParserCombinator negation() {
       if (negationParser == null) {
-        FutureParser future = scoped("negation", false);
+        FutureParser future = scoped("negation", HIDING);
         negationParser = future;
         future.setParser(
-          choice(
-            as("negation",
-              sequence(
-                token("NOT"),
-                simpleCondition()
-              )
+          sequence(
+            optional(
+              token("NOT")
             ),
             simpleCondition()
           )
@@ -19677,7 +19660,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator simpleCondition() {
       if (simpleConditionParser == null) {
-        FutureParser future = scoped("simpleCondition", false);
+        FutureParser future = scoped("simpleCondition", PRIVATE);
         simpleConditionParser = future;
         future.setParser(
           choice(
@@ -19710,7 +19693,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator parenthesizedCondition() {
       if (parenthesizedConditionParser == null) {
-        FutureParser future = scoped("parenthesizedCondition", true);
+        FutureParser future = scoped("parenthesizedCondition", PUBLIC);
         parenthesizedConditionParser = future;
         future.setParser(
           sequence(
@@ -19740,7 +19723,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classCondition() {
       if (classConditionParser == null) {
-        FutureParser future = scoped("classCondition", true);
+        FutureParser future = scoped("classCondition", PUBLIC);
         classConditionParser = future;
         future.setParser(
           sequence(
@@ -19774,7 +19757,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator classType() {
       if (classTypeParser == null) {
-        FutureParser future = scoped("classType", true);
+        FutureParser future = scoped("classType", PUBLIC);
         classTypeParser = future;
         future.setParser(
           choice(
@@ -19805,7 +19788,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator signCondition() {
       if (signConditionParser == null) {
-        FutureParser future = scoped("signCondition", true);
+        FutureParser future = scoped("signCondition", PUBLIC);
         signConditionParser = future;
         future.setParser(
           sequence(
@@ -19836,7 +19819,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator signType() {
       if (signTypeParser == null) {
-        FutureParser future = scoped("signType", true);
+        FutureParser future = scoped("signType", PUBLIC);
         signTypeParser = future;
         future.setParser(
           choice(
@@ -19860,7 +19843,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator omittedArgumentCondition() {
       if (omittedArgumentConditionParser == null) {
-        FutureParser future = scoped("omittedArgumentCondition", true);
+        FutureParser future = scoped("omittedArgumentCondition", PUBLIC);
         omittedArgumentConditionParser = future;
         future.setParser(
           sequence(
@@ -19891,7 +19874,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator relationCondition() {
       if (relationConditionParser == null) {
-        FutureParser future = scoped("relationCondition", true);
+        FutureParser future = scoped("relationCondition", PUBLIC);
         relationConditionParser = future;
         future.setParser(
           sequence(
@@ -19918,26 +19901,21 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator abbreviatedDisjunctionParser = null;
     
-    private final Start abbreviatedDisjunction = Start.on(getNamespace(), "abbreviatedDisjunction");
+    public final Start abbreviatedDisjunction = Start.on(getNamespace(), "abbreviatedDisjunction");
     
-    private ParserCombinator abbreviatedDisjunction() {
+    public ParserCombinator abbreviatedDisjunction() {
       if (abbreviatedDisjunctionParser == null) {
-        FutureParser future = scoped("abbreviatedDisjunction", false);
+        FutureParser future = scoped("abbreviatedDisjunction", HIDING);
         abbreviatedDisjunctionParser = future;
         future.setParser(
-          choice(
-            as("disjunction",
+          sequence(
+            abbreviatedConjunction(),
+            star(
               sequence(
-                abbreviatedConjunction(),
-                plus(
-                  sequence(
-                    token("OR"),
-                    abbreviatedConjunction()
-                  )
-                )
+                token("OR"),
+                abbreviatedConjunction()
               )
-            ),
-            abbreviatedConjunction()
+            )
           )
         );
       }
@@ -19951,26 +19929,21 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator abbreviatedConjunctionParser = null;
     
-    private final Start abbreviatedConjunction = Start.on(getNamespace(), "abbreviatedConjunction");
+    public final Start abbreviatedConjunction = Start.on(getNamespace(), "abbreviatedConjunction");
     
-    private ParserCombinator abbreviatedConjunction() {
+    public ParserCombinator abbreviatedConjunction() {
       if (abbreviatedConjunctionParser == null) {
-        FutureParser future = scoped("abbreviatedConjunction", false);
+        FutureParser future = scoped("abbreviatedConjunction", HIDING);
         abbreviatedConjunctionParser = future;
         future.setParser(
-          choice(
-            as("conjunction",
+          sequence(
+            abbreviatedNegation(),
+            star(
               sequence(
-                abbreviatedNegation(),
-                plus(
-                  sequence(
-                    token("AND"),
-                    abbreviatedNegation()
-                  )
-                )
+                token("AND"),
+                abbreviatedNegation()
               )
-            ),
-            abbreviatedNegation()
+            )
           )
         );
       }
@@ -19984,19 +19957,16 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator abbreviatedNegationParser = null;
     
-    private final Start abbreviatedNegation = Start.on(getNamespace(), "abbreviatedNegation");
+    public final Start abbreviatedNegation = Start.on(getNamespace(), "abbreviatedNegation");
     
-    private ParserCombinator abbreviatedNegation() {
+    public ParserCombinator abbreviatedNegation() {
       if (abbreviatedNegationParser == null) {
-        FutureParser future = scoped("abbreviatedNegation", false);
+        FutureParser future = scoped("abbreviatedNegation", HIDING);
         abbreviatedNegationParser = future;
         future.setParser(
-          choice(
-            as("negation",
-              sequence(
-                token("NOT"),
-                relationObject()
-              )
+          sequence(
+            optional(
+              token("NOT")
             ),
             relationObject()
           )
@@ -20016,7 +19986,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator relationSubject() {
       if (relationSubjectParser == null) {
-        FutureParser future = scoped("relationSubject", true);
+        FutureParser future = scoped("relationSubject", PUBLIC);
         relationSubjectParser = future;
         future.setParser(
           relationOperand()
@@ -20036,7 +20006,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator relationObject() {
       if (relationObjectParser == null) {
-        FutureParser future = scoped("relationObject", true);
+        FutureParser future = scoped("relationObject", PUBLIC);
         relationObjectParser = future;
         future.setParser(
           sequence(
@@ -20081,7 +20051,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator relationOperand() {
       if (relationOperandParser == null) {
-        FutureParser future = scoped("relationOperand", false);
+        FutureParser future = scoped("relationOperand", PRIVATE);
         relationOperandParser = future;
         future.setParser(
           choice(
@@ -20128,7 +20098,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator relop() {
       if (relopParser == null) {
-        FutureParser future = scoped("relop", true);
+        FutureParser future = scoped("relop", PUBLIC);
         relopParser = future;
         future.setParser(
           sequence(
@@ -20200,7 +20170,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator greaterThanOp() {
       if (greaterThanOpParser == null) {
-        FutureParser future = scoped("greaterThanOp", true);
+        FutureParser future = scoped("greaterThanOp", PUBLIC);
         greaterThanOpParser = future;
         future.setParser(
           choice(
@@ -20228,7 +20198,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator lessThanOp() {
       if (lessThanOpParser == null) {
-        FutureParser future = scoped("lessThanOp", true);
+        FutureParser future = scoped("lessThanOp", PUBLIC);
         lessThanOpParser = future;
         future.setParser(
           choice(
@@ -20256,7 +20226,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator equalToOp() {
       if (equalToOpParser == null) {
-        FutureParser future = scoped("equalToOp", true);
+        FutureParser future = scoped("equalToOp", PUBLIC);
         equalToOpParser = future;
         future.setParser(
           choice(
@@ -20284,7 +20254,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator exceedsOp() {
       if (exceedsOpParser == null) {
-        FutureParser future = scoped("exceedsOp", true);
+        FutureParser future = scoped("exceedsOp", PUBLIC);
         exceedsOpParser = future;
         future.setParser(
           token("EXCEEDS")
@@ -20304,7 +20274,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator equalsOp() {
       if (equalsOpParser == null) {
-        FutureParser future = scoped("equalsOp", true);
+        FutureParser future = scoped("equalsOp", PUBLIC);
         equalsOpParser = future;
         future.setParser(
           token("EQUALS")
@@ -20324,7 +20294,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator unequalToOp() {
       if (unequalToOpParser == null) {
-        FutureParser future = scoped("unequalToOp", true);
+        FutureParser future = scoped("unequalToOp", PUBLIC);
         unequalToOpParser = future;
         future.setParser(
           choice(
@@ -20352,7 +20322,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator greaterOrEqualOp() {
       if (greaterOrEqualOpParser == null) {
-        FutureParser future = scoped("greaterOrEqualOp", true);
+        FutureParser future = scoped("greaterOrEqualOp", PUBLIC);
         greaterOrEqualOpParser = future;
         future.setParser(
           choice(
@@ -20385,7 +20355,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator lessOrEqualOp() {
       if (lessOrEqualOpParser == null) {
-        FutureParser future = scoped("lessOrEqualOp", true);
+        FutureParser future = scoped("lessOrEqualOp", PUBLIC);
         lessOrEqualOpParser = future;
         future.setParser(
           choice(
@@ -20418,7 +20388,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator conditionNameCondition() {
       if (conditionNameConditionParser == null) {
-        FutureParser future = scoped("conditionNameCondition", true);
+        FutureParser future = scoped("conditionNameCondition", PUBLIC);
         conditionNameConditionParser = future;
         future.setParser(
           sequence(
@@ -20446,7 +20416,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator programName() {
       if (programNameParser == null) {
-        FutureParser future = scoped("programName", true);
+        FutureParser future = scoped("programName", PUBLIC);
         programNameParser = future;
         future.setParser(
           choice(
@@ -20469,7 +20439,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator dataName() {
       if (dataNameParser == null) {
-        FutureParser future = scoped("dataName", true);
+        FutureParser future = scoped("dataName", PUBLIC);
         dataNameParser = future;
         future.setParser(
           cobolWord()
@@ -20489,7 +20459,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator qualifiedDataName() {
       if (qualifiedDataNameParser == null) {
-        FutureParser future = scoped("qualifiedDataName", true);
+        FutureParser future = scoped("qualifiedDataName", PUBLIC);
         qualifiedDataNameParser = future;
         future.setParser(
           sequence(
@@ -20523,7 +20493,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator screenName() {
       if (screenNameParser == null) {
-        FutureParser future = scoped("screenName", true);
+        FutureParser future = scoped("screenName", PUBLIC);
         screenNameParser = future;
         future.setParser(
           cobolWord()
@@ -20543,7 +20513,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sectionName() {
       if (sectionNameParser == null) {
-        FutureParser future = scoped("sectionName", true);
+        FutureParser future = scoped("sectionName", PUBLIC);
         sectionNameParser = future;
         future.setParser(
           name()
@@ -20563,7 +20533,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator paragraphName() {
       if (paragraphNameParser == null) {
-        FutureParser future = scoped("paragraphName", true);
+        FutureParser future = scoped("paragraphName", PUBLIC);
         paragraphNameParser = future;
         future.setParser(
           name()
@@ -20583,7 +20553,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator procedureName() {
       if (procedureNameParser == null) {
-        FutureParser future = scoped("procedureName", true);
+        FutureParser future = scoped("procedureName", PUBLIC);
         procedureNameParser = future;
         future.setParser(
           sequence(
@@ -20617,7 +20587,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator name() {
       if (nameParser == null) {
-        FutureParser future = scoped("name", true);
+        FutureParser future = scoped("name", PUBLIC);
         nameParser = future;
         future.setParser(
           choice(
@@ -20640,7 +20610,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator segmentNumber() {
       if (segmentNumberParser == null) {
-        FutureParser future = scoped("segmentNumber", true);
+        FutureParser future = scoped("segmentNumber", PUBLIC);
         segmentNumberParser = future;
         future.setParser(
           integer()
@@ -20660,7 +20630,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator operand() {
       if (operandParser == null) {
-        FutureParser future = scoped("operand", true);
+        FutureParser future = scoped("operand", PUBLIC);
         operandParser = future;
         future.setParser(
           choice(
@@ -20700,7 +20670,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator threadPointer() {
       if (threadPointerParser == null) {
-        FutureParser future = scoped("threadPointer", true);
+        FutureParser future = scoped("threadPointer", PUBLIC);
         threadPointerParser = future;
         future.setParser(
           cobolWord()
@@ -20720,7 +20690,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator eventPointer() {
       if (eventPointerParser == null) {
-        FutureParser future = scoped("eventPointer", true);
+        FutureParser future = scoped("eventPointer", PUBLIC);
         eventPointerParser = future;
         future.setParser(
           cobolWord()
@@ -20740,7 +20710,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator conditionName() {
       if (conditionNameParser == null) {
-        FutureParser future = scoped("conditionName", true);
+        FutureParser future = scoped("conditionName", PUBLIC);
         conditionNameParser = future;
         future.setParser(
           identifier()
@@ -20760,7 +20730,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator indexName() {
       if (indexNameParser == null) {
-        FutureParser future = scoped("indexName", true);
+        FutureParser future = scoped("indexName", PUBLIC);
         indexNameParser = future;
         future.setParser(
           cobolWord()
@@ -20780,7 +20750,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator className() {
       if (classNameParser == null) {
-        FutureParser future = scoped("className", true);
+        FutureParser future = scoped("className", PUBLIC);
         classNameParser = future;
         future.setParser(
           cobolWord()
@@ -20800,7 +20770,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator typeSpecifier() {
       if (typeSpecifierParser == null) {
-        FutureParser future = scoped("typeSpecifier", true);
+        FutureParser future = scoped("typeSpecifier", PUBLIC);
         typeSpecifierParser = future;
         future.setParser(
           cobolWord()
@@ -20820,7 +20790,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator parameterName() {
       if (parameterNameParser == null) {
-        FutureParser future = scoped("parameterName", true);
+        FutureParser future = scoped("parameterName", PUBLIC);
         parameterNameParser = future;
         future.setParser(
           cobolWord()
@@ -20840,7 +20810,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator interfaceName() {
       if (interfaceNameParser == null) {
-        FutureParser future = scoped("interfaceName", true);
+        FutureParser future = scoped("interfaceName", PUBLIC);
         interfaceNameParser = future;
         future.setParser(
           cobolWord()
@@ -20860,7 +20830,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator methodName() {
       if (methodNameParser == null) {
-        FutureParser future = scoped("methodName", true);
+        FutureParser future = scoped("methodName", PUBLIC);
         methodNameParser = future;
         future.setParser(
           cobolWord()
@@ -20880,7 +20850,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator propertyName() {
       if (propertyNameParser == null) {
-        FutureParser future = scoped("propertyName", true);
+        FutureParser future = scoped("propertyName", PUBLIC);
         propertyNameParser = future;
         future.setParser(
           choice(
@@ -20903,7 +20873,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator propertyValue() {
       if (propertyValueParser == null) {
-        FutureParser future = scoped("propertyValue", true);
+        FutureParser future = scoped("propertyValue", PUBLIC);
         propertyValueParser = future;
         future.setParser(
           choice(
@@ -20926,7 +20896,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator delegateName() {
       if (delegateNameParser == null) {
-        FutureParser future = scoped("delegateName", true);
+        FutureParser future = scoped("delegateName", PUBLIC);
         delegateNameParser = future;
         future.setParser(
           cobolWord()
@@ -20946,7 +20916,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator iteratorName() {
       if (iteratorNameParser == null) {
-        FutureParser future = scoped("iteratorName", true);
+        FutureParser future = scoped("iteratorName", PUBLIC);
         iteratorNameParser = future;
         future.setParser(
           cobolWord()
@@ -20966,7 +20936,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator enumName() {
       if (enumNameParser == null) {
-        FutureParser future = scoped("enumName", true);
+        FutureParser future = scoped("enumName", PUBLIC);
         enumNameParser = future;
         future.setParser(
           cobolWord()
@@ -20986,7 +20956,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator valuetypeName() {
       if (valuetypeNameParser == null) {
-        FutureParser future = scoped("valuetypeName", true);
+        FutureParser future = scoped("valuetypeName", PUBLIC);
         valuetypeNameParser = future;
         future.setParser(
           cobolWord()
@@ -21006,7 +20976,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator typeName() {
       if (typeNameParser == null) {
-        FutureParser future = scoped("typeName", true);
+        FutureParser future = scoped("typeName", PUBLIC);
         typeNameParser = future;
         future.setParser(
           cobolWord()
@@ -21026,7 +20996,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator attributeName() {
       if (attributeNameParser == null) {
-        FutureParser future = scoped("attributeName", true);
+        FutureParser future = scoped("attributeName", PUBLIC);
         attributeNameParser = future;
         future.setParser(
           cobolWord()
@@ -21046,7 +21016,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator typedefName() {
       if (typedefNameParser == null) {
-        FutureParser future = scoped("typedefName", true);
+        FutureParser future = scoped("typedefName", PUBLIC);
         typedefNameParser = future;
         future.setParser(
           cobolWord()
@@ -21066,7 +21036,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator fileName() {
       if (fileNameParser == null) {
-        FutureParser future = scoped("fileName", true);
+        FutureParser future = scoped("fileName", PUBLIC);
         fileNameParser = future;
         future.setParser(
           choice(
@@ -21089,7 +21059,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator computerName() {
       if (computerNameParser == null) {
-        FutureParser future = scoped("computerName", true);
+        FutureParser future = scoped("computerName", PUBLIC);
         computerNameParser = future;
         future.setParser(
           cobolWord()
@@ -21109,7 +21079,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator functionName() {
       if (functionNameParser == null) {
-        FutureParser future = scoped("functionName", true);
+        FutureParser future = scoped("functionName", PUBLIC);
         functionNameParser = future;
         future.setParser(
           cobolWord()
@@ -21129,7 +21099,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator recordName() {
       if (recordNameParser == null) {
-        FutureParser future = scoped("recordName", true);
+        FutureParser future = scoped("recordName", PUBLIC);
         recordNameParser = future;
         future.setParser(
           identifier()
@@ -21149,7 +21119,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator mnemonicName() {
       if (mnemonicNameParser == null) {
-        FutureParser future = scoped("mnemonicName", true);
+        FutureParser future = scoped("mnemonicName", PUBLIC);
         mnemonicNameParser = future;
         future.setParser(
           choice(
@@ -21172,7 +21142,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator environmentName() {
       if (environmentNameParser == null) {
-        FutureParser future = scoped("environmentName", true);
+        FutureParser future = scoped("environmentName", PUBLIC);
         environmentNameParser = future;
         future.setParser(
           choice(
@@ -21222,7 +21192,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alphabetName() {
       if (alphabetNameParser == null) {
-        FutureParser future = scoped("alphabetName", true);
+        FutureParser future = scoped("alphabetName", PUBLIC);
         alphabetNameParser = future;
         future.setParser(
           cobolWord()
@@ -21242,7 +21212,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator cdName() {
       if (cdNameParser == null) {
-        FutureParser future = scoped("cdName", true);
+        FutureParser future = scoped("cdName", PUBLIC);
         cdNameParser = future;
         future.setParser(
           cobolWord()
@@ -21262,7 +21232,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator reportName() {
       if (reportNameParser == null) {
-        FutureParser future = scoped("reportName", true);
+        FutureParser future = scoped("reportName", PUBLIC);
         reportNameParser = future;
         future.setParser(
           cobolWord()
@@ -21282,7 +21252,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator literal() {
       if (literalParser == null) {
-        FutureParser future = scoped("literal", true);
+        FutureParser future = scoped("literal", PUBLIC);
         literalParser = future;
         future.setParser(
           choice(
@@ -21315,7 +21285,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator literalValue() {
       if (literalValueParser == null) {
-        FutureParser future = scoped("literalValue", true);
+        FutureParser future = scoped("literalValue", PUBLIC);
         literalValueParser = future;
         future.setParser(
           choice(
@@ -21341,7 +21311,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator concatenatedLiteral() {
       if (concatenatedLiteralParser == null) {
-        FutureParser future = scoped("concatenatedLiteral", true);
+        FutureParser future = scoped("concatenatedLiteral", PUBLIC);
         concatenatedLiteralParser = future;
         future.setParser(
           sequence(
@@ -21367,7 +21337,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator value() {
       if (valueParser == null) {
-        FutureParser future = scoped("value", true);
+        FutureParser future = scoped("value", PUBLIC);
         valueParser = future;
         future.setParser(
           choice(
@@ -21391,7 +21361,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator figurativeConstant() {
       if (figurativeConstantParser == null) {
-        FutureParser future = scoped("figurativeConstant", true);
+        FutureParser future = scoped("figurativeConstant", PUBLIC);
         figurativeConstantParser = future;
         future.setParser(
           choice(
@@ -21433,7 +21403,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator numericLiteral() {
       if (numericLiteralParser == null) {
-        FutureParser future = scoped("numericLiteral", true);
+        FutureParser future = scoped("numericLiteral", PUBLIC);
         numericLiteralParser = future;
         future.setParser(
           choice(
@@ -21468,7 +21438,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator numeric() {
       if (numericParser == null) {
-        FutureParser future = scoped("numeric", true);
+        FutureParser future = scoped("numeric", PUBLIC);
         numericParser = future;
         future.setParser(
           choice(
@@ -21504,7 +21474,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator integer() {
       if (integerParser == null) {
-        FutureParser future = scoped("integer", true);
+        FutureParser future = scoped("integer", PUBLIC);
         integerParser = future;
         future.setParser(
           choice(
@@ -21527,7 +21497,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator constant() {
       if (constantParser == null) {
-        FutureParser future = scoped("constant", true);
+        FutureParser future = scoped("constant", PUBLIC);
         constantParser = future;
         future.setParser(
           choice(
@@ -21550,7 +21520,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator integerConstant() {
       if (integerConstantParser == null) {
-        FutureParser future = scoped("integerConstant", true);
+        FutureParser future = scoped("integerConstant", PUBLIC);
         integerConstantParser = future;
         future.setParser(
           cobolWord()
@@ -21570,7 +21540,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alphanumeric() {
       if (alphanumericParser == null) {
-        FutureParser future = scoped("alphanumeric", true);
+        FutureParser future = scoped("alphanumeric", PUBLIC);
         alphanumericParser = future;
         future.setParser(
           choice(
@@ -21593,7 +21563,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator alphanumericConstant() {
       if (alphanumericConstantParser == null) {
-        FutureParser future = scoped("alphanumericConstant", true);
+        FutureParser future = scoped("alphanumericConstant", PUBLIC);
         alphanumericConstantParser = future;
         future.setParser(
           cobolWord()

@@ -120,9 +120,12 @@ public class Generation {
 
 				final boolean hasPrivateModifier = rule.getDescendant(
 						"modifier", "private") != null;
+				final boolean hasHidingModifier = rule.getDescendant(
+						"modifier", "hiding") != null;
 
 				setValue("modifier", hasPrivateModifier ? "private" : "public");
-				setValue("publik", hasPrivateModifier ? "false" : "true");
+				setValue("visibility", hasPrivateModifier ? "PRIVATE"
+						: hasHidingModifier ? "HIDING" : "PUBLIC");
 
 				final Tree locals = rule.getChild("local-variables");
 				if (locals != null) {

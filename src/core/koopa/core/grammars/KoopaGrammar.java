@@ -1,5 +1,7 @@
 package koopa.core.grammars;
 
+import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import koopa.core.grammars.combinators.MatchLiteral;
 import koopa.core.grammars.combinators.MatchToken;
 import koopa.core.grammars.combinators.Opt;
 import koopa.core.grammars.combinators.Scoped;
+import koopa.core.grammars.combinators.Scoped.Visibility;
 import koopa.core.grammars.combinators.TestTag;
 import koopa.core.grammars.combinators.WithOption;
 import koopa.core.grammars.combinators.WrappedAs;
@@ -44,11 +47,11 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected FutureParser scoped(final String name) {
-		return scoped(name, true);
+		return scoped(name, PUBLIC);
 	}
 
-	protected FutureParser scoped(final String name, final boolean publik) {
-		return new Scoped(this, name, publik);
+	protected FutureParser scoped(final String name, final Visibility visibility) {
+		return new Scoped(this, name, visibility);
 	}
 
 	protected ParserCombinator as(final String name,

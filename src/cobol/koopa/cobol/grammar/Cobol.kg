@@ -4683,7 +4683,7 @@ hiding def term =
 end
 
 hiding def factor =
-    base ('**' base)* 
+    base (power: '**' base)* 
 end
 
 hiding def base =

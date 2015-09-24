@@ -19441,9 +19441,11 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             base(),
             star(
-              sequence(
-                literal("**"),
-                base()
+              as("power",
+                sequence(
+                  literal("**"),
+                  base()
+                )
               )
             )
           )

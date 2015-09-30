@@ -15103,64 +15103,82 @@ public class CobolGrammar extends CobolBaseGrammar {
             token("MERGE"),
             fileName(),
             plus(
-              sequence(
-                optional(
-                  token("ON")
-                ),
-                choice(
-                  token("ASCENDING"),
-                  token("DESCENDING")
-                ),
-                optional(
-                  token("KEY")
-                ),
-                optional(
-                  token("IS")
-                ),
-                plus(
-                  qualifiedDataName()
+              as("key",
+                sequence(
+                  optional(
+                    token("ON")
+                  ),
+                  choice(
+                    as("asc",
+                      token("ASCENDING")
+                    ),
+                    as("desc",
+                      token("DESCENDING")
+                    )
+                  ),
+                  optional(
+                    token("KEY")
+                  ),
+                  optional(
+                    token("IS")
+                  ),
+                  plus(
+                    qualifiedDataName()
+                  )
                 )
               )
             ),
             optional(
-              sequence(
-                optional(
-                  token("COLLATING")
-                ),
-                token("SEQUENCE"),
-                optional(
-                  token("IS")
-                ),
-                alphabetName()
+              as("sequence",
+                sequence(
+                  optional(
+                    as("collating",
+                      token("COLLATING")
+                    )
+                  ),
+                  token("SEQUENCE"),
+                  optional(
+                    token("IS")
+                  ),
+                  alphabetName()
+                )
               )
             ),
-            token("USING"),
-            fileName(),
-            plus(
-              fileName()
+            as("using",
+              sequence(
+                token("USING"),
+                fileName(),
+                plus(
+                  fileName()
+                )
+              )
             ),
             choice(
-              sequence(
-                token("OUTPUT"),
-                token("PROCEDURE"),
-                optional(
-                  token("IS")
-                ),
-                procedureName(),
-                optional(
-                  sequence(
-                    choice(
-                      token("THROUGH"),
-                      token("THRU")
-                    ),
-                    procedureName()
+              as("output",
+                sequence(
+                  token("OUTPUT"),
+                  token("PROCEDURE"),
+                  optional(
+                    token("IS")
+                  ),
+                  procedureName(),
+                  optional(
+                    sequence(
+                      choice(
+                        token("THROUGH"),
+                        token("THRU")
+                      ),
+                      procedureName()
+                    )
                   )
                 )
               ),
-              sequence(
-                token("GIVING"),
-                plus(
-                  fileName()
+              as("giving",
+                sequence(
+                  token("GIVING"),
+                  plus(
+                    fileName()
+                  )
                 )
               )
             )
@@ -16212,9 +16230,11 @@ public class CobolGrammar extends CobolBaseGrammar {
               token("RECORD")
             ),
             optional(
-              sequence(
-                token("INTO"),
-                identifier()
+              as("into",
+                sequence(
+                  token("INTO"),
+                  identifier()
+                )
               )
             ),
             atEnd(),
@@ -16246,7 +16266,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             token("REWRITE"),
-            recordName(),
+            choice(
+              sequence(
+                token("FILE"),
+                fileName()
+              ),
+              recordName()
+            ),
             optional(
               sequence(
                 token("FROM"),
@@ -16572,99 +16598,119 @@ public class CobolGrammar extends CobolBaseGrammar {
               fileName(),
               plus(
                 sequence(
-                  token("ON"),
+                  optional(
+                    token("ON")
+                  ),
                   plus(
-                    sequence(
-                      choice(
-                        token("ASCENDING"),
-                        token("DESCENDING")
-                      ),
-                      optional(
-                        token("KEY")
-                      ),
-                      optional(
-                        token("IS")
-                      ),
-                      plus(
-                        qualifiedDataName()
+                    as("key",
+                      sequence(
+                        choice(
+                          as("asc",
+                            token("ASCENDING")
+                          ),
+                          as("desc",
+                            token("DESCENDING")
+                          )
+                        ),
+                        optional(
+                          token("KEY")
+                        ),
+                        optional(
+                          token("IS")
+                        ),
+                        plus(
+                          qualifiedDataName()
+                        )
                       )
                     )
                   )
                 )
               ),
               optional(
-                sequence(
-                  optional(
-                    token("WITH")
-                  ),
-                  token("DUPLICATES"),
-                  optional(
-                    sequence(
-                      token("IN"),
-                      token("ORDER")
+                as("duplicates",
+                  sequence(
+                    optional(
+                      token("WITH")
+                    ),
+                    token("DUPLICATES"),
+                    optional(
+                      sequence(
+                        token("IN"),
+                        token("ORDER")
+                      )
                     )
                   )
                 )
               ),
               optional(
-                sequence(
-                  optional(
-                    token("COLLATING")
-                  ),
-                  token("SEQUENCE"),
-                  optional(
-                    token("IS")
-                  ),
-                  alphabetName()
-                )
-              ),
-              choice(
-                sequence(
-                  token("INPUT"),
-                  token("PROCEDURE"),
-                  optional(
-                    token("IS")
-                  ),
-                  procedureName(),
-                  optional(
-                    sequence(
-                      choice(
-                        token("THROUGH"),
-                        token("THRU")
-                      ),
-                      procedureName()
-                    )
-                  )
-                ),
-                sequence(
-                  token("USING"),
-                  plus(
-                    fileName()
+                as("sequence",
+                  sequence(
+                    optional(
+                      token("COLLATING")
+                    ),
+                    token("SEQUENCE"),
+                    optional(
+                      token("IS")
+                    ),
+                    alphabetName()
                   )
                 )
               ),
               choice(
-                sequence(
-                  token("OUTPUT"),
-                  token("PROCEDURE"),
-                  optional(
-                    token("IS")
-                  ),
-                  procedureName(),
-                  optional(
-                    sequence(
-                      choice(
-                        token("THROUGH"),
-                        token("THRU")
-                      ),
-                      procedureName()
+                as("input",
+                  sequence(
+                    token("INPUT"),
+                    token("PROCEDURE"),
+                    optional(
+                      token("IS")
+                    ),
+                    procedureName(),
+                    optional(
+                      sequence(
+                        choice(
+                          token("THROUGH"),
+                          token("THRU")
+                        ),
+                        procedureName()
+                      )
                     )
                   )
                 ),
-                sequence(
-                  token("GIVING"),
-                  plus(
-                    fileName()
+                as("using",
+                  sequence(
+                    token("USING"),
+                    plus(
+                      fileName()
+                    )
+                  )
+                )
+              ),
+              choice(
+                as("output",
+                  sequence(
+                    token("OUTPUT"),
+                    token("PROCEDURE"),
+                    optional(
+                      token("IS")
+                    ),
+                    procedureName(),
+                    optional(
+                      sequence(
+                        choice(
+                          token("THROUGH"),
+                          token("THRU")
+                        ),
+                        procedureName()
+                      )
+                    )
+                  )
+                ),
+                as("giving",
+                  sequence(
+                    token("GIVING"),
+                    plus(
+                      fileName()
+                    )
                   )
                 )
               )
@@ -16674,50 +16720,62 @@ public class CobolGrammar extends CobolBaseGrammar {
               dataName(),
               plus(
                 sequence(
-                  token("ON"),
+                  optional(
+                    token("ON")
+                  ),
                   plus(
-                    sequence(
-                      choice(
-                        token("ASCENDING"),
-                        token("DESCENDING")
-                      ),
-                      optional(
-                        token("KEY")
-                      ),
-                      optional(
-                        token("IS")
-                      ),
-                      plus(
-                        qualifiedDataName()
+                    as("key",
+                      sequence(
+                        choice(
+                          as("asc",
+                            token("ASCENDING")
+                          ),
+                          as("desc",
+                            token("DESCENDING")
+                          )
+                        ),
+                        optional(
+                          token("KEY")
+                        ),
+                        optional(
+                          token("IS")
+                        ),
+                        plus(
+                          qualifiedDataName()
+                        )
                       )
                     )
                   )
                 )
               ),
               optional(
-                sequence(
-                  optional(
-                    token("WITH")
-                  ),
-                  token("DUPLICATES"),
-                  optional(
-                    sequence(
-                      token("IN"),
-                      token("ORDER")
+                as("duplicates",
+                  sequence(
+                    optional(
+                      token("WITH")
+                    ),
+                    token("DUPLICATES"),
+                    optional(
+                      sequence(
+                        token("IN"),
+                        token("ORDER")
+                      )
                     )
                   )
                 )
               ),
               optional(
-                sequence(
-                  optional(
-                    token("COLLATING")
-                  ),
-                  token("SEQUENCE"),
-                  optional(
-                    token("IS")
-                  ),
-                  alphabetName()
+                as("sequence",
+                  sequence(
+                    optional(
+                      token("COLLATING")
+                    ),
+                    token("SEQUENCE"),
+                    optional(
+                      token("IS")
+                    ),
+                    alphabetName()
+                  )
                 )
               )
             )
@@ -16899,7 +16957,33 @@ public class CobolGrammar extends CobolBaseGrammar {
             token("START"),
             fileName(),
             optional(
-              keyModifier()
+              sequence(
+                optional(
+                  token("WITH")
+                ),
+                token("NO"),
+                token("LOCK")
+              )
+            ),
+            optional(
+              choice(
+                token("FIRST"),
+                token("LAST"),
+                sequence(
+                  token("KEY"),
+                  relop(),
+                  identifier(),
+                  optional(
+                    sequence(
+                      optional(
+                        token("WITH")
+                      ),
+                      token("LENGTH"),
+                      arithmeticExpression()
+                    )
+                  )
+                )
+              )
             ),
             optional(
               sizeModifier()
@@ -16921,43 +17005,6 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return startStatementParser;
-    }
-    
-    // ========================================================
-    // keyModifier
-    // ........................................................
-    
-    private ParserCombinator keyModifierParser = null;
-    
-    public final Start keyModifier = Start.on(getNamespace(), "keyModifier");
-    
-    public ParserCombinator keyModifier() {
-      if (keyModifierParser == null) {
-        FutureParser future = scoped("keyModifier", PUBLIC);
-        keyModifierParser = future;
-        future.setParser(
-          sequence(
-            token("KEY"),
-            optional(
-              token("IS")
-            ),
-            choice(
-              relop(),
-              token("FIRST"),
-              token("LAST")
-            ),
-            identifier(),
-            star(
-              sequence(
-                token("IN"),
-                identifier()
-              )
-            )
-          )
-        );
-      }
-    
-      return keyModifierParser;
     }
     
     // ========================================================
@@ -17044,101 +17091,29 @@ public class CobolGrammar extends CobolBaseGrammar {
         likeModsParser = future;
         future.setParser(
           choice(
-            trimmedRight(),
-            trimmedLeft(),
-            caseSensitive(),
-            caseInsensitive()
+            as("trimmedRight",
+              sequence(
+                token("TRIMMED"),
+                token("RIGHT")
+              )
+            ),
+            as("trimmedLeft",
+              sequence(
+                token("TRIMMED"),
+                token("LEFT")
+              )
+            ),
+            as("caseSensitive",
+              token("CASE-SENSITIVE")
+            ),
+            as("caseInsensitive",
+              token("CASE-INSENSITIVE")
+            )
           )
         );
       }
     
       return likeModsParser;
-    }
-    
-    // ========================================================
-    // trimmedRight
-    // ........................................................
-    
-    private ParserCombinator trimmedRightParser = null;
-    
-    public final Start trimmedRight = Start.on(getNamespace(), "trimmedRight");
-    
-    public ParserCombinator trimmedRight() {
-      if (trimmedRightParser == null) {
-        FutureParser future = scoped("trimmedRight", PUBLIC);
-        trimmedRightParser = future;
-        future.setParser(
-          sequence(
-            token("TRIMMED"),
-            token("RIGHT")
-          )
-        );
-      }
-    
-      return trimmedRightParser;
-    }
-    
-    // ========================================================
-    // trimmedLeft
-    // ........................................................
-    
-    private ParserCombinator trimmedLeftParser = null;
-    
-    public final Start trimmedLeft = Start.on(getNamespace(), "trimmedLeft");
-    
-    public ParserCombinator trimmedLeft() {
-      if (trimmedLeftParser == null) {
-        FutureParser future = scoped("trimmedLeft", PUBLIC);
-        trimmedLeftParser = future;
-        future.setParser(
-          sequence(
-            token("TRIMMED"),
-            token("LEFT")
-          )
-        );
-      }
-    
-      return trimmedLeftParser;
-    }
-    
-    // ========================================================
-    // caseSensitive
-    // ........................................................
-    
-    private ParserCombinator caseSensitiveParser = null;
-    
-    public final Start caseSensitive = Start.on(getNamespace(), "caseSensitive");
-    
-    public ParserCombinator caseSensitive() {
-      if (caseSensitiveParser == null) {
-        FutureParser future = scoped("caseSensitive", PUBLIC);
-        caseSensitiveParser = future;
-        future.setParser(
-          token("CASE-SENSITIVE")
-        );
-      }
-    
-      return caseSensitiveParser;
-    }
-    
-    // ========================================================
-    // caseInsensitive
-    // ........................................................
-    
-    private ParserCombinator caseInsensitiveParser = null;
-    
-    public final Start caseInsensitive = Start.on(getNamespace(), "caseInsensitive");
-    
-    public ParserCombinator caseInsensitive() {
-      if (caseInsensitiveParser == null) {
-        FutureParser future = scoped("caseInsensitive", PUBLIC);
-        caseInsensitiveParser = future;
-        future.setParser(
-          token("CASE-INSENSITIVE")
-        );
-      }
-    
-      return caseInsensitiveParser;
     }
     
     // ========================================================
@@ -17965,7 +17940,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             token("WRITE"),
-            recordName(),
+            choice(
+              sequence(
+                token("FILE"),
+                fileName()
+              ),
+              recordName()
+            ),
             optional(
               sequence(
                 token("FROM"),
@@ -17988,6 +17969,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 choice(
+                  token("TAB"),
+                  token("FORMFEED"),
+                  token("PAGE"),
                   sequence(
                     choice(
                       identifier(),
@@ -18001,10 +17985,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                       )
                     )
                   ),
-                  mnemonicName(),
-                  token("PAGE"),
-                  token("TAB"),
-                  token("FORMFEED")
+                  mnemonicName()
                 )
               )
             ),

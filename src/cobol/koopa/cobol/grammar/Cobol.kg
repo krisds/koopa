@@ -3501,11 +3501,23 @@ end
 
 def mergeStatement =
     MERGE fileName
-        ( [ON] (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )+
-        [ [COLLATING] SEQUENCE [IS] alphabetName ]
-        USING fileName (fileName)+
-        ( OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
-        | GIVING (fileName)+
+        ( key : 
+          [ON] (asc: ASCENDING | desc: DESCENDING) [KEY]
+          [IS] (qualifiedDataName)+ 
+        )+
+        
+        [ sequence :
+          [collating: COLLATING] SEQUENCE [IS] alphabetName
+        ]
+
+        ( using :
+          USING fileName (fileName)+
+        )
+        
+        ( output: 
+          OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
+        | giving:
+          GIVING (fileName)+
         )
 end
 
@@ -3782,7 +3794,8 @@ end
 ## -----------------------------------------------------------------------------
 
 def returnStatement =
-    RETURN fileName [RECORD] [INTO identifier] 
+    RETURN fileName [RECORD]
+    [into: INTO identifier] 
     atEnd 
     [notAtEnd]
     [END-RETURN]
@@ -3793,15 +3806,21 @@ end
 ## -----------------------------------------------------------------------------
 
 def rewriteStatement =
-    REWRITE recordName [FROM (identifier | literal)]
+    REWRITE 
     
+    ( FILE fileName
+    | recordName
+    )
+
+    [FROM (identifier | literal)]
+
     [retryPhrase]
-    
+
     [[WITH] [NO] LOCK]
-    
+
     [invalidKey]
     [notInvalidKey]
-    
+
     [END-REWRITE]
 end
 
@@ -3886,23 +3905,41 @@ end
 def sortStatement =
     ( # File format
         SORT fileName
-        ( ON ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )+ )+
-        [ [WITH] DUPLICATES [IN ORDER] ]
-        [ [COLLATING] SEQUENCE [IS] alphabetName ]
+
+        ( [ON] 
+          ( key:
+            (asc: ASCENDING | desc: DESCENDING) [KEY]
+            [IS] (qualifiedDataName)+
+          )+
+        )+
+
+        [ duplicates : [WITH] DUPLICATES [IN ORDER]           ]
+        [ sequence   : [COLLATING] SEQUENCE [IS] alphabetName ]
         
-        ( INPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
-        | USING (fileName)+
+        ( input: 
+          INPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
+        | using:
+          USING (fileName)+
         )
         
-        ( OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
-        | GIVING (fileName)+
+        ( output:
+          OUTPUT PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
+        | giving:
+          GIVING (fileName)+
         )
-        
+
     | # Data format
         SORT dataName
-        ( ON ( (ASCENDING | DESCENDING) [KEY] [IS] (qualifiedDataName)+ )+ )+
-        [ [WITH] DUPLICATES [IN ORDER] ]
-        [ [COLLATING] SEQUENCE [IS] alphabetName ]
+
+        ( [ON]
+          ( key:
+            (asc: ASCENDING | desc: DESCENDING) [KEY]
+            [IS] (qualifiedDataName)+
+          )+
+        )+
+
+        [ duplicates : [WITH] DUPLICATES [IN ORDER]           ]
+        [ sequence   : [COLLATING] SEQUENCE [IS] alphabetName ]
     )
 end
 
@@ -3974,7 +4011,21 @@ end
 def startStatement =
     START fileName
     
-    [keyModifier]
+    # - [COB2_BS] Procedure Division, START statement
+    [[WITH] NO LOCK]
+    
+    [ # - [SPEC-XX] 14.9.37.1 START statement, General format
+      FIRST
+    
+    | # - [SPEC-XX] 14.9.37.1 START statement, General format
+      LAST
+    
+    | KEY relop identifier 
+    
+      # - [SPEC-XX] 14.9.37.1 START statement, General format
+      [[WITH] LENGTH arithmeticExpression]
+    ]
+    
     [sizeModifier]
     [whileKeyModifier]
     
@@ -3984,40 +4035,24 @@ def startStatement =
     [END-START]
 end
 
-def keyModifier =
-	KEY [IS] (relop | FIRST | LAST) identifier (IN identifier)*
-end
-
+# - [????] TODO
 def sizeModifier =
 	[WITH] SIZE (identifier | integer)
 end
 
+# - [????] TODO
 def whileKeyModifier =
 	WHILE [KEY [IS]] [NOT] LIKE (likeMods)* (identifier | literal)
 end
 
 def likeMods =
-	(trimmedRight
-	|trimmedLeft
-	|caseSensitive
-	|caseInsensitive)
+	( trimmedRight    : TRIMMED RIGHT
+	| trimmedLeft     : TRIMMED LEFT
+	| caseSensitive   : CASE-SENSITIVE
+	| caseInsensitive : CASE-INSENSITIVE
+    )
 end
 
-def trimmedRight =
-	TRIMMED RIGHT
-end
-
-def trimmedLeft =
-	TRIMMED LEFT
-end
-
-def caseSensitive =
-	CASE-SENSITIVE
-end
-
-def caseInsensitive =
-	CASE-INSENSITIVE
-end
 
 ## #############################################################################
 ## STOP statement.
@@ -4225,27 +4260,34 @@ end
 ## -----------------------------------------------------------------------------
 
 def writeStatement =
-    WRITE recordName [FROM (identifier | literal)]
+    WRITE
     
+    ( FILE fileName
+    | recordName
+    )
+    
+    [ FROM (identifier | literal) ]
+
     [ (AFTER | BEFORE) [ADVANCING | POSITIONING]
-      ( (identifier | integer | zero) [LINE | LINES]
-      | mnemonicName
-      | PAGE
-      | TAB                 # *MF
+      ( TAB                 # *MF
       | FORMFEED            # *MF
+
+      | PAGE
+      | (identifier | integer | zero) [LINE | LINES]
+      | mnemonicName
       )
     ]
-    
+
     [atEndOfPage]
     [notAtEndOfPage]
 
     [retryPhrase]
 
     [[WITH] [NO] LOCK]
-    
+
     [invalidKey]
     [notInvalidKey]
-    
+
     [END-WRITE]
 end
 

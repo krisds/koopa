@@ -20084,58 +20084,60 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("relop", PUBLIC);
         relopParser = future;
         future.setParser(
-          sequence(
-            optional(
+          choice(
+            sequence(
+              optional(
+                choice(
+                  token("IS"),
+                  token("ARE")
+                )
+              ),
               choice(
-                token("IS"),
-                token("ARE")
+                sequence(
+                  optional(
+                    as("not",
+                      token("NOT")
+                    )
+                  ),
+                  greaterOrEqualOp()
+                ),
+                sequence(
+                  optional(
+                    as("not",
+                      token("NOT")
+                    )
+                  ),
+                  lessOrEqualOp()
+                ),
+                sequence(
+                  optional(
+                    as("not",
+                      token("NOT")
+                    )
+                  ),
+                  greaterThanOp()
+                ),
+                sequence(
+                  optional(
+                    as("not",
+                      token("NOT")
+                    )
+                  ),
+                  lessThanOp()
+                ),
+                sequence(
+                  optional(
+                    as("not",
+                      token("NOT")
+                    )
+                  ),
+                  equalToOp()
+                ),
+                unequalToOp()
               )
             ),
-            choice(
-              sequence(
-                optional(
-                  as("not",
-                    token("NOT")
-                  )
-                ),
-                greaterOrEqualOp()
-              ),
-              sequence(
-                optional(
-                  as("not",
-                    token("NOT")
-                  )
-                ),
-                lessOrEqualOp()
-              ),
-              sequence(
-                optional(
-                  as("not",
-                    token("NOT")
-                  )
-                ),
-                greaterThanOp()
-              ),
-              sequence(
-                optional(
-                  as("not",
-                    token("NOT")
-                  )
-                ),
-                lessThanOp()
-              ),
-              sequence(
-                optional(
-                  as("not",
-                    token("NOT")
-                  )
-                ),
-                equalToOp()
-              ),
-              exceedsOp(),
-              equalsOp(),
-              unequalToOp()
-            )
+            exceedsOp(),
+            equalsOp()
           )
         );
       }
@@ -20228,74 +20230,6 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // exceedsOp
-    // ........................................................
-    
-    private ParserCombinator exceedsOpParser = null;
-    
-    public final Start exceedsOp = Start.on(getNamespace(), "exceedsOp");
-    
-    public ParserCombinator exceedsOp() {
-      if (exceedsOpParser == null) {
-        FutureParser future = scoped("exceedsOp", PUBLIC);
-        exceedsOpParser = future;
-        future.setParser(
-          token("EXCEEDS")
-        );
-      }
-    
-      return exceedsOpParser;
-    }
-    
-    // ========================================================
-    // equalsOp
-    // ........................................................
-    
-    private ParserCombinator equalsOpParser = null;
-    
-    public final Start equalsOp = Start.on(getNamespace(), "equalsOp");
-    
-    public ParserCombinator equalsOp() {
-      if (equalsOpParser == null) {
-        FutureParser future = scoped("equalsOp", PUBLIC);
-        equalsOpParser = future;
-        future.setParser(
-          token("EQUALS")
-        );
-      }
-    
-      return equalsOpParser;
-    }
-    
-    // ========================================================
-    // unequalToOp
-    // ........................................................
-    
-    private ParserCombinator unequalToOpParser = null;
-    
-    public final Start unequalToOp = Start.on(getNamespace(), "unequalToOp");
-    
-    public ParserCombinator unequalToOp() {
-      if (unequalToOpParser == null) {
-        FutureParser future = scoped("unequalToOp", PUBLIC);
-        unequalToOpParser = future;
-        future.setParser(
-          choice(
-            sequence(
-              token("UNEQUAL"),
-              optional(
-                token("TO")
-              )
-            ),
-            literal("<>")
-          )
-        );
-      }
-    
-      return unequalToOpParser;
-    }
-    
-    // ========================================================
     // greaterOrEqualOp
     // ........................................................
     
@@ -20359,6 +20293,74 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return lessOrEqualOpParser;
+    }
+    
+    // ========================================================
+    // unequalToOp
+    // ........................................................
+    
+    private ParserCombinator unequalToOpParser = null;
+    
+    public final Start unequalToOp = Start.on(getNamespace(), "unequalToOp");
+    
+    public ParserCombinator unequalToOp() {
+      if (unequalToOpParser == null) {
+        FutureParser future = scoped("unequalToOp", PUBLIC);
+        unequalToOpParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              token("UNEQUAL"),
+              optional(
+                token("TO")
+              )
+            ),
+            literal("<>")
+          )
+        );
+      }
+    
+      return unequalToOpParser;
+    }
+    
+    // ========================================================
+    // exceedsOp
+    // ........................................................
+    
+    private ParserCombinator exceedsOpParser = null;
+    
+    public final Start exceedsOp = Start.on(getNamespace(), "exceedsOp");
+    
+    public ParserCombinator exceedsOp() {
+      if (exceedsOpParser == null) {
+        FutureParser future = scoped("exceedsOp", PUBLIC);
+        exceedsOpParser = future;
+        future.setParser(
+          token("EXCEEDS")
+        );
+      }
+    
+      return exceedsOpParser;
+    }
+    
+    // ========================================================
+    // equalsOp
+    // ........................................................
+    
+    private ParserCombinator equalsOpParser = null;
+    
+    public final Start equalsOp = Start.on(getNamespace(), "equalsOp");
+    
+    public ParserCombinator equalsOp() {
+      if (equalsOpParser == null) {
+        FutureParser future = scoped("equalsOp", PUBLIC);
+        equalsOpParser = future;
+        future.setParser(
+          token("EQUALS")
+        );
+      }
+    
+      return equalsOpParser;
     }
     
     // ========================================================

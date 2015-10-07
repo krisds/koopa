@@ -1,8 +1,5 @@
 grammar Cobol extends CobolBase.
 
-## Micro Focus COBOL Language Reference
-## http://documentation.microfocus.com/help/index.jsp?nav=%2F3_9_4_1
-
 ## #############################################################################
 ## Top level definitions.
 ## -----------------------------------------------------------------------------
@@ -4995,26 +4992,34 @@ private def relationOperand =
 end
 
 def relop =
-	[IS | ARE]
-	( [not: NOT] greaterOrEqualOp
-	| [not: NOT] lessOrEqualOp
-	| [not: NOT] greaterThanOp
-	| [not: NOT] lessThanOp
-	| [not: NOT] equalToOp
+	( [IS | ARE]
+	  ( [not: NOT] greaterOrEqualOp
+	  | [not: NOT] lessOrEqualOp
+	  | [not: NOT] greaterThanOp
+	  | [not: NOT] lessThanOp
+	  | [not: NOT] equalToOp
+	  | unequalToOp
+	  )
+
     | exceedsOp
     | equalsOp
-	| unequalToOp
-	)
+    )
 end
 
 def greaterThanOp    = (GREATER [THAN]               | '>' )  end
 def lessThanOp       = (LESS [THAN]                  | '<' )  end
 def equalToOp        = (EQUAL [TO]                   | '=' )  end
-def exceedsOp        = EXCEEDS                                end
-def equalsOp         = EQUALS                                 end
-def unequalToOp      = (UNEQUAL [TO]                 | '<>')  end
 def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>=')  end
 def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<=')  end 
+
+# "UNEQUAL" is found in MicroFocus. 
+# - [Micro Focus Documentation - Relation Conditions]
+def unequalToOp      = (UNEQUAL [TO]                 | '<>')  end
+
+# "EXCEEDS" and "EQUALS" are found in MicroFocus. 
+# - [Micro Focus Documentation - Relation Conditions]
+def exceedsOp        = EXCEEDS                                end
+def equalsOp         = EQUALS                                 end
 
 # "In a condition-name condition, a conditional variable is tested to determine
 #  whether or not its value is equal to one of the values associated with
@@ -5364,3 +5369,10 @@ end
 def alphanumericConstant =
     cobolWord
 end
+
+
+# References
+#
+# [Micro Focus Documentation - Relation Conditions]
+#   http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FHRLHLHPDF60A.html
+

@@ -35,6 +35,18 @@ public class TokensTest extends TestCase {
 	}
 
 	@Test
+	public void testAnyLengthSubtokens() {
+		final Token t = new Token(TEXT, START, STOP);
+
+		for (int l = 0; l < LENGTH; l++)
+			for (int i = 0; i < LENGTH - l; i++) {
+				Token sub = Tokens.subtoken(t, i, i + l);
+				assertEquals(TEXT.substring(i, i + l), sub.getText());
+				assertEquals(l, sub.getLength());
+			}
+	}
+
+	@Test
 	public void testFullSubtokenToEndIsSameAsOriginal() {
 		final Token t = new Token(TEXT, START, STOP);
 

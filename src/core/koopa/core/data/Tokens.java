@@ -93,7 +93,7 @@ public final class Tokens {
 
 		List<Range> ranges = new ArrayList<Range>();
 		for (Range range : token.getRanges()) {
-			if (end <= 0) {
+			if (end < 0) {
 				// We have gone past the end index. Which means we're done.
 				break;
 			}

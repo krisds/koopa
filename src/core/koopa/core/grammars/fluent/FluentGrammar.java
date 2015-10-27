@@ -13,6 +13,7 @@ import koopa.core.grammars.combinators.Opt;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.grammars.combinators.TestTag;
 import koopa.core.grammars.combinators.WithOption;
+import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.Optional;
@@ -211,6 +212,7 @@ public abstract class FluentGrammar extends Grammar {
 
 	public class DelayedDefinition extends Definition {
 		private Definition body = null;
+		private FutureParser parser = null;
 
 		public DelayedDefinition as(Object... elements) {
 			assert (body == null);
@@ -229,7 +231,12 @@ public abstract class FluentGrammar extends Grammar {
 
 		@Override
 		public ParserCombinator asParser() {
-			return body.asParser();
+			if (parser == null) {
+				parser = new FutureParser();
+				parser.setParser(body.asParser());
+			}
+
+			return parser;
 		}
 	}
 

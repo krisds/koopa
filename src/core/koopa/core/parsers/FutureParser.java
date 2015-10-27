@@ -10,8 +10,7 @@ import java.util.Set;
  * a case you can first create instances of this class, and then install the
  * definitions later.
  */
-// TODO Rename to ScopedParser ?
-public abstract class FutureParser extends ParserCombinator {
+public class FutureParser extends ParserCombinator {
 
 	protected ParserCombinator parser = null;
 	private Set<String> allKeywords;
@@ -42,5 +41,10 @@ public abstract class FutureParser extends ParserCombinator {
 			return true;
 
 		return frame.up().isKeyword(word);
+	}
+
+	@Override
+	protected boolean matches(Parse parse) {
+		return parser.matches(parse);
 	}
 }

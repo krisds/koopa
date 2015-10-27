@@ -81,6 +81,8 @@
 			<test name="koopa.core.grammars.test.AutomaticKeywordsTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
 
+			<test name="koopa.core.grammars.fluent.test.FluentGrammarTest" />
+
 			<test name="koopa.core.treeparsers.test.TreeWalkerTest" />
 			<test name="koopa.core.treeparsers.test.TreeStreamTest" />
 			<test name="koopa.core.treegrammars.test.TreeGrammarTest" />

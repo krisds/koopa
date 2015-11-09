@@ -43,8 +43,8 @@ public class CopybookPathsSelector extends JDialog {
 	private void setupComponents() {
 		setLayout(new BorderLayout());
 
-		final DefaultListModel<File> model = new DefaultListModel<File>();
-		final JList<File> pathsList = new JList<File>(model);
+		final DefaultListModel model = new DefaultListModel();
+		final JList pathsList = new JList(model);
 
 		for (File path : coordinator.getCopybookPaths())
 			model.addElement(path);
@@ -71,8 +71,8 @@ public class CopybookPathsSelector extends JDialog {
 				removeCopybookPathButton, okButton);
 	}
 
-	private void setupInteractions(final DefaultListModel<File> model,
-			final JList<File> pathsList, JButton addCopybookPathButton,
+	private void setupInteractions(final DefaultListModel model,
+			final JList pathsList, JButton addCopybookPathButton,
 			final JButton removeCopybookPathButton, JButton okButton) {
 
 		addCopybookPathButton.setAction(new AbstractAction(
@@ -98,7 +98,7 @@ public class CopybookPathsSelector extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				int[] selectedIndices = pathsList.getSelectedIndices();
 				for (int i = selectedIndices.length - 1; i >= 0; i--) {
-					coordinator.removeCopybookPath(model
+					coordinator.removeCopybookPath((File) model
 							.get(selectedIndices[i]));
 					model.removeElementAt(selectedIndices[i]);
 				}

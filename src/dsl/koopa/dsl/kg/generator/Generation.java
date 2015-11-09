@@ -3,6 +3,7 @@ package koopa.dsl.kg.generator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Set;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.trees.Tree;
+import koopa.core.util.Encoding;
+import koopa.core.util.Iterables;
 import koopa.templates.Template;
 import koopa.templates.TemplateLogic;
 
@@ -41,7 +44,7 @@ public class Generation {
 		// required imports. We collect them here into actual valid Java import
 		// statements.
 		final List<String> additionalImports = new LinkedList<String>();
-		for (String key : meta.stringPropertyNames()) {
+		for (String key : stringPropertyNames(meta)) {
 			if (key.startsWith("import.")) {
 				final String importName = key.substring("import.".length());
 				final String packageName = meta.getProperty(key);
@@ -95,7 +98,7 @@ public class Generation {
 					for (String imp : additionalImports) {
 						builder.append(indent);
 						builder.append(imp);
-						builder.append(System.lineSeparator());
+						builder.append(Encoding.lineSeparator());
 					}
 
 				else if ("rules".equals(target))
@@ -323,7 +326,7 @@ public class Generation {
 			builder.append("\"");
 			appendText(builder, d.getChild("literal"));
 			builder.append(i < children.size() - 1 ? "\"," : "\"");
-			builder.append(System.lineSeparator());
+			builder.append(Encoding.lineSeparator());
 		}
 	}
 
@@ -410,5 +413,22 @@ public class Generation {
 			return text.substring(1, text.length() - 1);
 		else
 			return text;
+	}
+
+	/**
+	 * Equivalent (I hope) to Properties.stringPropertyNames() in later Java
+	 * versions.
+	 */
+	private Set<String> stringPropertyNames(Properties props) {
+		Set<String> names = new HashSet<String>();
+
+		@SuppressWarnings("unchecked")
+		final Enumeration<String> propertyNames = (Enumeration<String>) props
+				.propertyNames();
+
+		for (String name : Iterables.forEnumeration(propertyNames))
+			names.add(name);
+
+		return names;
 	}
 }

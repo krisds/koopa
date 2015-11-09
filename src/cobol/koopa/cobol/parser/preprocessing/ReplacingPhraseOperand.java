@@ -56,10 +56,10 @@ public class ReplacingPhraseOperand {
 
 		// Discard leading and trailing spaces.
 		while (!this.tokens.isEmpty()
-				&& isConsideredSingleSpace(this.tokens.peekFirst()))
+				&& isConsideredSingleSpace(this.tokens.getFirst()))
 			this.tokens.removeFirst();
 		while (!this.tokens.isEmpty()
-				&& isConsideredSingleSpace(this.tokens.peekLast()))
+				&& isConsideredSingleSpace(this.tokens.getLast()))
 			this.tokens.removeLast();
 
 		this.textWords = reduce(this.tokens);

@@ -1,5 +1,6 @@
 package koopa.templates.partials;
 
+import koopa.core.util.Encoding;
 import koopa.templates.TemplateLogic;
 
 public class LineWithReplacements implements Part {
@@ -20,6 +21,6 @@ public class LineWithReplacements implements Part {
 				builder.append(logic.getValue(parts[i]));
 		}
 
-		builder.append(System.lineSeparator());
+		builder.append(Encoding.lineSeparator());
 	}
 }

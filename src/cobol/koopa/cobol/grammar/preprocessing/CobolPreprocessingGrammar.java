@@ -19,12 +19,12 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.core.data.tags.AreaTag;
-import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
-import koopa.cobol.data.tags.SyntacticTag;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
 import koopa.core.data.tags.TokenizerTag;
+import koopa.cobol.data.tags.SyntacticTag;
 import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
+import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
+import koopa.core.data.tags.AreaTag;
 
 public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     public CobolPreprocessingGrammar() {

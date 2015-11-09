@@ -1,6 +1,8 @@
 package koopa.core.parsers;
 
-import java.util.Collections;
+import static koopa.core.util.Iterators.descendingIterator;
+import static koopa.core.util.Iterators.emptyIterator;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -284,7 +286,7 @@ public class BaseStream implements Stream {
 	/** {@inheritDoc} */
 	public Iterator<Data> backToBookmarkIterator() {
 		if (bookmarks.isEmpty())
-			return Collections.emptyIterator();
+			return emptyIterator();
 
 		final Bookmark bookmark = bookmarks.peek();
 		final int numberOfDelayedMarkers = bookmark.delayedMarkers == null ? 0
@@ -302,7 +304,7 @@ public class BaseStream implements Stream {
 
 			public Data next() {
 				if (reverseIterator == null)
-					reverseIterator = seen.descendingIterator();
+					reverseIterator = descendingIterator(seen);
 
 				currentPosition -= 1;
 				return reverseIterator.next();

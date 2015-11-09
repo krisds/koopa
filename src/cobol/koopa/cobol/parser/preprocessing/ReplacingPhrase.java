@@ -10,6 +10,7 @@ import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.trees.Tree;
+import koopa.core.util.Strings;
 
 public abstract class ReplacingPhrase {
 
@@ -87,7 +88,7 @@ public abstract class ReplacingPhrase {
 		if (";".equals(text))
 			return true;
 
-		if (text.trim().isEmpty())
+		if (Strings.isEmpty(text.trim()))
 			return true;
 
 		return false;

@@ -1,5 +1,6 @@
 package koopa.templates.partials;
 
+import koopa.core.util.Encoding;
 import koopa.templates.TemplateLogic;
 
 public class VerbatimLine implements Part {
@@ -14,6 +15,6 @@ public class VerbatimLine implements Part {
 			TemplateLogic logic) {
 		builder.append(indent);
 		builder.append(text);
-		builder.append(System.lineSeparator());
+		builder.append(Encoding.lineSeparator());
 	}
 }

@@ -3,6 +3,7 @@ package koopa.cobol.parser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class CobolParser {
 		}
 	}
 
-	private ParseResults parse(File file, FileReader reader) throws IOException {
+	public ParseResults parse(File file, Reader reader) throws IOException {
 		final boolean isCopybook = CobolFiles.isCopybook(file);
 
 		// This object holds all grammar productions. It is not thread-safe,

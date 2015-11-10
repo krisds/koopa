@@ -2,6 +2,7 @@ package koopa.cobol.parser;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 
 import koopa.cobol.Copybooks;
@@ -44,6 +45,14 @@ public class ParsingCoordinator {
 	}
 
 	public ParseResults parse(File file) throws IOException {
+		return getConfiguredParser().parse(file);
+	}
+
+	public ParseResults parse(File file, Reader reader) throws IOException {
+		return getConfiguredParser().parse(file, reader);
+	}
+
+	private CobolParser getConfiguredParser() {
 		CobolParser parser = new CobolParser();
 
 		parser.setFormat(format);
@@ -53,9 +62,7 @@ public class ParsingCoordinator {
 		parser.setCopybooks(copybooks);
 
 		parser.setBuildTrees(buildTrees);
-		ParseResults results = parser.parse(file);
-
-		return results;
+		return parser;
 	}
 
 	public boolean isKeepingTrackOfTokens() {

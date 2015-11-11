@@ -3992,7 +3992,9 @@ def setOther =
       )
 
     # Was from "setFormatSemaphoreValue"
-    | (UP | DOWN) BY (integer | identifier)
+    # Issue #57: prefer to categorize identifiers as identifiers, rather than
+    # catching them as integer constants.
+    | (UP | DOWN) BY (identifier | integer)
     )
     
 end

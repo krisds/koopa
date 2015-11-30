@@ -19,12 +19,12 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.core.data.tags.TokenizerTag;
-import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
-import koopa.cobol.data.tags.SyntacticTag;
-import koopa.core.data.tags.AreaTag;
-import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
+import koopa.core.data.tags.TokenizerTag;
+import koopa.cobol.data.tags.SyntacticTag;
+import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
+import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
+import koopa.core.data.tags.AreaTag;
 
 public class CobolGrammar extends CobolBaseGrammar {
     public CobolGrammar() {
@@ -19485,9 +19485,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         atomParser = future;
         future.setParser(
           choice(
-            zero(),
-            identifier(),
-            numeric(),
+            as("zeroAtom",
+              zero()
+            ),
+            as("identifierAtom",
+              identifier()
+            ),
+            as("numericAtom",
+              numeric()
+            ),
             as("nested",
               sequence(
                 literal("("),

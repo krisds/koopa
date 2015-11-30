@@ -4737,9 +4737,9 @@ end
 
 # TODO: Check sources for use of ZERO in this case.
 private def atom =
-    ( zero
-    | identifier
-    | numeric
+    ( zeroAtom       : zero
+    | identifierAtom : identifier
+    | numericAtom    : numeric
     | nested: '(' bitwiseInclusiveDisjunction ')'
     )
 end

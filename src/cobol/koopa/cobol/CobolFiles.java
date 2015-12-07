@@ -105,10 +105,15 @@ public class CobolFiles {
 			return;
 
 		for (String extraExtension : extraSourceExtensions.split(",")) {
-			final String extension = "." + extraExtension.trim().toUpperCase();
+			extraExtension = extraExtension.trim().toUpperCase();
 
-			COPYBOOK_EXTENSIONS.remove(extension);
-			SOURCE_EXTENSIONS.add(extension);
+			if ("".equals(extraExtension))
+				SOURCE_EXTENSIONS.add("");
+			else {
+				final String extension = "." + extraExtension;
+				COPYBOOK_EXTENSIONS.remove(extension);
+				SOURCE_EXTENSIONS.add(extension);
+			}
 		}
 	}
 
@@ -117,10 +122,16 @@ public class CobolFiles {
 			return;
 
 		for (String extraExtension : extraSourceExtensions.split(",")) {
-			final String extension = "." + extraExtension.trim().toUpperCase();
+			extraExtension = extraExtension.trim().toUpperCase();
 
-			SOURCE_EXTENSIONS.remove(extension);
-			COPYBOOK_EXTENSIONS.add(extension);
+			if ("".equals(extraExtension))
+				COPYBOOK_EXTENSIONS.add("");
+			else {
+				final String extension = "." + extraExtension;
+
+				SOURCE_EXTENSIONS.remove(extension);
+				COPYBOOK_EXTENSIONS.add(extension);
+			}
 		}
 	}
 

@@ -2245,9 +2245,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator configurationSectionBodyParser = null;
     
-    private final Start configurationSectionBody = Start.on(getNamespace(), "configurationSectionBody");
+    protected final Start configurationSectionBody = Start.on(getNamespace(), "configurationSectionBody");
     
-    private ParserCombinator configurationSectionBody() {
+    protected ParserCombinator configurationSectionBody() {
       if (configurationSectionBodyParser == null) {
         FutureParser future = scoped("configurationSectionBody", PRIVATE);
         configurationSectionBodyParser = future;
@@ -3646,9 +3646,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator ioSectionBodyParser = null;
     
-    private final Start ioSectionBody = Start.on(getNamespace(), "ioSectionBody");
+    protected final Start ioSectionBody = Start.on(getNamespace(), "ioSectionBody");
     
-    private ParserCombinator ioSectionBody() {
+    protected ParserCombinator ioSectionBody() {
       if (ioSectionBodyParser == null) {
         FutureParser future = scoped("ioSectionBody", PRIVATE);
         ioSectionBodyParser = future;
@@ -4815,9 +4815,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator fileSectionContentsParser = null;
     
-    private final Start fileSectionContents = Start.on(getNamespace(), "fileSectionContents");
+    protected final Start fileSectionContents = Start.on(getNamespace(), "fileSectionContents");
     
-    private ParserCombinator fileSectionContents() {
+    protected ParserCombinator fileSectionContents() {
       if (fileSectionContentsParser == null) {
         FutureParser future = scoped("fileSectionContents", PRIVATE);
         fileSectionContentsParser = future;
@@ -5805,9 +5805,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator constantEntry_level01Parser = null;
     
-    private final Start constantEntry_level01 = Start.on(getNamespace(), "constantEntry_level01");
+    protected final Start constantEntry_level01 = Start.on(getNamespace(), "constantEntry_level01");
     
-    private ParserCombinator constantEntry_level01() {
+    protected ParserCombinator constantEntry_level01() {
       if (constantEntry_level01Parser == null) {
         FutureParser future = scoped("constantEntry_level01", PRIVATE);
         constantEntry_level01Parser = future;
@@ -5855,9 +5855,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator constantEntry_level78Parser = null;
     
-    private final Start constantEntry_level78 = Start.on(getNamespace(), "constantEntry_level78");
+    protected final Start constantEntry_level78 = Start.on(getNamespace(), "constantEntry_level78");
     
-    private ParserCombinator constantEntry_level78() {
+    protected ParserCombinator constantEntry_level78() {
       if (constantEntry_level78Parser == null) {
         FutureParser future = scoped("constantEntry_level78", PRIVATE);
         constantEntry_level78Parser = future;
@@ -5884,9 +5884,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator dataDescriptionEntry_format1Parser = null;
     
-    private final Start dataDescriptionEntry_format1 = Start.on(getNamespace(), "dataDescriptionEntry_format1");
+    protected final Start dataDescriptionEntry_format1 = Start.on(getNamespace(), "dataDescriptionEntry_format1");
     
-    private ParserCombinator dataDescriptionEntry_format1() {
+    protected ParserCombinator dataDescriptionEntry_format1() {
       if (dataDescriptionEntry_format1Parser == null) {
         FutureParser future = scoped("dataDescriptionEntry_format1", PRIVATE);
         dataDescriptionEntry_format1Parser = future;
@@ -5999,9 +5999,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator dataDescriptionEntry_format2Parser = null;
     
-    private final Start dataDescriptionEntry_format2 = Start.on(getNamespace(), "dataDescriptionEntry_format2");
+    protected final Start dataDescriptionEntry_format2 = Start.on(getNamespace(), "dataDescriptionEntry_format2");
     
-    private ParserCombinator dataDescriptionEntry_format2() {
+    protected ParserCombinator dataDescriptionEntry_format2() {
       if (dataDescriptionEntry_format2Parser == null) {
         FutureParser future = scoped("dataDescriptionEntry_format2", PRIVATE);
         dataDescriptionEntry_format2Parser = future;
@@ -6028,9 +6028,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator dataDescriptionEntry_format3_and_4Parser = null;
     
-    private final Start dataDescriptionEntry_format3_and_4 = Start.on(getNamespace(), "dataDescriptionEntry_format3_and_4");
+    protected final Start dataDescriptionEntry_format3_and_4 = Start.on(getNamespace(), "dataDescriptionEntry_format3_and_4");
     
-    private ParserCombinator dataDescriptionEntry_format3_and_4() {
+    protected ParserCombinator dataDescriptionEntry_format3_and_4() {
       if (dataDescriptionEntry_format3_and_4Parser == null) {
         FutureParser future = scoped("dataDescriptionEntry_format3_and_4", PRIVATE);
         dataDescriptionEntry_format3_and_4Parser = future;
@@ -9736,24 +9736,61 @@ public class CobolGrammar extends CobolBaseGrammar {
         sentenceParser = future;
         future.setParser(
           choice(
+            literal("."),
             compilerStatement(),
             sequence(
               statement(),
               star(
                 choice(
-                  compilerStatement(),
                   statement(),
+                  compilerStatement(),
                   continuationOfStatement()
                 )
               ),
               literal(".")
-            ),
-            literal(".")
+            )
           )
         );
       }
     
       return sentenceParser;
+    }
+    
+    // ========================================================
+    // nestedCopyStatement
+    // ........................................................
+    
+    private ParserCombinator nestedCopyStatementParser = null;
+    
+    protected final Start nestedCopyStatement = Start.on(getNamespace(), "nestedCopyStatement");
+    
+    protected ParserCombinator nestedCopyStatement() {
+      if (nestedCopyStatementParser == null) {
+        FutureParser future = scoped("nestedCopyStatement", PRIVATE);
+        nestedCopyStatementParser = future;
+        future.setParser(
+          as("copyStatement",
+            sequence(
+              copyStatementBody(),
+              optional(
+                sequence(
+                  literal("."),
+                  at(
+                    choice(
+                      literal("."),
+                      verb(),
+                      endOfStatementMarker(),
+                      somethingFollowingAStatement()
+                    )
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return nestedCopyStatementParser;
     }
     
     // ========================================================
@@ -9837,7 +9874,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                 "INITIALIZE",
                 "INSPECT",
                 "ALLOCATE",
-                "FREE"
+                "FREE",
+                "COPY"
               },
               new ParserCombinator[]{
                 acceptStatement(),
@@ -9911,7 +9949,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                 initializeStatement(),
                 inspectStatement(),
                 allocateStatement(),
-                freeStatement()
+                freeStatement(),
+                nestedCopyStatement()
               }
             ),
             sequence(
@@ -10006,9 +10045,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator eventPhraseParser = null;
     
-    private final Start eventPhrase = Start.on(getNamespace(), "eventPhrase");
+    protected final Start eventPhrase = Start.on(getNamespace(), "eventPhrase");
     
-    private ParserCombinator eventPhrase() {
+    protected ParserCombinator eventPhrase() {
       if (eventPhraseParser == null) {
         FutureParser future = scoped("eventPhrase", PRIVATE);
         eventPhraseParser = future;
@@ -10040,9 +10079,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator eventTypeParser = null;
     
-    private final Start eventType = Start.on(getNamespace(), "eventType");
+    protected final Start eventType = Start.on(getNamespace(), "eventType");
     
-    private ParserCombinator eventType() {
+    protected ParserCombinator eventType() {
       if (eventTypeParser == null) {
         FutureParser future = scoped("eventType", PRIVATE);
         eventTypeParser = future;
@@ -10133,9 +10172,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator endOfStatementMarkerParser = null;
     
-    private final Start endOfStatementMarker = Start.on(getNamespace(), "endOfStatementMarker");
+    protected final Start endOfStatementMarker = Start.on(getNamespace(), "endOfStatementMarker");
     
-    private ParserCombinator endOfStatementMarker() {
+    protected ParserCombinator endOfStatementMarker() {
       if (endOfStatementMarkerParser == null) {
         FutureParser future = scoped("endOfStatementMarker", PRIVATE);
         endOfStatementMarkerParser = future;
@@ -10223,9 +10262,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator somethingFollowingAStatementParser = null;
     
-    private final Start somethingFollowingAStatement = Start.on(getNamespace(), "somethingFollowingAStatement");
+    protected final Start somethingFollowingAStatement = Start.on(getNamespace(), "somethingFollowingAStatement");
     
-    private ParserCombinator somethingFollowingAStatement() {
+    protected ParserCombinator somethingFollowingAStatement() {
       if (somethingFollowingAStatementParser == null) {
         FutureParser future = scoped("somethingFollowingAStatement", PRIVATE);
         somethingFollowingAStatementParser = future;
@@ -10864,9 +10903,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator addition_format1Parser = null;
     
-    private final Start addition_format1 = Start.on(getNamespace(), "addition_format1");
+    protected final Start addition_format1 = Start.on(getNamespace(), "addition_format1");
     
-    private ParserCombinator addition_format1() {
+    protected ParserCombinator addition_format1() {
       if (addition_format1Parser == null) {
         FutureParser future = scoped("addition_format1", PRIVATE);
         addition_format1Parser = future;
@@ -10905,9 +10944,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator addition_format2Parser = null;
     
-    private final Start addition_format2 = Start.on(getNamespace(), "addition_format2");
+    protected final Start addition_format2 = Start.on(getNamespace(), "addition_format2");
     
-    private ParserCombinator addition_format2() {
+    protected ParserCombinator addition_format2() {
       if (addition_format2Parser == null) {
         FutureParser future = scoped("addition_format2", PRIVATE);
         addition_format2Parser = future;
@@ -10956,9 +10995,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator addition_format3Parser = null;
     
-    private final Start addition_format3 = Start.on(getNamespace(), "addition_format3");
+    protected final Start addition_format3 = Start.on(getNamespace(), "addition_format3");
     
-    private ParserCombinator addition_format3() {
+    protected ParserCombinator addition_format3() {
       if (addition_format3Parser == null) {
         FutureParser future = scoped("addition_format3", PRIVATE);
         addition_format3Parser = future;
@@ -13352,9 +13391,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator division_format1Parser = null;
     
-    private final Start division_format1 = Start.on(getNamespace(), "division_format1");
+    protected final Start division_format1 = Start.on(getNamespace(), "division_format1");
     
-    private ParserCombinator division_format1() {
+    protected ParserCombinator division_format1() {
       if (division_format1Parser == null) {
         FutureParser future = scoped("division_format1", PRIVATE);
         division_format1Parser = future;
@@ -13406,9 +13445,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator division_format2Parser = null;
     
-    private final Start division_format2 = Start.on(getNamespace(), "division_format2");
+    protected final Start division_format2 = Start.on(getNamespace(), "division_format2");
     
-    private ParserCombinator division_format2() {
+    protected ParserCombinator division_format2() {
       if (division_format2Parser == null) {
         FutureParser future = scoped("division_format2", PRIVATE);
         division_format2Parser = future;
@@ -13458,9 +13497,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator division_format3Parser = null;
     
-    private final Start division_format3 = Start.on(getNamespace(), "division_format3");
+    protected final Start division_format3 = Start.on(getNamespace(), "division_format3");
     
-    private ParserCombinator division_format3() {
+    protected ParserCombinator division_format3() {
       if (division_format3Parser == null) {
         FutureParser future = scoped("division_format3", PRIVATE);
         division_format3Parser = future;
@@ -13934,9 +13973,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator execStatementParser = null;
     
-    private final Start execStatement = Start.on(getNamespace(), "execStatement");
+    protected final Start execStatement = Start.on(getNamespace(), "execStatement");
     
-    private ParserCombinator execStatement() {
+    protected ParserCombinator execStatement() {
       if (execStatementParser == null) {
         FutureParser future = scoped("execStatement", PRIVATE);
         execStatementParser = future;
@@ -15278,9 +15317,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator multiplication_format1Parser = null;
     
-    private final Start multiplication_format1 = Start.on(getNamespace(), "multiplication_format1");
+    protected final Start multiplication_format1 = Start.on(getNamespace(), "multiplication_format1");
     
-    private ParserCombinator multiplication_format1() {
+    protected ParserCombinator multiplication_format1() {
       if (multiplication_format1Parser == null) {
         FutureParser future = scoped("multiplication_format1", PRIVATE);
         multiplication_format1Parser = future;
@@ -15327,9 +15366,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator multiplication_format2Parser = null;
     
-    private final Start multiplication_format2 = Start.on(getNamespace(), "multiplication_format2");
+    protected final Start multiplication_format2 = Start.on(getNamespace(), "multiplication_format2");
     
-    private ParserCombinator multiplication_format2() {
+    protected ParserCombinator multiplication_format2() {
       if (multiplication_format2Parser == null) {
         FutureParser future = scoped("multiplication_format2", PRIVATE);
         multiplication_format2Parser = future;
@@ -17305,9 +17344,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator subtraction_format1Parser = null;
     
-    private final Start subtraction_format1 = Start.on(getNamespace(), "subtraction_format1");
+    protected final Start subtraction_format1 = Start.on(getNamespace(), "subtraction_format1");
     
-    private ParserCombinator subtraction_format1() {
+    protected ParserCombinator subtraction_format1() {
       if (subtraction_format1Parser == null) {
         FutureParser future = scoped("subtraction_format1", PRIVATE);
         subtraction_format1Parser = future;
@@ -17344,9 +17383,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator subtraction_format2Parser = null;
     
-    private final Start subtraction_format2 = Start.on(getNamespace(), "subtraction_format2");
+    protected final Start subtraction_format2 = Start.on(getNamespace(), "subtraction_format2");
     
-    private ParserCombinator subtraction_format2() {
+    protected ParserCombinator subtraction_format2() {
       if (subtraction_format2Parser == null) {
         FutureParser future = scoped("subtraction_format2", PRIVATE);
         subtraction_format2Parser = future;
@@ -17395,9 +17434,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator subtraction_format3Parser = null;
     
-    private final Start subtraction_format3 = Start.on(getNamespace(), "subtraction_format3");
+    protected final Start subtraction_format3 = Start.on(getNamespace(), "subtraction_format3");
     
-    private ParserCombinator subtraction_format3() {
+    protected ParserCombinator subtraction_format3() {
       if (subtraction_format3Parser == null) {
         FutureParser future = scoped("subtraction_format3", PRIVATE);
         subtraction_format3Parser = future;
@@ -19477,9 +19516,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator atomParser = null;
     
-    private final Start atom = Start.on(getNamespace(), "atom");
+    protected final Start atom = Start.on(getNamespace(), "atom");
     
-    private ParserCombinator atom() {
+    protected ParserCombinator atom() {
       if (atomParser == null) {
         FutureParser future = scoped("atom", PRIVATE);
         atomParser = future;
@@ -19514,9 +19553,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator moreArithmeticOpParser = null;
     
-    private final Start moreArithmeticOp = Start.on(getNamespace(), "moreArithmeticOp");
+    protected final Start moreArithmeticOp = Start.on(getNamespace(), "moreArithmeticOp");
     
-    private ParserCombinator moreArithmeticOp() {
+    protected ParserCombinator moreArithmeticOp() {
       if (moreArithmeticOpParser == null) {
         FutureParser future = scoped("moreArithmeticOp", PRIVATE);
         moreArithmeticOpParser = future;
@@ -19645,9 +19684,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator simpleConditionParser = null;
     
-    private final Start simpleCondition = Start.on(getNamespace(), "simpleCondition");
+    protected final Start simpleCondition = Start.on(getNamespace(), "simpleCondition");
     
-    private ParserCombinator simpleCondition() {
+    protected ParserCombinator simpleCondition() {
       if (simpleConditionParser == null) {
         FutureParser future = scoped("simpleCondition", PRIVATE);
         simpleConditionParser = future;
@@ -20036,9 +20075,9 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator relationOperandParser = null;
     
-    private final Start relationOperand = Start.on(getNamespace(), "relationOperand");
+    protected final Start relationOperand = Start.on(getNamespace(), "relationOperand");
     
-    private ParserCombinator relationOperand() {
+    protected ParserCombinator relationOperand() {
       if (relationOperandParser == null) {
         FutureParser future = scoped("relationOperand", PRIVATE);
         relationOperandParser = future;

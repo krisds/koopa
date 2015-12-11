@@ -2142,12 +2142,20 @@ def paragraph =
     (sentence)*
 end
 
-#Modified by Adrian Noguero
 def sentence =
-    ( compilerStatement
-    | statement (compilerStatement | statement | continuationOfStatement)* .
-    | .
+    ( .
+    | compilerStatement
+    | statement (statement | compilerStatement | continuationOfStatement)* .
     )
+end
+
+private def nestedCopyStatement =
+    ( copyStatement : copyStatementBody 
+      [ . 
+        %at ( . 
+            | verb 
+            | endOfStatementMarker 
+            | somethingFollowingAStatement ) ] )
 end
 
 def statement =
@@ -2223,6 +2231,8 @@ def statement =
     
       | ALLOCATE   => allocateStatement
       | FREE       => freeStatement
+      
+      | COPY       => nestedCopyStatement
       )
     
     | verb

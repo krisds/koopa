@@ -1,0 +1,48 @@
+package koopa.cobol.grammar.test;
+grammar koopa.cobol.grammar.CobolGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target sentence;
+
++[ . ]
+
++[ DISPLAY FOO . ]
+
++[ COPY SOME-TEXT . ]
+
+
+# Leading compiler statements are considered to be in a sentence of their own.
++[ COPY SOME-TEXT .
+   #
+   DISPLAY FOO . ]
+
+# Nested COPY statements become part of the sentence they're in.
+# The problem lies with the closing dot of the COPY statement.
+# Koopa applies a guess at what to do with it. Here is the first case:
+# when the "COPY-dot" is followed by a second dot, the COPY-dot becomes part
+# of the COPY statement, allowing the sentence to continue to the next dot.
++[ DISPLAY FOO
+   COPY SOME-TEXT .
+   . ]
+
+# This shows the second case: when the COPY-dot is followed by a verb, the
+# COPY-dot also becomes part of the COPY statement, allowing the sentence to
+# continue on to the next statement.
++[ DISPLAY FOO
+   COPY SOME-TEXT .
+   DISPLAY FUM
+   . ]
+
+# Third case: when the COPY-dot is followed by an end-of-statement marker, the
+# COPY-dot also becomes part of the COPY statement, allowing the sentence to 
+# continue on to this marker.
++[ IF FOO > 0
+     DISPLAY FOO
+     COPY SOME-TEXT .
+   END-IF . ]
+
+# Fourth and final case applies to any other situation: the COPY-dot is
+# excluded from the COPY statement, allowing the sentence to consume this dot
+# as a way to close that sentence.
++[ DISPLAY FOO
+   COPY SOME-TEXT . ]

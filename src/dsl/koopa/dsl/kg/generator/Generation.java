@@ -126,7 +126,7 @@ public class Generation {
 				final boolean hasHidingModifier = rule.getDescendant(
 						"modifier", "hiding") != null;
 
-				setValue("modifier", hasPrivateModifier ? "private" : "public");
+				setValue("modifier", hasPrivateModifier ? "protected" : "public");
 				setValue("visibility", hasPrivateModifier ? "PRIVATE"
 						: hasHidingModifier ? "HIDING" : "PUBLIC");
 

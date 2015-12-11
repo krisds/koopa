@@ -251,9 +251,9 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     private ParserCombinator paramParser = null;
     
-    private final Start param = Start.on(getNamespace(), "param");
+    protected final Start param = Start.on(getNamespace(), "param");
     
-    private ParserCombinator param() {
+    protected ParserCombinator param() {
       if (paramParser == null) {
         FutureParser future = scoped("param", PRIVATE);
         paramParser = future;

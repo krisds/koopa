@@ -81,17 +81,17 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
     
     // ========================================================
-    // copyStatement
+    // copyStatementBody
     // ........................................................
     
-    private ParserCombinator copyStatementParser = null;
+    private ParserCombinator copyStatementBodyParser = null;
     
-    public final Start copyStatement = Start.on(getNamespace(), "copyStatement");
+    protected final Start copyStatementBody = Start.on(getNamespace(), "copyStatementBody");
     
-    public ParserCombinator copyStatement() {
-      if (copyStatementParser == null) {
-        FutureParser future = scoped("copyStatement", PUBLIC);
-        copyStatementParser = future;
+    protected ParserCombinator copyStatementBody() {
+      if (copyStatementBodyParser == null) {
+        FutureParser future = scoped("copyStatementBody", PRIVATE);
+        copyStatementBodyParser = future;
         future.setParser(
           sequence(
             token("COPY"),
@@ -115,7 +115,29 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
             ),
             optional(
               copyReplacingPhrase()
-            ),
+            )
+          )
+        );
+      }
+    
+      return copyStatementBodyParser;
+    }
+    
+    // ========================================================
+    // copyStatement
+    // ........................................................
+    
+    private ParserCombinator copyStatementParser = null;
+    
+    public final Start copyStatement = Start.on(getNamespace(), "copyStatement");
+    
+    public ParserCombinator copyStatement() {
+      if (copyStatementParser == null) {
+        FutureParser future = scoped("copyStatement", PUBLIC);
+        copyStatementParser = future;
+        future.setParser(
+          sequence(
+            copyStatementBody(),
             literal(".")
           )
         );
@@ -272,9 +294,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     private ParserCombinator replaceStatement_format1Parser = null;
     
-    private final Start replaceStatement_format1 = Start.on(getNamespace(), "replaceStatement_format1");
+    protected final Start replaceStatement_format1 = Start.on(getNamespace(), "replaceStatement_format1");
     
-    private ParserCombinator replaceStatement_format1() {
+    protected ParserCombinator replaceStatement_format1() {
       if (replaceStatement_format1Parser == null) {
         FutureParser future = scoped("replaceStatement_format1", PRIVATE);
         replaceStatement_format1Parser = future;
@@ -316,9 +338,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     private ParserCombinator replaceStatement_format2Parser = null;
     
-    private final Start replaceStatement_format2 = Start.on(getNamespace(), "replaceStatement_format2");
+    protected final Start replaceStatement_format2 = Start.on(getNamespace(), "replaceStatement_format2");
     
-    private ParserCombinator replaceStatement_format2() {
+    protected ParserCombinator replaceStatement_format2() {
       if (replaceStatement_format2Parser == null) {
         FutureParser future = scoped("replaceStatement_format2", PRIVATE);
         replaceStatement_format2Parser = future;
@@ -467,9 +489,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     private ParserCombinator unsigned_decimalParser = null;
     
-    private final Start unsigned_decimal = Start.on(getNamespace(), "unsigned_decimal");
+    protected final Start unsigned_decimal = Start.on(getNamespace(), "unsigned_decimal");
     
-    private ParserCombinator unsigned_decimal() {
+    protected ParserCombinator unsigned_decimal() {
       if (unsigned_decimalParser == null) {
         FutureParser future = scoped("unsigned_decimal", PRIVATE);
         unsigned_decimalParser = future;
@@ -506,9 +528,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     private ParserCombinator intgrParser = null;
     
-    private final Start intgr = Start.on(getNamespace(), "intgr");
+    protected final Start intgr = Start.on(getNamespace(), "intgr");
     
-    private ParserCombinator intgr() {
+    protected ParserCombinator intgr() {
       if (intgrParser == null) {
         FutureParser future = scoped("intgr", PRIVATE);
         intgrParser = future;
@@ -529,9 +551,9 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     private ParserCombinator uintgrParser = null;
     
-    private final Start uintgr = Start.on(getNamespace(), "uintgr");
+    protected final Start uintgr = Start.on(getNamespace(), "uintgr");
     
-    private ParserCombinator uintgr() {
+    protected ParserCombinator uintgr() {
       if (uintgrParser == null) {
         FutureParser future = scoped("uintgr", PRIVATE);
         uintgrParser = future;

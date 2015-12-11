@@ -20,11 +20,14 @@ end
 ## COPY statement.
 ## -----------------------------------------------------------------------------
 
-def copyStatement =
+private def copyStatementBody =
     COPY textName [ (OF | IN) libraryName ]
     [SUPPRESS [PRINTING]]
     [copyReplacingPhrase]
-    .
+end
+
+def copyStatement =
+    copyStatementBody .
 end
 
 def copyReplacingPhrase =

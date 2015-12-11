@@ -36,7 +36,7 @@ SEQNR I TEXT EOLN/TEXT
 
        >> source free
 <------------------->^
-COMPILER_DIRECTIVE   eoln
+CD                   eoln
 
 display "freedom".
 <---------------->^
@@ -48,7 +48,7 @@ text              eoln
 
 >> source fixed
 <------------->^
-compiler_directive EOLN
+cd             EOLN
 
        DISPLAY FOO.
 <---->^<---------->^

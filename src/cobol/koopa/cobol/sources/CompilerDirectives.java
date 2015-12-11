@@ -1,5 +1,6 @@
 package koopa.cobol.sources;
 
+import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
@@ -56,6 +57,9 @@ public class CompilerDirectives extends BasicSource<Token> implements
 			return token.withTags(referenceFormat);
 
 		if (isCompilerDirective(token))
+			return queuedTokens.removeFirst();
+
+		if (isLibrarianIncDirective(token))
 			return queuedTokens.removeFirst();
 
 		if (isMicroFocusCompilerDirective(token))
@@ -130,6 +134,61 @@ public class CompilerDirectives extends BasicSource<Token> implements
 			if (comment != null)
 				LOGGER.trace(comment);
 		}
+
+		return true;
+	}
+
+	// ========================================================================
+
+	private static final Pattern LIBRARIAN_INC_DIRECTIVE = Pattern
+			.compile("^-INC\\s+(\\S+).*$");
+
+	private static final int LIBRARIAN_INC_TEXTNAME_GROUP = 1;
+
+	/**
+	 * Based on MicroFocus' <a href=
+	 * "https://supportline.microfocus.com/documentation/books/sx40/lrcomp.htm"
+	 * >Compiler-directing Statements, The ++INCLUDE and -INC Mechanisms</a>.
+	 */
+	private boolean isLibrarianIncDirective(Token token) {
+		final String text = token.getText().toUpperCase();
+
+		final Matcher matcher = LIBRARIAN_INC_DIRECTIVE.matcher(text);
+
+		if (!matcher.find())
+			return false;
+
+		int start = matcher.start(LIBRARIAN_INC_TEXTNAME_GROUP);
+		int end = matcher.end(LIBRARIAN_INC_TEXTNAME_GROUP);
+
+		final Token inc = Tokens.subtoken(token, 0, 4).withTags(
+				COMPILER_DIRECTIVE, referenceFormat);
+
+		final Token ws = Tokens.subtoken(token, 4, start).withTags(
+				COMPILER_DIRECTIVE, SEPARATOR, referenceFormat);
+
+		final Token textName = Tokens.subtoken(token, start, end).withTags(
+				COMPILER_DIRECTIVE, referenceFormat);
+
+		if (LOGGER.isTraceEnabled()) {
+			LOGGER.trace(inc);
+			LOGGER.trace(ws);
+			LOGGER.trace(textName);
+		}
+
+		if (end < token.getLength()) {
+			final Token comment = Tokens.subtoken(token, end).withTags(COMMENT,
+					referenceFormat);
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(comment);
+
+			queuedTokens.addFirst(comment);
+		}
+
+		queuedTokens.addFirst(textName);
+		queuedTokens.addFirst(ws);
+		queuedTokens.addFirst(inc);
 
 		return true;
 	}

@@ -137,13 +137,14 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		TAG_VALIDATIONS = new HashMap<String, Object[]>();
 
 		TAG_VALIDATIONS.put(":", new Object[] { SEPARATOR });
+		TAG_VALIDATIONS.put("SEP", new Object[] { SEPARATOR });
 
 		TAG_VALIDATIONS.put("EOLN", new Object[] { END_OF_LINE, FIXED });
 		TAG_VALIDATIONS.put("eoln", new Object[] { END_OF_LINE, FREE });
 
-		TAG_VALIDATIONS.put("COMPILER_DIRECTIVE", new Object[] {
+		TAG_VALIDATIONS.put("CD", new Object[] {
 				COMPILER_DIRECTIVE, FIXED });
-		TAG_VALIDATIONS.put("compiler_directive", new Object[] {
+		TAG_VALIDATIONS.put("cd", new Object[] {
 				COMPILER_DIRECTIVE, FREE });
 
 		TAG_VALIDATIONS.put("COMMENT", new Object[] { COMMENT, FIXED });

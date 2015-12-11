@@ -2,30 +2,34 @@
 <--------------------------------------------------------------------------->^
 _                                                                            EOLN
 
+-INC TEXTNAME  witty remark
+<-->^<------><------------>^
+CD SEP/CD CD COMMENT       EOLN
+
        >> source format is free
 <----------------------------->^
-COMPILER_DIRECTIVE             eoln
+CD                             eoln
 
 >> source format is fixed
 <----------------------->^
-compiler_directive       EOLN
+cd                       EOLN
 
        >> source format is free    *> witty remark
 <---------------------------------><------------->^
-COMPILER_DIRECTIVE                 COMMENT        eoln
+CD                                 COMMENT        eoln
 
 >> source format is fixed    *> witty remark
 <---------------------------><------------->^
-compiler_directive           comment        EOLN
+cd                           comment        EOLN
 
        >> source free
 <------------------->^
-COMPILER_DIRECTIVE   eoln
+CD                   eoln
 
 >> source fixed
 <------------->^
-compiler_directive EOLN
+cd             EOLN
 
 $ SET SOURCEFORMAT "FREE"
 <----------------------->^
-COMPILER_DIRECTIVE       EOLN
+CD                       EOLN

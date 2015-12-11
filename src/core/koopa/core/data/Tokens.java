@@ -24,8 +24,25 @@ public final class Tokens {
 	 * @return The requested subtoken.
 	 */
 	public static Token subtoken(final Token token, final int beginIndex) {
+		final int lengthOfToken = token.getLength();
+
+		// Check bounds.
+		if (beginIndex < 0 || beginIndex > lengthOfToken)
+			throw new IndexOutOfBoundsException("Start position (" + beginIndex
+					+ ") falls outside the token's bounds [0, " + lengthOfToken
+					+ "[.");
+
+		// Full token ?
 		if (beginIndex == 0)
 			return token;
+
+		// Empty token ?
+		if (beginIndex == lengthOfToken) {
+			List<Range> ranges = new ArrayList<Range>(1);
+			Position end = token.getEnd();
+			ranges.add(new Range(end, end));
+			return new Token("", ranges, token.getTags(), token.getReplacing());
+		}
 
 		int index = beginIndex;
 		String text = token.getText().substring(index);

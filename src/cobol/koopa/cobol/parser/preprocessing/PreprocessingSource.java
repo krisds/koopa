@@ -54,14 +54,14 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private PreprocessingListener listener = null;
 
 	public PreprocessingSource(Source<Token> source, Grammar grammar,
-			SourceFormat format, File path, Copybooks copybooks) {
+			SourceFormat format, File file, Copybooks copybooks) {
 		assert (source != null);
 
 		this.grammar = grammar;
 		this.format = format;
 		this.copybooks = copybooks;
 
-		this.inputs = new Input(path, source);
+		this.inputs = new Input(file, source);
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 						+ " in library " + libraryName);
 		}
 
-		File copybook = copybooks.lookup(textName, libraryName, inputs.path);
+		File copybook = copybooks.lookup(textName, libraryName, inputs.file);
 		if (copybook == null) {
 			LOGGER.error("Missing copybook " + textName + " in " + libraryName);
 			unsupportedDirective = directive;
@@ -180,7 +180,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 					.getNewSource(
 							copybook.getAbsolutePath(), //
 							new FileReader(copybook), //
-							grammar, format, copybook.getParentFile(),
+							grammar, format, copybook, 
 							(Copybooks) null);
 
 			// Note that we don't pass the Copybooks instance when asking for a
@@ -202,8 +202,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 							tree.getStartPosition(), //
 							tree.getEndPosition()));
 
-			inputs = inputs.push(new Input(newSource, copybook,
-					activeCopyStatement));
+			inputs = inputs.push(new Input(newSource, copybook, activeCopyStatement));
 
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Problem while reading copybook: " + copybook, e);
@@ -274,15 +273,15 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	 */
 	private static class Input {
 		public final Source<Token> source;
-		public final File path;
+		public final File file;
 		private final Token activeCopyStatement;
 
 		private QueueingTokenSink buffer = null;
 		private boolean bufferReady = false;
 		private Input nextInput = null;
 
-		public Input(File path, Source<Token> source) {
-			this(source, path, null);
+		public Input(File file, Source<Token> source) {
+			this(source, file, null);
 		}
 
 		public Input push(Input input) {
@@ -294,9 +293,10 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			return nextInput;
 		}
 
-		public Input(Source<Token> source, File path, Token activeCopyStatement) {
+		public Input(Source<Token> source, File file, 
+				Token activeCopyStatement) {
 			this.source = source;
-			this.path = path;
+			this.file = file;
 			this.activeCopyStatement = activeCopyStatement;
 		}
 
@@ -318,7 +318,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 					Parse.of(source).to(buffer));
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("PREPROCESSING GRAMMAR ACCEPTED " + path + " ? "
+				LOGGER.trace("PREPROCESSING GRAMMAR ACCEPTED " + file + " ? "
 						+ accepts);
 
 			bufferReady = true;

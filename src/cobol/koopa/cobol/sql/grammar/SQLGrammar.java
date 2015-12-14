@@ -37,7 +37,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator sqlStatement() {
       if (sqlStatementParser == null) {
-        FutureParser future = scoped("sqlStatement", PUBLIC);
+        FutureParser future = scoped("sqlStatement", PUBLIC, true);
         sqlStatementParser = future;
         future.setParser(
           choice(
@@ -67,7 +67,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator includeStatement() {
       if (includeStatementParser == null) {
-        FutureParser future = scoped("includeStatement", PUBLIC);
+        FutureParser future = scoped("includeStatement", PUBLIC, true);
         includeStatementParser = future;
         future.setParser(
           sequence(
@@ -90,7 +90,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator declareSessionStatement() {
       if (declareSessionStatementParser == null) {
-        FutureParser future = scoped("declareSessionStatement", PUBLIC);
+        FutureParser future = scoped("declareSessionStatement", PUBLIC, true);
         declareSessionStatementParser = future;
         future.setParser(
           sequence(
@@ -123,7 +123,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator declareCursorStatement() {
       if (declareCursorStatementParser == null) {
-        FutureParser future = scoped("declareCursorStatement", PUBLIC);
+        FutureParser future = scoped("declareCursorStatement", PUBLIC, true);
         declareCursorStatementParser = future;
         future.setParser(
           sequence(
@@ -163,7 +163,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator selectStatement() {
       if (selectStatementParser == null) {
-        FutureParser future = scoped("selectStatement", PUBLIC);
+        FutureParser future = scoped("selectStatement", PUBLIC, true);
         selectStatementParser = future;
         future.setParser(
           sequence(
@@ -207,7 +207,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator insertStatement() {
       if (insertStatementParser == null) {
-        FutureParser future = scoped("insertStatement", PUBLIC);
+        FutureParser future = scoped("insertStatement", PUBLIC, true);
         insertStatementParser = future;
         future.setParser(
           sequence(
@@ -244,7 +244,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator updateStatement() {
       if (updateStatementParser == null) {
-        FutureParser future = scoped("updateStatement", PUBLIC);
+        FutureParser future = scoped("updateStatement", PUBLIC, true);
         updateStatementParser = future;
         future.setParser(
           sequence(
@@ -280,7 +280,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator deleteStatement() {
       if (deleteStatementParser == null) {
-        FutureParser future = scoped("deleteStatement", PUBLIC);
+        FutureParser future = scoped("deleteStatement", PUBLIC, true);
         deleteStatementParser = future;
         future.setParser(
           sequence(
@@ -315,7 +315,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator openStatement() {
       if (openStatementParser == null) {
-        FutureParser future = scoped("openStatement", PUBLIC);
+        FutureParser future = scoped("openStatement", PUBLIC, true);
         openStatementParser = future;
         future.setParser(
           sequence(
@@ -338,7 +338,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator rollbackStatement() {
       if (rollbackStatementParser == null) {
-        FutureParser future = scoped("rollbackStatement", PUBLIC);
+        FutureParser future = scoped("rollbackStatement", PUBLIC, true);
         rollbackStatementParser = future;
         future.setParser(
           token("ROLLBACK")
@@ -358,7 +358,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator textName() {
       if (textNameParser == null) {
-        FutureParser future = scoped("textName", PUBLIC);
+        FutureParser future = scoped("textName", PUBLIC, true);
         textNameParser = future;
         future.setParser(
           choice(
@@ -381,7 +381,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator name() {
       if (nameParser == null) {
-        FutureParser future = scoped("name", PUBLIC);
+        FutureParser future = scoped("name", PUBLIC, true);
         nameParser = future;
         future.setParser(
           identifier()
@@ -401,7 +401,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator schemaName() {
       if (schemaNameParser == null) {
-        FutureParser future = scoped("schemaName", PUBLIC);
+        FutureParser future = scoped("schemaName", PUBLIC, true);
         schemaNameParser = future;
         future.setParser(
           identifier()
@@ -421,7 +421,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator tableName() {
       if (tableNameParser == null) {
-        FutureParser future = scoped("tableName", PUBLIC);
+        FutureParser future = scoped("tableName", PUBLIC, true);
         tableNameParser = future;
         future.setParser(
           identifier()
@@ -441,7 +441,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator delimitedIdentifier() {
       if (delimitedIdentifierParser == null) {
-        FutureParser future = scoped("delimitedIdentifier", PUBLIC);
+        FutureParser future = scoped("delimitedIdentifier", PUBLIC, true);
         delimitedIdentifierParser = future;
         future.setParser(
           sequence(
@@ -465,7 +465,7 @@ public class SQLGrammar extends SQLBaseGrammar {
     
     public ParserCombinator identifier() {
       if (identifierParser == null) {
-        FutureParser future = scoped("identifier", PUBLIC);
+        FutureParser future = scoped("identifier", PUBLIC, true);
         identifierParser = future;
         future.setParser(
           any()

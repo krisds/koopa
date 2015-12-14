@@ -47,11 +47,16 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected FutureParser scoped(final String name) {
-		return scoped(name, PUBLIC);
+		return scoped(name, PUBLIC, true);
 	}
 
 	protected FutureParser scoped(final String name, final Visibility visibility) {
-		return new Scoped(this, name, visibility);
+		return scoped(name, visibility, true);
+	}
+
+	protected FutureParser scoped(final String name,
+			final Visibility visibility, boolean allowKeywords) {
+		return new Scoped(this, name, visibility, allowKeywords);
 	}
 
 	protected ParserCombinator as(final String name,

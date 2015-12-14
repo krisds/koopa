@@ -40,7 +40,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator preprocessing() {
       if (preprocessingParser == null) {
-        FutureParser future = scoped("preprocessing", PUBLIC);
+        FutureParser future = scoped("preprocessing", PUBLIC, true);
         preprocessingParser = future;
         future.setParser(
           star(
@@ -67,7 +67,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator preprocessingDirective() {
       if (preprocessingDirectiveParser == null) {
-        FutureParser future = scoped("preprocessingDirective", PUBLIC);
+        FutureParser future = scoped("preprocessingDirective", PUBLIC, true);
         preprocessingDirectiveParser = future;
         future.setParser(
           choice(
@@ -90,7 +90,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     protected ParserCombinator copyStatementBody() {
       if (copyStatementBodyParser == null) {
-        FutureParser future = scoped("copyStatementBody", PRIVATE);
+        FutureParser future = scoped("copyStatementBody", PRIVATE, true);
         copyStatementBodyParser = future;
         future.setParser(
           sequence(
@@ -133,7 +133,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator copyStatement() {
       if (copyStatementParser == null) {
-        FutureParser future = scoped("copyStatement", PUBLIC);
+        FutureParser future = scoped("copyStatement", PUBLIC, true);
         copyStatementParser = future;
         future.setParser(
           sequence(
@@ -156,7 +156,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator copyReplacingPhrase() {
       if (copyReplacingPhraseParser == null) {
-        FutureParser future = scoped("copyReplacingPhrase", PUBLIC);
+        FutureParser future = scoped("copyReplacingPhrase", PUBLIC, true);
         copyReplacingPhraseParser = future;
         future.setParser(
           sequence(
@@ -181,7 +181,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator copyReplacementInstruction() {
       if (copyReplacementInstructionParser == null) {
-        FutureParser future = scoped("copyReplacementInstruction", PUBLIC);
+        FutureParser future = scoped("copyReplacementInstruction", PUBLIC, true);
         copyReplacementInstructionParser = future;
         future.setParser(
           sequence(
@@ -211,7 +211,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator leading() {
       if (leadingParser == null) {
-        FutureParser future = scoped("leading", PUBLIC);
+        FutureParser future = scoped("leading", PUBLIC, true);
         leadingParser = future;
         future.setParser(
           token("LEADING")
@@ -231,7 +231,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator trailing() {
       if (trailingParser == null) {
-        FutureParser future = scoped("trailing", PUBLIC);
+        FutureParser future = scoped("trailing", PUBLIC, true);
         trailingParser = future;
         future.setParser(
           token("TRAILING")
@@ -251,7 +251,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator copyOperandName() {
       if (copyOperandNameParser == null) {
-        FutureParser future = scoped("copyOperandName", PUBLIC);
+        FutureParser future = scoped("copyOperandName", PUBLIC, true);
         copyOperandNameParser = future;
         future.setParser(
           choice(
@@ -275,7 +275,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator replaceStatement() {
       if (replaceStatementParser == null) {
-        FutureParser future = scoped("replaceStatement", PUBLIC);
+        FutureParser future = scoped("replaceStatement", PUBLIC, true);
         replaceStatementParser = future;
         future.setParser(
           choice(
@@ -298,7 +298,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     protected ParserCombinator replaceStatement_format1() {
       if (replaceStatement_format1Parser == null) {
-        FutureParser future = scoped("replaceStatement_format1", PRIVATE);
+        FutureParser future = scoped("replaceStatement_format1", PRIVATE, true);
         replaceStatement_format1Parser = future;
         future.setParser(
           sequence(
@@ -342,7 +342,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     protected ParserCombinator replaceStatement_format2() {
       if (replaceStatement_format2Parser == null) {
-        FutureParser future = scoped("replaceStatement_format2", PRIVATE);
+        FutureParser future = scoped("replaceStatement_format2", PRIVATE, true);
         replaceStatement_format2Parser = future;
         future.setParser(
           sequence(
@@ -369,7 +369,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator textName() {
       if (textNameParser == null) {
-        FutureParser future = scoped("textName", PUBLIC);
+        FutureParser future = scoped("textName", PUBLIC, true);
         textNameParser = future;
         future.setParser(
           choice(
@@ -392,7 +392,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator libraryName() {
       if (libraryNameParser == null) {
-        FutureParser future = scoped("libraryName", PUBLIC);
+        FutureParser future = scoped("libraryName", PUBLIC, true);
         libraryNameParser = future;
         future.setParser(
           choice(
@@ -415,7 +415,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator literal() {
       if (literalParser == null) {
-        FutureParser future = scoped("literal", PUBLIC);
+        FutureParser future = scoped("literal", PUBLIC, true);
         literalParser = future;
         future.setParser(
           choice(
@@ -438,7 +438,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator numeric() {
       if (numericParser == null) {
-        FutureParser future = scoped("numeric", PUBLIC);
+        FutureParser future = scoped("numeric", PUBLIC, true);
         numericParser = future;
         future.setParser(
           choice(
@@ -462,7 +462,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     public ParserCombinator decimal() {
       if (decimalParser == null) {
-        FutureParser future = scoped("decimal", PUBLIC);
+        FutureParser future = scoped("decimal", PUBLIC, true);
         decimalParser = future;
         future.setParser(
           choice(
@@ -493,7 +493,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     protected ParserCombinator unsigned_decimal() {
       if (unsigned_decimalParser == null) {
-        FutureParser future = scoped("unsigned_decimal", PRIVATE);
+        FutureParser future = scoped("unsigned_decimal", PRIVATE, true);
         unsigned_decimalParser = future;
         future.setParser(
           choice(
@@ -532,7 +532,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     protected ParserCombinator intgr() {
       if (intgrParser == null) {
-        FutureParser future = scoped("intgr", PRIVATE);
+        FutureParser future = scoped("intgr", PRIVATE, true);
         intgrParser = future;
         future.setParser(
           sequence(
@@ -555,7 +555,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     
     protected ParserCombinator uintgr() {
       if (uintgrParser == null) {
-        FutureParser future = scoped("uintgr", PRIVATE);
+        FutureParser future = scoped("uintgr", PRIVATE, true);
         uintgrParser = future;
         future.setParser(
           sequence(

@@ -36,7 +36,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator cicsStatement() {
       if (cicsStatementParser == null) {
-        FutureParser future = scoped("cicsStatement", PUBLIC);
+        FutureParser future = scoped("cicsStatement", PUBLIC, true);
         cicsStatementParser = future;
         future.setParser(
           sequence(
@@ -61,7 +61,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator command() {
       if (commandParser == null) {
-        FutureParser future = scoped("command", PUBLIC);
+        FutureParser future = scoped("command", PUBLIC, true);
         commandParser = future;
         future.setParser(
           choice(
@@ -176,7 +176,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator option() {
       if (optionParser == null) {
-        FutureParser future = scoped("option", PUBLIC);
+        FutureParser future = scoped("option", PUBLIC, true);
         optionParser = future;
         future.setParser(
           sequence(
@@ -205,7 +205,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator name() {
       if (nameParser == null) {
-        FutureParser future = scoped("name", PUBLIC);
+        FutureParser future = scoped("name", PUBLIC, true);
         nameParser = future;
         future.setParser(
           sequence(
@@ -233,7 +233,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     public ParserCombinator value() {
       if (valueParser == null) {
-        FutureParser future = scoped("value", PUBLIC);
+        FutureParser future = scoped("value", PUBLIC, true);
         valueParser = future;
         future.setParser(
           plus(
@@ -255,7 +255,7 @@ public class CICSGrammar extends CICSBaseGrammar {
     
     protected ParserCombinator param() {
       if (paramParser == null) {
-        FutureParser future = scoped("param", PRIVATE);
+        FutureParser future = scoped("param", PRIVATE, true);
         paramParser = future;
         future.setParser(
           choice(

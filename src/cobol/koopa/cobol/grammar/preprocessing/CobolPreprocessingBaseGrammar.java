@@ -151,11 +151,20 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 							PROGRAM_TEXT_AREA);
 
 					String text = cobolWord.getText();
-					if (!isCobolWord(cobolWord.getText()))
-						return false;
+					if (!isCobolWord(cobolWord.getText())) {
+						if (parse.getTrace().isEnabled())
+							parse.getTrace().add(
+									"no; illegal cobol word: " + text);
 
-					if (parse.getStack().isKeyword(text.toUpperCase()))
 						return false;
+					}
+
+					if (parse.getStack().isKeyword(text.toUpperCase())) {
+						if (parse.getTrace().isEnabled())
+							parse.getTrace().add("no; keyword: " + text);
+
+						return false;
+					}
 
 					parse.getStack().getScope().setReturnValue(cobolWord);
 					return true;

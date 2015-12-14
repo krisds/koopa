@@ -121,12 +121,15 @@ public class Generation {
 			{
 				setValue("name", rule.getChild("identifier").getAllText());
 
+				final boolean allowKeywords = rule.getDescendant("nokeywords") == null;
 				final boolean hasPrivateModifier = rule.getDescendant(
 						"modifier", "private") != null;
 				final boolean hasHidingModifier = rule.getDescendant(
 						"modifier", "hiding") != null;
 
-				setValue("modifier", hasPrivateModifier ? "protected" : "public");
+				setValue("allowKeywords", allowKeywords ? "true" : "false");
+				setValue("modifier", hasPrivateModifier ? "protected"
+						: "public");
 				setValue("visibility", hasPrivateModifier ? "PRIVATE"
 						: hasHidingModifier ? "HIDING" : "PUBLIC");
 

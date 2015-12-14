@@ -251,7 +251,7 @@ public abstract class FluentGrammar extends Grammar {
 		@Override
 		public ParserCombinator asParser() {
 			if (parser == null) {
-				parser = new Scoped(FluentGrammar.this, name, PUBLIC);
+				parser = new Scoped(FluentGrammar.this, name, PUBLIC, true);
 				parser.setParser(super.asParser());
 			}
 			return parser;

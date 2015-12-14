@@ -12,7 +12,18 @@ def compilationGroup =
 end
 
 # Copybook. This is just a guess at the likely suspect(s).
-def copybook =
+#
+# Note: we tell the copybook it does not define any keywords. We do this to
+# prevent pollution of the keyword space for rules being evaluated in
+# "sourceUnit" with the much more extensive set of keywords from 
+# "copybookHoldingData" and "copybookHoldingBehaviour".
+# For instance, "SYSIN" is not a keyword according to "sourceUnit", but it is
+# one in "copybookHoldingData". If we allowed that to come across, a statement
+# such as:
+#    ACCEPT FOO FROM SYSIN.
+# would fail when part of a copybook, even though it is gladly accepted by
+# "sourceUnit" on its own...
+def %nokeywords copybook =
     ( (sourceUnit)+
     | copybookHoldingData
     | copybookHoldingBehaviour

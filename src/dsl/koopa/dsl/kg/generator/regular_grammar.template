@@ -43,7 +43,7 @@ def rule
     
     #modifier# ParserCombinator #name#() {
       if (#name#Parser == null) {
-        FutureParser future = scoped("#name#", #visibility#);
+        FutureParser future = scoped("#name#", #visibility#, #allowKeywords#);
         #name#Parser = future;
         future.setParser(
 >         body

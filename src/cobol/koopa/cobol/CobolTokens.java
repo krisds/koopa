@@ -25,7 +25,7 @@ import koopa.core.sources.Source;
 public class CobolTokens {
 	public static Source<Token> getNewSource(String resourceName,
 			Reader reader, Grammar grammar, SourceFormat format,
-			List<ChainableSource<Token>> intermediateSources, File path,
+			List<ChainableSource<Token>> intermediateSources, File file,
 			Copybooks copybooks) {
 
 		// We will be building up our tokenization stage in several steps. Each
@@ -65,23 +65,23 @@ public class CobolTokens {
 		// EXPERIMENTAL: optional preprocessing stage.
 		if (copybooks != null)
 			tokenizer = new PreprocessingSource(tokenizer, grammar, format,
-					path, copybooks);
+					file, copybooks);
 
 		// TODO REPLACE statement source, but only at the top level...
 		// TODO Can I fold that into the PreprocessingSource ?
-		
+
 		return tokenizer;
 	}
 
 	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, Grammar grammar, SourceFormat format, File path,
+			Reader reader, Grammar grammar, SourceFormat format, File file,
 			Copybooks copybooks) {
-		return getNewSource(resourceName, reader, grammar, format, null, path,
+		return getNewSource(resourceName, reader, grammar, format, null, file,
 				copybooks);
 	}
 
 	public static Source<Token> getNewSource(Reader reader, Grammar grammar,
 			SourceFormat format) {
-		return getNewSource(null, reader, grammar, format, null, null, null);
+		return getNewSource(null, reader, grammar, format, null, null);
 	}
 }

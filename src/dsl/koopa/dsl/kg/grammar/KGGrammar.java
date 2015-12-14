@@ -31,10 +31,13 @@ public class KGGrammar extends FluentGrammar {
 		define("grammar_name").as("==grammar==", "name");
 		define("extends").as("==extends==", "name");
 
-		// [modifier] 'def' identifier [locals] [returning] '=' sequence 'end'
+		// [modifier] 'def' [nokeywords] identifier [locals] [returning] '='
+		// sequence 'end'
 		define("rule").as( //
 				optional("modifier"), //
-				"==def==", "identifier", //
+				"==def==", //
+				optional("nokeywords"), //
+				"identifier", //
 				optional("local-variables"), //
 				optional("return_value"), //
 				"=====", "sequence", "==end==" //
@@ -137,11 +140,14 @@ public class KGGrammar extends FluentGrammar {
 
 		// '%at' part
 		define("lookahead").as("==%==", noskip("==at=="), "part");
-		
+
 		// '%noskip' part
 		define("noskip").as("==%==", noskip("==noskip=="), "part");
 
-		// @ %noskip name
+		// '%nokeywords' part
+		define("nokeywords").as("==%==", noskip("==nokeywords=="));
+
+		// @name
 		define("tagged").as("==@==", noskip("name"));
 
 		// @WORD _

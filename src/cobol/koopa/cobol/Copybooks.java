@@ -26,7 +26,10 @@ public class Copybooks {
 
 	// TODO Take library name into account.
 	public File lookup(final String textName, final String libraryName,
-			File currentPath) {
+			final File currentFile) {
+
+		final File currentPath = currentFile == null ? null : currentFile
+				.getParentFile();
 
 		// Were we given a literal name ?
 		final boolean isLiteralTextName = isLiteral(textName);
@@ -41,7 +44,7 @@ public class Copybooks {
 		// Where are we looking for it ?
 		final String relativePathName;
 		if (libraryName == null)
-			relativePathName = ".";
+			relativePathName = null;
 		else if (isLiteral(libraryName))
 			relativePathName = libraryName.substring(1,
 					libraryName.length() - 1);
@@ -52,7 +55,19 @@ public class Copybooks {
 		final FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File path, String name) {
 				// LOGGER.trace("<" + name + "> <" + path + ">");
-				
+
+				// This tries to break direct recursion. Ideally, this would
+				// compare canonical paths, but resolving those is prone to
+				// IOExceptions; so I didn't bother...
+				// TODO Break indirect recursion as well.
+				if (path.equals(currentPath)
+						&& name.equalsIgnoreCase(currentFile.getName())) {
+					if (LOGGER.isTraceEnabled())
+						LOGGER.trace("- " + name
+								+ " ? No, same as source file.");
+					return false;
+				}
+
 				if (isLiteralTextName && fileName.equalsIgnoreCase(name)) {
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("- " + name + " ? Yes, exact match.");
@@ -80,8 +95,10 @@ public class Copybooks {
 				LOGGER.trace("Looking for " + fileName + " in " + libraryName
 						+ " on current path: " + currentPath);
 
-			File[] matches = new File(currentPath, relativePathName)
-					.listFiles(filter);
+			final File relativePath = relativePathName == null ? currentPath
+					: new File(currentPath, relativePathName);
+
+			File[] matches = relativePath.listFiles(filter);
 
 			if (matches != null && matches.length > 0) {
 				if (LOGGER.isInfoEnabled())
@@ -99,8 +116,10 @@ public class Copybooks {
 					LOGGER.trace("Looking for " + fileName + " in "
 							+ libraryName + " on copybook path: " + path);
 
-				File[] matches = new File(path, relativePathName)
-						.listFiles(filter);
+				final File relativePath = relativePathName == null ? path
+						: new File(path, relativePathName);
+
+				File[] matches = relativePath.listFiles(filter);
 
 				if (matches != null && matches.length > 0) {
 					if (LOGGER.isInfoEnabled())

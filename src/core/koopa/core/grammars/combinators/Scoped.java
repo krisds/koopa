@@ -12,6 +12,7 @@ import koopa.core.grammars.Grammar;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.Stream;
+import koopa.core.parsers.Stack.Frame;
 import koopa.core.util.WeakSet;
 
 public class Scoped extends FutureParser {
@@ -52,12 +53,15 @@ public class Scoped extends FutureParser {
 	}
 
 	private final Visibility visibility;
+	private final boolean allowKeywords;
 
-	public Scoped(Grammar grammar, String name, Visibility visibility) {
+	public Scoped(Grammar grammar, String name, Visibility visibility,
+			boolean allowKeywords) {
 		this.grammar = grammar;
 		this.name = name;
 		this.failures = new WeakSet<Token>();
 		this.visibility = visibility;
+		this.allowKeywords = allowKeywords;
 	}
 
 	public boolean matches(Parse parse) {
@@ -161,11 +165,21 @@ public class Scoped extends FutureParser {
 	 * for the overall structure of the program, and little else.
 	 */
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		parser.addAllLeadingKeywordsTo(keywords);
+		if (allowKeywords)
+			parser.addAllLeadingKeywordsTo(keywords);
 	}
 
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		parser.addAllLeadingKeywordsTo(keywords);
+		if (allowKeywords)
+			parser.addAllLeadingKeywordsTo(keywords);
+	}
+
+	@Override
+	public boolean isKeyword(String word, Frame frame) {
+		if (!allowKeywords)
+			return false;
+		else
+			return super.isKeyword(word, frame);
 	}
 
 	public boolean canMatchEmptyInputs() {

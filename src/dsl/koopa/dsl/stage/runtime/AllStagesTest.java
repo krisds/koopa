@@ -83,7 +83,9 @@ public abstract class AllStagesTest implements SampleBasedTest {
 
 		} else {
 			Parse parse = Parse.of(source);
-			assertFalse(target.accepts(parse) && source.isWhereExpected());
+			assertFalse(targetName + " should accept [" + sample
+					+ "] up to the expected point", target.accepts(parse)
+					&& source.isWhereExpected());
 		}
 	}
 }

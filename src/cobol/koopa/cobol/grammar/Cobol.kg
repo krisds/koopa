@@ -1476,8 +1476,11 @@ end
 
 private def dataDescriptionEntry_format3_and_4 =
     ( levelNumber : 88 )
-    [ entryName   : (%not (VALUE|VALUES)) conditionName ]
-    valueClause
+    
+    ( [ entryName : (%not (VALUE|VALUES)) conditionName ]
+      valueClause
+    | unknown: --> .
+    )
     .
 end
 

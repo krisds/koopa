@@ -6039,20 +6039,29 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("levelNumber",
               token("88")
             ),
-            optional(
-              as("entryName",
-                sequence(
-                  not(
-                    choice(
-                      token("VALUE"),
-                      token("VALUES")
+            choice(
+              sequence(
+                optional(
+                  as("entryName",
+                    sequence(
+                      not(
+                        choice(
+                          token("VALUE"),
+                          token("VALUES")
+                        )
+                      ),
+                      conditionName()
                     )
-                  ),
-                  conditionName()
+                  )
+                ),
+                valueClause()
+              ),
+              as("unknown",
+                skipto(
+                  literal(".")
                 )
               )
             ),
-            valueClause(),
             literal(".")
           )
         );

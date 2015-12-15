@@ -506,12 +506,12 @@ end
 # This stuff is present in the testsuite. The best description I found for it
 # is here: http://supportline.microfocus.com/documentation/books/sx20books/lrpdfx.htm
 def metadata =
-    ( AUTHOR .        [commentEntry]
-    | INSTALLATION .  [commentEntry]
-    | DATE-WRITTEN .  [commentEntry]
-    | DATE-COMPILED . [commentEntry]
-    | SECURITY .      [commentEntry]
-    | REMARKS .       [commentEntry]
+    ( AUTHOR        [.] [commentEntry]
+    | INSTALLATION  [.] [commentEntry]
+    | DATE-WRITTEN  [.] [commentEntry]
+    | DATE-COMPILED [.] [commentEntry]
+    | SECURITY      [.] [commentEntry]
+    | REMARKS       [.] [commentEntry]
     )+
     [--> (paragraphStart | sectionStart | divisionStart)]
 end

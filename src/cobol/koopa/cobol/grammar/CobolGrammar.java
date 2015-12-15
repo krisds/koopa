@@ -2054,42 +2054,54 @@ public class CobolGrammar extends CobolBaseGrammar {
               choice(
                 sequence(
                   token("AUTHOR"),
-                  literal("."),
+                  optional(
+                    literal(".")
+                  ),
                   optional(
                     commentEntry()
                   )
                 ),
                 sequence(
                   token("INSTALLATION"),
-                  literal("."),
+                  optional(
+                    literal(".")
+                  ),
                   optional(
                     commentEntry()
                   )
                 ),
                 sequence(
                   token("DATE-WRITTEN"),
-                  literal("."),
+                  optional(
+                    literal(".")
+                  ),
                   optional(
                     commentEntry()
                   )
                 ),
                 sequence(
                   token("DATE-COMPILED"),
-                  literal("."),
+                  optional(
+                    literal(".")
+                  ),
                   optional(
                     commentEntry()
                   )
                 ),
                 sequence(
                   token("SECURITY"),
-                  literal("."),
+                  optional(
+                    literal(".")
+                  ),
                   optional(
                     commentEntry()
                   )
                 ),
                 sequence(
                   token("REMARKS"),
-                  literal("."),
+                  optional(
+                    literal(".")
+                  ),
                   optional(
                     commentEntry()
                   )

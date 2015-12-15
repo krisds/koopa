@@ -6,7 +6,6 @@ import static koopa.core.trees.jaxen.Jaxen.getText;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 import koopa.core.trees.Tree;
+import koopa.core.util.Files;
 
 import org.apache.log4j.Logger;
 
@@ -179,7 +179,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			Source<Token> newSource = CobolTokens
 					.getNewSource(
 							copybook.getAbsolutePath(), //
-							new FileReader(copybook), //
+							Files.getReader(copybook), //
 							grammar, format, copybook, 
 							(Copybooks) null);
 

@@ -1,7 +1,6 @@
 package koopa.cobol.parser;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ import koopa.core.sources.Source;
 import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.util.Files;
 import koopa.core.util.Tuple;
 
 import org.apache.log4j.Logger;
@@ -49,9 +49,9 @@ public class CobolParser {
 		if (LOGGER.isInfoEnabled())
 			LOGGER.info("Parsing " + file);
 
-		FileReader reader = null;
+		Reader reader = null;
 		try {
-			reader = new FileReader(file);
+			reader = Files.getReader(file);
 			return parse(file, reader);
 
 		} finally {
@@ -70,8 +70,7 @@ public class CobolParser {
 		// Build the tokenisation stage.
 		Source<Token> source = CobolTokens.getNewSource(
 				file.getCanonicalPath(), reader, grammar, format,
-				intermediateTokenizers, file, 
-				preprocessing ? copybooks : null);
+				intermediateTokenizers, file, preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
 

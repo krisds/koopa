@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Set;
 
 import koopa.core.data.Data;
+import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.grammars.combinators.Opt;
+import koopa.core.parsers.Stack.Frame;
 import koopa.core.sources.NullSource;
 import koopa.core.sources.Source;
 import koopa.core.targets.CompositeTarget;
@@ -21,6 +23,9 @@ import koopa.core.util.Tuple;
 public class Parse {
 
 	private Stack stack;
+
+	private Position finalPosition = Position.ZERO;
+	private Frame finalFrame = null;
 
 	private Source<Token> source = new NullSource<Token>();
 	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
@@ -165,5 +170,18 @@ public class Parse {
 		Target<Data> target = getTarget(clazz);
 		if (target != null)
 			targets.remove(target);
+	}
+
+	public Position getFinalPosition() {
+		return finalPosition;
+	}
+
+	public Frame getFinalFrame() {
+		return finalFrame;
+	}
+
+	public void setFinalMatch(Position position, Frame frame) {
+		this.finalPosition = position;
+		this.finalFrame = frame;
 	}
 }

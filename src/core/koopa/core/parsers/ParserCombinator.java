@@ -2,6 +2,8 @@ package koopa.core.parsers;
 
 import java.util.Set;
 
+import koopa.core.data.Position;
+import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.targets.Target;
 
@@ -16,7 +18,23 @@ public abstract class ParserCombinator {
 
 		stack.push(this);
 		try {
-			return matches(parse);
+			boolean matches = matches(parse);
+
+			if (matches) {
+				// We keep track of how far the parse got, and what the parse
+				// was at that point. We do that so that we can give a more
+				// accurate and, hopefully, more useful error message in case of
+				// an incomplete parse.
+				Token peek = parse.getStream().peek();
+				if (peek != null) {
+					final Position currentPosition = peek.getStart();
+					if (parse.getFinalPosition().compareTo(currentPosition) < 0)
+						parse.setFinalMatch(currentPosition, parse.getStack()
+								.getHead());
+				}
+			}
+
+			return matches;
 
 		} finally {
 			stack.pop();

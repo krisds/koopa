@@ -3,7 +3,6 @@ package koopa.cobol.parser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,11 +13,16 @@ import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.LOCCount;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
+import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.Stack.Frame;
+import koopa.core.parsers.Stream;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
+import koopa.core.targets.NullTarget;
 import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -117,56 +121,41 @@ public class CobolParser {
 			}
 		}
 
-		// Check if we have consumed all program text.
-		List<Token> following = new ArrayList<Token>(5);
-		boolean sawMoreProgramText = false;
-		while (true) {
-			final Token t = source.next();
+		// Lets figure out whether we have seen all program text.
+		// This will also push any remaining tokens to the token tracker, if one
+		// was set up.
+		final Stream tail = new BaseStream(source, new NullTarget<Data>());
+		tail.bookmark();
 
-			// End-of-input ?
-			if (t == null)
-				break;
-
-			// If we're tracking tokens, push them to the tracker.
-			if (tokenTracker != null)
-				tokenTracker.push(t);
-
-			// Have we found more program text ?
-			if (!sawMoreProgramText && grammar.isProgramText(t)
-					&& !grammar.isSeparator(t, null))
-				sawMoreProgramText = true;
-
-			// Stop after a few tokens have been seen, unless we're tracking
-			// them all.
-			if (sawMoreProgramText) {
-				if (following.size() < 5)
-					following.add(t);
-				else if (tokenTracker == null)
-					break;
-			}
-		}
+		final boolean sawMoreProgramText = grabRemainingProgramText(grammar,
+				tail, tokenTracker);
 
 		// Here we check if the parser really consumed all input. If it didn't
-		// we show a glimpse of the next few tokens that should have been
-		// consumed.
-		if (accepts) {
-			if (sawMoreProgramText) {
-				accepts = false;
-				results.setValidInput(false);
-				parse.error(following.get(0), "Not all input was consumed.");
+		// we try to flag the point of failure as best we can.
+		if (accepts && sawMoreProgramText) {
+			accepts = false;
+			results.setValidInput(false);
 
-				if (LOGGER.isInfoEnabled()) {
-					LOGGER.info("Not all input was consumed.");
-					for (Token f : following)
-						LOGGER.info("-> " + f);
-					LOGGER.info("-> ...");
-				}
-			}
+			String msg = "Incomplete parse.";
+
+			final Frame finalFrame = parse.getFinalFrame();
+			if (finalFrame != null)
+				msg += " Last successful match: " + finalFrame.toTrace() + ".";
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(msg);
+
+			tail.rewind();
+			final Position finalPosition = parse.getFinalPosition();
+			final Token token = findTokenAt(tail, finalPosition);
+
+			if (token != null)
+				parse.error(token, msg);
 		}
 
-		// Some of our tokenizers may be threaded. We need to make sure that any
+		// Some of our sources may be threaded. We need to make sure that any
 		// threads they hold get stopped. This is what we do here. The message
-		// will get passed along the chain of tokenizers, giving each a chance
+		// will get passed along the chain of sources, giving each a chance
 		// to stop running.
 		source.close();
 
@@ -222,5 +211,46 @@ public class CobolParser {
 
 	public void setCopybooks(Copybooks copybooks) {
 		this.copybooks = copybooks;
+	}
+
+	private boolean grabRemainingProgramText(CobolGrammar grammar,
+			Stream stream, TokenTracker tracker) {
+
+		boolean sawMoreProgramText = false;
+
+		while (true) {
+			final Token t = stream.forward();
+
+			// End-of-input ?
+			if (t == null)
+				break;
+
+			// If we're tracking tokens, push them to the tracker.
+			if (tracker != null)
+				tracker.push(t);
+
+			// Have we found more program text ?
+			if (!sawMoreProgramText && grammar.isProgramText(t)
+					&& !grammar.isSeparator(t, null))
+				sawMoreProgramText = true;
+
+			// Stop after we found program text, unless we're tracking all
+			// tokens.
+			if (sawMoreProgramText && tracker == null)
+				break;
+		}
+
+		return sawMoreProgramText;
+	}
+
+	private Token findTokenAt(Stream tail, Position best) {
+		Token token = tail.forward();
+		Token first = token;
+		while (token != null && token.getStart().compareTo(best) < 0)
+			token = tail.forward();
+
+		if (token == null)
+			token = first;
+		return token;
 	}
 }

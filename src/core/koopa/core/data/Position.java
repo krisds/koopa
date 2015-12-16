@@ -9,7 +9,7 @@ import koopa.core.util.Files;
  * <p>
  * <b>Trying to keep this class immutable.</b>
  */
-public final class Position {
+public final class Position implements Comparable<Position> {
 
 	public static final Position ZERO = new Position(null, 0, 0, 0);
 
@@ -59,7 +59,7 @@ public final class Position {
 	}
 
 	public String toString() {
-		return toStringPrefix + linenumber + ":" + positionInLine;
+		return toStringPrefix + ":" +  linenumber + ":" + positionInLine;
 	}
 
 	@Override
@@ -77,5 +77,9 @@ public final class Position {
 			return false;
 
 		return positionInFile == other.positionInFile;
+	}
+
+	public int compareTo(Position other) {
+		return positionInFile - other.positionInFile;
 	}
 }

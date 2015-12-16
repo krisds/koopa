@@ -190,6 +190,10 @@ public class Scoped extends FutureParser {
 		return name.equals(n);
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public String toString() {
 		return "def " + name;
 	}

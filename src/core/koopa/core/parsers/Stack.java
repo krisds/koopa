@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import koopa.core.data.Token;
+import koopa.core.grammars.combinators.Scoped;
 
 public class Stack {
 
 	private Frame head;
 
 	public Stack() {
-		head = new Frame();
+		head = new Frame(null, null);
 		head.makeScoped();
 	}
 
@@ -77,26 +78,21 @@ public class Stack {
 	}
 
 	public class Frame {
-		private ParserCombinator parser = null;
+		private final ParserCombinator parser;
 
 		/** "Up" = towards the root of the stack. */
-		private Frame up = null;
+		private final Frame up;
 
-		/** "Down" = away from the root of the stack. */
-		private Frame down = null;
+		private Scope scope;
 
-		private Scope scope = null;
+		public Frame(Frame up, ParserCombinator parser) {
+			this.up = up;
+			this.parser = parser;
+			this.scope = null;
+		}
 
 		private Frame push(ParserCombinator p) {
-			// We try to reuse existing frames before creating new ones.
-			if (down == null) {
-				down = new Frame();
-				down.up = this;
-			}
-
-			down.parser = p;
-			down.scope = null;
-			return down;
+			return new Frame(this, p);
 		}
 
 		public boolean isKeyword(String word) {
@@ -110,10 +106,11 @@ public class Stack {
 			if (up == null)
 				return null;
 
-			if (scope != null)
+			if (scope != null) {
 				up.getScope().setRValue(scope.returnValue);
+				scope = null;
+			}
 
-			parser = null;
 			return up;
 		}
 
@@ -131,6 +128,24 @@ public class Stack {
 				return scope;
 			else
 				return up.getScope();
+		}
+
+		public String toTrace() {
+			StringBuilder sb = new StringBuilder();
+
+			Frame frame = this;
+			do {
+				if (frame.parser == null || !(frame.parser instanceof Scoped))
+					continue;
+
+				if (sb.length() > 0)
+					sb.append(" < ");
+
+				sb.append(((Scoped) frame.parser).getName());
+
+			} while ((frame = frame.up()) != null);
+
+			return sb.toString();
 		}
 	}
 

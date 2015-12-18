@@ -7,14 +7,14 @@ import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.JTabbedPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.app.Application;
 import koopa.app.batchit.ParseDetails;
-import koopa.app.components.breadcrumb.Breadcrumb;
+import koopa.app.components.detail.token.TokenDetails;
 import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.highlights.Highlights;
@@ -41,7 +41,7 @@ public class Detail extends JPanel {
 	private SourceView sourceView = null;
 	private CobolOutline outline = null;
 	private DetailsTable detailsTable = null;
-	private Breadcrumb breadcrumb = null;
+	private TokenDetails breadcrumb = null;
 	private boolean parsing = false;
 
 	private Tree tree = null;
@@ -77,7 +77,7 @@ public class Detail extends JPanel {
 			}
 		});
 
-		breadcrumb = new Breadcrumb(application);
+		breadcrumb = new TokenDetails(application);
 		sourceView.addTokenSelectionListener(breadcrumb);
 
 		detailsTable = new DetailsTable(parseDetails);
@@ -98,15 +98,15 @@ public class Detail extends JPanel {
 		JPanel x = new JPanel();
 		x.setLayout(new BorderLayout());
 		x.add(horizontalSplit, BorderLayout.CENTER);
-		JScrollPane scrollingBreadcrumb = new JScrollPane(breadcrumb);
-		scrollingBreadcrumb
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		x.add(scrollingBreadcrumb, BorderLayout.SOUTH);
+
+		JTabbedPane foo = new JTabbedPane();
+		foo.addTab("Messages", detailsScroll);
+		foo.addTab("Selection", breadcrumb);
+		foo.setSelectedIndex(1);
 
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, x,
-				detailsScroll);
+				foo);
 		verticalSplit.setResizeWeight(0.8);
-		// verticalSplit.setDividerLocation(0.8);
 
 		add(verticalSplit, BorderLayout.CENTER);
 	}

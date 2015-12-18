@@ -1,7 +1,7 @@
-package koopa.app.components.breadcrumb;
+package koopa.app.components.detail.token;
 
+import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -17,11 +18,12 @@ import koopa.app.listeners.TokenSelectionListener;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 
-// TODO Style this a bit better.
-@SuppressWarnings("serial")
-public class Breadcrumb extends JPanel implements TokenSelectionListener {
+public class ListOfGrammarRules extends JPanel implements
+		TokenSelectionListener {
 
-	private static final Font FONT = new Font("Courier", Font.PLAIN, 10);
+	private static final long serialVersionUID = 1L;
+
+	private static final Font FONT = new Font("Courier", Font.PLAIN, 14);
 
 	private Application application = null;
 	private Tree parseTree = null;
@@ -39,13 +41,14 @@ public class Breadcrumb extends JPanel implements TokenSelectionListener {
 		}
 	};
 
-	public Breadcrumb(Application application) {
+	public ListOfGrammarRules(Application application) {
 		this.application = application;
 		setupComponents();
 	}
 
 	private void setupComponents() {
-		setLayout(new FlowLayout(FlowLayout.LEFT));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBackground(Color.WHITE);
 
 		noSelection = new JLabel("no selection");
 		noSelection.setFont(FONT);
@@ -89,12 +92,8 @@ public class Breadcrumb extends JPanel implements TokenSelectionListener {
 
 		remove(noSelection);
 
-		for (String crumb : breadcrumb) {
-			if (index > 0)
-				add(getLabel("<"));
-
+		for (String crumb : breadcrumb)
 			add(getLabel(crumb));
-		}
 
 		validate();
 		getParent().validate();

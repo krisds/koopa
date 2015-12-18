@@ -8,6 +8,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,10 @@ import javax.swing.text.TabStop;
 import koopa.app.ApplicationSupport;
 import koopa.app.components.sourceview.LineNumberView;
 import koopa.app.components.sourceview.LinePainter;
+import koopa.core.data.Token;
+import koopa.core.sources.Source;
+import koopa.dsl.kg.source.KGTokens;
+import koopa.dsl.kg.tags.KGTag;
 
 public class GrammarView extends JPanel {
 
@@ -255,67 +261,85 @@ public class GrammarView extends JPanel {
 	}
 
 	private void colorize(StyledDocument document, String pathToGrammarResource) {
-		// TODO Re-implement...
-		/*
-		 * try { final InputStream resourceStream = GrammarView.class
-		 * .getResourceAsStream(pathToGrammarResource);
-		 * 
-		 * final InputStreamReader reader = new InputStreamReader(
-		 * resourceStream);
-		 * 
-		 * KGLexer lexer = new KGLexer(new ANTLRReaderStream(reader));
-		 * 
-		 * boolean justSawDef = false; while (true) { CommonToken token =
-		 * (CommonToken) lexer.nextToken();
-		 * 
-		 * if (token.getType() == Token.EOF) break;
-		 * 
-		 * Style style = null; if (token.getType() == KGLexer.COMMENT) { style =
-		 * getCommentStyle(document); justSawDef = false;
-		 * 
-		 * } else if ("def".equals(token.getText())) { style =
-		 * getKeywordStyle(document); justSawDef = true;
-		 * 
-		 * } else if ("end".equals(token.getText())) { style =
-		 * getKeywordStyle(document); justSawDef = false;
-		 * 
-		 * } else if (token.getType() == KGLexer.ANY || token.getType() ==
-		 * KGLexer.NOSKIP || token.getType() == KGLexer.SKIP_TO ||
-		 * token.getType() == KGLexer.OPEN_PAREN || token.getType() ==
-		 * KGLexer.CLOSE_PAREN || token.getType() == KGLexer.OPEN_BRACKET ||
-		 * token.getType() == KGLexer.CLOSE_BRACKET || token.getType() ==
-		 * KGLexer.BANG || token.getType() == KGLexer.CHOICE || token.getType()
-		 * == KGLexer.STAR || token.getType() == KGLexer.PLUS || token.getType()
-		 * == KGLexer.NOT || token.getType() == KGLexer.PIPE) { style =
-		 * getKeywordStyle(document);
-		 * 
-		 * } else if (token.getType() == KGLexer.IDENTIFIER) { if
-		 * (!token.getText().toUpperCase().equals(token.getText())) style =
-		 * getIdentifierStyle(document);
-		 * 
-		 * if (justSawDef) ruleNameOffsets.put(token.getText(),
-		 * token.getStartIndex());
-		 * 
-		 * justSawDef = false;
-		 * 
-		 * } else if (token.getType() == KGLexer.NATIVE_CODE) { style =
-		 * getNativeStyle(document); justSawDef = false;
-		 * 
-		 * } else if (token.getType() == KGLexer.TAG) { style =
-		 * getTagStyle(document);
-		 * 
-		 * } else if (token.getType() == KGLexer.WHITESPACE) { // Nop.
-		 * 
-		 * } else { justSawDef = false; }
-		 * 
-		 * if (style == null) style = getDefaultStyle(document);
-		 * 
-		 * document.insertString(token.getStartIndex(), token.getText(), style);
-		 * }
-		 * 
-		 * } catch (IOException e) { e.printStackTrace(); } catch
-		 * (BadLocationException e) { e.printStackTrace(); }
-		 */
+
+		try {
+			final InputStream resourceStream = GrammarView.class
+					.getResourceAsStream(pathToGrammarResource);
+
+			final InputStreamReader reader = new InputStreamReader(
+					resourceStream);
+
+			Source<Token> tokens = KGTokens.getNewSource(pathToGrammarResource,
+					reader);
+
+			boolean justSawDef = false;
+			while (true) {
+				Token token = tokens.next();
+
+				if (token == null)
+					break;
+
+				Style style = null;
+				if (token.hasTag(KGTag.COMMENT)) {
+					style = getCommentStyle(document);
+					justSawDef = false;
+
+				} else if ("def".equals(token.getText())) {
+					style = getKeywordStyle(document);
+					justSawDef = true;
+
+				} else if ("end".equals(token.getText())) {
+					style = getKeywordStyle(document);
+					justSawDef = false;
+
+					// } else if (token.getType() == KGLexer.ANY
+					// || token.getType() == KGLexer.NOSKIP
+					// || token.getType() == KGLexer.SKIP_TO
+					// || token.getType() == KGLexer.OPEN_PAREN
+					// || token.getType() == KGLexer.CLOSE_PAREN
+					// || token.getType() == KGLexer.OPEN_BRACKET
+					// || token.getType() == KGLexer.CLOSE_BRACKET
+					// || token.getType() == KGLexer.BANG
+					// || token.getType() == KGLexer.CHOICE
+					// || token.getType() == KGLexer.STAR
+					// || token.getType() == KGLexer.PLUS
+					// || token.getType() == KGLexer.NOT
+					// || token.getType() == KGLexer.PIPE) {
+					// style = getKeywordStyle(document);
+
+				} else if (token.hasTag(KGTag.IDENTIFIER)) {
+					if (!token.getText().toUpperCase().equals(token.getText()))
+						style = getIdentifierStyle(document);
+
+					if (justSawDef)
+						ruleNameOffsets.put(token.getText(), token.getStart()
+								.getPositionInFile());
+
+					justSawDef = false;
+
+				} else if (token.hasTag(KGTag.NATIVE_CODE_BLOCK)) {
+					style = getNativeStyle(document);
+					justSawDef = false;
+
+					// } else if (token.getType() == KGLexer.TAG) {
+					// style = getTagStyle(document);
+
+				} else if (token.hasTag(KGTag.WHITESPACE)) {
+					// Nop.
+
+				} else {
+					justSawDef = false;
+				}
+
+				if (style == null)
+					style = getDefaultStyle(document);
+
+				document.insertString(token.getStart().getPositionInFile(),
+						token.getText(), style);
+			}
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

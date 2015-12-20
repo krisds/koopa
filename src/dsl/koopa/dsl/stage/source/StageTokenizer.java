@@ -134,7 +134,8 @@ public class StageTokenizer extends BasicSource<Token> implements Source<Token> 
 					index += 1;
 				}
 
-				part = Tokens.subtoken(token, start, index);
+				if (index > start)
+					part = Tokens.subtoken(token, start, index);
 			}
 
 			parts.add(part);

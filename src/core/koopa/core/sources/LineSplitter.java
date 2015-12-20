@@ -4,47 +4,69 @@ import static koopa.core.data.tags.AreaTag.END_OF_LINE;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PushbackReader;
 import java.io.Reader;
+import java.util.List;
 
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
+import koopa.core.util.Encoding;
 
 /**
  * This class takes a {@link Reader} and spits out tokens. The tokens are either
  * "end of lines" which have an {@link AreaTag#END_OF_LINE} tag, or contain one
  * line of text (without tags).
+ * <p>
+ * The client can specify which line endings to use by providing a list of
+ * character lists. Each will tried in order.
+ * <p>
+ * If the client does not specify line endings, this will use
+ * {@linkplain Encoding#getDefaultLineEndings()} instead.
  */
 public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 
-	private static final int NO_CHARACTER = -2;
-
 	private final String resourceName;
-	private BufferedReader reader = null;
+	private PushbackReader reader = null;
+	private final char[] lookahead;
+	private final List<List<Character>> lineEndings;
 
 	private int linenumber = 1;
 	private int positionInFile = 1;
 	private int positionInLine = 1;
-
-	private int character = NO_CHARACTER;
 
 	private Position start = null;
 	private Position end = null;
 	private StringBuffer buffer = null;
 
 	public LineSplitter(Reader reader) {
-		this(null, reader);
+		this(null, reader, Encoding.getDefaultLineEndings());
 	}
 
 	public LineSplitter(String resourceName, Reader reader) {
+		this(resourceName, reader, Encoding.getDefaultLineEndings());
+	}
+
+	public LineSplitter(String resourceName, Reader reader,
+			List<List<Character>> lineEndings) {
+
 		assert (reader != null);
+		assert (lineEndings != null && !lineEndings.isEmpty());
+		final int max = maxLengthOfLineEnding(lineEndings);
+		assert (max > 0);
 
 		this.resourceName = resourceName;
 
+		final BufferedReader br;
 		if (reader instanceof BufferedReader)
-			this.reader = (BufferedReader) reader;
+			br = (BufferedReader) reader;
 		else
-			this.reader = new BufferedReader(reader);
+			br = new BufferedReader(reader);
+		this.reader = new PushbackReader(br, max);
+
+		this.lookahead = new char[max];
+
+		this.lineEndings = lineEndings;
 
 		this.buffer = new StringBuffer();
 	}
@@ -55,89 +77,37 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 			if (atEndOfFile())
 				return null;
 
-			if (!atEndOfLine()) {
-				// Not already processing a newline.
+			buffer.setLength(0);
 
-				// Reset buffer.
-				buffer.setLength(0);
-
-				markStart();
-
-				// Process left over character from last time (if any).
-				if (character >= 0) {
-					buffer.append((char) character);
-					nextPosition();
-				}
-
-				// Read line.
-				while (true) {
-					character = reader.read();
-
-					if (atEndOfFile() || atEndOfLine()) {
-						break;
-					}
-
-					buffer.append((char) character);
-					nextPosition();
-				}
-
-				// Produce the line, if we read one.
-				if (buffer.length() > 0) {
-					markEnd();
-					return produceToken(buffer.toString());
-				}
-			}
-
-			if (character == '\n') {
-				// Processing an end of line.
+			final int len = atLineEnding();
+			if (len > 0) {
+				// Read line ending, whose length we know.
 
 				markStart();
-				nextPosition();
+				reader.read(lookahead, 0, len);
+				buffer.append(lookahead, 0, len);
+				advance(len);
 				markEnd();
-
-				final Token token = produceToken("\n", END_OF_LINE);
-
 				newLine();
 
-				character = NO_CHARACTER;
+				final Token lineEnding = produceToken(buffer.toString(),
+						END_OF_LINE);
+				return lineEnding;
 
-				return token;
-			}
-
-			if (character == '\r') {
-				// Processing an end of line.
+			} else {
+				// Read line of unknown length;
 
 				markStart();
-				nextPosition();
-
-				// We need to know if this is followed by a '\n'. If so that is
-				// part of the newline token.
-				character = reader.read();
-
-				if (character == '\n') {
-					nextPosition();
-					markEnd();
-
-					final Token token = produceToken("\r\n", END_OF_LINE);
-
-					newLine();
-
-					character = NO_CHARACTER;
-
-					return token;
-
-				} else {
-					markEnd();
-
-					final Token token = produceToken("\r", END_OF_LINE);
-
-					newLine();
-
-					return token;
+				while (!atEndOfFile() && atLineEnding() <= 0) {
+					int c = reader.read();
+					buffer.append((char) c);
+					advance();
 				}
-			}
+				markEnd();
 
-			return null;
+				final Token line = produceToken(buffer.toString());
+				return line;
+			}
 
 		} catch (IOException e) {
 			// How to handle this correctly ?
@@ -146,16 +116,45 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 		}
 	}
 
-	private boolean atEndOfFile() {
-		return character == -1;
+	private int atLineEnding() throws IOException {
+		for (List<Character> list : lineEndings)
+			if (atLineEnding(list))
+				return list.size();
+
+		return -1;
 	}
 
-	private boolean atEndOfLine() {
-		return character == '\n' || character == '\r';
+	private boolean atLineEnding(List<Character> list) throws IOException {
+		int len = 0;
+
+		for (char expected : list) {
+			lookahead[len] = (char) reader.read();
+
+			if (lookahead[len] == -1) {
+				reader.unread(lookahead, 0, len);
+				return false;
+			}
+
+			len += 1;
+
+			if (lookahead[len - 1] != expected) {
+				reader.unread(lookahead, 0, len);
+				return false;
+			}
+		}
+
+		reader.unread(lookahead, 0, len);
+		return true;
 	}
 
-	private Token produceToken(String text, Object... tags) {
-		return new Token(text, start, end, tags);
+	private boolean atEndOfFile() throws IOException {
+		final int c = reader.read();
+		if (c == -1)
+			return true;
+		else {
+			reader.unread(c);
+			return false;
+		}
 	}
 
 	private void newLine() {
@@ -163,9 +162,14 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 		positionInLine = 1;
 	}
 
-	private void nextPosition() {
+	private void advance() {
 		positionInLine += 1;
 		positionInFile += 1;
+	}
+
+	private void advance(int len) {
+		positionInLine += len;
+		positionInFile += len;
 	}
 
 	private void markStart() {
@@ -178,6 +182,10 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 				positionInLine - 1);
 	}
 
+	private Token produceToken(String text, Object... tags) {
+		return new Token(text, start, end, tags);
+	}
+
 	public void close() {
 		try {
 			if (reader != null)
@@ -188,7 +196,15 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 
 		} finally {
 			reader = null;
-			character = -1;
 		}
+	}
+
+	private static int maxLengthOfLineEnding(List<List<Character>> lineEndings) {
+		int max = 0;
+
+		for (List<Character> list : lineEndings)
+			max = Math.max(max, list.size());
+
+		return max;
 	}
 }

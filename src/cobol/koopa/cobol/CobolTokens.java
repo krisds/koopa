@@ -19,10 +19,12 @@ import koopa.core.grammars.Grammar;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
+import koopa.core.util.Encoding;
 
 // TODO Make it so that CobolParser can reuse this. --> 
 // We'll need support for intermediate tokenizers and copybook lookup.
 public class CobolTokens {
+
 	public static Source<Token> getNewSource(String resourceName,
 			Reader reader, Grammar grammar, SourceFormat format,
 			List<ChainableSource<Token>> intermediateSources, File file,
@@ -33,7 +35,8 @@ public class CobolTokens {
 		Source<Token> tokenizer;
 
 		// Split the input into lines.
-		tokenizer = new LineSplitter(resourceName, new BufferedReader(reader));
+		tokenizer = new LineSplitter(resourceName, new BufferedReader(reader),
+				Encoding.getLineEndings());
 		// Filter out some compiler directives.
 		tokenizer = new CompilerDirectives(tokenizer, format);
 		// Split up the different areas of each line.

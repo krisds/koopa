@@ -1,5 +1,6 @@
 package koopa.core.util;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +67,11 @@ public final class Encoding {
 	}
 
 	private static String getString(byte[] bytes) {
-		return new String(bytes, charset);
+		try {
+			return new String(bytes, charset.name());
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static char[] getChars(byte[] bytes) {

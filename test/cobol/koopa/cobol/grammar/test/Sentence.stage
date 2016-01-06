@@ -46,3 +46,8 @@ target sentence;
 # as a way to close that sentence.
 +[ DISPLAY FOO
    COPY SOME-TEXT . ]
+
+# Same as the fourth case; but here I want to make sure that the COPY statement
+# does not get consumed by the MOVE statement's "unknown" capturing.
++[ MOVE "BLAH" TO BLAH
+   COPY SOME-TEXT . ]

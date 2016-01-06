@@ -10293,6 +10293,7 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             literal("."),
             verb(),
+            token("COPY"),
             token("ELSE"),
             token("WHEN"),
             token("END-ACCEPT"),

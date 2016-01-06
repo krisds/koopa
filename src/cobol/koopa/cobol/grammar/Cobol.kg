@@ -2321,6 +2321,8 @@ private def somethingFollowingAStatement =
     ( . 
     | verb
 
+    | COPY
+
     | ELSE 
     | WHEN
     

@@ -17,6 +17,11 @@ public class CompositeTarget<T extends Data> implements Target<T> {
 			target.push(data);
 	}
 
+	public void done() {
+		for (Target<T> target : targets)
+			target.done();
+	}
+
 	public void addTarget(Target<T> target) {
 		assert (target != null);
 		targets.add(target);

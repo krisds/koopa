@@ -46,6 +46,9 @@ public abstract class TreeBuildingTarget implements Target<Data> {
 		}
 	}
 
+	public void done() {
+	}
+
 	/**
 	 * Start of a tree.
 	 */

@@ -301,4 +301,7 @@ public class SourceView extends JPanel {
 	public void removeTokenSelectionListener(TokenSelectionListener listener) {
 		tokenSelectionListeners.remove(listener);
 	}
+
+	public void close() {
+	}
 }

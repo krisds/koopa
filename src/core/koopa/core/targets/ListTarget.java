@@ -25,6 +25,9 @@ public class ListTarget implements Target<Data>, Iterable<Data> {
 		packets.add(packet);
 	}
 
+	public void done() {
+	}
+
 	public boolean isEmpty() {
 		return packets.isEmpty();
 	}

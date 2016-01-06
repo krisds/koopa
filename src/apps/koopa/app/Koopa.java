@@ -661,6 +661,9 @@ public class Koopa extends JFrame implements Application {
 
 		fireClosedDetail(component);
 		updateMenus();
+		
+		if (component instanceof Detail)
+			((Detail) component).close();
 	}
 
 	public void closeView() {

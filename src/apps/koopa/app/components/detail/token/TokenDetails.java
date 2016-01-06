@@ -84,4 +84,9 @@ public class TokenDetails extends JPanel implements TokenSelectionListener {
 		}
 		return hex.toString().toUpperCase();
 	}
+
+	public void close() {
+		rules.close();
+		tags.close();
+	}
 }

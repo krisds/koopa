@@ -16,6 +16,9 @@ public class TokenTracker implements Target<Data> {
 			tokens.add((Token) data);
 	}
 
+	public void done() {
+	}
+
 	public List<Token> getTokens() {
 		return tokens;
 	}

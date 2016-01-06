@@ -14,5 +14,10 @@ public interface Target<T extends Data> {
 	 */
 	void push(T data);
 
+	/**
+	 * Lets us know the parse is done.
+	 */
+	void done();
+
 	// TODO Needed ? T pop();
 }

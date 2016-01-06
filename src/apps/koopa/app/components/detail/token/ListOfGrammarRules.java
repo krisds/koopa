@@ -134,4 +134,8 @@ public class ListOfGrammarRules extends JPanel implements
 		validate();
 		repaint();
 	}
+
+	public void close() {
+		parseTree = null;
+	}
 }

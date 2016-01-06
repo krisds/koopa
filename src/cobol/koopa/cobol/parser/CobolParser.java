@@ -35,6 +35,8 @@ public class CobolParser {
 
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
+	private static final CobolGrammar grammar = new CobolGrammar();
+
 	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
 	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
 
@@ -66,10 +68,6 @@ public class CobolParser {
 
 	public ParseResults parse(File file, Reader reader) throws IOException {
 		final boolean isCopybook = CobolFiles.isCopybook(file);
-
-		// This object holds all grammar productions. It is not thread-safe,
-		// meaning that you can only ask it to parse one thing at a time.
-		CobolGrammar grammar = new CobolGrammar();
 
 		// Build the tokenisation stage.
 		Source<Token> source = CobolTokens.getNewSource(
@@ -153,11 +151,7 @@ public class CobolParser {
 				parse.error(token, msg);
 		}
 
-		// Some of our sources may be threaded. We need to make sure that any
-		// threads they hold get stopped. This is what we do here. The message
-		// will get passed along the chain of sources, giving each a chance
-		// to stop running.
-		source.close();
+		parse.done();
 
 		// It is now safe to quit the method if we want/need to.
 		if (!accepts)

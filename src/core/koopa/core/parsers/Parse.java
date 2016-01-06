@@ -30,6 +30,7 @@ public class Parse {
 	private Source<Token> source = new NullSource<Token>();
 	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
 	private Stream stream = null;
+	private WaterTagger waterTagger;
 
 	private Set<Opt> options = new HashSet<Opt>();
 
@@ -79,8 +80,10 @@ public class Parse {
 		if (stream == null) {
 			if (targets.isEmpty())
 				setStream(new BaseStream(source, new NullTarget<Data>()));
-			else
-				setStream(new BaseStream(source, new WaterTagger(all(targets))));
+			else {
+				waterTagger = new WaterTagger(all(targets));
+				setStream(new BaseStream(source, waterTagger));
+			}
 		}
 
 		return stream;
@@ -183,5 +186,20 @@ public class Parse {
 	public void setFinalMatch(Position position, Frame frame) {
 		this.finalPosition = position;
 		this.finalFrame = frame;
+	}
+
+	public void done() {
+		// Some of our sources may be threaded. We need to make sure that any
+		// threads they hold get stopped. This is what we do here. The message
+		// will get passed along the chain of sources, giving each a chance
+		// to stop running.
+		source.close();
+
+		// While there are no threaded targets at the time of writing, we do
+		// want to give them a chance to clean up on completion of the parse.
+		for (Target<?> target : targets)
+			target.done();
+		if (waterTagger != null)
+			waterTagger.done();
 	}
 }

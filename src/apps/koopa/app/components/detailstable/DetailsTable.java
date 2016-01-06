@@ -72,4 +72,8 @@ public class DetailsTable extends JXTable {
 			listener.userSelectedDetail(detail);
 		}
 	}
+
+	public void close() {
+		parseDetails = null;
+	}
 }

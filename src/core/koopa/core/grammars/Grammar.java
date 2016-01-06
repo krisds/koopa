@@ -3,8 +3,17 @@ package koopa.core.grammars;
 import static koopa.core.grammars.combinators.Opt.NOSKIP;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
+/**
+ * This defines the basic details of a grammar, as well as the source of actual
+ * {@linkplain ParserCombinator}s.
+ * <p>
+ * <strong>It is expected that this class and the {@linkplain ParserCombinator}
+ * s it generates are thread safe.</strong> Any state needed while parsing
+ * should be part of the {@linkplain Parse} instance used.
+ */
 public abstract class Grammar {
 
 	/**

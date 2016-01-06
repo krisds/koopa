@@ -19,6 +19,9 @@ public class QueueingTokenSink implements Target<Data> {
 		}
 	}
 
+	public void done() {
+	}
+
 	public Data next() {
 		synchronized (this.tokens) {
 			if (this.tokens.isEmpty()) {

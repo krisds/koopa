@@ -66,4 +66,8 @@ public class CobolOutline extends JPanel {
 		final DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 		model.nodeStructureChanged(root);
 	}
+
+	public void close() {
+		root.removeAllChildren();
+	}
 }

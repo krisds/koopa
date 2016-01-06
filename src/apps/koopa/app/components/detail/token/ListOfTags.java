@@ -86,4 +86,7 @@ public class ListOfTags extends JPanel implements TokenSelectionListener {
 		index += 1;
 		return label;
 	}
+
+	public void close() {
+	}
 }

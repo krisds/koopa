@@ -9,4 +9,7 @@ public class NullTarget<T extends Data> implements Target<T> {
 
 	public void push(T packet) {
 	}
+
+	public void done() {
+	}
 }

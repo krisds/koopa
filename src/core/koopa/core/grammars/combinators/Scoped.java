@@ -11,21 +11,13 @@ import koopa.core.data.markers.Start;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.Stream;
 import koopa.core.parsers.Stack.Frame;
-import koopa.core.util.WeakSet;
+import koopa.core.parsers.Stream;
 
 public class Scoped extends FutureParser {
 
 	private final Grammar grammar;
 	private final String name;
-
-	// Using this for memoization because, as it turns out, it occurs often
-	// enough that the same grammar rule gets evaluated on the same token.
-	// If we already know it has failed before then we can shortcircuit a
-	// lot of duplicate work.
-	// TODO Should track this on the Parse instance instead...
-	private final WeakSet<Token> failures;
 
 	/**
 	 * Choices for visibility of {@linkplain Marker}s.
@@ -59,7 +51,6 @@ public class Scoped extends FutureParser {
 			boolean allowKeywords) {
 		this.grammar = grammar;
 		this.name = name;
-		this.failures = new WeakSet<Token>();
 		this.visibility = visibility;
 		this.allowKeywords = allowKeywords;
 	}
@@ -70,13 +61,6 @@ public class Scoped extends FutureParser {
 
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().indent(name + " ? " + stream.peekMore() + "...");
-
-		if (failures.has(stream.peek())) {
-			if (parse.getTrace().isEnabled())
-				parse.getTrace().dedent(name + ": no (memoized)");
-
-			return false;
-		}
 
 		parse.getStack().getHead().makeScoped();
 
@@ -98,7 +82,6 @@ public class Scoped extends FutureParser {
 
 		} else {
 			stream.rewind();
-			failures.put(stream.peek());
 		}
 
 		if (parse.getTrace().isEnabled())

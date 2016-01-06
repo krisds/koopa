@@ -41,7 +41,7 @@ public class Detail extends JPanel {
 	private SourceView sourceView = null;
 	private CobolOutline outline = null;
 	private DetailsTable detailsTable = null;
-	private TokenDetails breadcrumb = null;
+	private TokenDetails tokenDetails = null;
 	private boolean parsing = false;
 
 	private Tree tree = null;
@@ -77,8 +77,8 @@ public class Detail extends JPanel {
 			}
 		});
 
-		breadcrumb = new TokenDetails(application);
-		sourceView.addTokenSelectionListener(breadcrumb);
+		tokenDetails = new TokenDetails(application);
+		sourceView.addTokenSelectionListener(tokenDetails);
 
 		detailsTable = new DetailsTable(parseDetails);
 
@@ -101,8 +101,8 @@ public class Detail extends JPanel {
 
 		JTabbedPane foo = new JTabbedPane();
 		foo.addTab("Messages", detailsScroll);
-		foo.addTab("Selection", breadcrumb);
-		foo.setSelectedIndex(1);
+		foo.addTab("Selection", tokenDetails);
+		foo.setSelectedIndex(0);
 
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, x,
 				foo);
@@ -127,7 +127,7 @@ public class Detail extends JPanel {
 			tree = results.getParse().getTarget(KoopaTreeBuilder.class)
 					.getTree();
 
-			breadcrumb.setParseTree(tree);
+			tokenDetails.setParseTree(tree);
 
 			outline.setParseResults(results);
 			parseDetails.setParseResults(results);
@@ -202,5 +202,16 @@ public class Detail extends JPanel {
 
 	public void removeTokenSelectionListener(TokenSelectionListener listener) {
 		sourceView.removeTokenSelectionListener(listener);
+	}
+
+	public void close() {
+		sourceView.close();
+		outline.close();
+		detailsTable.close();
+		tokenDetails.close();
+
+		coordinator = null;
+		parseDetails = null;
+		tree = null;
 	}
 }

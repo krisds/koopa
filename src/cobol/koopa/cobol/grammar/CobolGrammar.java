@@ -180,7 +180,7 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     public ParserCombinator sourceUnit() {
       if (sourceUnitParser == null) {
-        FutureParser future = scoped("sourceUnit", PUBLIC, true);
+        FutureParser future = scoped("sourceUnit", PUBLIC, false);
         sourceUnitParser = future;
         future.setParser(
           choice(

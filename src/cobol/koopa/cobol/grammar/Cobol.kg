@@ -56,7 +56,7 @@ end
 ## Compilation units
 ## -----------------------------------------------------------------------------
 
-def sourceUnit =
+def %nokeywords sourceUnit =
     ( programPrototype                 # STD.BK
     | functionPrototype                # STD.BK
     | programDefinition                # STD.BK

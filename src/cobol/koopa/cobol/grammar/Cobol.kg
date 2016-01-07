@@ -3232,9 +3232,10 @@ end
 # This is supported by a separate grammar.
 
 def execSQLStatement =
-   (EXEC | EXECUTE) SQL 
-     (--- [sqlStatement] --> END-EXEC) 
-   END-EXEC
+    (EXEC | EXECUTE) SQL 
+      (--- [sqlStatement] --> END-EXEC) 
+      [unknown: --> END-EXEC]
+    END-EXEC
 end
 
 # EXEC CICS support. -----------------------------------------------------------
@@ -3242,6 +3243,7 @@ end
 def execCICSStatement =
     (EXEC | EXECUTE) CICS
       (--- [cicsStatement] --> END-EXEC)
+      [unknown: --> END-EXEC]
     END-EXEC
 end
 

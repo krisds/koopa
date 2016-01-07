@@ -14040,6 +14040,13 @@ public class CobolGrammar extends CobolBaseGrammar {
               ),
               token("END-EXEC")
             ),
+            optional(
+              as("unknown",
+                skipto(
+                  token("END-EXEC")
+                )
+              )
+            ),
             token("END-EXEC")
           )
         );
@@ -14072,6 +14079,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                 cicsStatement()
               ),
               token("END-EXEC")
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  token("END-EXEC")
+                )
+              )
             ),
             token("END-EXEC")
           )

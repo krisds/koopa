@@ -43,7 +43,6 @@ import koopa.app.cli.CommandLineOptions;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
-import koopa.app.components.misc.Tab;
 import koopa.app.components.overview.Overview;
 import koopa.app.util.Getter;
 import koopa.cobol.CobolFiles;
@@ -661,7 +660,7 @@ public class Koopa extends JFrame implements Application {
 
 		fireClosedDetail(component);
 		updateMenus();
-		
+
 		if (component instanceof Detail)
 			((Detail) component).close();
 	}

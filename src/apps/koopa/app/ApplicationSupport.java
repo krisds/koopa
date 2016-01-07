@@ -247,4 +247,12 @@ public class ApplicationSupport {
 			}
 		}
 	}
+
+	public static boolean getCustomColumnsNeedXPath() {
+		for (String key : getCustomColumnKeys())
+			if (getCustomColumnProperty(key, "xpath") != null)
+				return true;
+
+		return false;
+	}
 }

@@ -13,6 +13,7 @@ import koopa.cobol.parser.ParseResults;
 import koopa.core.parsers.Parse;
 import koopa.core.targets.TokenTracker;
 import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.trees.jaxen.XPathException;
 
@@ -171,9 +172,10 @@ public class BatchResults extends AbstractTableModel {
 
 		if (customXPathQuery != null) {
 			try {
-				List<?> matches = Jaxen.evaluate(
-						results.getParse().getTarget(KoopaTreeBuilder.class)
-								.getTree(), customXPathQuery);
+				final KoopaTreeBuilder treeBuilder = results.getParse()
+						.getTarget(KoopaTreeBuilder.class);
+				final Tree tree = treeBuilder.getTree();
+				List<?> matches = Jaxen.evaluate(tree, customXPathQuery);
 
 				if (matches == null)
 					value = null;
@@ -183,8 +185,10 @@ public class BatchResults extends AbstractTableModel {
 					value = matches.get(0).toString();
 
 			} catch (NullPointerException e) {
-				// Ignore
+				e.printStackTrace();
+				value = e.getMessage();
 			} catch (XPathException e) {
+				e.printStackTrace();
 				value = e.getMessage();
 			}
 		}

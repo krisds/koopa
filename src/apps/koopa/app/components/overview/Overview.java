@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import koopa.app.Application;
+import koopa.app.ApplicationSupport;
 import koopa.app.actions.ParsingProvider;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ParseDetails;
@@ -58,7 +59,8 @@ public class Overview extends JPanel implements ParsingProvider {
 		this.application = application;
 		coordinator = new ParsingCoordinator();
 		coordinator.setKeepingTrackOfTokens(true);
-		coordinator.setBuildTrees(false);
+		coordinator.setBuildTrees(ApplicationSupport
+				.getCustomColumnsNeedXPath());
 
 		setLayout(new BorderLayout());
 		setupComponents();

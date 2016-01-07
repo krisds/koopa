@@ -36,7 +36,7 @@ public final class Start extends Marker {
 		return markers.get(key);
 	}
 
-	public String getNamspace() {
+	public String getNamespace() {
 		return this.namespace;
 	}
 

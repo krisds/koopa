@@ -5,6 +5,8 @@ import java.util.Iterator;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
+import koopa.core.data.markers.End;
+import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.trees.Tree;
 
@@ -281,12 +283,24 @@ public class KoopaNavigator extends DefaultNavigator {
 	}
 
 	public String getElementNamespaceUri(Object foo) {
-		if (LOGGER.isTraceEnabled()) {
+		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("KoopaNavigator.getElementNamespaceUri(" + foo + ")");
-			LOGGER.trace(" => " + "");
-		}
 
-		return "";
+		final Tree tree = (Tree) foo;
+		String namespace = null;
+
+		Data data = tree.getData();
+		if (data instanceof Start)
+			namespace = ((Start) data).getNamespace();
+		else if (data instanceof End)
+			namespace = ((End) data).getNamespace();
+		else
+			namespace = "";
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + namespace);
+
+		return namespace;
 	}
 
 	public String getElementQName(Object foo) {

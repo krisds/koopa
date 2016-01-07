@@ -885,8 +885,9 @@ end
 
 def selectStatement = 
     selectClause
-    assignClause
-    ![ organizationClause
+    
+    ![ assignClause
+     | organizationClause
      | collationClause
      | recordDelimiterClause
      | reserveClause

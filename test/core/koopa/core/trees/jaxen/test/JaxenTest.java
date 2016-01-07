@@ -227,4 +227,23 @@ public class JaxenTest extends TestCase {
 		Assert.assertEquals(1, matches.size());
 		Assert.assertSame(tree, matches.get(0));
 	}
+
+	@Test
+	public void testMatchesNSAttribute() throws IOException {
+		Tree leaf = token("leaf");
+		Tree branch = tree("branch", leaf);
+		Tree root = tree("root", branch);
+		Tree document = tree("koopa", root);
+
+		List<?> matches = Jaxen.evaluate(document, "//*[@ns='test']");
+
+		// Two, because it never matches the document.
+		Assert.assertEquals(2, matches.size());
+		Assert.assertSame(root, matches.get(0));
+		Assert.assertTrue(matches.contains(branch));
+		Assert.assertTrue(matches.contains(root));
+		Assert.assertFalse(matches.contains(leaf));
+		Assert.assertFalse(matches.contains(document));
+	}
+
 }

@@ -3757,9 +3757,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             selectClause(),
-            assignClause(),
             optional(
               permuted(
+                assignClause(),
                 organizationClause(),
                 collationClause(),
                 recordDelimiterClause(),

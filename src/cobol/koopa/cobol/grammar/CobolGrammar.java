@@ -11259,11 +11259,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   ),
                   token("CONTENT"),
                   choice(
-                    sequence(
-                      token("LENGTH"),
-                      token("OF"),
-                      identifier()
-                    ),
+                    lengthPhrase(),
                     sequence(
                       identifier(),
                       not(
@@ -11286,9 +11282,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   token("VALUE"),
                   choice(
                     sequence(
-                      token("LENGTH"),
-                      token("OF"),
-                      identifier(),
+                      lengthPhrase(),
                       optional(
                         sequence(
                           token("SIZE"),
@@ -11296,14 +11290,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                             token("IS")
                           ),
                           optional(
-                            choice(
-                              sequence(
-                                token("LENGTH"),
-                                token("OF"),
-                                identifier()
-                              ),
-                              integer()
-                            )
+                            integer()
                           )
                         )
                       )
@@ -11315,14 +11302,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                         token("IS")
                       ),
                       optional(
-                        choice(
-                          sequence(
-                            token("LENGTH"),
-                            token("OF"),
-                            identifier()
-                          ),
-                          integer()
-                        )
+                        integer()
                       )
                     ),
                     sequence(
@@ -11744,15 +11724,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   token("VALUE"),
                   plus(
                     choice(
-                      sequence(
-                        optional(
-                          sequence(
-                            token("LENGTH"),
-                            token("OF")
-                          )
-                        ),
-                        identifier()
-                      ),
+                      identifier(),
                       sequence(
                         integer(),
                         optional(
@@ -21512,17 +21484,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             integer(),
             booleanLiteral(),
             hexadecimal(),
-            zero(),
-            sequence(
-              choice(
-                token("LENGTH"),
-                token("BYTE-LENGTH")
-              ),
-              optional(
-                token("OF")
-              ),
-              identifier()
-            )
+            zero()
           )
         );
       }
@@ -21545,12 +21507,66 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             integerLiteral(),
-            integerConstant()
+            integerConstant(),
+            lengthPhrase(),
+            byteLengthPhrase()
           )
         );
       }
     
       return integerParser;
+    }
+    
+    // ========================================================
+    // lengthPhrase
+    // ........................................................
+    
+    private ParserCombinator lengthPhraseParser = null;
+    
+    public final Start lengthPhrase = Start.on(getNamespace(), "lengthPhrase");
+    
+    public ParserCombinator lengthPhrase() {
+      if (lengthPhraseParser == null) {
+        FutureParser future = scoped("lengthPhrase", PUBLIC, true);
+        lengthPhraseParser = future;
+        future.setParser(
+          sequence(
+            token("LENGTH"),
+            optional(
+              token("OF")
+            ),
+            identifier()
+          )
+        );
+      }
+    
+      return lengthPhraseParser;
+    }
+    
+    // ========================================================
+    // byteLengthPhrase
+    // ........................................................
+    
+    private ParserCombinator byteLengthPhraseParser = null;
+    
+    public final Start byteLengthPhrase = Start.on(getNamespace(), "byteLengthPhrase");
+    
+    public ParserCombinator byteLengthPhrase() {
+      if (byteLengthPhraseParser == null) {
+        FutureParser future = scoped("byteLengthPhrase", PUBLIC, true);
+        byteLengthPhraseParser = future;
+        future.setParser(
+          sequence(
+            token("BYTE-LENGTH"),
+            optional(
+              token("OF")
+            ),
+            identifier()
+          )
+        );
+      }
+    
+      return byteLengthPhraseParser;
     }
     
     // ========================================================

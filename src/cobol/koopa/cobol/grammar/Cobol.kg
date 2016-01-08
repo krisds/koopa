@@ -2634,13 +2634,13 @@ def callUsing =
                              | identifier
                              | literal
                              )
-          | [BY] CONTENT     ( LENGTH OF identifier
+          | [BY] CONTENT     ( lengthPhrase
                              | identifier (%not moreArithmeticOp)
                              | literal    (%not moreArithmeticOp)
                              | arithmeticExpression
                              )
-          | [BY] VALUE       ( LENGTH OF identifier [ SIZE [IS] [LENGTH OF identifier | integer] ]
-                             | integer SIZE [IS] [LENGTH OF identifier | integer]
+          | [BY] VALUE       ( lengthPhrase [ SIZE [IS] [integer] ]
+                             | integer SIZE [IS] [integer]
                              | identifier (%not moreArithmeticOp)
                              | literal    (%not moreArithmeticOp)
                              | arithmeticExpression
@@ -2710,7 +2710,7 @@ def chainUsing =
     USING (literal | identifier)*
           ( [BY] REFERENCE ([ADDRESS OF] identifier | OMITTED | literal)+
           | [BY] CONTENT (literal | identifier)+
-          | [BY] VALUE ([LENGTH OF] identifier | integer [SIZE [IS] integer] | literal)+
+          | [BY] VALUE (identifier | integer [SIZE [IS] integer] | literal)+
           )*
 end
 
@@ -5367,15 +5367,19 @@ def numeric =
     | booleanLiteral
     | hexadecimal
     | zero
-    | (LENGTH | BYTE-LENGTH) [OF] identifier
     )
 end
 
 def integer =
     ( integerLiteral
     | integerConstant
+    | lengthPhrase
+    | byteLengthPhrase
     )
 end
+
+def lengthPhrase     =  LENGTH      [OF] identifier  end
+def byteLengthPhrase =  BYTE-LENGTH [OF] identifier  end
 
 def constant =
     ( integerConstant

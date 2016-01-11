@@ -4401,31 +4401,6 @@ end
 
 
 ## #############################################################################
-## Source formatting directives.
-## TODO Merge this somehow with the SourceFormattingDirectivesFilter.
-## -----------------------------------------------------------------------------
-
-def sourceFormattingDirective =
-    ( ejectStatement
-    | skipStatement
-    | titleStatement
-    )
-end
-
-def ejectStatement =
-    EJECT [.]
-end
-
-def skipStatement =
-    (SKIP1 | SKIP2 | SKIP3) [.]
-end
-
-def titleStatement =
-    TITLE literal [.]
-end
-
-
-## #############################################################################
 ## Lookaheads used for skipping.
 ## -----------------------------------------------------------------------------
 

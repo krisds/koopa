@@ -11,13 +11,43 @@ import koopa.core.sources.Source;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Looks for, and tags, following source formatting directives:
+ * <p>
+ * 
+ * <b>EJECT</b>
+ * <ul>
+ * <li><i>"The EJECT statement specifies that the next source statement is to be
+ * printed at the top of the next page."</i></li>
+ * <li><i>"The EJECT statement must be the only statement on the line. You may
+ * write it in either Area A or Area B, and you may terminate it with a
+ * separator period."</i></li>
+ * <li><i>"The EJECT statement has no effect on the compilation of the source
+ * program itself."</i></li>
+ * </ul>
+ * Source: <a href=
+ * "http://www-01.ibm.com/support/knowledgecenter/SSAE4W_9.1.0/com.ibm.etools.iseries.langref.doc/evfeb4ls270.htm"
+ * >IBM Knowledge Center - COBOL/400 Language Help - EJECT Statement</a>
+ * <p>
+ * 
+ * <b>SKIP1, SKIP2, SKIP3</b>
+ * <ul>
+ * <li><i>
+ * "The SKIP1, SKIP2 and SKIP3 statements control the vertical spacing of the source code listing produced by your COBOL system. They specify the lines to be skipped in the source code listing."
+ * </i></li>
+ * <li><i>"The statement can begin in area A or in area B, must be the only
+ * statement on the line and can optionally be followed by a period. "</i></li>
+ * </ul>
+ * Source: <a href=
+ * "https://supportline.microfocus.com/documentation/books/mx31/lhcomp0q.htm"
+ * >Micro Focus Support Line - The SKIP1, SKIP2 and SKIP3 Statements</a>
+ */
 public class SourceFormattingDirectives extends BasicSource<Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.source_formatting");
 
-	// TODO Add "TITLE string" directive.
 	private static final String REGEX = "^\\s*(SKIP1|SKIP2|SKIP3|EJECT)\\s*\\.?\\s*$";
 
 	private static final Pattern PATTERN = Pattern.compile(REGEX);
@@ -44,7 +74,7 @@ public class SourceFormattingDirectives extends BasicSource<Token> implements
 		if (text == null)
 			return token;
 
-		if (PATTERN.matcher(text).matches()) {
+		if (PATTERN.matcher(text.toUpperCase()).matches()) {
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Marking " + token
 						+ " as a source formatting directive.");

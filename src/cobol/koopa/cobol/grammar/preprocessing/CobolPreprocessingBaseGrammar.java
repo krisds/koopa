@@ -1,11 +1,14 @@
 package koopa.cobol.grammar.preprocessing;
 
 import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
+import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.CobolWords;
+import koopa.cobol.Copybooks;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
@@ -24,31 +27,6 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 
 	public boolean isCaseSensitive() {
 		return false;
-	}
-
-	private static final int DEFAULT_MAX_COBOL_WORD_LENGTH = 31;
-	private static final int MAX_COBOL_WORD_LENGTH;
-
-	static {
-		String maxCobolWordLengthSetting = System.getProperty(
-				"koopa.maxCobolWordLength", "" + DEFAULT_MAX_COBOL_WORD_LENGTH);
-
-		int maxCobolWordLengthValue;
-		try {
-			maxCobolWordLengthValue = Integer
-					.parseInt(maxCobolWordLengthSetting);
-
-		} catch (NumberFormatException e) {
-			System.err
-					.println("Warning: value for koopa.maxCobolWordLength is not a number: "
-							+ maxCobolWordLengthSetting);
-			maxCobolWordLengthValue = DEFAULT_MAX_COBOL_WORD_LENGTH;
-		}
-
-		if (maxCobolWordLengthValue == 0)
-			maxCobolWordLengthValue = DEFAULT_MAX_COBOL_WORD_LENGTH;
-
-		MAX_COBOL_WORD_LENGTH = maxCobolWordLengthValue;
 	}
 
 	// ============================================================================
@@ -98,24 +76,32 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 
 	private ParserCombinator cobolWordParser = null;
 
-	/*
-	 * "A COBOL word is a character-string of not more than 31 characters that
-	 * forms a compiler-directive word, a context-sensitive word, an
+	/**
+	 * <i>"A COBOL word is a character-string of not more than 31 characters
+	 * that forms a compiler-directive word, a context-sensitive word, an
 	 * intrinsic-function-name, a reserved word, a system-name, or a
 	 * user-defined word. Each character of a COBOL word that is not a special
 	 * character word shall be selected from the set of basic letters, basic
 	 * digits, extended letters, and the basic special characters hyphen and
 	 * underscore. The hyphen or underscore shall not appear as the first or
-	 * last character in such words."
+	 * last character in such words."</i>
 	 * 
-	 * ------------------------------------------------------------------------
-	 * Except where specific rules apply, the hyphen (-) and the underline (_)
-	 * are treated as the same character in a user- defined word. The underline
-	 * (_), however, can begin or end a user-defined word, and the hyphen (-)
-	 * cannot.
+	 * <hr/>
+	 * <i>"Except where specific rules apply, the hyphen (-) and the underline
+	 * (_) are treated as the same character in a user- defined word. The
+	 * underline (_), however, can begin or end a user-defined word, and the
+	 * hyphen (-) cannot."</i>
 	 * 
-	 * Description from: HP COBOL Reference Manual http://h71000.
-	 * www7.hp.com/doc/82final/6296/6296pro_002.html
+	 * Description from: <a
+	 * href="http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html">HP
+	 * COBOL Reference Manual - Character Strings</a>.
+	 * 
+	 * <hr/>
+	 * Because anything in a copybook can be replaced via the COPY statement,
+	 * some COBOL words may contain characters which are not legal otherwise. We
+	 * allow this behaviour to be configured via
+	 * {@linkplain Copybooks#useExtendedCharactersInCopybooks()} and
+	 * {@linkplain Copybooks#isExtendedPart(String)}.
 	 */
 	public ParserCombinator cobolWord() {
 		if (cobolWordParser == null) {
@@ -123,6 +109,10 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 			cobolWordParser = future;
 			future.setParser(new ParserCombinator() {
 				public boolean matches(Parse parse) {
+					boolean extendedRules = CobolWords
+							.useExtendedCharactersInCopybooks()
+							&& parse.getStack().isMatching("copybook");
+
 					Stream stream = parse.getStream();
 
 					skipSeparators(parse);
@@ -131,10 +121,17 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 					while (true) {
 						Token token = stream.forward();
 
-						if (token == null)
+						if (token == null) {
 							break;
 
-						if (!token.hasTag(PROGRAM_TEXT_AREA)
+						} else if (extendedRules
+								&& token.hasTag(PROGRAM_TEXT_AREA)
+								&& token.hasTag(SEPARATOR)
+								&& CobolWords.isExtendedPart(token.getText())) {
+							// Allowing this separator to be part of a COBOL
+							// word.
+
+						} else if (!token.hasTag(PROGRAM_TEXT_AREA)
 								|| !token.hasTag(CHARACTER_STRING)
 								|| !isCobolWordPart(token.getText())) {
 							stream.rewind(token);
@@ -147,11 +144,11 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 					if (parts.isEmpty())
 						return false;
 
-					Token cobolWord = Tokens.join(parts, CHARACTER_STRING,
-							PROGRAM_TEXT_AREA);
+					final Token cobolWord = Tokens.join(parts,
+							CHARACTER_STRING, PROGRAM_TEXT_AREA);
 
-					String text = cobolWord.getText();
-					if (!isCobolWord(cobolWord.getText())) {
+					final String text = cobolWord.getText();
+					if (!CobolWords.accepts(text)) {
 						if (parse.getTrace().isEnabled())
 							parse.getTrace().add(
 									"no; illegal cobol word: " + text);
@@ -192,28 +189,6 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 					}
 
 					return true;
-				}
-
-				private boolean isCobolWord(String text) {
-					final int len = text.length();
-					if (len < 1
-							|| (MAX_COBOL_WORD_LENGTH > 0 && len > MAX_COBOL_WORD_LENGTH))
-						return false;
-
-					if (text.charAt(0) == '-')
-						return false;
-
-					if (text.charAt(len - 1) == '-')
-						return false;
-
-					for (int i = 0; i < len; i++) {
-						final char c = text.charAt(i);
-
-						if (c < '0' || c > '9')
-							return true;
-					}
-
-					return false;
 				}
 
 				public String toString() {

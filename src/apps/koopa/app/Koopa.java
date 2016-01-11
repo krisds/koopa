@@ -40,6 +40,7 @@ import koopa.app.actions.ShowGrammarAction;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
 import koopa.app.cli.CommandLineOptions;
+import koopa.app.components.cobolwords.CobolWordSettings;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
@@ -56,6 +57,7 @@ import koopa.core.util.Tuple;
 
 import org.apache.log4j.PropertyConfigurator;
 
+// TODO This class has become a bit of a monster...
 public class Koopa extends JFrame implements Application {
 
 	private static final long serialVersionUID = 1L;
@@ -261,7 +263,7 @@ public class Koopa extends JFrame implements Application {
 		group.add(freeFormat);
 		sourceFormat.add(freeFormat);
 
-		preprocessing = new JMenu("Preprocessing (ALPHA!)");
+		preprocessing = new JMenu("Preprocessing");
 		parserSettings.add(preprocessing);
 
 		final ButtonGroup preprocessingGroup = new ButtonGroup();
@@ -308,7 +310,8 @@ public class Koopa extends JFrame implements Application {
 
 		copybookPath = new JMenuItem();
 
-		AbstractAction setCopybookPath = new AbstractAction("Copybook Paths...") {
+		AbstractAction setCopybookPath = new AbstractAction(
+				"Copybook Paths ...") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
@@ -327,6 +330,12 @@ public class Koopa extends JFrame implements Application {
 		copybookPath.setAction(setCopybookPath);
 
 		preprocessing.add(copybookPath);
+
+		parserSettings.addSeparator();
+
+		JMenuItem cobolWords = new JMenuItem();
+		cobolWords.setAction(CobolWordSettings.actionToShow(this));
+		parserSettings.add(cobolWords);
 
 		bar.add(parserSettings);
 

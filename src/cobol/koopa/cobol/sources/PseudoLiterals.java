@@ -17,9 +17,9 @@ import koopa.core.sources.ThreadedSource;
 public class PseudoLiterals extends ThreadedSource<Token> implements
 		Source<Token> {
 
-	private Source<? extends Token> source = null;
+	private Source<Token> source = null;
 
-	public PseudoLiterals(Source<? extends Token> source) {
+	public PseudoLiterals(Source<Token> source) {
 		super("PseudoLiteralTokenizer");
 		assert (source != null);
 		this.source = source;
@@ -49,10 +49,39 @@ public class PseudoLiterals extends ThreadedSource<Token> implements
 		Token next = source.next();
 		while (next != null) {
 			if (next.hasTag(PROGRAM_TEXT_AREA)) {
-				tokens.add(next);
+				if (next.getText().equals("==")) {
+					// We check that the very next thing is "whitespace".
+					// Because "=====" is legal...
 
-				if (next.getText().equals("=="))
-					break;
+					Token oneMore = source.next();
+					if (oneMore == null) {
+						tokens.add(next);
+						break;
+					}
+
+					// This isn't the greatest solution to the problem, I
+					// think... :-)
+					if (oneMore.hasTag(PROGRAM_TEXT_AREA)
+							&& "=".equals(oneMore.getText())) {
+
+						tokens.add(Tokens.subtoken(next, 0, 1));
+
+						List<Token> endMarker = new ArrayList<Token>(2);
+						endMarker.add(Tokens.subtoken(next, 1));
+						endMarker.add(oneMore);
+
+						tokens.add(Tokens.join(endMarker, PROGRAM_TEXT_AREA,
+								SEPARATOR));
+						break;
+
+					} else {
+						source.unshift(oneMore);
+						tokens.add(next);
+						break;
+					}
+
+				} else
+					tokens.add(next);
 			}
 
 			next = source.next();

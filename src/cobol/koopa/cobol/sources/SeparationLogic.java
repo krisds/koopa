@@ -383,7 +383,7 @@ public class SeparationLogic {
 	private static int pseudoLiteral(final Token token, final int start,
 			Feedback feedback) {
 		final Token pseudoLiteral = Tokens.subtoken(token, start, start + 2)
-				.withTags(PROGRAM_TEXT_AREA, SyntacticTag.SEPARATOR);
+				.withTags(PROGRAM_TEXT_AREA, SEPARATOR);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Pseudo literal separator: " + pseudoLiteral);

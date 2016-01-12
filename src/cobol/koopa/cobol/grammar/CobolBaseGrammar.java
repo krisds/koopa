@@ -2,13 +2,19 @@ package koopa.cobol.grammar;
 
 import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.cobol.sources.SourceFormat.FIXED;
+import static koopa.cobol.sources.SourceFormat.FREE;
+import static koopa.core.data.tags.AreaTag.END_OF_LINE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import koopa.cobol.cics.grammar.CICSGrammar;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
+import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
@@ -179,17 +185,29 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	}
 
 	// ============================================================================
-	// commentEnry
+	// commentEntry
 	// ............................................................................
 
-	// This is a deprecated language feature, but one which appears quite
-	// prominently in the testsuite.
-
-	// Following is based on a description found here:
-	// http://supportline.microfocus.com/documentation/books/sx20books/lrpdfx.htm
+	/**
+	 * OSVS allows a comment entry to have words in area A, except for ones in
+	 * this list.
+	 */
+	private static final List<String> END_OF_COMMENT_ENTRY_MARKERS //
+	= Collections.unmodifiableList(Arrays.asList(new String[] { //
+			"PROGRAM-ID", "AUTHOR", "INSTALLATION", "DATE-WRITTEN",
+					"DATE-COMPILED", "SECURITY", "ENVIRONMENT", "DATA",
+					"PROCEDURE" }));
 
 	private ParserCombinator commentEntryParser = null;
 
+	/**
+	 * This is a deprecated language feature, but one which appears quite
+	 * prominently in the testsuite.
+	 * <p>
+	 * The implementation is based on a description found here: <a href=
+	 * "http://supportline.microfocus.com/documentation/books/sx20books/lrpdfx.htm"
+	 * >Micro Focus COBOL - 5.1 Identification Division</a>.
+	 */
 	public ParserCombinator commentEntry() {
 		if (commentEntryParser == null) {
 			FutureParser future = scoped("commentEntry");
@@ -198,13 +216,36 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 				public boolean matches(Parse parse) {
 					Stream stream = parse.getStream();
 
+					// First thing we need to know is the format being used.
+					Token peek = stream.peek();
+
+					// Of course, if we're at the end of the stream, there's not
+					// much point.
+					if (peek == null)
+						return false;
+
+					// So, what is it ?
+					final SourceFormat format = peek.hasTag(FREE) ? FREE
+							: FIXED;
+
+					// We want to only confirm a comment entry match if we saw
+					// something other than whitespace.
 					boolean sawSomething = false;
 
 					while (true) {
-						Token token = stream.forward();
+						final Token token = stream.forward();
 
 						if (token == null)
 							return sawSomething;
+
+						// "If the Compiler directive SOURCEFORMAT is
+						// specified as FREE, the comment-entry cannot be
+						// continued; the next line will begin the next
+						// non-comment entry." - MF
+						if (format == FREE && token.hasTag(END_OF_LINE)) {
+							stream.rewind(token);
+							return sawSomething;
+						}
 
 						if (!token.hasTag(PROGRAM_TEXT_AREA))
 							continue;
@@ -212,11 +253,31 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						if (token.hasTag(AreaTag.COMMENT))
 							continue;
 
-						if (token.getText().trim().length() == 0)
+						final String text = token.getText().toUpperCase();
+						if (text.trim().length() == 0)
 							continue;
 
-						// Area B = 12..72, or 11-71 when zero-based.
-						if (token.getStart().getPositionInLine() < 11) {
+						// "If the Compiler directive SOURCEFORMAT is specified
+						// as or defaulted to FIXED, the comment-entry can be
+						// contained on one or more lines but is restricted to
+						// area B of those lines; the next line commencing in
+						// area A will begin the next non-comment entry." - MF
+						//
+						// For OSVS though: "The comment-entry can be contained
+						// in either area A or area B of the comment-entry
+						// lines. However, the next occurrence in area A of any
+						// one of the following COBOL words or phrases will
+						// terminate the comment-entry and begin the next
+						// paragraph or division: PROGRAM-ID, AUTHOR,
+						// INSTALLATION, DATE-WRITTEN, DATE-COMPILED, SECURITY,
+						// ENVIRONMENT, DATA, PROCEDURE." - MF
+						//
+						// We're allowing words in area A, except for those
+						// mentioned by OSVS. It seems like a reasonable
+						// default.
+						if (format == FIXED
+								&& token.getStart().getPositionInLine() < 11
+								&& END_OF_COMMENT_ENTRY_MARKERS.contains(text)) {
 							stream.rewind(token);
 							return sawSomething;
 						}
@@ -226,7 +287,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 				}
 			});
 		}
+
 		return commentEntryParser;
 	}
-
 }

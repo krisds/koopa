@@ -2645,6 +2645,7 @@ def callUsing =
                              | literal    (%not moreArithmeticOp)
                              | arithmeticExpression
                              )
+          | copyStatement
           )+
 end
 
@@ -3859,7 +3860,9 @@ def rollbackStatement =
 end
 
 # Refs:
-# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFB06.html
+# MF: https://supportline.microfocus.com/documentation/books/sx40/lrpdfb.htm
+# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FHRLHLHPDFB06.html
+# IBM: http://publib.boulder.ibm.com/iseries/v5r1/ic2924/books/c0925392479.htm
 
 ## #############################################################################
 ## SEARCH statement.

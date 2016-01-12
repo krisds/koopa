@@ -11319,7 +11319,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     arithmeticExpression()
                   )
-                )
+                ),
+                copyStatement()
               )
             )
           )

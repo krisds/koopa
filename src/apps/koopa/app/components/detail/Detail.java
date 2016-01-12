@@ -22,6 +22,7 @@ import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
 import koopa.app.listeners.TokenSelectionListener;
+import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
@@ -30,7 +31,7 @@ import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
 // TODO Extract commonalities with Overview into a common superclass ?
-public class Detail extends JPanel {
+public class Detail extends JPanel implements Coordinated {
 	private static final long serialVersionUID = 1L;
 
 	private Application application = null;

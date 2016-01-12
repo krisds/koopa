@@ -8,10 +8,13 @@ import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.util.Encoding;
+import koopa.core.util.LineEndings;
 
 /**
  * This class takes a {@link Reader} and spits out tokens. The tokens are either
@@ -22,14 +25,20 @@ import koopa.core.util.Encoding;
  * character lists. Each will tried in order.
  * <p>
  * If the client does not specify line endings, this will use
- * {@linkplain Encoding#getDefaultLineEndings()} instead.
+ * {@linkplain Encoding#getDefaults()} instead.
  */
 public class LineSplitter extends BasicSource<Token> implements Source<Token> {
+
+	private static final Logger LOGGER = Logger
+			.getLogger("source.linesplitter");
 
 	private final String resourceName;
 	private PushbackReader reader = null;
 	private final char[] lookahead;
+
 	private final List<List<Character>> lineEndings;
+	private final boolean stickyEndings;
+	private List<Character> detectedLineEnding;
 
 	private int linenumber = 1;
 	private int positionInFile = 1;
@@ -40,11 +49,11 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 	private StringBuffer buffer = null;
 
 	public LineSplitter(Reader reader) {
-		this(null, reader, Encoding.getDefaultLineEndings());
+		this(null, reader, LineEndings.getDefaults());
 	}
 
 	public LineSplitter(String resourceName, Reader reader) {
-		this(resourceName, reader, Encoding.getDefaultLineEndings());
+		this(resourceName, reader, LineEndings.getDefaults());
 	}
 
 	public LineSplitter(String resourceName, Reader reader,
@@ -66,6 +75,7 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 
 		this.lookahead = new char[max];
 
+		this.stickyEndings = LineEndings.areSticky();
 		this.lineEndings = lineEndings;
 
 		this.buffer = new StringBuffer();
@@ -117,11 +127,29 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 	}
 
 	private int atLineEnding() throws IOException {
-		for (List<Character> list : lineEndings)
-			if (atLineEnding(list))
-				return list.size();
+		if (detectedLineEnding != null && stickyEndings) {
+			if (atLineEnding(detectedLineEnding))
+				return detectedLineEnding.size();
+			else
+				return -1;
 
-		return -1;
+		} else {
+			for (List<Character> possibleLineEnding : lineEndings)
+				if (atLineEnding(possibleLineEnding)) {
+					if (stickyEndings) {
+						detectedLineEnding = possibleLineEnding;
+
+						if (LOGGER.isTraceEnabled())
+							LOGGER.trace("Detected line ending: "
+									+ LineEndings.encodeLineEnding(detectedLineEnding)
+									+ ". Stickying.");
+					}
+
+					return possibleLineEnding.size();
+				}
+
+			return -1;
+		}
 	}
 
 	private boolean atLineEnding(List<Character> list) throws IOException {

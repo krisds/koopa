@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,6 +18,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import koopa.app.ApplicationSupport;
+import koopa.app.Koopa;
+import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParsingCoordinator;
 
 /**
@@ -26,11 +29,12 @@ import koopa.cobol.parser.ParsingCoordinator;
 public class CopybookPathsSelector extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+	private static final String NAME = "Copybook Paths";
 
 	private ParsingCoordinator coordinator;
 
 	public CopybookPathsSelector(Frame owner, ParsingCoordinator coordinator) {
-		super(owner, "Set up Copybook Paths", false);
+		super(owner, NAME, false);
 
 		this.coordinator = coordinator;
 
@@ -123,5 +127,20 @@ public class CopybookPathsSelector extends JDialog {
 						.isSelectionEmpty());
 			}
 		});
+	}
+
+	public static Action actionToShow(final Koopa koopa) {
+		return new AbstractAction(NAME + " ...") {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				final Coordinated view = koopa.getCoordinatedView();
+				final Coordinated coordinated = (Coordinated) view;
+				final ParsingCoordinator coordinator = coordinated
+						.getParsingCoordinator();
+
+				new CopybookPathsSelector(koopa, coordinator).setVisible(true);
+			}
+		};
 	}
 }

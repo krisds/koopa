@@ -28,6 +28,7 @@ import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
 import koopa.cobol.CobolFiles;
+import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
@@ -39,7 +40,7 @@ import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 @SuppressWarnings("serial")
-public class Overview extends JPanel implements ParsingProvider {
+public class Overview extends JPanel implements ParsingProvider, Coordinated {
 
 	private Application application = null;
 

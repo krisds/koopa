@@ -44,9 +44,11 @@ import koopa.app.components.cobolwords.CobolWordSettings;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
+import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
 import koopa.app.util.Getter;
 import koopa.cobol.CobolFiles;
+import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
@@ -222,15 +224,8 @@ public class Koopa extends JFrame implements Application {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				// TODO Use a common interface for these.
-				Component view = getView();
-				if (view == overview) {
-					overview.getParsingCoordinator().setFormat(
-							SourceFormat.FIXED);
-				} else {
-					((Detail) view).getParsingCoordinator().setFormat(
-							SourceFormat.FIXED);
-				}
+				final Coordinated view = getCoordinatedView();
+				view.getParsingCoordinator().setFormat(SourceFormat.FIXED);
 			}
 		};
 
@@ -246,15 +241,8 @@ public class Koopa extends JFrame implements Application {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				// TODO Use a common interface for these.
-				Component view = getView();
-				if (view == overview) {
-					overview.getParsingCoordinator().setFormat(
-							SourceFormat.FREE);
-				} else {
-					((Detail) view).getParsingCoordinator().setFormat(
-							SourceFormat.FREE);
-				}
+				final Coordinated view = getCoordinatedView();
+				view.getParsingCoordinator().setFormat(SourceFormat.FREE);
 			}
 		};
 
@@ -276,13 +264,8 @@ public class Koopa extends JFrame implements Application {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				Component view = getView();
-				if (view == overview)
-					overview.getParsingCoordinator().setPreprocessing(true);
-				else
-					((Detail) view).getParsingCoordinator().setPreprocessing(
-							true);
-
+				final Coordinated view = getCoordinatedView();
+				view.getParsingCoordinator().setPreprocessing(true);
 			}
 		};
 
@@ -290,12 +273,8 @@ public class Koopa extends JFrame implements Application {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				Component view = getView();
-				if (view == overview)
-					overview.getParsingCoordinator().setPreprocessing(false);
-				else
-					((Detail) view).getParsingCoordinator().setPreprocessing(
-							false);
+				final Coordinated view = getCoordinatedView();
+				view.getParsingCoordinator().setPreprocessing(false);
 			}
 		};
 
@@ -309,29 +288,14 @@ public class Koopa extends JFrame implements Application {
 		preprocessing.addSeparator();
 
 		copybookPath = new JMenuItem();
-
-		AbstractAction setCopybookPath = new AbstractAction(
-				"Copybook Paths ...") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				ParsingCoordinator coordinator = null;
-
-				Component view = getView();
-				if (view == overview)
-					coordinator = overview.getParsingCoordinator();
-				else
-					coordinator = ((Detail) view).getParsingCoordinator();
-				CopybookPathsSelector selector = new CopybookPathsSelector(
-						Koopa.this, coordinator);
-				selector.setVisible(true);
-			}
-		};
-		copybookPath.setAction(setCopybookPath);
-
+		copybookPath.setAction(CopybookPathsSelector.actionToShow(this));
 		preprocessing.add(copybookPath);
 
 		parserSettings.addSeparator();
+
+		JMenuItem lineEndings = new JMenuItem();
+		lineEndings.setAction(LineEndingSettings.actionToShow(this));
+		parserSettings.add(lineEndings);
 
 		JMenuItem cobolWords = new JMenuItem();
 		cobolWords.setAction(CobolWordSettings.actionToShow(this));
@@ -533,15 +497,8 @@ public class Koopa extends JFrame implements Application {
 	}
 
 	public void openFile(File file) {
-		Component view = getView();
-
-		if (overview == view) {
-			openFile(file, overview.getParsingCoordinator(), null);
-
-		} else {
-			Detail detail = (Detail) view;
-			openFile(file, detail.getParsingCoordinator(), null);
-		}
+		final Coordinated view = getCoordinatedView();
+		openFile(file, view.getParsingCoordinator(), null);
 	}
 
 	public void openFile(File file, ParsingCoordinator parsingCoordinator) {
@@ -658,6 +615,10 @@ public class Koopa extends JFrame implements Application {
 
 	public Component getView() {
 		return tabbedPane.getSelectedComponent();
+	}
+
+	public Coordinated getCoordinatedView() {
+		return (Coordinated) tabbedPane.getSelectedComponent();
 	}
 
 	public void closeView(Component component) {

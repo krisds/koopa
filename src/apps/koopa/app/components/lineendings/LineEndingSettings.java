@@ -1,10 +1,4 @@
-package koopa.app.components.cobolwords;
-
-import static koopa.cobol.CobolWords.getExtendedCharactersInCopybooks;
-import static koopa.cobol.CobolWords.setExtendedCharactersInCopybooks;
-import static koopa.cobol.CobolWords.setMaxLength;
-import static koopa.cobol.CobolWords.setUseExtendedCharactersInCopybooks;
-import static koopa.cobol.CobolWords.useExtendedCharactersInCopybooks;
+package koopa.app.components.lineendings;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -23,19 +17,18 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import koopa.cobol.CobolWords;
+import koopa.core.util.LineEndings;
 
-public class CobolWordSettings extends JDialog {
+public class LineEndingSettings extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private static final String NAME = "COBOL Words";
+	private static final String NAME = "Line Endings";
 
 	private JButton ok;
-	private JTextField maxLength;
-	private JCheckBox extended;
-	private JTextField extendedCharacters;
+	private JTextField lineEndings;
+	private JCheckBox sticky;
 
-	public CobolWordSettings(Frame owner) {
+	public LineEndingSettings(Frame owner) {
 		super(owner, NAME, false);
 
 		setupComponents();
@@ -50,23 +43,35 @@ public class CobolWordSettings extends JDialog {
 		JPanel config = new JPanel();
 		config.setLayout(new GridLayout(2, 1));
 
-		config.add(getLengthConfiguration());
 		config.add(getExtendedCharactersInCopybooksConfiguration());
+		config.add(getStickyConfiguration());
 
 		add(config, BorderLayout.CENTER);
 
 		add(getConfirmation(), BorderLayout.SOUTH);
 	}
 
-	private JPanel getLengthConfiguration() {
+	private JPanel getStickyConfiguration() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		panel.add(new JLabel("  Max. length: "));
+		sticky = new JCheckBox("Sticky line endings");
+		sticky.setSelected(LineEndings.areSticky());
+		panel.add(sticky);
 
-		maxLength = new JTextField(3);
-		maxLength.setText("" + CobolWords.getMaxLength());
-		maxLength.getDocument().addDocumentListener(new DocumentListener() {
+		return panel;
+	}
+
+	private JPanel getExtendedCharactersInCopybooksConfiguration() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		panel.add(new JLabel("  Line endings: "));
+
+		lineEndings = new JTextField(16);
+		lineEndings
+				.setText(LineEndings.encodeChoices(LineEndings.getChoices()));
+		lineEndings.getDocument().addDocumentListener(new DocumentListener() {
 
 			public void removeUpdate(DocumentEvent e) {
 				validateInputs();
@@ -80,22 +85,7 @@ public class CobolWordSettings extends JDialog {
 				validateInputs();
 			}
 		});
-		panel.add(maxLength);
-
-		return panel;
-	}
-
-	private JPanel getExtendedCharactersInCopybooksConfiguration() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-		extended = new JCheckBox("Allow in copybook:");
-		extended.setSelected(useExtendedCharactersInCopybooks());
-		panel.add(extended);
-
-		extendedCharacters = new JTextField(16);
-		extendedCharacters.setText(getExtendedCharactersInCopybooks());
-		panel.add(extendedCharacters);
+		panel.add(lineEndings);
 
 		return panel;
 	}
@@ -130,31 +120,18 @@ public class CobolWordSettings extends JDialog {
 	private void validateInputs() {
 		boolean valid = true;
 
-		final String maxLengthInput = maxLength.getText();
-		if (maxLengthInput.length() == 0)
-			valid = false;
-
-		if (valid)
-			try {
-				Integer.parseInt(maxLengthInput);
-			} catch (NumberFormatException e) {
-				valid = false;
-			}
-
-		if (valid)
-			valid = extendedCharacters.getText().length() > 0;
+		String lineEndingsValue = lineEndings.getText();
+		valid = LineEndings.isValidDefinition(lineEndingsValue);
 
 		ok.setEnabled(valid);
 	}
 
 	private void applyInputs() {
-		int maxLengthValue = Integer.parseInt(maxLength.getText());
-		boolean extendedValue = extended.isSelected();
-		String extendedCharactersValue = extendedCharacters.getText();
+		final String lineEndingsValue = lineEndings.getText();
+		final boolean stickyValue = sticky.isSelected();
 
-		setMaxLength(maxLengthValue);
-		setUseExtendedCharactersInCopybooks(extendedValue);
-		setExtendedCharactersInCopybooks(extendedCharactersValue);
+		LineEndings.setChoices(lineEndingsValue);
+		LineEndings.setSticky(stickyValue);
 	}
 
 	public static Action actionToShow(final Frame owner) {
@@ -162,7 +139,7 @@ public class CobolWordSettings extends JDialog {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				new CobolWordSettings(owner).setVisible(true);
+				new LineEndingSettings(owner).setVisible(true);
 			}
 		};
 	}

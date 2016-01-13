@@ -2403,6 +2403,7 @@ def verb =
     | ROLLBACK      # *MF
     | SEARCH
     | SERVICE
+    | SET
     | SKIP1
     | SKIP2
     | SKIP3
@@ -2556,12 +2557,14 @@ private def addition_format1 =
 end
 
 private def addition_format2 =
+    %not (CORRESPONDING | CORR)
     (identifier | literal)+
     [ to     : TO (identifier | literal) ]
     ( giving : GIVING (identifier [ROUNDED])+ )
 end
 
 private def addition_format3 =
+    %not (CORRESPONDING | CORR)
     (identifier | literal)+
     ( to : TO (identifier [ROUNDED])+ )
 end

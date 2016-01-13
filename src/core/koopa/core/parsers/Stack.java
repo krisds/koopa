@@ -83,6 +83,7 @@ public class Stack {
 		/** "Up" = towards the root of the stack. */
 		private final Frame up;
 
+		/** Each frame can establish an optional scope. */
 		private Scope scope;
 
 		public Frame(Frame up, ParserCombinator parser) {
@@ -149,6 +150,11 @@ public class Stack {
 		}
 	}
 
+	/**
+	 * This establishes a scope for variables defined in the grammar.
+	 * <p>
+	 * We also use it to resolve return values and "lvalues".
+	 */
 	public class Scope {
 		private Map<String, Object> values = new HashMap<String, Object>();
 		private Object returnValue = null;

@@ -10450,6 +10450,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             token("ROLLBACK"),
             token("SEARCH"),
             token("SERVICE"),
+            token("SET"),
             token("SKIP1"),
             token("SKIP2"),
             token("SKIP3"),
@@ -10974,6 +10975,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         addition_format2Parser = future;
         future.setParser(
           sequence(
+            not(
+              choice(
+                token("CORRESPONDING"),
+                token("CORR")
+              )
+            ),
             plus(
               choice(
                 identifier(),
@@ -11025,6 +11032,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         addition_format3Parser = future;
         future.setParser(
           sequence(
+            not(
+              choice(
+                token("CORRESPONDING"),
+                token("CORR")
+              )
+            ),
             plus(
               choice(
                 identifier(),

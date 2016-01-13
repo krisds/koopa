@@ -6,7 +6,6 @@ import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.Stream;
 
 public class MatchLiteral extends ParserCombinator {
@@ -59,10 +58,6 @@ public class MatchLiteral extends ParserCombinator {
 
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		keywords.add(text);
-	}
-
-	public boolean isKeyword(String word, Frame frame) {
-		return frame.up().isKeyword(word);
 	}
 
 	public String toString() {

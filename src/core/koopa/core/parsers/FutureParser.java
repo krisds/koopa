@@ -40,7 +40,7 @@ public class FutureParser extends ParserCombinator {
 		if (getAllKeywordsInScope().contains(word))
 			return true;
 
-		return frame.up().isKeyword(word);
+		return super.isKeyword(word, frame);
 	}
 
 	@Override

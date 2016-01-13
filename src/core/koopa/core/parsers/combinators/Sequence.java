@@ -8,13 +8,15 @@ import koopa.core.parsers.ParserCombinator;
 public class Sequence extends ParserCombinator {
 
 	private final ParserCombinator[] parsers;
+	private final int length;
 
 	public Sequence(ParserCombinator[] parsers) {
 		this.parsers = parsers;
+		this.length = parsers.length;
 	}
 
 	public boolean matches(Parse parse) {
-		for (ParserCombinator parser : parsers)
+		for (ParserCombinator parser : parsers) 
 			if (!parser.accepts(parse))
 				return false;
 
@@ -27,7 +29,7 @@ public class Sequence extends ParserCombinator {
 	}
 
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		for (int i = 0; i < parsers.length; i++) {
+		for (int i = 0; i < length; i++) {
 			parsers[i].addAllLeadingKeywordsTo(keywords);
 			if (!parsers[i].canMatchEmptyInputs())
 				break;

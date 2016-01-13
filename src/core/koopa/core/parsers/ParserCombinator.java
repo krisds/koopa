@@ -69,6 +69,12 @@ public abstract class ParserCombinator {
 		return false;
 	}
 
+	/**
+	 * Whether or not this parser can say that the given word is a keyword in
+	 * the given stack context.
+	 * <p>
+	 * By default this forwards the question to the parent frame in the stack.
+	 */
 	public boolean isKeyword(String word, Stack.Frame frame) {
 		return frame.up().isKeyword(word);
 	}

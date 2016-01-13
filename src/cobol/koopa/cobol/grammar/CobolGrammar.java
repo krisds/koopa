@@ -5213,19 +5213,8 @@ public class CobolGrammar extends CobolBaseGrammar {
               token("INITIAL")
             ),
             token("INPUT"),
-            choice(
-              plus(
-                choice(
-                  token("FILLER"),
-                  sequence(
-                    not(
-                      token("STATUS")
-                    ),
-                    dataName()
-                  )
-                )
-              ),
-              optional(
+            optional(
+              choice(
                 permuted(
                   sequence(
                     optional(
@@ -5325,6 +5314,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                     optional(
                       token("IS")
                     ),
+                    dataName()
+                  )
+                ),
+                plus(
+                  choice(
+                    token("FILLER"),
                     dataName()
                   )
                 )

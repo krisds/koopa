@@ -1229,11 +1229,7 @@ end
 def communicationDescriptionEntry_format1 =
     CD cdName [FOR] [INITIAL] INPUT
     
-    ( # TODO We really want to exclude all of the possible starter tokens for
-      # the other clauses.  Can we automate that somehow ?
-      ( FILLER | (%not STATUS) dataName )+
-      
-    | ![ [SYMBOLIC] QUEUE       [IS] dataName
+    [ !( [SYMBOLIC] QUEUE       [IS] dataName
        | [SYMBOLIC] SUB-QUEUE-1 [IS] dataName
        | [SYMBOLIC] SUB-QUEUE-2 [IS] dataName
        | [SYMBOLIC] SUB-QUEUE-3 [IS] dataName
@@ -1244,8 +1240,12 @@ def communicationDescriptionEntry_format1 =
        | END KEY                [IS] dataName
        | STATUS KEY             [IS] dataName
        | [MESSAGE] COUNT        [IS] dataName
-       ]
-    )
+       )
+      
+    | # TODO We really want to exclude all of the possible starter tokens for
+      # the other clauses.  Can we automate that somehow ?
+      ( FILLER | dataName )+
+    ]
     .
 end
 

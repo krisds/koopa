@@ -60,7 +60,9 @@ public abstract class AllStagesTest implements SampleBasedTest {
 			assertTrue(targetName + " should accept [" + sample + "]",
 					target.accepts(parse));
 			assertTrue(targetName + " should accept [" + sample
-					+ "] up to the expected point", source.isWhereExpected());
+					+ "] up to the expected point. Got to "
+					+ parse.getFinalFrame().toTrace() + ".", //
+					source.isWhereExpected());
 
 			int inUnknown = 0;
 			for (Data data : resultingData) {

@@ -81,7 +81,7 @@ public class VisualTrace extends Trace {
 		super.dedent(message);
 
 		ensureFrameIsAvailable();
-		nodes.pop();
-		nodes.peek().add(new DefaultMutableTreeNode(message));
+		nodes.pop().setUserObject(message);
+		// nodes.peek().add(new DefaultMutableTreeNode(message));
 	}
 }

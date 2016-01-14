@@ -49,9 +49,9 @@ public class LinePainter extends DefaultHighlighter.DefaultHighlightPainter
 	 * @param g
 	 *            the graphics context
 	 * @param offs0
-	 *            the starting model offset >= 0
+	 *            the starting model offset &gt;= 0
 	 * @param offs1
-	 *            the ending model offset >= offs1
+	 *            the ending model offset &gt;= offs1
 	 * @param bounds
 	 *            the bounding box of the view, which is not necessarily the
 	 *            region to paint.

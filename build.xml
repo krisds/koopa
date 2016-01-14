@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Koopa" default="build" basedir="." 
-    xmlns:if="ant:if" xmlns:unless="ant:unless">
+<project name="Koopa" default="build" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-    <!-- Thank you: http://stackoverflow.com/questions/7260697/set-ant-bootclasspath-jdk-1-7-has-a-new-javac-warning-for-setting-an-older-sour -->
-    <property environment="env" />
-    <property name="java5.boot.classpath" value="${env.JAVA5_BOOTCLASSES}" />
-    <echo unless:set="env.JAVA5_BOOTCLASSES">
+	<!-- Thank you: http://stackoverflow.com/questions/7260697/set-ant-bootclasspath-jdk-1-7-has-a-new-javac-warning-for-setting-an-older-sour -->
+	<property environment="env" />
+	<property name="java5.boot.classpath" value="${env.JAVA5_BOOTCLASSES}" />
+	<echo unless:set="env.JAVA5_BOOTCLASSES">
         Please make sure JAVA5_BOOTCLASSES is set to a valid Java 5 bootstrap classpath.
         You may get builds which are not compatible with java 5 otherwise.
     </echo>
 
 	<target name="clean">
+		<delete dir="doc/javadoc/" />
 		<delete dir="build/" />
 	</target>
 
@@ -31,8 +31,7 @@
 
 	<target name="core-compile" depends="core-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
-		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -50,8 +49,7 @@
 
 	<target name="core-tests" depends="core">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -112,8 +110,7 @@
 
 	<target name="templates">
 		<echo>Compiling Koopa Templates DSL...</echo>
-		<javac srcdir="src/templates/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/templates/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -127,8 +124,7 @@
 
 	<target name="kg" depends="core,templates">
 		<echo>Compiling Koopa Grammar DSL...</echo>
-		<javac srcdir="src/dsl/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/dsl/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -150,8 +146,7 @@
 		<kgg path="src/cobol/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -170,8 +165,7 @@
 
 	<target name="cobol-tests" depends="core,core-tests,cobol">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -237,8 +231,7 @@
 		<kgg path="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
-		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -259,24 +252,21 @@
 		<kgg path="examples/" />
 
 		<echo>Compiling example classes...</echo>
-		<javac srcdir="examples/basic/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="examples/basic/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5" target="1.5" 
-            bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -363,6 +353,26 @@
 				<pathelement path="${java.class.path}" />
 			</classpath>
 		</java>
+	</target>
+
+	<!-- JAVADOC -->
+
+	<target name="javadoc">
+
+		<delete dir="doc/javadoc/" />
+		<javadoc destdir="doc/javadoc/" windowtitle="Koopa Cobol Parser">
+
+			<fileset dir="src/" />
+			<fileset dir="test/" />
+
+			<classpath>
+				<pathelement path="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement path="${java.class.path}" />
+			</classpath>
+		</javadoc>
 	</target>
 
 	<!-- MACROS -->

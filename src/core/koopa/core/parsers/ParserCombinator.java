@@ -4,15 +4,9 @@ import java.util.Set;
 
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.sources.Source;
-import koopa.core.targets.Target;
 
 public abstract class ParserCombinator {
 
-	/**
-	 * This method should <b>not</b> get called directly by clients! They should
-	 * use {@linkplain #accepts(Source, Target)} instead.
-	 */
 	public final boolean accepts(Parse parse) {
 		Stack stack = parse.getStack();
 

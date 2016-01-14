@@ -2,6 +2,7 @@ package koopa.core.grammars;
 
 import static koopa.core.grammars.combinators.Opt.NOSKIP;
 import koopa.core.data.Token;
+import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
@@ -60,7 +61,7 @@ public abstract class Grammar {
 	 * Skips all tokens which are either not program text, or which are
 	 * separators.
 	 * <p>
-	 * If the {@linkplain #noskip} option is active then this will only skip
+	 * If the {@linkplain Opt#NOSKIP} option is active then this will only skip
 	 * tokens which are not program text.
 	 * <p>
 	 * Subclasses may use this as needed in custom parsers.
@@ -73,7 +74,7 @@ public abstract class Grammar {
 	 * Skips all tokens which are either not program text, or which are
 	 * separators other than the given one.
 	 * <p>
-	 * If the {@linkplain #noskip} option is active then this will only skip
+	 * If the {@linkplain Opt#NOSKIP} option is active then this will only skip
 	 * tokens which are not program text.
 	 * <p>
 	 * Subclasses may use this as needed in custom parsers.

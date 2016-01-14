@@ -14,8 +14,7 @@ import org.junit.Test;
 /**
  * This class tests a possible fix for issue #48
  * "Delay categorization of decimals". It let's the parser define decimals based
- * on {@linkplain KGTag#INTEGER_LITERAL}, separators, and
- * {@linkplain ContextTag}s.
+ * on {@linkplain TestTag#INTEGER_LITERAL} and separators.
  */
 public class DecimalGrammarTest extends GrammarTest {
 
@@ -31,12 +30,13 @@ public class DecimalGrammarTest extends GrammarTest {
 	 * </pre>
 	 */
 	private ParserCombinator decimal() {
-		final ParserCombinator integer = G.sequence(G.tagged(INTEGER_LITERAL), G.any());
+		final ParserCombinator integer = G.sequence(G.tagged(INTEGER_LITERAL),
+				G.any());
 
 		final ParserCombinator comma = G.choice(G.token(","), G.token("."));
 
-		final ParserCombinator unsignedInteger = G.sequence(G.tagged(INTEGER_LITERAL),
-				G.tagged(UNSIGNED), G.any());
+		final ParserCombinator unsignedInteger = G.sequence(
+				G.tagged(INTEGER_LITERAL), G.tagged(UNSIGNED), G.any());
 
 		return G.sequence(integer,
 				G.opt(Opt.NOSKIP, G.sequence(comma, unsignedInteger)));

@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import koopa.cobol.CobolWords;
-import koopa.cobol.Copybooks;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
@@ -85,8 +84,8 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	 * digits, extended letters, and the basic special characters hyphen and
 	 * underscore. The hyphen or underscore shall not appear as the first or
 	 * last character in such words."</i>
+	 * <p>
 	 * 
-	 * <hr/>
 	 * <i>"Except where specific rules apply, the hyphen (-) and the underline
 	 * (_) are treated as the same character in a user- defined word. The
 	 * underline (_), however, can begin or end a user-defined word, and the
@@ -95,13 +94,12 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	 * Description from: <a
 	 * href="http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html">HP
 	 * COBOL Reference Manual - Character Strings</a>.
-	 * 
-	 * <hr/>
+	 * <p>
 	 * Because anything in a copybook can be replaced via the COPY statement,
 	 * some COBOL words may contain characters which are not legal otherwise. We
 	 * allow this behaviour to be configured via
-	 * {@linkplain Copybooks#useExtendedCharactersInCopybooks()} and
-	 * {@linkplain Copybooks#isExtendedPart(String)}.
+	 * {@linkplain CobolWords#useExtendedCharactersInCopybooks()} and
+	 * {@linkplain CobolWords#isExtendedPart(String)}.
 	 */
 	public ParserCombinator cobolWord() {
 		if (cobolWordParser == null) {

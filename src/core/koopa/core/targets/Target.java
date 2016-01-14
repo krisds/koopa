@@ -1,6 +1,7 @@
 package koopa.core.targets;
 
 import koopa.core.data.Data;
+import koopa.core.sources.Source;
 
 /**
  * This is the counterpart to {@linkplain Source}s. They provide a place for

@@ -21,8 +21,7 @@ import org.apache.log4j.Logger;
  * </pre>
  * 
  * Which corresponds to <code>\r\n</code>, <code>\r</code> and <code>\n</code>.
- * <hr />
- * 
+ * <p>
  * In addition you can also toggle whether line endings should be "sticky" or
  * not. By that we mean whether the first line ending encountered should be used
  * for the remainder of the parse ("sticky" mode), or whether we should try all
@@ -93,7 +92,7 @@ public class LineEndings {
 	/**
 	 * Specify these via system property <code>koopa.lineEndings</code>.
 	 * <p>
-	 * Otherwise, this returns {@linkplain Encoding#getDefaults()}.
+	 * Otherwise, this returns {@linkplain #getDefaults()}.
 	 */
 	public static List<List<Character>> getChoices() {
 		return lineEndings;

@@ -8,13 +8,12 @@ import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.util.Encoding;
 import koopa.core.util.LineEndings;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class takes a {@link Reader} and spits out tokens. The tokens are either
@@ -25,7 +24,7 @@ import koopa.core.util.LineEndings;
  * character lists. Each will tried in order.
  * <p>
  * If the client does not specify line endings, this will use
- * {@linkplain Encoding#getDefaults()} instead.
+ * {@linkplain LineEndings#getDefaults()} instead.
  */
 public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 

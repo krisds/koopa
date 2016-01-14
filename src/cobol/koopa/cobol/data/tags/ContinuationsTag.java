@@ -3,7 +3,7 @@ package koopa.cobol.data.tags;
 public enum ContinuationsTag {
 	/**
 	 * This token is being continued with another (marked with
-	 * {@link PseudoTag#CONTINUING}).
+	 * {@link #CONTINUING}).
 	 */
 	CONTINUED,
 
@@ -13,8 +13,7 @@ public enum ContinuationsTag {
 	SKIPPED,
 
 	/**
-	 * This token is continuing another (marked with {@link PseudoTag#CONTINUED}
-	 * ).
+	 * This token is continuing another (marked with {@link #CONTINUED} ).
 	 */
 	CONTINUING,
 

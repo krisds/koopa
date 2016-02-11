@@ -6,12 +6,64 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
+import koopa.core.util.FilenameFilters;
 import koopa.core.util.Files;
+import koopa.core.util.Select;
+
+import org.apache.log4j.Logger;
 
 /** EXPERIMENTAL ! Support for pre-processing. */
 public class Copybooks {
+
+	private static final class IsCopybookNamed implements FilenameFilter {
+		private final String fileName;
+
+		private IsCopybookNamed(String fileName) {
+			this.fileName = fileName;
+		}
+
+		public boolean accept(File path, String name) {
+			LOGGER.trace("<" + name + "> <" + path + ">");
+
+			// If the names match exactly then we'll assume we have got the
+			// right file.
+			if (fileName.equalsIgnoreCase(name)) {
+				if (LOGGER.isTraceEnabled())
+					LOGGER.trace("- " + name + " ? Yes, exact match.");
+
+				return true;
+			}
+
+			final boolean isCopybook = CobolFiles.isCopybook(name);
+			final boolean namesMatch = Files.getName(name).equalsIgnoreCase(
+					Files.getName(fileName));
+			final boolean isMatch = isCopybook && namesMatch;
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("- "
+						+ name
+						+ " ? "
+						+ (isMatch ? "Yes." : "No. Names match: " + namesMatch
+								+ "; is copybook: " + isCopybook));
+
+			return isMatch;
+		}
+
+		@Override
+		public String toString() {
+			return fileName;
+		}
+	}
+
+	private static final Select<File> FIRST = new Select<File>() {
+		public File select(File[] list) {
+			if (list != null && list.length > 0)
+				return list[0];
+			else
+				return null;
+		}
+	};
+
 	private static final Logger LOGGER = Logger.getLogger("copybooks");
 
 	private List<File> copybookPaths = new ArrayList<File>();
@@ -20,122 +72,51 @@ public class Copybooks {
 		this.copybookPaths = copybookPaths;
 	}
 
-	public File lookup(String textName, final String libraryName) {
-		return lookup(textName, libraryName, null);
-	}
-
 	// TODO Take library name into account.
-	public File lookup(final String textName, final String libraryName,
+	public File lookup(String copybookName, String libraryName,
 			final File currentFile) {
 
-		final File currentPath = currentFile == null ? null : currentFile
-				.getParentFile();
+		// Unquote the copybook and library names if needed.
+		if (isLiteral(copybookName))
+			copybookName = copybookName.substring(1, copybookName.length() - 1);
+		if (libraryName != null && isLiteral(libraryName))
+			libraryName = libraryName.substring(1, libraryName.length() - 1);
 
-		// Were we given a literal name ?
-		final boolean isLiteralTextName = isLiteral(textName);
+		// How do we match candidate files ? Well, they must be different from
+		// the current file (which avoids recursion), and they must be a
+		// copybook with a matching name.
+		final FilenameFilter filter = FilenameFilters.and( //
+				FilenameFilters.exclude(currentFile), //
+				new IsCopybookNamed(copybookName));
 
-		// So what are we looking for ?
-		final String fileName;
-		if (isLiteralTextName)
-			fileName = textName.substring(1, textName.length() - 1);
-		else
-			fileName = textName;
+		// How do we decide which of the candidate matching files to accept ?
+		// Well, for now we just pick the first match found...
+		Select<File> tieBreaker = FIRST;
 
-		// Where are we looking for it ?
-		final String relativePathName;
-		if (libraryName == null)
-			relativePathName = null;
-		else if (isLiteral(libraryName))
-			relativePathName = libraryName.substring(1,
-					libraryName.length() - 1);
-		else
-			relativePathName = libraryName;
+		// Where do we look for matching files ?
+		File match = null;
+		// We look in the current folder first, possibly offset by the library
+		// name.
+		if (currentFile != null)
+			match = Files.find(
+					Files.offset(libraryName, currentFile.getParentFile()),
+					filter, tieBreaker);
 
-		// How do we match candidate files ?
-		final FilenameFilter filter = new FilenameFilter() {
-			public boolean accept(File path, String name) {
-				// LOGGER.trace("<" + name + "> <" + path + ">");
+		// Then we try all copybook paths in order, again possibly offset by the
+		// library name.
+		if (match == null)
+			match = Files.find(Files.offset(libraryName, copybookPaths),
+					filter, tieBreaker);
 
-				// This tries to break direct recursion. Ideally, this would
-				// compare canonical paths, but resolving those is prone to
-				// IOExceptions; so I didn't bother...
-				// TODO Break indirect recursion as well.
-				if (path.equals(currentPath)
-						&& name.equalsIgnoreCase(currentFile.getName())) {
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("- " + name
-								+ " ? No, same as source file.");
-					return false;
-				}
+		if (LOGGER.isTraceEnabled())
+			if (match != null)
+				LOGGER.trace("Lookup of copybook " + copybookName + " in "
+						+ libraryName + " succeeded; found " + match);
+			else
+				LOGGER.trace("Lookup of copybook " + copybookName + " in "
+						+ libraryName + " failed: not found.");
 
-				if (isLiteralTextName && fileName.equalsIgnoreCase(name)) {
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("- " + name + " ? Yes, exact match.");
-
-					return true;
-				}
-
-				final boolean isCopybook = CobolFiles.isCopybook(name);
-				final boolean namesMatch = Files.getName(name)
-						.equalsIgnoreCase(Files.getName(fileName));
-				final boolean isMatch = isCopybook && namesMatch;
-
-				LOGGER.trace("- "
-						+ name
-						+ " ? "
-						+ (isMatch ? "Yes." : "No. Names match: " + namesMatch
-								+ "; is copybook: " + isCopybook));
-
-				return isMatch;
-			}
-		};
-
-		if (currentPath != null) {
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Looking for " + fileName + " in " + libraryName
-						+ " on current path: " + currentPath);
-
-			final File relativePath = relativePathName == null ? currentPath
-					: new File(currentPath, relativePathName);
-
-			File[] matches = relativePath.listFiles(filter);
-
-			if (matches != null && matches.length > 0) {
-				if (LOGGER.isInfoEnabled())
-					LOGGER.info("Looking for " + fileName + " in "
-							+ libraryName + " on current path; found "
-							+ matches[0]);
-
-				return matches[0];
-			}
-		}
-
-		if (copybookPaths != null) {
-			for (File path : copybookPaths) {
-				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("Looking for " + fileName + " in "
-							+ libraryName + " on copybook path: " + path);
-
-				final File relativePath = relativePathName == null ? path
-						: new File(path, relativePathName);
-
-				File[] matches = relativePath.listFiles(filter);
-
-				if (matches != null && matches.length > 0) {
-					if (LOGGER.isInfoEnabled())
-						LOGGER.info("Looking for " + fileName + " in "
-								+ libraryName + " on copybook path; found "
-								+ matches[0]);
-
-					return matches[0];
-				}
-			}
-		}
-
-		if (LOGGER.isInfoEnabled())
-			LOGGER.info("Lookup of copybook " + textName + " in " + libraryName
-					+ " failed: not found.");
-		return null;
+		return match;
 	}
 
 	private boolean isLiteral(final String name) {

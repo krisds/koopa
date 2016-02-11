@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final class Files {
 
@@ -86,4 +90,50 @@ public final class Files {
 		final FileInputStream stream = new FileInputStream(file);
 		return new InputStreamReader(stream, Encoding.getCharset());
 	}
+
+	public static List<File> offset(String relativePathName, File path) {
+		if (path == null)
+			return Collections.emptyList();
+
+		if (relativePathName == null)
+			return Collections.singletonList(path);
+
+		return Collections.singletonList(new File(path, relativePathName));
+	}
+
+	public static List<File> offset(String relativePathName, List<File> paths) {
+		if (paths == null || paths.size() == 0)
+			return Collections.emptyList();
+
+		if (relativePathName == null)
+			return paths;
+
+		List<File> offset = new ArrayList<File>();
+		for (File path : paths)
+			offset.add(new File(path, relativePathName));
+		return offset;
+	}
+
+	public static File find(List<File> pathsInOrder, FilenameFilter filter,
+			Select<File> selector) {
+
+		if (pathsInOrder == null || pathsInOrder.size() == 0)
+			return null;
+		if (selector == null)
+			return null;
+
+		for (File path : pathsInOrder) {
+			File[] matches = path.listFiles(filter);
+
+			if (matches == null || matches.length == 0)
+				continue;
+
+			File match = selector.select(matches);
+			if (match != null)
+				return match;
+		}
+
+		return null;
+	}
+
 }

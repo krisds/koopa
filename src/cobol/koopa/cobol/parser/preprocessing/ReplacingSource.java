@@ -8,7 +8,6 @@ import java.util.List;
 
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.parser.preprocessing.ReplacingPhrase.Mode;
-import koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
@@ -45,9 +44,10 @@ public class ReplacingSource extends ChainableSource<Token> implements
 		ReplacingPhraseOperand by = ReplacingPhraseOperand.from(getMatch(
 				instruction, "copyOperandName[2]"));
 
-		// TODO Support literal matching as well.
-		if (replacing.getType() == Type.LITERAL)
-			return new ReplaceNone();
+		// "For purposes of matching, text-1, word-1, and literal-3 are treated
+		// as pseudo-text containing only text-1, word-1, or literal-3,
+		// respectively."
+		// So we can match everything the same way we match pseudo-text.
 
 		switch (mode) {
 		case MATCHING:

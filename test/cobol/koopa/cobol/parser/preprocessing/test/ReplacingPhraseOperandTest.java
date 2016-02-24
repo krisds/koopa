@@ -1,6 +1,8 @@
 package koopa.cobol.parser.preprocessing.test;
 
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
+import static koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type.LITERAL;
 import static koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type.PSEUDO;
 import static koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type.WORD;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
@@ -34,6 +36,18 @@ public class ReplacingPhraseOperandTest {
 
 		assertRejects(phrase, input("COBOL"));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "PL/I"));
+	}
+
+	@Test
+	public void canMatchStringLiteral() {
+		ReplacingPhrase phrase = matching(stringLiteral("\"COBOL\""),
+				stringLiteral("\"Hopper\""));
+
+		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "\"COBOL\""));
+		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "\"cobol\""));
+
+		assertRejects(phrase, input("COBOL"));
+		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "\"PL/I\""));
 	}
 
 	@Test
@@ -199,6 +213,11 @@ public class ReplacingPhraseOperandTest {
 
 	private ReplacingPhraseOperand word(String word) {
 		return new ReplacingPhraseOperand(WORD, asTokens(word));
+	}
+
+	private ReplacingPhraseOperand stringLiteral(String literal) {
+		return new ReplacingPhraseOperand(LITERAL, asTokens(STRING_LITERAL,
+				literal));
 	}
 
 	private ReplacingPhraseOperand pseudo(Object... tagsAndTokens) {

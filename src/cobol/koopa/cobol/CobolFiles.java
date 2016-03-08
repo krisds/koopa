@@ -200,6 +200,9 @@ public class CobolFiles {
 		};
 	}
 
+	/**
+	 * Does the extension for the given file indicate that it's a Cobol file ?
+	 */
 	public static boolean isCobolFile(File file) {
 		if (!file.isFile())
 			return false;
@@ -207,17 +210,27 @@ public class CobolFiles {
 		return isCobolFileName(file.getName());
 	}
 
+	/**
+	 * Does the extension for the given filename indicate that it's a Cobol file
+	 * ?
+	 */
 	public static boolean isCobolFileName(String name) {
 		final String extension = Files.getExtension(name).toUpperCase();
 		return SOURCE_EXTENSIONS.contains(extension)
 				|| COPYBOOK_EXTENSIONS.contains(extension);
 	}
 
+	/**
+	 * Does the extension for the given file indicate that it's a copybook ?
+	 */
 	public static boolean isCopybook(File file) {
 		final String extension = Files.getExtension(file).toUpperCase();
 		return COPYBOOK_EXTENSIONS.contains(extension);
 	}
 
+	/**
+	 * Does the extension for the given filename indicate that it's a copybook ?
+	 */
 	public static boolean isCopybook(String filename) {
 		final String extension = Files.getExtension(filename).toUpperCase();
 		return COPYBOOK_EXTENSIONS.contains(extension);

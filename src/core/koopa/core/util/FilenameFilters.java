@@ -7,18 +7,28 @@ public final class FilenameFilters {
 	private FilenameFilters() {
 	}
 
+	/**
+	 * This {@linkplain FilenameFilter} accepts all files.
+	 */
 	public static final FilenameFilter ALL = new FilenameFilter() {
 		public boolean accept(File dir, String name) {
 			return true;
 		}
 	};
 
+	/**
+	 * This {@linkplain FilenameFilter} rejects all files.
+	 */
 	public static final FilenameFilter NONE = new FilenameFilter() {
 		public boolean accept(File dir, String name) {
 			return false;
 		}
 	};
 
+	/**
+	 * Return a {@linkplain FilenameFilter} which accepts all files except the
+	 * given one.
+	 */
 	public static FilenameFilter exclude(File file) {
 		if (file == null)
 			return ALL;
@@ -33,6 +43,10 @@ public final class FilenameFilters {
 		};
 	}
 
+	/**
+	 * Return a {@linkplain FilenameFilter} which only accepts files which are
+	 * accepted by all given filters.
+	 */
 	public static FilenameFilter and(final FilenameFilter... filters) {
 		if (filters == null || filters.length == 0)
 			return NONE;

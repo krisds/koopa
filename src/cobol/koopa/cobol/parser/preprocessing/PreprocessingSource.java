@@ -131,7 +131,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 						+ " in library " + libraryName);
 		}
 
-		File copybook = copybooks.lookup(textName, libraryName, inputs.file);
+		File copybook = copybooks.locate(textName, libraryName, inputs.file);
 		if (copybook == null) {
 			LOGGER.error("Missing copybook " + textName + " in " + libraryName);
 			unsupportedDirective = directive;

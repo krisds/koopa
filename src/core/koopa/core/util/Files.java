@@ -60,6 +60,10 @@ public final class Files {
 		return path.substring(sep + 1, path.length());
 	}
 
+	/**
+	 * Return the "name" part of a filename. That is, everything up to the final
+	 * dot, if there is one.
+	 */
 	public static String getName(String filename) {
 		int dot = filename.lastIndexOf(".");
 
@@ -69,10 +73,18 @@ public final class Files {
 		return filename.substring(0, dot);
 	}
 
+	/**
+	 * Return the "name" part of a filename. That is, everything up to the final
+	 * dot, if there is one.
+	 */
 	public static String getName(File file) {
 		return getName(file.getName());
 	}
 
+	/**
+	 * Return the extension of a given filename. That is, everything from the
+	 * final dot, if there is one.
+	 */
 	public static String getExtension(String filename) {
 		int dot = filename.lastIndexOf(".");
 
@@ -82,6 +94,10 @@ public final class Files {
 		return filename.substring(dot);
 	}
 
+	/**
+	 * Return the extension of a given filename. That is, everything from the
+	 * final dot, if there is one.
+	 */
 	public static String getExtension(File file) {
 		return getExtension(file.getName());
 	}
@@ -101,6 +117,13 @@ public final class Files {
 		return Collections.singletonList(new File(path, relativePathName));
 	}
 
+	/**
+	 * Given a list of paths, return a new list of paths which have been offset
+	 * by the given relative path name.
+	 * <p>
+	 * If the given path name is
+	 * <code>null</null> returns the paths as they were given.
+	 */
 	public static List<File> offset(String relativePathName, List<File> paths) {
 		if (paths == null || paths.size() == 0)
 			return Collections.emptyList();
@@ -114,6 +137,11 @@ public final class Files {
 		return offset;
 	}
 
+	/**
+	 * Look in each of the given paths for files matching the given filter. When
+	 * you find some ask the given selector which you should return, and return
+	 * that one.
+	 */
 	public static File find(List<File> pathsInOrder, FilenameFilter filter,
 			Select<File> selector) {
 

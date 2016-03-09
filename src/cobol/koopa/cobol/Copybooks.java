@@ -37,9 +37,7 @@ public class Copybooks {
 				// This cast may fail if the class we loaded is not a
 				// CopybookLocator. In that case we just want the thing to break
 				// with a ClassCastException, I think.
-				CopybookLocator l = (CopybookLocator) locatorClass
-						.newInstance();
-				locator = l;
+				setLocator((CopybookLocator) locatorClass.newInstance());
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -55,6 +53,22 @@ public class Copybooks {
 					+ ". Using default instead.", e);
 		}
 	}
+
+	/**
+	 * Set the {@linkplain CopybookLocator} instance to use when resolving
+	 * copybooks.
+	 * <p>
+	 * If passed <code>null</code> will install a
+	 * {@linkplain DefaultCopybookLocator} instance instead.
+	 */
+	public static void setLocator(CopybookLocator l) {
+		if (l == null)
+			locator = new DefaultCopybookLocator();
+		else
+			locator = l;
+	}
+
+	// ------------------------------------------------------------------------
 
 	private List<File> copybookPaths = new ArrayList<File>();
 

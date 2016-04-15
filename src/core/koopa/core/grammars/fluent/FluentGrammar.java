@@ -16,6 +16,7 @@ import koopa.core.grammars.combinators.WithOption;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.Choice;
+import koopa.core.parsers.combinators.Not;
 import koopa.core.parsers.combinators.Optional;
 import koopa.core.parsers.combinators.Plus;
 import koopa.core.parsers.combinators.Sequence;
@@ -139,6 +140,17 @@ public abstract class FluentGrammar extends Grammar {
 			@Override
 			public ParserCombinator asParser() {
 				return new MatchToken(FluentGrammar.this, text);
+			}
+		};
+	}
+
+	protected Definition not(final Object... elements) {
+		return new Definition() {
+			private Definition def = all(elements);
+
+			@Override
+			public ParserCombinator asParser() {
+				return new Not(def.asParser());
 			}
 		};
 	}

@@ -37,20 +37,20 @@ def rule
     // #name#
     // ........................................................
     
-    private ParserCombinator #name#Parser = null;
+    private ParserCombinator #fullyQualifiedName#Parser = null;
     
-    #modifier# final Start #name# = Start.on(getNamespace(), "#name#");
+    #modifier# final Start #fullyQualifiedName# = Start.on(getNamespace(), "#name#");
     
-    #modifier# ParserCombinator #name#() {
-      if (#name#Parser == null) {
+    #modifier# ParserCombinator #fullyQualifiedName#() {
+      if (#fullyQualifiedName#Parser == null) {
         FutureParser future = scoped("#name#", #visibility#, #allowKeywords#);
-        #name#Parser = future;
+        #fullyQualifiedName#Parser = future;
         future.setParser(
 >         body
         );
       }
     
-      return #name#Parser;
+      return #fullyQualifiedName#Parser;
     }
     
 end
@@ -86,7 +86,7 @@ def plus
 end
 
 def identifier
-    #text#()
+    #fully_qualified_identifier#()
 end
 
 def literal

@@ -23,6 +23,7 @@ import koopa.core.sources.Source;
 public class KGTokenizer extends BasicSource<Token> implements Source<Token> {
 
 	private static final String OPERATOR_CHARACTERS = "()[]|+*=->!$:.@%,";
+	public static final char SCOPE_SEPARATOR_CHARACTER = '$';
 
 	private final Source<Token> source;
 
@@ -150,7 +151,8 @@ public class KGTokenizer extends BasicSource<Token> implements Source<Token> {
 		while (index < token.getLength()) {
 			char c = token.charAt(index);
 
-			if (c == '-' || c == '_' || isLetterOrDigit(c)) {
+			if (c == '-' || c == '_' || isLetterOrDigit(c)
+					|| c == SCOPE_SEPARATOR_CHARACTER) {
 				if (isLetter(c))
 					allUppercase = allUppercase && isUpperCase(c);
 

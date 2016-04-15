@@ -18,6 +18,7 @@ import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
+import koopa.dsl.kg.source.KGTokenizer;
 
 public class StageTokenizer extends BasicSource<Token> implements Source<Token> {
 
@@ -89,7 +90,8 @@ public class StageTokenizer extends BasicSource<Token> implements Source<Token> 
 		while (index < token.getLength()) {
 			char c = token.charAt(index);
 
-			if (c == '-' || c == '_' || isLetterOrDigit(c)) {
+			if (c == '-' || c == '_' || isLetterOrDigit(c)
+					|| c == KGTokenizer.SCOPE_SEPARATOR_CHARACTER) {
 				index += 1;
 
 			} else

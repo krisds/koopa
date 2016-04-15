@@ -190,12 +190,6 @@ def classIdParagraph =
       [ USING (parameterName)+ ] [.]
 end
 
-def attributeClause =
-    ( ATTRIBUTE attributeName '(' (NAME propertyName '=' propertyValue | parameterName)* ')'
-    | CUSTOM-ATTRIBUTE IS className [ '(' (propertyName '=' propertyValue | parameterName)* ')' ]
-    )+
-end
-
 def factoryDefinition =
     ( identificationDivision :
         [(ID | IDENTIFICATION) DIVISION .]
@@ -318,7 +312,7 @@ def delegateDefinition =
         delegateIdParagraph
     )
     
-    procedureDivisionHeader
+    ( procedureDivisionHeader : procedureDivision$header )
     END DELEGATE .
 end
 
@@ -2055,59 +2049,84 @@ def varyingClause =
 end
 
 
-
-
 ## #############################################################################
 ## PROCEDURE DIVISION .
 ## -----------------------------------------------------------------------------
 
-# I have seen descriptions of the format for procedure divisions where if you
-# use sections everything must be inside a section. That is, there can be no
-# leading statements or paragraphs. This however conflicts with actual code I
-# have seen. I therefore do not enforce this rule and accept leading statements
-# and paragraphs.
-
 def procedureDivision =
-    procedureDivisionHeader
+    header
+
     [declaratives]
+
+    # I have found descriptions of the format for procedure divisions where if
+    # you use sections everything must be inside a section. That is, there can 
+    # be no leading statements or paragraphs. This however conflicts with
+    # actual code I have seen. I therefore do not enforce this rule and accept
+    # leading statements and paragraphs, whether there are sections or not.
     (sentence)*
     (paragraph)*
     (section)*
-#    [--> divisionStart]
-end
-
-def procedureDivisionHeader =
-    PROCEDURE DIVISION [mnemonicName] [usingOrChainingPhrase] [returningProcedurePhrase] .
-end
 
 
-# Refs. http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
-def usingOrChainingPhrase =
-    (USING | CHAINING | GIVING) 
-    (dataReference | dataValue | dataOutput)+
-    [repeatedPhrase]
-end
+  where def header =
+    PROCEDURE DIVISION
+    [mnemonicName]                       # [MF - Procedure Division Header]
+    [using]
+    [returning]
+    .
 
-def dataReference = 
-    [[BY] REFERENCE]
-    ( ANY | [OPTIONAL] dataName [DELIMITED [BY SIZE]] [AS typeName [attributeClause]] | typedefName )+
-end
+    where def using =
+        ( USING
+        | CHAINING                       # [MF - Procedure Division Header]
+        | GIVING                         # [MF - Procedure Division Header]
+        )
+        ( byReference
+        | byValue
+        | byOutput                       # [MF - Procedure Division Header]
+        )+
 
-def dataValue =
-    [BY] VALUE ( ANY | dataName [AS typeName [attributeClause]] | typedefName )+
-end
+        [repeated]                       # [MF - Procedure Division Header]
 
-def dataOutput =
-    [BY] OUTPUT ( dataName AS typeName [attributeClause] )*
-end
 
-def repeatedPhrase =
-    REPEATED [integer TO integer]
-end
+      where def byReference =  [[BY] REFERENCE] (arg [asTypeName])+  end
+      where def byValue     =   [BY] VALUE      (arg [asTypeName])+  end
+      where def byOutput    =   [BY] OUTPUT     (arg  asTypeName )*  end
 
-def returningProcedurePhrase =
-    (RETURNING | YIELDING | GIVING)
-    dataName [AS typeName [attributeClause]]
+      where def arg =
+          [UNSIGNED]                     # [GNU Cobol 2.0]
+          [sizeIs]                       # [GNU Cobol 2.0]
+
+          [optional: OPTIONAL] value
+
+          [DELIMITED [BY SIZE]]          # [MF - Procedure Division Header]
+
+        where def value =
+          ( dataName
+          | any: ANY                     # [MF - Procedure Division Header]
+          )
+        end
+
+        where def sizeIs =
+            SIZE [IS]
+            ( AUTO | DEFAULT                  # GNU Cobol
+            | integer                         # GNU Cobol, IBM
+            )
+        end
+      end
+    
+      where def repeated =  REPEATED [integer TO integer]  end
+
+      # [MF - Procedure Division Header]
+      where def asTypeName =
+          AS typeName [attributeClause]
+      end
+    end
+
+    where def returning =
+        ( RETURNING | YIELDING | GIVING )
+        dataName [AS typeName [attributeClause]]
+    end
+  end
 end
 
 
@@ -2544,29 +2563,30 @@ end
 ## -----------------------------------------------------------------------------
 
 def addStatement =
-    ADD ( addition_format1 | addition_format2 | addition_format3 )
+    ADD ( format1 | format2 | format3 )
     [onSizeError]
     [notOnSizeError]
     [END-ADD]
-end
 
-private def addition_format1 =
-    ( corresponding :
-      (CORRESPONDING | CORR) (identifier : qualifiedDataName) )
-    ( to : TO qualifiedDataName [ROUNDED])
-end
 
-private def addition_format2 =
-    %not (CORRESPONDING | CORR)
-    (identifier | literal)+
-    [ to     : TO (identifier | literal) ]
-    ( giving : GIVING (identifier [ROUNDED])+ )
-end
+  where private def format1 =
+      ( corresponding :
+        (CORRESPONDING | CORR) (identifier : qualifiedDataName) )
+      ( to : TO qualifiedDataName [ROUNDED])
+  end
 
-private def addition_format3 =
-    %not (CORRESPONDING | CORR)
-    (identifier | literal)+
-    ( to : TO (identifier [ROUNDED])+ )
+  where private def format2 =
+      %not (CORRESPONDING | CORR)
+      (identifier | literal)+
+      [ to     : TO (identifier | literal) ]
+      ( giving : GIVING (identifier [ROUNDED])+ )
+  end
+
+  where private def format3 =
+      %not (CORRESPONDING | CORR)
+      (identifier | literal)+
+      ( to : TO (identifier [ROUNDED])+ )
+  end
 end
 
 
@@ -2585,6 +2605,7 @@ def allocateStatement =
     [ RETURNING qualifiedDataName ]
 end
 
+
 ## #############################################################################
 ## ACCEPT statement.
 ## -----------------------------------------------------------------------------
@@ -2597,6 +2618,7 @@ def alterationClause =
     procedureName TO [PROCEED TO] procedureName
 end
 
+
 ## #############################################################################
 ## CALL statement.
 ## -----------------------------------------------------------------------------
@@ -2604,93 +2626,68 @@ end
 def callStatement =
     CALL
     
-    ( NESTED
-    | alphanumericLiteral
-    | identifier
-        # http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFA06.html
-        [alphanumericLiteral | identifier]   
+    ( [ programName AS ] NESTED                                   # Format 3
+    |   programName AS   programPrototypeName                     # Format 3
+   
+    | # [MF - CALL statement] The mnenomic name specifies the calling convention.
+      (mnemonicName: identifier) programName
+   
+    | programName                                                 # Format 1, 2
     )
-    [AS (NESTED | programName)]
-    
-    [ callUsing ]
-    [ callGivingOrReturning ]
 
-    [unknown: --> somethingFollowingAStatement]
+    [ using  ]
+    [ giving ]
 
-    [ # Call statement format 1.
-      onOverflow
-    
-    | # Call statement format 2.
-      onException
-      [notOnException]
+    [ unknown: --> somethingFollowingAStatement ]
 
-    | # Call statement format 2.
-      notOnException
+    [ onOverflow                                                  # Format 1
+    | !(onException | notOnException)                             # Format 2, 3
     ]
 
     [END-CALL]
+
+
+  where def programName          =  ( identifier | alphanumericLiteral )  end
+  where def programPrototypeName =  cobolWord                             end
+
+  where def using =
+      USING ( byReference | byContent | byValue | copyStatement )+
+
+    where def byReference =  [[BY] REFERENCE] (arg)+  end
+    where def byContent   =   [BY] CONTENT    (arg)+  end
+    where def byValue     =   [BY] VALUE      (arg)+  end
+
+    where def arg =
+        [UNSIGNED]                        # [GNU Cobol 2.0], CALL
+        [sizeIs]                          # [GNU Cobol 2.0], CALL
+        value
+        
+      
+      where def value =
+        ( addressOf                       # [IBM Cobol zOS 4.2], CALL statement
+        | lengthOf                        # [IBM Cobol zOS 4.2], CALL statement
+        | omitted: OMITTED
+        | identifier (%not moreArithmeticOp)
+        | literal    (%not moreArithmeticOp)
+        | arithmeticExpression
+        )
+      end
+    
+      where def sizeIs =
+          SIZE [IS]
+          ( AUTO | DEFAULT                  # GNU Cobol
+          | integer                         # GNU Cobol, IBM
+          )
+      end
+    end
+  end
+  
+  where def giving =
+      ( GIVING | RETURNING ) 
+      ( addressOf | [INTO] identifier )
+  end
 end
 
-def callUsing =
-    USING ( [[BY] REFERENCE] ( ADDRESS OF identifier
-                             | OMITTED
-                             | identifier
-                             | literal
-                             )
-          | [BY] CONTENT     ( lengthPhrase
-                             | identifier (%not moreArithmeticOp)
-                             | literal    (%not moreArithmeticOp)
-                             | arithmeticExpression
-                             )
-          | [BY] VALUE       ( lengthPhrase [ SIZE [IS] [integer] ]
-                             | integer SIZE [IS] [integer]
-                             | identifier (%not moreArithmeticOp)
-                             | literal    (%not moreArithmeticOp)
-                             | arithmeticExpression
-                             )
-          | copyStatement
-          )+
-end
-
-def callGivingOrReturning =
-    (GIVING | RETURNING) [INTO | ADDRESS OF] identifier
-end
-
-def onOverflow =
-    [ON] OVERFLOW nestedStatements
-end
-
-def notOnOverflow =
-    NOT [ON] OVERFLOW nestedStatements
-end
-
-def onException =
-    [ON] EXCEPTION nestedStatements
-end
-
-def notOnException =
-    NOT [ON] EXCEPTION nestedStatements
-end
-
-def onSizeError =
-    [ON] SIZE ERROR nestedStatements
-end
-
-def notOnSizeError =
-    NOT [ON] SIZE ERROR nestedStatements
-end
-
-def onEscape =
-    [ON] ESCAPE nestedStatements
-end
-
-def notOnEscape =
-    NOT [ON] ESCAPE nestedStatements
-end
-
-def programID =
-    (identifier | alphanumeric)
-end
 
 ## #############################################################################
 ## CANCEL statement.
@@ -2712,7 +2709,7 @@ end
 
 def chainUsing =
     USING (literal | identifier)*
-          ( [BY] REFERENCE ([ADDRESS OF] identifier | OMITTED | literal)+
+          ( [BY] REFERENCE (addressOf | identifier | OMITTED | literal)+
           | [BY] CONTENT (literal | identifier)+
           | [BY] VALUE (identifier | integer [SIZE [IS] integer] | literal)+
           )*
@@ -3081,30 +3078,31 @@ end
 ## -----------------------------------------------------------------------------
 
 def divideStatement =
-    DIVIDE ( division_format1 | division_format2 | division_format3 )
+    DIVIDE ( format1 | format2 | format3 )
     [onSizeError]
     [notOnSizeError]
     [END-DIVIDE]
-end
 
-private def division_format1 =
-    (identifier | literal)
-    ( into      : (INTO | BY) (identifier | literal) )
-    ( giving    : GIVING (identifier = qualifiedDataName) [ROUNDED] )
-    ( remainder : REMAINDER qualifiedDataName )
-end
 
-private def division_format2 =
-    (identifier | literal)
-    ( into   : (INTO | BY) (identifier | literal) )
-    ( giving : GIVING
-      ((identifier : qualifiedDataName) [ROUNDED])+
-    )
-end
+  where private def format1 =
+      (identifier | literal)
+      ( into      : (INTO | BY) (identifier | literal) )
+      ( giving    : GIVING (identifier = qualifiedDataName) [ROUNDED] )
+      ( remainder : REMAINDER qualifiedDataName )
+  end
 
-private def division_format3 =
-    (identifier | literal)
-    (into : INTO (qualifiedDataName [ROUNDED])+)
+  where private def format2 =
+      (identifier | literal)
+      ( into   : (INTO | BY) (identifier | literal) )
+      ( giving : GIVING
+        ((identifier : qualifiedDataName) [ROUNDED])+
+      )
+  end
+
+  where private def format3 =
+      (identifier | literal)
+      (into : INTO (qualifiedDataName [ROUNDED])+)
+  end
 end
 
 
@@ -3297,7 +3295,7 @@ end
 
 def returningPhrase =
     (GIVING | RETURNING)
-    (integer | ADDRESS OF identifier)
+    (integer | addressOf)
 end
 
 # Refs:
@@ -3328,7 +3326,7 @@ end
 
 def gobackStatement =
     GOBACK
-        [(GIVING | RETURNING) ([ADDRESS OF] identifier | integer)]  # *MF
+        [(GIVING | RETURNING) (addressOf | identifier | integer)]  # *MF
 end
 
 ## #############################################################################
@@ -3377,6 +3375,7 @@ def initiateStatement =
     INITIATE (reportName)+
 end
 
+
 ## #############################################################################
 ## INVOKE statement.
 ## -----------------------------------------------------------------------------
@@ -3385,7 +3384,7 @@ def invokeStatement =
     INVOKE identifier [AS (OBJECT | identifier)] (literal | identifier)
     
     [ USING
-      ( [[BY] REFERENCE] ( ADDRESS OF identifier | OMITTED | literal | identifier )
+      ( [[BY] REFERENCE] ( addressOf | OMITTED | literal | identifier )
       | [BY] CONTENT
         ( LENGTH OF identifier
         | literal    (%not moreArithmeticOp)
@@ -3402,8 +3401,13 @@ def invokeStatement =
       )+
     ]
 
-    [ (GIVING | RETURNING) [INTO | ADDRESS OF] identifier ]
+    [ ( GIVING | RETURNING )
+      ( addressOf
+      | [INTO] identifier
+      )
+    ]
 end
+
 
 ## #############################################################################
 ## EXHIBIT statement.
@@ -3575,24 +3579,25 @@ end
 ## -----------------------------------------------------------------------------
 
 def multiplyStatement =
-    MULTIPLY ( multiplication_format1 | multiplication_format2 )
+    MULTIPLY ( format1 | format2 )
     [onSizeError]
     [notOnSizeError]
     [END-MULTIPLY]
+
+  # The order of these is important!
+
+  where private def format1 =
+      (identifier | literal)
+      ( by     : BY (identifier | literal) )
+      ( giving : GIVING (( identifier : qualifiedDataName ) [ROUNDED])+ )
+  end
+
+  where private def  format2 =
+      (identifier | literal)
+      ( by : BY (qualifiedDataName [ROUNDED])+ )
+  end
 end
 
-# The order of these is important!
-
-private def multiplication_format1 =
-    (identifier | literal)
-    ( by     : BY (identifier | literal) )
-    ( giving : GIVING (( identifier : qualifiedDataName ) [ROUNDED])+ )
-end
-
-private def multiplication_format2 =
-    (identifier | literal)
-    ( by : BY (qualifiedDataName [ROUNDED])+ )
-end
 
 ## #############################################################################
 ## NEXT SENTENCE statement.
@@ -4097,8 +4102,9 @@ def stopStatement =
 
     ( ( endpoint : RUN )
       [ # MF
-        (GIVING | RETURNING)
-        ( [ADDRESS OF] identifier
+        ( GIVING | RETURNING )
+        ( addressOf
+        | identifier
         | integer [SIZE [IS] integer]
         )
 
@@ -4136,27 +4142,28 @@ end
 ## -----------------------------------------------------------------------------
 
 def subtractStatement =
-    SUBTRACT ( subtraction_format1 | subtraction_format2 | subtraction_format3 )
+    SUBTRACT ( format1 | format2 | format3 )
     [onSizeError]
     [notOnSizeError]
     [END-SUBTRACT]
+
+  where private def format1 =
+      ( corresponding : (CORRESPONDING | CORR) identifier )
+      ( from          : FROM identifier [ROUNDED] )
+  end
+
+  where private def format2 =
+      (identifier | literal)+
+      [ from   : FROM (identifier | literal) ]
+      ( giving : GIVING (identifier [ROUNDED])+ )
+  end
+
+  where private def format3 =
+      (identifier | literal)+
+      ( from : FROM (identifier [ROUNDED])+)
+  end
 end
 
-private def subtraction_format1 =
-    ( corresponding : (CORRESPONDING | CORR) identifier )
-    ( from          : FROM identifier [ROUNDED] )
-end
-
-private def subtraction_format2 =
-    (identifier | literal)+
-    [ from   : FROM (identifier | literal) ]
-    ( giving : GIVING (identifier [ROUNDED])+ )
-end
-
-private def subtraction_format3 =
-    (identifier | literal)+
-    ( from : FROM (identifier [ROUNDED])+)
-end
 
 ## #############################################################################
 ## SUPPRESS statement.
@@ -4353,6 +4360,7 @@ def xmlGenerateStatement =
     [END-XML]
 end
 
+
 ## #############################################################################
 ## XML PARSE statement.
 ## -----------------------------------------------------------------------------
@@ -4365,6 +4373,60 @@ def xmlParseStatement =
     [notOnException]
     [END-XML]
 end
+
+
+## #############################################################################
+## Common clauses
+## -----------------------------------------------------------------------------
+
+# The only reasonable description of the (custom) attribute clause I could find
+# comes from:
+# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.visualcobol.vs2012%2FHRLHLHPDF40T.html
+# Unfortunately I can't make much sense of the grammar description there. So
+# I'm choosing to just skip most of it instead
+def attributeClause =
+    ( ATTRIBUTE attributeName         '('  (--> ')')  ')'
+    | CUSTOM-ATTRIBUTE IS className [ '('  (--> ')')  ')' ]
+    )+
+end
+
+
+## #############################################################################
+## Exception clauses.
+## -----------------------------------------------------------------------------
+
+def onOverflow =
+    [ON] OVERFLOW nestedStatements
+end
+
+def notOnOverflow =
+    NOT [ON] OVERFLOW nestedStatements
+end
+
+def onException =
+    [ON] EXCEPTION nestedStatements
+end
+
+def notOnException =
+    NOT [ON] EXCEPTION nestedStatements
+end
+
+def onSizeError =
+    [ON] SIZE ERROR nestedStatements
+end
+
+def notOnSizeError =
+    NOT [ON] SIZE ERROR nestedStatements
+end
+
+def onEscape =
+    [ON] ESCAPE nestedStatements
+end
+
+def notOnEscape =
+    NOT [ON] ESCAPE nestedStatements
+end
+
 
 ## #############################################################################
 ## Controlling the compiler.
@@ -4414,7 +4476,7 @@ def divisionStart =
     ( (ID | IDENTIFICATION) DIVISION
     | ENVIRONMENT DIVISION
     | DATA DIVISION
-    | PROCEDURE DIVISION [usingOrChainingPhrase] [returningProcedurePhrase]
+    | PROCEDURE DIVISION --> .
     )
     .
 end
@@ -4453,8 +4515,6 @@ end
 ## #############################################################################
 ## Identifiers.
 ## -----------------------------------------------------------------------------
-
-# TODO Qualifiers, subscripts and reference modifiers.
 
 def function = 
     FUNCTION
@@ -4652,6 +4712,7 @@ end
 def referenceModifier =
     '(' arithmeticExpression ':' [arithmeticExpression] ')'
 end
+
 
 ## #############################################################################
 ## Arithmetic expressions.
@@ -4996,7 +5057,7 @@ end
 
 private def relationOperand =
     ( figurativeConstant: (NULL | NULLS)
-    | addressOf: ADDRESS OF identifier
+    | addressOf
     | literal     (%not moreArithmeticOp)
     | identifier  (%not moreArithmeticOp)
     | arithmeticExpression
@@ -5025,11 +5086,11 @@ def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>=')  end
 def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<=')  end 
 
 # "UNEQUAL" is found in MicroFocus. 
-# - [Micro Focus Documentation - Relation Conditions]
+# - [MF - Relation Conditions]
 def unequalToOp      = (UNEQUAL [TO]                 | '<>')  end
 
 # "EXCEEDS" and "EQUALS" are found in MicroFocus. 
-# - [Micro Focus Documentation - Relation Conditions]
+# - [MF - Relation Conditions]
 def exceedsOp        = EXCEEDS                                end
 def equalsOp         = EQUALS                                 end
 
@@ -5354,13 +5415,14 @@ end
 def integer =
     ( integerLiteral
     | integerConstant
-    | lengthPhrase
-    | byteLengthPhrase
+    | lengthOf
+    | byteLengthOf
     )
 end
 
-def lengthPhrase     =  LENGTH      [OF] identifier  end
-def byteLengthPhrase =  BYTE-LENGTH [OF] identifier  end
+def addressOf    =  ADDRESS      OF  identifier  end
+def lengthOf     =  LENGTH      [OF] identifier  end
+def byteLengthOf =  BYTE-LENGTH [OF] identifier  end
 
 def constant =
     ( integerConstant
@@ -5389,6 +5451,16 @@ end
 
 # References
 #
-# [Micro Focus Documentation - Relation Conditions]
+# [IBM Cobol zOS 4.2]
+#   "IBM - Enterprise COBOL for z/OS - Language Reference - Version 4 Release 2"
+#
+# [MF - Relation Conditions]
 #   http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FHRLHLHPDF60A.html
-
+# [MF - Procedure Division Header]
+#   http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
+# [MF - CALL statement]
+#   https://supportline.microfocus.com/Documentation/books/nx50/lhpdf804.htm
+#
+# [GNU Cobol 2.0]
+#   "GNU COBOL 2.0 Programmers Guide"
+#

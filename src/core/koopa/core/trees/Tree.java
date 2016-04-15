@@ -260,7 +260,10 @@ public class Tree {
 	}
 
 	public Tree getChild(int i) {
-		return children.get(i);
+		if (i >= 0)
+			return children.get(i);
+		else
+			return children.get(children.size() + i);
 	}
 
 	public List<Tree> getChildren() {
@@ -328,6 +331,9 @@ public class Tree {
 		return data instanceof Token;
 	}
 
+	/**
+	 * Return the first child node with the given name.
+	 */
 	public Tree getChild(String name) {
 		for (Tree child : children)
 			if (child.isNode(name))
@@ -336,6 +342,9 @@ public class Tree {
 		return null;
 	}
 
+	/**
+	 * Return a list of all child nodes with the given name.
+	 */
 	public List<Tree> getChildren(String name) {
 		List<Tree> matching = new LinkedList<Tree>();
 
@@ -359,6 +368,13 @@ public class Tree {
 		return current;
 	}
 
+	public Tree getAncestor(String name) {
+		Tree parent = getParent();
+		while (parent != null && !parent.isNode(name))
+			parent = parent.getParent();
+		return parent;
+	}
+
 	public Tree find(Token token) {
 		if (token == null)
 			return null;
@@ -373,5 +389,15 @@ public class Tree {
 		}
 
 		return null;
+	}
+
+	public int getDepth() {
+		int d = 0;
+		Tree p = parent;
+		while (p != null) {
+			d += 1;
+			p = p.parent;
+		}
+		return d;
 	}
 }

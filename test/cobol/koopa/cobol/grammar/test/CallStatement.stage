@@ -196,22 +196,23 @@ target callStatement;
 
 -[ CALL h"AF" USING set-bit-pairs user-key-control ]
 
-# Arithmetic operations are not permitted in USING BY REFERENCE clauses:
-
--[ CALL 'sub' AS NESTED USING foo + 1 ]
--[ CALL 'sub' AS NESTED USING REFERENCE foo + 1 ]
+# Arithmetic operations are not permitted in USING BY REFERENCE clauses.
+# However, to simplify the grammar and the syntax tree, we do accept it 
+# syntactically.
+# -[ CALL 'sub' AS NESTED USING foo + 1 ]
+# -[ CALL 'sub' AS NESTED USING REFERENCE foo + 1 ]
 
 
 +[ CALL foo "bar"
      USING BY REFERENCE bar-name
            BY REFERENCE bar-handle
-           BY VALUE     0 SIZE 4
+           BY VALUE     SIZE 4  0
      RETURNING bar-status
    END-CALL ]
 
 +[ CALL foo "bar"
-     USING BY VALUE bar-handle
+     USING BY VALUE     bar-handle
            BY REFERENCE baz
-           BY VALUE LENGTH OF baz SIZE 4
+           BY VALUE     LENGTH OF baz
      RETURNING ret
    END-CALL ]

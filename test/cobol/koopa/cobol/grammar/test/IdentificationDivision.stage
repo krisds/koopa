@@ -108,33 +108,33 @@ target classIdParagraph;
 +[ CLASS-ID . foo PUBLIC IMPLEMENTS bar baz . ]
 
 +[ CLASS-ID . foo PUBLIC
-   ATTRIBUTE bar (b1 NAME b2 = v2 NAME b3 = v3 b4)
    IMPLEMENTS baz . ]
+#   ATTRIBUTE bar (b1 NAME b2 = v2 NAME b3 = v3 b4)
 
 +[ CLASS-ID . foo PUBLIC
-   ATTRIBUTE bar ()
    IMPLEMENTS baz . ]
+#   ATTRIBUTE bar ()
    
 +[ CLASS-ID . foo PUBLIC
-   ATTRIBUTE bar (b1)
    IMPLEMENTS baz . ]
+#   ATTRIBUTE bar (b1)
 
 +[ CLASS-ID . foo PUBLIC
-   ATTRIBUTE bar (b1 b2)
    IMPLEMENTS baz . ]
+#   ATTRIBUTE bar (b1 b2)
 
 +[ CLASS-ID . foo PUBLIC
-   ATTRIBUTE bar (b1 b2)
-   ATTRIBUTE baz (b3)
    IMPLEMENTS boojum . ]
+#   ATTRIBUTE bar (b1 b2)
+#   ATTRIBUTE baz (b3)
 
 +[ CLASS-ID . foo
-   ATTRIBUTE bar (NAME snark = "boojum")
    IMPLEMENTS baz . ]
+#   ATTRIBUTE bar (NAME snark = "boojum")
    
 +[ CLASS-ID . foo
-   CUSTOM-ATTRIBUTE IS bar (snark = "boojum")
    IMPLEMENTS baz . ]
+#   CUSTOM-ATTRIBUTE IS bar (snark = "boojum")
    
 
 target methodIdParagraph;
@@ -216,10 +216,10 @@ target valueTypeIdParagraph;
 +[ VALUETYPE-ID . foo IMPLEMENTS bar . ]
 
 +[ VALUETYPE-ID . foo
-   ATTRIBUTE bar (b1 b2)
    IMPLEMENTS baz . ]
+#   ATTRIBUTE bar (b1 b2)
 
 +[ VALUETYPE-ID . foo
-   ATTRIBUTE bar (b1 b2)
-   ATTRIBUTE baz ()
    IMPLEMENTS boojum . ]
+#   ATTRIBUTE bar (b1 b2)
+#   ATTRIBUTE baz ()

@@ -136,7 +136,7 @@ target declaratives;
 ]
 
 
-target usingOrChainingPhrase;
+target procedureDivision$header$using;
 
 +[ USING BY REFERENCE A ]
 +[ USING REFERENCE A ]

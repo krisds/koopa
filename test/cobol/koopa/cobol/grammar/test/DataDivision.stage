@@ -549,13 +549,11 @@ target dataDescriptionEntry;
 +[ 05 foo INTERNAL . ]
 +[ 05 foo PRIVATE . ]
 +[ 05 foo PROTECTED . ]
-+[ 05 foo ATTRIBUTE bar ( n ) . ]
-+[ 05 foo PUBLIC
-   ATTRIBUTE bar ( NAME n = v ) . ]
-+[ 05 foo PRIVATE
-   CUSTOM-ATTRIBUTE bar . ]
-+[ 05 foo PROTECTED
-   CUSTOM-ATTRIBUTE bar ( n = v ) . ]
+
+# +[ 05 foo           ATTRIBUTE bar ( n ) . ]
+# +[ 05 foo PUBLIC    ATTRIBUTE bar ( NAME n = v ) . ]
+# +[ 05 foo PRIVATE   CUSTOM-ATTRIBUTE bar . ]
+# +[ 05 foo PROTECTED CUSTOM-ATTRIBUTE bar ( n = v ) . ]
 
 +[ 05 foo IS TYPEDEF . ]
 +[ 05 foo IS THREAD-LOCAL . ]

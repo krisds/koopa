@@ -13,8 +13,10 @@ import java.util.Set;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.trees.Tree;
+import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.util.Encoding;
 import koopa.core.util.Iterables;
+import koopa.dsl.kg.source.KGTokenizer;
 import koopa.templates.Template;
 import koopa.templates.TemplateLogic;
 
@@ -102,8 +104,17 @@ public class Generation {
 					}
 
 				else if ("rules".equals(target))
-					for (Tree rule : ast.getChildren("rule"))
+					for (Tree rule : ast.getChildren("rule")) {
 						TEMPLATE.apply("rule", builder, indent, ruleLogic(rule));
+
+						List<?> nestedRules = Jaxen.getMatches(rule,
+								".//nested_rule");
+						if (nestedRules != null)
+							for (Object nested : nestedRules)
+								if (nested instanceof Tree)
+									TEMPLATE.apply("rule", builder, indent,
+											ruleLogic((Tree) nested));
+					}
 
 				else
 					super.call(target, builder, indent);
@@ -119,7 +130,8 @@ public class Generation {
 			private List<String> unbindings = new LinkedList<String>();
 
 			{
-				setValue("name", rule.getChild("identifier").getAllText());
+				setValue("name", getRuleName(rule));
+				setValue("fullyQualifiedName", getFullyQualifiedRuleName(rule));
 
 				final boolean allowKeywords = rule.getDescendant("nokeywords") == null;
 				final boolean hasPrivateModifier = rule.getDescendant(
@@ -203,6 +215,9 @@ public class Generation {
 
 				if ("unquoted_text".equals(name))
 					return unquoted(part.getAllText());
+
+				if ("fully_qualified_identifier".equals(name))
+					return getFullyQualifiedIdentifier(part);
 
 				return super.getValue(name);
 			}
@@ -433,5 +448,37 @@ public class Generation {
 			names.add(name);
 
 		return names;
+	}
+
+	private String getRuleName(final Tree rule) {
+		return rule.getChild("identifier").getAllText();
+	}
+
+
+	private String getFullyQualifiedRuleName(final Tree rule) {
+		final String localName = getRuleName(rule);
+
+		final Tree parent = rule.getParent();
+		if (parent == null)
+			return localName;
+		else if (parent.isNode("rule") || parent.isNode("nested_rule"))
+			return getFullyQualifiedRuleName(parent)
+					+ KGTokenizer.SCOPE_SEPARATOR_CHARACTER + localName;
+		else
+			return localName;
+	}
+
+	private String getFullyQualifiedIdentifier(final Tree identifier) {
+		final String name = identifier.getAllText();
+
+		final Tree scope = identifier.getAncestor("rule");
+
+		final Object match = Jaxen.getMatch(scope,
+				".//nested_rule[identifier[text()='" + name + "']]");
+
+		if (match != null)
+			return getFullyQualifiedRuleName((Tree) match);
+
+		return name;
 	}
 }

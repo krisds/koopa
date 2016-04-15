@@ -32,7 +32,7 @@ public class KGGrammar extends FluentGrammar {
 		define("extends").as("==extends==", "name");
 
 		// [modifier] 'def' [nokeywords] identifier [locals] [returning] '='
-		// sequence 'end'
+		// sequence (nested_rule)* 'end'
 		define("rule").as( //
 				optional("modifier"), //
 				"==def==", //
@@ -40,7 +40,24 @@ public class KGGrammar extends FluentGrammar {
 				"identifier", //
 				optional("local-variables"), //
 				optional("return_value"), //
-				"=====", "sequence", "==end==" //
+				"=====", "sequence", //
+				many("nested_rule"), //
+				"==end==" //
+		);
+
+		// 'where' [modifier] 'def' [nokeywords] identifier [locals] [returning] '='
+		// sequence (nested_rule)* 'end'
+		define("nested_rule").as( //
+				"==where==", //
+				optional("modifier"), //
+				"==def==", //
+				optional("nokeywords"), //
+				"identifier", //
+				optional("local-variables"), //
+				optional("return_value"), //
+				"=====", "sequence", //
+				many("nested_rule"), //
+				"==end==" //
 		);
 
 		define("modifier").as(oneOf( //
@@ -157,7 +174,9 @@ public class KGGrammar extends FluentGrammar {
 		define("type").as(tagged(WORD), userDefined());
 
 		// @IDENTIFIER _
-		define("identifier").as(tagged(IDENTIFIER), userDefined());
+		define("identifier").as( //
+				not(oneOf("==def==", "==where==", "modifier")), //
+				tagged(IDENTIFIER), userDefined());
 
 		// @LITERAL _
 		define("literal").as(tagged(LITERAL), userDefined());

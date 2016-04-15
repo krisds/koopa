@@ -3,6 +3,7 @@ package koopa.dsl.kg.util;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
@@ -18,8 +19,11 @@ public final class KGUtil {
 	}
 
 	public static Tree getAST(File input) throws IOException {
-		final Source<Token> source = KGTokens.getNewSource(//
-				input.getName(), new FileReader(input));
+		return getAST(input.getName(), new FileReader(input));
+	}
+
+	public static Tree getAST(String name, Reader reader) throws IOException {
+		final Source<Token> source = KGTokens.getNewSource(name, reader);
 
 		final KGGrammar kg = new KGGrammar();
 

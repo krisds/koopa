@@ -749,7 +749,10 @@ def localeIs =
 end
 
 def currencySignIs =
-    CURRENCY [SIGN] [IS] literal
+  sign [symbol]
+
+  where def sign   =  CURRENCY [SIGN] [IS] literal   end
+  where def symbol =  [WITH] PICTURE SYMBOL literal  end
 end
 
 def decimalIsComma =

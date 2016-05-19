@@ -3044,6 +3044,31 @@ public class CobolGrammar extends CobolBaseGrammar {
         currencySignIsParser = future;
         future.setParser(
           sequence(
+            currencySignIs$sign(),
+            optional(
+              currencySignIs$symbol()
+            )
+          )
+        );
+      }
+    
+      return currencySignIsParser;
+    }
+    
+    // ========================================================
+    // sign
+    // ........................................................
+    
+    private ParserCombinator currencySignIs$signParser = null;
+    
+    public final Start currencySignIs$sign = Start.on(getNamespace(), "sign");
+    
+    public ParserCombinator currencySignIs$sign() {
+      if (currencySignIs$signParser == null) {
+        FutureParser future = scoped("sign", PUBLIC, true);
+        currencySignIs$signParser = future;
+        future.setParser(
+          sequence(
             token("CURRENCY"),
             optional(
               token("SIGN")
@@ -3056,7 +3081,34 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return currencySignIsParser;
+      return currencySignIs$signParser;
+    }
+    
+    // ========================================================
+    // symbol
+    // ........................................................
+    
+    private ParserCombinator currencySignIs$symbolParser = null;
+    
+    public final Start currencySignIs$symbol = Start.on(getNamespace(), "symbol");
+    
+    public ParserCombinator currencySignIs$symbol() {
+      if (currencySignIs$symbolParser == null) {
+        FutureParser future = scoped("symbol", PUBLIC, true);
+        currencySignIs$symbolParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              token("WITH")
+            ),
+            token("PICTURE"),
+            token("SYMBOL"),
+            literal()
+          )
+        );
+      }
+    
+      return currencySignIs$symbolParser;
     }
     
     // ========================================================

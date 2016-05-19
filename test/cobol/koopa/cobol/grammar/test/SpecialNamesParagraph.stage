@@ -78,6 +78,14 @@ target specialNamesParagraph;
      CURRENCY SIGN IS "$" ]
 
 +[ SPECIAL-NAMES.
+     CURRENCY SIGN IS "$"
+     WITH PICTURE SYMBOL "D" ]
+
++[ SPECIAL-NAMES.
+     CURRENCY SIGN IS "$"
+     PICTURE SYMBOL "D" ]
+
++[ SPECIAL-NAMES.
      DECIMAL-POINT COMMA ]
 
 +[ SPECIAL-NAMES.

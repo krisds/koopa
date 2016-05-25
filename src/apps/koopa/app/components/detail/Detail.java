@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.app.Application;
 import koopa.app.batchit.ParseDetails;
+import koopa.app.components.detail.source.SourceDetails;
 import koopa.app.components.detail.token.TokenDetails;
 import koopa.app.components.detailstable.DetailsTable;
 import koopa.app.components.detailstable.DetailsTableListener;
@@ -43,6 +44,7 @@ public class Detail extends JPanel implements Coordinated {
 	private CobolOutline outline = null;
 	private DetailsTable detailsTable = null;
 	private TokenDetails tokenDetails = null;
+	private SourceDetails sourceDetails = null;
 	private boolean parsing = false;
 
 	private Tree tree = null;
@@ -81,6 +83,9 @@ public class Detail extends JPanel implements Coordinated {
 		tokenDetails = new TokenDetails(application);
 		sourceView.addTokenSelectionListener(tokenDetails);
 
+		sourceDetails = new SourceDetails(application);
+		sourceView.addTokenSelectionListener(sourceDetails);
+
 		detailsTable = new DetailsTable(parseDetails);
 
 		detailsTable.addListener(new DetailsTableListener() {
@@ -103,6 +108,7 @@ public class Detail extends JPanel implements Coordinated {
 		JTabbedPane foo = new JTabbedPane();
 		foo.addTab("Messages", detailsScroll);
 		foo.addTab("Selection", tokenDetails);
+		foo.addTab("Source", sourceDetails);
 		foo.setSelectedIndex(0);
 
 		JSplitPane verticalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, x,
@@ -210,6 +216,7 @@ public class Detail extends JPanel implements Coordinated {
 		outline.close();
 		detailsTable.close();
 		tokenDetails.close();
+		sourceDetails.close();
 
 		coordinator = null;
 		parseDetails = null;

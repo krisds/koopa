@@ -101,6 +101,9 @@ public class Tree {
 		return allTokens(null);
 	}
 
+	/**
+	 * Cfr {@linkplain #getStartPosition()}.
+	 */
 	@Deprecated
 	public Position getStart() {
 		return getStartPosition();
@@ -137,6 +140,34 @@ public class Tree {
 		return null;
 	}
 
+	/**
+	 * Searches the tree for the first known token.
+	 */
+	public Token getRawStartToken() {
+		if (data instanceof Token)
+			return (Token) data;
+
+		for (int i = 0; i < children.size(); i++) {
+			final Token token = children.get(i).getRawStartToken();
+
+			if (token != null)
+				return token;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Searches the tree for the last known end position.
+	 */
+	public Position getRawStart() {
+		Token t = getRawStartToken();
+		return t == null ? null : t.getStart();
+	}
+
+	/**
+	 * Cfr {@linkplain #getEndPosition()}.
+	 */
 	@Deprecated
 	public Position getEnd() {
 		return getEndPosition();
@@ -175,7 +206,7 @@ public class Tree {
 	}
 
 	/**
-	 * Searches the tree for the last known end token.
+	 * Searches the tree for the last known token.
 	 */
 	// TODO Combine this with getEndToken and TokenFilters.
 	public Token getRawEndToken() {
@@ -193,41 +224,11 @@ public class Tree {
 	}
 
 	/**
-	 * Searches the tree for the first known start position.
-	 */
-	public Position getRawStart() {
-		if (data instanceof Token) {
-			Token token = (Token) data;
-			return token.getStart();
-		}
-
-		for (int i = 0; i < children.size(); i++) {
-			Position position = children.get(i).getRawStart();
-
-			if (position != null)
-				return position;
-		}
-
-		return null;
-	}
-
-	/**
 	 * Searches the tree for the last known end position.
 	 */
 	public Position getRawEnd() {
-		if (data instanceof Token) {
-			Token token = (Token) data;
-			return token.getEnd();
-		}
-
-		for (int i = children.size() - 1; i >= 0; i--) {
-			Position position = children.get(i).getRawEnd();
-
-			if (position != null)
-				return position;
-		}
-
-		return null;
+		Token t = getRawEndToken();
+		return t == null ? null : t.getEnd();
 	}
 
 	public void addChild(Tree child) {

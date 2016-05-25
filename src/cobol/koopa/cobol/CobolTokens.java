@@ -65,13 +65,9 @@ public class CobolTokens {
 
 		// tokenizer = new Printing(tokenizer, "%% ");
 
-		// EXPERIMENTAL: optional preprocessing stage.
 		if (copybooks != null)
 			tokenizer = new PreprocessingSource(tokenizer, grammar, format,
 					file, copybooks);
-
-		// TODO REPLACE statement source, but only at the top level...
-		// TODO Can I fold that into the PreprocessingSource ?
 
 		return tokenizer;
 	}

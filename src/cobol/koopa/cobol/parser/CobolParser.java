@@ -47,7 +47,6 @@ public class CobolParser {
 	private SourceFormat format = SourceFormat.FIXED;
 	private Copybooks copybooks = new Copybooks();
 
-	/** EXPERIMENTAL */
 	// TODO Extend ParserConfiguration to allow changing these from there.
 	private boolean preprocessing = false;
 

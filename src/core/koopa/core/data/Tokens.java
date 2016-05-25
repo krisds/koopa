@@ -41,7 +41,7 @@ public final class Tokens {
 			List<Range> ranges = new ArrayList<Range>(1);
 			Position end = token.getEnd();
 			ranges.add(new Range(end, end));
-			return new Token("", ranges, token.getTags(), token.getReplacing());
+			return new Token("", ranges, token.getTags(), token.getReplaced());
 		}
 
 		int index = beginIndex;
@@ -75,7 +75,7 @@ public final class Tokens {
 		assert (!ranges.isEmpty());
 
 		final Token sub = new Token(text, Collections.unmodifiableList(ranges),
-				token.getTags(), token.getReplacing());
+				token.getTags(), token.getReplaced());
 
 		return sub;
 	}
@@ -151,7 +151,7 @@ public final class Tokens {
 		assert (!ranges.isEmpty());
 
 		final Token sub = new Token(text, Collections.unmodifiableList(ranges),
-				token.getTags(), token.getReplacing());
+				token.getTags(), token.getReplaced());
 
 		return sub;
 	}

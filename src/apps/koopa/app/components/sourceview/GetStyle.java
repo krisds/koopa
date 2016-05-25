@@ -18,6 +18,7 @@ import koopa.core.data.Token;
 public class GetStyle {
 	private static final Color BG_REPLACED = new Color(248, 248, 236);
 	private static final Color FG_COMMENT = new Color(50, 116, 44);
+	private static final Color FG_COMPILER_DIRECTIVE = new Color(255, 136, 0);
 	private static final Color FG_STRING = new Color(98, 40, 110);
 	private static final Color FG_WATER = new Color(6, 71, 128);
 
@@ -120,13 +121,13 @@ public class GetStyle {
 		if (style == null) {
 			style = addStyle(document, "compilerDirective", isReplacement);
 
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, true);
+			StyleConstants.setItalic(style, true);
+			StyleConstants.setBold(style, false);
 			StyleConstants.setFontFamily(style, "Courier");
 			StyleConstants.setFontSize(style, 14);
 			StyleConstants.setBackground(style, isReplacement ? BG_REPLACED
 					: Color.WHITE);
-			StyleConstants.setForeground(style, FG_COMMENT);
+			StyleConstants.setForeground(style, FG_COMPILER_DIRECTIVE);
 		}
 
 		return style;

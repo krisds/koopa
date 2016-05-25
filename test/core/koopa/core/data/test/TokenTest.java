@@ -3,7 +3,9 @@ package koopa.core.data.test;
 import static koopa.core.util.test.Util.asListOfRanges;
 import junit.framework.TestCase;
 import koopa.core.data.Position;
+import koopa.core.data.Replaced;
 import koopa.core.data.Token;
+import koopa.core.trees.Tree;
 
 import org.junit.Test;
 
@@ -75,7 +77,9 @@ public class TokenTest extends TestCase {
 
 	@Test
 	public void canBeReplacingAToken() {
-		final Token r = new Token(TEXT, START, STOP, "Quote", "Grace Hopper");
+		final Token rr = new Token(TEXT, START, STOP, "Quote", "Grace Hopper");
+		final Tree tt = new Tree(rr);
+		Replaced r = new Replaced(tt, null);
 
 		final String text = "It is often easier to ask for forgiveness "
 				+ "than to ask for permission.";
@@ -83,7 +87,7 @@ public class TokenTest extends TestCase {
 		final Position end = start.offsetBy(text.length());
 		final Token t = new Token(text, start, end);
 
-		assertNull(t.getReplacing());
+		assertNull(t.getReplaced());
 		assertSame(t, t.asReplacing(null));
 
 		final Token s = t.asReplacing(r);
@@ -91,6 +95,6 @@ public class TokenTest extends TestCase {
 		assertEquals(text, s.getText());
 		assertEquals(start, s.getStart());
 		assertEquals(end, s.getEnd());
-		assertSame(r, s.getReplacing());
+		assertSame(r, s.getReplaced());
 	}
 }

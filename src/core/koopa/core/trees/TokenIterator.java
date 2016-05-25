@@ -11,6 +11,10 @@ public class TokenIterator implements Iterator<Token> {
 
 	private Tree current;
 
+	public TokenIterator(Tree root) {
+		this(root, null);
+	}
+
 	public TokenIterator(Tree root, TokenFilter filter) {
 		this.root = root;
 		this.filter = filter != null ? filter : new TokenFilter() {

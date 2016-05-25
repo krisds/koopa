@@ -15,6 +15,7 @@ import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
+import koopa.core.data.Replaced;
 import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.Start;
@@ -51,7 +52,6 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private Input inputs = null;
 
 	private LinkedList<Data> unsupportedDirective = null;
-	private PreprocessingListener listener = null;
 
 	public PreprocessingSource(Source<Token> source, Grammar grammar,
 			SourceFormat format, File file, Copybooks copybooks) {
@@ -173,15 +173,10 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			ReplacingSource replacing, Tree tree,
 			LinkedList<Data> originalDirective) {
 		try {
-			if (listener != null)
-				listener.startCopying(tree);
-
-			Source<Token> newSource = CobolTokens
-					.getNewSource(
-							copybook.getAbsolutePath(), //
-							Files.getReader(copybook), //
-							grammar, format, copybook, 
-							(Copybooks) null);
+			Source<Token> newSource = CobolTokens.getNewSource(
+					copybook.getAbsolutePath(), //
+					Files.getReader(copybook), //
+					grammar, format, copybook, (Copybooks) null);
 
 			// Note that we don't pass the Copybooks instance when asking for a
 			// new source. This will prevent the generation of an extra
@@ -196,13 +191,11 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			// Each input tracks the COPY statement which triggered it. In
 			// addition, each token will get linked to the COPY statement it's
 			// replacing. The same is true for the COPY statement itself.
-			final Token activeCopyStatement = (Token) inputs.asReplacing( //
-					new Token(//
-							tree.getProgramText(), //
-							tree.getStartPosition(), //
-							tree.getEndPosition()));
+			final Replaced activeCopyStatement = new Replaced(tree,
+					inputs.activeCopyStatement);
 
-			inputs = inputs.push(new Input(newSource, copybook, activeCopyStatement));
+			inputs = inputs.push(new Input(newSource, copybook,
+					activeCopyStatement));
 
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Problem while reading copybook: " + copybook, e);
@@ -274,7 +267,7 @@ public class PreprocessingSource extends BasicSource<Token> implements
 	private static class Input {
 		public final Source<Token> source;
 		public final File file;
-		private final Token activeCopyStatement;
+		private final Replaced activeCopyStatement;
 
 		private QueueingTokenSink buffer = null;
 		private boolean bufferReady = false;
@@ -293,8 +286,8 @@ public class PreprocessingSource extends BasicSource<Token> implements
 			return nextInput;
 		}
 
-		public Input(Source<Token> source, File file, 
-				Token activeCopyStatement) {
+		public Input(Source<Token> source, File file,
+				Replaced activeCopyStatement) {
 			this.source = source;
 			this.file = file;
 			this.activeCopyStatement = activeCopyStatement;

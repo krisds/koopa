@@ -25,7 +25,7 @@ public class ASTJTree extends JTree {
 		Tree node = (Tree) value;
 		if (node.getData() instanceof Token) {
 			Token token = (Token) node.getData();
-			if (token.getReplacing() == null)
+			if (token.getReplaced() == null)
 				return token.getText() + " | "
 						+ token.getStart().getLinenumber() + ":"
 						+ token.getStart().getPositionInLine();

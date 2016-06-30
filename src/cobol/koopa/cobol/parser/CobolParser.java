@@ -6,6 +6,8 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import koopa.cobol.CobolFiles;
 import koopa.cobol.CobolTokens;
 import koopa.cobol.Copybooks;
@@ -20,7 +22,6 @@ import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.Stream;
-import koopa.core.sources.ChainableSource;
 import koopa.core.sources.Source;
 import koopa.core.targets.NullTarget;
 import koopa.core.targets.Target;
@@ -29,15 +30,12 @@ import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.util.Files;
 import koopa.core.util.Tuple;
 
-import org.apache.log4j.Logger;
-
 public class CobolParser {
 
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
 	private static final CobolGrammar grammar = new CobolGrammar();
 
-	private List<ChainableSource<Token>> intermediateTokenizers = new LinkedList<ChainableSource<Token>>();
 	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
 
 	private boolean keepingTrackOfTokens = false;
@@ -69,9 +67,8 @@ public class CobolParser {
 		final boolean isCopybook = CobolFiles.isCopybook(file);
 
 		// Build the tokenisation stage.
-		Source<Token> source = CobolTokens.getNewSource(
-				file.getCanonicalPath(), reader, grammar, format,
-				intermediateTokenizers, file, preprocessing ? copybooks : null);
+		Source<Token> source = CobolTokens.getNewSource(file.getCanonicalPath(), reader, grammar, format, file,
+				preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
 
@@ -113,8 +110,7 @@ public class CobolParser {
 				LOGGER.info("There were warnings from the grammar:");
 
 				for (Tuple<Token, String> warning : parse.getWarnings())
-					LOGGER.info("  " + warning.getFirst() + ": "
-							+ warning.getSecond());
+					LOGGER.info("  " + warning.getFirst() + ": " + warning.getSecond());
 			}
 		}
 
@@ -124,8 +120,7 @@ public class CobolParser {
 		final Stream tail = new BaseStream(source, new NullTarget<Data>());
 		tail.bookmark();
 
-		final boolean sawMoreProgramText = grabRemainingProgramText(grammar,
-				tail, tokenTracker);
+		final boolean sawMoreProgramText = grabRemainingProgramText(grammar, tail, tokenTracker);
 
 		// Here we check if the parser really consumed all input. If it didn't
 		// we try to flag the point of failure as best we can.
@@ -168,11 +163,6 @@ public class CobolParser {
 		this.targets.add(target);
 	}
 
-	public void addIntermediateTokenizer(ChainableSource<Token> tokenizer) {
-		assert (tokenizer != null);
-		this.intermediateTokenizers.add(tokenizer);
-	}
-
 	public void setKeepingTrackOfTokens(boolean keepingTrackOfTokens) {
 		this.keepingTrackOfTokens = keepingTrackOfTokens;
 	}
@@ -206,8 +196,7 @@ public class CobolParser {
 		this.copybooks = copybooks;
 	}
 
-	private boolean grabRemainingProgramText(CobolGrammar grammar,
-			Stream stream, TokenTracker tracker) {
+	private boolean grabRemainingProgramText(CobolGrammar grammar, Stream stream, TokenTracker tracker) {
 
 		boolean sawMoreProgramText = false;
 
@@ -223,8 +212,7 @@ public class CobolParser {
 				tracker.push(t);
 
 			// Have we found more program text ?
-			if (!sawMoreProgramText && grammar.isProgramText(t)
-					&& !grammar.isSeparator(t, null))
+			if (!sawMoreProgramText && grammar.isProgramText(t) && !grammar.isSeparator(t, null))
 				sawMoreProgramText = true;
 
 			// Stop after we found program text, unless we're tracking all

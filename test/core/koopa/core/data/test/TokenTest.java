@@ -1,13 +1,13 @@
 package koopa.core.data.test;
 
 import static koopa.core.util.test.Util.asListOfRanges;
+
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import koopa.core.data.Position;
 import koopa.core.data.Replaced;
 import koopa.core.data.Token;
-import koopa.core.trees.Tree;
-
-import org.junit.Test;
 
 /**
  * Tests basic {@linkplain Token} functionality.
@@ -77,11 +77,9 @@ public class TokenTest extends TestCase {
 
 	@Test
 	public void canBeReplacingAToken() {
-		final Token rr = new Token(TEXT, START, STOP, "Quote", "Grace Hopper");
-		final Tree tt = new Tree(rr);
-		Replaced r = new Replaced(tt, null);
+		Replaced r = new Replaced(START, STOP, null);
 
-		final String text = "It is often easier to ask for forgiveness "
+		final String text = "It is often easier to ask for forgiveness " //
 				+ "than to ask for permission.";
 		final Position start = Position.ZERO;
 		final Position end = start.offsetBy(text.length());

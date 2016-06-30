@@ -1,17 +1,18 @@
-package koopa.cobol.parser.preprocessing;
+package koopa.cobol.parser.preprocessing.replacing;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type;
+import org.apache.log4j.Logger;
+
+import koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
-
-import org.apache.log4j.Logger;
 
 public class ReplaceTrailing extends ReplacingPhrase {
 
@@ -45,7 +46,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 		}
 	}
 
-	public boolean appliedTo(Source<Token> library, LinkedList<Token> newTokens) {
+	public boolean appliedTo(Source<Data> library, LinkedList<Token> newTokens) {
 
 		final Stack<Token> seen = new Stack<Token>();
 		final Token next = nextTextWord(library, seen);

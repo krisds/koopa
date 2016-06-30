@@ -200,7 +200,8 @@
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
 			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
 			<test name="koopa.cobol.cics.grammar.test.EmbeddedCICSGrammarTests" />
-			<test name="koopa.cobol.parser.preprocessing.test.ReplacingPhraseOperandTest" />
+			<test name="koopa.cobol.parser.preprocessing.replacing.test.ReplacingPhraseOperandTest" />
+			<test name="koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest" />
 		</junit>
 	</target>
 

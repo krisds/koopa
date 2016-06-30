@@ -19,19 +19,15 @@ import koopa.core.sources.ThreadedSource;
 
 import org.apache.log4j.Logger;
 
-public class ProgramArea extends ThreadedSource<Token> implements Source<Token> {
+public class ProgramArea extends ThreadedSource<Token, Token> implements Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.programarea");
 
-	private final Source<? extends Token> source;
-
-	public ProgramArea(Source<? extends Token> source) {
-		super();
+	public ProgramArea(Source<Token> source) {
+		super(source);
 
 		assert (source != null);
-
-		this.source = source;
 	}
 
 	protected void tokenize() throws IOException {

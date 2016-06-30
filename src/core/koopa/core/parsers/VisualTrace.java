@@ -24,7 +24,14 @@ public class VisualTrace extends Trace {
 	private Stack<DefaultMutableTreeNode> nodes = new Stack<DefaultMutableTreeNode>();
 	private JFrame frame = null;
 
+	private final boolean preventShutdown;
+
 	public VisualTrace() {
+		this(false);
+	}
+
+	public VisualTrace(boolean preventShutdown) {
+		this.preventShutdown = preventShutdown;
 	}
 
 	private void ensureFrameIsAvailable() {
@@ -50,9 +57,10 @@ public class VisualTrace extends Trace {
 			}
 		});
 
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-		JVM.forbidSystemExitCall();
+		if (preventShutdown) {
+			frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			JVM.forbidSystemExitCall();
+		}
 
 		frame.setVisible(true);
 	}
@@ -70,8 +78,7 @@ public class VisualTrace extends Trace {
 		super.indent(message);
 
 		ensureFrameIsAvailable();
-		final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(
-				message);
+		final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(message);
 		nodes.peek().add(newChild);
 		nodes.push(newChild);
 	}

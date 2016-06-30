@@ -45,12 +45,7 @@ public class SourceDetails extends JPanel implements TokenSelectionListener {
 		Replaced r = token.getReplaced();
 		while (r != null) {
 			msg.append("\n");
-			msg.append("Part of replacement: \n");
-			msg.append("--------------------------------------------------\n");
-			msg.append(r.getData().getProgramText());
-			msg.append("\n");
-			msg.append("--------------------------------------------------\n");
-
+			msg.append("Replacing: \n");
 			msg.append("From ");
 			appendLocation(msg, r.getStart());
 			msg.append(".\n");

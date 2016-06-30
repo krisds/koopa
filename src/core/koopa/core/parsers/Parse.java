@@ -160,6 +160,13 @@ public class Parse {
 		return errors.get(index);
 	}
 
+	public <T extends Source<? extends Data>> T getSource(Class<T> clazz) {
+		if (source == null)
+			return null;
+		else
+			return source.getSource(clazz);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
 		for (Target<Data> target : targets)

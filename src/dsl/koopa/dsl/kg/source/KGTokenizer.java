@@ -15,23 +15,22 @@ import static koopa.dsl.kg.tags.KGTag.QUOTED_LITERAL;
 import static koopa.dsl.kg.tags.KGTag.TEXT;
 import static koopa.dsl.kg.tags.KGTag.WHITESPACE;
 import static koopa.dsl.kg.tags.KGTag.WORD;
+
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
-import koopa.core.sources.BasicSource;
+import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class KGTokenizer extends BasicSource<Token> implements Source<Token> {
+public class KGTokenizer extends ChainingSource<Token, Token> implements Source<Token> {
 
 	private static final String OPERATOR_CHARACTERS = "()[]|+*=->!$:.@%,";
 	public static final char SCOPE_SEPARATOR_CHARACTER = '$';
-
-	private final Source<Token> source;
 
 	private Token token = null;
 	private int index = 0;
 
 	public KGTokenizer(Source<Token> source) {
-		this.source = source;
+		super(source);
 	}
 
 	@Override

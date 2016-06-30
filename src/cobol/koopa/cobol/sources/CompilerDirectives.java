@@ -10,28 +10,26 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import koopa.core.data.Token;
-import koopa.core.data.Tokens;
-import koopa.core.sources.BasicSource;
-import koopa.core.sources.Source;
-
 import org.apache.log4j.Logger;
 
-public class CompilerDirectives extends BasicSource<Token> implements
+import koopa.core.data.Token;
+import koopa.core.data.Tokens;
+import koopa.core.sources.ChainingSource;
+import koopa.core.sources.Source;
+
+public class CompilerDirectives extends ChainingSource<Token, Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.compiler-directives");
 
-	private final Source<? extends Token> source;
-
 	private final LinkedList<Token> queuedTokens = new LinkedList<Token>();
 
 	private SourceFormat referenceFormat;
 
-	public CompilerDirectives(Source<? extends Token> source,
+	public CompilerDirectives(Source<Token> source,
 			SourceFormat initialReferenceFormat) {
-		super();
+		super(source);
 
 		assert (source != null);
 		assert (initialReferenceFormat != null);

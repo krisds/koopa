@@ -1,0 +1,20 @@
+This exercises activation and explicit deactivation of a single REPLACE.
+
+
+Default state has no active replacements.
+< MOVE 11 TO XXX.
+> MOVE 11 TO XXX.
+
+
+
+Here we activate one, then cancel it a bit later.
+< REPLACE ==XXX== BY ==FOO==.
+< MOVE 22 TO XXX.
+< REPLACE OFF.
+< MOVE 33 TO XXX.
+
+Which should expand to:
+> 
+> MOVE 22 TO FOO.
+> 
+> MOVE 33 TO XXX.

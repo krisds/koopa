@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 @RunWith(Files.class)
 public abstract class CobolParsingRegressionTest implements FileBasedTest {
@@ -82,8 +82,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 				}
 			}
 
-			assertFalse(info.toString(), messages != null
-					&& messages.size() > 0);
+			assertFalse(info.toString(), messages != null && messages.size() > 0);
 		}
 	}
 

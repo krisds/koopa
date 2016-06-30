@@ -1,0 +1,93 @@
+package koopa.cobol.parser.preprocessing.test;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.StringReader;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import koopa.cobol.CobolTokens;
+import koopa.cobol.Copybooks;
+import koopa.cobol.grammar.CobolGrammar;
+import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Token;
+import koopa.core.sources.Source;
+import koopa.core.util.test.FileBasedTest;
+import koopa.core.util.test.Files;
+
+@RunWith(Files.class)
+public class PreprocessingSourceTest implements FileBasedTest {
+
+	private static final String INPUT_PREFIX = "<";
+	private static final String EXPECTED_PREFIX = ">";
+
+	public File[] getFiles() {
+		File folder = new File("test/cobol/koopa/cobol/parser/preprocessing/test/");
+
+		File[] sources = folder.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				name = name.toLowerCase();
+				return name.endsWith(".ppsample");
+			}
+		});
+
+		return sources;
+	}
+
+	private File file;
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	@Test
+	public void testSampleValidates() throws IOException {
+		Sample sample = new Sample(file);
+
+		Source<Token> source = CobolTokens.getNewSource( //
+				file.getName(), //
+				new StringReader(sample.input.toString()), //
+				new CobolGrammar(), //
+				SourceFormat.FREE, //
+				file, //
+				new Copybooks());
+
+		StringBuilder actual = new StringBuilder();
+		Token t = null;
+		while ((t = source.next()) != null)
+			actual.append(t.getText());
+
+		Assert.assertEquals(sample.expected.toString(), actual.toString());
+	}
+
+	private static class Sample {
+		private StringBuilder input = new StringBuilder();
+		private StringBuilder expected = new StringBuilder();
+
+		public Sample(File file) throws IOException {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			try {
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					if (line.startsWith(INPUT_PREFIX)) {
+						input.append(line.substring(INPUT_PREFIX.length()));
+						input.append('\n');
+
+					} else if (line.startsWith(EXPECTED_PREFIX)) {
+						expected.append(line.substring(EXPECTED_PREFIX.length()));
+						expected.append('\n');
+					}
+				}
+
+			} finally {
+				if (br != null)
+					br.close();
+			}
+		}
+	}
+}

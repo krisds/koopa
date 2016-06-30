@@ -18658,28 +18658,20 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // copyOperandName
+    // replacementOperand
     // ........................................................
     
-    private ParserCombinator copyOperandNameParser = null;
+    private ParserCombinator replacementOperandParser = null;
     
-    public final Start copyOperandName = Start.on(getNamespace(), "copyOperandName");
+    public final Start replacementOperand = Start.on(getNamespace(), "replacementOperand");
     
-    public ParserCombinator copyOperandName() {
-      if (copyOperandNameParser == null) {
-        FutureParser future = scoped("copyOperandName", PUBLIC, true);
-        copyOperandNameParser = future;
+    public ParserCombinator replacementOperand() {
+      if (replacementOperandParser == null) {
+        FutureParser future = scoped("replacementOperand", PUBLIC, true);
+        replacementOperandParser = future;
         future.setParser(
           choice(
-            sequence(
-              optional(
-                choice(
-                  token("LEADING"),
-                  token("TRAILING")
-                )
-              ),
-              pseudoLiteral()
-            ),
+            pseudoLiteral(),
             verb(),
             literal(),
             identifier(),
@@ -18688,7 +18680,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return copyOperandNameParser;
+      return replacementOperandParser;
     }
     
     // ========================================================

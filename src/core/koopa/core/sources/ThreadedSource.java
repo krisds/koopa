@@ -9,8 +9,7 @@ import koopa.core.util.SynchronizedQueue;
  * Base for implementing a {@linkplain Source} where the data gets generated in
  * a separate thread.
  */
-public abstract class ThreadedSource<T extends Data> extends BasicSource<T>
-		implements Source<T> {
+public abstract class ThreadedSource<S extends Data, T extends Data> extends ChainingSource<S, T> implements Source<T> {
 
 	private boolean tokenizing = false;
 	private SynchronizedQueue<T> queue = null;
@@ -18,11 +17,12 @@ public abstract class ThreadedSource<T extends Data> extends BasicSource<T>
 
 	private AssertionError error = null;
 
-	public ThreadedSource() {
-		this("");
+	public ThreadedSource(Source<S> source) {
+		this("", source);
 	}
 
-	public ThreadedSource(String name) {
+	public ThreadedSource(String name, Source<S> source) {
+		super(source);
 		this.queue = new SynchronizedQueue<T>(name);
 	}
 

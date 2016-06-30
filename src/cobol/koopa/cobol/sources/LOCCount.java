@@ -5,11 +5,12 @@ import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.END_OF_LINE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+
 import koopa.core.data.Token;
-import koopa.core.sources.BasicSource;
+import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class LOCCount extends BasicSource<Token> implements Source<Token> {
+public class LOCCount extends ChainingSource<Token, Token> implements Source<Token> {
 
 	private final Source<? extends Token> source;
 
@@ -21,7 +22,9 @@ public class LOCCount extends BasicSource<Token> implements Source<Token> {
 	private boolean sawCode = false;
 	private boolean sawComment = false;
 
-	public LOCCount(Source<? extends Token> source) {
+	public LOCCount(Source<Token> source) {
+		super(source);
+
 		assert (source != null);
 
 		this.source = source;
@@ -82,7 +85,6 @@ public class LOCCount extends BasicSource<Token> implements Source<Token> {
 
 	@Override
 	public String toString() {
-		return "LOC { lines: " + lines + ", code: " + code + ", comments: "
-				+ comments + " }";
+		return "LOC { lines: " + lines + ", code: " + code + ", comments: " + comments + " }";
 	}
 }

@@ -5,11 +5,11 @@ import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
 
 import java.util.regex.Pattern;
 
-import koopa.core.data.Token;
-import koopa.core.sources.BasicSource;
-import koopa.core.sources.Source;
-
 import org.apache.log4j.Logger;
+
+import koopa.core.data.Token;
+import koopa.core.sources.ChainingSource;
+import koopa.core.sources.Source;
 
 /**
  * Looks for, and tags, following source formatting directives:
@@ -39,14 +39,12 @@ import org.apache.log4j.Logger;
  * statement on the line and can optionally be followed by a period. "</i></li>
  * </ul>
  * Source: <a href=
- * "https://supportline.microfocus.com/documentation/books/mx31/lhcomp0q.htm"
- * >Micro Focus Support Line - The SKIP1, SKIP2 and SKIP3 Statements</a>
+ * "https://supportline.microfocus.com/documentation/books/mx31/lhcomp0q.htm" >
+ * Micro Focus Support Line - The SKIP1, SKIP2 and SKIP3 Statements</a>
  */
-public class SourceFormattingDirectives extends BasicSource<Token> implements
-		Source<Token> {
+public class SourceFormattingDirectives extends ChainingSource<Token, Token> implements Source<Token> {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.source_formatting");
+	private static final Logger LOGGER = Logger.getLogger("tokenising.source_formatting");
 
 	private static final String REGEX = "^\\s*(SKIP1|SKIP2|SKIP3|EJECT)\\s*\\.?\\s*$";
 
@@ -54,7 +52,8 @@ public class SourceFormattingDirectives extends BasicSource<Token> implements
 
 	private Source<? extends Token> source = null;
 
-	public SourceFormattingDirectives(Source<? extends Token> source) {
+	public SourceFormattingDirectives(Source<Token> source) {
+		super(source);
 		assert (source != null);
 		this.source = source;
 	}
@@ -76,11 +75,9 @@ public class SourceFormattingDirectives extends BasicSource<Token> implements
 
 		if (PATTERN.matcher(text.toUpperCase()).matches()) {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Marking " + token
-						+ " as a source formatting directive.");
+				LOGGER.trace("Marking " + token + " as a source formatting directive.");
 
-			token = token.replacingTag(PROGRAM_TEXT_AREA,
-					SOURCE_FORMATTING_DIRECTIVE);
+			token = token.replacingTag(PROGRAM_TEXT_AREA, SOURCE_FORMATTING_DIRECTIVE);
 		}
 
 		return token;

@@ -29,19 +29,18 @@ import org.apache.log4j.Logger;
  * {@link ContinuationsTag#CONTINUED}, {@link ContinuationsTag#CONTINUING} and
  * {@link ContinuationsTag#SKIPPED}).
  */
-public class LineContinuations extends ThreadedSource<Token> implements
+public class LineContinuations extends ThreadedSource<Token, Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.continuations");
 
-	private Source<? extends Token> source = null;
 	private LinkedList<Token> buffer = null;
 	private LinkedList<Token> skippedByContinuation = null;
 
-	public LineContinuations(Source<? extends Token> source) {
+	public LineContinuations(Source<Token> source) {
+		super(source);
 		assert (source != null);
-		this.source = source;
 		this.buffer = new LinkedList<Token>();
 		this.skippedByContinuation = new LinkedList<Token>();
 	}

@@ -12,23 +12,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.core.data.Token;
-import koopa.core.data.Tokens;
-import koopa.core.sources.BasicSource;
-import koopa.core.sources.Source;
-
 import org.apache.log4j.Logger;
 
-public class ContinuationWelding extends BasicSource<Token> implements
+import koopa.core.data.Token;
+import koopa.core.data.Tokens;
+import koopa.core.sources.ChainingSource;
+import koopa.core.sources.Source;
+
+public class ContinuationWelding extends ChainingSource<Token, Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("tokenising.continuation-welding");
 
-	private Source<? extends Token> source = null;
 	private LinkedList<Token> buffer = null;
 
-	public ContinuationWelding(Source<? extends Token> source) {
+	public ContinuationWelding(Source<Token> source) {
+		super(source);
 		assert (source != null);
 		this.source = source;
 		this.buffer = new LinkedList<Token>();

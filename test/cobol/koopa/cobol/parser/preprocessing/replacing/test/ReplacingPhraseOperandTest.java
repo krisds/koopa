@@ -1,10 +1,10 @@
-package koopa.cobol.parser.preprocessing.test;
+package koopa.cobol.parser.preprocessing.replacing.test;
 
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
-import static koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type.LITERAL;
-import static koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type.PSEUDO;
-import static koopa.cobol.parser.preprocessing.ReplacingPhraseOperand.Type.WORD;
+import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.LITERAL;
+import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.PSEUDO;
+import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.WORD;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.util.test.Util.asTokens;
 
@@ -12,18 +12,20 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.cobol.parser.preprocessing.ReplaceLeading;
-import koopa.cobol.parser.preprocessing.ReplaceMatching;
-import koopa.cobol.parser.preprocessing.ReplaceTrailing;
-import koopa.cobol.parser.preprocessing.ReplacingPhrase;
-import koopa.cobol.parser.preprocessing.ReplacingPhraseOperand;
+import org.junit.Assert;
+import org.junit.Test;
+
+import koopa.cobol.parser.preprocessing.replacing.ReplaceLeading;
+import koopa.cobol.parser.preprocessing.replacing.ReplaceMatching;
+import koopa.cobol.parser.preprocessing.replacing.ReplaceTrailing;
+import koopa.cobol.parser.preprocessing.replacing.ReplacingPhrase;
+import koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand;
+import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
+import koopa.core.sources.WideningSource;
 import koopa.core.sources.test.HardcodedSource;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class ReplacingPhraseOperandTest {
 
@@ -64,8 +66,7 @@ public class ReplacingPhraseOperandTest {
 
 	@Test
 	public void canMatchPseudoTextMultiWord() {
-		ReplacingPhrase phrase = matching(
-				pseudo("==", "GRACE", "HOPPER", "=="),
+		ReplacingPhrase phrase = matching(pseudo("==", "GRACE", "HOPPER", "=="),
 				pseudo("Grace", "Murray", "Hopper"));
 
 		assertMatches(phrase,
@@ -104,12 +105,10 @@ public class ReplacingPhraseOperandTest {
 
 		assertMatches(phrase,
 				input(PROGRAM_TEXT_AREA, "GRACE", PROGRAM_TEXT_AREA, "HOPPER"));
-		assertMatches(
-				phrase,
+		assertMatches(phrase,
 				input(PROGRAM_TEXT_AREA, "GRACE", PROGRAM_TEXT_AREA, SEPARATOR,
 						" ", PROGRAM_TEXT_AREA, "HOPPER"));
-		assertMatches(
-				phrase,
+		assertMatches(phrase,
 				input(PROGRAM_TEXT_AREA, "GRACE", PROGRAM_TEXT_AREA, SEPARATOR,
 						" ", PROGRAM_TEXT_AREA, SEPARATOR, " ",
 						PROGRAM_TEXT_AREA, "HOPPER"));
@@ -123,10 +122,8 @@ public class ReplacingPhraseOperandTest {
 						"=="), //
 				word("FOO"));
 
-		assertMatches(
-				phrase,
-				input(PROGRAM_TEXT_AREA, ":", PROGRAM_TEXT_AREA, "L",
-						PROGRAM_TEXT_AREA, ":"));
+		assertMatches(phrase, input(PROGRAM_TEXT_AREA, ":", PROGRAM_TEXT_AREA,
+				"L", PROGRAM_TEXT_AREA, ":"));
 	}
 
 	@Test
@@ -135,9 +132,9 @@ public class ReplacingPhraseOperandTest {
 				pseudo("==", "COBOL", "=="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "LANG-NAME"),
-				Arrays.asList(new Token[] { new Token("COBOL-NAME",
-						new Position(2, 0, 2), new Position(10, 0, 10),
-						PROGRAM_TEXT_AREA) }));
+				Arrays.asList(new Token[] {
+						new Token("COBOL-NAME", new Position(2, 0, 2),
+								new Position(10, 0, 10), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "LING-NAME"));
 	}
 
@@ -147,8 +144,9 @@ public class ReplacingPhraseOperandTest {
 				pseudo("==", "=="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "LANG-NAME"),
-				Arrays.asList(new Token[] { new Token("-NAME", new Position(5,
-						0, 5), new Position(10, 0, 10), PROGRAM_TEXT_AREA) }));
+				Arrays.asList(
+						new Token[] { new Token("-NAME", new Position(5, 0, 5),
+								new Position(10, 0, 10), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "LING-NAME"));
 	}
 
@@ -158,9 +156,9 @@ public class ReplacingPhraseOperandTest {
 				pseudo("==", "COBOL", "=="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "NAME-LANG"),
-				Arrays.asList(new Token[] { new Token("NAME-COBOL",
-						new Position(1, 0, 1), new Position(7, 0, 7),
-						PROGRAM_TEXT_AREA) }));
+				Arrays.asList(new Token[] {
+						new Token("NAME-COBOL", new Position(1, 0, 1),
+								new Position(7, 0, 7), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "NAME-LING"));
 	}
 
@@ -170,8 +168,9 @@ public class ReplacingPhraseOperandTest {
 				pseudo("==", "=="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "NAME-LANG"),
-				Arrays.asList(new Token[] { new Token("NAME-", new Position(1,
-						0, 1), new Position(5, 0, 5), PROGRAM_TEXT_AREA) }));
+				Arrays.asList(
+						new Token[] { new Token("NAME-", new Position(1, 0, 1),
+								new Position(5, 0, 5), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "NAME-LING"));
 	}
 
@@ -186,7 +185,9 @@ public class ReplacingPhraseOperandTest {
 			Source<Token> library, List<Token> expected) {
 
 		LinkedList<Token> result = new LinkedList<Token>();
-		Assert.assertTrue(phrase.appliedTo(library, result));
+		Assert.assertTrue(phrase.appliedTo(
+				new WideningSource<Data, Token>(library, Token.class),
+				result));
 		Assert.assertNull(library.next());
 
 		Assert.assertEquals(expected.size(), result.size());
@@ -202,12 +203,13 @@ public class ReplacingPhraseOperandTest {
 
 	private static void assertRejects(ReplacingPhrase phrase,
 			Source<Token> library) {
-
 		final Token firstToken = library.next();
 		if (firstToken != null)
 			library.unshift(firstToken);
 
-		Assert.assertFalse(phrase.appliedTo(library, new LinkedList<Token>()));
+		Assert.assertFalse(phrase.appliedTo(//
+				new WideningSource<Data, Token>(library, Token.class),
+				new LinkedList<Token>()));
 		Assert.assertSame(firstToken, library.next());
 	}
 
@@ -216,8 +218,8 @@ public class ReplacingPhraseOperandTest {
 	}
 
 	private ReplacingPhraseOperand stringLiteral(String literal) {
-		return new ReplacingPhraseOperand(LITERAL, asTokens(STRING_LITERAL,
-				literal));
+		return new ReplacingPhraseOperand(LITERAL,
+				asTokens(STRING_LITERAL, literal));
 	}
 
 	private ReplacingPhraseOperand pseudo(Object... tagsAndTokens) {

@@ -10,18 +10,13 @@ import koopa.core.data.tags.AreaTag;
  * "end of lines" which have an {@link AreaTag#END_OF_LINE} tag, or contain one
  * line of text (without tags).
  */
-public class Printing extends BasicSource<Token> implements Source<Token> {
+public class Printing extends ChainingSource<Token, Token> implements Source<Token> {
 
-	private final Source<Token> source;
 	private final String prefix;
 
 	public Printing(Source<Token> source, String prefix) {
-		this.source = source;
+		super(source);
 		this.prefix = prefix;
-	}
-
-	public void close() {
-		source.close();
 	}
 
 	@Override

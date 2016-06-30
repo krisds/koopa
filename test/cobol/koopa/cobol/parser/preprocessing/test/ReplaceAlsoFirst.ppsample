@@ -1,0 +1,15 @@
+What if we REPLACE ALSO without any active REPLACEs ?
+
+Default state has no active replacements.
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.
+
+
+
+This will ALSO activate replacement of XXX !?
+< REPLACE ALSO ==XXX== BY ==FOO==.
+> 
+
+It should just act like a normal REPLACE, really.
+< MOVE XXX TO YYY.
+> MOVE FOO TO YYY.

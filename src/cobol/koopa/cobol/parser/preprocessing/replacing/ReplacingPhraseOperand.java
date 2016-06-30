@@ -1,10 +1,11 @@
-package koopa.cobol.parser.preprocessing;
+package koopa.cobol.parser.preprocessing.replacing;
 
-import static koopa.cobol.parser.preprocessing.ReplacingPhrase.isConsideredSingleSpace;
+import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhrase.isConsideredSingleSpace;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.sources.SeparationLogic;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
@@ -39,7 +40,8 @@ public class ReplacingPhraseOperand {
 		LinkedList<Token> tokens = new LinkedList<Token>();
 
 		for (Token token : operand.getTokens())
-			tokens.addAll(SeparationLogic.apply(token));
+			tokens.addAll(SeparationLogic.apply(//
+					token.withoutTags(SyntacticTag.PSEUDO_LITERAL)));
 
 		return new ReplacingPhraseOperand(type, tokens);
 	}
@@ -55,11 +57,9 @@ public class ReplacingPhraseOperand {
 		}
 
 		// Discard leading and trailing spaces.
-		while (!this.tokens.isEmpty()
-				&& isConsideredSingleSpace(this.tokens.getFirst()))
+		while (!this.tokens.isEmpty() && isConsideredSingleSpace(this.tokens.getFirst()))
 			this.tokens.removeFirst();
-		while (!this.tokens.isEmpty()
-				&& isConsideredSingleSpace(this.tokens.getLast()))
+		while (!this.tokens.isEmpty() && isConsideredSingleSpace(this.tokens.getLast()))
 			this.tokens.removeLast();
 
 		this.textWords = reduce(this.tokens);

@@ -4466,8 +4466,14 @@ def compilerDisplayStatement =
 end
 
 # This overrides the CobolPreprocessing definition.
-def copyOperandName =
-    ([LEADING | TRAILING] pseudoLiteral | verb | literal | identifier | cobolWord)
+# Cfr. testsuite/cobol85/SM202A.CBL as a reason for doing this.
+def replacementOperand =
+    ( pseudoLiteral
+    | verb
+    | literal
+    | identifier
+    | cobolWord
+    )
 end
 
 

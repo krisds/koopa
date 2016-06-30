@@ -13,20 +13,18 @@ import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 
-public class Separators extends ThreadedSource<Token> implements Source<Token> {
+public class Separators extends ThreadedSource<Token, Token> implements Source<Token> {
 
-	private Source<? extends Token> source = null;
 	private final Feedback feedback = new Feedback() {
 		public void add(Token token) {
 			enqueue(token);
 		}
 	};
 
-	public Separators(Source<? extends Token> tokenizer) {
-		super();
+	public Separators(Source<Token> source) {
+		super(source);
 
-		assert (tokenizer != null);
-		this.source = tokenizer;
+		assert (source != null);
 	}
 
 	protected void tokenize() throws IOException {
@@ -35,11 +33,12 @@ public class Separators extends ThreadedSource<Token> implements Source<Token> {
 
 			if (token == null) {
 				break;
+
 			} else if (token.hasTag(END_OF_LINE)) {
 				enqueue(token.withTags(SEPARATOR));
 
-			} else if (token.hasTag(PROGRAM_TEXT_AREA)
-					&& !token.hasTag(COMMENT)
+			} else if (token.hasTag(PROGRAM_TEXT_AREA) //
+					&& !token.hasTag(COMMENT) //
 					&& !token.hasTag(COMPILER_DIRECTIVE)) {
 				SeparationLogic.apply(token, feedback);
 

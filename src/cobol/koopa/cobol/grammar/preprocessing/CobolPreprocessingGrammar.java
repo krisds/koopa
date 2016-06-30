@@ -80,6 +80,29 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
     
     // ========================================================
+    // copyStatement
+    // ........................................................
+    
+    private ParserCombinator copyStatementParser = null;
+    
+    public final Start copyStatement = Start.on(getNamespace(), "copyStatement");
+    
+    public ParserCombinator copyStatement() {
+      if (copyStatementParser == null) {
+        FutureParser future = scoped("copyStatement", PUBLIC, true);
+        copyStatementParser = future;
+        future.setParser(
+          sequence(
+            copyStatementBody(),
+            literal(".")
+          )
+        );
+      }
+    
+      return copyStatementParser;
+    }
+    
+    // ========================================================
     // copyStatementBody
     // ........................................................
     
@@ -113,7 +136,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
               )
             ),
             optional(
-              copyReplacingPhrase()
+              copyStatementBody$replacing()
             )
           )
         );
@@ -123,135 +146,112 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
     
     // ========================================================
-    // copyStatement
+    // replacing
     // ........................................................
     
-    private ParserCombinator copyStatementParser = null;
+    private ParserCombinator copyStatementBody$replacingParser = null;
     
-    public final Start copyStatement = Start.on(getNamespace(), "copyStatement");
+    public final Start copyStatementBody$replacing = Start.on(getNamespace(), "replacing");
     
-    public ParserCombinator copyStatement() {
-      if (copyStatementParser == null) {
-        FutureParser future = scoped("copyStatement", PUBLIC, true);
-        copyStatementParser = future;
-        future.setParser(
-          sequence(
-            copyStatementBody(),
-            literal(".")
-          )
-        );
-      }
-    
-      return copyStatementParser;
-    }
-    
-    // ========================================================
-    // copyReplacingPhrase
-    // ........................................................
-    
-    private ParserCombinator copyReplacingPhraseParser = null;
-    
-    public final Start copyReplacingPhrase = Start.on(getNamespace(), "copyReplacingPhrase");
-    
-    public ParserCombinator copyReplacingPhrase() {
-      if (copyReplacingPhraseParser == null) {
-        FutureParser future = scoped("copyReplacingPhrase", PUBLIC, true);
-        copyReplacingPhraseParser = future;
+    public ParserCombinator copyStatementBody$replacing() {
+      if (copyStatementBody$replacingParser == null) {
+        FutureParser future = scoped("replacing", PUBLIC, true);
+        copyStatementBody$replacingParser = future;
         future.setParser(
           sequence(
             token("REPLACING"),
             plus(
-              copyReplacementInstruction()
+              replacementInstruction()
             )
           )
         );
       }
     
-      return copyReplacingPhraseParser;
+      return copyStatementBody$replacingParser;
     }
     
     // ========================================================
-    // copyReplacementInstruction
+    // replacementInstruction
     // ........................................................
     
-    private ParserCombinator copyReplacementInstructionParser = null;
+    private ParserCombinator replacementInstructionParser = null;
     
-    public final Start copyReplacementInstruction = Start.on(getNamespace(), "copyReplacementInstruction");
+    public final Start replacementInstruction = Start.on(getNamespace(), "replacementInstruction");
     
-    public ParserCombinator copyReplacementInstruction() {
-      if (copyReplacementInstructionParser == null) {
-        FutureParser future = scoped("copyReplacementInstruction", PUBLIC, true);
-        copyReplacementInstructionParser = future;
+    public ParserCombinator replacementInstruction() {
+      if (replacementInstructionParser == null) {
+        FutureParser future = scoped("replacementInstruction", PUBLIC, true);
+        replacementInstructionParser = future;
         future.setParser(
           sequence(
             optional(
               choice(
-                leading(),
-                trailing()
+                replacementInstruction$leading(),
+                replacementInstruction$trailing()
               )
             ),
-            copyOperandName(),
+            replacementOperand(),
             token("BY"),
-            copyOperandName()
+            replacementOperand()
           )
         );
       }
     
-      return copyReplacementInstructionParser;
+      return replacementInstructionParser;
     }
     
     // ========================================================
     // leading
     // ........................................................
     
-    private ParserCombinator leadingParser = null;
+    private ParserCombinator replacementInstruction$leadingParser = null;
     
-    public final Start leading = Start.on(getNamespace(), "leading");
+    public final Start replacementInstruction$leading = Start.on(getNamespace(), "leading");
     
-    public ParserCombinator leading() {
-      if (leadingParser == null) {
+    public ParserCombinator replacementInstruction$leading() {
+      if (replacementInstruction$leadingParser == null) {
         FutureParser future = scoped("leading", PUBLIC, true);
-        leadingParser = future;
+        replacementInstruction$leadingParser = future;
         future.setParser(
           token("LEADING")
         );
       }
     
-      return leadingParser;
+      return replacementInstruction$leadingParser;
     }
     
     // ========================================================
     // trailing
     // ........................................................
     
-    private ParserCombinator trailingParser = null;
+    private ParserCombinator replacementInstruction$trailingParser = null;
     
-    public final Start trailing = Start.on(getNamespace(), "trailing");
+    public final Start replacementInstruction$trailing = Start.on(getNamespace(), "trailing");
     
-    public ParserCombinator trailing() {
-      if (trailingParser == null) {
+    public ParserCombinator replacementInstruction$trailing() {
+      if (replacementInstruction$trailingParser == null) {
         FutureParser future = scoped("trailing", PUBLIC, true);
-        trailingParser = future;
+        replacementInstruction$trailingParser = future;
         future.setParser(
           token("TRAILING")
         );
       }
     
-      return trailingParser;
+      return replacementInstruction$trailingParser;
     }
     
     // ========================================================
-    // copyOperandName
+    // replacementOperand
     // ........................................................
     
-    private ParserCombinator copyOperandNameParser = null;
+    private ParserCombinator replacementOperandParser = null;
     
-    public final Start copyOperandName = Start.on(getNamespace(), "copyOperandName");
+    public final Start replacementOperand = Start.on(getNamespace(), "replacementOperand");
     
-    public ParserCombinator copyOperandName() {
-      if (copyOperandNameParser == null) {
-        FutureParser future = scoped("copyOperandName", PUBLIC, true);
-        copyOperandNameParser = future;
+    public ParserCombinator replacementOperand() {
+      if (replacementOperandParser == null) {
+        FutureParser future = scoped("replacementOperand", PUBLIC, true);
+        replacementOperandParser = future;
         future.setParser(
           choice(
             pseudoLiteral(),
@@ -261,7 +261,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         );
       }
     
-      return copyOperandNameParser;
+      return replacementOperandParser;
     }
     
     // ========================================================
@@ -277,9 +277,13 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         FutureParser future = scoped("replaceStatement", PUBLIC, true);
         replaceStatementParser = future;
         future.setParser(
-          choice(
-            replaceStatement_format1(),
-            replaceStatement_format2()
+          sequence(
+            token("REPLACE"),
+            choice(
+              replaceStatement$replacing(),
+              replaceStatement$off()
+            ),
+            literal(".")
           )
         );
       }
@@ -288,74 +292,59 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
     
     // ========================================================
-    // replaceStatement_format1
+    // replacing
     // ........................................................
     
-    private ParserCombinator replaceStatement_format1Parser = null;
+    private ParserCombinator replaceStatement$replacingParser = null;
     
-    protected final Start replaceStatement_format1 = Start.on(getNamespace(), "replaceStatement_format1");
+    public final Start replaceStatement$replacing = Start.on(getNamespace(), "replacing");
     
-    protected ParserCombinator replaceStatement_format1() {
-      if (replaceStatement_format1Parser == null) {
-        FutureParser future = scoped("replaceStatement_format1", PRIVATE, true);
-        replaceStatement_format1Parser = future;
+    public ParserCombinator replaceStatement$replacing() {
+      if (replaceStatement$replacingParser == null) {
+        FutureParser future = scoped("replacing", PUBLIC, true);
+        replaceStatement$replacingParser = future;
         future.setParser(
           sequence(
-            token("REPLACE"),
             optional(
-              token("ALSO")
-            ),
-            plus(
-              choice(
-                sequence(
-                  pseudoLiteral(),
-                  token("BY"),
-                  pseudoLiteral()
-                ),
-                sequence(
-                  choice(
-                    token("LEADING"),
-                    token("TRAILING")
-                  ),
-                  pseudoLiteral(),
-                  token("BY"),
-                  pseudoLiteral()
-                )
+              as("also",
+                token("ALSO")
               )
             ),
-            literal(".")
+            plus(
+              replacementInstruction()
+            )
           )
         );
       }
     
-      return replaceStatement_format1Parser;
+      return replaceStatement$replacingParser;
     }
     
     // ========================================================
-    // replaceStatement_format2
+    // off
     // ........................................................
     
-    private ParserCombinator replaceStatement_format2Parser = null;
+    private ParserCombinator replaceStatement$offParser = null;
     
-    protected final Start replaceStatement_format2 = Start.on(getNamespace(), "replaceStatement_format2");
+    public final Start replaceStatement$off = Start.on(getNamespace(), "off");
     
-    protected ParserCombinator replaceStatement_format2() {
-      if (replaceStatement_format2Parser == null) {
-        FutureParser future = scoped("replaceStatement_format2", PRIVATE, true);
-        replaceStatement_format2Parser = future;
+    public ParserCombinator replaceStatement$off() {
+      if (replaceStatement$offParser == null) {
+        FutureParser future = scoped("off", PUBLIC, true);
+        replaceStatement$offParser = future;
         future.setParser(
           sequence(
-            token("REPLACE"),
             optional(
-              token("LAST")
+              as("last",
+                token("LAST")
+              )
             ),
-            token("OFF"),
-            literal(".")
+            token("OFF")
           )
         );
       }
     
-      return replaceStatement_format2Parser;
+      return replaceStatement$offParser;
     }
     
     // ========================================================

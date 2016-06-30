@@ -1,0 +1,19 @@
+This tests the absence of any preprocessing directives.
+I'm also using it as a way to show the structure of these test files.
+
+Lines starting with a '<' define the input for the preprocessor.
+< MOVE 11 TO XXX.
+< MOVE 22 TO YYY.
+< MOVE 33 TO ZZZ.
+
+Lines starting with a '>' define the output expected from the preprocessor. 
+> MOVE 11 TO XXX.
+> MOVE 22 TO YYY.
+> MOVE 33 TO ZZZ.
+
+The test runner will feed the input lines through a preprocessor, capture the
+output lines, and compare them to the expected output. The test will pass if
+both are equal.
+
+Important note: all lines are considered to be in FREE format. So there is no
+need to bother with counting columns.

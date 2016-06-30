@@ -2,31 +2,29 @@ package koopa.core.sources.test;
 
 import java.util.LinkedList;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
-import koopa.core.sources.BasicSource;
+import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
-
-import org.apache.log4j.Logger;
 
 /**
  * A {@linkplain Source} which can tell you whether or not it has reached an
  * expected endpoint. That point is either indicated by an explicit marker (see
  * {@linkplain #MARKER_TEXT}, or just the end of regular input.
  */
-public class TestTokenizer extends BasicSource<Token> implements Source<Token> {
+public class TestTokenizer extends ChainingSource<Token, Token> implements Source<Token> {
 
 	private static final Logger LOGGER = Logger.getLogger("tokenising.test");
 
 	public static final String MARKER_TEXT = "#";
 
-	private Source<Token> source;
-
 	private Token marker;
 	private LinkedList<Token> tokensSinceMarker = new LinkedList<Token>();
 
 	public TestTokenizer(Source<Token> source) {
-		this.source = source;
+		super(source);
 	}
 
 	@Override

@@ -1,0 +1,61 @@
+This tests that a REPLACE ALSO leaves previous REPLACEs intact.
+And that turning LAST OFF works as expected.
+
+Default state has no active replacements.
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.
+
+
+
+This will activate replacement of XXX.
+< REPLACE ==XXX== BY ==FOO==.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE FOO TO YYY.
+
+
+
+This will ALSO activate replacement of YYY.
+Replacement of XXX should still be active.
+< REPLACE ALSO ==YYY== BY ==FUM==.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE FOO TO FUM.
+
+
+
+We should be able to override existing replacements.
+< REPLACE ALSO ==XXX== BY ==FEE==.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE FEE TO FUM.
+
+
+
+This cancels the last active replacement (XXX by FEE).
+< REPLACE LAST OFF.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE FOO TO FUM.
+
+
+
+This cancels the last active replacement (YYY by FUM).
+< REPLACE LAST OFF.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE FOO TO YYY.
+
+
+
+This cancels the last active replacement (XXX by FOO).
+< REPLACE LAST OFF.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.

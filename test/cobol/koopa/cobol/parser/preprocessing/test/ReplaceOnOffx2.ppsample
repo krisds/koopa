@@ -1,0 +1,36 @@
+This exercises activation and explicit deactivation of a single REPLACE.
+But now twice in a row.
+
+
+Default state has no active replacements.
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.
+
+
+
+Here we activate one, then cancel it a bit later.
+< REPLACE ==XXX== BY ==FOO==.
+< MOVE XXX TO YYY.
+< REPLACE OFF.
+< MOVE XXX TO YYY.
+
+Which should expand to:
+> 
+> MOVE FOO TO YYY.
+> 
+> MOVE XXX TO YYY.
+
+
+
+Here we activate another one, then cancel it a bit later.
+< REPLACE ==YYY== BY ==FUM==.
+< MOVE XXX TO YYY.
+< REPLACE OFF.
+< MOVE XXX TO YYY.
+
+Which should expand to:
+> 
+> MOVE XXX TO FUM.
+> 
+> MOVE XXX TO YYY.
+

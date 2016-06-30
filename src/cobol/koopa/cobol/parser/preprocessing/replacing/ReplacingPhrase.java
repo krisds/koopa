@@ -1,4 +1,4 @@
-package koopa.cobol.parser.preprocessing;
+package koopa.cobol.parser.preprocessing.replacing;
 
 import static koopa.core.trees.jaxen.Jaxen.getMatch;
 
@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 import koopa.cobol.data.tags.SyntacticTag;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
@@ -30,8 +31,7 @@ public abstract class ReplacingPhrase {
 	protected final ReplacingPhraseOperand replacing;
 	protected final ReplacingPhraseOperand by;
 
-	public ReplacingPhrase(ReplacingPhraseOperand replacing,
-			ReplacingPhraseOperand by) {
+	public ReplacingPhrase(ReplacingPhraseOperand replacing, ReplacingPhraseOperand by) {
 		this.replacing = replacing;
 		this.by = by;
 	}
@@ -44,15 +44,22 @@ public abstract class ReplacingPhrase {
 		return by;
 	}
 
-	public abstract boolean appliedTo(Source<Token> source,
-			LinkedList<Token> newTokens);
+	public abstract boolean appliedTo(Source<Data> source, LinkedList<Token> newTokens);
 
-	protected Token nextTextWord(Source<Token> library, Stack<Token> seen) {
+	protected Token nextTextWord(Source<Data> library, Stack<Token> seen) {
 		while (true) {
-			final Token textWord = library.next();
+			final Data data = library.next();
 
-			if (textWord == null)
+			if (data == null)
 				return null;
+
+			// TODO Non-tokens still need to be tracked.
+			if (!(data instanceof Token)) {
+				library.unshift(data);
+				return null;
+			}
+
+			final Token textWord = (Token) data;
 
 			seen.add(textWord);
 
@@ -67,7 +74,7 @@ public abstract class ReplacingPhrase {
 		}
 	}
 
-	protected void unshiftStack(Source<Token> library, Stack<Token> seen) {
+	protected void unshiftStack(Source<Data> library, Stack<Token> seen) {
 		while (!seen.isEmpty())
 			library.unshift(seen.pop());
 	}
@@ -97,5 +104,10 @@ public abstract class ReplacingPhrase {
 	protected boolean isNewline(Token token) {
 		final String text = token.getText();
 		return "\n".equals(text) || "\r\n".equals(text);
+	}
+
+	@Override
+	public String toString() {
+		return replacing + " BY " + by;
 	}
 }

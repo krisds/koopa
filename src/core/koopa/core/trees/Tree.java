@@ -66,9 +66,8 @@ public class Tree {
 
 		Token previous = null;
 		for (Token t : allTokens(new ProgramTextFilter())) {
-			if (previous != null && builder.length() > 0
-					&& previous.getEnd().getPositionInFile() + 1 //
-					< t.getStart().getPositionInFile())
+			if (previous != null && builder.length() > 0 && previous.getEnd().getPositionInFile() + 1 //
+			< t.getStart().getPositionInFile())
 				builder.append(" ");
 
 			builder.append(t.getText());
@@ -341,6 +340,13 @@ public class Tree {
 				return child;
 
 		return null;
+	}
+
+	/**
+	 * Does this node have a child with the given name ?
+	 */
+	public boolean hasChild(String name) {
+		return getChild(name) != null;
 	}
 
 	/**

@@ -1,0 +1,33 @@
+This tests that a new REPLACE cancels all previous.
+
+Default state has no active replacements.
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.
+
+
+
+This will activate replacement of XXX.
+< REPLACE ==XXX== BY ==FOO==.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE FOO TO YYY.
+
+
+
+This will activate replacement of YYY.
+Replacement of XXX should have been cancelled.
+< REPLACE ==YYY== BY ==FUM==.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE XXX TO FUM.
+
+
+
+This cancels all replacements.
+< REPLACE OFF.
+> 
+
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.

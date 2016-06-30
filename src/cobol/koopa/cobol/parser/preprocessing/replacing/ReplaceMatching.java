@@ -1,25 +1,24 @@
-package koopa.cobol.parser.preprocessing;
+package koopa.cobol.parser.preprocessing.replacing;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
+
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 
-import org.apache.log4j.Logger;
-
 public class ReplaceMatching extends ReplacingPhrase {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.preprocessing.replacing.matching");
+	private static final Logger LOGGER = Logger.getLogger("tokenising.preprocessing.replacing.matching");
 
-	public ReplaceMatching(ReplacingPhraseOperand replacing,
-			ReplacingPhraseOperand by) {
+	public ReplaceMatching(ReplacingPhraseOperand replacing, ReplacingPhraseOperand by) {
 		super(replacing, by);
 	}
 
-	public boolean appliedTo(Source<Token> library, LinkedList<Token> newTokens) {
+	public boolean appliedTo(Source<Data> library, LinkedList<Token> newTokens) {
 		boolean matchOccurred = true;
 		Stack<Token> seenWhileMatching = new Stack<Token>();
 
@@ -28,8 +27,7 @@ public class ReplaceMatching extends ReplacingPhrase {
 
 		Iterator<Token> it = replacing.getTextWords().iterator();
 		while (it.hasNext()) {
-			final Token libraryTextWord = nextTextWord(library,
-					seenWhileMatching);
+			final Token libraryTextWord = nextTextWord(library, seenWhileMatching);
 
 			if (libraryTextWord == null) {
 				if (LOGGER.isTraceEnabled())
@@ -77,7 +75,18 @@ public class ReplaceMatching extends ReplacingPhrase {
 				LOGGER.trace("  Replaced with " + by);
 			}
 
+			// The output should include any whitespace we skipped while
+			// matching.
+			if (!seenWhileMatching.isEmpty())
+				for (Token token : seenWhileMatching) {
+					if (isNewline(token) || isConsideredSingleSpace(token))
+						newTokens.add(token);
+					else
+						break;
+				}
+
 			newTokens.addAll(by.getTokens());
+
 		} else
 			unshiftStack(library, seenWhileMatching);
 

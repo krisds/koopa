@@ -3,7 +3,6 @@ package koopa.cobol;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.Reader;
-import java.util.List;
 
 import koopa.cobol.parser.preprocessing.PreprocessingSource;
 import koopa.cobol.sources.CompilerDirectives;
@@ -16,7 +15,6 @@ import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
-import koopa.core.sources.ChainableSource;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.util.LineEndings;
@@ -25,18 +23,15 @@ import koopa.core.util.LineEndings;
 // We'll need support for intermediate tokenizers and copybook lookup.
 public class CobolTokens {
 
-	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, Grammar grammar, SourceFormat format,
-			List<ChainableSource<Token>> intermediateSources, File file,
-			Copybooks copybooks) {
+	public static Source<Token> getNewSource(String resourceName, Reader reader, Grammar grammar, SourceFormat format,
+			File file, Copybooks copybooks) {
 
 		// We will be building up our tokenization stage in several steps. Each
 		// step takes the preceding tokenizer, and extends its abilities.
 		Source<Token> tokenizer;
 
 		// Split the input into lines.
-		tokenizer = new LineSplitter(resourceName, new BufferedReader(reader),
-				LineEndings.getChoices());
+		tokenizer = new LineSplitter(resourceName, new BufferedReader(reader), LineEndings.getChoices());
 		// Filter out some compiler directives.
 		tokenizer = new CompilerDirectives(tokenizer, format);
 		// Split up the different areas of each line.
@@ -53,34 +48,15 @@ public class CobolTokens {
 		// Find (and mark) pseudo literals.
 		tokenizer = new PseudoLiterals(tokenizer);
 
-		if (intermediateSources != null) {
-			// This allows external tools to see all tokens before further
-			// processing. At the moment it is not guaranteed that all tokens
-			// will make it to the token sinks.
-			for (ChainableSource<Token> intermediate : intermediateSources) {
-				intermediate.setSource(tokenizer);
-				tokenizer = intermediate;
-			}
-		}
-
 		// tokenizer = new Printing(tokenizer, "%% ");
 
 		if (copybooks != null)
-			tokenizer = new PreprocessingSource(tokenizer, grammar, format,
-					file, copybooks);
+			tokenizer = new PreprocessingSource(tokenizer, grammar, format, file, copybooks);
 
 		return tokenizer;
 	}
 
-	public static Source<Token> getNewSource(String resourceName,
-			Reader reader, Grammar grammar, SourceFormat format, File file,
-			Copybooks copybooks) {
-		return getNewSource(resourceName, reader, grammar, format, null, file,
-				copybooks);
-	}
-
-	public static Source<Token> getNewSource(Reader reader, Grammar grammar,
-			SourceFormat format) {
+	public static Source<Token> getNewSource(Reader reader, Grammar grammar, SourceFormat format) {
 		return getNewSource(null, reader, grammar, format, null, null);
 	}
 }

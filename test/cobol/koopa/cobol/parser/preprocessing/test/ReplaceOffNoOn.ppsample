@@ -1,0 +1,16 @@
+What if we REPLACE OFF without any active REPLACEs ?
+
+
+Default state has no active replacements.
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.
+
+
+
+Let's deactivate them anyway !?
+< REPLACE OFF.
+> 
+
+It shouldn't change anything, really.
+< MOVE XXX TO YYY.
+> MOVE XXX TO YYY.

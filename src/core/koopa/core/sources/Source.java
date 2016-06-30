@@ -25,4 +25,10 @@ public interface Source<T extends Data> {
 	 * <code>null</code>.
 	 */
 	void close();
+
+	/**
+	 * If this is a source of a matching class type, return <code>this</code>.
+	 * If not, look for it elsewhere.
+	 */
+	<S extends Source<? extends Data>> S getSource(Class<S> clazz);
 }

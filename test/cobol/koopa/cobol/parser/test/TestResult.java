@@ -14,6 +14,7 @@ import java.util.Set;
 
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
+import koopa.cobol.parser.preprocessing.PreprocessingSource;
 import koopa.core.data.Token;
 import koopa.core.util.Tuple;
 import au.com.bytecode.opencsv.CSVReader;
@@ -32,6 +33,8 @@ public class TestResult {
 	private int warningCount = 0;
 	private List<Tuple<Token, String>> warnings = null;
 
+	private int preprocessedDirectivesCount = 0;
+
 	public static TestResult from(ParseResults parseResults) {
 		TestResult result = new TestResult();
 
@@ -45,10 +48,13 @@ public class TestResult {
 		result.errors = parseResults.getParse().getErrors();
 		result.warnings = parseResults.getParse().getWarnings();
 
+		PreprocessingSource preprocessing = parseResults.getParse().getSource(PreprocessingSource.class);
+		if (preprocessing != null)
+			result.preprocessedDirectivesCount = preprocessing.getHandledDirectives().size();
+
 		return result;
 	}
 
-	// String warnings = entries[7];
 	public String getName() {
 		return name;
 	}
@@ -97,6 +103,14 @@ public class TestResult {
 		this.warningCount = warningCount;
 	}
 
+	public int getPreprocessedDirectivesCount() {
+		return preprocessedDirectivesCount;
+	}
+
+	public void setPreprocessedDirectivesCount(int preprocessedDirectivesCount) {
+		this.preprocessedDirectivesCount = preprocessedDirectivesCount;
+	}
+
 	public List<String> getComparison(TestResult actual) {
 		final List<String> messages = new ArrayList<String>();
 		if (actual.valid != this.valid) {
@@ -109,56 +123,55 @@ public class TestResult {
 		if (actual.tokenCount != this.tokenCount) {
 			// Positive case: when valid and count went up ?
 			if (actual.tokenCount < this.tokenCount) {
-				messages.add("  Number of tokens went down from "
-						+ this.tokenCount + " to " + actual.tokenCount + ".");
+				messages.add("  Number of tokens went down from " + this.tokenCount + " to " + actual.tokenCount + ".");
 
 			} else {
-				messages.add("  Number of tokens went up from "
-						+ this.tokenCount + " to " + actual.tokenCount + ".");
+				messages.add("  Number of tokens went up from " + this.tokenCount + " to " + actual.tokenCount + ".");
 			}
 		}
 
 		if (actual.coverage != this.coverage) {
 			if (actual.coverage < this.coverage) {
-				messages.add("- Coverage went down from " + this.coverage
-						+ " to " + actual.coverage + ".");
+				messages.add("- Coverage went down from " + this.coverage + " to " + actual.coverage + ".");
 
 			} else {
-				messages.add("+ Coverage went up from " + this.coverage
-						+ " to " + actual.coverage + ".");
+				messages.add("+ Coverage went up from " + this.coverage + " to " + actual.coverage + ".");
 			}
 		}
 
 		if (actual.errorCount != this.errorCount) {
 			if (actual.errorCount < this.errorCount)
-				messages.add("+ Error count went down from " + this.errorCount
-						+ " to " + actual.errorCount + ".");
+				messages.add("+ Error count went down from " + this.errorCount + " to " + actual.errorCount + ".");
 			else
-				messages.add("- Error count went up from " + this.errorCount
-						+ " to " + actual.errorCount + ".");
+				messages.add("- Error count went up from " + this.errorCount + " to " + actual.errorCount + ".");
 		}
 
 		// TODO Errors.
 
 		if (actual.warningCount != this.warningCount) {
 			if (actual.warningCount < this.warningCount)
-				messages.add("+ Warning count went down from "
-						+ this.warningCount + " to " + actual.warningCount
-						+ ".");
+				messages.add(
+						"+ Warning count went down from " + this.warningCount + " to " + actual.warningCount + ".");
 
 			else
-				messages.add("- Warning count went up from "
-						+ this.warningCount + " to " + actual.warningCount
-						+ ".");
+				messages.add("- Warning count went up from " + this.warningCount + " to " + actual.warningCount + ".");
 		}
 
 		// TODO Warnings.
 
+		if (actual.preprocessedDirectivesCount != this.preprocessedDirectivesCount) {
+			if (actual.preprocessedDirectivesCount < this.preprocessedDirectivesCount)
+				messages.add("+ Preprocessed directives count went down from " + this.preprocessedDirectivesCount
+						+ " to " + actual.preprocessedDirectivesCount + ".");
+			else
+				messages.add("- Preprocessed directives count went up from " + this.preprocessedDirectivesCount + " to "
+						+ actual.preprocessedDirectivesCount + ".");
+		}
+
 		return messages;
 	}
 
-	public static Map<String, TestResult> loadFromFile(File expectedFile)
-			throws IOException {
+	public static Map<String, TestResult> loadFromFile(File expectedFile) throws IOException {
 		CSVReader reader = null;
 		try {
 			reader = new CSVReader(new FileReader(expectedFile));
@@ -181,6 +194,7 @@ public class TestResult {
 				// final String errors = entries[5];
 				final String warningCount = entries[6];
 				// final String warnings = entries[7];
+				final String preprocessedDirectivesCount = entries[8];
 
 				TestResult results = new TestResult();
 				results.setName(name);
@@ -191,6 +205,7 @@ public class TestResult {
 				// TODO List of errors.
 				results.setWarningCount(Integer.parseInt(warningCount));
 				// TODO List of warnings.
+				results.setPreprocessedDirectivesCount(Integer.parseInt(preprocessedDirectivesCount));
 
 				targets.put(name, results);
 			}
@@ -207,8 +222,7 @@ public class TestResult {
 		}
 	}
 
-	public static void saveToFile(Map<String, TestResult> results,
-			File targetFile) throws IOException {
+	public static void saveToFile(Map<String, TestResult> results, File targetFile) throws IOException {
 
 		final FileWriter fw = new FileWriter(targetFile);
 		final BufferedWriter bw = new BufferedWriter(fw);
@@ -231,18 +245,15 @@ public class TestResult {
 		}
 	}
 
-	private static void writeResultsHeader(final CSVWriter writer)
-			throws IOException {
-		final String[] header = new String[] { "File", "Valid",
-				"Number of tokens", "Coverage", "Number of errors", "Errors",
-				"Number of warnings", "Warnings" };
+	private static void writeResultsHeader(final CSVWriter writer) throws IOException {
+		final String[] header = new String[] { "File", "Valid", "Number of tokens", "Coverage", "Number of errors",
+				"Errors", "Number of warnings", "Warnings", "Number of preprocessed directives" };
 		writer.writeNext(header);
 		writer.flush();
 	}
 
-	private static void writeNextResult(CSVWriter writer, String name,
-			TestResult results) throws IOException {
-		final String[] entries = new String[8];
+	private static void writeNextResult(CSVWriter writer, String name, TestResult results) throws IOException {
+		final String[] entries = new String[9];
 
 		String errors = "";
 		for (Tuple<Token, String> error : results.errors) {
@@ -268,6 +279,7 @@ public class TestResult {
 		entries[5] = "" + errors;
 		entries[6] = "" + results.warningCount;
 		entries[7] = "" + warnings;
+		entries[8] = "" + results.preprocessedDirectivesCount;
 		writer.writeNext(entries);
 		writer.flush();
 	}

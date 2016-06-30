@@ -31,4 +31,12 @@ public abstract class BasicSource<T extends Data> implements Source<T> {
 		if (packet != null)
 			this.unseen.addFirst(packet);
 	}
+
+	@SuppressWarnings("unchecked")
+	public <S extends Source<? extends Data>> S getSource(Class<S> clazz) {
+		if (clazz.isAssignableFrom(this.getClass()))
+			return (S) this;
+		else
+			return null;
+	}
 }

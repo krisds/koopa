@@ -20,30 +20,29 @@ end
 ## COPY statement.
 ## -----------------------------------------------------------------------------
 
+def copyStatement =  copyStatementBody .  end
+
 private def copyStatementBody =
     COPY textName [ (OF | IN) libraryName ]
     [SUPPRESS [PRINTING]]
-    [copyReplacingPhrase]
+    [replacing]
+
+  where def replacing =  REPLACING (replacementInstruction)+  end
 end
 
-def copyStatement =
-    copyStatementBody .
+def replacementInstruction =
+	[leading | trailing] replacementOperand
+	BY replacementOperand
+
+  where def leading  =  LEADING   end
+  where def trailing =  TRAILING  end
 end
 
-def copyReplacingPhrase =
-	REPLACING
-	(copyReplacementInstruction)+
-end
-
-def copyReplacementInstruction =
-	[leading | trailing] copyOperandName BY copyOperandName
-end
-
-def leading  =  LEADING   end
-def trailing =  TRAILING  end
-
-def copyOperandName =
-	(pseudoLiteral | literal | cobolWord)
+def replacementOperand = 
+	( pseudoLiteral
+	| literal
+	| cobolWord
+	)
 end
 
 
@@ -52,21 +51,10 @@ end
 ## -----------------------------------------------------------------------------
 
 def replaceStatement =
-    ( replaceStatement_format1
-    | replaceStatement_format2
-    )
-end
+    REPLACE (replacing | off) .
 
-private def replaceStatement_format1 =
-    REPLACE [ALSO]
-    ( pseudoLiteral BY pseudoLiteral
-    | (LEADING | TRAILING) pseudoLiteral BY pseudoLiteral
-    )+
-    .
-end
-
-private def replaceStatement_format2 =
-    REPLACE [LAST] OFF .
+  where def replacing =  [also: ALSO] (replacementInstruction)+  end
+  where def off       =  [last: LAST] OFF                        end
 end
 
 

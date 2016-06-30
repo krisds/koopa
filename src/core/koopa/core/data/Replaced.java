@@ -4,26 +4,18 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import koopa.core.trees.Tree;
-
 public class Replaced {
 
-	private final Tree data;
 	private final Replaced context;
 
 	private final Position start;
 	private final Position end;
 
-	public Replaced(Tree data, Replaced context) {
-		this.data = data;
+	public Replaced(Position start, Position end, Replaced context) {
 		this.context = context;
 
-		this.start = data.getRawStart();
-		this.end = data.getRawEnd();
-	}
-
-	public Tree getData() {
-		return data;
+		this.start = start;
+		this.end = end;
 	}
 
 	public Replaced getContext() {
@@ -38,6 +30,11 @@ public class Replaced {
 		return end;
 	}
 
+	/**
+	 * Given an iteration of tokens, this returns the set of replacements which
+	 * were found to be active inside them.
+	 */
+	@Deprecated
 	public static Set<Replaced> getAllIn(Iterator<Token> tokens) {
 		Set<Replaced> all = new LinkedHashSet<Replaced>();
 
@@ -54,10 +51,5 @@ public class Replaced {
 		}
 
 		return all;
-	}
-
-	@Override
-	public String toString() {
-		return data.getProgramText();
 	}
 }

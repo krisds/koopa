@@ -16,21 +16,19 @@ import java.util.List;
 
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
-import koopa.core.sources.BasicSource;
+import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 import koopa.dsl.kg.source.KGTokenizer;
 
-public class StageTokenizer extends BasicSource<Token> implements Source<Token> {
+public class StageTokenizer extends ChainingSource<Token, Token> implements Source<Token> {
 
 	private static final String OPERATOR_CHARACTERS = ".;+-";
-
-	private final Source<Token> source;
 
 	private Token token = null;
 	private int index = 0;
 
 	public StageTokenizer(Source<Token> source) {
-		this.source = source;
+		super(source);
 	}
 
 	@Override
@@ -90,16 +88,14 @@ public class StageTokenizer extends BasicSource<Token> implements Source<Token> 
 		while (index < token.getLength()) {
 			char c = token.charAt(index);
 
-			if (c == '-' || c == '_' || isLetterOrDigit(c)
-					|| c == KGTokenizer.SCOPE_SEPARATOR_CHARACTER) {
+			if (c == '-' || c == '_' || isLetterOrDigit(c) || c == KGTokenizer.SCOPE_SEPARATOR_CHARACTER) {
 				index += 1;
 
 			} else
 				break;
 		}
 
-		return Tokens.subtoken(token, start, index).withTags(TEXT, WORD,
-				IDENTIFIER);
+		return Tokens.subtoken(token, start, index).withTags(TEXT, WORD, IDENTIFIER);
 	}
 
 	private boolean isOperator(char c) {
@@ -154,9 +150,8 @@ public class StageTokenizer extends BasicSource<Token> implements Source<Token> 
 	private Token unknown(char c) {
 		int start = index;
 		index = token.getLength();
-		System.err.println("Unexpected character at line "
-				+ token.getStart().getLinenumber() + " column " + start + ": '"
-				+ c + "'");
+		System.err.println("Unexpected character at line " + token.getStart().getLinenumber() + " column " + start
+				+ ": '" + c + "'");
 		return Tokens.subtoken(token, start);
 	}
 

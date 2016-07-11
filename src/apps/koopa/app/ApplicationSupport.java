@@ -219,7 +219,7 @@ public class ApplicationSupport {
 					.getResourceAsStream("/REVISION");
 
 			if (in == null)
-				return "unkown";
+				return "unknown";
 
 			InputStreamReader r = new InputStreamReader(in);
 			b = new BufferedReader(r);
@@ -227,17 +227,17 @@ public class ApplicationSupport {
 			String revision = b.readLine();
 
 			if (revision == null)
-				return "unkown";
+				return "unknown";
 
 			revision = revision.trim();
 			if (revision.length() == 0)
-				return "unkown";
+				return "unknown";
 			else
 				return revision;
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "unkown";
+			return "unknown";
 
 		} finally {
 			try {

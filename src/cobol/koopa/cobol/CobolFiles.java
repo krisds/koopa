@@ -64,6 +64,11 @@ public class CobolFiles {
 		SOURCE_EXTENSIONS.clear();
 		COPYBOOK_EXTENSIONS.clear();
 
+		if (System.getProperty("koopa.cobolFileExtensions") != null)
+			LOGGER.warn("You are using 'koopa.cobolFileExtensions' to define "
+					+ "custom file extensions. This option has been deprecated. "
+					+ "Please use `koopa.sources' instead.");
+		
 		if (System.getProperty("koopa.cobolFileExtensions") == null
 				&& System.getProperty("koopa.sources") == null) {
 			SOURCE_EXTENSIONS.add(".CBL");

@@ -612,6 +612,10 @@ target dataDescriptionEntry;
       RENAMES FOO
       THROUGH ADDRESS OF SOMETHING . ]
 
+# Issue 24. Mostly-numeric name.
++ [ 88 4-1 value '1' . ]
+
+
 target localStorageSection;
 
 +[ LOCAL-STORAGE Section .

@@ -14,6 +14,10 @@ target cobolWord;
 
 # By Rob Stapper; confirmed by Simon Sobisch.
 +[ 00-00 ]
+
+# Issue 30 has a similar one.
++[ 0020-0008 ]
+
 # But I'm disallowing numbers as legal cobol words for now:
 -[ 00 ]
 

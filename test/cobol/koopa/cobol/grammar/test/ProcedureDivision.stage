@@ -49,6 +49,10 @@ target paragraph;
    ADD A TO B
    DISPLAY B . ]
 
+# Issue 30. Mostly numeric paragraph name.
++[ 0020-0008 . ]
+
+
 
 target section;
 

@@ -10,23 +10,28 @@ Koopa is a Cobol parser (generator). It can handle source files in isolation (no
 * Covered by a Cobol 85 testsuite, and grammar unit testing
 * Cobol viewer with syntax highlighting, outline, quick navigation and XPath-based querying
 * XML dumps of parse trees
-* Experimental, work in progress: Cobol preprocessor (copy book expansion only)
+* Cobol preprocessor:
+** copybook expansion with (limited) support for `REPLACING`
+** `REPLACE` statement
 
 ## Licensing
 
 Everything in Koopa is covered by a BSD license, unless noted differently in the actual file or folder.
 
-The files in the testsuite/cobol85 folder are a Cobol85 test suite by the National Computing Centre, UK, found originally at [www.itl.nist.gov](http://www.itl.nist.gov/div897/ctg/cobol_form.htm). The version here differs only in that it splits up the different programs in separate files, where the original puts them all in one big file. The licensing is unclear, but the code is offered publicly at the above site.
+The files in the `testsuite/cobol85` folder are a Cobol85 test suite by the National Computing Centre, UK, found originally at [www.itl.nist.gov](http://www.itl.nist.gov/div897/ctg/cobol_form.htm). The version here differs only in that it splits up the different programs in separate files, where the original puts them all in one big file. The licensing is unclear, but the code is offered publicly at the above site.
 
 ## Configuration options
 
-Some customisation of Koopa is possible by the user.
+Some runtime customisation of Koopa is possible by the user.
 
 ### Command line
 
 Following options can be set on the command line by passing them as  "-D<option>=<value>" to the JVM.
 
-* koopa.maxCobolWordLength: defaults to 31. Use a value greater than zero to override this. Setting it to 0 makes it use the default value. Setting it to a negative value disables the length check all together.
+* `koopa.maxCobolWordLength`: defaults to 31. Use a value greater than zero to override this. Setting it to 0 makes it use the default value. Setting it to a negative value disables the length check all together. (Cfr. the `koopa.cobol.CobolWords` class.)
+* `koopa.sources`: a comma-separated list of file extensions use to identify Cobol source files. This defaults to "cbl,cob". (Cfr. the `koopa.cobol.CobolFiles` class.)
+* `koopa.copybooks`: a comma-separated list of file extensions use to identify Cobol copybook files. This defaults to "cpy,copy". (Cfr. the `koopa.cobol.CobolFiles` class.)
+* `koopa.copybooks.locator`: use a specific `koopa.cobol.copybooks.CopybookLocator` subclass when searching for copybooks on the file system. This defaults to `koopa.cobol.copybooks.DefaultCopybookLocator`.
 
 ### Custom columns
 
@@ -59,27 +64,16 @@ All of this is taken care of by the ANT build script. If you make modifications 
 
 If you're using an IDE such as Eclipse you may need to refresh your workspace after building with ANT.
 
-### Unit Tests
+### Tests
 
-Koopa has unit tests covering (parts of) the Koopa implementation. These can be found in koopa.cobol.parser.test.
+Koopa has unit tests covering the Koopa implementation. Look for package names named `test`, or check the different `run-FOO-tests` targets in the build script.
 
-Koopa also has unit tests covering (part of) the generated Cobol parser. These reside in koopa.cobol.grammar.test. The unit tests are generated from the ".stage" files which reside in the same folder. Generation is handled by the koopa.core.grammars.test.generator.GenerateUnitTests class (also triggered by the build script).
+Note that many, if not most tests, are defined using custom formats. The grammar unit tests, for instance, are all in `.stage` files. I do this to reduce the amount of friction writing individual tests, so that new tests can be written more easily and in a shorter amount of time.
 
-All unit tests can be triggered from ANT. Simply invoke "ant run-tests" on the command line.
+There is also support for regression testing based on the cobol85 testsuite. This will attempt to parse all source files (once with and once without preprocessing), and compare the results with those of a previous run. Look for the `run-cobol-regression-tests` build target.
 
-There is also support for regression testing based on the cobol85 testsuite. The class which takes care of this is koopa.grammars.test.RegressionTest. Again, you can also run this test through an ANT call: "ant run-regression-test".
+All unit tests can be triggered from ANT. Simply invoke `ant run-tests` on the command line.
 
-### Other Tests
-
-Aside from the unit tests there are a few other test applications inside the sandbox. One is TokenizerTest, which verifies if a certain line yields the expected number of tokens (if the line is annotated with the expected number). There is also ParserTest which attempts to parse a testsuite of Cobol files. Finally, there is CommonTreeBuildingTest which parses the same testsuite, builds ANTLR ASTs for each file, and the uses the generated ANTLR tree parser to parse those ASTs.
-
-Some tests may complain about not being able to parse the following file: testsuite/cobol85/OBNC1M.CBL. This is normal. The file in question tests comment-entries, which were deprecated in the 1985 standard. The Koopa Cobol parser does not know how to handle these. Given the deprecated nature of this language feature I won't be adding support for it either.
-
-There may be other warnings and errors. This is quite likely as expected. When in doubt, contact the maintainers.
-
-### KG.tokens
-
-In koopa.core.treegrammars.generator, KG.tokens is a copy of the file with the same name from koopa.core.grammars.generator. If the original ever changes this means that the tree grammar generator is broken. In that case you need to update its tokens file. Again, the ANT build script takes care of this for you.
 
 ## Further reading
 

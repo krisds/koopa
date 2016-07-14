@@ -1,6 +1,7 @@
 package koopa.dsl.kg.grammar;
 
 import static koopa.dsl.kg.tags.KGTag.COMMENT;
+import static koopa.dsl.kg.tags.KGTag.ESCAPED;
 import static koopa.dsl.kg.tags.KGTag.IDENTIFIER;
 import static koopa.dsl.kg.tags.KGTag.LITERAL;
 import static koopa.dsl.kg.tags.KGTag.NATIVE_CODE_BLOCK;
@@ -9,6 +10,7 @@ import static koopa.dsl.kg.tags.KGTag.QUOTED_LITERAL;
 import static koopa.dsl.kg.tags.KGTag.TEXT;
 import static koopa.dsl.kg.tags.KGTag.WHITESPACE;
 import static koopa.dsl.kg.tags.KGTag.WORD;
+
 import koopa.core.data.Token;
 import koopa.core.grammars.fluent.FluentGrammar;
 import koopa.core.parsers.Parse;
@@ -45,7 +47,8 @@ public class KGGrammar extends FluentGrammar {
 				"==end==" //
 		);
 
-		// 'where' [modifier] 'def' [nokeywords] identifier [locals] [returning] '='
+		// 'where' [modifier] 'def' [nokeywords] identifier [locals] [returning]
+		// '='
 		// sequence (nested_rule)* 'end'
 		define("nested_rule").as( //
 				"==where==", //
@@ -72,7 +75,7 @@ public class KGGrammar extends FluentGrammar {
 		define("sequence").as(oneOf( //
 				with("as").as("identifier", "==:==", "sequence"), //
 				oneOrMore("part") //
-				));
+		));
 
 		defineHelper("part").as(oneOf( //
 				with("star").as("repeatable", "==*=="), //
@@ -113,7 +116,7 @@ public class KGGrammar extends FluentGrammar {
 				"native_code", //
 				with("any").as("==_=="), //
 				with("dot").as("==.==") //
-				));
+		));
 
 		// '(' sequence ('|' sequence)* ')'
 		define("nested").as( //
@@ -174,9 +177,12 @@ public class KGGrammar extends FluentGrammar {
 		define("type").as(tagged(WORD), userDefined());
 
 		// @IDENTIFIER _
-		define("identifier").as( //
-				not(oneOf("==def==", "==where==", "modifier")), //
-				tagged(IDENTIFIER), userDefined());
+		define("identifier").as(oneOf(//
+				// Any escaped identifier.
+				all(tagged(ESCAPED), tagged(IDENTIFIER), any()), //
+				// Or any identifier which is not a keyword.
+				all(not(oneOf("==def==", "==where==", "modifier")), //
+						tagged(IDENTIFIER), userDefined())));
 
 		// @LITERAL _
 		define("literal").as(tagged(LITERAL), userDefined());
@@ -193,6 +199,10 @@ public class KGGrammar extends FluentGrammar {
 
 	public ParserCombinator grammar() {
 		return definitionOf("grammar").asParser();
+	}
+
+	public ParserCombinator rule() {
+		return definitionOf("rule").asParser();
 	}
 
 	// ------------------------------------------------------------------------

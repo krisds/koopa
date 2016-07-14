@@ -2,10 +2,7 @@ package koopa.cobol.sql.grammar.test;
 grammar koopa.cobol.sql.grammar.SQLGrammar;
 tokenizer koopa.cobol.sources.test.CobolTestSource;
 
-target openStatement;
+target cursorName;
 
-+[ OPEN C USING A , B ]
-
-# Example by Suman Saurabh.
-+[ OPEN CD05 ]
-
++[ HOPPER ]
++[ MODULE.HOPPER ]

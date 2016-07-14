@@ -1,0 +1,32 @@
+package koopa.dsl.kg.grammar.test;
+grammar koopa.dsl.kg.grammar.KGGrammar;
+tokenizer koopa.dsl.kg.sources.test.KGTestSource;
+
+target rule;
+
++[ def cobol =  GRACE MURRAY HOPPER  end ]
++[ def dot   =  .                    end ]
+
++[ def repetition =  (PRACTICE)+  end ]
++[ def repetition =  (PRACTICE)*  end ]
++[ def anything   =  _            end ]
+
++[ def choice =  (RED PILL | BLUE PILL)  end ]
+
++[ def nested = inTheRough
+     where def inTheRough = DIAMOND end
+   end ]
+
+-[ def noKeywords =  def    end ]
+-[ def noKeywords =  where  end ]
+
+-[ DEF caseSensitive  =  OOPS  end ]
+-[ def caseSensitive  =  OOPS  END ]
+-[ def CASE_SENSITIVE =  OOPS  end ]
+
++[ def escapedKeywords = `def end ]
++[ def escapedKeywords = `where end ]
+
++[ def `def = `where
+     where def `where = `end end
+   end ]

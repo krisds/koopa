@@ -9,79 +9,133 @@ def sqlStatement =
     | updateStatement
     | deleteStatement
     | openStatement
+    | closeStatement
     | rollbackStatement
     )
 end
 
 def includeStatement =
-    INCLUDE textName
+    INCLUDE identifier
 end
 
 def declareSessionStatement =
-    DECLARE SESSION . name
+    DECLARE SESSION . identifier
     TABLE
     [unknown: --> eof]
 end
 
 def declareCursorStatement =
-    DECLARE name CURSOR
-    [unknown: --> FOR] FOR selectStatement
+    DECLARE cursorName [sensitivity] [scrollability] CURSOR
+
+    [holdability]
+    [returnability]
+
+    FOR queryExpression [orderBy] [updatability]
+    
     [unknown: --> eof]
+    
+  where def sensitivity     =  (SENSITIVE | INSENSITIVE | ASENSITIVE)     end
+  where def scrollability   =  (SCROLL | NO SCROLL)                       end
+  where def holdability     =  (WITH HOLD | WITHOUT HOLD)                 end
+  where def returnability   =  (WITH RETURN | WITHOUT RETURN)             end
+  where def queryExpression =  unknown                                    end
+  where def orderBy         =  ORDER BY unknown                           end
+  where def updatability    =  FOR ( READ ONLY | UPDATE [ OF unknown ] )  end
+
+  where def unknown =  --> ( ORDER BY | FOR | eof )  end 
 end
 
 def selectStatement =
     SELECT
-    [unknown: --> FROM] FROM [schemaName '.'] tableName   
-    [unknown: --> eof]
+
+    [ unknown: --> FROM ] from
+    [[unknown: --> WHERE] `where]
+    [ unknown: --> eof ]
+
+  where def from   =  FROM  tableReferenceList  [unknown]  end
+  where def `where =  WHERE [unknown]                      end
+
+  where def unknown =  --> ( FROM | WHERE | GROUP BY | HAVING | WINDOW | eof )  end 
 end
 
 def insertStatement =
-    INSERT INTO [schemaName '.'] tableName
+    INSERT INTO tableName
     [unknown: --> eof]
 end
 
 def updateStatement =
-    UPDATE [schemaName '.'] tableName
+    UPDATE targetTable
+
+    [[unknown: --> WHERE] `where]
+
     [unknown: --> eof]
+
+  where def `where =  WHERE (CURRENT OF unknown | unknown)  end
+
+  where def unknown =  --> eof  end 
 end
 
 def deleteStatement = 
-    DELETE FROM [schemaName '.'] tableName
+    DELETE FROM targetTable
     [--> eof]
 end
 
 def openStatement =
-    OPEN name
+    OPEN cursorName [inputUsing]
+    
+  where def inputUsing =  [USING (unknown: --> eof)]  end
+end
+
+def closeStatement =
+    CLOSE cursorName
 end
 
 def rollbackStatement =
     ROLLBACK
 end
 
+
 # -----------------------------------------------------------------------------
 
-def textName =
-    ( delimitedIdentifier
-    | identifier
-    )
-end
+def identifier          =  (regularIdentifier | delimitedIdentifier)  end
+def regularIdentifier   =  _                                          end
+def delimitedIdentifier =  @CHARACTER_STRING @STRING_LITERAL _        end
 
-def name =
-    identifier
-end
 
-def schemaName =
-    identifier
+def tableReferenceList =  tableReference (',' tableReference)*  end
+
+# Note: this one is a huge oversimplification...
+def tableReference =  tableName  end
+
+
+def cursorName =
+   [ module . ] identifier
+
+  where def module =  MODULE  end
 end
 
 def tableName =
-    identifier
+    ( catalogName . ( module | schemaName ) . identifier
+    |               ( module | schemaName ) . identifier
+    |                                         identifier
+    )
+
+  where def module      =  MODULE      end
+  where def schemaName  =  identifier  end
+  where def catalogName =  identifier  end
 end
 
-def delimitedIdentifier =
-	@CHARACTER_STRING @STRING_LITERAL _
-end
+def targetTable =  ( ONLY '(' tableName ')' | tableName )   end
 
-def identifier =
-    _
-end
+
+
+# -----------------------------------------------------------------------------
+#
+# References
+#
+# [SQL-2003 BNF]
+#   http://savage.net.au/SQL/sql-2003-2.bnf
+#
+# [IBM DB2 SQL Statements]
+#   http://www.ibm.com/support/knowledgecenter/en/SSEPEK_11.0.0/com.ibm.db2z11.doc.sqlref/src/tpc/db2z_sql_statementsintro.html
+#

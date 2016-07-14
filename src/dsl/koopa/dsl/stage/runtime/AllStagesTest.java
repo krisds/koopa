@@ -52,7 +52,7 @@ public abstract class AllStagesTest implements SampleBasedTest {
 		assertNotNull(target);
 
 		final TestTokenizer source = new TestTokenizer(
-				testSource.forSample(sample));
+				testSource.forSample(sample, grammar));
 
 		if (shouldAccept) {
 			ListTarget resultingData = new ListTarget();

@@ -14,10 +14,10 @@
 		<delete dir="build/" />
 	</target>
 
-	<target name="build" depends="clean,core,core-tests,kg,cobol,cobol-tests,apps,examples,report-java-version">
+	<target name="build" depends="clean,core,core-tests,dsl,dsl-tests,cobol,cobol-tests,apps,examples,report-java-version">
 	</target>
 
-	<target name="run-tests" depends="run-core-tests,run-cobol-tests,run-cobol-regression-tests">
+	<target name="run-tests" depends="run-core-tests,run-dsl-tests,run-cobol-tests,run-cobol-regression-tests">
 	</target>
 
 	<!-- CORE / ISLAND PARSER GENERATOR -->
@@ -120,9 +120,9 @@
 		</javac>
 	</target>
 
-	<!-- Koopa Grammar (KG) DSL -->
+	<!-- Koopa Domain Specific Languages -->
 
-	<target name="kg" depends="core,templates">
+	<target name="dsl" depends="core,templates">
 		<echo>Compiling Koopa Grammar DSL...</echo>
 		<javac srcdir="src/dsl/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
 			<classpath>
@@ -139,9 +139,47 @@
 		</copy>
 	</target>
 
+	<!-- Koopa Domain Specific Languages TESTS -->
+
+	<target name="dsl-tests" depends="core,core-tests,dsl">
+		<echo>Compiling unit tests...</echo>
+		<javac srcdir="test/dsl/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<echo>Copying additional resources...</echo>
+		<copy todir="build/">
+			<fileset dir="test/dsl/" excludes="**/*.java,**/*.g" />
+		</copy>
+	</target>
+
+	<target name="run-dsl-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<classpath>
+				<pathelement location="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<assertions>
+				<enable />
+			</assertions>
+
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.dsl.kg.grammar.test.KGGrammarTests" />
+		</junit>
+	</target>
+	
 	<!-- COBOL PARSER -->
 
-	<target name="cobol" depends="core,kg">
+	<target name="cobol" depends="core,dsl">
 		<echo>Generating parsers...</echo>
 		<kgg path="src/cobol/" />
 
@@ -227,7 +265,7 @@
 
 	<!-- APPLICATIONS -->
 
-	<target name="apps" depends="core,kg,cobol">
+	<target name="apps" depends="core,dsl,cobol">
 		<echo>Generating the parsers...</echo>
 		<kgg path="src/apps/" />
 
@@ -248,7 +286,7 @@
 
 	<!-- EXAMPLES -->
 
-	<target name="examples" depends="core,kg,cobol">
+	<target name="examples" depends="core,dsl,cobol">
 		<echo>Generating the parsers...</echo>
 		<kgg path="examples/" />
 

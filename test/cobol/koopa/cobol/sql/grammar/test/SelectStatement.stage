@@ -1,0 +1,20 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target selectStatement;
+
++[ SELECT * FROM STUDENTS ]
++[ SELECT * FROM SCHOOL.STUDENTS ]
+
++[ SELECT * FROM STUDENTS
+     ORDER BY SCORE ]
+
++[ SELECT CLASS, AVG(SCORE)
+     FROM STUDENTS
+     GROUP BY CLASS
+     ORDER BY 2 ]
+
++[ SELECT TEACHERS.NAME, COURSES.NAME
+     FROM TEACHERS, COURSES
+     WHERE COURSES.TEACHER_ID = TEACHERS.ID ]

@@ -2,10 +2,8 @@ package koopa.cobol.sql.grammar.test;
 grammar koopa.cobol.sql.grammar.SQLGrammar;
 tokenizer koopa.cobol.sources.test.CobolTestSource;
 
-target openStatement;
+target updateStatement;
 
-+[ OPEN C USING A , B ]
-
-# Example by Suman Saurabh.
-+[ OPEN CD05 ]
-
++[ UPDATE STUDENT
+     SET SCORE = 'C'
+     WHERE SID = 42 ]

@@ -7,6 +7,7 @@ import static java.lang.Character.isUpperCase;
 import static java.lang.Character.isWhitespace;
 import static koopa.core.data.tags.AreaTag.END_OF_LINE;
 import static koopa.dsl.kg.tags.KGTag.COMMENT;
+import static koopa.dsl.kg.tags.KGTag.ESCAPED;
 import static koopa.dsl.kg.tags.KGTag.IDENTIFIER;
 import static koopa.dsl.kg.tags.KGTag.LITERAL;
 import static koopa.dsl.kg.tags.KGTag.NATIVE_CODE_BLOCK;
@@ -21,10 +22,12 @@ import koopa.core.data.Tokens;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class KGTokenizer extends ChainingSource<Token, Token> implements Source<Token> {
+public class KGTokenizer extends ChainingSource<Token, Token>
+		implements Source<Token> {
 
 	private static final String OPERATOR_CHARACTERS = "()[]|+*=->!$:.@%,";
 	public static final char SCOPE_SEPARATOR_CHARACTER = '$';
+	private static final char ESCAPED_WORD_CHARACTER = '`';
 
 	private Token token = null;
 	private int index = 0;
@@ -59,6 +62,9 @@ public class KGTokenizer extends ChainingSource<Token, Token> implements Source<
 			return quotedLiteral();
 		else if (c == '{')
 			return nativeCodeBlock();
+		else if (c == ESCAPED_WORD_CHARACTER && index + 1 < token.getLength()
+				&& isLetter(token.charAt(index + 1)))
+			return escapedWord();
 		else if (isWhitespace(c))
 			return whitespace();
 		else if (isLetter(c))
@@ -163,6 +169,12 @@ public class KGTokenizer extends ChainingSource<Token, Token> implements Source<
 
 		return Tokens.subtoken(token, start, index).withTags(TEXT, WORD,
 				allUppercase ? LITERAL : IDENTIFIER);
+	}
+
+	private Token escapedWord() {
+		// Skip the escape character.
+		index += 1;
+		return word().withTags(ESCAPED);
 	}
 
 	private Token number() {

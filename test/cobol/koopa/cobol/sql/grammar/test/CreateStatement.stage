@@ -1,0 +1,31 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target createStatement;
+
+# NOTE: All of these are just hand-made dummies.
++[ CREATE ALIAS                   FOO etc etc ]
++[ CREATE PUBLIC ALIAS            FOO etc etc ]
++[ CREATE AUX TABLE               FOO etc etc ]
++[ CREATE DATABASE                FOO         ]
++[ CREATE FUNCTION                FOO etc etc ]
++[ CREATE GLOBAL TEMPORARY TABLE  FOO etc etc ]
++[ CREATE UNIQUE INDEX            FOO etc etc ]
++[ CREATE MASK                    FOO etc etc ]
++[ CREATE PERMISSION              FOO etc etc ]
++[ CREATE PROCEDURE               FOO etc etc ]
++[ CREATE ROLE                    FOO etc etc ]
++[ CREATE SEQUENCE                FOO etc etc ]
++[ CREATE STOGROUP                FOO etc etc ]
++[ CREATE SYNONYM                 FOO etc etc ]
++[ CREATE TABLE                   FOO etc etc ]
++[ CREATE TABLESPACE              FOO etc etc ]
++[ CREATE LOB TABLESPACE          FOO etc etc ]
++[ CREATE TRIGGER                 FOO etc etc ]
++[ CREATE TRUSTED CONTEXT         FOO etc etc ]
++[ CREATE TYPE                    FOO etc etc ]
++[ CREATE VARIABLE                FOO etc etc ]
++[ CREATE VIEW                    FOO etc etc ]
+# Catch-all:
++[ CREATE                         FOO etc etc ]

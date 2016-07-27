@@ -164,7 +164,7 @@ public class KGGrammar extends FluentGrammar {
 		// '%noskip' part
 		define("noskip").as("==%==", noskip("==noskip=="), "part");
 
-		// '%nokeywords' part
+		// '%nokeywords'
 		define("nokeywords").as("==%==", noskip("==nokeywords=="));
 
 		// @name

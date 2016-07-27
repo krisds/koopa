@@ -50,7 +50,12 @@ public class SQLGrammar extends SQLBaseGrammar {
             deleteStatement(),
             openStatement(),
             closeStatement(),
-            rollbackStatement()
+            rollbackStatement(),
+            lockTableStatement(),
+            alterStatement(),
+            createStatement(),
+            dropStatement(),
+            renameStatement()
           )
         );
       }
@@ -765,6 +770,331 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return rollbackStatementParser;
+    }
+    
+    // ========================================================
+    // lockTableStatement
+    // ........................................................
+    
+    private ParserCombinator lockTableStatementParser = null;
+    
+    public final Start lockTableStatement = Start.on(getNamespace(), "lockTableStatement");
+    
+    public ParserCombinator lockTableStatement() {
+      if (lockTableStatementParser == null) {
+        FutureParser future = scoped("lockTableStatement", PUBLIC, true);
+        lockTableStatementParser = future;
+        future.setParser(
+          sequence(
+            token("LOCK"),
+            token("TABLE"),
+            tableName(),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return lockTableStatementParser;
+    }
+    
+    // ========================================================
+    // alterStatement
+    // ........................................................
+    
+    private ParserCombinator alterStatementParser = null;
+    
+    public final Start alterStatement = Start.on(getNamespace(), "alterStatement");
+    
+    public ParserCombinator alterStatement() {
+      if (alterStatementParser == null) {
+        FutureParser future = scoped("alterStatement", PUBLIC, true);
+        alterStatementParser = future;
+        future.setParser(
+          sequence(
+            token("ALTER"),
+            optional(
+              as("subject",
+                choice(
+                  token("DATABASE"),
+                  token("DOMAIN"),
+                  token("INDEX"),
+                  sequence(
+                    optional(
+                      token("SPECIFIC")
+                    ),
+                    token("FUNCTION")
+                  ),
+                  token("MASK"),
+                  token("PERMISSION"),
+                  token("PROCEDURE"),
+                  token("SEQUENCE"),
+                  token("STOGROUP"),
+                  token("TABLE"),
+                  token("TABLESPACE"),
+                  choice(
+                    token("TRANSFORM"),
+                    token("TRANSFORMS")
+                  ),
+                  token("TRIGGER"),
+                  sequence(
+                    token("TRUSTED"),
+                    token("CONTEXT")
+                  ),
+                  token("VIEW")
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return alterStatementParser;
+    }
+    
+    // ========================================================
+    // createStatement
+    // ........................................................
+    
+    private ParserCombinator createStatementParser = null;
+    
+    public final Start createStatement = Start.on(getNamespace(), "createStatement");
+    
+    public ParserCombinator createStatement() {
+      if (createStatementParser == null) {
+        FutureParser future = scoped("createStatement", PUBLIC, true);
+        createStatementParser = future;
+        future.setParser(
+          sequence(
+            token("CREATE"),
+            optional(
+              as("subject",
+                choice(
+                  sequence(
+                    optional(
+                      token("PUBLIC")
+                    ),
+                    token("ALIAS")
+                  ),
+                  token("ASSERTION"),
+                  token("CAST"),
+                  sequence(
+                    token("CHARACTER"),
+                    token("SET")
+                  ),
+                  token("COLLATION"),
+                  token("DATABASE"),
+                  token("DOMAIN"),
+                  token("FUNCTION"),
+                  sequence(
+                    optional(
+                      sequence(
+                        token("UNIQUE"),
+                        optional(
+                          sequence(
+                            token("WHERE"),
+                            token("NOT"),
+                            token("NULL")
+                          )
+                        )
+                      )
+                    ),
+                    token("INDEX")
+                  ),
+                  token("MASK"),
+                  sequence(
+                    optional(
+                      choice(
+                        token("INSTANCE"),
+                        token("STATIC"),
+                        token("CONSTRUCTOR")
+                      )
+                    ),
+                    token("METHOD")
+                  ),
+                  token("ORDERING"),
+                  token("PERMISSION"),
+                  token("PROCEDURE"),
+                  token("ROLE"),
+                  token("SCHEMA"),
+                  token("SEQUENCE"),
+                  sequence(
+                    token("SPECIFIC"),
+                    token("METHOD")
+                  ),
+                  token("STOGROUP"),
+                  token("SYNONYM"),
+                  sequence(
+                    optional(
+                      choice(
+                        sequence(
+                          choice(
+                            token("GLOBAL"),
+                            token("LOCAL")
+                          ),
+                          token("TEMPORARY")
+                        ),
+                        token("AUXILIARY"),
+                        token("AUX")
+                      )
+                    ),
+                    token("TABLE")
+                  ),
+                  sequence(
+                    optional(
+                      token("LOB")
+                    ),
+                    token("TABLESPACE")
+                  ),
+                  choice(
+                    token("TRANSFORM"),
+                    token("TRANSFORMS")
+                  ),
+                  token("TRANSLATION"),
+                  token("TRIGGER"),
+                  sequence(
+                    token("TRUSTED"),
+                    token("CONTEXT")
+                  ),
+                  token("TYPE"),
+                  token("VARIABLE"),
+                  sequence(
+                    optional(
+                      token("RECURSIVE")
+                    ),
+                    token("VIEW")
+                  )
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return createStatementParser;
+    }
+    
+    // ========================================================
+    // dropStatement
+    // ........................................................
+    
+    private ParserCombinator dropStatementParser = null;
+    
+    public final Start dropStatement = Start.on(getNamespace(), "dropStatement");
+    
+    public ParserCombinator dropStatement() {
+      if (dropStatementParser == null) {
+        FutureParser future = scoped("dropStatement", PUBLIC, true);
+        dropStatementParser = future;
+        future.setParser(
+          sequence(
+            token("DROP"),
+            optional(
+              as("subject",
+                choice(
+                  sequence(
+                    optional(
+                      token("PUBLIC")
+                    ),
+                    token("ALIAS")
+                  ),
+                  token("CONSTRAINT"),
+                  token("DATABASE"),
+                  sequence(
+                    optional(
+                      token("SPECIFIC")
+                    ),
+                    token("FUNCTION")
+                  ),
+                  token("INDEX"),
+                  token("MASK"),
+                  token("PACKAGE"),
+                  token("PERMISSION"),
+                  token("PROCEDURE"),
+                  token("ROLE"),
+                  token("SCHEMA"),
+                  token("SEQUENCE"),
+                  token("STOGROUP"),
+                  token("SYNONYM"),
+                  token("TABLE"),
+                  token("TABLESPACE"),
+                  token("TRIGGER"),
+                  sequence(
+                    token("TRUSTED"),
+                    token("CONTEXT")
+                  ),
+                  token("TYPE"),
+                  token("VARIABLE"),
+                  token("VIEW")
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return dropStatementParser;
+    }
+    
+    // ========================================================
+    // renameStatement
+    // ........................................................
+    
+    private ParserCombinator renameStatementParser = null;
+    
+    public final Start renameStatement = Start.on(getNamespace(), "renameStatement");
+    
+    public ParserCombinator renameStatement() {
+      if (renameStatementParser == null) {
+        FutureParser future = scoped("renameStatement", PUBLIC, true);
+        renameStatementParser = future;
+        future.setParser(
+          sequence(
+            token("RENAME"),
+            optional(
+              choice(
+                token("TABLE"),
+                token("INDEX")
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return renameStatementParser;
     }
     
     // ========================================================

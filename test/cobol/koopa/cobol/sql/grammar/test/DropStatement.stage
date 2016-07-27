@@ -1,0 +1,22 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target dropStatement;
+
+# NOTE: All of these are just hand-made dummies.
++[ DROP ALIAS               FOO etc etc ]
++[ DROP PUBLIC ALIAS        FOO etc etc ]
++[ DROP TABLE               FOO etc etc ]
++[ DROP TABLESPACE          FOO etc etc ]
++[ DROP VIEW                FOO etc etc ]
++[ DROP PACKAGE             FOO etc etc ]
++[ DROP TYPE                FOO etc etc ]
++[ DROP FUNCTION            FOO etc etc ]
++[ DROP SPECIFIC FUNCTION   FOO etc etc ]
++[ DROP PROCEDURE           FOO etc etc ]
++[ DROP TRIGGER             FOO etc etc ]
++[ DROP ROLE                FOO etc etc ]
++[ DROP TRUSTED CONTEXT     FOO etc etc ]
+# Catch-all:
++[ DROP                     FOO etc etc ]

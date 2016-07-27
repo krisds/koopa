@@ -1,5 +1,10 @@
 grammar SQL extends SQLBase.
 
+# This is a grammar targeted at SQL statements which are embedded in Cobol
+# code. The rules assume they are always parsing a single SQL statement,
+# and will eat any remaining unidentified tokens as 'unknown'.
+
+
 def sqlStatement =
     ( includeStatement
     | declareSessionStatement
@@ -11,6 +16,12 @@ def sqlStatement =
     | openStatement
     | closeStatement
     | rollbackStatement
+    | lockTableStatement
+    
+    | alterStatement
+    | createStatement
+    | dropStatement
+    | renameStatement
     )
 end
 
@@ -94,8 +105,130 @@ def rollbackStatement =
     ROLLBACK
 end
 
+def lockTableStatement =
+    LOCK TABLE tableName
 
-# -----------------------------------------------------------------------------
+    [unknown: --> eof]
+end
+
+## #############################################################################
+## Data Definition Language Statements
+## -----------------------------------------------------------------------------
+
+def alterStatement =
+    ALTER
+    [ subject :
+      ( DATABASE                                     # [IBM DB2 SQL Statements]
+      | DOMAIN
+      | INDEX                                        # [IBM DB2 SQL Statements]
+      | [SPECIFIC] FUNCTION                          # [IBM DB2 SQL Statements]
+      | MASK                                         # [IBM DB2 SQL Statements]
+      | PERMISSION                                   # [IBM DB2 SQL Statements]
+      | PROCEDURE                                    # [IBM DB2 SQL Statements]
+      | SEQUENCE
+      | STOGROUP                                     # [IBM DB2 SQL Statements]
+      | TABLE
+      | TABLESPACE                                   # [IBM DB2 SQL Statements]
+      | (TRANSFORM | TRANSFORMS)
+      | TRIGGER                                      # [IBM DB2 SQL Statements]
+      | TRUSTED CONTEXT                              # [IBM DB2 SQL Statements]
+      | VIEW                                         # [IBM DB2 SQL Statements]
+      )
+    ]
+
+    [unknown: --> eof]
+end
+
+
+def createStatement =
+    CREATE
+    [ subject :
+      ( [PUBLIC] ALIAS                                # [IBM DB2 SQL Statements]
+      | ASSERTION
+      | CAST
+      | CHARACTER SET
+      | COLLATION
+      | DATABASE                                      # [IBM DB2 SQL Statements]
+      | DOMAIN
+      | FUNCTION
+      | [UNIQUE [WHERE NOT NULL]]
+         INDEX                                        # [IBM DB2 SQL Statements]
+      | MASK                                          # [IBM DB2 SQL Statements]
+      | [ INSTANCE
+        | STATIC
+        | CONSTRUCTOR
+        ]
+        METHOD
+      | ORDERING
+      | PERMISSION                                    # [IBM DB2 SQL Statements]
+      | PROCEDURE
+      | ROLE
+      | SCHEMA
+      | SEQUENCE
+      | SPECIFIC METHOD
+      | STOGROUP                                      # [IBM DB2 SQL Statements]
+      | SYNONYM                                       # [IBM DB2 SQL Statements]
+      | [ (GLOBAL | LOCAL) TEMPORARY
+        | AUXILIARY                                   # [IBM DB2 SQL Statements]
+        | AUX                                         # [IBM DB2 SQL Statements]
+        ] 
+        TABLE
+      | [LOB]
+        TABLESPACE                                    # [IBM DB2 SQL Statements]
+      | (TRANSFORM | TRANSFORMS)
+      | TRANSLATION
+      | TRIGGER
+      | TRUSTED CONTEXT                               # [IBM DB2 SQL Statements]
+      | TYPE
+      | VARIABLE                                      # [IBM DB2 SQL Statements]
+      | [RECURSIVE] VIEW
+      )
+    ]
+
+    [unknown: --> eof]
+end
+
+
+def dropStatement =
+    DROP
+    [ subject :
+      ( [PUBLIC] ALIAS                               # [IBM DB2 SQL Statements]
+      | CONSTRAINT
+      | DATABASE                                     # [IBM DB2 SQL Statements]
+      | [SPECIFIC] FUNCTION                          # [IBM DB2 SQL Statements]
+      | INDEX                                        # [IBM DB2 SQL Statements]
+      | MASK                                         # [IBM DB2 SQL Statements]
+      | PACKAGE                                      # [IBM DB2 SQL Statements]
+      | PERMISSION                                   # [IBM DB2 SQL Statements]
+      | PROCEDURE                                    # [IBM DB2 SQL Statements]
+      | ROLE                                         # [IBM DB2 SQL Statements]
+      | SCHEMA
+      | SEQUENCE                                     # [IBM DB2 SQL Statements]
+      | STOGROUP                                     # [IBM DB2 SQL Statements]
+      | SYNONYM                                      # [IBM DB2 SQL Statements]
+      | TABLE
+      | TABLESPACE                                   # [IBM DB2 SQL Statements]
+      | TRIGGER                                      # [IBM DB2 SQL Statements]
+      | TRUSTED CONTEXT                              # [IBM DB2 SQL Statements]
+      | TYPE                                         # [IBM DB2 SQL Statements]
+      | VARIABLE                                     # [IBM DB2 SQL Statements]
+      | VIEW
+      )
+    ]
+
+    [unknown: --> eof]
+end
+
+def renameStatement =
+    RENAME [TABLE | INDEX]
+
+    [unknown: --> eof]
+end
+
+
+## #############################################################################
+## Low level stuff.
+## -----------------------------------------------------------------------------
 
 def identifier          =  (regularIdentifier | delimitedIdentifier)  end
 def regularIdentifier   =  _                                          end

@@ -1,0 +1,23 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target alterStatement;
+
+# NOTE: All of these are just hand-made dummies.
++[ ALTER DATABASE               FOO etc etc ]
++[ ALTER FUNCTION               FOO etc etc ]
++[ ALTER SPECIFIC FUNCTION      FOO etc etc ]
++[ ALTER INDEX                  FOO etc etc ]
++[ ALTER MASK                   FOO etc etc ]
++[ ALTER PERMISSION             FOO etc etc ]
++[ ALTER PROCEDURE              FOO etc etc ]
++[ ALTER SEQUENCE               FOO etc etc ]
++[ ALTER STOGROUP               FOO etc etc ]
++[ ALTER TABLE                  FOO etc etc ]
++[ ALTER TABLESPACE             FOO etc etc ]
++[ ALTER TRIGGER                FOO etc etc ]
++[ ALTER TRUSTED CONTEXT        FOO etc etc ]
++[ ALTER VIEW                   FOO etc etc ]
+# Catch-all:
++[ ALTER                        FOO etc etc ]

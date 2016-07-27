@@ -1,0 +1,11 @@
+package koopa.cobol.sql.grammar.test;
+grammar koopa.cobol.sql.grammar.SQLGrammar;
+tokenizer koopa.cobol.sources.test.CobolTestSource;
+
+target renameStatement;
+
+# NOTE: All of these are just hand-made dummies.
++[ RENAME TABLE               FOO etc etc ]
++[ RENAME INDEX               FOO etc etc ]
+# Catch-all:
++[ RENAME                     FOO etc etc ]

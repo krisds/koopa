@@ -152,6 +152,14 @@ public class Token implements Data {
 		return true;
 	}
 
+	public boolean hasAnyTag(Object[] tags) {
+		for (Object tag : tags)
+			if (hasTag(tag))
+				return true;
+
+		return false;
+	}
+	
 	public int tagCount() {
 		return tags.size();
 	}
@@ -186,7 +194,7 @@ public class Token implements Data {
 		if (theseTags.length == 0)
 			return this;
 
-		if (!hasTags(theseTags))
+		if (!hasAnyTag(theseTags))
 			return this;
 
 		Set<Object> newTags = new HashSet<Object>(tags);

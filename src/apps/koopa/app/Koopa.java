@@ -43,6 +43,7 @@ import koopa.app.cli.CommandLineOptions;
 import koopa.app.components.cobolwords.CobolWordSettings;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
+import koopa.app.components.fileextensions.FileExtensions;
 import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
@@ -292,6 +293,10 @@ public class Koopa extends JFrame implements Application {
 		preprocessing.add(copybookPath);
 
 		parserSettings.addSeparator();
+
+		JMenuItem fileExtensions = new JMenuItem();
+		fileExtensions.setAction(FileExtensions.actionToShow(this));
+		parserSettings.add(fileExtensions);
 
 		JMenuItem lineEndings = new JMenuItem();
 		lineEndings.setAction(LineEndingSettings.actionToShow(this));

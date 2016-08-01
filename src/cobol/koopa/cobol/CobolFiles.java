@@ -2,14 +2,17 @@ package koopa.cobol;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Logger;
-
 import koopa.core.util.Files;
+import koopa.core.util.Strings;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class offers a number of utility functions which help in selecting Cobol
@@ -50,8 +53,6 @@ public class CobolFiles {
 	private static Set<String> SOURCE_EXTENSIONS = new LinkedHashSet<String>();
 	private static Set<String> COPYBOOK_EXTENSIONS = new LinkedHashSet<String>();
 
-	private static String DESCRIPTION = "";
-
 	static {
 		configure();
 	}
@@ -68,11 +69,11 @@ public class CobolFiles {
 			LOGGER.warn("You are using 'koopa.cobolFileExtensions' to define "
 					+ "custom file extensions. This option has been deprecated. "
 					+ "Please use `koopa.sources' instead.");
-		
+
 		if (System.getProperty("koopa.cobolFileExtensions") == null
 				&& System.getProperty("koopa.sources") == null) {
-			SOURCE_EXTENSIONS.add(".CBL");
-			SOURCE_EXTENSIONS.add(".COB");
+			SOURCE_EXTENSIONS.add("CBL");
+			SOURCE_EXTENSIONS.add("COB");
 
 		} else {
 			addSourceExtensions(System.getProperty("koopa.cobolFileExtensions"));
@@ -80,24 +81,10 @@ public class CobolFiles {
 		}
 
 		if (System.getProperty("koopa.copybooks") == null) {
-			COPYBOOK_EXTENSIONS.add(".CPY");
-			COPYBOOK_EXTENSIONS.add(".COPY");
+			COPYBOOK_EXTENSIONS.add("CPY");
+			COPYBOOK_EXTENSIONS.add("COPY");
 		} else
 			addCopybookExtensions(System.getProperty("koopa.copybooks"));
-
-		for (String extension : SOURCE_EXTENSIONS) {
-			if (DESCRIPTION.length() > 0)
-				DESCRIPTION += ", ";
-
-			DESCRIPTION += extension;
-		}
-
-		for (String extension : COPYBOOK_EXTENSIONS) {
-			if (DESCRIPTION.length() > 0)
-				DESCRIPTION += ", ";
-
-			DESCRIPTION += extension;
-		}
 
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Cobol source extensions: " + SOURCE_EXTENSIONS);
@@ -115,10 +102,47 @@ public class CobolFiles {
 			if ("".equals(extraExtension))
 				SOURCE_EXTENSIONS.add("");
 			else {
-				final String extension = "." + extraExtension;
-				COPYBOOK_EXTENSIONS.remove(extension);
-				SOURCE_EXTENSIONS.add(extension);
+				COPYBOOK_EXTENSIONS.remove(extraExtension);
+				SOURCE_EXTENSIONS.add(extraExtension);
 			}
+		}
+	}
+
+	/**
+	 * This sets the list of source extensions to match those provided.
+	 * <p>
+	 * If one of the new extensions is found in the list of copybook extensions
+	 * it will be removed from that one.
+	 */
+	public static void setSourceExtensions(String[] extensions) {
+		SOURCE_EXTENSIONS.clear();
+
+		if (extensions == null)
+			return;
+
+		for (String e : extensions) {
+			e = e.trim().toUpperCase();
+			COPYBOOK_EXTENSIONS.remove(e);
+			SOURCE_EXTENSIONS.add(e);
+		}
+	}
+
+	/**
+	 * This sets the list of copybook extensions to match those provided.
+	 * <p>
+	 * If one of the new extensions is found in the list of source extensions it
+	 * will be removed from that one.
+	 */
+	public static void setCopybookExtensions(String[] extensions) {
+		COPYBOOK_EXTENSIONS.clear();
+
+		if (extensions == null)
+			return;
+
+		for (String e : extensions) {
+			e = e.trim().toUpperCase();
+			SOURCE_EXTENSIONS.remove(e);
+			COPYBOOK_EXTENSIONS.add(e);
 		}
 	}
 
@@ -132,10 +156,8 @@ public class CobolFiles {
 			if ("".equals(extraExtension))
 				COPYBOOK_EXTENSIONS.add("");
 			else {
-				final String extension = "." + extraExtension;
-
-				SOURCE_EXTENSIONS.remove(extension);
-				COPYBOOK_EXTENSIONS.add(extension);
+				SOURCE_EXTENSIONS.remove(extraExtension);
+				COPYBOOK_EXTENSIONS.add(extraExtension);
 			}
 		}
 	}
@@ -144,7 +166,14 @@ public class CobolFiles {
 		return getSwingFileFilter(true);
 	}
 
+	private static String getFullDescription() {
+		final String sources = Strings.join(", ", SOURCE_EXTENSIONS);
+		final String copybooks = Strings.join(", ", COPYBOOK_EXTENSIONS);
+		return Strings.join(", ", sources, copybooks);
+	}
+
 	public static FileFilter getSwingFileFilter(final boolean filesOnly) {
+
 		return new FileFilter() {
 			public boolean accept(File f) {
 				if (!filesOnly && f.isDirectory())
@@ -154,7 +183,7 @@ public class CobolFiles {
 			}
 
 			public String getDescription() {
-				return "Cobol file (" + DESCRIPTION + ")";
+				return "Cobol file (" + getFullDescription() + ")";
 			}
 		};
 	}
@@ -239,5 +268,13 @@ public class CobolFiles {
 	public static boolean isCopybook(String filename) {
 		final String extension = Files.getExtension(filename).toUpperCase();
 		return COPYBOOK_EXTENSIONS.contains(extension);
+	}
+
+	public static List<String> getSourceExtensions() {
+		return new ArrayList<String>(SOURCE_EXTENSIONS);
+	}
+
+	public static List<String> getCopybookExtensions() {
+		return new ArrayList<String>(COPYBOOK_EXTENSIONS);
 	}
 }

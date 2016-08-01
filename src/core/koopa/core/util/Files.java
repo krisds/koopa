@@ -91,7 +91,7 @@ public final class Files {
 		if (dot < 0)
 			return "";
 
-		return filename.substring(dot);
+		return filename.substring(dot + 1);
 	}
 
 	/**

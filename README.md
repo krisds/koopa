@@ -33,6 +33,12 @@ Following options can be set on the command line by passing them as  "-D<option>
 * `koopa.copybooks`: a comma-separated list of file extensions use to identify Cobol copybook files. This defaults to "cpy,copy". (Cfr. the `koopa.cobol.CobolFiles` class.)
 * `koopa.copybooks.locator`: use a specific `koopa.cobol.copybooks.CopybookLocator` subclass when searching for copybooks on the file system. This defaults to `koopa.cobol.copybooks.DefaultCopybookLocator`.
 
+
+### GUI
+
+Some (most) of the command line options can also be set directly from the Koopa GUI, through the `Parser settings` menu.
+
+
 ### Custom columns
 
 The user can add custom XPath queries to the standard parsing overview tab.

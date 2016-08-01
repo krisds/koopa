@@ -53,6 +53,17 @@ Complex XPath query results should be presented in serialized form.
 
 ## Technical Info (for Developers)
 
+### Java 5
+
+The minimum target runtime environment for Koopa is Java 5. To that end the build script forces everything to be compiled to Java 5 compatible bytecode. This, however, is not enough to ensure Java 5 compatibility as you may still be compiling against the library of a later Java version. For that reason you also need to specify where the Java 5 runtime library can be found, by setting the `JAVA5_BOOTCLASSES` environment variable to its location.
+
+You may see following message when building the project with ANT:
+
+>     Please make sure JAVA5_BOOTCLASSES is set to a valid Java 5 bootstrap classpath.
+>     You may get builds which are not compatible with java 5 otherwise.
+
+This is a reminder from the build script that you have not specified where the Java 5 runtime library may be found.
+
 ### Parser Generation
 
 Koopa Grammar files end in ".kg" (for "Koopa grammar"). These are processed by the koopa.dsl.kg.KGG class. You can pass it one of the following:

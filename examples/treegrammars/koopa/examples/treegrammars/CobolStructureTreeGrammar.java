@@ -6,8 +6,8 @@ import koopa.core.treegrammars.TreeGrammar;
 import koopa.core.treeparsers.FutureTreeParser;
 import koopa.core.treeparsers.TreeParser;
 
-import koopa.examples.treegrammars.CobolStructureBaseGrammar;
 import koopa.core.trees.Tree;
+import koopa.examples.treegrammars.CobolStructureBaseGrammar;
 
 public class CobolStructureTreeGrammar extends CobolStructureBaseGrammar {
     public CobolStructureTreeGrammar() {

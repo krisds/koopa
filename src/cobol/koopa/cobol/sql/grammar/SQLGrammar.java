@@ -19,9 +19,9 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import koopa.cobol.sql.grammar.SQLBaseGrammar;
 import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
+import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 
 public class SQLGrammar extends SQLBaseGrammar {
     public SQLGrammar() {

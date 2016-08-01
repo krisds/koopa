@@ -3,6 +3,7 @@ package koopa.dsl.kg.generator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -60,6 +61,10 @@ public class Generation {
 						+ importName + ";");
 			}
 		}
+		
+		// The order in which property names are listed is not stable.
+		// So we sort all imports to ensure stability in the generated output.
+		Collections.sort(additionalImports);
 
 		return toCode(ast, meta, additionalImports);
 	}

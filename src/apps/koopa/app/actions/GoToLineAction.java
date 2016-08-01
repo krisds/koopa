@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -15,12 +14,10 @@ public class GoToLineAction extends AbstractAction implements Action {
 	private static final long serialVersionUID = 1L;
 
 	private Application application = null;
-	private Component parent = null;
 
-	public GoToLineAction(Application application, Component parent) {
+	public GoToLineAction(Application application) {
 		super("Go to line...");
 		this.application = application;
-		this.parent = parent;
 	}
 
 	public void actionPerformed(ActionEvent ae) {
@@ -30,8 +27,9 @@ public class GoToLineAction extends AbstractAction implements Action {
 
 				final int numberOfLines = detail.getNumberOfLines();
 
-				String input = (String) JOptionPane.showInputDialog(parent,
-						"Enter line number (1 to " + numberOfLines + ")");
+				String input = (String) JOptionPane.showInputDialog(
+						application.getFrame(), "Enter line number (1 to "
+								+ numberOfLines + ")");
 
 				if (input == null)
 					return;
@@ -40,7 +38,7 @@ public class GoToLineAction extends AbstractAction implements Action {
 					int lineNumber = Integer.parseInt(input);
 
 					if (lineNumber < 1 || lineNumber > numberOfLines)
-						JOptionPane.showMessageDialog(parent,
+						JOptionPane.showMessageDialog(application.getFrame(),
 								"Line number should be between 1 and "
 										+ numberOfLines + ".",
 								"Line number out of range.",
@@ -49,8 +47,8 @@ public class GoToLineAction extends AbstractAction implements Action {
 						detail.scrollToLine(lineNumber - 1);
 
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(parent, "Not a number: '"
-							+ input + "'", "Not a number.",
+					JOptionPane.showMessageDialog(application.getFrame(),
+							"Not a number: '" + input + "'", "Not a number.",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}

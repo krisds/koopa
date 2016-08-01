@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +28,11 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 		}
 	};
 
-	private Component parent = null;
 	private Application application = null;
 
-	public ExportASTToXMLAction(Application application, Component parent) {
+	public ExportASTToXMLAction(Application application) {
 		super("Export to XML...");
 		this.application = application;
-		this.parent = parent;
 	}
 
 	public void actionPerformed(ActionEvent ae) {
@@ -43,7 +40,7 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 			public void run() {
 				final Tree tree = application.getSyntaxTree();
 				File file = ApplicationSupport.askUserForFile(false,
-						"last-folder", filter, parent);
+						"last-folder", filter, application.getFrame());
 
 				if (file == null) {
 					return;
@@ -51,14 +48,14 @@ public class ExportASTToXMLAction extends AbstractAction implements Action {
 
 				try {
 					XMLSerializer.serialize(tree, file);
-					JOptionPane.showMessageDialog(parent,
+					JOptionPane.showMessageDialog(application.getFrame(),
 							"AST has been exported.", "Export",
 							JOptionPane.INFORMATION_MESSAGE);
 
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(parent, "Export failed.\n"
-							+ e.getMessage(), "Input/Output problem",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(application.getFrame(),
+							"Export failed.\n" + e.getMessage(),
+							"Input/Output problem", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}).start();

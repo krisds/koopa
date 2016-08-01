@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -14,8 +13,7 @@ public class FindAgainAction extends AbstractAction implements Action {
 
 	private FindAction findAction;
 
-	public FindAgainAction(Application application, Component parent,
-			FindAction findAction) {
+	public FindAgainAction(Application application, FindAction findAction) {
 		super("Find again");
 		this.findAction = findAction;
 	}

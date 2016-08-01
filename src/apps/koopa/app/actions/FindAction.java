@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.regex.PatternSyntaxException;
 
@@ -18,19 +17,17 @@ public class FindAction extends AbstractAction implements Action {
 	private String lastSearch = "";
 
 	private Application application = null;
-	private Component parent = null;
 
-	public FindAction(Application application, Component parent) {
+	public FindAction(Application application) {
 		super("Find...");
 		this.application = application;
-		this.parent = parent;
 	}
 
 	public void actionPerformed(ActionEvent ae) {
 		new Thread(new Runnable() {
 			public void run() {
 				final String input = (String) JOptionPane.showInputDialog(
-						parent, "Pattern...", lastSearch);
+						application.getFrame(), "Pattern...", lastSearch);
 
 				search(input);
 			}
@@ -50,7 +47,7 @@ public class FindAction extends AbstractAction implements Action {
 			lastSearch = input;
 
 			if (input.length() == 0) {
-				JOptionPane.showMessageDialog(parent,
+				JOptionPane.showMessageDialog(application.getFrame(),
 						"Can not match empty search pattern.", "Not found",
 						JOptionPane.ERROR_MESSAGE);
 				return;
@@ -58,13 +55,14 @@ public class FindAction extends AbstractAction implements Action {
 
 			Detail detail = (Detail) application.getView();
 			if (!detail.find(input))
-				JOptionPane.showMessageDialog(parent, "No match for '" + input
-						+ "'.", "Not found", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(application.getFrame(),
+						"No match for '" + input + "'.", "Not found",
+						JOptionPane.ERROR_MESSAGE);
 
 		} catch (PatternSyntaxException e) {
 			JOptionPane
 					.showMessageDialog(
-							parent,
+							application.getFrame(),
 							"Syntax error in pattern at position "
 									+ e.getIndex() + ".", "Not found",
 							JOptionPane.ERROR_MESSAGE);

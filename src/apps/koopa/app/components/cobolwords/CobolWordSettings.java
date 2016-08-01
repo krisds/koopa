@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import koopa.app.Application;
 import koopa.cobol.CobolWords;
 
 public class CobolWordSettings extends JDialog {
@@ -157,12 +158,12 @@ public class CobolWordSettings extends JDialog {
 		setExtendedCharactersInCopybooks(extendedCharactersValue);
 	}
 
-	public static Action actionToShow(final Frame owner) {
+	public static Action actionToShow(final Application application) {
 		return new AbstractAction(NAME + " ...") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				new CobolWordSettings(owner).setVisible(true);
+				new CobolWordSettings(application.getFrame()).setVisible(true);
 			}
 		};
 	}

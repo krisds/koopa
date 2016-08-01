@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -22,7 +21,7 @@ public class ShowASTAction extends AbstractAction implements Action {
 
 	private Application application = null;
 
-	public ShowASTAction(Application application, Component parent) {
+	public ShowASTAction(Application application) {
 		super("Show AST...");
 		this.application = application;
 	}

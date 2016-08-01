@@ -1,6 +1,5 @@
 package koopa.app.actions;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -11,12 +10,10 @@ import koopa.app.components.query.XPathQueryingDialog;
 
 @SuppressWarnings("serial")
 public class QueryUsingXPathAction extends AbstractAction implements Action {
-	private Frame parent = null;
 	private Application application = null;
 
-	public QueryUsingXPathAction(Frame parent, Application application) {
+	public QueryUsingXPathAction(Application application) {
 		super("Find by XPath...");
-		this.parent = parent;
 		this.application = application;
 	}
 
@@ -24,7 +21,7 @@ public class QueryUsingXPathAction extends AbstractAction implements Action {
 		new Thread(new Runnable() {
 			public void run() {
 				final XPathQueryingDialog dialog = XPathQueryingDialog
-						.getDialog(parent, application);
+						.getDialog(application.getFrame(), application);
 
 				dialog.setVisible(true);
 			}

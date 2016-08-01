@@ -3,6 +3,10 @@ package koopa.app;
 import java.awt.Component;
 import java.io.File;
 
+import javax.swing.JFrame;
+
+import koopa.app.components.overview.Overview;
+import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
@@ -35,6 +39,8 @@ public interface Application {
 
 	// TODO Set up a View type.
 	Component getView();
+	
+	Coordinated getCoordinatedView();
 
 	void closeView(Component component);
 
@@ -43,4 +49,8 @@ public interface Application {
 	void showGrammarRules();
 
 	void quitParsing();
+
+	Overview getOverview();
+
+	JFrame getFrame();
 }

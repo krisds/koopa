@@ -15,6 +15,10 @@
 	</target>
 
 	<target name="build" depends="clean,core,core-tests,dsl,dsl-tests,cobol,cobol-tests,apps,examples,report-java-version">
+		<!-- Include all readme's in the output. -->
+		<copy todir="build/">
+			<fileset dir="." includes="*.md" />
+		</copy>
 	</target>
 
 	<target name="run-tests" depends="run-core-tests,run-dsl-tests,run-cobol-tests,run-cobol-regression-tests">

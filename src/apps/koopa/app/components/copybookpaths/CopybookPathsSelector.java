@@ -17,8 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import koopa.app.Application;
 import koopa.app.ApplicationSupport;
-import koopa.app.Koopa;
 import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParsingCoordinator;
 
@@ -129,17 +129,17 @@ public class CopybookPathsSelector extends JDialog {
 		});
 	}
 
-	public static Action actionToShow(final Koopa koopa) {
+	public static Action actionToShow(final Application application) {
 		return new AbstractAction(NAME + " ...") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = koopa.getCoordinatedView();
+				final Coordinated view = application.getCoordinatedView();
 				final Coordinated coordinated = (Coordinated) view;
 				final ParsingCoordinator coordinator = coordinated
 						.getParsingCoordinator();
 
-				new CopybookPathsSelector(koopa, coordinator).setVisible(true);
+				new CopybookPathsSelector(application.getFrame(), coordinator).setVisible(true);
 			}
 		};
 	}

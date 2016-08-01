@@ -60,4 +60,9 @@ public class CommandLineOptions {
 	public List<String> getOther() {
 		return other;
 	}
+
+	public String usage() {
+		return "Usage: [--free-format] "
+				+ "[--preprocess -I <copyboopath>] [source]";
+	}
 }

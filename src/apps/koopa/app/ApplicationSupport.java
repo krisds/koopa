@@ -16,8 +16,12 @@ import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -35,6 +39,16 @@ public class ApplicationSupport {
 	private static Preferences preferences = getPreferences();
 
 	private static JFileChooser chooser = null;
+
+	public static final String MODIFIER = "::::";
+	private static final String MODIFIER_KEY;
+	static {
+		String os = System.getProperty("os.name");
+		if ("Mac OS X".equals(os))
+			MODIFIER_KEY = "meta";
+		else
+			MODIFIER_KEY = "ctrl";
+	}
 
 	public static File askUserForFile(final boolean openFile, String key,
 			FileFilter filter, final Component parent) {
@@ -254,5 +268,27 @@ public class ApplicationSupport {
 				return true;
 
 		return false;
+	}
+
+	public static void setAccelerators(JMenuItem item,
+			String keyStrokeDefinition,
+			String... alternateKeyStrokesDefinitions) {
+
+		KeyStroke keystroke = KeyStroke.getKeyStroke(keyStrokeDefinition
+				.replaceAll(MODIFIER, MODIFIER_KEY));
+		item.setAccelerator(keystroke);
+
+		if (alternateKeyStrokesDefinitions != null
+				&& alternateKeyStrokesDefinitions.length > 0) {
+			InputMap im = item.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+			final Object actionMapKey = im.get(keystroke);
+
+			for (String alternateKeyStrokeDefinition : alternateKeyStrokesDefinitions) {
+				KeyStroke alternateKeystroke = KeyStroke
+						.getKeyStroke(alternateKeyStrokeDefinition.replaceAll(
+								MODIFIER, MODIFIER_KEY));
+				im.put(alternateKeystroke, actionMapKey);
+			}
+		}
 	}
 }

@@ -3,52 +3,28 @@ package koopa.app;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.ButtonGroup;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import koopa.app.actions.CloseFileAction;
-import koopa.app.actions.ExportASTToXMLAction;
-import koopa.app.actions.ExportBatchResultsToCSVAction;
-import koopa.app.actions.FindAction;
-import koopa.app.actions.FindAgainAction;
-import koopa.app.actions.GoToLineAction;
-import koopa.app.actions.OpenFileAction;
-import koopa.app.actions.QueryUsingXPathAction;
-import koopa.app.actions.QuitParsingAction;
-import koopa.app.actions.ReloadFileAction;
-import koopa.app.actions.ShowASTAction;
-import koopa.app.actions.ShowGrammarAction;
-import koopa.app.batchit.BatchResults;
-import koopa.app.batchit.ClearResultsAction;
 import koopa.app.cli.CommandLineOptions;
-import koopa.app.components.cobolwords.CobolWordSettings;
-import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
-import koopa.app.components.fileextensions.FileExtensions;
 import koopa.app.components.grammarview.GrammarView;
-import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
-import koopa.app.util.Getter;
-import koopa.cobol.CobolFiles;
+import koopa.app.menus.FileMenu;
+import koopa.app.menus.HelpMenu;
+import koopa.app.menus.NavigationMenu;
+import koopa.app.menus.ParserSettingsMenu;
+import koopa.app.menus.SyntaxTreeMenu;
 import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
@@ -60,7 +36,6 @@ import koopa.core.util.Tuple;
 
 import org.apache.log4j.PropertyConfigurator;
 
-// TODO This class has become a bit of a monster...
 public class Koopa extends JFrame implements Application {
 
 	private static final long serialVersionUID = 1L;
@@ -80,8 +55,7 @@ public class Koopa extends JFrame implements Application {
 
 		final List<String> other = options.getOther();
 		if (other.size() > 1) {
-			System.err.println("Usage: [--free-format] "
-					+ "[--preprocess -I <copyboopath>] [source]");
+			System.err.println(options.usage());
 			return;
 		}
 
@@ -100,45 +74,13 @@ public class Koopa extends JFrame implements Application {
 
 	private static DecimalFormat coverageFormatter = new DecimalFormat("0.0");
 
-	private static final String MODIFIER = "::::";
-	private static final String MODIFIER_KEY;
-	static {
-		String os = System.getProperty("os.name");
-		if ("Mac OS X".equals(os))
-			MODIFIER_KEY = "meta";
-		else
-			MODIFIER_KEY = "ctrl";
-	}
-
 	private List<ApplicationListener> listeners = new ArrayList<ApplicationListener>();
 
-	private JMenu file = null;
-	private JMenuItem open = null;
-	private JMenuItem reload = null;
-	private JMenuItem close = null;
-	private JMenuItem quitParsing = null;
-	private JMenuItem clearResults = null;
-	private JMenuItem saveCSV = null;
-
-	private JMenu parserSettings = null;
-	private JMenu sourceFormat = null;
-	private JRadioButtonMenuItem fixedFormat = null;
-	private JRadioButtonMenuItem freeFormat = null;
-	private JMenu preprocessing = null;
-	private JRadioButtonMenuItem preprocessingEnabled = null;
-	private JRadioButtonMenuItem preprocessingDisabled = null;
-	private JMenuItem copybookPath = null;
-
-	private JMenu navigation = null;
-	private JMenuItem goToLine = null;
-	private JMenuItem find = null;
-	private JMenuItem findAgain = null;
-
-	private JMenu syntaxTree = null;
-	private JMenuItem showAST = null;
-	private JMenuItem saveXML = null;
-	private JMenuItem queryUsingXath = null;
-	private JMenuItem showGrammar = null;
+	private FileMenu fileMenu = null;
+	private ParserSettingsMenu parserSettingsMenu = null;
+	private NavigationMenu navigationMenu = null;
+	private SyntaxTreeMenu syntaxTreeMenu = null;
+	private HelpMenu helpMenu = null;
 
 	private JTabbedPane tabbedPane = null;
 
@@ -169,188 +111,20 @@ public class Koopa extends JFrame implements Application {
 
 		JMenuBar bar = new JMenuBar();
 
-		// File operations ----------------------------------------------------
+		fileMenu = new FileMenu(this);
+		bar.add(fileMenu);
 
-		file = new JMenu("File");
+		parserSettingsMenu = new ParserSettingsMenu(this);
+		bar.add(parserSettingsMenu);
 
-		open = new JMenuItem(new OpenFileAction("Parse ...", this,
-				CobolFiles.getSwingFileFilter(false), this));
+		navigationMenu = new NavigationMenu(this);
+		bar.add(navigationMenu);
 
-		setAccelerators(open, MODIFIER + " O");
-		file.add(open);
+		syntaxTreeMenu = new SyntaxTreeMenu(this);
+		bar.add(syntaxTreeMenu);
 
-		reload = new JMenuItem(new ReloadFileAction(this));
-		setAccelerators(reload, MODIFIER + " R");
-		file.add(reload);
-
-		close = new JMenuItem(new CloseFileAction(this));
-		setAccelerators(close, MODIFIER + " W", "ESCAPE");
-		file.add(close);
-
-		file.addSeparator();
-
-		quitParsing = new JMenuItem(new QuitParsingAction(this));
-		setAccelerators(quitParsing, MODIFIER + " B");
-		file.add(quitParsing);
-
-		file.addSeparator();
-
-		clearResults = new JMenuItem(new ClearResultsAction(overview));
-		file.add(clearResults);
-
-		saveCSV = new JMenuItem(new ExportBatchResultsToCSVAction(
-				new Getter<BatchResults>() {
-					public BatchResults getIt() {
-						return overview.getResults();
-					}
-				}, this));
-
-		setAccelerators(saveCSV, MODIFIER + " E");
-		file.add(saveCSV);
-
-		bar.add(file);
-
-		// --- Parser settings ------------------------------------------------
-
-		parserSettings = new JMenu("Parser settings");
-
-		sourceFormat = new JMenu("Source format");
-		parserSettings.add(sourceFormat);
-
-		final ButtonGroup group = new ButtonGroup();
-
-		fixedFormat = new JRadioButtonMenuItem();
-
-		AbstractAction selectFixedFormat = new AbstractAction("Fixed") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = getCoordinatedView();
-				view.getParsingCoordinator().setFormat(SourceFormat.FIXED);
-			}
-		};
-
-		fixedFormat.setAction(selectFixedFormat);
-
-		fixedFormat.setSelected(true);
-		group.add(fixedFormat);
-		sourceFormat.add(fixedFormat);
-
-		freeFormat = new JRadioButtonMenuItem();
-
-		AbstractAction selectFreeFormat = new AbstractAction("Free") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = getCoordinatedView();
-				view.getParsingCoordinator().setFormat(SourceFormat.FREE);
-			}
-		};
-
-		freeFormat.setAction(selectFreeFormat);
-
-		group.add(freeFormat);
-		sourceFormat.add(freeFormat);
-
-		preprocessing = new JMenu("Preprocessing");
-		parserSettings.add(preprocessing);
-
-		final ButtonGroup preprocessingGroup = new ButtonGroup();
-		preprocessingEnabled = new JRadioButtonMenuItem();
-		preprocessingDisabled = new JRadioButtonMenuItem("Disabled");
-		preprocessingGroup.add(preprocessingEnabled);
-		preprocessingGroup.add(preprocessingDisabled);
-
-		AbstractAction enablePreprocessing = new AbstractAction("Enabled") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = getCoordinatedView();
-				view.getParsingCoordinator().setPreprocessing(true);
-			}
-		};
-
-		AbstractAction disablePreprocessing = new AbstractAction("Disabled") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = getCoordinatedView();
-				view.getParsingCoordinator().setPreprocessing(false);
-			}
-		};
-
-		preprocessingEnabled.setAction(enablePreprocessing);
-		preprocessingDisabled.setAction(disablePreprocessing);
-
-		preprocessing.add(preprocessingEnabled);
-		preprocessing.add(preprocessingDisabled);
-		preprocessingDisabled.setSelected(true);
-
-		preprocessing.addSeparator();
-
-		copybookPath = new JMenuItem();
-		copybookPath.setAction(CopybookPathsSelector.actionToShow(this));
-		preprocessing.add(copybookPath);
-
-		parserSettings.addSeparator();
-
-		JMenuItem fileExtensions = new JMenuItem();
-		fileExtensions.setAction(FileExtensions.actionToShow(this));
-		parserSettings.add(fileExtensions);
-
-		JMenuItem lineEndings = new JMenuItem();
-		lineEndings.setAction(LineEndingSettings.actionToShow(this));
-		parserSettings.add(lineEndings);
-
-		JMenuItem cobolWords = new JMenuItem();
-		cobolWords.setAction(CobolWordSettings.actionToShow(this));
-		parserSettings.add(cobolWords);
-
-		bar.add(parserSettings);
-
-		// Navigation ---------------------------------------------------------
-
-		navigation = new JMenu("Navigation");
-
-		goToLine = new JMenuItem(new GoToLineAction(this, this));
-		setAccelerators(goToLine, MODIFIER + " L");
-		navigation.add(goToLine);
-
-		final FindAction findAction = new FindAction(this, this);
-		find = new JMenuItem(findAction);
-		setAccelerators(find, MODIFIER + " F");
-		navigation.add(find);
-
-		findAgain = new JMenuItem(new FindAgainAction(this, this, findAction));
-		setAccelerators(findAgain, MODIFIER + " G");
-		navigation.add(findAgain);
-
-		bar.add(navigation);
-
-		// Parse results ------------------------------------------------------
-
-		syntaxTree = new JMenu("Syntax tree");
-
-		showGrammar = new JMenuItem(new ShowGrammarAction(this));
-		// setAccelerators(showGrammar, MODIFIER + " G");
-		syntaxTree.add(showGrammar);
-
-		syntaxTree.addSeparator();
-
-		showAST = new JMenuItem(new ShowASTAction(this, this));
-		syntaxTree.add(showAST);
-
-		saveXML = new JMenuItem(new ExportASTToXMLAction(this, this));
-		// setAccelerators(saveXML, MODIFIER + " E");
-		syntaxTree.add(saveXML);
-
-		queryUsingXath = new JMenuItem(new QueryUsingXPathAction(this, this));
-		setAccelerators(queryUsingXath, MODIFIER + " D");
-		syntaxTree.add(queryUsingXath);
-
-		bar.add(syntaxTree);
-
-		// --------------------------------------------------------------------
+		helpMenu = new HelpMenu(this);
+		bar.add(helpMenu);
 
 		setJMenuBar(bar);
 	}
@@ -396,15 +170,15 @@ public class Koopa extends JFrame implements Application {
 	 * .getTransferData(DataFlavor.javaFileListFlavor);
 	 * 
 	 * if (data != null && !data.isEmpty()) { new Thread(new Runnable() { public
-	 * void run() { if (data.size() == 1) { File file = data.get(0);
+	 * void run() { if (data.size() == 1) { File fileMenu = data.get(0);
 	 * 
-	 * if (file.isDirectory()) { tabbedPane .setSelectedComponent(overview);
-	 * overview.walkAndParse(file);
+	 * if (fileMenu.isDirectory()) { tabbedPane .setSelectedComponent(overview);
+	 * overview.walkAndParse(fileMenu);
 	 * 
-	 * } else { openFile(file); }
+	 * } else { openFile(fileMenu); }
 	 * 
-	 * } else { tabbedPane.setSelectedComponent(overview); for (File file :
-	 * data) overview.walkAndParse(file); } } }).start(); }
+	 * } else { tabbedPane.setSelectedComponent(overview); for (File fileMenu :
+	 * data) overview.walkAndParse(fileMenu); } } }).start(); }
 	 * 
 	 * return true;
 	 * 
@@ -416,89 +190,11 @@ public class Koopa extends JFrame implements Application {
 	 */
 
 	private void updateMenus() {
-		Component view = getView();
-
-		if (view == overview) {
-			boolean isParsing = overview.isParsing();
-			boolean hasResults = !isParsing
-					&& overview.getResults().getRowCount() > 0;
-
-			// File menu ...
-			open.setEnabled(!isParsing);
-			reload.setEnabled(false);
-			close.setEnabled(false);
-			quitParsing.setEnabled(isParsing);
-			clearResults.setEnabled(hasResults);
-			saveCSV.setEnabled(hasResults);
-
-			// Parse settings ...
-			parserSettings.setEnabled(!isParsing);
-			switch (overview.getParsingCoordinator().getFormat()) {
-			case FIXED:
-				fixedFormat.setSelected(true);
-				break;
-			case FREE:
-				freeFormat.setSelected(true);
-				break;
-			}
-
-			if (overview.getParsingCoordinator().isPreprocessing())
-				preprocessingEnabled.setSelected(true);
-			else
-				preprocessingEnabled.setSelected(false);
-
-			// Navigation ...
-			navigation.setEnabled(false);
-			goToLine.setEnabled(false);
-			find.setEnabled(false);
-			findAgain.setEnabled(false);
-
-			// Syntax tree ...
-			showAST.setEnabled(false);
-			saveXML.setEnabled(false);
-			queryUsingXath.setEnabled(false);
-
-		} else {
-			Detail detail = (Detail) view;
-
-			boolean isParsing = overview.isParsing();
-			boolean canDoExtraActions = !isParsing && !detail.isParsing();
-
-			// File menu ...
-			open.setEnabled(canDoExtraActions);
-			reload.setEnabled(canDoExtraActions);
-			close.setEnabled(canDoExtraActions);
-			quitParsing.setEnabled(isParsing);
-			clearResults.setEnabled(false);
-			saveCSV.setEnabled(false);
-
-			// Parse settings ...
-			switch (detail.getParsingCoordinator().getFormat()) {
-			case FIXED:
-				fixedFormat.setSelected(true);
-				break;
-			case FREE:
-				freeFormat.setSelected(true);
-				break;
-			}
-
-			if (detail.getParsingCoordinator().isPreprocessing())
-				preprocessingEnabled.setSelected(true);
-			else
-				preprocessingEnabled.setSelected(false);
-
-			// Navigation ...
-			navigation.setEnabled(true);
-			goToLine.setEnabled(true);
-			find.setEnabled(true);
-			findAgain.setEnabled(true);
-
-			// Syntax tree ...
-			boolean hasSyntaxTree = detail.hasSyntaxTree();
-			showAST.setEnabled(hasSyntaxTree);
-			saveXML.setEnabled(hasSyntaxTree);
-			queryUsingXath.setEnabled(hasSyntaxTree);
-		}
+		fileMenu.update();
+		parserSettingsMenu.update();
+		navigationMenu.update();
+		syntaxTreeMenu.update();
+		helpMenu.update();
 	}
 
 	public void openFile(File file) {
@@ -518,8 +214,8 @@ public class Koopa extends JFrame implements Application {
 			return;
 		}
 
-		// TODO Check if there already exists a tab for the given file. In that
-		// case do a reload instead.
+		// TODO Check if there already exists a tab for the given fileMenu. In
+		// that case do a reload instead.
 
 		final Detail detail = new Detail(this, file, parsingCoordinator);
 		overview.addParseResults(detail.getParseResults());
@@ -659,27 +355,6 @@ public class Koopa extends JFrame implements Application {
 		grammarView.showRule(name);
 	}
 
-	private void setAccelerators(JMenuItem item, String keyStrokeDefinition,
-			String... alternateKeyStrokesDefinitions) {
-
-		KeyStroke keystroke = KeyStroke.getKeyStroke(keyStrokeDefinition
-				.replaceAll(MODIFIER, MODIFIER_KEY));
-		item.setAccelerator(keystroke);
-
-		if (alternateKeyStrokesDefinitions != null
-				&& alternateKeyStrokesDefinitions.length > 0) {
-			InputMap im = item.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			final Object actionMapKey = im.get(keystroke);
-
-			for (String alternateKeyStrokeDefinition : alternateKeyStrokesDefinitions) {
-				KeyStroke alternateKeystroke = KeyStroke
-						.getKeyStroke(alternateKeyStrokeDefinition.replaceAll(
-								MODIFIER, MODIFIER_KEY));
-				im.put(alternateKeystroke, actionMapKey);
-			}
-		}
-	}
-
 	public void quitParsing() {
 		overview.quitParsing();
 	}
@@ -698,5 +373,13 @@ public class Koopa extends JFrame implements Application {
 	public void setSourceFormat(SourceFormat format) {
 		overview.getParsingCoordinator().setFormat(format);
 		updateMenus();
+	}
+
+	public Overview getOverview() {
+		return overview;
+	}
+
+	public JFrame getFrame() {
+		return this;
 	}
 }

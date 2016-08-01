@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import koopa.app.Application;
 import koopa.core.util.LineEndings;
 
 public class LineEndingSettings extends JDialog {
@@ -134,12 +135,12 @@ public class LineEndingSettings extends JDialog {
 		LineEndings.setSticky(stickyValue);
 	}
 
-	public static Action actionToShow(final Frame owner) {
+	public static Action actionToShow(final Application application) {
 		return new AbstractAction(NAME + " ...") {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				new LineEndingSettings(owner).setVisible(true);
+				new LineEndingSettings(application.getFrame()).setVisible(true);
 			}
 		};
 	}

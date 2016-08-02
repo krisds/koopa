@@ -16841,18 +16841,26 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator setEnvironmentVariableParser = null;
     
-    public final Start setEnvironmentVariable = Start.on(getNamespace(), "setEnvironmentVariable");
+    protected final Start setEnvironmentVariable = Start.on(getNamespace(), "setEnvironmentVariable");
     
-    public ParserCombinator setEnvironmentVariable() {
+    protected ParserCombinator setEnvironmentVariable() {
       if (setEnvironmentVariableParser == null) {
-        FutureParser future = scoped("setEnvironmentVariable", PUBLIC, true);
+        FutureParser future = scoped("setEnvironmentVariable", PRIVATE, true);
         setEnvironmentVariableParser = future;
         future.setParser(
           sequence(
-            token("ENVIRONMENT"),
-            literal(),
-            token("TO"),
-            literal()
+            as("environment",
+              sequence(
+                token("ENVIRONMENT"),
+                literal()
+              )
+            ),
+            as("to",
+              sequence(
+                token("TO"),
+                literal()
+              )
+            )
           )
         );
       }
@@ -16866,86 +16874,101 @@ public class CobolGrammar extends CobolBaseGrammar {
     
     private ParserCombinator setOtherParser = null;
     
-    public final Start setOther = Start.on(getNamespace(), "setOther");
+    protected final Start setOther = Start.on(getNamespace(), "setOther");
     
-    public ParserCombinator setOther() {
+    protected ParserCombinator setOther() {
       if (setOtherParser == null) {
-        FutureParser future = scoped("setOther", PUBLIC, true);
+        FutureParser future = scoped("setOther", PRIVATE, true);
         setOtherParser = future;
         future.setParser(
           sequence(
             plus(
               choice(
-                sequence(
-                  token("ADDRESS"),
-                  optional(
-                    token("OF")
-                  ),
-                  identifier()
-                ),
+                addressOf(),
                 qualifiedDataName(),
                 identifier()
               )
             ),
             choice(
-              sequence(
-                token("TO"),
-                choice(
-                  token("ON"),
-                  token("OFF"),
-                  token("TRUE"),
-                  token("FALSE"),
-                  sequence(
-                    token("ADDRESS"),
-                    optional(
-                      token("OF")
+              as("to",
+                sequence(
+                  token("TO"),
+                  choice(
+                    as("on",
+                      token("ON")
                     ),
-                    identifier()
-                  ),
-                  sequence(
-                    optional(
-                      token("NOT")
+                    as("off",
+                      token("OFF")
                     ),
-                    choice(
-                      token("BROWSING"),
-                      token("READING"),
-                      token("WRITING")
+                    as("true",
+                      token("TRUE")
                     ),
-                    optional(
+                    as("false",
+                      token("FALSE")
+                    ),
+                    addressOf(),
+                    as("formatMonitor",
                       sequence(
-                        token("CONVERTING"),
-                        token("FROM"),
+                        optional(
+                          token("NOT")
+                        ),
                         choice(
                           token("BROWSING"),
+                          token("READING"),
                           token("WRITING")
+                        ),
+                        optional(
+                          sequence(
+                            token("CONVERTING"),
+                            token("FROM"),
+                            choice(
+                              token("BROWSING"),
+                              token("WRITING")
+                            )
+                          )
                         )
                       )
-                    )
-                  ),
-                  sequence(
-                    token("ENTRY"),
-                    choice(
-                      identifier(),
-                      literal()
-                    )
-                  ),
-                  token("NULL"),
-                  token("NULLS"),
-                  figurativeConstant(),
-                  name(),
-                  identifier(),
-                  integer()
+                    ),
+                    as("entry",
+                      sequence(
+                        token("ENTRY"),
+                        choice(
+                          identifier(),
+                          literal()
+                        )
+                      )
+                    ),
+                    as("null",
+                      token("NULL")
+                    ),
+                    as("null",
+                      token("NULLS")
+                    ),
+                    figurativeConstant(),
+                    name(),
+                    identifier(),
+                    integer()
+                  )
                 )
               ),
-              sequence(
-                choice(
+              as("up",
+                sequence(
                   token("UP"),
-                  token("DOWN")
-                ),
-                token("BY"),
-                choice(
-                  identifier(),
-                  integer()
+                  token("BY"),
+                  choice(
+                    identifier(),
+                    integer()
+                  )
+                )
+              ),
+              as("down",
+                sequence(
+                  token("DOWN"),
+                  token("BY"),
+                  choice(
+                    identifier(),
+                    integer()
+                  )
                 )
               )
             )
@@ -21633,7 +21656,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             token("ADDRESS"),
-            token("OF"),
+            optional(
+              token("OF")
+            ),
             identifier()
           )
         );

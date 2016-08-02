@@ -3999,34 +3999,36 @@ def setStatement =
 end
 
 # Based on a sample found in the wild...
-def setEnvironmentVariable =
-    ENVIRONMENT literal TO literal
+private def setEnvironmentVariable =
+    (environment: ENVIRONMENT literal) 
+    (to: TO literal)
 end
 
-def setOther =
-    ( ADDRESS [OF] identifier
+private def setOther =
+    ( addressOf
     | qualifiedDataName
     | identifier
     )+
     
-    ( TO (
-        ON                     # STD Format 3 (switch setting)
-      | OFF                    # STD Format 3 (switch setting)
+    ( to: TO (
+        on:  ON                              # STD Format 3 (switch setting)
+      | off: OFF                             # STD Format 3 (switch setting)
     
-      | TRUE                   # STD Format 4 (condition setting)
-      | FALSE                  # STD Format 4 (condition setting)
+      | true:  TRUE                          # STD Format 4 (condition setting)
+      | false: FALSE                         # STD Format 4 (condition setting)
     
       # Was from "setFormatDataPointerAssignment"
-      | ADDRESS [OF] identifier
+      | addressOf
     
       # Was from "setFormatMonitorValue"
-      | [NOT] (BROWSING | READING | WRITING)
-        [CONVERTING FROM (BROWSING | WRITING)]
+      | formatMonitor: 
+          [NOT] (BROWSING | READING | WRITING)
+          [CONVERTING FROM (BROWSING | WRITING)]
     
       # Was from "setFormatProcedurePointerAssignment"
-      | ENTRY (identifier | literal)
-      | NULL
-      | NULLS
+      | entry: ENTRY (identifier | literal)
+      | null: NULL
+      | null: NULLS
     
       | figurativeConstant
       | name
@@ -4037,7 +4039,8 @@ def setOther =
     # Was from "setFormatSemaphoreValue"
     # Issue #57: prefer to categorize identifiers as identifiers, rather than
     # catching them as integer constants.
-    | (UP | DOWN) BY (identifier | integer)
+    | up:   UP    BY (identifier | integer)
+    | down: DOWN  BY (identifier | integer)
     )
     
 end
@@ -5429,7 +5432,7 @@ def integer =
     )
 end
 
-def addressOf    =  ADDRESS      OF  identifier  end
+def addressOf    =  ADDRESS     [OF] identifier  end
 def lengthOf     =  LENGTH      [OF] identifier  end
 def byteLengthOf =  BYTE-LENGTH [OF] identifier  end
 

@@ -5407,7 +5407,8 @@ def figurativeConstant =
 end
 
 def numericLiteral =
-    ( decimal
+    ( floatingPoint
+    | decimal
     | integerLiteral
     | booleanLiteral
     | hexadecimal
@@ -5431,6 +5432,8 @@ def integer =
     | byteLengthOf
     )
 end
+
+def floatingPoint =  @FLOATING_POINT_LITERAL _  end
 
 def addressOf    =  ADDRESS     [OF] identifier  end
 def lengthOf     =  LENGTH      [OF] identifier  end

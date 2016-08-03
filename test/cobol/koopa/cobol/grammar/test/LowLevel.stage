@@ -45,6 +45,23 @@ target decimal;
 -[ "ABC" ]
 -[ DEF ]
 
+
+target floatingPoint;
++[ +0.0E+00 ]
++[ -0.0E+00 ]
++[  0.0E+00 ]
+
++[ +0.0e+00 ]
++[ -0.0e+00 ]
++[  0.0e+00 ]
+
++[ +0.0E00 ]
++[ -0.0E00 ]
++[  0.0E00 ]
+
+-[ +123E+00 ]
+
+
 # Bug found by Marc Dzaebel. The '.' and '01' were being merged into a decimal,
 # because the newline after the '.' was not seen by the parser.
 -[ .

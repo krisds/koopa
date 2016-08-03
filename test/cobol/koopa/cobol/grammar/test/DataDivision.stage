@@ -615,6 +615,9 @@ target dataDescriptionEntry;
 # Issue 24. Mostly-numeric name.
 + [ 88 4-1 value '1' . ]
 
+# Checking that floating point values get accepted.
++[ 01 FLOATINGPOINT  VALUE +0.0E+00 . ]
+
 
 target localStorageSection;
 

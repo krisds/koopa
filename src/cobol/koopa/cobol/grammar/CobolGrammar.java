@@ -22,6 +22,7 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.core.data.tags.AreaTag;
+import static koopa.cobol.data.tags.SyntacticTag.FLOATING_POINT_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
 
@@ -21569,6 +21570,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         numericLiteralParser = future;
         future.setParser(
           choice(
+            floatingPoint(),
             decimal(),
             integerLiteral(),
             booleanLiteral(),
@@ -21639,6 +21641,29 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return integerParser;
+    }
+    
+    // ========================================================
+    // floatingPoint
+    // ........................................................
+    
+    private ParserCombinator floatingPointParser = null;
+    
+    public final Start floatingPoint = Start.on(getNamespace(), "floatingPoint");
+    
+    public ParserCombinator floatingPoint() {
+      if (floatingPointParser == null) {
+        FutureParser future = scoped("floatingPoint", PUBLIC, true);
+        floatingPointParser = future;
+        future.setParser(
+          sequence(
+            tagged(FLOATING_POINT_LITERAL),
+            any()
+          )
+        );
+      }
+    
+      return floatingPointParser;
     }
     
     // ========================================================

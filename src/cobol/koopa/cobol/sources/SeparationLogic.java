@@ -3,6 +3,7 @@ package koopa.cobol.sources;
 import static koopa.cobol.data.tags.SyntacticTag.BOOLEAN_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
 import static koopa.cobol.data.tags.SyntacticTag.DECIMAL_LITERAL;
+import static koopa.cobol.data.tags.SyntacticTag.FLOATING_POINT_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.HEXADECIMAL_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
 import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
@@ -14,6 +15,8 @@ import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
@@ -48,6 +51,8 @@ public class SeparationLogic {
 
 		while (position < length) {
 			final char c = text.charAt(position);
+
+			int end = -1;
 
 			// NOTE. The following cases are repeated in the 'other' method. If
 			// you update these cases then also update that method!
@@ -123,7 +128,8 @@ public class SeparationLogic {
 				position = hexadecimal(token, text, position, 1, length, false,
 						feedback);
 
-			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
+			} else if (startOfAlphanumericHexadecimal(text, length, position,
+					c)) {
 				// ALPHANUMERIC HEXADECIMAL LITERAL: x"00"
 				position = hexadecimal(token, text, position, 1, length, true,
 						feedback);
@@ -133,14 +139,22 @@ public class SeparationLogic {
 				position = hexadecimal(token, text, position, 2, length, true,
 						feedback);
 
+			} else if ((end = matchesFloatingPoint(text, position, length,
+					c)) > position) {
+				// FLOATING POINT LITERAL.
+				position = floatingPoint(token, text, position, end, length,
+						feedback);
+
 			} else if (startOfSignedNumber(text, position, length, c)) {
 				// SIGNED NUMERIC LITERAL.
-				position = signedNumber(token, text, position, length, feedback);
+				position = signedNumber(token, text, position, length,
+						feedback);
 				/*
 				 * } else if (startsDotDecimal(text, length, position, c)) { //
 				 * UNSIGNED DECIMAL LITERAL. position = dotDecimal(token, text,
 				 * position, length);
 				 */
+
 			} else if (isLetterOrDigit(c)) {
 				// UNSIGNED NUMERIC LITERAL or COBOL WORD.
 				position = cobolWordOrNumber(token, text, position, length,
@@ -153,8 +167,8 @@ public class SeparationLogic {
 		}
 	}
 
-	private static boolean startsDotDecimal(final String text,
-			final int length, int position, final char c) {
+	private static boolean startsDotDecimal(final String text, final int length,
+			int position, final char c) {
 		return c == '.' && position + 1 < length
 				&& isDigit(text.charAt(position + 1));
 	}
@@ -186,66 +200,59 @@ public class SeparationLogic {
 
 	private static boolean startOfNullTerminatedString(final String text,
 			final int length, int position, final char c) {
-		return (c == 'z' || c == 'Z')
-				&& position + 1 < length
-				&& (text.charAt(position + 1) == '"' || text
-						.charAt(position + 1) == '\'');
+		return (c == 'z' || c == 'Z') && position + 1 < length
+				&& (text.charAt(position + 1) == '"'
+						|| text.charAt(position + 1) == '\'');
 	}
 
 	private static boolean startOfNationalString(final String text,
 			final int length, int position, final char c) {
-		return (c == 'n' || c == 'N')
-				&& position + 1 < length
-				&& (text.charAt(position + 1) == '"' || text
-						.charAt(position + 1) == '\'');
+		return (c == 'n' || c == 'N') && position + 1 < length
+				&& (text.charAt(position + 1) == '"'
+						|| text.charAt(position + 1) == '\'');
 	}
 
 	private static boolean startOfBoolean(final String text, final int length,
 			int position, final char c) {
-		return (c == 'b' || c == 'B')
-				&& position + 1 < length
-				&& (text.charAt(position + 1) == '"' || text
-						.charAt(position + 1) == '\'');
+		return (c == 'b' || c == 'B') && position + 1 < length
+				&& (text.charAt(position + 1) == '"'
+						|| text.charAt(position + 1) == '\'');
 	}
 
 	private static boolean startOfBooleanHexadecimal(final String text,
 			final int length, int position, final char c) {
-		return (c == 'b' || c == 'B')
-				&& position + 2 < length
-				&& (text.charAt(position + 1) == 'x' || text
-						.charAt(position + 1) == 'X')
-				&& (text.charAt(position + 2) == '"' || text
-						.charAt(position + 2) == '\'');
+		return (c == 'b' || c == 'B') && position + 2 < length
+				&& (text.charAt(position + 1) == 'x'
+						|| text.charAt(position + 1) == 'X')
+				&& (text.charAt(position + 2) == '"'
+						|| text.charAt(position + 2) == '\'');
 	}
 
 	private static boolean startOfHexadecimal(final String text,
 			final int length, int position, final char c) {
-		return (c == 'h' || c == 'H')
-				&& position + 1 < length
-				&& (text.charAt(position + 1) == '"' || text
-						.charAt(position + 1) == '\'');
+		return (c == 'h' || c == 'H') && position + 1 < length
+				&& (text.charAt(position + 1) == '"'
+						|| text.charAt(position + 1) == '\'');
 	}
 
 	private static boolean startOfAlphanumericHexadecimal(final String text,
 			final int length, int position, final char c) {
-		return (c == 'x' || c == 'X')
-				&& position + 1 < length
-				&& (text.charAt(position + 1) == '"' || text
-						.charAt(position + 1) == '\'');
+		return (c == 'x' || c == 'X') && position + 1 < length
+				&& (text.charAt(position + 1) == '"'
+						|| text.charAt(position + 1) == '\'');
 	}
 
 	private static boolean startOfNationalHexadecimal(final String text,
 			final int length, int position, final char c) {
-		return (c == 'n' || c == 'N')
-				&& position + 2 < length
-				&& (text.charAt(position + 1) == 'x' || text
-						.charAt(position + 1) == 'X')
-				&& (text.charAt(position + 2) == '"' || text
-						.charAt(position + 2) == '\'');
+		return (c == 'n' || c == 'N') && position + 2 < length
+				&& (text.charAt(position + 1) == 'x'
+						|| text.charAt(position + 1) == 'X')
+				&& (text.charAt(position + 2) == '"'
+						|| text.charAt(position + 2) == '\'');
 	}
 
-	private static boolean startOfInlineComment(final String text,
-			int position, final int length, final char c) {
+	private static boolean startOfInlineComment(final String text, int position,
+			final int length, final char c) {
 		return c == '*' && position + 1 < length
 				&& text.charAt(position + 1) == '>';
 	}
@@ -346,9 +353,10 @@ public class SeparationLogic {
 			}
 
 			// Completed string literal.
-			final Token stringliteral = Tokens.subtoken(token, start,
-					position + 1).withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING,
-					STRING_LITERAL);
+			final Token stringliteral = Tokens
+					.subtoken(token, start, position + 1)
+					.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING,
+							STRING_LITERAL);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("String literal: " + stringliteral);
@@ -358,8 +366,8 @@ public class SeparationLogic {
 		}
 
 		// TODO Incomplete string literal. Throw error?
-		final Token stringliteral = Tokens.subtoken(token, start).withTags(
-				PROGRAM_TEXT_AREA, CHARACTER_STRING, STRING_LITERAL);
+		final Token stringliteral = Tokens.subtoken(token, start)
+				.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING, STRING_LITERAL);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Incomplete string literal: " + stringliteral);
@@ -370,8 +378,8 @@ public class SeparationLogic {
 
 	private static int inlineComment(final Token token, final int start,
 			final int length, Feedback feedback) {
-		final Token comment = Tokens.subtoken(token, start).withTags(
-				PROGRAM_TEXT_AREA, COMMENT, CHARACTER_STRING);
+		final Token comment = Tokens.subtoken(token, start)
+				.withTags(PROGRAM_TEXT_AREA, COMMENT, CHARACTER_STRING);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Inline comment: " + comment);
@@ -408,9 +416,10 @@ public class SeparationLogic {
 				continue;
 			}
 
-			final Token booleanLiteral = Tokens.subtoken(token, start,
-					position + 1).withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING,
-					BOOLEAN_LITERAL);
+			final Token booleanLiteral = Tokens
+					.subtoken(token, start, position + 1)
+					.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING,
+							BOOLEAN_LITERAL);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Boolean: " + booleanLiteral);
@@ -421,8 +430,8 @@ public class SeparationLogic {
 
 		// TODO Incomplete hexadecimal. Throw error ?
 
-		final Token booleanLiteral = Tokens.subtoken(token, start).withTags(
-				PROGRAM_TEXT_AREA, CHARACTER_STRING, BOOLEAN_LITERAL);
+		final Token booleanLiteral = Tokens.subtoken(token, start)
+				.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING, BOOLEAN_LITERAL);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Incomplete boolean: " + booleanLiteral);
@@ -479,18 +488,60 @@ public class SeparationLogic {
 		return length;
 	}
 
+	private static final Pattern FLOATING_POINT_REGEX = Pattern
+			.compile("(\\+|\\-)?\\d+\\.\\d+(e|E)(\\+|\\-)?\\d+");
+
+	private static int matchesFloatingPoint(final String text,
+			final int position, final int length, final char first) {
+
+		Matcher m = FLOATING_POINT_REGEX.matcher(text);
+
+		if (!m.find(position))
+			return -1;
+		else if (m.start() != position)
+			return -1;
+		else
+			return m.end();
+	}
+
+	private static int floatingPoint(final Token token, final String text,
+			final int start, final int stop, final int length,
+			Feedback feedback) {
+
+		Token floatingPointLiteral = Tokens.subtoken(token, start, stop - 1);
+
+		char c = floatingPointLiteral.charAt(0);
+		if (c == '+' || c == '-')
+			floatingPointLiteral = floatingPointLiteral.withTags(
+					PROGRAM_TEXT_AREA, CHARACTER_STRING, FLOATING_POINT_LITERAL,
+					SIGNED);
+		else
+			floatingPointLiteral = floatingPointLiteral.withTags(
+					PROGRAM_TEXT_AREA, CHARACTER_STRING,
+					FLOATING_POINT_LITERAL);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("Floating point literal: " + floatingPointLiteral);
+
+		feedback.add(floatingPointLiteral);
+
+		return stop;
+	}
+
 	private static int signedNumber(final Token token, final String text,
 			final int start, final int length, Feedback feedback) {
 
 		final int lengthOfNumber = tryNumericLiteral(text, start + 1, length);
 
-		Token numericLiteral = Tokens.subtoken(token, start, start + 1
-				+ lengthOfNumber);
+		Token numericLiteral = Tokens.subtoken(token, start,
+				start + 1 + lengthOfNumber);
 
-		numericLiteral = numericLiteral.withTags(PROGRAM_TEXT_AREA,
-				CHARACTER_STRING,
-				(isDecimal(numericLiteral) ? SyntacticTag.DECIMAL_LITERAL
-						: SyntacticTag.INTEGER_LITERAL), SIGNED);
+		numericLiteral = numericLiteral
+				.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING,
+						(isDecimal(numericLiteral)
+								? SyntacticTag.DECIMAL_LITERAL
+								: SyntacticTag.INTEGER_LITERAL),
+						SIGNED);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Signed numeric literal: " + numericLiteral);
@@ -506,9 +557,8 @@ public class SeparationLogic {
 		int match = tryCobolWord(text, start, length);
 		if (match > 0) {
 			// TODO Cobol word.
-			final Token cobolWord = Tokens
-					.subtoken(token, start, start + match).withTags(
-							PROGRAM_TEXT_AREA, CHARACTER_STRING);
+			final Token cobolWord = Tokens.subtoken(token, start, start + match)
+					.withTags(PROGRAM_TEXT_AREA, CHARACTER_STRING);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Cobol word: " + cobolWord);
@@ -522,10 +572,11 @@ public class SeparationLogic {
 			// TODO Cobol word.
 			Token numericLiteral = Tokens.subtoken(token, start, start + match);
 
-			numericLiteral = numericLiteral.withTags(PROGRAM_TEXT_AREA,
-					CHARACTER_STRING,
-					(isDecimal(numericLiteral) ? DECIMAL_LITERAL
-							: INTEGER_LITERAL), UNSIGNED);
+			numericLiteral = numericLiteral
+					.withTags(PROGRAM_TEXT_AREA,
+							CHARACTER_STRING, (isDecimal(numericLiteral)
+									? DECIMAL_LITERAL : INTEGER_LITERAL),
+							UNSIGNED);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Unsigned numeric literal: " + numericLiteral);
@@ -674,7 +725,8 @@ public class SeparationLogic {
 				// HEXADECIMAL LITERAL.
 				break;
 
-			} else if (startOfAlphanumericHexadecimal(text, length, position, c)) {
+			} else if (startOfAlphanumericHexadecimal(text, length, position,
+					c)) {
 				// ALPHANUMERIC HEXADECIMAL LITERAL.
 				break;
 

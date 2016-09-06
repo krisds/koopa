@@ -1,24 +1,27 @@
 package koopa.core.parsers.combinators;
 
-import java.util.Set;
-
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
-public class Plus extends ParserCombinator {
+/**
+ * A {@linkplain ParserCombinator} which will try to match a given
+ * {@linkplain ParserCombinator} as many times as it can, with a minimum of 1.
+ */
+public class Plus extends UnaryParserDecorator {
 
-	private final ParserCombinator parser;
+	private static final String SYMBOL = "...+";
 
 	public Plus(ParserCombinator parser) {
-		this.parser = parser;
+		super(parser);
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
 		Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent("[plus>");
+			parse.getTrace().indent(SYMBOL + " ?");
 
 		stream.bookmark();
 
@@ -26,7 +29,7 @@ public class Plus extends ParserCombinator {
 			stream.rewind();
 
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().dedent("<plus]: no");
+				parse.getTrace().dedent(SYMBOL + " : no");
 
 			return false;
 		}
@@ -45,24 +48,13 @@ public class Plus extends ParserCombinator {
 		}
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent("<plus]: yes");
+			parse.getTrace().dedent(SYMBOL + " : yes");
 
 		return true;
 	}
 
-	public boolean canMatchEmptyInputs() {
-		return parser.canMatchEmptyInputs();
-	}
-
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		parser.addAllKeywordsInScopeTo(keywords);
-	}
-
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		parser.addAllLeadingKeywordsTo(keywords);
-	}
-
+	@Override
 	public String toString() {
-		return "...+";
+		return SYMBOL;
 	}
 }

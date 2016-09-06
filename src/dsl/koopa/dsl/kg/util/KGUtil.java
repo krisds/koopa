@@ -2,6 +2,7 @@ package koopa.dsl.kg.util;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -18,10 +19,18 @@ public final class KGUtil {
 	private KGUtil() {
 	}
 
+	/**
+	 * Parse the contents of a grammar file, and return the syntax tree.
+	 */
 	public static Tree getAST(File input) throws IOException {
 		return getAST(input.getName(), new FileReader(input));
 	}
 
+	/**
+	 * Parse the contents of a {@linkplain Reader}, and return the syntax tree.
+	 * The name you pass along will be used as a reference name for its
+	 * contents.
+	 */
 	public static Tree getAST(String name, Reader reader) throws IOException {
 		final Source<Token> source = KGTokens.getNewSource(name, reader);
 
@@ -29,21 +38,24 @@ public final class KGUtil {
 
 		final Parse parse = Parse.of(source).to(new KoopaTreeBuilder(kg));
 
-		boolean accepts = kg.grammar().accepts(parse);
+		final boolean accepts = kg.grammar().accepts(parse);
 
 		if (!accepts) {
-			System.out.println("Parse failed.");
+			System.out.println("Parse failed. Got up to: "
+					+ parse.getFinalPosition());
 			return null;
 		}
 
 		final KoopaTreeBuilder builder = parse
 				.getTarget(KoopaTreeBuilder.class);
-		Tree ast = builder.getTree();
-
-		return ast;
+		return builder.getTree();
 	}
 
-	public static boolean isTreeGrammar(Tree ast) {
-		return ast.getDescendant("header", "tree") != null;
+	public static FilenameFilter getFilenameFilter() {
+		return new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".kg");
+			}
+		};
 	}
 }

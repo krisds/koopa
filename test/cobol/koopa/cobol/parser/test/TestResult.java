@@ -22,6 +22,16 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 public class TestResult {
 
+	/**
+	 * Just a quick override, useful when working on the tokenizers.
+	 */
+	private static final boolean TEST_TOKEN_COUNT = true;
+
+	/**
+	 * Just a quick override, useful when working on the tokenizers.
+	 */
+	private static final boolean TEST_COVERAGE = true;
+
 	private String name = null;
 	private boolean valid = false;
 	private int tokenCount = 0;
@@ -48,9 +58,11 @@ public class TestResult {
 		result.errors = parseResults.getParse().getErrors();
 		result.warnings = parseResults.getParse().getWarnings();
 
-		PreprocessingSource preprocessing = parseResults.getParse().getSource(PreprocessingSource.class);
+		PreprocessingSource preprocessing = parseResults.getParse().getSource(
+				PreprocessingSource.class);
 		if (preprocessing != null)
-			result.preprocessedDirectivesCount = preprocessing.getHandledDirectives().size();
+			result.preprocessedDirectivesCount = preprocessing
+					.getHandledDirectives().size();
 
 		return result;
 	}
@@ -120,58 +132,70 @@ public class TestResult {
 				messages.add("+ This file used to fail parsing. It is now valid.");
 		}
 
-		if (actual.tokenCount != this.tokenCount) {
+		if (TEST_TOKEN_COUNT && actual.tokenCount != this.tokenCount) {
 			// Positive case: when valid and count went up ?
 			if (actual.tokenCount < this.tokenCount) {
-				messages.add("  Number of tokens went down from " + this.tokenCount + " to " + actual.tokenCount + ".");
+				messages.add("  Number of tokens went down from "
+						+ this.tokenCount + " to " + actual.tokenCount + ".");
 
 			} else {
-				messages.add("  Number of tokens went up from " + this.tokenCount + " to " + actual.tokenCount + ".");
+				messages.add("  Number of tokens went up from "
+						+ this.tokenCount + " to " + actual.tokenCount + ".");
 			}
 		}
 
-		if (actual.coverage != this.coverage) {
+		if (TEST_COVERAGE && actual.coverage != this.coverage) {
 			if (actual.coverage < this.coverage) {
-				messages.add("- Coverage went down from " + this.coverage + " to " + actual.coverage + ".");
+				messages.add("- Coverage went down from " + this.coverage
+						+ " to " + actual.coverage + ".");
 
 			} else {
-				messages.add("+ Coverage went up from " + this.coverage + " to " + actual.coverage + ".");
+				messages.add("+ Coverage went up from " + this.coverage
+						+ " to " + actual.coverage + ".");
 			}
 		}
 
 		if (actual.errorCount != this.errorCount) {
 			if (actual.errorCount < this.errorCount)
-				messages.add("+ Error count went down from " + this.errorCount + " to " + actual.errorCount + ".");
+				messages.add("+ Error count went down from " + this.errorCount
+						+ " to " + actual.errorCount + ".");
 			else
-				messages.add("- Error count went up from " + this.errorCount + " to " + actual.errorCount + ".");
+				messages.add("- Error count went up from " + this.errorCount
+						+ " to " + actual.errorCount + ".");
 		}
 
 		// TODO Errors.
 
 		if (actual.warningCount != this.warningCount) {
 			if (actual.warningCount < this.warningCount)
-				messages.add(
-						"+ Warning count went down from " + this.warningCount + " to " + actual.warningCount + ".");
+				messages.add("+ Warning count went down from "
+						+ this.warningCount + " to " + actual.warningCount
+						+ ".");
 
 			else
-				messages.add("- Warning count went up from " + this.warningCount + " to " + actual.warningCount + ".");
+				messages.add("- Warning count went up from "
+						+ this.warningCount + " to " + actual.warningCount
+						+ ".");
 		}
 
 		// TODO Warnings.
 
 		if (actual.preprocessedDirectivesCount != this.preprocessedDirectivesCount) {
 			if (actual.preprocessedDirectivesCount < this.preprocessedDirectivesCount)
-				messages.add("+ Preprocessed directives count went down from " + this.preprocessedDirectivesCount
-						+ " to " + actual.preprocessedDirectivesCount + ".");
+				messages.add("+ Preprocessed directives count went down from "
+						+ this.preprocessedDirectivesCount + " to "
+						+ actual.preprocessedDirectivesCount + ".");
 			else
-				messages.add("- Preprocessed directives count went up from " + this.preprocessedDirectivesCount + " to "
+				messages.add("- Preprocessed directives count went up from "
+						+ this.preprocessedDirectivesCount + " to "
 						+ actual.preprocessedDirectivesCount + ".");
 		}
 
 		return messages;
 	}
 
-	public static Map<String, TestResult> loadFromFile(File expectedFile) throws IOException {
+	public static Map<String, TestResult> loadFromFile(File expectedFile)
+			throws IOException {
 		CSVReader reader = null;
 		try {
 			reader = new CSVReader(new FileReader(expectedFile));
@@ -205,7 +229,8 @@ public class TestResult {
 				// TODO List of errors.
 				results.setWarningCount(Integer.parseInt(warningCount));
 				// TODO List of warnings.
-				results.setPreprocessedDirectivesCount(Integer.parseInt(preprocessedDirectivesCount));
+				results.setPreprocessedDirectivesCount(Integer
+						.parseInt(preprocessedDirectivesCount));
 
 				targets.put(name, results);
 			}
@@ -222,7 +247,8 @@ public class TestResult {
 		}
 	}
 
-	public static void saveToFile(Map<String, TestResult> results, File targetFile) throws IOException {
+	public static void saveToFile(Map<String, TestResult> results,
+			File targetFile) throws IOException {
 
 		final FileWriter fw = new FileWriter(targetFile);
 		final BufferedWriter bw = new BufferedWriter(fw);
@@ -245,14 +271,18 @@ public class TestResult {
 		}
 	}
 
-	private static void writeResultsHeader(final CSVWriter writer) throws IOException {
-		final String[] header = new String[] { "File", "Valid", "Number of tokens", "Coverage", "Number of errors",
-				"Errors", "Number of warnings", "Warnings", "Number of preprocessed directives" };
+	private static void writeResultsHeader(final CSVWriter writer)
+			throws IOException {
+		final String[] header = new String[] { "File", "Valid",
+				"Number of tokens", "Coverage", "Number of errors", "Errors",
+				"Number of warnings", "Warnings",
+				"Number of preprocessed directives" };
 		writer.writeNext(header);
 		writer.flush();
 	}
 
-	private static void writeNextResult(CSVWriter writer, String name, TestResult results) throws IOException {
+	private static void writeNextResult(CSVWriter writer, String name,
+			TestResult results) throws IOException {
 		final String[] entries = new String[9];
 
 		String errors = "";

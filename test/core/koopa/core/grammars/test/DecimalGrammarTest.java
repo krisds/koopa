@@ -6,8 +6,8 @@ import static koopa.core.grammars.test.TestTag.UNSIGNED;
 
 import java.util.List;
 
-import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.combinators.Opt;
 
 import org.junit.Test;
 

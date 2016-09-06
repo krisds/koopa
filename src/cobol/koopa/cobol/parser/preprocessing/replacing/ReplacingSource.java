@@ -3,7 +3,6 @@ package koopa.cobol.parser.preprocessing.replacing;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.markers.End;
@@ -103,11 +102,11 @@ public class ReplacingSource extends ChainingSource<Data, Data> implements Sourc
 			// "The leftmost library text-word that is not a separator comma or
 			// a separator semicolon is the first text-word used for
 			// comparison."
-			if (leftmost.hasTag(SyntacticTag.SEPARATOR)) {
+			//if (leftmost.hasTag(SyntacticTag.SEPARATOR)) {
 				final String text = leftmost.getText();
 				if (",".equals(text) || ";".equals(text))
 					return leftmost;
-			}
+			//}
 
 			// Repositioning the token stream to start with the leftmost token.
 			source.unshift(leftmost);

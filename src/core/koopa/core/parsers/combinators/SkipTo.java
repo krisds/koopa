@@ -9,18 +9,30 @@ import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
-public class SkipTo extends ParserCombinator {
+/**
+ * This {@linkplain ParserCombinator} consumes tokens until it has reached a
+ * certain point in the stream, as identified by a given
+ * {@linkplain ParserCombinator}. The match for the limiting parser will be
+ * rollbacked, so that from a point of view of the grammar you'll be a the point
+ * where the limiting parser will match.
+ * <p>
+ * The tokens which were skipped will be wrapped with {@linkplain InWater} and
+ * {@linkplain OnLand} markers.
+ */
+public class SkipTo extends UnaryParserDecorator {
 
-	private final ParserCombinator parser;
+	private static final String SYMBOL = "--> ...";
 
 	public SkipTo(ParserCombinator parser) {
-		this.parser = parser;
+		super(parser);
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
+		final Stream stream = parse.getStream();
+
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent("[skipto>");
+			parse.getTrace().indent(SYMBOL + " ?");
 
 		boolean inWater = false;
 
@@ -37,7 +49,7 @@ public class SkipTo extends ParserCombinator {
 
 			if (skipped == null) {
 				if (parse.getTrace().isEnabled())
-					parse.getTrace().dedent("<skipto]: no");
+					parse.getTrace().dedent(SYMBOL + " : no");
 
 				return false;
 			}
@@ -51,19 +63,26 @@ public class SkipTo extends ParserCombinator {
 			stream.insert(OnLand.getInstance());
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent("<skipto]: yes");
+			parse.getTrace().dedent(SYMBOL + " ]: yes");
 
 		return true;
 	}
 
+	@Override
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
 	}
 
+	@Override
+	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	}
+
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return true;
 	}
 
+	@Override
 	public String toString() {
-		return "--> ...";
+		return SYMBOL;
 	}
 }

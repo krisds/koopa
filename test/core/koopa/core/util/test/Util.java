@@ -37,6 +37,8 @@ public final class Util {
 		for (Object part : parts) {
 			if (part instanceof Tree)
 				tree.addChild((Tree) part);
+			else if (part instanceof Token)
+				tree.addChild(new Tree((Token) part));
 			else if (part instanceof String)
 				tree.addChild(token((String) part));
 			else
@@ -57,6 +59,16 @@ public final class Util {
 		Tree tree = new Tree(token);
 
 		return tree;
+	}
+
+	public static Token t(String text, Object... tags) {
+		Position start = new Position(0, 0, 0);
+		Token token = new Token(text, start, start.offsetBy(text.length()));
+
+		if (tags != null)
+			token = token.withTags(tags);
+
+		return token;
 	}
 
 	public static Tree text(String text) {

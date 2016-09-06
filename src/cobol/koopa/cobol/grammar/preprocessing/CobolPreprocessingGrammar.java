@@ -14,16 +14,15 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.combinators.Opt.NOSKIP;
+import static koopa.core.parsers.combinators.Opt.NOSKIP;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
-import koopa.core.data.tags.AreaTag;
-import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
+import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
+import static koopa.core.data.tags.SyntacticTag.NUMBER;
+import static koopa.core.data.tags.SyntacticTag.STRING;
 
 public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     public CobolPreprocessingGrammar() {
@@ -116,22 +115,22 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         copyStatementBodyParser = future;
         future.setParser(
           sequence(
-            token("COPY"),
+            keyword("COPY"),
             textName(),
             optional(
               sequence(
                 choice(
-                  token("OF"),
-                  token("IN")
+                  keyword("OF"),
+                  keyword("IN")
                 ),
                 libraryName()
               )
             ),
             optional(
               sequence(
-                token("SUPPRESS"),
+                keyword("SUPPRESS"),
                 optional(
-                  token("PRINTING")
+                  keyword("PRINTING")
                 )
               )
             ),
@@ -159,7 +158,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         copyStatementBody$replacingParser = future;
         future.setParser(
           sequence(
-            token("REPLACING"),
+            keyword("REPLACING"),
             plus(
               replacementInstruction()
             )
@@ -191,7 +190,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
               )
             ),
             replacementOperand(),
-            token("BY"),
+            keyword("BY"),
             replacementOperand()
           )
         );
@@ -213,7 +212,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         FutureParser future = scoped("leading", PUBLIC, true);
         replacementInstruction$leadingParser = future;
         future.setParser(
-          token("LEADING")
+          keyword("LEADING")
         );
       }
     
@@ -233,7 +232,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         FutureParser future = scoped("trailing", PUBLIC, true);
         replacementInstruction$trailingParser = future;
         future.setParser(
-          token("TRAILING")
+          keyword("TRAILING")
         );
       }
     
@@ -278,7 +277,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         replaceStatementParser = future;
         future.setParser(
           sequence(
-            token("REPLACE"),
+            keyword("REPLACE"),
             choice(
               replaceStatement$replacing(),
               replaceStatement$off()
@@ -307,7 +306,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             optional(
               as("also",
-                token("ALSO")
+                keyword("ALSO")
               )
             ),
             plus(
@@ -336,10 +335,10 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             optional(
               as("last",
-                token("LAST")
+                keyword("LAST")
               )
             ),
-            token("OFF")
+            keyword("OFF")
           )
         );
       }
@@ -441,6 +440,316 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
     
     // ========================================================
+    // integerLiteral
+    // ........................................................
+    
+    private ParserCombinator integerLiteralParser = null;
+    
+    public final Start integerLiteral = Start.on(getNamespace(), "integerLiteral");
+    
+    public ParserCombinator integerLiteral() {
+      if (integerLiteralParser == null) {
+        FutureParser future = scoped("integerLiteral", PUBLIC, true);
+        integerLiteralParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal("+"),
+              opt(NOSKIP,
+                uintgr()
+              )
+            ),
+            sequence(
+              literal("-"),
+              opt(NOSKIP,
+                uintgr()
+              )
+            ),
+            uintgr()
+          )
+        );
+      }
+    
+      return integerLiteralParser;
+    }
+    
+    // ========================================================
+    // hexadecimal
+    // ........................................................
+    
+    private ParserCombinator hexadecimalParser = null;
+    
+    public final Start hexadecimal = Start.on(getNamespace(), "hexadecimal");
+    
+    public ParserCombinator hexadecimal() {
+      if (hexadecimalParser == null) {
+        FutureParser future = scoped("hexadecimal", PUBLIC, true);
+        hexadecimalParser = future;
+        future.setParser(
+          sequence(
+            literal("H"),
+            opt(NOSKIP,
+              sequence(
+                tagged(STRING),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return hexadecimalParser;
+    }
+    
+    // ========================================================
+    // alphanumericHexadecimal
+    // ........................................................
+    
+    private ParserCombinator alphanumericHexadecimalParser = null;
+    
+    public final Start alphanumericHexadecimal = Start.on(getNamespace(), "alphanumericHexadecimal");
+    
+    public ParserCombinator alphanumericHexadecimal() {
+      if (alphanumericHexadecimalParser == null) {
+        FutureParser future = scoped("alphanumericHexadecimal", PUBLIC, true);
+        alphanumericHexadecimalParser = future;
+        future.setParser(
+          sequence(
+            literal("X"),
+            opt(NOSKIP,
+              sequence(
+                tagged(STRING),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return alphanumericHexadecimalParser;
+    }
+    
+    // ========================================================
+    // nationalAlphanumericHexadecimal
+    // ........................................................
+    
+    private ParserCombinator nationalAlphanumericHexadecimalParser = null;
+    
+    public final Start nationalAlphanumericHexadecimal = Start.on(getNamespace(), "nationalAlphanumericHexadecimal");
+    
+    public ParserCombinator nationalAlphanumericHexadecimal() {
+      if (nationalAlphanumericHexadecimalParser == null) {
+        FutureParser future = scoped("nationalAlphanumericHexadecimal", PUBLIC, true);
+        nationalAlphanumericHexadecimalParser = future;
+        future.setParser(
+          sequence(
+            literal("NX"),
+            opt(NOSKIP,
+              sequence(
+                tagged(STRING),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return nationalAlphanumericHexadecimalParser;
+    }
+    
+    // ========================================================
+    // booleanHexadecimal
+    // ........................................................
+    
+    private ParserCombinator booleanHexadecimalParser = null;
+    
+    public final Start booleanHexadecimal = Start.on(getNamespace(), "booleanHexadecimal");
+    
+    public ParserCombinator booleanHexadecimal() {
+      if (booleanHexadecimalParser == null) {
+        FutureParser future = scoped("booleanHexadecimal", PUBLIC, true);
+        booleanHexadecimalParser = future;
+        future.setParser(
+          sequence(
+            literal("BX"),
+            opt(NOSKIP,
+              sequence(
+                tagged(STRING),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return booleanHexadecimalParser;
+    }
+    
+    // ========================================================
+    // hexadecimalLiteral
+    // ........................................................
+    
+    private ParserCombinator hexadecimalLiteralParser = null;
+    
+    protected final Start hexadecimalLiteral = Start.on(getNamespace(), "hexadecimalLiteral");
+    
+    protected ParserCombinator hexadecimalLiteral() {
+      if (hexadecimalLiteralParser == null) {
+        FutureParser future = scoped("hexadecimalLiteral", PRIVATE, true);
+        hexadecimalLiteralParser = future;
+        future.setParser(
+          choice(
+            hexadecimal(),
+            alphanumericHexadecimal(),
+            nationalAlphanumericHexadecimal(),
+            booleanHexadecimal()
+          )
+        );
+      }
+    
+      return hexadecimalLiteralParser;
+    }
+    
+    // ========================================================
+    // booleanLiteral
+    // ........................................................
+    
+    private ParserCombinator booleanLiteralParser = null;
+    
+    public final Start booleanLiteral = Start.on(getNamespace(), "booleanLiteral");
+    
+    public ParserCombinator booleanLiteral() {
+      if (booleanLiteralParser == null) {
+        FutureParser future = scoped("booleanLiteral", PUBLIC, true);
+        booleanLiteralParser = future;
+        future.setParser(
+          choice(
+            booleanHexadecimal(),
+            sequence(
+              literal("B"),
+              opt(NOSKIP,
+                sequence(
+                  tagged(STRING),
+                  any()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return booleanLiteralParser;
+    }
+    
+    // ========================================================
+    // nullTerminatedStringLiteral
+    // ........................................................
+    
+    private ParserCombinator nullTerminatedStringLiteralParser = null;
+    
+    public final Start nullTerminatedStringLiteral = Start.on(getNamespace(), "nullTerminatedStringLiteral");
+    
+    public ParserCombinator nullTerminatedStringLiteral() {
+      if (nullTerminatedStringLiteralParser == null) {
+        FutureParser future = scoped("nullTerminatedStringLiteral", PUBLIC, true);
+        nullTerminatedStringLiteralParser = future;
+        future.setParser(
+          sequence(
+            literal("Z"),
+            opt(NOSKIP,
+              sequence(
+                tagged(STRING),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return nullTerminatedStringLiteralParser;
+    }
+    
+    // ========================================================
+    // nationalStringLiteral
+    // ........................................................
+    
+    private ParserCombinator nationalStringLiteralParser = null;
+    
+    public final Start nationalStringLiteral = Start.on(getNamespace(), "nationalStringLiteral");
+    
+    public ParserCombinator nationalStringLiteral() {
+      if (nationalStringLiteralParser == null) {
+        FutureParser future = scoped("nationalStringLiteral", PUBLIC, true);
+        nationalStringLiteralParser = future;
+        future.setParser(
+          sequence(
+            literal("N"),
+            opt(NOSKIP,
+              sequence(
+                tagged(STRING),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return nationalStringLiteralParser;
+    }
+    
+    // ========================================================
+    // alphanumericLiteral
+    // ........................................................
+    
+    private ParserCombinator alphanumericLiteralParser = null;
+    
+    public final Start alphanumericLiteral = Start.on(getNamespace(), "alphanumericLiteral");
+    
+    public ParserCombinator alphanumericLiteral() {
+      if (alphanumericLiteralParser == null) {
+        FutureParser future = scoped("alphanumericLiteral", PUBLIC, true);
+        alphanumericLiteralParser = future;
+        future.setParser(
+          choice(
+            alphanumericHexadecimal(),
+            nationalAlphanumericHexadecimal(),
+            nullTerminatedStringLiteral(),
+            nationalStringLiteral(),
+            sequence(
+              tagged(STRING),
+              any()
+            )
+          )
+        );
+      }
+    
+      return alphanumericLiteralParser;
+    }
+    
+    // ========================================================
+    // pseudoLiteral
+    // ........................................................
+    
+    private ParserCombinator pseudoLiteralParser = null;
+    
+    public final Start pseudoLiteral = Start.on(getNamespace(), "pseudoLiteral");
+    
+    public ParserCombinator pseudoLiteral() {
+      if (pseudoLiteralParser == null) {
+        FutureParser future = scoped("pseudoLiteral", PUBLIC, true);
+        pseudoLiteralParser = future;
+        future.setParser(
+          sequence(
+            tagged(PSEUDO_LITERAL),
+            any()
+          )
+        );
+      }
+    
+      return pseudoLiteralParser;
+    }
+    
+    // ========================================================
     // decimal
     // ........................................................
     
@@ -486,7 +795,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              intgr(),
+              uintgr(),
               opt(NOSKIP,
                 sequence(
                   choice(
@@ -511,29 +820,6 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     }
     
     // ========================================================
-    // intgr
-    // ........................................................
-    
-    private ParserCombinator intgrParser = null;
-    
-    protected final Start intgr = Start.on(getNamespace(), "intgr");
-    
-    protected ParserCombinator intgr() {
-      if (intgrParser == null) {
-        FutureParser future = scoped("intgr", PRIVATE, true);
-        intgrParser = future;
-        future.setParser(
-          sequence(
-            tagged(INTEGER_LITERAL),
-            any()
-          )
-        );
-      }
-    
-      return intgrParser;
-    }
-    
-    // ========================================================
     // uintgr
     // ........................................................
     
@@ -547,8 +833,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         uintgrParser = future;
         future.setParser(
           sequence(
-            tagged(UNSIGNED),
-            tagged(INTEGER_LITERAL),
+            tagged(NUMBER),
             any()
           )
         );

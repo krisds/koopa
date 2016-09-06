@@ -1,5 +1,6 @@
 package koopa.cobol.sources;
 
+import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
@@ -7,9 +8,8 @@ import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.END_OF_LINE;
-import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -33,7 +33,7 @@ public class LineContinuations extends ThreadedSource<Token, Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.continuations");
+			.getLogger("source.cobol.continuations");
 
 	private LinkedList<Token> buffer = null;
 	private LinkedList<Token> skippedByContinuation = null;

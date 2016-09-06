@@ -1,52 +1,36 @@
 package koopa.core.grammars.combinators;
 
-import java.util.Set;
-
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stream;
 
 /**
  * Accepts when the token stream is at the end of the input (ignoring
  * separators).
- * <p>
- * This will skip all intermediate separators.
  */
-public class MatchEndOfFile extends ParserCombinator {
+public class MatchEndOfFile extends GrammaticalCombinator {
 
-	private final Grammar grammar;
+	private static final String SYMBOL = "eof";
 
 	public MatchEndOfFile(Grammar grammar) {
-		this.grammar = grammar;
+		super(grammar);
 	}
 
-	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
-
-		grammar.skipSeparators(parse);
-
-		final Token token = stream.forward();
+	@Override
+	protected boolean matchesAfterSkipped(Parse parse) {
+		final Token token = parse.getStream().forward();
 		final boolean atEndOfFile = token == null;
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().add(token + " == null : " + atEndOfFile);
+			parse.getTrace().add(
+					SYMBOL + " : " + (atEndOfFile ? "yes" : "no") + ", "
+							+ token);
 
 		return atEndOfFile;
 	}
 
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-	}
-
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-	}
-
-	public boolean canMatchEmptyInputs() {
-		return true;
-	}
-
+	@Override
 	public String toString() {
-		return "end-of-file";
+		return SYMBOL;
 	}
 }

@@ -1,7 +1,3 @@
-package koopa.cobol.sql.grammar.test;
-grammar koopa.cobol.sql.grammar.SQLGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target tableName;
 
 +[ HOPPER ]
@@ -10,3 +6,6 @@ target tableName;
 
 +[ MODULE.HOPPER ]
 +[ GRACE.MODULE.HOPPER ]
+
++[ T800 ]
++[ T-800 ]

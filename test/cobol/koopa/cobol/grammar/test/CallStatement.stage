@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target callStatement;
 
 # Simplest calls possible.
@@ -169,7 +165,7 @@ target callStatement;
 
 
 # Sample from issue #13, by Simon Sobisch.
-+ [ CALL 'sub'
++[ CALL 'sub'
       USING '123'
             OMITTED
             OMITTED

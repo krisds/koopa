@@ -23,7 +23,7 @@ public class ContinuationWelding extends ChainingSource<Token, Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.continuation-welding");
+			.getLogger("source.cobol.continuations.welding");
 
 	private LinkedList<Token> buffer = null;
 

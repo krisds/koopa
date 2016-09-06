@@ -5,7 +5,6 @@ import static koopa.core.trees.jaxen.Jaxen.getMatch;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
@@ -84,8 +83,8 @@ public abstract class ReplacingPhrase {
 		// pseudo-text-1 or in the library text is considered to be a single
 		// space."
 
-		if (!textWord.hasTag(SyntacticTag.SEPARATOR))
-			return false;
+		//if (!textWord.hasTag(SyntacticTag.SEPARATOR))
+		//	return false;
 
 		final String text = textWord.getText();
 

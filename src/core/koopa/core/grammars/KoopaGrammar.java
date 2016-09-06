@@ -8,13 +8,14 @@ import java.util.Map;
 import koopa.core.grammars.combinators.Dispatched;
 import koopa.core.grammars.combinators.MatchAny;
 import koopa.core.grammars.combinators.MatchEndOfFile;
+import koopa.core.grammars.combinators.MatchKeyword;
 import koopa.core.grammars.combinators.MatchLiteral;
+import koopa.core.grammars.combinators.MatchNumber;
 import koopa.core.grammars.combinators.MatchToken;
-import koopa.core.grammars.combinators.Opt;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.grammars.combinators.Scoped.Visibility;
+import koopa.core.grammars.combinators.TestForKeyword;
 import koopa.core.grammars.combinators.TestTag;
-import koopa.core.grammars.combinators.WithOption;
 import koopa.core.grammars.combinators.WrappedAs;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
@@ -25,6 +26,7 @@ import koopa.core.parsers.combinators.Block;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.LimitedTo;
 import koopa.core.parsers.combinators.Not;
+import koopa.core.parsers.combinators.Opt;
 import koopa.core.parsers.combinators.Optional;
 import koopa.core.parsers.combinators.Permuted;
 import koopa.core.parsers.combinators.Plus;
@@ -32,6 +34,7 @@ import koopa.core.parsers.combinators.ReturningValue;
 import koopa.core.parsers.combinators.Sequence;
 import koopa.core.parsers.combinators.SkipTo;
 import koopa.core.parsers.combinators.Star;
+import koopa.core.parsers.combinators.WithOption;
 
 /**
  * This provides the basis for implementing full grammars. It basically gives
@@ -39,7 +42,7 @@ import koopa.core.parsers.combinators.Star;
  * grammar rules.
  * <p>
  * Note that you shouldn't be using this class directly. Instead the actual code
- * will get generated from actual Koopa grammar definitions.
+ * will get generated from Koopa grammar definitions.
  */
 public abstract class KoopaGrammar extends Grammar {
 
@@ -125,6 +128,14 @@ public abstract class KoopaGrammar extends Grammar {
 		return new MatchToken(this, text);
 	}
 
+	protected ParserCombinator keyword(final String text) {
+		return new MatchKeyword(this, text);
+	}
+
+	protected ParserCombinator number(final String text) {
+		return new MatchNumber(this, text);
+	}
+
 	protected ParserCombinator any() {
 		return new MatchAny(this);
 	}
@@ -149,12 +160,21 @@ public abstract class KoopaGrammar extends Grammar {
 
 		final Map<String, ParserCombinator> lookupTable = new HashMap<String, ParserCombinator>();
 		for (int i = 0; i < keys.length; i++)
-			lookupTable.put(keys[i].toUpperCase(), parsers[i]);
+			lookupTable.put(comparableText(keys[i]), parsers[i]);
 
 		return new Dispatched(this, lookupTable);
 	}
 
 	protected ParserCombinator eof() {
 		return new MatchEndOfFile(this);
+	}
+
+	protected ParserCombinator notAKeyword(final ParserCombinator parser) {
+		return new TestForKeyword(this, false, parser);
+	}
+
+	@Override
+	public ParserCombinator keyword() {
+		return any();
 	}
 }

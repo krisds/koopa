@@ -35,7 +35,8 @@ public final class StageUtil {
 		boolean accepts = kg.stage().accepts(parse);
 
 		if (!accepts) {
-			System.out.println("Parse failed.");
+			System.out.println("Parse failed. Got up to: "
+					+ parse.getFinalPosition());
 			return null;
 		}
 

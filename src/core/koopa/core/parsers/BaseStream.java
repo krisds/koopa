@@ -2,6 +2,7 @@ package koopa.core.parsers;
 
 import static koopa.core.util.Iterators.descendingIterator;
 import static koopa.core.util.Iterators.emptyIterator;
+import static koopa.core.util.Iterators.listIterator;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,19 +33,41 @@ public class BaseStream implements Stream {
 
 	private static final Logger LOGGER = Logger.getLogger("parse.stream");
 
+	/**
+	 * The stream fetches {@linkplain Token}s from this {@linkplain Source}.
+	 */
 	private final Source<Token> source;
+
+	/**
+	 * The stream pushes {@linkplain Data} to this {@linkplain Target}.
+	 */
 	private final Target<Data> target;
 
-	// Tokens this list are always in reading order.
+	/**
+	 * Everything the parser has processed, but which has not been committed yet
+	 * in full.
+	 * <p>
+	 * The data here is in reading order.
+	 */
 	private final LinkedList<Data> seen;
 
-	// Markers which are waiting to get pushed.
+	/**
+	 * Markers which have been inserted, but not yet pushed to the {@link #seen}
+	 * list.
+	 * <p>
+	 * See {@link #weShouldDelay(Marker)} for more.
+	 */
 	private LinkedList<Marker> delayedMarkers;
 
-	// Bookmarks govern rewind/commit semantics.
+	/**
+	 * Bookmarks in the {@link #seen} list for easy {@link #commit()}-ing and
+	 * {@link #rewind()}-ing.
+	 */
 	private final Stack<Bookmark> bookmarks;
 
-	// The active parse.
+	/**
+	 * The {@linkplain Parse} this stream is part of.
+	 */
 	private Parse parse = null;
 
 	public BaseStream(Source<Token> source, Target<Data> target) {
@@ -315,6 +338,20 @@ public class BaseStream implements Stream {
 					reverseIterator.remove();
 			}
 		};
+	}
+
+	/** {@inheritDoc} */
+	public Iterator<Data> fromBookmarkIterator() {
+		if (bookmarks.isEmpty())
+			return emptyIterator();
+
+		final Bookmark bookmark = bookmarks.peek();
+		final int numberOfDelayedMarkers = bookmark.delayedMarkers == null ? 0
+				: bookmark.delayedMarkers.size();
+		final int positionOfBookmark = bookmark.position
+				+ numberOfDelayedMarkers;
+
+		return listIterator(seen, positionOfBookmark);
 	}
 
 	private final class Bookmark {

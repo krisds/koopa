@@ -212,7 +212,7 @@ public class CobolParser {
 				tracker.push(t);
 
 			// Have we found more program text ?
-			if (!sawMoreProgramText && grammar.isProgramText(t) && !grammar.isSeparator(t, null))
+			if (!sawMoreProgramText && grammar.isProgramText(t) && !grammar.canBeSkipped(t, null))
 				sawMoreProgramText = true;
 
 			// Stop after we found program text, unless we're tracking all

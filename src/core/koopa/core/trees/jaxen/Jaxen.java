@@ -72,11 +72,12 @@ public class Jaxen {
 	 * Evaluate the XPath and if there is a single match return the text of that
 	 * single match.
 	 */
-	public static String getText(Tree tree, String xpath) {
-		final List<?> values = evaluate(tree, xpath);
-		if (values == null || values.size() != 1)
+	public static String getAllText(Tree tree, String xpath) {
+		Tree match = getMatch(tree, xpath);
+
+		if (match == null)
 			return null;
 		else
-			return ((Tree) values.get(0)).getText();
+			return match.getAllText();
 	}
 }

@@ -2,6 +2,7 @@ package koopa.app.components.sourceview;
 
 import static koopa.app.components.sourceview.GetStyle.forTokenInDocument;
 import static koopa.app.components.sourceview.GetStyle.forUnparsed;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +15,6 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.StyledDocument;
 
 import koopa.core.data.Token;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.trees.Tree;
 
 public class TreeBasedDocument extends DefaultStyledDocument implements
@@ -45,7 +45,7 @@ public class TreeBasedDocument extends DefaultStyledDocument implements
 
 				offset += token.getLength();
 
-				if (token.hasTag(AreaTag.END_OF_LINE))
+				if (token.hasTag(END_OF_LINE))
 					offsetsForLines.add(offset);
 			}
 
@@ -58,7 +58,7 @@ public class TreeBasedDocument extends DefaultStyledDocument implements
 
 					offset += token.getLength();
 
-					if (token.hasTag(AreaTag.END_OF_LINE))
+					if (token.hasTag(END_OF_LINE))
 						offsetsForLines.add(offset);
 				}
 			}

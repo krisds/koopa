@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target condition;
 
 +[ TRUE ]
@@ -221,3 +217,5 @@ target condition;
    MINUS-ONE = ONE
 ]
 
+# From NC238A.CBL
++[ 1ST-ENTRY (IDX-4) EQUAL TO "2288LLLLKKKKJJJJIIII" ]

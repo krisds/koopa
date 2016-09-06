@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target statement;
 
 +[ DISPLAY FIELD ]
@@ -21,89 +17,78 @@ target sentence;
    DISPLAY B . ]
 
 
-target paragraph;
+target paragraphName;
 
-+[ PARAGRAPH-07 . ]
++[ PARAGRAPH ]
++[ PARAGRAPH-42 ]
 
-+[ PARAGRAPH-08 .
-   ADD A TO B . ]
-
-+[ PARAGRAPH-09 .
-   ADD A TO B .
-   DISPLAY B . ]
-
-+[ PARAGRAPH-09 .
-   ADD A TO B
-   DISPLAY B . ]
-
-+[ 10 . ]
-
-+[ 11 .
-   ADD A TO B . ]
-
-+[ 12 .
-   ADD A TO B .
-   DISPLAY B . ]
-
-+[ 13 .
-   ADD A TO B
-   DISPLAY B . ]
++ Basic:integer
 
 # Issue 30. Mostly numeric paragraph name.
-+[ 0020-0008 . ]
++[ 0020-0008 ]
 
+
+target paragraph;
+
++ paragraphName [ . ]
+
++ paragraphName [ .
+   ADD A TO B . ]
+
++ paragraphName [ .
+   ADD A TO B .
+   DISPLAY B . ]
+
++ paragraphName [ .
+   ADD A TO B
+   DISPLAY B . ]
+
++ Basic:integer [ .
+   ADD A TO B
+   DISPLAY B . ]
+
+
+
+target sectionName;
+
++[ GRACE ]
++[ HOPPER-42 ]
+
++ Basic:integer
+
+# Issue 30. Mostly numeric paragraph name.
++[ 0020-0008 ]
 
 
 target section;
 
-+[ SECTION-10 SECTION . ]
++ sectionName [ SECTION . ]
 
-+[ 10 SECTION . ]
-
-+[ SECTION-11 SECTION .
++ sectionName [ SECTION .
    ADD A TO B . ]
 
-+[ 11 SECTION .
-   ADD A TO B . ]
-
-+[ SECTION-12 SECTION .
++ sectionName [ SECTION .
    ADD A TO B .
    DISPLAY B . ]
 
-+[ 12 SECTION .
-   ADD A TO B .
-   DISPLAY B . ]
-
-+[ SECTION-12 SECTION .
++ sectionName [ SECTION .
    ADD A TO B
    DISPLAY B . ]
 
-+[ 12 SECTION .
-   ADD A TO B
-   DISPLAY B . ]
-
-+[ SECTION-13 SECTION .
-   PARAGRAPH-13 .
++ sectionName [ SECTION .
+   ] paragraphName [ .
    DISPLAY 13 . ]
 
-+[ 13 SECTION .
-   PARAGRAPH-13 .
-   DISPLAY 13 . ]
-
-+[ 13 SECTION .
-   14 .
-   DISPLAY 13 . ]
-
-+[ SECTION-14 SECTION .
++ sectionName [ SECTION .
    ADD A TO B .
-   PARAGRAPH-14 .
+   ] paragraphName [ .
    DISPLAY 14 . ]
 
-+[ SECTION-15 SECTION .
++ sectionName [ SECTION .
    ADD A TO B .
-   PARAGRAPH-15-A .
+   ] paragraphName [ .
    DISPLAY 15A .
-   PARAGRAPH-15-B .
+   ] paragraphName [ .
    DISPLAY 15B . ]
    
 

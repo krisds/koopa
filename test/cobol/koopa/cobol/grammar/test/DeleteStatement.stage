@@ -1,12 +1,8 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target deleteStatement;
 
-+[ DELETE MY-FILE # . ]
++[ DELETE MY-FILE ] <> [ . ]
 
-+[ DELETE MY-FILE RECORD # . ]
++[ DELETE MY-FILE RECORD ] <> [ . ]
 
 +[ DELETE MY-FILE
    END-DELETE ]

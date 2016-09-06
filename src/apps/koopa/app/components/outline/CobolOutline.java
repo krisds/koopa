@@ -56,8 +56,8 @@ public class CobolOutline extends JPanel {
 		root.setUserObject(results);
 
 		CobolOutlineTreeProcessor outliner = new CobolOutlineTreeProcessor();
-		outliner.processes(results.getParse().getTarget(KoopaTreeBuilder.class)
-				.getTree(), results.getFile());
+		outliner.process(results.getParse().getTarget(KoopaTreeBuilder.class)
+				.getTree());
 
 		if (outliner.hasTrees())
 			for (DefaultMutableTreeNode node : outliner.getTrees())

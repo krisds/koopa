@@ -4,11 +4,23 @@ import java.util.Set;
 
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.grammars.Grammar;
 
+/**
+ * A parser combinator is the basic building block for doing the actual parsing.
+ * Koopa is based on the idea of parsing expression grammars (of PEGs), and it
+ * is the parser combinators which implement the individual parts for that.
+ */
 public abstract class ParserCombinator {
 
+	/**
+	 * Whether or not this parser will accept the provided input.
+	 * <p>
+	 * This method fires of the entire process of parsing by invoking the
+	 * {@link #matches(Parse)} method.
+	 */
 	public final boolean accepts(Parse parse) {
-		Stack stack = parse.getStack();
+		final Stack stack = parse.getStack();
 
 		stack.push(this);
 		try {
@@ -19,7 +31,7 @@ public abstract class ParserCombinator {
 				// was at that point. We do that so that we can give a more
 				// accurate and, hopefully, more useful error message in case of
 				// an incomplete parse.
-				Token peek = parse.getStream().peek();
+				final Token peek = parse.getStream().peek();
 				if (peek != null) {
 					final Position currentPosition = peek.getStart();
 					if (parse.getFinalPosition().compareTo(currentPosition) < 0)
@@ -46,9 +58,19 @@ public abstract class ParserCombinator {
 	// ------------------------------------------------------------------------
 	// Support for automatic keywords...
 
+	/**
+	 * Add all keywords in scope to the given set.
+	 * <p>
+	 * By default this leaves the set untouched.
+	 */
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
 	}
 
+	/**
+	 * Add all leading keywords in scope to the given set.
+	 * <p>
+	 * By default this leaves the set untouched.
+	 */
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 	}
 
@@ -67,6 +89,9 @@ public abstract class ParserCombinator {
 	 * Whether or not this parser can say that the given word is a keyword in
 	 * the given stack context.
 	 * <p>
+	 * We assume that the given word has been passed through
+	 * {@linkplain Grammar#comparableText(String)} already.
+	 * <p>
 	 * By default this forwards the question to the parent frame in the stack.
 	 */
 	public boolean isKeyword(String word, Stack.Frame frame) {
@@ -75,6 +100,8 @@ public abstract class ParserCombinator {
 
 	/**
 	 * Is this parser matching a rule with the given name ?
+	 * <p>
+	 * By default this returns <code>false</code>.
 	 */
 	public boolean isMatching(String name) {
 		return false;

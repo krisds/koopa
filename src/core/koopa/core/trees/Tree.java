@@ -13,6 +13,10 @@ import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
+import koopa.core.trees.iterators.ChildDataIterator;
+import koopa.core.trees.iterators.ChildTokenIterator;
+import koopa.core.trees.iterators.ChildTreeIterator;
+import koopa.core.trees.iterators.DepthFirstTokenIterator;
 
 public class Tree {
 
@@ -66,8 +70,9 @@ public class Tree {
 
 		Token previous = null;
 		for (Token t : allTokens(new ProgramTextFilter())) {
-			if (previous != null && builder.length() > 0 && previous.getEnd().getPositionInFile() + 1 //
-			< t.getStart().getPositionInFile())
+			if (previous != null && builder.length() > 0
+					&& previous.getEnd().getPositionInFile() + 1 //
+					< t.getStart().getPositionInFile())
 				builder.append(" ");
 
 			builder.append(t.getText());
@@ -88,16 +93,70 @@ public class Tree {
 		return data;
 	}
 
+	/**
+	 * Gives you an {@linkplain Iterable} for all {@linkplain Token}s found
+	 * anywhere in this tree, in depth-first order.
+	 */
+	public Iterable<Token> allTokens() {
+		return allTokens(null);
+	}
+
+	/**
+	 * Gives you an {@linkplain Iterable} for {@linkplain Token}s found anywhere
+	 * in this tree which pass the given {@linkplain TokenFilter}, in
+	 * depth-first order.
+	 */
 	public Iterable<Token> allTokens(final TokenFilter filter) {
 		return new Iterable<Token>() {
 			public Iterator<Token> iterator() {
-				return new TokenIterator(Tree.this, filter);
+				return new DepthFirstTokenIterator(Tree.this, filter);
 			}
 		};
 	}
 
-	public Iterable<Token> allTokens() {
-		return allTokens(null);
+	/**
+	 * Gives you an {@linkplain Iterable} for all child {@linkplain Token}s
+	 * found in this tree, in original order.
+	 */
+	public Iterable<Token> childTokens() {
+		return childTokens(null);
+	}
+
+	/**
+	 * Gives you an {@linkplain Iterable} for child {@linkplain Token}s found in
+	 * this tree which pass the given {@linkplain TokenFilter}, in original
+	 * order.
+	 */
+	public Iterable<Token> childTokens(final TokenFilter filter) {
+		return new Iterable<Token>() {
+			public Iterator<Token> iterator() {
+				return new ChildTokenIterator(Tree.this, filter);
+			}
+		};
+	}
+
+	/**
+	 * Gives you an {@linkplain Iterable} for child {@linkplain Data} found in
+	 * this tree, in original order.
+	 */
+	public Iterable<Data> childData() {
+		return new Iterable<Data>() {
+			public Iterator<Data> iterator() {
+				return new ChildDataIterator(Tree.this);
+			}
+		};
+	}
+
+	/**
+	 * Gives you an {@linkplain Iterable} for child {@linkplain Tree}s found in
+	 * this tree, in original order.
+	 */
+	public Iterable<Tree> childTrees() {
+		return new Iterable<Tree>() {
+			public Iterator<Tree> iterator() {
+				return new ChildTreeIterator(Tree.this);
+			}
+		};
 	}
 
 	/**

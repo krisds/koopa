@@ -1,0 +1,38 @@
+target identifier;
+
+# Identifiers must start with a word, and can contain words, numbers, 
+# underscores and/or dollar signs.
+
++[ hopper   ]
++[ hopper1  ]
++[ hopper_1 ]
++[ hopper$1 ]
+
++[ grace_murray_hopper ]
++[ grace$murray$hopper ]
+
+-[ 1 ]
+-[ _foo ]
+-[ $foo ]
+
+
+
+target stage;
+
+# Positive and negative tests (order does not matter):
++[ target ] identifier [;
+   + [ 1 2 3 ]
+   - [ 4 5 6 ]
+   + [ A B C ]
+   - [ D E F ]
+]
+
+# Tests with many parts, including references to other test targets:
++[ target ] identifier [;
+  + [ My name is ] name [ . ] greetings:hi
+]
+
+# Tests for partial matches:
++[ target ] identifier [;
+  + [ Cobol ] <> [ is such an interesting language. ]
+]

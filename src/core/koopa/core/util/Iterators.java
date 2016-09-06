@@ -57,6 +57,29 @@ public class Iterators {
 		};
 	}
 
+	/**
+	 * Equivalent (I hope) to LinkedList.listIterator(int index) in later
+	 * versions of Java.
+	 */
+	public static <T> Iterator<T> listIterator(final LinkedList<T> list,
+			final int index) {
+		return new Iterator<T>() {
+			private int i = index;
+
+			public boolean hasNext() {
+				return i < list.size();
+			}
+
+			public T next() {
+				return list.get(i++);
+			}
+
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
+
 	public static <T> Iterator<T> forEnumeration(
 			final Enumeration<T> enumeration) {
 		return new Iterator<T>() {

@@ -1,28 +1,25 @@
 package koopa.cobol.sources.test;
 
+import static koopa.cobol.data.tags.CobolAreaTag.IDENTIFICATION_AREA;
+import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
+import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
+import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
 import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
-import static koopa.cobol.data.tags.SyntacticTag.BOOLEAN_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
-import static koopa.cobol.data.tags.SyntacticTag.HEXADECIMAL_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.PSEUDO_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
-import static koopa.cobol.data.tags.SyntacticTag.SIGNED;
-import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.END_OF_LINE;
-import static koopa.core.data.tags.AreaTag.IDENTIFICATION_AREA;
-import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.NUMBER;
+import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.core.data.tags.SyntacticTag.STRING;
+import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
+import static koopa.core.data.tags.SyntacticTag.WORD;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -34,15 +31,16 @@ import java.util.Map;
 
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
+import koopa.cobol.sources.InlineComments;
 import koopa.cobol.sources.LineContinuations;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.PseudoLiterals;
-import koopa.cobol.sources.Separators;
 import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
+import koopa.core.sources.TokenSeparator;
 import koopa.core.sources.test.AnnotatedSourceSample;
 import koopa.core.sources.test.TokenValidator;
 import koopa.core.util.test.FileBasedTest;
@@ -117,8 +115,12 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		if (file.getName().startsWith("ContinuationWelding"))
 			return source;
 
-		source = new Separators(source);
-		if (file.getName().startsWith("Separators"))
+		source = new TokenSeparator(source);
+		if (file.getName().startsWith("TokenSeparator"))
+			return source;
+
+		source = new InlineComments(source);
+		if (file.getName().startsWith("InlineComments"))
 			return source;
 
 		source = new PseudoLiterals(source);
@@ -139,13 +141,14 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		TAG_VALIDATIONS.put(":", new Object[] { SEPARATOR });
 		TAG_VALIDATIONS.put("SEP", new Object[] { SEPARATOR });
 
+		TAG_VALIDATIONS.put(".", new Object[] { SEPARATOR, WHITESPACE });
+		TAG_VALIDATIONS.put("WS", new Object[] { SEPARATOR, WHITESPACE });
+
 		TAG_VALIDATIONS.put("EOLN", new Object[] { END_OF_LINE, FIXED });
 		TAG_VALIDATIONS.put("eoln", new Object[] { END_OF_LINE, FREE });
 
-		TAG_VALIDATIONS.put("CD", new Object[] {
-				COMPILER_DIRECTIVE, FIXED });
-		TAG_VALIDATIONS.put("cd", new Object[] {
-				COMPILER_DIRECTIVE, FREE });
+		TAG_VALIDATIONS.put("CD", new Object[] { COMPILER_DIRECTIVE, FIXED });
+		TAG_VALIDATIONS.put("cd", new Object[] { COMPILER_DIRECTIVE, FREE });
 
 		TAG_VALIDATIONS.put("COMMENT", new Object[] { COMMENT, FIXED });
 		TAG_VALIDATIONS.put("comment", new Object[] { COMMENT, FREE });
@@ -171,21 +174,19 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		TAG_VALIDATIONS.put("formatting", new Object[] {
 				SOURCE_FORMATTING_DIRECTIVE, FREE });
 
-		TAG_VALIDATIONS.put("CS", new Object[] { CHARACTER_STRING,
-				PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("STRING", new Object[] { STRING_LITERAL,
-				CHARACTER_STRING, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("BOOL", new Object[] { BOOLEAN_LITERAL,
-				CHARACTER_STRING, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("HEX", new Object[] { HEXADECIMAL_LITERAL,
-				CHARACTER_STRING, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("UINT", new Object[] { INTEGER_LITERAL, UNSIGNED,
-				CHARACTER_STRING, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("SINT", new Object[] { INTEGER_LITERAL, SIGNED,
-				CHARACTER_STRING, PROGRAM_TEXT_AREA });
+		TAG_VALIDATIONS.put("STRING",
+				new Object[] { STRING, PROGRAM_TEXT_AREA });
+
+		TAG_VALIDATIONS.put("N", new Object[] { NUMBER, PROGRAM_TEXT_AREA });
+		TAG_VALIDATIONS.put("NUM", new Object[] { NUMBER, PROGRAM_TEXT_AREA });
+		TAG_VALIDATIONS.put("NUMBER",
+				new Object[] { NUMBER, PROGRAM_TEXT_AREA });
+
+		TAG_VALIDATIONS.put("W", new Object[] { WORD, PROGRAM_TEXT_AREA });
+		TAG_VALIDATIONS.put("WORD", new Object[] { WORD, PROGRAM_TEXT_AREA });
 
 		TAG_VALIDATIONS.put("PSEUDO", new Object[] { PSEUDO_LITERAL,
-				CHARACTER_STRING, PROGRAM_TEXT_AREA });
+				PROGRAM_TEXT_AREA });
 
 		TAG_VALIDATIONS.put("CTD__", new Object[] { CONTINUED });
 		TAG_VALIDATIONS.put("_CTD_", new Object[] { CONTINUING, CONTINUED });
@@ -198,7 +199,7 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 
 	public void validate(Token token, String category) {
 		if ("_".equalsIgnoreCase(category)) {
-			// A "don't care". For when you don't care.
+			// Don't care.
 			return;
 		}
 

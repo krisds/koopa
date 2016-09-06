@@ -54,9 +54,9 @@ public class JaxenSample {
 		jax(tree, "//text()[@line=100]");
 		jax(tree, "//text()[@line<10]");
 		jax(tree, "//text()[@line<10]/@tag");
-		jax(tree, "//dataDivision//node()[@tag=\"STRING_LITERAL\"]");
-		jax(tree, "//dataDivision//node()[@tag=\"INTEGER_LITERAL\"]");
-		jax(tree, "//node()[@line<100 and @tag=\"STRING_LITERAL\"]");
+		jax(tree, "//dataDivision//node()[@tag=\"STRING\"]");
+		jax(tree, "//dataDivision//node()[@tag=\"NUMBER\"]");
+		jax(tree, "//node()[@line<100 and @tag=\"STRING\"]");
 		jax(tree, "//node()[@tag=\"WATER\"]");
 		jax(tree, "//performStatement[./procedureName]");
 		jax(tree, "//comment()");

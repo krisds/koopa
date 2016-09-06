@@ -1,11 +1,17 @@
 package koopa.core.grammars;
 
-import static koopa.core.grammars.combinators.Opt.NOSKIP;
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
+import static koopa.core.parsers.combinators.Opt.NOSKIP;
 import koopa.core.data.Token;
-import koopa.core.grammars.combinators.Opt;
+import koopa.core.data.tags.AreaTag;
+import koopa.core.data.tags.SyntacticTag;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
+import koopa.core.parsers.combinators.Opt;
 
 /**
  * This defines the basic details of a grammar, as well as the source of actual
@@ -27,29 +33,29 @@ public abstract class Grammar {
 	/**
 	 * Whether or not a token contributes to program text.
 	 * <p>
-	 * It is up to actual grammars to override this and implement as needed.
-	 */
-	public abstract boolean isProgramText(Token token);
-
-	/**
-	 * Whether or not a token counts as a comment.
-	 */
-	public abstract boolean isComment(Token token);
-
-	/**
-	 * Whether or not a piece of text represents a separator (or whitespace).
+	 * Program text is the part of the tokens which will be parsed. Anything
+	 * which is not program text will be ignored.
 	 * <p>
-	 * It is up to actual grammars to override this and implement as needed.
+	 * The default implementation tests whether a token is program text by
+	 * looking for the presence of a {@linkplain AreaTag#PROGRAM_TEXT_AREA} tag,
+	 * and the absence of a {@linkplain AreaTag#COMMENT} tag.
 	 */
-	public abstract boolean isSeparator(String text);
+	public boolean isProgramText(Token token) {
+		return token.hasTag(PROGRAM_TEXT_AREA) && !token.hasTag(COMMENT);
+	}
 
 	/**
-	 * Whether or not a token represents a separator.
+	 * Whether or not a token can be skipped at a given point in the parse.
 	 * <p>
-	 * By default this delegates to {@linkplain Grammar#isSeparator(String)}.
+	 * This should only be called on tokens which are program text (as decided
+	 * by {@link #isProgramText(Token)}).
+	 * <p>
+	 * The default implementation tests whether a token is program text by
+	 * looking for the presence of either a {@linkplain SyntacticTag#WHITESPACE}
+	 * tag, or a {@linkplain SyntacticTag#END_OF_LINE} tag.
 	 */
-	public boolean isSeparator(Token token, Parse parseStack) {
-		return isSeparator(token.getText());
+	public boolean canBeSkipped(Token token, Parse parse) {
+		return token.hasAnyTag(WHITESPACE, END_OF_LINE);
 	}
 
 	/**
@@ -58,28 +64,44 @@ public abstract class Grammar {
 	public abstract boolean isCaseSensitive();
 
 	/**
-	 * Skips all tokens which are either not program text, or which are
-	 * separators.
+	 * Normalize program text so it can be used in string comparison.
 	 * <p>
-	 * If the {@linkplain Opt#NOSKIP} option is active then this will only skip
-	 * tokens which are not program text.
-	 * <p>
-	 * Subclasses may use this as needed in custom parsers.
+	 * Basically, this will {@linkplain String#toUpperCase()} what you give it
+	 * if {@link #isCaseSensitive()} is <code>true</code>, or return it as is
+	 * otherwise.
 	 */
-	public void skipSeparators(Parse parse) {
-		skipOtherSeparators(parse, null);
+	public String comparableText(String word) {
+		if (word == null)
+			return null;
+		else if (isCaseSensitive())
+			return word;
+		else
+			return word.toUpperCase();
 	}
 
 	/**
-	 * Skips all tokens which are either not program text, or which are
-	 * separators other than the given one.
+	 * This is equivalent to {@linkplain #skipOther(Parse, String)}, with the
+	 * second parameter set to <code>null</code>.
+	 */
+	public void skipAll(Parse parse) {
+		skipOther(parse, null);
+	}
+
+	/**
+	 * Skips all tokens which are either not program text (via
+	 * {@linkplain #isProgramText(Token)}), or which can be skipped (via
+	 * {@linkplain #canBeSkipped(Token, Parse)}).
+	 * <p>
+	 * This will not skip program text tokens matching the <code>text</code>
+	 * parameter, unless it is set to <code>null</code>.
 	 * <p>
 	 * If the {@linkplain Opt#NOSKIP} option is active then this will only skip
 	 * tokens which are not program text.
 	 * <p>
 	 * Subclasses may use this as needed in custom parsers.
 	 */
-	public void skipOtherSeparators(Parse parse, String sep) {
+	public void skipOther(Parse parse, String text) {
+		text = comparableText(text);
 		while (true) {
 			Stream stream = parse.getStream();
 			Token token = stream.peek();
@@ -95,10 +117,10 @@ public abstract class Grammar {
 			if (parse.isSet(NOSKIP))
 				return;
 
-			if (sep != null && sep.equals(token.getText()))
+			if (text != null && text.equals(comparableText(token.getText())))
 				return;
 
-			if (isSeparator(token, stream.getParse())) {
+			if (canBeSkipped(token, stream.getParse())) {
 				stream.skip();
 				continue;
 			}
@@ -106,4 +128,10 @@ public abstract class Grammar {
 			return;
 		}
 	}
+
+	/**
+	 * Matches a <i>potential</i> keyword. There is no need to actually test
+	 * whether it is a keyword, as Koopa tries to do that automatically anyway.
+	 */
+	public abstract ParserCombinator keyword();
 }

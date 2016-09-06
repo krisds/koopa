@@ -1,81 +1,88 @@
 package koopa.dsl.kg.grammar;
 
-import static koopa.dsl.kg.tags.KGTag.COMMENT;
-import static koopa.dsl.kg.tags.KGTag.ESCAPED;
-import static koopa.dsl.kg.tags.KGTag.IDENTIFIER;
-import static koopa.dsl.kg.tags.KGTag.LITERAL;
-import static koopa.dsl.kg.tags.KGTag.NATIVE_CODE_BLOCK;
-import static koopa.dsl.kg.tags.KGTag.NUMBER;
-import static koopa.dsl.kg.tags.KGTag.QUOTED_LITERAL;
-import static koopa.dsl.kg.tags.KGTag.TEXT;
-import static koopa.dsl.kg.tags.KGTag.WHITESPACE;
-import static koopa.dsl.kg.tags.KGTag.WORD;
-
-import koopa.core.data.Token;
+import static koopa.core.data.tags.SyntacticTag.NUMBER;
+import static koopa.core.data.tags.SyntacticTag.STRING;
+import static koopa.core.data.tags.SyntacticTag.WORD;
 import koopa.core.grammars.fluent.FluentGrammar;
-import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 
+/**
+ * A grammar for defining grammars.
+ * <p>
+ * Check kg.stage to see a definition of itself using its own grammar.
+ */
 public class KGGrammar extends FluentGrammar {
+
+	public static final String SCOPE_SEPARATOR = "$";
+
+	@Override
+	public String getNamespace() {
+		return "kg";
+	}
+
+	@Override
+	public boolean isCaseSensitive() {
+		return true;
+	}
+
+	// ------------------------------------------------------------------------
 
 	public KGGrammar() {
 		// header rule* eof
 		define("grammar").as("header", many("rule"), eof());
 
-		// ['tree'] 'grammar' name ['extends' name] '.'
+		// 'grammar' name ['extends' name] '.'
 		define("header").as( //
-				optional("tree"), //
 				"grammar_name", //
 				optional("extends"), //
 				"==.==" //
 		);
-		define("tree").as("==tree==");
-		define("grammar_name").as("==grammar==", "name");
-		define("extends").as("==extends==", "name");
+		define("grammar_name").as("++grammar++", "name");
+		define("extends").as("++extends++", "name");
 
 		// [modifier] 'def' [nokeywords] identifier [locals] [returning] '='
 		// sequence (nested_rule)* 'end'
 		define("rule").as( //
 				optional("modifier"), //
-				"==def==", //
+				"++def++", //
 				optional("nokeywords"), //
 				"identifier", //
 				optional("local-variables"), //
 				optional("return_value"), //
 				"=====", "sequence", //
 				many("nested_rule"), //
-				"==end==" //
+				"++end++" //
 		);
 
 		// 'where' [modifier] 'def' [nokeywords] identifier [locals] [returning]
 		// '='
 		// sequence (nested_rule)* 'end'
 		define("nested_rule").as( //
-				"==where==", //
+				"++where++", //
 				optional("modifier"), //
-				"==def==", //
+				"++def++", //
 				optional("nokeywords"), //
 				"identifier", //
 				optional("local-variables"), //
 				optional("return_value"), //
 				"=====", "sequence", //
 				many("nested_rule"), //
-				"==end==" //
+				"++end++" //
 		);
 
 		define("modifier").as(oneOf( //
-				with("public").as("==public=="), //
-				with("private").as("==private=="), //
-				with("hiding").as("==hiding==")));
+				with("public").as("++public++"), //
+				with("private").as("++private++"), //
+				with("hiding").as("++hiding++")));
 		define("local-variables").as( //
 				"==(==", alternating("declaration", "==,=="), "==)==");
 		define("declaration").as("type", "name");
-		define("return_value").as("==returns==", "identifier");
+		define("return_value").as("++returns++", "identifier");
 
 		define("sequence").as(oneOf( //
 				with("as").as("identifier", "==:==", "sequence"), //
 				oneOrMore("part") //
-		));
+				));
 
 		defineHelper("part").as(oneOf( //
 				with("star").as("repeatable", "==*=="), //
@@ -116,7 +123,7 @@ public class KGGrammar extends FluentGrammar {
 				"native_code", //
 				with("any").as("==_=="), //
 				with("dot").as("==.==") //
-		));
+				));
 
 		// '(' sequence ('|' sequence)* ')'
 		define("nested").as( //
@@ -126,25 +133,26 @@ public class KGGrammar extends FluentGrammar {
 		// '[' sequence ('|' sequence)* ']'
 		define("optional").as( //
 				"==[==", //
-				oneOf(with("nested").as(alternating("sequence", "==|==")), //
-						"sequence"), //
+				with("nested").as(alternating("sequence", "==|==")), //
 				"==]==" //
 		);
 
 		// '!' '(' sequence ('|' sequence)* ')'
 		define("permutation").as("==!==", //
-				"==(==", alternating("sequence", "==|=="), "==)==");
+				noskip("==(=="), alternating("sequence", "==|=="), "==)==");
 
 		// '!' '[' sequence ('|' sequence)* ']'
-		defineHelper("optional-permutation") //
-				.with("optional").with("permutation").as( //
-						"==!==", //
-						"==[==", alternating("sequence", "==|=="), "==]==");
+		defineHelper("optional-permutation")
+				//
+				.with("optional").with("permutation")
+				.as( //
+				"==!==", //
+				noskip("==[=="), alternating("sequence", "==|=="), "==]==");
 
 		// '$' '(' dispatch ('|' dispatch)* ')'
 		define("dispatched").as( //
-				"==$==", "==(==", //
-				"dispatch", many("==|==", "dispatch"), //
+				"==$==", noskip("==(=="), //
+				alternating("dispatch", "==|=="), //
 				"==)==" //
 		);
 		// literal '=>' sequence
@@ -167,35 +175,50 @@ public class KGGrammar extends FluentGrammar {
 		// '%nokeywords'
 		define("nokeywords").as("==%==", noskip("==nokeywords=="));
 
-		// @name
+		// @ %noskip name
 		define("tagged").as("==@==", noskip("name"));
 
-		// @WORD _
-		define("name").as(tagged(WORD), userDefined());
+		// identifier
+		define("name").as(notAKeyword("word"));
 
-		// @WORD _
-		define("type").as(tagged(WORD), userDefined());
+		// identifier
+		define("type").as(notAKeyword("word"));
 
-		// @IDENTIFIER _
+		// ( '`' %noskip (%someLowercase word)
+		// | %noKeyword (%someLowercase word) )
 		define("identifier").as(oneOf(//
 				// Any escaped identifier.
-				all(tagged(ESCAPED), tagged(IDENTIFIER), any()), //
+				all("==`==", noskip(someLowercase("word"))), //
 				// Or any identifier which is not a keyword.
-				all(not(oneOf("==def==", "==where==", "modifier")), //
-						tagged(IDENTIFIER), userDefined())));
+				notAKeyword(someLowercase("word"))));
 
-		// @LITERAL _
-		define("literal").as(tagged(LITERAL), userDefined());
+		// %uppercase word
+		define("literal").as(allUppercase("word"));
+
+		defineHelper("word").as( //
+				tagged(WORD), any(), //
+				noskip(many(oneOf( //
+						"==-==", //
+						"==_==", //
+						token(SCOPE_SEPARATOR), //
+						all(tagged(WORD), any()), //
+						all(tagged(NUMBER), any()) //
+				))));
 
 		// @QUOTED_LITERAL _
-		define("quoted_literal").as(tagged(QUOTED_LITERAL), userDefined());
+		define("quoted_literal").as(tagged(STRING), any());
 
 		// @NUMBER _
-		define("number").as(tagged(NUMBER), userDefined());
+		define("number").as(tagged(NUMBER), any());
 
-		// @NATIVE_CODE _
-		define("native_code").as(tagged(NATIVE_CODE_BLOCK), userDefined());
+		define("native_code").as("braced");
+		defineHelper("braced").as( //
+				"=={==", //
+				many(oneOf("braced", all(not("==}=="), any()))), //
+				"==}==");
 	}
+
+	// ------------------------------------------------------------------------
 
 	public ParserCombinator grammar() {
 		return definitionOf("grammar").asParser();
@@ -205,35 +228,19 @@ public class KGGrammar extends FluentGrammar {
 		return definitionOf("rule").asParser();
 	}
 
-	// ------------------------------------------------------------------------
-
-	@Override
-	public boolean isCaseSensitive() {
-		return true;
+	public ParserCombinator identifier() {
+		return definitionOf("identifier").asParser();
 	}
 
-	@Override
-	public boolean isProgramText(Token token) {
-		return token.hasTag(TEXT);
+	public ParserCombinator literal() {
+		return definitionOf("literal").asParser();
 	}
 
-	@Override
-	public boolean isComment(Token token) {
-		return token.hasTag(COMMENT);
+	public ParserCombinator name() {
+		return definitionOf("name").asParser();
 	}
 
-	@Override
-	public boolean isSeparator(String text) {
-		return text.trim().length() == 0;
-	}
-
-	@Override
-	public boolean isSeparator(Token token, Parse parseStack) {
-		return token.hasTag(WHITESPACE);
-	}
-
-	@Override
-	public String getNamespace() {
-		return "kg";
+	public ParserCombinator word() {
+		return definitionOf("word").asParser();
 	}
 }

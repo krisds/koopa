@@ -91,6 +91,9 @@ There is also support for regression testing based on the cobol85 testsuite. Thi
 
 All unit tests can be triggered from ANT. Simply invoke `ant run-tests` on the command line.
 
+### Random tests
+
+The grammar unit tests have the option of being randomized, assuming there are definitions referencing other definitions. To enable this set `koopa.tests.random` to `true`, and `koopa.tests.random.limit` to a positive integer value. Each definition which can be randomized will than be randomized a number of times, up to the given limit.  
 
 ## Further reading
 

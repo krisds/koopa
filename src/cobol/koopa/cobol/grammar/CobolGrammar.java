@@ -14,17 +14,13 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.combinators.Opt.NOSKIP;
+import static koopa.core.parsers.combinators.Opt.NOSKIP;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
-import koopa.core.data.tags.AreaTag;
-import static koopa.cobol.data.tags.SyntacticTag.FLOATING_POINT_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.INTEGER_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.UNSIGNED;
+import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
 public class CobolGrammar extends CobolBaseGrammar {
     public CobolGrammar() {
@@ -224,10 +220,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -246,8 +242,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("PROGRAM"),
+            keyword("END"),
+            keyword("PROGRAM"),
             name(),
             literal(".")
           )
@@ -271,21 +267,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         programPrototypeIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("PROGRAM-ID"),
+            keyword("PROGRAM-ID"),
             optional(
               literal(".")
             ),
             name(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("PROTOTYPE"),
+            keyword("PROTOTYPE"),
             optional(
               literal(".")
             )
@@ -315,10 +311,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -337,8 +333,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("FUNCTION"),
+            keyword("END"),
+            keyword("FUNCTION"),
             name(),
             literal(".")
           )
@@ -362,21 +358,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         functionPrototypeIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("FUNCTION-ID"),
+            keyword("FUNCTION-ID"),
             optional(
               literal(".")
             ),
             name(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("PROTOTYPE"),
+            keyword("PROTOTYPE"),
             optional(
               literal(".")
             )
@@ -406,10 +402,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -443,8 +439,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("END"),
-                token("PROGRAM"),
+                keyword("END"),
+                keyword("PROGRAM"),
                 programName(),
                 literal(".")
               )
@@ -470,31 +466,31 @@ public class CobolGrammar extends CobolBaseGrammar {
         programIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("PROGRAM-ID"),
+            keyword("PROGRAM-ID"),
             optional(
               literal(".")
             ),
             programName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 permuted(
-                  token("COMMON"),
+                  keyword("COMMON"),
                   choice(
-                    token("INITIAL"),
-                    token("RECURSIVE")
+                    keyword("INITIAL"),
+                    keyword("RECURSIVE")
                   )
                 ),
                 optional(
-                  token("PROGRAM")
+                  keyword("PROGRAM")
                 )
               )
             ),
@@ -527,10 +523,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -549,8 +545,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("FUNCTION"),
+            keyword("END"),
+            keyword("FUNCTION"),
             name(),
             literal(".")
           )
@@ -574,14 +570,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         functionIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("FUNCTION-ID"),
+            keyword("FUNCTION-ID"),
             optional(
               literal(".")
             ),
             name(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
@@ -614,10 +610,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -636,8 +632,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               instanceDefinition()
             ),
-            token("END"),
-            token("CLASS"),
+            keyword("END"),
+            keyword("CLASS"),
             name(),
             literal(".")
           )
@@ -661,22 +657,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         classIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("CLASS-ID"),
+            keyword("CLASS-ID"),
             optional(
               literal(".")
             ),
             name(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
-                token("INHERITS"),
+                keyword("INHERITS"),
                 optional(
-                  token("FROM")
+                  keyword("FROM")
                 ),
                 plus(
                   typeSpecifier()
@@ -686,21 +682,21 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
-                token("STATIC")
+                keyword("STATIC")
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 plus(
                   choice(
-                    token("PARTIAL"),
-                    token("FINAL"),
-                    token("ABSTRACT")
+                    keyword("PARTIAL"),
+                    keyword("FINAL"),
+                    keyword("ABSTRACT")
                   )
                 )
               )
@@ -708,11 +704,11 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 choice(
-                  token("PUBLIC"),
-                  token("INTERNAL")
+                  keyword("PUBLIC"),
+                  keyword("INTERNAL")
                 )
               )
             ),
@@ -721,7 +717,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("IMPLEMENTS"),
+                keyword("IMPLEMENTS"),
                 plus(
                   typeSpecifier()
                 )
@@ -729,7 +725,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("USING"),
+                keyword("USING"),
                 plus(
                   parameterName()
                 )
@@ -764,10 +760,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -786,8 +782,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("FACTORY"),
+            keyword("END"),
+            keyword("FACTORY"),
             literal(".")
           )
         );
@@ -810,13 +806,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         factoryParagraphParser = future;
         future.setParser(
           sequence(
-            token("FACTORY"),
+            keyword("FACTORY"),
             optional(
               literal(".")
             ),
             optional(
               sequence(
-                token("IMPLEMENTS"),
+                keyword("IMPLEMENTS"),
                 plus(
                   name()
                 ),
@@ -849,10 +845,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -871,8 +867,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("OBJECT"),
+            keyword("END"),
+            keyword("OBJECT"),
             literal(".")
           )
         );
@@ -895,13 +891,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         objectParagraphParser = future;
         future.setParser(
           sequence(
-            token("OBJECT"),
+            keyword("OBJECT"),
             optional(
               literal(".")
             ),
             optional(
               sequence(
-                token("IMPLEMENTS"),
+                keyword("IMPLEMENTS"),
                 plus(
                   name()
                 ),
@@ -936,10 +932,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -955,8 +951,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("INTERFACE"),
+            keyword("END"),
+            keyword("INTERFACE"),
             name(),
             literal(".")
           )
@@ -980,22 +976,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         interfaceIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("INTERFACE-ID"),
+            keyword("INTERFACE-ID"),
             optional(
               literal(".")
             ),
             name(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
-                token("INHERITS"),
+                keyword("INHERITS"),
                 optional(
-                  token("FROM")
+                  keyword("FROM")
                 ),
                 plus(
                   name()
@@ -1004,9 +1000,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("USING"),
+                keyword("USING"),
                 optional(
-                  token("FROM")
+                  keyword("FROM")
                 ),
                 plus(
                   name()
@@ -1042,10 +1038,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1064,8 +1060,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               procedureDivision()
             ),
-            token("END"),
-            token("METHOD"),
+            keyword("END"),
+            keyword("METHOD"),
             optional(
               name()
             ),
@@ -1091,38 +1087,38 @@ public class CobolGrammar extends CobolBaseGrammar {
         methodIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("METHOD-ID"),
+            keyword("METHOD-ID"),
             optional(
               literal(".")
             ),
             choice(
               sequence(
                 choice(
-                  token("GET"),
-                  token("SET")
+                  keyword("GET"),
+                  keyword("SET")
                 ),
-                token("PROPERTY"),
+                keyword("PROPERTY"),
                 name()
               ),
               sequence(
                 name(),
                 optional(
                   sequence(
-                    token("AS"),
+                    keyword("AS"),
                     literal()
                   )
                 )
               )
             ),
             optional(
-              token("OVERRIDE")
+              keyword("OVERRIDE")
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
-                token("FINAL")
+                keyword("FINAL")
               )
             ),
             optional(
@@ -1154,10 +1150,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1178,8 +1174,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("END"),
-                token("PROGRAM"),
+                keyword("END"),
+                keyword("PROGRAM"),
                 programName(),
                 literal(".")
               )
@@ -1205,17 +1201,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         callPrototypeIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("PROGRAM-ID"),
+            keyword("PROGRAM-ID"),
             optional(
               literal(".")
             ),
             programName(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("EXTERNAL"),
+            keyword("EXTERNAL"),
             optional(
-              token("PROGRAM")
+              keyword("PROGRAM")
             ),
             optional(
               literal(".")
@@ -1246,10 +1242,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1259,8 +1255,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("procedureDivisionHeader",
               procedureDivision$header()
             ),
-            token("END"),
-            token("DELEGATE"),
+            keyword("END"),
+            keyword("DELEGATE"),
             literal(".")
           )
         );
@@ -1283,28 +1279,28 @@ public class CobolGrammar extends CobolBaseGrammar {
         delegateIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("DELEGATE-ID"),
+            keyword("DELEGATE-ID"),
             optional(
               literal(".")
             ),
             delegateName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 plus(
                   choice(
-                    token("PUBLIC"),
-                    token("PRIVATE"),
-                    token("PROTECTED"),
-                    token("INTERNAL")
+                    keyword("PUBLIC"),
+                    keyword("PRIVATE"),
+                    keyword("PROTECTED"),
+                    keyword("INTERNAL")
                   )
                 )
               )
@@ -1341,10 +1337,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1354,14 +1350,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               skipto(
                 sequence(
-                  token("END"),
-                  token("ENUM"),
+                  keyword("END"),
+                  keyword("ENUM"),
                   literal(".")
                 )
               )
             ),
-            token("END"),
-            token("ENUM"),
+            keyword("END"),
+            keyword("ENUM"),
             literal(".")
           )
         );
@@ -1384,28 +1380,28 @@ public class CobolGrammar extends CobolBaseGrammar {
         enumIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("ENUM-ID"),
+            keyword("ENUM-ID"),
             optional(
               literal(".")
             ),
             enumName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 plus(
                   choice(
-                    token("PUBLIC"),
-                    token("PRIVATE"),
-                    token("PROTECTED"),
-                    token("INTERNAL")
+                    keyword("PUBLIC"),
+                    keyword("PRIVATE"),
+                    keyword("PROTECTED"),
+                    keyword("INTERNAL")
                   )
                 )
               )
@@ -1442,10 +1438,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1455,14 +1451,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               skipto(
                 sequence(
-                  token("END"),
-                  token("ITERATOR"),
+                  keyword("END"),
+                  keyword("ITERATOR"),
                   literal(".")
                 )
               )
             ),
-            token("END"),
-            token("ITERATOR"),
+            keyword("END"),
+            keyword("ITERATOR"),
             literal(".")
           )
         );
@@ -1485,28 +1481,28 @@ public class CobolGrammar extends CobolBaseGrammar {
         iteratorIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("ITERATOR-ID"),
+            keyword("ITERATOR-ID"),
             optional(
               literal(".")
             ),
             iteratorName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 plus(
                   choice(
-                    token("PUBLIC"),
-                    token("PRIVATE"),
-                    token("PROTECTED"),
-                    token("INTERNAL")
+                    keyword("PUBLIC"),
+                    keyword("PRIVATE"),
+                    keyword("PROTECTED"),
+                    keyword("INTERNAL")
                   )
                 )
               )
@@ -1543,10 +1539,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1556,14 +1552,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               skipto(
                 sequence(
-                  token("END"),
-                  token("ENUM"),
+                  keyword("END"),
+                  keyword("ENUM"),
                   literal(".")
                 )
               )
             ),
-            token("END"),
-            token("OPERATOR"),
+            keyword("END"),
+            keyword("OPERATOR"),
             literal(".")
           )
         );
@@ -1586,7 +1582,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         operatorIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("OPERATOR-ID"),
+            keyword("OPERATOR-ID"),
             optional(
               literal(".")
             ),
@@ -1594,26 +1590,41 @@ public class CobolGrammar extends CobolBaseGrammar {
               sequence(
                 literal("="),
                 optional(
-                  token("EXTENSION")
+                  keyword("EXTENSION")
                 )
               ),
-              literal("<>"),
-              literal(">="),
+              sequence(
+                literal("<"),
+                opt(NOSKIP,
+                  literal(">")
+                )
+              ),
+              sequence(
+                literal(">"),
+                opt(NOSKIP,
+                  literal("=")
+                )
+              ),
               literal(">"),
-              literal("<="),
+              sequence(
+                literal("<"),
+                opt(NOSKIP,
+                  literal("=")
+                )
+              ),
               literal("<"),
               literal("+"),
               literal("-"),
               literal("*"),
               literal("/"),
-              token("B-AND"),
-              token("B-OR"),
-              token("B-XOR"),
-              token("B-NOT"),
-              token("B-LEFT"),
-              token("B-RIGHT"),
-              token("IMPLICIT"),
-              token("EXPLICIT")
+              keyword("B-AND"),
+              keyword("B-OR"),
+              keyword("B-XOR"),
+              keyword("B-NOT"),
+              keyword("B-LEFT"),
+              keyword("B-RIGHT"),
+              keyword("IMPLICIT"),
+              keyword("EXPLICIT")
             ),
             optional(
               literal(".")
@@ -1644,10 +1655,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("ID"),
-                      token("IDENTIFICATION")
+                      keyword("ID"),
+                      keyword("IDENTIFICATION")
                     ),
-                    token("DIVISION"),
+                    keyword("DIVISION"),
                     literal(".")
                   )
                 ),
@@ -1657,14 +1668,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               skipto(
                 sequence(
-                  token("END"),
-                  token("ENUM"),
+                  keyword("END"),
+                  keyword("ENUM"),
                   literal(".")
                 )
               )
             ),
-            token("END"),
-            token("VALUETYPE"),
+            keyword("END"),
+            keyword("VALUETYPE"),
             literal(".")
           )
         );
@@ -1687,37 +1698,37 @@ public class CobolGrammar extends CobolBaseGrammar {
         valueTypeIdParagraphParser = future;
         future.setParser(
           sequence(
-            token("VALUETYPE-ID"),
+            keyword("VALUETYPE-ID"),
             optional(
               literal(".")
             ),
             valuetypeName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 choice(
-                  token("FINAL"),
-                  token("PARTIAL"),
-                  token("ABSTRACT")
+                  keyword("FINAL"),
+                  keyword("PARTIAL"),
+                  keyword("ABSTRACT")
                 )
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 choice(
-                  token("PUBLIC"),
-                  token("INTERNAL")
+                  keyword("PUBLIC"),
+                  keyword("INTERNAL")
                 )
               )
             ),
@@ -1726,7 +1737,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("IMPLEMENTS"),
+                keyword("IMPLEMENTS"),
                 plus(
                   interfaceName()
                 )
@@ -1756,49 +1767,49 @@ public class CobolGrammar extends CobolBaseGrammar {
         endMarkerParser = future;
         future.setParser(
           sequence(
-            token("END"),
+            keyword("END"),
             choice(
               sequence(
-                token("CLASS"),
+                keyword("CLASS"),
                 name()
               ),
-              token("FACTORY"),
+              keyword("FACTORY"),
               sequence(
-                token("FUNCTION"),
-                name()
-              ),
-              sequence(
-                token("INTERFACE"),
+                keyword("FUNCTION"),
                 name()
               ),
               sequence(
-                token("METHOD"),
+                keyword("INTERFACE"),
+                name()
+              ),
+              sequence(
+                keyword("METHOD"),
                 optional(
                   name()
                 )
               ),
-              token("OBJECT"),
+              keyword("OBJECT"),
               sequence(
-                token("PROGRAM"),
+                keyword("PROGRAM"),
                 programName()
               ),
               sequence(
-                token("DELEGATE"),
+                keyword("DELEGATE"),
                 name()
               ),
               sequence(
-                token("ENUM"),
+                keyword("ENUM"),
                 name()
               ),
               sequence(
-                token("OPERATOR"),
+                keyword("OPERATOR"),
                 optional(
                   name()
                 )
               ),
-              token("STATIC"),
+              keyword("STATIC"),
               sequence(
-                token("VALUETYPE"),
+                keyword("VALUETYPE"),
                 name()
               )
             ),
@@ -1824,7 +1835,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         optionsParagraphParser = future;
         future.setParser(
           sequence(
-            token("OPTIONS"),
+            keyword("OPTIONS"),
             literal("."),
             optional(
               arithmeticClause()
@@ -1860,15 +1871,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         arithmeticClauseParser = future;
         future.setParser(
           sequence(
-            token("ARITHMETIC"),
+            keyword("ARITHMETIC"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("NATIVE"),
-              token("STANDARD"),
-              token("STANDARD-BINARY"),
-              token("STANDARD-DECIMAL")
+              keyword("NATIVE"),
+              keyword("STANDARD"),
+              keyword("STANDARD-BINARY"),
+              keyword("STANDARD-DECIMAL")
             )
           )
         );
@@ -1891,23 +1902,23 @@ public class CobolGrammar extends CobolBaseGrammar {
         defaultRoundedClauseParser = future;
         future.setParser(
           sequence(
-            token("DEFAULT"),
-            token("ROUNDED"),
+            keyword("DEFAULT"),
+            keyword("ROUNDED"),
             optional(
-              token("MODE")
+              keyword("MODE")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("AWAY-FROM-ZERO"),
-              token("NEAREST-AWAY-FROM-ZERO"),
-              token("NEAREST-EVEN"),
-              token("NEAREST-TOWARD-ZERO"),
-              token("PROHIBITED"),
-              token("TOWARD-GREATER"),
-              token("TOWARD-LESSER"),
-              token("TRUNCATION")
+              keyword("AWAY-FROM-ZERO"),
+              keyword("NEAREST-AWAY-FROM-ZERO"),
+              keyword("NEAREST-EVEN"),
+              keyword("NEAREST-TOWARD-ZERO"),
+              keyword("PROHIBITED"),
+              keyword("TOWARD-GREATER"),
+              keyword("TOWARD-LESSER"),
+              keyword("TRUNCATION")
             )
           )
         );
@@ -1930,12 +1941,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         entryConventionClauseParser = future;
         future.setParser(
           sequence(
-            token("ENTRY-CONVENTION"),
+            keyword("ENTRY-CONVENTION"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("COBOL"),
+              keyword("COBOL"),
               name()
             )
           )
@@ -1959,16 +1970,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         intermediateRoundingClauseParser = future;
         future.setParser(
           sequence(
-            token("INTERMEDIATE"),
-            token("ROUNDING"),
+            keyword("INTERMEDIATE"),
+            keyword("ROUNDING"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("NEAREST-AWAY-FROM-ZERO"),
-              token("NEAREST-EVEN"),
-              token("PROHIBITED"),
-              token("TRUNCATION")
+              keyword("NEAREST-AWAY-FROM-ZERO"),
+              keyword("NEAREST-EVEN"),
+              keyword("PROHIBITED"),
+              keyword("TRUNCATION")
             )
           )
         );
@@ -1994,7 +2005,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             plus(
               choice(
                 sequence(
-                  token("AUTHOR"),
+                  keyword("AUTHOR"),
                   optional(
                     literal(".")
                   ),
@@ -2003,7 +2014,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 sequence(
-                  token("INSTALLATION"),
+                  keyword("INSTALLATION"),
                   optional(
                     literal(".")
                   ),
@@ -2012,7 +2023,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 sequence(
-                  token("DATE-WRITTEN"),
+                  keyword("DATE-WRITTEN"),
                   optional(
                     literal(".")
                   ),
@@ -2021,7 +2032,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 sequence(
-                  token("DATE-COMPILED"),
+                  keyword("DATE-COMPILED"),
                   optional(
                     literal(".")
                   ),
@@ -2030,7 +2041,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 sequence(
-                  token("SECURITY"),
+                  keyword("SECURITY"),
                   optional(
                     literal(".")
                   ),
@@ -2039,7 +2050,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 sequence(
-                  token("REMARKS"),
+                  keyword("REMARKS"),
                   optional(
                     literal(".")
                   ),
@@ -2080,8 +2091,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("ENVIRONMENT"),
-              token("DIVISION"),
+              keyword("ENVIRONMENT"),
+              keyword("DIVISION"),
               literal("."),
               optional(
                 environmentDivisionBody()
@@ -2177,8 +2188,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("CONFIGURATION"),
-              token("SECTION"),
+              keyword("CONFIGURATION"),
+              keyword("SECTION"),
               literal("."),
               optional(
                 configurationSectionBody()
@@ -2247,7 +2258,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         sourceComputerParagraphParser = future;
         future.setParser(
           sequence(
-            token("SOURCE-COMPUTER"),
+            keyword("SOURCE-COMPUTER"),
             literal("."),
             optional(
               sequence(
@@ -2289,10 +2300,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("DEBUGGING"),
-            token("MODE")
+            keyword("DEBUGGING"),
+            keyword("MODE")
           )
         );
       }
@@ -2314,7 +2325,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         objectComputerParagraphParser = future;
         future.setParser(
           sequence(
-            token("OBJECT-COMPUTER"),
+            keyword("OBJECT-COMPUTER"),
             literal("."),
             optional(
               sequence(
@@ -2357,7 +2368,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         constraintsParagraphParser = future;
         future.setParser(
           sequence(
-            token("CONSTRAINTS"),
+            keyword("CONSTRAINTS"),
             literal("."),
             optional(
               skipto(
@@ -2389,7 +2400,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         classAttributesParagraphParser = future;
         future.setParser(
           sequence(
-            token("CLASS-ATTRIBUTES"),
+            keyword("CLASS-ATTRIBUTES"),
             literal("."),
             optional(
               skipto(
@@ -2421,7 +2432,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         assemblyAttributesParagraphParser = future;
         future.setParser(
           sequence(
-            token("ASSEMBLY-ATTRIBUTES"),
+            keyword("ASSEMBLY-ATTRIBUTES"),
             literal("."),
             optional(
               skipto(
@@ -2458,8 +2469,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("WITH"),
-                token("DEBUGGING")
+                keyword("WITH"),
+                keyword("DEBUGGING")
               )
             ),
             optional(
@@ -2486,7 +2497,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         specialNamesParagraphParser = future;
         future.setParser(
           sequence(
-            token("SPECIAL-NAMES"),
+            keyword("SPECIAL-NAMES"),
             literal("."),
             star(
               choice(
@@ -2543,19 +2554,19 @@ public class CobolGrammar extends CobolBaseGrammar {
             eventStatusIs(),
             sequence(
               cobolSwitch(),
-              token("IS"),
+              keyword("IS"),
               mnemonicName(),
               star(
                 sequence(
                   choice(
-                    token("ON"),
-                    token("OFF")
+                    keyword("ON"),
+                    keyword("OFF")
                   ),
                   optional(
-                    token("STATUS")
+                    keyword("STATUS")
                   ),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   conditionName()
                 )
@@ -2563,7 +2574,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             sequence(
               cobolDevice(),
-              token("IS"),
+              keyword("IS"),
               mnemonicName()
             )
           )
@@ -2587,11 +2598,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         consoleIsCRTParser = future;
         future.setParser(
           sequence(
-            token("CONSOLE"),
+            keyword("CONSOLE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("CRT")
+            keyword("CRT")
           )
         );
       }
@@ -2613,42 +2624,42 @@ public class CobolGrammar extends CobolBaseGrammar {
         cobolDeviceParser = future;
         future.setParser(
           choice(
-            token("SYSIN"),
-            token("SYSIPT"),
-            token("SYSOUT"),
-            token("SYSLIST"),
-            token("SYSLST"),
-            token("SYSPCH"),
-            token("SYSPUNCH"),
-            token("CONSOLE"),
-            token("TAB"),
-            token("PRINTER"),
-            token("FORMFEED"),
-            token("COMMAND-LINE"),
-            token("ARGUMENT-NUMBER"),
-            token("ENVIRONMENT-NAME"),
-            token("ENVIRONMENT-VALUE"),
-            token("SYSERR"),
-            token("C01"),
-            token("C02"),
-            token("C03"),
-            token("C04"),
-            token("C05"),
-            token("C06"),
-            token("C07"),
-            token("C08"),
-            token("C09"),
-            token("C10"),
-            token("C11"),
-            token("C12"),
-            token("S01"),
-            token("S02"),
-            token("S03"),
-            token("S04"),
-            token("S05"),
-            token("CSP"),
+            keyword("SYSIN"),
+            keyword("SYSIPT"),
+            keyword("SYSOUT"),
+            keyword("SYSLIST"),
+            keyword("SYSLST"),
+            keyword("SYSPCH"),
+            keyword("SYSPUNCH"),
+            keyword("CONSOLE"),
+            keyword("TAB"),
+            keyword("PRINTER"),
+            keyword("FORMFEED"),
+            keyword("COMMAND-LINE"),
+            keyword("ARGUMENT-NUMBER"),
+            keyword("ENVIRONMENT-NAME"),
+            keyword("ENVIRONMENT-VALUE"),
+            keyword("SYSERR"),
+            keyword("C01"),
+            keyword("C02"),
+            keyword("C03"),
+            keyword("C04"),
+            keyword("C05"),
+            keyword("C06"),
+            keyword("C07"),
+            keyword("C08"),
+            keyword("C09"),
+            keyword("C10"),
+            keyword("C11"),
+            keyword("C18"),
+            keyword("S01"),
+            keyword("S02"),
+            keyword("S03"),
+            keyword("S04"),
+            keyword("S05"),
+            keyword("CSP"),
             alphanumericLiteral(),
-            cobolWord()
+            justAName()
           )
         );
       }
@@ -2670,15 +2681,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         cobolSwitchParser = future;
         future.setParser(
           choice(
-            token("SWITCH-0"),
-            token("SWITCH-1"),
-            token("SWITCH-2"),
-            token("SWITCH-3"),
-            token("SWITCH-4"),
-            token("SWITCH-5"),
-            token("SWITCH-6"),
-            token("SWITCH-7"),
-            token("SWITCH-8")
+            keyword("SWITCH-0"),
+            keyword("SWITCH-1"),
+            keyword("SWITCH-2"),
+            keyword("SWITCH-3"),
+            keyword("SWITCH-4"),
+            keyword("SWITCH-5"),
+            keyword("SWITCH-6"),
+            keyword("SWITCH-7"),
+            keyword("SWITCH-8")
           )
         );
       }
@@ -2700,10 +2711,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         alphabetIsParser = future;
         future.setParser(
           sequence(
-            token("ALPHABET"),
+            keyword("ALPHABET"),
             identifier(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             alphabetType()
           )
@@ -2754,7 +2765,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("standard1AlphabetType", PUBLIC, true);
         standard1AlphabetTypeParser = future;
         future.setParser(
-          token("STANDARD-1")
+          keyword("STANDARD-1")
         );
       }
     
@@ -2774,7 +2785,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("standard2AlphabetType", PUBLIC, true);
         standard2AlphabetTypeParser = future;
         future.setParser(
-          token("STANDARD-2")
+          keyword("STANDARD-2")
         );
       }
     
@@ -2794,7 +2805,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("nativeAlphabetType", PUBLIC, true);
         nativeAlphabetTypeParser = future;
         future.setParser(
-          token("NATIVE")
+          keyword("NATIVE")
         );
       }
     
@@ -2814,7 +2825,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("asciiAlphabetType", PUBLIC, true);
         asciiAlphabetTypeParser = future;
         future.setParser(
-          token("ASCII")
+          keyword("ASCII")
         );
       }
     
@@ -2834,7 +2845,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("ebcdicAlphabetType", PUBLIC, true);
         ebcdicAlphabetTypeParser = future;
         future.setParser(
-          token("EBCDIC")
+          keyword("EBCDIC")
         );
       }
     
@@ -2861,7 +2872,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             star(
               sequence(
-                token("ALSO"),
+                keyword("ALSO"),
                 choice(
                   literalRange(),
                   literal()
@@ -2888,7 +2899,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("codeNameAlphabetType", PUBLIC, true);
         codeNameAlphabetTypeParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -2911,8 +2922,8 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             literal(),
             choice(
-              token("THROUGH"),
-              token("THRU")
+              keyword("THROUGH"),
+              keyword("THRU")
             ),
             literal()
           )
@@ -2936,11 +2947,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         symbolicCharsParser = future;
         future.setParser(
           sequence(
-            token("SYMBOLIC"),
+            keyword("SYMBOLIC"),
             optional(
               choice(
-                token("CHARACTER"),
-                token("CHARACTERS")
+                keyword("CHARACTER"),
+                keyword("CHARACTERS")
               )
             ),
             plus(
@@ -2950,8 +2961,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 optional(
                   choice(
-                    token("IS"),
-                    token("ARE")
+                    keyword("IS"),
+                    keyword("ARE")
                   )
                 ),
                 plus(
@@ -2961,7 +2972,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("IN"),
+                keyword("IN"),
                 identifier()
               )
             )
@@ -2986,10 +2997,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         classIsParser = future;
         future.setParser(
           sequence(
-            token("CLASS"),
+            keyword("CLASS"),
             identifier(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             plus(
               choice(
@@ -3018,10 +3029,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         localeIsParser = future;
         future.setParser(
           sequence(
-            token("LOCALE"),
+            keyword("LOCALE"),
             identifier(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             identifier()
           )
@@ -3070,12 +3081,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         currencySignIs$signParser = future;
         future.setParser(
           sequence(
-            token("CURRENCY"),
+            keyword("CURRENCY"),
             optional(
-              token("SIGN")
+              keyword("SIGN")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             literal()
           )
@@ -3100,10 +3111,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("PICTURE"),
-            token("SYMBOL"),
+            keyword("PICTURE"),
+            keyword("SYMBOL"),
             literal()
           )
         );
@@ -3126,11 +3137,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         decimalIsCommaParser = future;
         future.setParser(
           sequence(
-            token("DECIMAL-POINT"),
+            keyword("DECIMAL-POINT"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("COMMA")
+            keyword("COMMA")
           )
         );
       }
@@ -3152,20 +3163,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         numericSignIsParser = future;
         future.setParser(
           sequence(
-            token("NUMERIC"),
-            token("SIGN"),
+            keyword("NUMERIC"),
+            keyword("SIGN"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("LEADING"),
-              token("TRAILING")
+              keyword("LEADING"),
+              keyword("TRAILING")
             ),
             optional(
               sequence(
-                token("SEPARATE"),
+                keyword("SEPARATE"),
                 optional(
-                  token("CHARACTER")
+                  keyword("CHARACTER")
                 )
               )
             )
@@ -3190,10 +3201,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         callConventionParser = future;
         future.setParser(
           sequence(
-            token("CALL-CONVENTION"),
+            keyword("CALL-CONVENTION"),
             integer(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             mnemonicName()
           )
@@ -3217,9 +3228,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         cursorIsParser = future;
         future.setParser(
           sequence(
-            token("CURSOR"),
+            keyword("CURSOR"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             dataName()
           )
@@ -3243,10 +3254,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         crtStatusIsParser = future;
         future.setParser(
           sequence(
-            token("CRT"),
-            token("STATUS"),
+            keyword("CRT"),
+            keyword("STATUS"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             dataName()
           )
@@ -3270,10 +3281,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         xmlSchemaIsParser = future;
         future.setParser(
           sequence(
-            token("XML-SCHEMA"),
+            keyword("XML-SCHEMA"),
             identifier(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               dataName(),
@@ -3300,10 +3311,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenControlIsParser = future;
         future.setParser(
           sequence(
-            token("SCREEN"),
-            token("CONTROL"),
+            keyword("SCREEN"),
+            keyword("CONTROL"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             identifier()
           )
@@ -3327,10 +3338,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         eventStatusIsParser = future;
         future.setParser(
           sequence(
-            token("EVENT"),
-            token("STATUS"),
+            keyword("EVENT"),
+            keyword("STATUS"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             identifier()
           )
@@ -3354,7 +3365,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         repositoryParagraphParser = future;
         future.setParser(
           sequence(
-            token("REPOSITORY"),
+            keyword("REPOSITORY"),
             literal("."),
             optional(
               sequence(
@@ -3393,19 +3404,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         classSpecifierParser = future;
         future.setParser(
           sequence(
-            token("CLASS"),
+            keyword("CLASS"),
             className(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
-                token("EXPANDS"),
+                keyword("EXPANDS"),
                 className(),
-                token("USING"),
+                keyword("USING"),
                 choice(
                   className(),
                   interfaceName()
@@ -3433,19 +3444,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         interfaceSpecifierParser = future;
         future.setParser(
           sequence(
-            token("INTERFACE"),
+            keyword("INTERFACE"),
             interfaceName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             ),
             optional(
               sequence(
-                token("EXPANDS"),
+                keyword("EXPANDS"),
                 interfaceName(),
-                token("USING"),
+                keyword("USING"),
                 choice(
                   className(),
                   interfaceName()
@@ -3473,11 +3484,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         programSpecifierParser = future;
         future.setParser(
           sequence(
-            token("PROGRAM"),
+            keyword("PROGRAM"),
             programName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             )
@@ -3502,11 +3513,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         propertySpecifierParser = future;
         future.setParser(
           sequence(
-            token("PROPERTY"),
+            keyword("PROPERTY"),
             propertyName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             )
@@ -3531,20 +3542,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         functionSpecifierParser = future;
         future.setParser(
           sequence(
-            token("FUNCTION"),
+            keyword("FUNCTION"),
             choice(
               sequence(
                 choice(
-                  token("ALL"),
+                  keyword("ALL"),
                   functionName()
                 ),
-                token("INTRINSIC")
+                keyword("INTRINSIC")
               ),
               sequence(
                 functionName(),
                 optional(
                   sequence(
-                    token("AS"),
+                    keyword("AS"),
                     literal()
                   )
                 )
@@ -3571,11 +3582,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         delegateSpecifierParser = future;
         future.setParser(
           sequence(
-            token("DELEGATE"),
+            keyword("DELEGATE"),
             delegateName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             )
@@ -3600,11 +3611,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         enumSpecifierParser = future;
         future.setParser(
           sequence(
-            token("ENUM"),
+            keyword("ENUM"),
             enumName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 literal()
               )
             )
@@ -3630,8 +3641,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("INPUT-OUTPUT"),
-              token("SECTION"),
+              keyword("INPUT-OUTPUT"),
+              keyword("SECTION"),
               literal("."),
               optional(
                 ioSectionBody()
@@ -3696,7 +3707,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("FILE-CONTROL"),
+              keyword("FILE-CONTROL"),
               literal("."),
               optional(
                 fileControlEntry()
@@ -3792,13 +3803,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         selectClauseParser = future;
         future.setParser(
           sequence(
-            token("SELECT"),
+            keyword("SELECT"),
             optional(
               choice(
-                token("OPTIONAL"),
+                keyword("OPTIONAL"),
                 sequence(
-                  token("NOT"),
-                  token("OPTIONAL")
+                  keyword("NOT"),
+                  keyword("OPTIONAL")
                 )
               )
             ),
@@ -3824,7 +3835,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         assignClauseParser = future;
         future.setParser(
           sequence(
-            token("ASSIGN"),
+            keyword("ASSIGN"),
             choice(
               assignUsingClause(),
               assignToClause()
@@ -3850,7 +3861,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         assignUsingClauseParser = future;
         future.setParser(
           sequence(
-            token("USING"),
+            keyword("USING"),
             dataName()
           )
         );
@@ -3874,12 +3885,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("TO")
+              keyword("TO")
             ),
             optional(
               choice(
-                token("EXTERNAL"),
-                token("DYNAMIC")
+                keyword("EXTERNAL"),
+                keyword("DYNAMIC")
               )
             ),
             choice(
@@ -3909,15 +3920,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("DISK"),
-              token("FROM"),
+              keyword("DISK"),
+              keyword("FROM"),
               dataName()
             ),
             sequence(
-              token("LINE"),
-              token("ADVANCING"),
+              keyword("LINE"),
+              keyword("ADVANCING"),
               optional(
-                token("FILE")
+                keyword("FILE")
               ),
               plus(
                 choice(
@@ -3928,14 +3939,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             sequence(
               optional(
-                token("MULTIPLE")
+                keyword("MULTIPLE")
               ),
               choice(
-                token("REEL"),
-                token("UNIT")
+                keyword("REEL"),
+                keyword("UNIT")
               ),
               optional(
-                token("FILE")
+                keyword("FILE")
               ),
               plus(
                 choice(
@@ -3946,9 +3957,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             sequence(
               optional(
-                token("DISK")
+                keyword("DISK")
               ),
-              token("FILE"),
+              keyword("FILE"),
               plus(
                 choice(
                   dataName(),
@@ -3958,18 +3969,18 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             sequence(
               choice(
-                token("DISK"),
-                token("PRINTER")
+                keyword("DISK"),
+                keyword("PRINTER")
               ),
-              token("DISPLAY")
+              keyword("DISPLAY")
             ),
             sequence(
               choice(
-                token("DISK"),
-                token("KEYBOARD"),
-                token("DISPLAY"),
-                token("PRINTER"),
-                token("PRINTER-1")
+                keyword("DISK"),
+                keyword("KEYBOARD"),
+                keyword("DISPLAY"),
+                keyword("PRINTER-1"),
+                keyword("PRINTER")
               ),
               star(
                 choice(
@@ -3999,12 +4010,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         collationClauseParser = future;
         future.setParser(
           sequence(
-            token("COLLATING"),
+            keyword("COLLATING"),
             optional(
-              token("SEQUENCE")
+              keyword("SEQUENCE")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             alphabetName()
           )
@@ -4028,13 +4039,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         recordDelimiterClauseParser = future;
         future.setParser(
           sequence(
-            token("RECORD"),
-            token("DELIMITER"),
+            keyword("RECORD"),
+            keyword("DELIMITER"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("STANDARD-1"),
+              keyword("STANDARD-1"),
               literal(),
               name()
             )
@@ -4059,18 +4070,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         reserveClauseParser = future;
         future.setParser(
           sequence(
-            token("RESERVE"),
+            keyword("RESERVE"),
             choice(
               integer(),
-              token("NO")
+              keyword("NO")
             ),
             optional(
-              token("ALTERNATE")
+              keyword("ALTERNATE")
             ),
             optional(
               choice(
-                token("AREA"),
-                token("AREAS")
+                keyword("AREA"),
+                keyword("AREAS")
               )
             )
           )
@@ -4096,27 +4107,27 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             optional(
               sequence(
-                token("ORGANIZATION"),
+                keyword("ORGANIZATION"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               )
             ),
             optional(
               choice(
-                token("LINE"),
+                keyword("LINE"),
                 sequence(
-                  token("RECORD"),
-                  token("BINARY")
+                  keyword("RECORD"),
+                  keyword("BINARY")
                 ),
-                token("RECORD"),
-                token("BINARY")
+                keyword("RECORD"),
+                keyword("BINARY")
               )
             ),
             choice(
-              token("SEQUENTIAL"),
-              token("RELATIVE"),
-              token("INDEXED")
+              keyword("SEQUENTIAL"),
+              keyword("RELATIVE"),
+              keyword("INDEXED")
             )
           )
         );
@@ -4139,26 +4150,26 @@ public class CobolGrammar extends CobolBaseGrammar {
         accessModeClauseParser = future;
         future.setParser(
           sequence(
-            token("ACCESS"),
+            keyword("ACCESS"),
             optional(
-              token("MODE")
+              keyword("MODE")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("SEQUENTIAL"),
-              token("RANDOM"),
-              token("DYNAMIC"),
-              token("EXCLUSIVE"),
+              keyword("SEQUENTIAL"),
+              keyword("RANDOM"),
+              keyword("DYNAMIC"),
+              keyword("EXCLUSIVE"),
               sequence(
-                token("MANUAL"),
+                keyword("MANUAL"),
                 optional(
                   lockModeWithClause()
                 )
               ),
               sequence(
-                token("AUTOMATIC"),
+                keyword("AUTOMATIC"),
                 optional(
                   lockModeWithClause()
                 )
@@ -4185,23 +4196,23 @@ public class CobolGrammar extends CobolBaseGrammar {
         lockModeClauseParser = future;
         future.setParser(
           sequence(
-            token("LOCK"),
+            keyword("LOCK"),
             optional(
-              token("MODE")
+              keyword("MODE")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("EXCLUSIVE"),
+              keyword("EXCLUSIVE"),
               sequence(
-                token("MANUAL"),
+                keyword("MANUAL"),
                 optional(
                   lockModeWithClause()
                 )
               ),
               sequence(
-                token("AUTOMATIC"),
+                keyword("AUTOMATIC"),
                 optional(
                   lockModeWithClause()
                 )
@@ -4229,19 +4240,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
             choice(
-              token("ROLLBACK"),
+              keyword("ROLLBACK"),
               sequence(
-                token("LOCK"),
-                token("ON"),
+                keyword("LOCK"),
+                keyword("ON"),
                 optional(
-                  token("MULTIPLE")
+                  keyword("MULTIPLE")
                 ),
                 choice(
-                  token("RECORD"),
-                  token("RECORDS")
+                  keyword("RECORD"),
+                  keyword("RECORDS")
                 )
               )
             )
@@ -4266,12 +4277,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         relativeKeyClauseParser = future;
         future.setParser(
           sequence(
-            token("RELATIVE"),
+            keyword("RELATIVE"),
             optional(
-              token("KEY")
+              keyword("KEY")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             recordKeyDefinition()
           )
@@ -4295,12 +4306,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         recordKeyClauseParser = future;
         future.setParser(
           sequence(
-            token("RECORD"),
+            keyword("RECORD"),
             optional(
-              token("KEY")
+              keyword("KEY")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             recordKeyDefinition(),
             optional(
@@ -4327,15 +4338,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         alternateRecordKeyClauseParser = future;
         future.setParser(
           sequence(
-            token("ALTERNATE"),
+            keyword("ALTERNATE"),
             optional(
-              token("RECORD")
+              keyword("RECORD")
             ),
             optional(
-              token("KEY")
+              keyword("KEY")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             recordKeyDefinition(),
             optional(
@@ -4344,9 +4355,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 suppressClause(),
                 sequence(
                   optional(
-                    token("WITH")
+                    keyword("WITH")
                   ),
-                  token("DUPLICATES")
+                  keyword("DUPLICATES")
                 )
               )
             )
@@ -4379,9 +4390,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               choice(
                 literal("="),
                 sequence(
-                  token("SOURCE"),
+                  keyword("SOURCE"),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   )
                 )
               ),
@@ -4412,11 +4423,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("FILE")
+              keyword("FILE")
             ),
-            token("STATUS"),
+            keyword("STATUS"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             qualifiedDataName()
           )
@@ -4440,10 +4451,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         sortStatusClauseParser = future;
         future.setParser(
           sequence(
-            token("SORT"),
-            token("STATUS"),
+            keyword("SORT"),
+            keyword("STATUS"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             qualifiedDataName()
           )
@@ -4467,9 +4478,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         passwordClauseParser = future;
         future.setParser(
           sequence(
-            token("PASSWORD"),
+            keyword("PASSWORD"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             dataName()
           )
@@ -4493,16 +4504,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         suppressClauseParser = future;
         future.setParser(
           sequence(
-            token("SUPPRESS"),
+            keyword("SUPPRESS"),
             optional(
-              token("WHEN")
+              keyword("WHEN")
             ),
             choice(
               zero(),
               space(),
               sequence(
                 optional(
-                  token("ALL")
+                  keyword("ALL")
                 ),
                 literal()
               )
@@ -4528,22 +4539,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         sharingClauseParser = future;
         future.setParser(
           sequence(
-            token("SHARING"),
+            keyword("SHARING"),
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
             choice(
               sequence(
-                token("READ"),
-                token("ONLY")
+                keyword("READ"),
+                keyword("ONLY")
               ),
               sequence(
                 choice(
-                  token("ALL"),
-                  token("NO")
+                  keyword("ALL"),
+                  keyword("NO")
                 ),
                 optional(
-                  token("OTHER")
+                  keyword("OTHER")
                 )
               )
             )
@@ -4568,12 +4579,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         paddingClauseParser = future;
         future.setParser(
           sequence(
-            token("PADDING"),
+            keyword("PADDING"),
             optional(
-              token("CHARACTER")
+              keyword("CHARACTER")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               literal(),
@@ -4600,7 +4611,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         ioControlParagraphParser = future;
         future.setParser(
           sequence(
-            token("I-O-CONTROL"),
+            keyword("I-O-CONTROL"),
             literal("."),
             optional(
               skipto(
@@ -4633,8 +4644,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("OBJECT"),
-              token("SECTION"),
+              keyword("OBJECT"),
+              keyword("SECTION"),
               literal("."),
               optional(
                 objectSectionBody()
@@ -4687,14 +4698,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         classControlParagraphParser = future;
         future.setParser(
           sequence(
-            token("CLASS-CONTROL"),
+            keyword("CLASS-CONTROL"),
             literal("."),
             plus(
               choice(
                 sequence(
                   className(),
-                  token("IS"),
-                  token("CLASS"),
+                  keyword("IS"),
+                  keyword("CLASS"),
                   literal()
                 ),
                 copyStatement()
@@ -4725,8 +4736,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("DATA"),
-              token("DIVISION"),
+              keyword("DATA"),
+              keyword("DIVISION"),
               literal("."),
               optional(
                 dataDivisionBody()
@@ -4789,8 +4800,8 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("FILE"),
-                token("SECTION"),
+                keyword("FILE"),
+                keyword("SECTION"),
                 literal("."),
                 optional(
                   fileSectionContents()
@@ -4881,7 +4892,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         fdFileDescriptionEntryParser = future;
         future.setParser(
           sequence(
-            token("FD"),
+            keyword("FD"),
             fileName(),
             optional(
               permuted(
@@ -4926,7 +4937,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         sdFileDescriptionEntryParser = future;
         future.setParser(
           sequence(
-            token("SD"),
+            keyword("SD"),
             fileName(),
             optional(
               permuted(
@@ -4963,8 +4974,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         workingStorageSectionParser = future;
         future.setParser(
           sequence(
-            token("WORKING-STORAGE"),
-            token("SECTION"),
+            keyword("WORKING-STORAGE"),
+            keyword("SECTION"),
             literal("."),
             star(
               choice(
@@ -4999,8 +5010,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         threadLocalStorageSectionParser = future;
         future.setParser(
           sequence(
-            token("THREAD-LOCAL-STORAGE"),
-            token("SECTION"),
+            keyword("THREAD-LOCAL-STORAGE"),
+            keyword("SECTION"),
             literal("."),
             star(
               choice(
@@ -5035,8 +5046,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         objectStorageSectionParser = future;
         future.setParser(
           sequence(
-            token("OBJECT-STORAGE"),
-            token("SECTION"),
+            keyword("OBJECT-STORAGE"),
+            keyword("SECTION"),
             literal("."),
             star(
               choice(
@@ -5071,8 +5082,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         localStorageSectionParser = future;
         future.setParser(
           sequence(
-            token("LOCAL-STORAGE"),
-            token("SECTION"),
+            keyword("LOCAL-STORAGE"),
+            keyword("SECTION"),
             literal("."),
             star(
               choice(
@@ -5107,8 +5118,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         linkageSectionParser = future;
         future.setParser(
           sequence(
-            token("LINKAGE"),
-            token("SECTION"),
+            keyword("LINKAGE"),
+            keyword("SECTION"),
             literal("."),
             star(
               choice(
@@ -5143,8 +5154,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         communicationSectionParser = future;
         future.setParser(
           sequence(
-            token("COMMUNICATION"),
-            token("SECTION"),
+            keyword("COMMUNICATION"),
+            keyword("SECTION"),
             literal("."),
             star(
               choice(
@@ -5197,122 +5208,122 @@ public class CobolGrammar extends CobolBaseGrammar {
         communicationDescriptionEntry_format1Parser = future;
         future.setParser(
           sequence(
-            token("CD"),
+            keyword("CD"),
             cdName(),
             optional(
-              token("FOR")
+              keyword("FOR")
             ),
             optional(
-              token("INITIAL")
+              keyword("INITIAL")
             ),
-            token("INPUT"),
+            keyword("INPUT"),
             optional(
               choice(
                 permuted(
                   sequence(
                     optional(
-                      token("SYMBOLIC")
+                      keyword("SYMBOLIC")
                     ),
-                    token("QUEUE"),
+                    keyword("QUEUE"),
                     optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    optional(
-                      token("SYMBOLIC")
-                    ),
-                    token("SUB-QUEUE-1"),
-                    optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
                     optional(
-                      token("SYMBOLIC")
+                      keyword("SYMBOLIC")
                     ),
-                    token("SUB-QUEUE-2"),
+                    keyword("SUB-QUEUE-1"),
                     optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    optional(
-                      token("SYMBOLIC")
-                    ),
-                    token("SUB-QUEUE-3"),
-                    optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    token("MESSAGE"),
-                    token("DATE"),
-                    optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    token("MESSAGE"),
-                    token("TIME"),
-                    optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
                     optional(
-                      token("SYMBOLIC")
+                      keyword("SYMBOLIC")
                     ),
-                    token("SOURCE"),
+                    keyword("SUB-QUEUE-2"),
                     optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    token("TEXT"),
-                    token("LENGTH"),
-                    optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    token("END"),
-                    token("KEY"),
-                    optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    token("STATUS"),
-                    token("KEY"),
-                    optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
                     optional(
-                      token("MESSAGE")
+                      keyword("SYMBOLIC")
                     ),
-                    token("COUNT"),
+                    keyword("SUB-QUEUE-3"),
                     optional(
-                      token("IS")
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    keyword("MESSAGE"),
+                    keyword("DATE"),
+                    optional(
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    keyword("MESSAGE"),
+                    keyword("TIME"),
+                    optional(
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    optional(
+                      keyword("SYMBOLIC")
+                    ),
+                    keyword("SOURCE"),
+                    optional(
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    keyword("TEXT"),
+                    keyword("LENGTH"),
+                    optional(
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    keyword("END"),
+                    keyword("KEY"),
+                    optional(
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    keyword("STATUS"),
+                    keyword("KEY"),
+                    optional(
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    optional(
+                      keyword("MESSAGE")
+                    ),
+                    keyword("COUNT"),
+                    optional(
+                      keyword("IS")
                     ),
                     dataName()
                   )
                 ),
                 plus(
                   choice(
-                    token("FILLER"),
+                    keyword("FILLER"),
                     dataName()
                   )
                 )
@@ -5340,56 +5351,56 @@ public class CobolGrammar extends CobolBaseGrammar {
         communicationDescriptionEntry_format2Parser = future;
         future.setParser(
           sequence(
-            token("CD"),
+            keyword("CD"),
             cdName(),
             optional(
-              token("FOR")
+              keyword("FOR")
             ),
-            token("OUTPUT"),
+            keyword("OUTPUT"),
             optional(
               sequence(
-                token("DESTINATION"),
-                token("COUNT"),
+                keyword("DESTINATION"),
+                keyword("COUNT"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 dataName()
               )
             ),
             optional(
               sequence(
-                token("TEXT"),
-                token("LENGTH"),
+                keyword("TEXT"),
+                keyword("LENGTH"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 dataName()
               )
             ),
             optional(
               sequence(
-                token("STATUS"),
-                token("KEY"),
+                keyword("STATUS"),
+                keyword("KEY"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 dataName()
               )
             ),
             optional(
               sequence(
-                token("DESTINATION"),
-                token("TABLE"),
-                token("OCCURS"),
+                keyword("DESTINATION"),
+                keyword("TABLE"),
+                keyword("OCCURS"),
                 integer(),
                 optional(
-                  token("TIMES")
+                  keyword("TIMES")
                 ),
                 optional(
                   sequence(
-                    token("INDEXED"),
+                    keyword("INDEXED"),
                     optional(
-                      token("BY")
+                      keyword("BY")
                     ),
                     plus(
                       indexName()
@@ -5400,10 +5411,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("ERROR"),
-                token("KEY"),
+                keyword("ERROR"),
+                keyword("KEY"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 dataName()
               )
@@ -5411,11 +5422,11 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("SYMBOLIC")
+                  keyword("SYMBOLIC")
                 ),
-                token("DESTINATION"),
+                keyword("DESTINATION"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 dataName()
               )
@@ -5442,71 +5453,71 @@ public class CobolGrammar extends CobolBaseGrammar {
         communicationDescriptionEntry_format3Parser = future;
         future.setParser(
           sequence(
-            token("CD"),
+            keyword("CD"),
             cdName(),
             optional(
-              token("FOR")
+              keyword("FOR")
             ),
             optional(
-              token("INITIAL")
+              keyword("INITIAL")
             ),
-            token("I-O"),
+            keyword("I-O"),
             choice(
               plus(
                 choice(
-                  token("FILLER"),
+                  keyword("FILLER"),
                   dataName()
                 )
               ),
               optional(
                 permuted(
                   sequence(
-                    token("MESSAGE"),
-                    token("DATE"),
+                    keyword("MESSAGE"),
+                    keyword("DATE"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
-                    token("MESSAGE"),
-                    token("TIME"),
+                    keyword("MESSAGE"),
+                    keyword("TIME"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
                     optional(
-                      token("SYMBOLIC")
+                      keyword("SYMBOLIC")
                     ),
-                    token("TERMINAL"),
+                    keyword("TERMINAL"),
                     optional(
-                      token("IS")
-                    ),
-                    dataName()
-                  ),
-                  sequence(
-                    token("TEXT"),
-                    token("LENGTH"),
-                    optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
-                    token("END"),
-                    token("KEY"),
+                    keyword("TEXT"),
+                    keyword("LENGTH"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     dataName()
                   ),
                   sequence(
-                    token("STATUS"),
-                    token("KEY"),
+                    keyword("END"),
+                    keyword("KEY"),
                     optional(
-                      token("IS")
+                      keyword("IS")
+                    ),
+                    dataName()
+                  ),
+                  sequence(
+                    keyword("STATUS"),
+                    keyword("KEY"),
+                    optional(
+                      keyword("IS")
                     ),
                     dataName()
                   )
@@ -5535,8 +5546,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         reportSectionParser = future;
         future.setParser(
           sequence(
-            token("REPORT"),
-            token("SECTION"),
+            keyword("REPORT"),
+            keyword("SECTION"),
             literal("."),
             star(
               sequence(
@@ -5567,7 +5578,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         reportDescriptionEntryParser = future;
         future.setParser(
           sequence(
-            token("RD"),
+            keyword("RD"),
             reportName(),
             optional(
               permuted(
@@ -5645,8 +5656,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenSectionParser = future;
         future.setParser(
           sequence(
-            token("SCREEN"),
-            token("SECTION"),
+            keyword("SCREEN"),
+            keyword("SECTION"),
             literal("."),
             star(
               screenDescriptionEntry()
@@ -5684,7 +5695,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             levelNumber(),
             optional(
               choice(
-                token("FILLER"),
+                keyword("FILLER"),
                 screenName()
               )
             ),
@@ -5815,30 +5826,30 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             as("levelNumber",
               choice(
-                token("1"),
-                token("01")
+                number("1"),
+                number("01")
               )
             ),
             as("entryName",
               choice(
-                token("FILLER"),
-                cobolWord()
+                keyword("FILLER"),
+                justAName()
               )
             ),
-            token("CONSTANT"),
+            keyword("CONSTANT"),
             optional(
               globalClause()
             ),
             choice(
               sequence(
                 optional(
-                  token("AS")
+                  keyword("AS")
                 ),
                 identifier()
               ),
               sequence(
-                token("FROM"),
-                cobolWord()
+                keyword("FROM"),
+                justAName()
               )
             ),
             literal(".")
@@ -5864,10 +5875,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             as("levelNumber",
-              token("78")
+              number("78")
             ),
             as("entryName",
-              cobolWord()
+              justAName()
             ),
             constantValueClause(),
             literal(".")
@@ -5896,8 +5907,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               as("entryName",
                 choice(
-                  token("FILLER"),
-                  token("CURSOR"),
+                  keyword("FILLER"),
+                  keyword("CURSOR"),
                   dataName()
                 )
               )
@@ -5955,26 +5966,26 @@ public class CobolGrammar extends CobolBaseGrammar {
                 securePhrase(),
                 sizePhrase(),
                 sequence(
-                  token("USING"),
+                  keyword("USING"),
                   identifier()
                 ),
                 sequence(
-                  token("FROM"),
+                  keyword("FROM"),
                   choice(
                     identifier(),
                     literal()
                   ),
                   optional(
                     sequence(
-                      token("TO"),
+                      keyword("TO"),
                       identifier()
                     )
                   )
                 ),
-                token("PUBLIC"),
-                token("PRIVATE"),
-                token("PROTECTED"),
-                token("INTERNAL"),
+                keyword("PUBLIC"),
+                keyword("PRIVATE"),
+                keyword("PROTECTED"),
+                keyword("INTERNAL"),
                 attributeClause(),
                 usageClause(),
                 literal()
@@ -6008,7 +6019,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             as("levelNumber",
-              token("66")
+              number("66")
             ),
             as("entryName",
               dataName()
@@ -6037,7 +6048,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             as("levelNumber",
-              token("88")
+              number("88")
             ),
             choice(
               sequence(
@@ -6046,8 +6057,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                     sequence(
                       not(
                         choice(
-                          token("VALUE"),
-                          token("VALUES")
+                          keyword("VALUE"),
+                          keyword("VALUES")
                         )
                       ),
                       conditionName()
@@ -6085,19 +6096,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("DATA")
+              keyword("DATA")
             ),
             choice(
               sequence(
-                token("RECORD"),
+                keyword("RECORD"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("RECORDS"),
+                keyword("RECORDS"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
@@ -6125,24 +6136,24 @@ public class CobolGrammar extends CobolBaseGrammar {
         labelRecordsParser = future;
         future.setParser(
           sequence(
-            token("LABEL"),
+            keyword("LABEL"),
             choice(
               sequence(
-                token("RECORD"),
+                keyword("RECORD"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("RECORDS"),
+                keyword("RECORDS"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
             choice(
-              token("OMITTED"),
-              token("STANDARD"),
+              keyword("OMITTED"),
+              keyword("STANDARD"),
               plus(
                 dataName()
               )
@@ -6168,20 +6179,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         recordingModeParser = future;
         future.setParser(
           sequence(
-            token("RECORDING"),
+            keyword("RECORDING"),
             optional(
-              token("MODE")
+              keyword("MODE")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("F"),
-              token("V"),
-              token("U"),
-              token("S"),
-              token("FIXED"),
-              token("VARIABLE")
+              keyword("F"),
+              keyword("V"),
+              keyword("U"),
+              keyword("S"),
+              keyword("FIXED"),
+              keyword("VARIABLE")
             )
           )
         );
@@ -6204,11 +6215,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         valueOfFileIdParser = future;
         future.setParser(
           sequence(
-            token("VALUE"),
-            token("OF"),
-            token("FILE-ID"),
+            keyword("VALUE"),
+            keyword("OF"),
+            keyword("FILE-ID"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               dataName(),
@@ -6235,17 +6246,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         valueOfParser = future;
         future.setParser(
           sequence(
-            token("VALUE"),
-            token("OF"),
+            keyword("VALUE"),
+            keyword("OF"),
             plus(
               sequence(
                 choice(
-                  token("IDENTIFICATION"),
-                  token("ID"),
-                  cobolWord()
+                  keyword("IDENTIFICATION"),
+                  keyword("ID"),
+                  justAName()
                 ),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 choice(
                   dataName(),
@@ -6275,11 +6286,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("DFHVALUE"),
-              token("DFHRESP")
+              keyword("DFHVALUE"),
+              keyword("DFHRESP")
             ),
             literal("("),
-            cobolWord(),
+            justAName(),
             literal(")")
           )
         );
@@ -6303,17 +6314,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WHEN")
+              keyword("WHEN")
             ),
             optional(
-              token("SET")
+              keyword("SET")
             ),
             optional(
-              token("TO")
+              keyword("TO")
             ),
-            token("FALSE"),
+            keyword("FALSE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             literal()
           )
@@ -6337,9 +6348,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         blankWhenZeroParser = future;
         future.setParser(
           sequence(
-            token("BLANK"),
+            keyword("BLANK"),
             optional(
-              token("WHEN")
+              keyword("WHEN")
             ),
             zero()
           )
@@ -6364,9 +6375,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("THREAD-LOCAL")
+            keyword("THREAD-LOCAL")
           )
         );
       }
@@ -6388,9 +6399,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         zeroParser = future;
         future.setParser(
           choice(
-            token("ZERO"),
-            token("ZEROS"),
-            token("ZEROES")
+            keyword("ZERO"),
+            keyword("ZEROS"),
+            keyword("ZEROES")
           )
         );
       }
@@ -6412,8 +6423,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         spaceParser = future;
         future.setParser(
           choice(
-            token("SPACE"),
-            token("SPACES")
+            keyword("SPACE"),
+            keyword("SPACES")
           )
         );
       }
@@ -6436,17 +6447,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("OUTPUT")
+              keyword("OUTPUT")
             ),
             choice(
-              token("JUSTIFIED"),
-              token("JUST")
+              keyword("JUSTIFIED"),
+              keyword("JUST")
             ),
             optional(
               choice(
-                token("LEFT"),
-                token("RIGHT"),
-                token("CENTERED")
+                keyword("LEFT"),
+                keyword("RIGHT"),
+                keyword("CENTERED")
               )
             )
           )
@@ -6472,15 +6483,15 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("VALUE"),
+                keyword("VALUE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("VALUES"),
+                keyword("VALUES"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
@@ -6491,14 +6502,14 @@ public class CobolGrammar extends CobolBaseGrammar {
                     sequence(
                       not(
                         choice(
-                          token("THROUGH"),
-                          token("THRU")
+                          keyword("THROUGH"),
+                          keyword("THRU")
                         )
                       ),
                       literal()
                     )
                   ),
-                  token("FROM"),
+                  keyword("FROM"),
                   literal("("),
                   plus(
                     subscript()
@@ -6506,7 +6517,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   literal(")"),
                   optional(
                     sequence(
-                      token("TO"),
+                      keyword("TO"),
                       literal("("),
                       plus(
                         subscript()
@@ -6523,7 +6534,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                       cicsValue(),
                       sequence(
                         not(
-                          token("FALSE")
+                          keyword("FALSE")
                         ),
                         literal()
                       )
@@ -6531,8 +6542,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                     optional(
                       sequence(
                         choice(
-                          token("THROUGH"),
-                          token("THRU")
+                          keyword("THROUGH"),
+                          keyword("THRU")
                         ),
                         literal()
                       )
@@ -6542,10 +6553,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     optional(
-                      token("IN")
+                      keyword("IN")
                     ),
                     not(
-                      token("FALSE")
+                      keyword("FALSE")
                     ),
                     alphabetName()
                   )
@@ -6553,17 +6564,17 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     optional(
-                      token("WHEN")
+                      keyword("WHEN")
                     ),
                     optional(
-                      token("SET")
+                      keyword("SET")
                     ),
                     optional(
-                      token("TO")
+                      keyword("TO")
                     ),
-                    token("FALSE"),
+                    keyword("FALSE"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     literal()
                   )
@@ -6572,19 +6583,19 @@ public class CobolGrammar extends CobolBaseGrammar {
                   sequence(
                     optional(
                       choice(
-                        token("IS"),
-                        token("ARE")
+                        keyword("IS"),
+                        keyword("ARE")
                       )
                     ),
                     choice(
-                      token("INVALID"),
-                      token("VALID")
+                      keyword("INVALID"),
+                      keyword("VALID")
                     )
                   )
                 ),
                 optional(
                   sequence(
-                    token("WHEN"),
+                    keyword("WHEN"),
                     condition()
                   )
                 )
@@ -6611,7 +6622,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("alignedClause", PUBLIC, true);
         alignedClauseParser = future;
         future.setParser(
-          token("ALIGNED")
+          keyword("ALIGNED")
         );
       }
     
@@ -6632,8 +6643,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         anyLengthClauseParser = future;
         future.setParser(
           sequence(
-            token("ANY"),
-            token("LENGTH")
+            keyword("ANY"),
+            keyword("LENGTH")
           )
         );
       }
@@ -6655,8 +6666,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         autoClauseParser = future;
         future.setParser(
           choice(
-            token("AUTO"),
-            token("AUTO-SKIP")
+            keyword("AUTO"),
+            keyword("AUTO-SKIP")
           )
         );
       }
@@ -6679,11 +6690,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("BACKGROUND-COLOR"),
-              token("BACKGROUND-COLOUR")
+              keyword("BACKGROUND-COLOR"),
+              keyword("BACKGROUND-COLOUR")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             integer()
           )
@@ -6706,7 +6717,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("basedClause", PUBLIC, true);
         basedClauseParser = future;
         future.setParser(
-          token("BASED")
+          keyword("BASED")
         );
       }
     
@@ -6726,7 +6737,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("bellClause", PUBLIC, true);
         bellClauseParser = future;
         future.setParser(
-          token("BELL")
+          keyword("BELL")
         );
       }
     
@@ -6747,10 +6758,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         blankClauseParser = future;
         future.setParser(
           sequence(
-            token("BLANK"),
+            keyword("BLANK"),
             choice(
-              token("SCREEN"),
-              token("LINE")
+              keyword("SCREEN"),
+              keyword("LINE")
             )
           )
         );
@@ -6773,9 +6784,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         blankWhenZeroClauseParser = future;
         future.setParser(
           sequence(
-            token("BLANK"),
+            keyword("BLANK"),
             optional(
-              token("WHEN")
+              keyword("WHEN")
             ),
             zero()
           )
@@ -6798,7 +6809,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("blinkClause", PUBLIC, true);
         blinkClauseParser = future;
         future.setParser(
-          token("BLINK")
+          keyword("BLINK")
         );
       }
     
@@ -6819,21 +6830,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         blockContainsClauseParser = future;
         future.setParser(
           sequence(
-            token("BLOCK"),
+            keyword("BLOCK"),
             optional(
-              token("CONTAINS")
+              keyword("CONTAINS")
             ),
             integer(),
             optional(
               sequence(
-                token("TO"),
+                keyword("TO"),
                 integer()
               )
             ),
             optional(
               choice(
-                token("CHARACTERS"),
-                token("RECORDS")
+                keyword("CHARACTERS"),
+                keyword("RECORDS")
               )
             )
           )
@@ -6857,16 +6868,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         classClauseParser = future;
         future.setParser(
           sequence(
-            token("CLASS"),
+            keyword("CLASS"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("NUMERIC"),
-              token("ALPHABETIC"),
-              token("ALPHABETIC-LOWER"),
-              token("ALPHABETIC-UPPER"),
-              token("BOOLEAN"),
+              keyword("NUMERIC"),
+              keyword("ALPHABETIC"),
+              keyword("ALPHABETIC-LOWER"),
+              keyword("ALPHABETIC-UPPER"),
+              keyword("BOOLEAN"),
               name()
             )
           )
@@ -6891,9 +6902,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("CODE"),
+            keyword("CODE"),
             choice(
               literal(),
               identifier()
@@ -6919,14 +6930,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         codeSetClauseParser = future;
         future.setParser(
           sequence(
-            token("CODE-SET"),
+            keyword("CODE-SET"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             alphabetName(),
             optional(
               sequence(
-                token("FOR"),
+                keyword("FOR"),
                 plus(
                   identifier()
                 )
@@ -6956,37 +6967,37 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               sequence(
                 choice(
-                  token("COL"),
-                  token("COLUMN")
+                  keyword("COL"),
+                  keyword("COLUMN")
                 ),
                 optional(
                   choice(
-                    token("NUMBER"),
-                    token("NUMBERS")
+                    keyword("NUMBER"),
+                    keyword("NUMBERS")
                   )
                 )
               ),
-              token("COLUMNS"),
-              token("COLS")
+              keyword("COLUMNS"),
+              keyword("COLS")
             ),
             optional(
               choice(
-                token("LEFT"),
-                token("CENTER"),
-                token("RIGHT")
+                keyword("LEFT"),
+                keyword("CENTER"),
+                keyword("RIGHT")
               )
             ),
             optional(
               choice(
-                token("IS"),
-                token("ARE")
+                keyword("IS"),
+                keyword("ARE")
               )
             ),
             optional(
               choice(
-                token("PLUS"),
+                keyword("PLUS"),
                 literal("+"),
-                token("MINUS"),
+                keyword("MINUS"),
                 literal("-")
               )
             ),
@@ -7016,8 +7027,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         constantRecordClauseParser = future;
         future.setParser(
           sequence(
-            token("CONSTANT"),
-            token("RECORD")
+            keyword("CONSTANT"),
+            keyword("RECORD")
           )
         );
       }
@@ -7039,23 +7050,23 @@ public class CobolGrammar extends CobolBaseGrammar {
         constantValueClauseParser = future;
         future.setParser(
           sequence(
-            token("VALUE"),
+            keyword("VALUE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("NEXT"),
+              keyword("NEXT"),
               sequence(
-                token("START"),
+                keyword("START"),
                 optional(
-                  token("OF")
+                  keyword("OF")
                 ),
                 dataName()
               ),
               sequence(
-                token("LENGTH"),
+                keyword("LENGTH"),
                 optional(
-                  token("OF")
+                  keyword("OF")
                 ),
                 dataName()
               ),
@@ -7064,8 +7075,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 choice(
-                  token("AND"),
-                  token("OR"),
+                  keyword("AND"),
+                  keyword("OR"),
                   literal("&"),
                   literal("+"),
                   literal("-"),
@@ -7073,18 +7084,18 @@ public class CobolGrammar extends CobolBaseGrammar {
                   literal("/")
                 ),
                 choice(
-                  token("NEXT"),
+                  keyword("NEXT"),
                   sequence(
-                    token("START"),
+                    keyword("START"),
                     optional(
-                      token("OF")
+                      keyword("OF")
                     ),
                     dataName()
                   ),
                   sequence(
-                    token("LENGTH"),
+                    keyword("LENGTH"),
                     optional(
-                      token("OF")
+                      keyword("OF")
                     ),
                     dataName()
                   ),
@@ -7115,21 +7126,21 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("CONTROL"),
+                keyword("CONTROL"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("CONTROLS"),
+                keyword("CONTROLS"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
             choice(
               sequence(
-                token("FINAL"),
+                keyword("FINAL"),
                 star(
                   dataName()
                 )
@@ -7159,12 +7170,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         defaultClauseParser = future;
         future.setParser(
           sequence(
-            token("DEFAULT"),
+            keyword("DEFAULT"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("NONE"),
+              keyword("NONE"),
               literal(),
               identifier()
             )
@@ -7189,9 +7200,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         destinationClauseParser = future;
         future.setParser(
           sequence(
-            token("DESTINATION"),
+            keyword("DESTINATION"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             plus(
               identifier()
@@ -7217,28 +7228,28 @@ public class CobolGrammar extends CobolBaseGrammar {
         eraseClauseParser = future;
         future.setParser(
           sequence(
-            token("ERASE"),
+            keyword("ERASE"),
             optional(
               choice(
-                token("EOL"),
-                token("EOS"),
+                keyword("EOL"),
+                keyword("EOS"),
                 sequence(
                   optional(
                     sequence(
-                      token("END"),
-                      token("OF")
+                      keyword("END"),
+                      keyword("OF")
                     )
                   ),
-                  token("LINE")
+                  keyword("LINE")
                 ),
                 sequence(
                   optional(
                     sequence(
-                      token("END"),
-                      token("OF")
+                      keyword("END"),
+                      keyword("OF")
                     )
                   ),
-                  token("SCREEN")
+                  keyword("SCREEN")
                 )
               )
             )
@@ -7264,14 +7275,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("EXTERNAL"),
+            keyword("EXTERNAL"),
             optional(
               sequence(
                 choice(
-                  token("AS"),
-                  token("BY")
+                  keyword("AS"),
+                  keyword("BY")
                 ),
                 literal()
               )
@@ -7298,11 +7309,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("FOREGROUND-COLOR"),
-              token("FOREGROUND-COLOUR")
+              keyword("FOREGROUND-COLOR"),
+              keyword("FOREGROUND-COLOUR")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               integer(),
@@ -7329,13 +7340,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         formatClauseParser = future;
         future.setParser(
           sequence(
-            token("FORMAT"),
+            keyword("FORMAT"),
             permuted(
-              token("BIT"),
-              token("CHARACTER"),
-              token("NUMERIC")
+              keyword("BIT"),
+              keyword("CHARACTER"),
+              keyword("NUMERIC")
             ),
-            token("DATA")
+            keyword("DATA")
           )
         );
       }
@@ -7356,7 +7367,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("fullClause", PUBLIC, true);
         fullClauseParser = future;
         future.setParser(
-          token("FULL")
+          keyword("FULL")
         );
       }
     
@@ -7378,9 +7389,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("GLOBAL")
+            keyword("GLOBAL")
           )
         );
       }
@@ -7402,9 +7413,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         groupIndicateClauseParser = future;
         future.setParser(
           sequence(
-            token("GROUP"),
+            keyword("GROUP"),
             optional(
-              token("INDICATE")
+              keyword("INDICATE")
             )
           )
         );
@@ -7427,13 +7438,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         groupUsageClauseParser = future;
         future.setParser(
           sequence(
-            token("GROUP-USAGE"),
+            keyword("GROUP-USAGE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("BIT"),
-              token("NATIONAL")
+              keyword("BIT"),
+              keyword("NATIONAL")
             )
           )
         );
@@ -7456,8 +7467,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         highlightClauseParser = future;
         future.setParser(
           choice(
-            token("HIGHLIGHT"),
-            token("LOWLIGHT")
+            keyword("HIGHLIGHT"),
+            keyword("LOWLIGHT")
           )
         );
       }
@@ -7479,8 +7490,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         invalidClauseParser = future;
         future.setParser(
           sequence(
-            token("INVALID"),
-            token("WHEN"),
+            keyword("INVALID"),
+            keyword("WHEN"),
             condition()
           )
         );
@@ -7504,11 +7515,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("JUSTIFIED"),
-              token("JUST")
+              keyword("JUSTIFIED"),
+              keyword("JUST")
             ),
             optional(
-              token("RIGHT")
+              keyword("RIGHT")
             )
           )
         );
@@ -7531,16 +7542,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         linageClauseParser = future;
         future.setParser(
           sequence(
-            token("LINAGE"),
+            keyword("LINAGE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               dataName(),
               integer()
             ),
             optional(
-              token("LINES")
+              keyword("LINES")
             ),
             optional(
               footingClause()
@@ -7573,11 +7584,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("FOOTING"),
+            keyword("FOOTING"),
             optional(
-              token("AT")
+              keyword("AT")
             ),
             choice(
               dataName(),
@@ -7605,12 +7616,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("LINES")
+              keyword("LINES")
             ),
             optional(
-              token("AT")
+              keyword("AT")
             ),
-            token("TOP"),
+            keyword("TOP"),
             choice(
               dataName(),
               integer()
@@ -7637,12 +7648,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("LINES")
+              keyword("LINES")
             ),
             optional(
-              token("AT")
+              keyword("AT")
             ),
-            token("BOTTOM"),
+            keyword("BOTTOM"),
             choice(
               dataName(),
               integer()
@@ -7670,24 +7681,24 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("LINE"),
+                keyword("LINE"),
                 optional(
                   choice(
-                    token("NUMBER"),
-                    token("NUMBERS")
+                    keyword("NUMBER"),
+                    keyword("NUMBERS")
                   )
                 ),
                 optional(
                   choice(
-                    token("IS"),
-                    token("ARE")
+                    keyword("IS"),
+                    keyword("ARE")
                   )
                 )
               ),
               sequence(
-                token("LINES"),
+                keyword("LINES"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
@@ -7699,16 +7710,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                     optional(
                       sequence(
                         optional(
-                          token("ON")
+                          keyword("ON")
                         ),
-                        token("NEXT"),
-                        token("PAGE")
+                        keyword("NEXT"),
+                        keyword("PAGE")
                       )
                     )
                   ),
                   sequence(
                     choice(
-                      token("PLUS"),
+                      keyword("PLUS"),
                       literal("+")
                     ),
                     choice(
@@ -7718,18 +7729,18 @@ public class CobolGrammar extends CobolBaseGrammar {
                   ),
                   sequence(
                     optional(
-                      token("ON")
+                      keyword("ON")
                     ),
-                    token("NEXT"),
-                    token("PAGE")
+                    keyword("NEXT"),
+                    keyword("PAGE")
                   )
                 )
               ),
               sequence(
                 choice(
-                  token("PLUS"),
+                  keyword("PLUS"),
                   literal("+"),
-                  token("MINUS"),
+                  keyword("MINUS"),
                   literal("-")
                 ),
                 choice(
@@ -7759,26 +7770,26 @@ public class CobolGrammar extends CobolBaseGrammar {
         nextGroupClauseParser = future;
         future.setParser(
           sequence(
-            token("NEXT"),
-            token("GROUP"),
+            keyword("NEXT"),
+            keyword("GROUP"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               integer(),
               sequence(
-                token("PLUS"),
+                keyword("PLUS"),
                 integer()
               ),
               sequence(
-                token("NEXT"),
-                token("PAGE"),
+                keyword("NEXT"),
+                keyword("PAGE"),
                 optional(
                   sequence(
                     optional(
-                      token("WITH")
+                      keyword("WITH")
                     ),
-                    token("RESET")
+                    keyword("RESET")
                   )
                 )
               )
@@ -7804,36 +7815,36 @@ public class CobolGrammar extends CobolBaseGrammar {
         occursClauseParser = future;
         future.setParser(
           sequence(
-            token("OCCURS"),
+            keyword("OCCURS"),
             choice(
               sequence(
                 choice(
                   as("dynamic",
                     sequence(
-                      token("DYNAMIC"),
+                      keyword("DYNAMIC"),
                       optional(
                         sequence(
-                          token("CAPACITY"),
+                          keyword("CAPACITY"),
                           optional(
-                            token("IN")
+                            keyword("IN")
                           ),
                           dataName()
                         )
                       ),
                       optional(
                         sequence(
-                          token("FROM"),
+                          keyword("FROM"),
                           integer()
                         )
                       ),
                       optional(
                         sequence(
-                          token("TO"),
+                          keyword("TO"),
                           integer()
                         )
                       ),
                       optional(
-                        token("INITIALIZED")
+                        keyword("INITIALIZED")
                       )
                     )
                   ),
@@ -7842,12 +7853,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                       optional(
                         sequence(
                           integer(),
-                          token("TO")
+                          keyword("TO")
                         )
                       ),
                       integer(),
                       optional(
-                        token("TIMES")
+                        keyword("TIMES")
                       )
                     )
                   )
@@ -7855,9 +7866,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   as("dependingOn",
                     sequence(
-                      token("DEPENDING"),
+                      keyword("DEPENDING"),
                       optional(
-                        token("ON")
+                        keyword("ON")
                       ),
                       qualifiedDataName()
                     )
@@ -7866,7 +7877,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   as("step",
                     sequence(
-                      token("STEP"),
+                      keyword("STEP"),
                       integer()
                     )
                   )
@@ -7876,17 +7887,17 @@ public class CobolGrammar extends CobolBaseGrammar {
                     sequence(
                       choice(
                         as("ascending",
-                          token("ASCENDING")
+                          keyword("ASCENDING")
                         ),
                         as("descending",
-                          token("DESCENDING")
+                          keyword("DESCENDING")
                         )
                       ),
                       optional(
-                        token("KEY")
+                        keyword("KEY")
                       ),
                       optional(
-                        token("IS")
+                        keyword("IS")
                       ),
                       plus(
                         qualifiedDataName()
@@ -7897,9 +7908,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 star(
                   as("indexedBy",
                     sequence(
-                      token("INDEXED"),
+                      keyword("INDEXED"),
                       optional(
-                        token("BY")
+                        keyword("BY")
                       ),
                       plus(
                         indexName()
@@ -7909,7 +7920,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               ),
               as("any",
-                token("ANY")
+                keyword("ANY")
               )
             )
           )
@@ -7933,49 +7944,49 @@ public class CobolGrammar extends CobolBaseGrammar {
         pageClauseParser = future;
         future.setParser(
           sequence(
-            token("PAGE"),
+            keyword("PAGE"),
             optional(
               choice(
-                token("LIMIT"),
-                token("LIMITS")
+                keyword("LIMIT"),
+                keyword("LIMITS")
               )
             ),
             optional(
               choice(
-                token("IS"),
-                token("ARE")
+                keyword("IS"),
+                keyword("ARE")
               )
             ),
             integer(),
             optional(
               choice(
-                token("LINE"),
-                token("LINES")
+                keyword("LINE"),
+                keyword("LINES")
               )
             ),
             optional(
               sequence(
-                token("HEADING"),
+                keyword("HEADING"),
                 integer()
               )
             ),
             optional(
               sequence(
-                token("FIRST"),
-                token("DETAIL"),
+                keyword("FIRST"),
+                keyword("DETAIL"),
                 integer()
               )
             ),
             optional(
               sequence(
-                token("LAST"),
-                token("DETAIL"),
+                keyword("LAST"),
+                keyword("DETAIL"),
                 integer()
               )
             ),
             optional(
               sequence(
-                token("FOOTING"),
+                keyword("FOOTING"),
                 integer()
               )
             )
@@ -8001,11 +8012,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("PIC"),
-              token("PICTURE")
+              keyword("PIC"),
+              keyword("PICTURE")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             pictureString(),
             optional(
@@ -8032,18 +8043,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         pictureLocaleClauseParser = future;
         future.setParser(
           sequence(
-            token("LOCALE"),
+            keyword("LOCALE"),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
-                cobolWord()
+                justAName()
               )
             ),
-            token("SIZE"),
+            keyword("SIZE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             integer()
           )
@@ -8067,8 +8078,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         presentWhenClauseParser = future;
         future.setParser(
           sequence(
-            token("PRESENT"),
-            token("WHEN"),
+            keyword("PRESENT"),
+            keyword("WHEN"),
             condition()
           )
         );
@@ -8091,25 +8102,25 @@ public class CobolGrammar extends CobolBaseGrammar {
         propertyClauseParser = future;
         future.setParser(
           sequence(
-            token("PROPERTY"),
+            keyword("PROPERTY"),
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("NO"),
+                keyword("NO"),
                 choice(
-                  token("GET"),
-                  token("SET")
+                  keyword("GET"),
+                  keyword("SET")
                 )
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
-                token("FINAL")
+                keyword("FINAL")
               )
             )
           )
@@ -8133,7 +8144,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         recordClauseParser = future;
         future.setParser(
           sequence(
-            token("RECORD"),
+            keyword("RECORD"),
             choice(
               recordContainsClause(),
               recordIsVaryingClause()
@@ -8160,17 +8171,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("CONTAINS")
+              keyword("CONTAINS")
             ),
             integer(),
             optional(
               sequence(
-                token("TO"),
+                keyword("TO"),
                 integer()
               )
             ),
             optional(
-              token("CHARACTERS")
+              keyword("CHARACTERS")
             )
           )
         );
@@ -8194,37 +8205,37 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("VARYING"),
+            keyword("VARYING"),
             optional(
-              token("IN")
+              keyword("IN")
             ),
             optional(
-              token("SIZE")
+              keyword("SIZE")
             ),
             optional(
               sequence(
                 optional(
-                  token("FROM")
+                  keyword("FROM")
                 ),
                 integer(),
                 optional(
                   sequence(
-                    token("TO"),
+                    keyword("TO"),
                     integer()
                   )
                 ),
                 optional(
-                  token("CHARACTERS")
+                  keyword("CHARACTERS")
                 )
               )
             ),
             optional(
               sequence(
-                token("DEPENDING"),
+                keyword("DEPENDING"),
                 optional(
-                  token("ON")
+                  keyword("ON")
                 ),
                 fileName()
               )
@@ -8250,7 +8261,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         redefinesClauseParser = future;
         future.setParser(
           sequence(
-            token("REDEFINES"),
+            keyword("REDEFINES"),
             dataName()
           )
         );
@@ -8273,13 +8284,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         renamesClauseParser = future;
         future.setParser(
           sequence(
-            token("RENAMES"),
+            keyword("RENAMES"),
             qualifiedDataName(),
             optional(
               sequence(
                 choice(
-                  token("THROUGH"),
-                  token("THRU")
+                  keyword("THROUGH"),
+                  keyword("THRU")
                 ),
                 qualifiedDataName()
               )
@@ -8307,15 +8318,15 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("REPORT"),
+                keyword("REPORT"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("REPORTS"),
+                keyword("REPORTS"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
@@ -8343,79 +8354,79 @@ public class CobolGrammar extends CobolBaseGrammar {
         reportGroupTypeClauseParser = future;
         future.setParser(
           sequence(
-            token("TYPE"),
+            keyword("TYPE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               choice(
-                token("RH"),
+                keyword("RH"),
                 sequence(
-                  token("REPORT"),
-                  token("HEADING")
+                  keyword("REPORT"),
+                  keyword("HEADING")
                 )
               ),
               choice(
-                token("PH"),
+                keyword("PH"),
                 sequence(
-                  token("PAGE"),
-                  token("HEADING")
+                  keyword("PAGE"),
+                  keyword("HEADING")
                 )
               ),
               sequence(
                 choice(
-                  token("CH"),
+                  keyword("CH"),
                   sequence(
-                    token("CONTROL"),
-                    token("HEADING")
+                    keyword("CONTROL"),
+                    keyword("HEADING")
                   )
                 ),
                 optional(
                   choice(
-                    token("ON"),
-                    token("FOR")
+                    keyword("ON"),
+                    keyword("FOR")
                   )
                 ),
                 choice(
-                  token("FINAL"),
+                  keyword("FINAL"),
                   dataName()
                 )
               ),
               choice(
-                token("DE"),
-                token("DETAIL")
+                keyword("DE"),
+                keyword("DETAIL")
               ),
               sequence(
                 choice(
-                  token("CF"),
+                  keyword("CF"),
                   sequence(
-                    token("CONTROL"),
-                    token("FOOTING")
+                    keyword("CONTROL"),
+                    keyword("FOOTING")
                   )
                 ),
                 optional(
                   choice(
-                    token("ON"),
-                    token("FOR")
+                    keyword("ON"),
+                    keyword("FOR")
                   )
                 ),
                 choice(
-                  token("FINAL"),
+                  keyword("FINAL"),
                   dataName()
                 )
               ),
               choice(
-                token("PF"),
+                keyword("PF"),
                 sequence(
-                  token("PAGE"),
-                  token("FOOTING")
+                  keyword("PAGE"),
+                  keyword("FOOTING")
                 )
               ),
               choice(
-                token("RF"),
+                keyword("RF"),
                 sequence(
-                  token("REPORT"),
-                  token("FOOTING")
+                  keyword("REPORT"),
+                  keyword("FOOTING")
                 )
               )
             )
@@ -8440,13 +8451,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         reportGroupUsageClauseParser = future;
         future.setParser(
           sequence(
-            token("USAGE"),
+            keyword("USAGE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("DISPLAY"),
-              token("DISPLAY-1")
+              keyword("DISPLAY"),
+              keyword("DISPLAY-1")
             )
           )
         );
@@ -8471,15 +8482,15 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("VALUE"),
+                keyword("VALUE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("VALUES"),
+                keyword("VALUES"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
@@ -8509,7 +8520,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("reverseVideoClause", PUBLIC, true);
         reverseVideoClauseParser = future;
         future.setParser(
-          token("REVERSE-VIDEO")
+          keyword("REVERSE-VIDEO")
         );
       }
     
@@ -8529,7 +8540,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("requiredClause", PUBLIC, true);
         requiredClauseParser = future;
         future.setParser(
-          token("REQUIRED")
+          keyword("REQUIRED")
         );
       }
     
@@ -8550,8 +8561,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         sameAsClauseParser = future;
         future.setParser(
           sequence(
-            token("SAME"),
-            token("AS"),
+            keyword("SAME"),
+            keyword("AS"),
             dataName()
           )
         );
@@ -8574,7 +8585,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenFromClauseParser = future;
         future.setParser(
           sequence(
-            token("FROM"),
+            keyword("FROM"),
             choice(
               literal(),
               identifier()
@@ -8600,7 +8611,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenToClauseParser = future;
         future.setParser(
           sequence(
-            token("TO"),
+            keyword("TO"),
             identifier()
           )
         );
@@ -8623,7 +8634,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenUsingClauseParser = future;
         future.setParser(
           sequence(
-            token("USING"),
+            keyword("USING"),
             identifier()
           )
         );
@@ -8646,9 +8657,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenValueClauseParser = future;
         future.setParser(
           sequence(
-            token("VALUE"),
+            keyword("VALUE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             literal()
           )
@@ -8671,7 +8682,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("secureClause", PUBLIC, true);
         secureClauseParser = future;
         future.setParser(
-          token("SECURE")
+          keyword("SECURE")
         );
       }
     
@@ -8692,10 +8703,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         selectWhenClauseParser = future;
         future.setParser(
           sequence(
-            token("SELECT"),
-            token("WHEN"),
+            keyword("SELECT"),
+            keyword("WHEN"),
             choice(
-              token("OTHER"),
+              keyword("OTHER"),
               conditionName()
             )
           )
@@ -8721,21 +8732,21 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             optional(
               sequence(
-                token("SIGN"),
+                keyword("SIGN"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               )
             ),
             choice(
-              token("LEADING"),
-              token("TRAILING")
+              keyword("LEADING"),
+              keyword("TRAILING")
             ),
             optional(
               sequence(
-                token("SEPARATE"),
+                keyword("SEPARATE"),
                 optional(
-                  token("CHARACTER")
+                  keyword("CHARACTER")
                 )
               )
             )
@@ -8762,15 +8773,15 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                token("SOURCE"),
+                keyword("SOURCE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               ),
               sequence(
-                token("SOURCES"),
+                keyword("SOURCES"),
                 optional(
-                  token("ARE")
+                  keyword("ARE")
                 )
               )
             ),
@@ -8811,21 +8822,21 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             plus(
               sequence(
-                token("SUM"),
+                keyword("SUM"),
                 optional(
-                  token("OF")
+                  keyword("OF")
                 ),
                 plus(
                   sequence(
                     not(
-                      token("UPON")
+                      keyword("UPON")
                     ),
                     identifier()
                   )
                 ),
                 optional(
                   sequence(
-                    token("UPON"),
+                    keyword("UPON"),
                     plus(
                       dataName()
                     )
@@ -8835,12 +8846,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("RESET"),
+                keyword("RESET"),
                 optional(
-                  token("ON")
+                  keyword("ON")
                 ),
                 choice(
-                  token("FINAL"),
+                  keyword("FINAL"),
                   dataName()
                 )
               )
@@ -8867,13 +8878,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("SYNCHRONIZED"),
-              token("SYNC")
+              keyword("SYNCHRONIZED"),
+              keyword("SYNC")
             ),
             optional(
               choice(
-                token("LEFT"),
-                token("RIGHT")
+                keyword("LEFT"),
+                keyword("RIGHT")
               )
             )
           )
@@ -8898,11 +8909,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("TYPEDEF"),
+            keyword("TYPEDEF"),
             optional(
-              token("STRONG")
+              keyword("STRONG")
             )
           )
         );
@@ -8925,9 +8936,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         typeNameTypeClauseParser = future;
         future.setParser(
           sequence(
-            token("TYPE"),
+            keyword("TYPE"),
             optional(
-              token("TO")
+              keyword("TO")
             ),
             typeName()
           )
@@ -8950,7 +8961,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("underlineClause", PUBLIC, true);
         underlineClauseParser = future;
         future.setParser(
-          token("UNDERLINE")
+          keyword("UNDERLINE")
         );
       }
     
@@ -8973,9 +8984,9 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             optional(
               sequence(
-                token("USAGE"),
+                keyword("USAGE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               )
             ),
@@ -9001,162 +9012,162 @@ public class CobolGrammar extends CobolBaseGrammar {
         usageOperandParser = future;
         future.setParser(
           choice(
-            token("BINARY"),
-            token("BINARY-C-LONG"),
+            keyword("BINARY"),
+            keyword("BINARY-C-LONG"),
             sequence(
-              token("BINARY-CHAR"),
+              keyword("BINARY-CHAR"),
               optional(
                 choice(
-                  token("SIGNED"),
-                  token("UNSIGNED")
+                  keyword("SIGNED"),
+                  keyword("UNSIGNED")
                 )
               )
             ),
             sequence(
-              token("BINARY-DOUBLE"),
+              keyword("BINARY-DOUBLE"),
               optional(
                 choice(
-                  token("SIGNED"),
-                  token("UNSIGNED")
+                  keyword("SIGNED"),
+                  keyword("UNSIGNED")
                 )
               )
             ),
             sequence(
-              token("BINARY-LONG"),
+              keyword("BINARY-LONG"),
               optional(
                 choice(
-                  token("SIGNED"),
-                  token("UNSIGNED")
+                  keyword("SIGNED"),
+                  keyword("UNSIGNED")
                 )
               )
             ),
             sequence(
-              token("BINARY-SHORT"),
+              keyword("BINARY-SHORT"),
               optional(
                 choice(
-                  token("SIGNED"),
-                  token("UNSIGNED")
+                  keyword("SIGNED"),
+                  keyword("UNSIGNED")
                 )
               )
             ),
-            token("BIT"),
-            token("CHARACTER"),
-            token("COMPUTATIONAL"),
-            token("COMP"),
-            token("COMPUTATIONAL-1"),
-            token("COMP-1"),
-            token("COMPUTATIONAL-2"),
-            token("COMP-2"),
-            token("COMPUTATIONAL-3"),
-            token("COMP-3"),
-            token("COMPUTATIONAL-4"),
-            token("COMP-4"),
-            token("COMPUTATIONAL-5"),
-            token("COMP-5"),
-            token("COMPUTATIONAL-6"),
-            token("COMP-6"),
-            token("COMPUTATIONAL-X"),
-            token("COMP-X"),
-            token("COMPUTATIONAL-N"),
-            token("COMP-N"),
-            token("CONDITION-VALUE"),
-            token("DECIMAL"),
-            token("DISPLAY"),
-            token("DISPLAY-1"),
-            token("DOUBLE"),
-            token("INDEX"),
-            token("FLOAT"),
-            token("FLOAT-EXTENDED"),
-            token("FLOAT-LONG"),
-            token("FLOAT-SHORT"),
+            keyword("BIT"),
+            keyword("CHARACTER"),
+            keyword("COMPUTATIONAL"),
+            keyword("COMP"),
+            keyword("COMPUTATIONAL-1"),
+            keyword("COMPUTATIONAL-2"),
+            keyword("COMPUTATIONAL-3"),
+            keyword("COMPUTATIONAL-4"),
+            keyword("COMPUTATIONAL-5"),
+            keyword("COMPUTATIONAL-6"),
+            keyword("COMP-1"),
+            keyword("COMP-2"),
+            keyword("COMP-3"),
+            keyword("COMP-4"),
+            keyword("COMP-5"),
+            keyword("COMP-6"),
+            keyword("COMPUTATIONAL-X"),
+            keyword("COMP-X"),
+            keyword("COMPUTATIONAL-N"),
+            keyword("COMP-N"),
+            keyword("CONDITION-VALUE"),
+            keyword("DECIMAL"),
+            keyword("DISPLAY"),
+            keyword("DISPLAY-1"),
+            keyword("DOUBLE"),
+            keyword("INDEX"),
+            keyword("FLOAT"),
+            keyword("FLOAT-EXTENDED"),
+            keyword("FLOAT-LONG"),
+            keyword("FLOAT-SHORT"),
             sequence(
-              token("HANDLE"),
+              keyword("HANDLE"),
               optional(
                 sequence(
                   optional(
-                    token("OF")
+                    keyword("OF")
                   ),
                   choice(
-                    token("WINDOW"),
-                    token("SUBWINDOW"),
+                    keyword("WINDOW"),
+                    keyword("SUBWINDOW"),
                     sequence(
-                      token("FONT"),
+                      keyword("FONT"),
                       optional(
-                        cobolWord()
+                        justAName()
                       )
                     ),
-                    token("THREAD"),
-                    token("MENU"),
-                    token("VARIANT"),
+                    keyword("THREAD"),
+                    keyword("MENU"),
+                    keyword("VARIANT"),
                     sequence(
-                      token("LAYOUT-MANAGER"),
+                      keyword("LAYOUT-MANAGER"),
                       optional(
-                        cobolWord()
+                        justAName()
                       )
                     )
                   )
                 )
               )
             ),
-            token("MONITOR-POINTER"),
-            token("MUTEX-POINTER"),
-            token("NATIONAL"),
+            keyword("MONITOR-POINTER"),
+            keyword("MUTEX-POINTER"),
+            keyword("NATIONAL"),
             sequence(
-              token("OBJECT"),
-              token("REFERENCE"),
+              keyword("OBJECT"),
+              keyword("REFERENCE"),
               optional(
                 choice(
                   sequence(
                     optional(
                       sequence(
-                        token("FACTORY"),
-                        token("OF")
+                        keyword("FACTORY"),
+                        keyword("OF")
                       )
                     ),
-                    token("ACTIVE-CLASS")
+                    keyword("ACTIVE-CLASS")
                   ),
                   sequence(
                     optional(
                       sequence(
-                        token("FACTORY"),
-                        token("OF")
+                        keyword("FACTORY"),
+                        keyword("OF")
                       )
                     ),
                     className(),
                     optional(
                       choice(
-                        token("ONLY"),
-                        token("EVENT")
+                        keyword("ONLY"),
+                        keyword("EVENT")
                       )
                     )
                   )
                 )
               )
             ),
-            token("OBJECT"),
-            token("PACKED-DECIMAL"),
-            token("POINTER"),
-            token("PROCEDURE-POINTER"),
+            keyword("OBJECT"),
+            keyword("PACKED-DECIMAL"),
+            keyword("POINTER"),
+            keyword("PROCEDURE-POINTER"),
             sequence(
-              token("PROGRAM-POINTER"),
+              keyword("PROGRAM-POINTER"),
               optional(
                 sequence(
                   optional(
-                    token("TO")
+                    keyword("TO")
                   ),
                   programName()
                 )
               )
             ),
-            token("SEMAPHORE-POINTER"),
-            token("SIGNED-INT"),
-            token("SIGNED-LONG"),
-            token("SIGNED-SHORT"),
-            token("THREAD-POINTER"),
-            token("UNSIGNED-INT"),
-            token("UNSIGNED-LONG"),
-            token("UNSIGNED-SHORT"),
-            token("STRING"),
+            keyword("SEMAPHORE-POINTER"),
+            keyword("SIGNED-INT"),
+            keyword("SIGNED-LONG"),
+            keyword("SIGNED-SHORT"),
+            keyword("THREAD-POINTER"),
+            keyword("UNSIGNED-INT"),
+            keyword("UNSIGNED-LONG"),
+            keyword("UNSIGNED-SHORT"),
+            keyword("STRING"),
             typedefName(),
             className()
           )
@@ -9181,34 +9192,34 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("VALIDATE-STATUS"),
-              token("VAL-STATUS")
+              keyword("VALIDATE-STATUS"),
+              keyword("VAL-STATUS")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               literal(),
               identifier()
             ),
             optional(
-              token("WHEN")
+              keyword("WHEN")
             ),
             optional(
-              token("NO")
+              keyword("NO")
             ),
-            token("ERROR"),
+            keyword("ERROR"),
             optional(
               sequence(
-                token("ON"),
+                keyword("ON"),
                 permuted(
-                  token("FORMAT"),
-                  token("CONTENT"),
-                  token("RELATION")
+                  keyword("FORMAT"),
+                  keyword("CONTENT"),
+                  keyword("RELATION")
                 )
               )
             ),
-            token("FOR"),
+            keyword("FOR"),
             plus(
               identifier()
             )
@@ -9233,19 +9244,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         varyingClauseParser = future;
         future.setParser(
           sequence(
-            token("VARYING"),
+            keyword("VARYING"),
             plus(
               sequence(
                 dataName(),
                 optional(
                   sequence(
-                    token("FROM"),
+                    keyword("FROM"),
                     arithmeticExpression()
                   )
                 ),
                 optional(
                   sequence(
-                    token("BY"),
+                    keyword("BY"),
                     arithmeticExpression()
                   )
                 )
@@ -9306,8 +9317,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         procedureDivision$headerParser = future;
         future.setParser(
           sequence(
-            token("PROCEDURE"),
-            token("DIVISION"),
+            keyword("PROCEDURE"),
+            keyword("DIVISION"),
             optional(
               mnemonicName()
             ),
@@ -9340,9 +9351,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("USING"),
-              token("CHAINING"),
-              token("GIVING")
+              keyword("USING"),
+              keyword("CHAINING"),
+              keyword("GIVING")
             ),
             plus(
               choice(
@@ -9378,9 +9389,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("BY")
+                  keyword("BY")
                 ),
-                token("REFERENCE")
+                keyword("REFERENCE")
               )
             ),
             plus(
@@ -9413,9 +9424,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("BY")
+              keyword("BY")
             ),
-            token("VALUE"),
+            keyword("VALUE"),
             plus(
               sequence(
                 procedureDivision$header$using$arg(),
@@ -9446,9 +9457,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("BY")
+              keyword("BY")
             ),
-            token("OUTPUT"),
+            keyword("OUTPUT"),
             star(
               sequence(
                 procedureDivision$header$using$arg(),
@@ -9477,24 +9488,24 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("UNSIGNED")
+              keyword("UNSIGNED")
             ),
             optional(
               procedureDivision$header$using$arg$sizeIs()
             ),
             optional(
               as("optional",
-                token("OPTIONAL")
+                keyword("OPTIONAL")
               )
             ),
             procedureDivision$header$using$arg$value(),
             optional(
               sequence(
-                token("DELIMITED"),
+                keyword("DELIMITED"),
                 optional(
                   sequence(
-                    token("BY"),
-                    token("SIZE")
+                    keyword("BY"),
+                    keyword("SIZE")
                   )
                 )
               )
@@ -9522,7 +9533,7 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             dataName(),
             as("any",
-              token("ANY")
+              keyword("ANY")
             )
           )
         );
@@ -9545,13 +9556,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         procedureDivision$header$using$arg$sizeIsParser = future;
         future.setParser(
           sequence(
-            token("SIZE"),
+            keyword("SIZE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("AUTO"),
-              token("DEFAULT"),
+              keyword("AUTO"),
+              keyword("DEFAULT"),
               integer()
             )
           )
@@ -9575,11 +9586,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         procedureDivision$header$using$repeatedParser = future;
         future.setParser(
           sequence(
-            token("REPEATED"),
+            keyword("REPEATED"),
             optional(
               sequence(
                 integer(),
-                token("TO"),
+                keyword("TO"),
                 integer()
               )
             )
@@ -9604,7 +9615,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         procedureDivision$header$using$asTypeNameParser = future;
         future.setParser(
           sequence(
-            token("AS"),
+            keyword("AS"),
             typeName(),
             optional(
               attributeClause()
@@ -9631,14 +9642,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("RETURNING"),
-              token("YIELDING"),
-              token("GIVING")
+              keyword("RETURNING"),
+              keyword("YIELDING"),
+              keyword("GIVING")
             ),
             dataName(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 typeName(),
                 optional(
                   attributeClause()
@@ -9666,22 +9677,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         roundedPhraseParser = future;
         future.setParser(
           sequence(
-            token("ROUNDED"),
+            keyword("ROUNDED"),
             optional(
               sequence(
-                token("MODE"),
+                keyword("MODE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 choice(
-                  token("AWAY-FROM-ZERO"),
-                  token("NEAREST-AWAY-FROM-ZERO"),
-                  token("NEAREST-EVEN"),
-                  token("NEAREST-TOWARD-ZERO"),
-                  token("PROHIBITED"),
-                  token("TOWARD-GREATER"),
-                  token("TOWARD-LESSER"),
-                  token("TRUNCATION")
+                  keyword("AWAY-FROM-ZERO"),
+                  keyword("NEAREST-AWAY-FROM-ZERO"),
+                  keyword("NEAREST-EVEN"),
+                  keyword("NEAREST-TOWARD-ZERO"),
+                  keyword("PROHIBITED"),
+                  keyword("TOWARD-GREATER"),
+                  keyword("TOWARD-LESSER"),
+                  keyword("TRUNCATION")
                 )
               )
             )
@@ -9706,13 +9717,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         declarativesParser = future;
         future.setParser(
           sequence(
-            token("DECLARATIVES"),
+            keyword("DECLARATIVES"),
             literal("."),
             star(
               declarativeSection()
             ),
-            token("END"),
-            token("DECLARATIVES"),
+            keyword("END"),
+            keyword("DECLARATIVES"),
             literal(".")
           )
         );
@@ -9736,7 +9747,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             sectionName(),
-            token("SECTION"),
+            keyword("SECTION"),
             literal("."),
             as("sentence",
               sequence(
@@ -9774,7 +9785,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             sectionName(),
-            token("SECTION"),
+            keyword("SECTION"),
             optional(
               segmentNumber()
             ),
@@ -10150,12 +10161,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("NOT")
+              keyword("NOT")
             ),
             optional(
               choice(
-                token("ON"),
-                token("AT")
+                keyword("ON"),
+                keyword("AT")
               )
             ),
             assign("t",
@@ -10185,33 +10196,33 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               assign("t",
-                token("EXCEPTION")
+                keyword("EXCEPTION")
               ),
               sequence(
                 assign("t",
-                  token("SIZE")
+                  keyword("SIZE")
                 ),
-                token("ERROR")
+                keyword("ERROR")
               ),
               assign("t",
-                token("OVERFLOW")
+                keyword("OVERFLOW")
               ),
               sequence(
                 assign("t",
-                  token("INVALID")
+                  keyword("INVALID")
                 ),
                 optional(
-                  token("KEY")
+                  keyword("KEY")
                 )
               ),
               assign("t",
-                token("END")
+                keyword("END")
               ),
               assign("t",
-                token("END-OF-PAGE")
+                keyword("END-OF-PAGE")
               ),
               assign("t",
-                token("EOP")
+                keyword("EOP")
               )
             ),
             returning("t")
@@ -10236,24 +10247,24 @@ public class CobolGrammar extends CobolBaseGrammar {
         retryPhraseParser = future;
         future.setParser(
           sequence(
-            token("RETRY"),
+            keyword("RETRY"),
             choice(
               sequence(
                 choice(
                   identifier(),
                   integer()
                 ),
-                token("TIMES")
+                keyword("TIMES")
               ),
               sequence(
-                token("FOR"),
+                keyword("FOR"),
                 choice(
                   identifier(),
                   integer()
                 ),
-                token("SECONDS")
+                keyword("SECONDS")
               ),
-              token("FOREVER")
+              keyword("FOREVER")
             )
           )
         );
@@ -10278,70 +10289,70 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               assign("t",
-                token("END-ACCEPT")
+                keyword("END-ACCEPT")
               ),
               assign("t",
-                token("END-ADD")
+                keyword("END-ADD")
               ),
               assign("t",
-                token("END-CALL")
+                keyword("END-CALL")
               ),
               assign("t",
-                token("END-CHAIN")
+                keyword("END-CHAIN")
               ),
               assign("t",
-                token("END-COMPUTE")
+                keyword("END-COMPUTE")
               ),
               assign("t",
-                token("END-DELETE")
+                keyword("END-DELETE")
               ),
               assign("t",
-                token("END-DIVIDE")
+                keyword("END-DIVIDE")
               ),
               assign("t",
-                token("END-EVALUATE")
+                keyword("END-EVALUATE")
               ),
               assign("t",
-                token("END-EXEC")
+                keyword("END-EXEC")
               ),
               assign("t",
-                token("END-IF")
+                keyword("END-IF")
               ),
               assign("t",
-                token("END-MULTIPLY")
+                keyword("END-MULTIPLY")
               ),
               assign("t",
-                token("END-PERFORM")
+                keyword("END-PERFORM")
               ),
               assign("t",
-                token("END-READ")
+                keyword("END-READ")
               ),
               assign("t",
-                token("END-RETURN")
+                keyword("END-RETURN")
               ),
               assign("t",
-                token("END-REWRITE")
+                keyword("END-REWRITE")
               ),
               assign("t",
-                token("END-SEARCH")
+                keyword("END-SEARCH")
               ),
               assign("t",
-                token("END-START")
+                keyword("END-START")
               ),
               assign("t",
-                token("END-STRING")
+                keyword("END-STRING")
               ),
               assign("t",
-                token("END-SUBTRACT")
+                keyword("END-SUBTRACT")
               ),
               assign("t",
-                token("END-UNSTRING")
+                keyword("END-UNSTRING")
               ),
               assign("t",
-                token("END-WAIT")
+                keyword("END-WAIT")
               ),
               assign("t",
-                token("END-WRITE")
+                keyword("END-WRITE")
               )
             ),
             returning("t")
@@ -10368,93 +10379,93 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             literal("."),
             verb(),
-            token("COPY"),
-            token("ELSE"),
-            token("WHEN"),
-            token("END-ACCEPT"),
-            token("END-ADD"),
-            token("END-CALL"),
-            token("END-CHAIN"),
-            token("END-COMPUTE"),
-            token("END-DELETE"),
-            token("END-DISPLAY"),
-            token("END-DIVIDE"),
-            token("END-EVALUATE"),
-            token("END-EXEC"),
-            token("END-IF"),
-            token("END-MULTIPLY"),
-            token("END-PERFORM"),
-            token("END-READ"),
-            token("END-RECEIVE"),
-            token("END-RETURN"),
-            token("END-REWRITE"),
-            token("END-SEARCH"),
-            token("END-START"),
-            token("END-STRING"),
-            token("END-SUBTRACT"),
-            token("END-UNSTRING"),
-            token("END-WAIT"),
-            token("END-WRITE"),
-            token("END-XML"),
+            keyword("COPY"),
+            keyword("ELSE"),
+            keyword("WHEN"),
+            keyword("END-ACCEPT"),
+            keyword("END-ADD"),
+            keyword("END-CALL"),
+            keyword("END-CHAIN"),
+            keyword("END-COMPUTE"),
+            keyword("END-DELETE"),
+            keyword("END-DISPLAY"),
+            keyword("END-DIVIDE"),
+            keyword("END-EVALUATE"),
+            keyword("END-EXEC"),
+            keyword("END-IF"),
+            keyword("END-MULTIPLY"),
+            keyword("END-PERFORM"),
+            keyword("END-READ"),
+            keyword("END-RECEIVE"),
+            keyword("END-RETURN"),
+            keyword("END-REWRITE"),
+            keyword("END-SEARCH"),
+            keyword("END-START"),
+            keyword("END-STRING"),
+            keyword("END-SUBTRACT"),
+            keyword("END-UNSTRING"),
+            keyword("END-WAIT"),
+            keyword("END-WRITE"),
+            keyword("END-XML"),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
-              token("INVALID")
+              keyword("INVALID")
             ),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               optional(
-                token("ON")
+                keyword("ON")
               ),
-              token("SIZE")
+              keyword("SIZE")
             ),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               optional(
-                token("ON")
+                keyword("ON")
               ),
-              token("OVERFLOW")
+              keyword("OVERFLOW")
             ),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               optional(
-                token("ON")
+                keyword("ON")
               ),
-              token("EXCEPTION")
+              keyword("EXCEPTION")
             ),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               optional(
-                token("AT")
+                keyword("AT")
               ),
-              token("END")
+              keyword("END")
             ),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               optional(
-                token("AT")
+                keyword("AT")
               ),
-              token("END-OF-PAGE")
+              keyword("END-OF-PAGE")
             ),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               optional(
-                token("AT")
+                keyword("AT")
               ),
-              token("EOP")
+              keyword("EOP")
             )
           )
         );
@@ -10477,92 +10488,92 @@ public class CobolGrammar extends CobolBaseGrammar {
         verbParser = future;
         future.setParser(
           choice(
-            token("ADD"),
-            token("ALTER"),
-            token("CALL"),
-            token("CANCEL"),
-            token("CHAIN"),
-            token("CLOSE"),
-            token("COMMIT"),
-            token("CONTINUE"),
-            token("DELETE"),
-            token("DIVIDE"),
-            token("EJECT"),
-            token("ENTRY"),
-            token("EVALUATE"),
-            token("EXEC"),
-            token("EXIT"),
-            token("GENERATE"),
-            token("GOBACK"),
-            token("GO"),
-            token("IDENTIFIED"),
-            token("IF"),
-            token("INITIATE"),
-            token("INVOKE"),
-            token("MERGE"),
-            token("MOVE"),
-            token("MULTIPLY"),
+            keyword("ADD"),
+            keyword("ALTER"),
+            keyword("CALL"),
+            keyword("CANCEL"),
+            keyword("CHAIN"),
+            keyword("CLOSE"),
+            keyword("COMMIT"),
+            keyword("CONTINUE"),
+            keyword("DELETE"),
+            keyword("DIVIDE"),
+            keyword("EJECT"),
+            keyword("ENTRY"),
+            keyword("EVALUATE"),
+            keyword("EXEC"),
+            keyword("EXIT"),
+            keyword("GENERATE"),
+            keyword("GOBACK"),
+            keyword("GO"),
+            keyword("IDENTIFIED"),
+            keyword("IF"),
+            keyword("INITIATE"),
+            keyword("INVOKE"),
+            keyword("MERGE"),
+            keyword("MOVE"),
+            keyword("MULTIPLY"),
             sequence(
-              token("NEXT"),
-              token("SENTENCE")
+              keyword("NEXT"),
+              keyword("SENTENCE")
             ),
-            token("OPEN"),
-            token("PERFORM"),
-            token("RAISE"),
-            token("READ"),
+            keyword("OPEN"),
+            keyword("PERFORM"),
+            keyword("RAISE"),
+            keyword("READ"),
             sequence(
-              token("READY"),
-              token("TRACE")
+              keyword("READY"),
+              keyword("TRACE")
             ),
-            token("RELEASE"),
-            token("REPLACE"),
+            keyword("RELEASE"),
+            keyword("REPLACE"),
             sequence(
-              token("RESET"),
-              token("TRACE")
+              keyword("RESET"),
+              keyword("TRACE")
             ),
-            token("RETURN"),
-            token("REWRITE"),
-            token("ROLLBACK"),
-            token("SEARCH"),
-            token("SERVICE"),
-            token("SET"),
-            token("SKIP1"),
-            token("SKIP2"),
-            token("SKIP3"),
-            token("SORT"),
-            token("STOP"),
-            token("STRING"),
-            token("SUBTRACT"),
-            token("SUPPRESS"),
-            token("TERMINATE"),
-            token("TITLE"),
-            token("UNSTRING"),
-            token("WAIT"),
-            token("WRITE"),
+            keyword("RETURN"),
+            keyword("REWRITE"),
+            keyword("ROLLBACK"),
+            keyword("SEARCH"),
+            keyword("SERVICE"),
+            keyword("SET"),
+            keyword("SKIP1"),
+            keyword("SKIP2"),
+            keyword("SKIP3"),
+            keyword("SORT"),
+            keyword("STOP"),
+            keyword("STRING"),
+            keyword("SUBTRACT"),
+            keyword("SUPPRESS"),
+            keyword("TERMINATE"),
+            keyword("TITLE"),
+            keyword("UNSTRING"),
+            keyword("WAIT"),
+            keyword("WRITE"),
             sequence(
-              token("XML"),
-              token("GENERATE")
+              keyword("XML"),
+              keyword("GENERATE")
             ),
             sequence(
-              token("XML"),
-              token("PARSE")
+              keyword("XML"),
+              keyword("PARSE")
             ),
-            token("SET"),
-            token("INITIALIZE"),
-            token("DISPLAY"),
-            token("COMPUTE"),
-            token("INSPECT"),
-            token("ACCEPT"),
-            token("ALLOCATE"),
-            token("FREE"),
-            token("XML"),
-            token("ENABLE"),
-            token("DISABLE"),
-            token("SEND"),
-            token("RECEIVE"),
-            token("PURGE"),
-            token("START"),
-            token("USE")
+            keyword("SET"),
+            keyword("INITIALIZE"),
+            keyword("DISPLAY"),
+            keyword("COMPUTE"),
+            keyword("INSPECT"),
+            keyword("ACCEPT"),
+            keyword("ALLOCATE"),
+            keyword("FREE"),
+            keyword("XML"),
+            keyword("ENABLE"),
+            keyword("DISABLE"),
+            keyword("SEND"),
+            keyword("RECEIVE"),
+            keyword("PURGE"),
+            keyword("START"),
+            keyword("USE")
           )
         );
       }
@@ -10584,7 +10595,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         acceptStatementParser = future;
         future.setParser(
           sequence(
-            token("ACCEPT"),
+            keyword("ACCEPT"),
             choice(
               acceptFromDate(),
               acceptScreenSizeData(),
@@ -10600,7 +10611,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              token("END-ACCEPT")
+              keyword("END-ACCEPT")
             )
           )
         );
@@ -10624,7 +10635,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             identifier_format2(),
-            token("FROM"),
+            keyword("FROM"),
             mnemonicName(),
             optional(
               choice(
@@ -10660,46 +10671,46 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             identifier_format2(),
-            token("FROM"),
+            keyword("FROM"),
             choice(
-              token("TERMINAL-INFO"),
-              token("SYSTEM-INFO"),
+              keyword("TERMINAL-INFO"),
+              keyword("SYSTEM-INFO"),
               sequence(
-                token("INPUT"),
-                token("STATUS")
+                keyword("INPUT"),
+                keyword("STATUS")
               ),
               sequence(
-                token("ESCAPE"),
-                token("KEY")
+                keyword("ESCAPE"),
+                keyword("KEY")
               ),
               sequence(
-                token("EXCEPTION"),
-                token("STATUS")
+                keyword("EXCEPTION"),
+                keyword("STATUS")
               ),
               sequence(
-                token("LINE"),
-                token("NUMBER")
+                keyword("LINE"),
+                keyword("NUMBER")
               ),
               sequence(
-                token("USER"),
-                token("NAME")
+                keyword("USER"),
+                keyword("NAME")
               ),
-              token("COMMAND-LINE"),
+              keyword("COMMAND-LINE"),
               sequence(
-                token("STANDARD"),
-                token("OBJECT"),
+                keyword("STANDARD"),
+                keyword("OBJECT"),
                 identifier()
               ),
               sequence(
-                token("THREAD"),
-                token("HANDLE")
+                keyword("THREAD"),
+                keyword("HANDLE")
               ),
               sequence(
-                token("WINDOW"),
-                token("HANDLE")
+                keyword("WINDOW"),
+                keyword("HANDLE")
               ),
               sequence(
-                token("ENVIRONMENT"),
+                keyword("ENVIRONMENT"),
                 choice(
                   name(),
                   alphanumericLiteral()
@@ -10728,7 +10739,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("OMITTED"),
+              keyword("OMITTED"),
               identifier()
             ),
             optional(
@@ -10742,8 +10753,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("FROM"),
-                token("CRT")
+                keyword("FROM"),
+                keyword("CRT")
               )
             ),
             optional(
@@ -10751,7 +10762,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("WITH"),
+                keyword("WITH"),
                 plus(
                   screenEntryPhrase()
                 )
@@ -10791,33 +10802,33 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             identifier_format2(),
-            token("FROM"),
+            keyword("FROM"),
             choice(
               sequence(
-                token("DATE"),
+                keyword("DATE"),
                 optional(
                   choice(
-                    token("YYYYMMDD"),
-                    token("CENTURY-DATE")
+                    keyword("YYYYMMDD"),
+                    keyword("CENTURY-DATE")
                   )
                 )
               ),
               sequence(
-                token("DAY"),
+                keyword("DAY"),
                 optional(
                   choice(
-                    token("YYYYDDD"),
-                    token("CENTURY-DAY")
+                    keyword("YYYYDDD"),
+                    keyword("CENTURY-DAY")
                   )
                 )
               ),
-              token("DAY-OF-WEEK"),
-              token("TIME"),
-              token("YEAR"),
-              token("YYYYMMDD"),
-              token("CENTURY-DATE"),
-              token("YYYYDDD"),
-              token("CENTURY-DAY")
+              keyword("DAY-OF-WEEK"),
+              keyword("TIME"),
+              keyword("YEAR"),
+              keyword("YYYYMMDD"),
+              keyword("CENTURY-DATE"),
+              keyword("YYYYDDD"),
+              keyword("CENTURY-DAY")
             )
           )
         );
@@ -10842,9 +10853,9 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             identifier(),
             optional(
-              token("MESSAGE")
+              keyword("MESSAGE")
             ),
-            token("COUNT")
+            keyword("COUNT")
           )
         );
       }
@@ -10866,7 +10877,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         unitPhraseParser = future;
         future.setParser(
           sequence(
-            token("UNIT"),
+            keyword("UNIT"),
             choice(
               identifier(),
               literal()
@@ -10892,11 +10903,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         modeIsBlockPhraseParser = future;
         future.setParser(
           sequence(
-            token("MODE"),
+            keyword("MODE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
-            token("BLOCK")
+            keyword("BLOCK")
           )
         );
       }
@@ -10919,10 +10930,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             identifier(),
-            token("FROM"),
+            keyword("FROM"),
             choice(
-              token("LINES"),
-              token("COLUMNS")
+              keyword("LINES"),
+              keyword("COLUMNS")
             )
           )
         );
@@ -10946,11 +10957,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             identifier(),
-            token("FROM"),
+            keyword("FROM"),
             choice(
-              token("COMMAND-LINE"),
-              token("ARGUMENT-NUMBER"),
-              token("ARGUMENT-VALUE")
+              keyword("COMMAND-LINE"),
+              keyword("ARGUMENT-NUMBER"),
+              keyword("ARGUMENT-VALUE")
             )
           )
         );
@@ -10973,7 +10984,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         addStatementParser = future;
         future.setParser(
           sequence(
-            token("ADD"),
+            keyword("ADD"),
             choice(
               addStatement$format1(),
               addStatement$format2(),
@@ -10986,7 +10997,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnSizeError()
             ),
             optional(
-              token("END-ADD")
+              keyword("END-ADD")
             )
           )
         );
@@ -11012,8 +11023,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("corresponding",
               sequence(
                 choice(
-                  token("CORRESPONDING"),
-                  token("CORR")
+                  keyword("CORRESPONDING"),
+                  keyword("CORR")
                 ),
                 as("identifier",
                   qualifiedDataName()
@@ -11022,10 +11033,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("to",
               sequence(
-                token("TO"),
+                keyword("TO"),
                 qualifiedDataName(),
                 optional(
-                  token("ROUNDED")
+                  keyword("ROUNDED")
                 )
               )
             )
@@ -11052,8 +11063,8 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             not(
               choice(
-                token("CORRESPONDING"),
-                token("CORR")
+                keyword("CORRESPONDING"),
+                keyword("CORR")
               )
             ),
             plus(
@@ -11065,7 +11076,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               as("to",
                 sequence(
-                  token("TO"),
+                  keyword("TO"),
                   choice(
                     identifier(),
                     literal()
@@ -11075,12 +11086,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("giving",
               sequence(
-                token("GIVING"),
+                keyword("GIVING"),
                 plus(
                   sequence(
                     identifier(),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -11109,8 +11120,8 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             not(
               choice(
-                token("CORRESPONDING"),
-                token("CORR")
+                keyword("CORRESPONDING"),
+                keyword("CORR")
               )
             ),
             plus(
@@ -11121,12 +11132,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("to",
               sequence(
-                token("TO"),
+                keyword("TO"),
                 plus(
                   sequence(
                     identifier(),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -11153,20 +11164,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         allocateStatementParser = future;
         future.setParser(
           sequence(
-            token("ALLOCATE"),
+            keyword("ALLOCATE"),
             choice(
               sequence(
                 arithmeticExpression(),
-                token("CHARACTERS")
+                keyword("CHARACTERS")
               ),
               qualifiedDataName()
             ),
             optional(
-              token("INITIALIZED")
+              keyword("INITIALIZED")
             ),
             optional(
               sequence(
-                token("RETURNING"),
+                keyword("RETURNING"),
                 qualifiedDataName()
               )
             )
@@ -11191,7 +11202,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         alterStatementParser = future;
         future.setParser(
           sequence(
-            token("ALTER"),
+            keyword("ALTER"),
             plus(
               alterationClause()
             )
@@ -11217,11 +11228,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             procedureName(),
-            token("TO"),
+            keyword("TO"),
             optional(
               sequence(
-                token("PROCEED"),
-                token("TO")
+                keyword("PROCEED"),
+                keyword("TO")
               )
             ),
             procedureName()
@@ -11246,20 +11257,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         callStatementParser = future;
         future.setParser(
           sequence(
-            token("CALL"),
+            keyword("CALL"),
             choice(
               sequence(
                 optional(
                   sequence(
                     callStatement$programName(),
-                    token("AS")
+                    keyword("AS")
                   )
                 ),
-                token("NESTED")
+                keyword("NESTED")
               ),
               sequence(
                 callStatement$programName(),
-                token("AS"),
+                keyword("AS"),
                 callStatement$programPrototypeName()
               ),
               sequence(
@@ -11293,7 +11304,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              token("END-CALL")
+              keyword("END-CALL")
             )
           )
         );
@@ -11316,8 +11327,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         callStatement$programNameParser = future;
         future.setParser(
           choice(
-            identifier(),
-            alphanumericLiteral()
+            alphanumericLiteral(),
+            identifier()
           )
         );
       }
@@ -11338,7 +11349,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("programPrototypeName", PUBLIC, true);
         callStatement$programPrototypeNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -11359,7 +11370,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         callStatement$usingParser = future;
         future.setParser(
           sequence(
-            token("USING"),
+            keyword("USING"),
             plus(
               choice(
                 callStatement$using$byReference(),
@@ -11392,9 +11403,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("BY")
+                  keyword("BY")
                 ),
-                token("REFERENCE")
+                keyword("REFERENCE")
               )
             ),
             plus(
@@ -11422,9 +11433,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("BY")
+              keyword("BY")
             ),
-            token("CONTENT"),
+            keyword("CONTENT"),
             plus(
               callStatement$using$arg()
             )
@@ -11450,9 +11461,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("BY")
+              keyword("BY")
             ),
-            token("VALUE"),
+            keyword("VALUE"),
             plus(
               callStatement$using$arg()
             )
@@ -11478,7 +11489,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("UNSIGNED")
+              keyword("UNSIGNED")
             ),
             optional(
               callStatement$using$arg$sizeIs()
@@ -11508,7 +11519,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             addressOf(),
             lengthOf(),
             as("omitted",
-              token("OMITTED")
+              keyword("OMITTED")
             ),
             sequence(
               identifier(),
@@ -11544,13 +11555,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         callStatement$using$arg$sizeIsParser = future;
         future.setParser(
           sequence(
-            token("SIZE"),
+            keyword("SIZE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
-              token("AUTO"),
-              token("DEFAULT"),
+              keyword("AUTO"),
+              keyword("DEFAULT"),
               integer()
             )
           )
@@ -11575,14 +11586,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("GIVING"),
-              token("RETURNING")
+              keyword("GIVING"),
+              keyword("RETURNING")
             ),
             choice(
               addressOf(),
               sequence(
                 optional(
-                  token("INTO")
+                  keyword("INTO")
                 ),
                 identifier()
               )
@@ -11608,7 +11619,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         cancelStatementParser = future;
         future.setParser(
           sequence(
-            token("CANCEL"),
+            keyword("CANCEL"),
             plus(
               choice(
                 identifier(),
@@ -11636,7 +11647,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         chainStatementParser = future;
         future.setParser(
           sequence(
-            token("CHAIN"),
+            keyword("CHAIN"),
             choice(
               identifier(),
               literal()
@@ -11645,7 +11656,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               chainUsing()
             ),
             optional(
-              token("END-CHAIN")
+              keyword("END-CHAIN")
             )
           )
         );
@@ -11668,7 +11679,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         chainUsingParser = future;
         future.setParser(
           sequence(
-            token("USING"),
+            keyword("USING"),
             star(
               choice(
                 literal(),
@@ -11679,23 +11690,23 @@ public class CobolGrammar extends CobolBaseGrammar {
               choice(
                 sequence(
                   optional(
-                    token("BY")
+                    keyword("BY")
                   ),
-                  token("REFERENCE"),
+                  keyword("REFERENCE"),
                   plus(
                     choice(
                       addressOf(),
                       identifier(),
-                      token("OMITTED"),
+                      keyword("OMITTED"),
                       literal()
                     )
                   )
                 ),
                 sequence(
                   optional(
-                    token("BY")
+                    keyword("BY")
                   ),
-                  token("CONTENT"),
+                  keyword("CONTENT"),
                   plus(
                     choice(
                       literal(),
@@ -11705,9 +11716,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 sequence(
                   optional(
-                    token("BY")
+                    keyword("BY")
                   ),
-                  token("VALUE"),
+                  keyword("VALUE"),
                   plus(
                     choice(
                       identifier(),
@@ -11715,9 +11726,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                         integer(),
                         optional(
                           sequence(
-                            token("SIZE"),
+                            keyword("SIZE"),
                             optional(
-                              token("IS")
+                              keyword("IS")
                             ),
                             integer()
                           )
@@ -11750,7 +11761,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         closeStatementParser = future;
         future.setParser(
           sequence(
-            token("CLOSE"),
+            keyword("CLOSE"),
             plus(
               sequence(
                 fileName(),
@@ -11758,35 +11769,35 @@ public class CobolGrammar extends CobolBaseGrammar {
                   choice(
                     sequence(
                       optional(
-                        token("WITH")
+                        keyword("WITH")
                       ),
                       choice(
                         sequence(
-                          token("NO"),
-                          token("REWIND")
+                          keyword("NO"),
+                          keyword("REWIND")
                         ),
-                        token("LOCK")
+                        keyword("LOCK")
                       )
                     ),
                     sequence(
                       choice(
-                        token("REEL"),
-                        token("UNIT")
+                        keyword("REEL"),
+                        keyword("UNIT")
                       ),
                       optional(
                         sequence(
                           optional(
-                            token("FOR")
+                            keyword("FOR")
                           ),
-                          token("REMOVAL")
+                          keyword("REMOVAL")
                         )
                       )
                     ),
                     sequence(
                       optional(
-                        token("FOR")
+                        keyword("FOR")
                       ),
-                      token("REMOVAL")
+                      keyword("REMOVAL")
                     )
                   )
                 )
@@ -11813,9 +11824,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         commitStatementParser = future;
         future.setParser(
           sequence(
-            token("COMMIT"),
+            keyword("COMMIT"),
             optional(
-              token("TRANSACTION")
+              keyword("TRANSACTION")
             )
           )
         );
@@ -11838,18 +11849,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         computeStatementParser = future;
         future.setParser(
           sequence(
-            token("COMPUTE"),
+            keyword("COMPUTE"),
             plus(
               sequence(
                 qualifiedDataName(),
                 optional(
-                  token("ROUNDED")
+                  keyword("ROUNDED")
                 )
               )
             ),
             choice(
               literal("="),
-              token("EQUAL")
+              keyword("EQUAL")
             ),
             arithmeticExpression(),
             optional(
@@ -11859,7 +11870,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnSizeError()
             ),
             optional(
-              token("END-COMPUTE")
+              keyword("END-COMPUTE")
             )
           )
         );
@@ -11881,7 +11892,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("continueStatement", PUBLIC, true);
         continueStatementParser = future;
         future.setParser(
-          token("CONTINUE")
+          keyword("CONTINUE")
         );
       }
     
@@ -11902,10 +11913,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         deleteStatementParser = future;
         future.setParser(
           sequence(
-            token("DELETE"),
+            keyword("DELETE"),
             fileName(),
             optional(
-              token("RECORD")
+              keyword("RECORD")
             ),
             optional(
               invalidKey()
@@ -11914,7 +11925,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              token("END-DELETE")
+              keyword("END-DELETE")
             )
           )
         );
@@ -11937,9 +11948,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         invalidKeyParser = future;
         future.setParser(
           sequence(
-            token("INVALID"),
+            keyword("INVALID"),
             optional(
-              token("KEY")
+              keyword("KEY")
             ),
             nestedStatements()
           )
@@ -11963,10 +11974,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         notInvalidKeyParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
-            token("INVALID"),
+            keyword("NOT"),
+            keyword("INVALID"),
             optional(
-              token("KEY")
+              keyword("KEY")
             ),
             nestedStatements()
           )
@@ -11990,8 +12001,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         deleteFileStatementParser = future;
         future.setParser(
           sequence(
-            token("DELETE"),
-            token("FILE"),
+            keyword("DELETE"),
+            keyword("FILE"),
             plus(
               fileName()
             )
@@ -12016,25 +12027,25 @@ public class CobolGrammar extends CobolBaseGrammar {
         disableStatementParser = future;
         future.setParser(
           sequence(
-            token("DISABLE"),
+            keyword("DISABLE"),
             choice(
               sequence(
-                token("INPUT"),
+                keyword("INPUT"),
                 optional(
-                  token("TERMINAL")
+                  keyword("TERMINAL")
                 )
               ),
               sequence(
-                token("I-O"),
-                token("TERMINAL")
+                keyword("I-O"),
+                keyword("TERMINAL")
               ),
-              token("OUTPUT")
+              keyword("OUTPUT")
             ),
             cdName(),
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("KEY"),
+            keyword("KEY"),
             choice(
               literal(),
               identifier()
@@ -12060,10 +12071,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         displayStatementParser = future;
         future.setParser(
           sequence(
-            token("DISPLAY"),
+            keyword("DISPLAY"),
             plus(
               choice(
-                token("OMITTED"),
+                keyword("OMITTED"),
                 identifier(),
                 literal()
               )
@@ -12073,7 +12084,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 uponClause(),
                 withNoAdvancing(),
                 sequence(
-                  token("UNIT"),
+                  keyword("UNIT"),
                   choice(
                     identifier(),
                     literal()
@@ -12085,7 +12096,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 modeIsBlockPhrase(),
                 sequence(
                   optional(
-                    token("WITH")
+                    keyword("WITH")
                   ),
                   plus(
                     screenEntryPhrase()
@@ -12100,7 +12111,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnException()
             ),
             optional(
-              token("END-DISPLAY")
+              keyword("END-DISPLAY")
             )
           )
         );
@@ -12123,7 +12134,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         displayStatement__Parser = future;
         future.setParser(
           sequence(
-            token("DISPLAY"),
+            keyword("DISPLAY"),
             choice(
               displayTerminalFormat(),
               displayDeviceFormat(),
@@ -12134,7 +12145,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              token("END-DISPLAY")
+              keyword("END-DISPLAY")
             )
           )
         );
@@ -12196,12 +12207,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         uponClauseParser = future;
         future.setParser(
           sequence(
-            token("UPON"),
+            keyword("UPON"),
             choice(
-              token("ARGUMENT-NUMBER"),
-              token("COMMAND-LINE"),
-              token("ENVIRONMENT-VALUE"),
-              token("ENVIRONMENT-NAME"),
+              keyword("ARGUMENT-NUMBER"),
+              keyword("COMMAND-LINE"),
+              keyword("ENVIRONMENT-VALUE"),
+              keyword("ENVIRONMENT-NAME"),
               environmentName(),
               mnemonicName()
             )
@@ -12227,10 +12238,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("NO"),
-            token("ADVANCING")
+            keyword("NO"),
+            keyword("ADVANCING")
           )
         );
       }
@@ -12254,13 +12265,13 @@ public class CobolGrammar extends CobolBaseGrammar {
           plus(
             sequence(
               choice(
-                token("OMITTED"),
+                keyword("OMITTED"),
                 identifier(),
                 literal()
               ),
               optional(
                 sequence(
-                  token("UNIT"),
+                  keyword("UNIT"),
                   choice(
                     identifier(),
                     literal()
@@ -12280,7 +12291,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               optional(
                 sequence(
                   optional(
-                    token("WITH")
+                    keyword("WITH")
                   ),
                   plus(
                     screenEntryPhrase()
@@ -12309,7 +12320,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         dtAtPositioningParser = future;
         future.setParser(
           sequence(
-            token("AT"),
+            keyword("AT"),
             choice(
               identifier(),
               literal()
@@ -12337,8 +12348,8 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             optional(
               choice(
-                token("AT"),
-                token("FROM")
+                keyword("AT"),
+                keyword("FROM")
               )
             ),
             choice(
@@ -12376,16 +12387,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         dtLinePosParser = future;
         future.setParser(
           sequence(
-            token("LINE"),
+            keyword("LINE"),
             optional(
-              token("NUMBER")
+              keyword("NUMBER")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             optional(
               choice(
-                token("PLUS"),
+                keyword("PLUS"),
                 literal("+"),
                 literal("-")
               )
@@ -12416,20 +12427,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("COL"),
-              token("COLUMN"),
-              token("POSITION"),
-              token("POS")
+              keyword("COL"),
+              keyword("COLUMN"),
+              keyword("POSITION"),
+              keyword("POS")
             ),
             optional(
-              token("NUMBER")
+              keyword("NUMBER")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             optional(
               choice(
-                token("PLUS"),
+                keyword("PLUS"),
                 literal("+"),
                 literal("-")
               )
@@ -12516,8 +12527,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         autoPhraseParser = future;
         future.setParser(
           choice(
-            token("AUTO"),
-            token("AUTO-SKIP")
+            keyword("AUTO"),
+            keyword("AUTO-SKIP")
           )
         );
       }
@@ -12540,11 +12551,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("BACKGROUND-COLOR"),
-              token("BACKGROUND-COLOUR")
+              keyword("BACKGROUND-COLOR"),
+              keyword("BACKGROUND-COLOUR")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             integer()
           )
@@ -12569,11 +12580,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("NO")
+              keyword("NO")
             ),
             choice(
-              token("BEEP"),
-              token("BELL")
+              keyword("BEEP"),
+              keyword("BELL")
             )
           )
         );
@@ -12596,10 +12607,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         blankPhraseParser = future;
         future.setParser(
           sequence(
-            token("BLANK"),
+            keyword("BLANK"),
             choice(
-              token("SCREEN"),
-              token("LINE")
+              keyword("SCREEN"),
+              keyword("LINE")
             )
           )
         );
@@ -12622,8 +12633,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         blinkPhraseParser = future;
         future.setParser(
           choice(
-            token("BLINKING"),
-            token("BLINK")
+            keyword("BLINKING"),
+            keyword("BLINK")
           )
         );
       }
@@ -12644,7 +12655,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("boldPhrase", PUBLIC, true);
         boldPhraseParser = future;
         future.setParser(
-          token("BOLD")
+          keyword("BOLD")
         );
       }
     
@@ -12665,8 +12676,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         capitalizationPhraseParser = future;
         future.setParser(
           choice(
-            token("UPPER"),
-            token("LOWER")
+            keyword("UPPER"),
+            keyword("LOWER")
           )
         );
       }
@@ -12688,9 +12699,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         controlPhraseParser = future;
         future.setParser(
           sequence(
-            token("CONTROL"),
+            keyword("CONTROL"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               identifier_format2(),
@@ -12717,8 +12728,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         convertPhraseParser = future;
         future.setParser(
           choice(
-            token("CONVERT"),
-            token("CONVERSION")
+            keyword("CONVERT"),
+            keyword("CONVERSION")
           )
         );
       }
@@ -12740,7 +12751,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         cursorPhraseParser = future;
         future.setParser(
           sequence(
-            token("CURSOR"),
+            keyword("CURSOR"),
             choice(
               identifier(),
               literal()
@@ -12765,7 +12776,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("echoPhrase", PUBLIC, true);
         echoPhraseParser = future;
         future.setParser(
-          token("ECHO")
+          keyword("ECHO")
         );
       }
     
@@ -12786,11 +12797,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         erasePhraseParser = future;
         future.setParser(
           sequence(
-            token("ERASE"),
+            keyword("ERASE"),
             optional(
               choice(
-                token("EOL"),
-                token("EOS")
+                keyword("EOL"),
+                keyword("EOS")
               )
             )
           )
@@ -12815,11 +12826,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("FOREGROUND-COLOR"),
-              token("FOREGROUND-COLOUR")
+              keyword("FOREGROUND-COLOR"),
+              keyword("FOREGROUND-COLOUR")
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             integer()
           )
@@ -12843,8 +12854,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         fullPhraseParser = future;
         future.setParser(
           choice(
-            token("FULL"),
-            token("LENGTH-CHECK")
+            keyword("FULL"),
+            keyword("LENGTH-CHECK")
           )
         );
       }
@@ -12865,7 +12876,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("gridPhrase", PUBLIC, true);
         gridPhraseParser = future;
         future.setParser(
-          token("GRID")
+          keyword("GRID")
         );
       }
     
@@ -12886,8 +12897,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         highPhraseParser = future;
         future.setParser(
           choice(
-            token("HIGH"),
-            token("HIGHLIGHT")
+            keyword("HIGH"),
+            keyword("HIGHLIGHT")
           )
         );
       }
@@ -12909,9 +12920,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         linePhraseParser = future;
         future.setParser(
           choice(
-            token("LEFTLINE"),
-            token("OVERLINE"),
-            token("UNDERLINE")
+            keyword("LEFTLINE"),
+            keyword("OVERLINE"),
+            keyword("UNDERLINE")
           )
         );
       }
@@ -12933,8 +12944,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         lowPhraseParser = future;
         future.setParser(
           choice(
-            token("LOW"),
-            token("LOWLIGHT")
+            keyword("LOW"),
+            keyword("LOWLIGHT")
           )
         );
       }
@@ -12955,7 +12966,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("offPhrase", PUBLIC, true);
         offPhraseParser = future;
         future.setParser(
-          token("OFF")
+          keyword("OFF")
         );
       }
     
@@ -12976,22 +12987,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         promptPhraseParser = future;
         future.setParser(
           sequence(
-            token("PROMPT"),
+            keyword("PROMPT"),
             optional(
               choice(
                 sequence(
-                  token("CHARACTER"),
+                  keyword("CHARACTER"),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   identifier()
                 ),
                 sequence(
                   optional(
-                    token("CHARACTER")
+                    keyword("CHARACTER")
                   ),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   literal()
                 )
@@ -13018,8 +13029,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         requiredPhraseParser = future;
         future.setParser(
           choice(
-            token("REQUIRED"),
-            token("EMPTY-CHECK")
+            keyword("REQUIRED"),
+            keyword("EMPTY-CHECK")
           )
         );
       }
@@ -13041,9 +13052,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         reversePhraseParser = future;
         future.setParser(
           choice(
-            token("REVERSE"),
-            token("REVERSED"),
-            token("REVERSE-VIDEO")
+            keyword("REVERSE"),
+            keyword("REVERSED"),
+            keyword("REVERSE-VIDEO")
           )
         );
       }
@@ -13065,23 +13076,23 @@ public class CobolGrammar extends CobolBaseGrammar {
         scrollPhraseParser = future;
         future.setParser(
           sequence(
-            token("SCROLL"),
+            keyword("SCROLL"),
             choice(
-              token("UP"),
-              token("DOWN")
+              keyword("UP"),
+              keyword("DOWN")
             ),
             optional(
               sequence(
                 optional(
-                  token("BY")
+                  keyword("BY")
                 ),
                 choice(
                   integer(),
                   identifier()
                 ),
                 choice(
-                  token("LINE"),
-                  token("LINES")
+                  keyword("LINE"),
+                  keyword("LINES")
                 )
               )
             )
@@ -13106,8 +13117,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         securePhraseParser = future;
         future.setParser(
           choice(
-            token("SECURE"),
-            token("NO-ECHO")
+            keyword("SECURE"),
+            keyword("NO-ECHO")
           )
         );
       }
@@ -13129,9 +13140,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         sizePhraseParser = future;
         future.setParser(
           sequence(
-            token("SIZE"),
+            keyword("SIZE"),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             choice(
               identifier(),
@@ -13157,7 +13168,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("standardPhrase", PUBLIC, true);
         standardPhraseParser = future;
         future.setParser(
-          token("STANDARD")
+          keyword("STANDARD")
         );
       }
     
@@ -13177,7 +13188,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("tabPhrase", PUBLIC, true);
         tabPhraseParser = future;
         future.setParser(
-          token("TAB")
+          keyword("TAB")
         );
       }
     
@@ -13199,9 +13210,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("BEFORE")
+              keyword("BEFORE")
             ),
-            token("TIME"),
+            keyword("TIME"),
             choice(
               identifier(),
               literal()
@@ -13228,10 +13239,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("TIME-OUT"),
-              token("TIMEOUT")
+              keyword("TIME-OUT"),
+              keyword("TIMEOUT")
             ),
-            token("AFTER"),
+            keyword("AFTER"),
             choice(
               identifier(),
               integer()
@@ -13257,8 +13268,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         justificationPhraseParser = future;
         future.setParser(
           choice(
-            token("LEFT-JUSTIFY"),
-            token("RIGHT-JUSTIFY")
+            keyword("LEFT-JUSTIFY"),
+            keyword("RIGHT-JUSTIFY")
           )
         );
       }
@@ -13280,8 +13291,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         fillPhraseParser = future;
         future.setParser(
           choice(
-            token("SPACE-FILL"),
-            token("ZERO-FILL")
+            keyword("SPACE-FILL"),
+            keyword("ZERO-FILL")
           )
         );
       }
@@ -13302,7 +13313,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("trailingSignPhrase", PUBLIC, true);
         trailingSignPhraseParser = future;
         future.setParser(
-          token("TRAILING-SIGN")
+          keyword("TRAILING-SIGN")
         );
       }
     
@@ -13322,7 +13333,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("updatePhrase", PUBLIC, true);
         updatePhraseParser = future;
         future.setParser(
-          token("UPDATE")
+          keyword("UPDATE")
         );
       }
     
@@ -13343,7 +13354,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         divideStatementParser = future;
         future.setParser(
           sequence(
-            token("DIVIDE"),
+            keyword("DIVIDE"),
             choice(
               divideStatement$format1(),
               divideStatement$format2(),
@@ -13356,7 +13367,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnSizeError()
             ),
             optional(
-              token("END-DIVIDE")
+              keyword("END-DIVIDE")
             )
           )
         );
@@ -13386,8 +13397,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("into",
               sequence(
                 choice(
-                  token("INTO"),
-                  token("BY")
+                  keyword("INTO"),
+                  keyword("BY")
                 ),
                 choice(
                   identifier(),
@@ -13397,18 +13408,18 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("giving",
               sequence(
-                token("GIVING"),
+                keyword("GIVING"),
                 assign("identifier",
                   qualifiedDataName()
                 ),
                 optional(
-                  token("ROUNDED")
+                  keyword("ROUNDED")
                 )
               )
             ),
             as("remainder",
               sequence(
-                token("REMAINDER"),
+                keyword("REMAINDER"),
                 qualifiedDataName()
               )
             )
@@ -13440,8 +13451,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("into",
               sequence(
                 choice(
-                  token("INTO"),
-                  token("BY")
+                  keyword("INTO"),
+                  keyword("BY")
                 ),
                 choice(
                   identifier(),
@@ -13451,14 +13462,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("giving",
               sequence(
-                token("GIVING"),
+                keyword("GIVING"),
                 plus(
                   sequence(
                     as("identifier",
                       qualifiedDataName()
                     ),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -13491,12 +13502,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("into",
               sequence(
-                token("INTO"),
+                keyword("INTO"),
                 plus(
                   sequence(
                     qualifiedDataName(),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -13523,25 +13534,25 @@ public class CobolGrammar extends CobolBaseGrammar {
         enableStatementParser = future;
         future.setParser(
           sequence(
-            token("ENABLE"),
+            keyword("ENABLE"),
             choice(
               sequence(
-                token("INPUT"),
+                keyword("INPUT"),
                 optional(
-                  token("TERMINAL")
+                  keyword("TERMINAL")
                 )
               ),
               sequence(
-                token("I-O"),
-                token("TERMINAL")
+                keyword("I-O"),
+                keyword("TERMINAL")
               ),
-              token("OUTPUT")
+              keyword("OUTPUT")
             ),
             cdName(),
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("KEY"),
+            keyword("KEY"),
             choice(
               literal(),
               identifier()
@@ -13567,38 +13578,38 @@ public class CobolGrammar extends CobolBaseGrammar {
         entryStatementParser = future;
         future.setParser(
           sequence(
-            token("ENTRY"),
+            keyword("ENTRY"),
             literal(),
             optional(
               mnemonicName()
             ),
             optional(
               sequence(
-                token("USING"),
+                keyword("USING"),
                 plus(
                   sequence(
                     optional(
                       sequence(
                         optional(
-                          token("BY")
+                          keyword("BY")
                         ),
                         choice(
-                          token("REFERENCE"),
-                          token("VALUE")
+                          keyword("REFERENCE"),
+                          keyword("VALUE")
                         )
                       )
                     ),
                     choice(
-                      token("ANY"),
+                      keyword("ANY"),
                       sequence(
                         dataName(),
                         optional(
                           sequence(
-                            token("DELIMITED"),
+                            keyword("DELIMITED"),
                             optional(
                               sequence(
-                                token("BY"),
-                                token("SIZE")
+                                keyword("BY"),
+                                keyword("SIZE")
                               )
                             )
                           )
@@ -13609,11 +13620,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 optional(
                   sequence(
-                    token("REPEATED"),
+                    keyword("REPEATED"),
                     optional(
                       sequence(
                         integer(),
-                        token("TO"),
+                        keyword("TO"),
                         integer()
                       )
                     )
@@ -13624,8 +13635,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 choice(
-                  token("GIVING"),
-                  token("RETURNING")
+                  keyword("GIVING"),
+                  keyword("RETURNING")
                 ),
                 dataName()
               )
@@ -13651,11 +13662,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         evaluateStatementParser = future;
         future.setParser(
           sequence(
-            token("EVALUATE"),
+            keyword("EVALUATE"),
             subject(),
             star(
               sequence(
-                token("ALSO"),
+                keyword("ALSO"),
                 subject()
               )
             ),
@@ -13666,7 +13677,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               whenOther()
             ),
             optional(
-              token("END-EVALUATE")
+              keyword("END-EVALUATE")
             )
           )
         );
@@ -13707,8 +13718,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             skipto(
               choice(
-                token("ALSO"),
-                token("WHEN")
+                keyword("ALSO"),
+                keyword("WHEN")
               )
             )
           )
@@ -13734,14 +13745,14 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             plus(
               sequence(
-                token("WHEN"),
+                keyword("WHEN"),
                 not(
-                  token("OTHER")
+                  keyword("OTHER")
                 ),
                 object(),
                 star(
                   sequence(
-                    token("ALSO"),
+                    keyword("ALSO"),
                     object()
                   )
                 )
@@ -13769,8 +13780,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         whenOtherParser = future;
         future.setParser(
           sequence(
-            token("WHEN"),
-            token("OTHER"),
+            keyword("WHEN"),
+            keyword("OTHER"),
             nestedStatements()
           )
         );
@@ -13793,14 +13804,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         objectParser = future;
         future.setParser(
           choice(
-            token("ANY"),
+            keyword("ANY"),
             rangeExpression(),
-            token("TRUE"),
-            token("FALSE"),
+            keyword("TRUE"),
+            keyword("FALSE"),
             condition(),
             sequence(
               optional(
-                token("NOT")
+                keyword("NOT")
               ),
               choice(
                 sequence(
@@ -13845,7 +13856,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("NOT")
+              keyword("NOT")
             ),
             choice(
               sequence(
@@ -13863,8 +13874,8 @@ public class CobolGrammar extends CobolBaseGrammar {
               arithmeticExpression()
             ),
             choice(
-              token("THROUGH"),
-              token("THRU")
+              keyword("THROUGH"),
+              keyword("THRU")
             ),
             choice(
               sequence(
@@ -13902,41 +13913,41 @@ public class CobolGrammar extends CobolBaseGrammar {
         examineStatementParser = future;
         future.setParser(
           sequence(
-            token("EXAMINE"),
+            keyword("EXAMINE"),
             identifier(),
             choice(
               sequence(
-                token("TALLYING"),
+                keyword("TALLYING"),
                 choice(
                   sequence(
-                    token("UNTIL"),
-                    token("FIRST")
+                    keyword("UNTIL"),
+                    keyword("FIRST")
                   ),
-                  token("ALL"),
-                  token("LEADING")
+                  keyword("ALL"),
+                  keyword("LEADING")
                 ),
                 literal(),
                 optional(
                   sequence(
-                    token("REPLACING"),
-                    token("BY"),
+                    keyword("REPLACING"),
+                    keyword("BY"),
                     literal()
                   )
                 )
               ),
               sequence(
-                token("REPLACING"),
+                keyword("REPLACING"),
                 choice(
-                  token("ALL"),
-                  token("LEADING"),
-                  token("FIRST"),
+                  keyword("ALL"),
+                  keyword("LEADING"),
+                  keyword("FIRST"),
                   sequence(
-                    token("UNTIL"),
-                    token("FIRST")
+                    keyword("UNTIL"),
+                    keyword("FIRST")
                   )
                 ),
                 literal(),
-                token("BY"),
+                keyword("BY"),
                 literal()
               )
             )
@@ -13988,24 +13999,24 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("EXEC"),
-              token("EXECUTE")
+              keyword("EXEC"),
+              keyword("EXECUTE")
             ),
-            token("SQL"),
+            keyword("SQL"),
             limited(
               optional(
                 sqlStatement()
               ),
-              token("END-EXEC")
+              keyword("END-EXEC")
             ),
             optional(
               as("unknown",
                 skipto(
-                  token("END-EXEC")
+                  keyword("END-EXEC")
                 )
               )
             ),
-            token("END-EXEC")
+            keyword("END-EXEC")
           )
         );
       }
@@ -14028,24 +14039,24 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("EXEC"),
-              token("EXECUTE")
+              keyword("EXEC"),
+              keyword("EXECUTE")
             ),
-            token("CICS"),
+            keyword("CICS"),
             limited(
               optional(
                 cicsStatement()
               ),
-              token("END-EXEC")
+              keyword("END-EXEC")
             ),
             optional(
               as("unknown",
                 skipto(
-                  token("END-EXEC")
+                  keyword("END-EXEC")
                 )
               )
             ),
-            token("END-EXEC")
+            keyword("END-EXEC")
           )
         );
       }
@@ -14068,18 +14079,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("EXEC"),
-              token("EXECUTE")
+              keyword("EXEC"),
+              keyword("EXECUTE")
             ),
-            token("DLI"),
+            keyword("DLI"),
             optional(
               as("unknown",
                 skipto(
-                  token("END-EXEC")
+                  keyword("END-EXEC")
                 )
               )
             ),
-            token("END-EXEC")
+            keyword("END-EXEC")
           )
         );
       }
@@ -14102,18 +14113,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("EXEC"),
-              token("EXECUTE")
+              keyword("EXEC"),
+              keyword("EXECUTE")
             ),
-            token("HTML"),
+            keyword("HTML"),
             optional(
               as("unknown",
                 skipto(
-                  token("END-EXEC")
+                  keyword("END-EXEC")
                 )
               )
             ),
-            token("END-EXEC")
+            keyword("END-EXEC")
           )
         );
       }
@@ -14136,18 +14147,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("EXEC"),
-              token("EXECUTE")
+              keyword("EXEC"),
+              keyword("EXECUTE")
             ),
             textName(),
             optional(
               as("unknown",
                 skipto(
-                  token("END-EXEC")
+                  keyword("END-EXEC")
                 )
               )
             ),
-            token("END-EXEC")
+            keyword("END-EXEC")
           )
         );
       }
@@ -14169,22 +14180,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         exitStatementParser = future;
         future.setParser(
           sequence(
-            token("EXIT"),
+            keyword("EXIT"),
             optional(
               as("endpoint",
                 choice(
-                  token("PROGRAM"),
-                  token("PARAGRAPH"),
-                  token("SECTION"),
+                  keyword("PROGRAM"),
+                  keyword("PARAGRAPH"),
+                  keyword("SECTION"),
                   sequence(
-                    token("PERFORM"),
+                    keyword("PERFORM"),
                     optional(
-                      token("CYCLE")
+                      keyword("CYCLE")
                     )
                   ),
-                  token("METHOD"),
-                  token("FUNCTION"),
-                  token("ITERATOR")
+                  keyword("METHOD"),
+                  keyword("FUNCTION"),
+                  keyword("ITERATOR")
                 )
               )
             ),
@@ -14213,8 +14224,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("GIVING"),
-              token("RETURNING")
+              keyword("GIVING"),
+              keyword("RETURNING")
             ),
             choice(
               integer(),
@@ -14241,7 +14252,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         generateStatementParser = future;
         future.setParser(
           sequence(
-            token("GENERATE"),
+            keyword("GENERATE"),
             choice(
               dataName(),
               reportName()
@@ -14267,14 +14278,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         freeStatementParser = future;
         future.setParser(
           sequence(
-            token("FREE"),
+            keyword("FREE"),
             plus(
               sequence(
                 optional(
                   sequence(
-                    token("ADDRESS"),
+                    keyword("ADDRESS"),
                     optional(
-                      token("OF")
+                      keyword("OF")
                     )
                   )
                 ),
@@ -14302,12 +14313,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         gobackStatementParser = future;
         future.setParser(
           sequence(
-            token("GOBACK"),
+            keyword("GOBACK"),
             optional(
               sequence(
                 choice(
-                  token("GIVING"),
-                  token("RETURNING")
+                  keyword("GIVING"),
+                  keyword("RETURNING")
                 ),
                 choice(
                   addressOf(),
@@ -14337,9 +14348,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         goToStatementParser = future;
         future.setParser(
           sequence(
-            token("GO"),
+            keyword("GO"),
             optional(
-              token("TO")
+              keyword("TO")
             ),
             star(
               procedureName()
@@ -14368,9 +14379,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         dependingOnParser = future;
         future.setParser(
           sequence(
-            token("DEPENDING"),
+            keyword("DEPENDING"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
             identifier()
           )
@@ -14394,14 +14405,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         ifStatementParser = future;
         future.setParser(
           sequence(
-            token("IF"),
+            keyword("IF"),
             condition(),
             thenBranch(),
             optional(
               elseBranch()
             ),
             optional(
-              token("END-IF")
+              keyword("END-IF")
             )
           )
         );
@@ -14425,7 +14436,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("THEN")
+              keyword("THEN")
             ),
             choice(
               nestedStatements(),
@@ -14456,7 +14467,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         elseBranchParser = future;
         future.setParser(
           sequence(
-            token("ELSE"),
+            keyword("ELSE"),
             choice(
               nestedStatements(),
               as("nestedStatements",
@@ -14486,7 +14497,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         initiateStatementParser = future;
         future.setParser(
           sequence(
-            token("INITIATE"),
+            keyword("INITIATE"),
             plus(
               reportName()
             )
@@ -14511,13 +14522,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         invokeStatementParser = future;
         future.setParser(
           sequence(
-            token("INVOKE"),
+            keyword("INVOKE"),
             identifier(),
             optional(
               sequence(
-                token("AS"),
+                keyword("AS"),
                 choice(
-                  token("OBJECT"),
+                  keyword("OBJECT"),
                   identifier()
                 )
               )
@@ -14528,34 +14539,34 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("USING"),
+                keyword("USING"),
                 plus(
                   choice(
                     sequence(
                       optional(
                         sequence(
                           optional(
-                            token("BY")
+                            keyword("BY")
                           ),
-                          token("REFERENCE")
+                          keyword("REFERENCE")
                         )
                       ),
                       choice(
                         addressOf(),
-                        token("OMITTED"),
+                        keyword("OMITTED"),
                         literal(),
                         identifier()
                       )
                     ),
                     sequence(
                       optional(
-                        token("BY")
+                        keyword("BY")
                       ),
-                      token("CONTENT"),
+                      keyword("CONTENT"),
                       choice(
                         sequence(
-                          token("LENGTH"),
-                          token("OF"),
+                          keyword("LENGTH"),
+                          keyword("OF"),
                           identifier()
                         ),
                         sequence(
@@ -14575,20 +14586,20 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     sequence(
                       optional(
-                        token("BY")
+                        keyword("BY")
                       ),
-                      token("VALUE"),
+                      keyword("VALUE"),
                       choice(
                         sequence(
-                          token("LENGTH"),
-                          token("OF"),
+                          keyword("LENGTH"),
+                          keyword("OF"),
                           identifier()
                         ),
                         sequence(
                           integer(),
-                          token("SIZE"),
+                          keyword("SIZE"),
                           optional(
-                            token("IS")
+                            keyword("IS")
                           ),
                           integer()
                         ),
@@ -14614,14 +14625,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 choice(
-                  token("GIVING"),
-                  token("RETURNING")
+                  keyword("GIVING"),
+                  keyword("RETURNING")
                 ),
                 choice(
                   addressOf(),
                   sequence(
                     optional(
-                      token("INTO")
+                      keyword("INTO")
                     ),
                     identifier()
                   )
@@ -14649,14 +14660,14 @@ public class CobolGrammar extends CobolBaseGrammar {
         exhibitStatementParser = future;
         future.setParser(
           sequence(
-            token("EXHIBIT"),
+            keyword("EXHIBIT"),
             choice(
-              token("NAMED"),
+              keyword("NAMED"),
               sequence(
-                token("CHANGED"),
-                token("NAMED")
+                keyword("CHANGED"),
+                keyword("NAMED")
               ),
-              token("CHANGED")
+              keyword("CHANGED")
             ),
             choice(
               identifier(),
@@ -14683,9 +14694,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         identifiedByStatementParser = future;
         future.setParser(
           sequence(
-            token("IDENTIFIED"),
+            keyword("IDENTIFIED"),
             optional(
-              token("BY")
+              keyword("BY")
             ),
             choice(
               dataName(),
@@ -14694,9 +14705,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
-                token("ATTRIBUTE")
+                keyword("ATTRIBUTE")
               )
             )
           )
@@ -14720,7 +14731,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         initializeStatementParser = future;
         future.setParser(
           sequence(
-            token("INITIALIZE"),
+            keyword("INITIALIZE"),
             plus(
               identifier()
             ),
@@ -14755,12 +14766,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         replacingInitClauseParser = future;
         future.setParser(
           sequence(
-            token("REPLACING"),
+            keyword("REPLACING"),
             replacementTarget(),
             optional(
-              token("DATA")
+              keyword("DATA")
             ),
-            token("BY"),
+            keyword("BY"),
             choice(
               identifier(),
               literal()
@@ -14786,15 +14797,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         replacementTargetParser = future;
         future.setParser(
           choice(
-            token("ALPHABETIC"),
-            token("ALPHANUMERIC"),
-            token("ALPHANUMERIC-EDITED"),
-            token("NATIONAL"),
-            token("NATIONAL-EDITED"),
-            token("NUMERIC"),
-            token("NUMERIC-EDITED"),
-            token("DBCS"),
-            token("EGCS")
+            keyword("ALPHABETIC"),
+            keyword("ALPHANUMERIC"),
+            keyword("ALPHANUMERIC-EDITED"),
+            keyword("NATIONAL"),
+            keyword("NATIONAL-EDITED"),
+            keyword("NUMERIC"),
+            keyword("NUMERIC-EDITED"),
+            keyword("DBCS"),
+            keyword("EGCS")
           )
         );
       }
@@ -14816,7 +14827,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         inspectStatementParser = future;
         future.setParser(
           sequence(
-            token("INSPECT"),
+            keyword("INSPECT"),
             identifier(),
             choice(
               convertingPhrase(),
@@ -14849,12 +14860,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         convertingPhraseParser = future;
         future.setParser(
           sequence(
-            token("CONVERTING"),
+            keyword("CONVERTING"),
             choice(
               identifier(),
               literal()
             ),
-            token("TO"),
+            keyword("TO"),
             choice(
               identifier(),
               literal()
@@ -14883,11 +14894,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         tallyingPhraseParser = future;
         future.setParser(
           sequence(
-            token("TALLYING"),
+            keyword("TALLYING"),
             star(
               sequence(
                 qualifiedDataName(),
-                token("FOR"),
+                keyword("FOR"),
                 star(
                   choice(
                     tallyingCharactersPhrase(),
@@ -14917,7 +14928,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         tallyingCharactersPhraseParser = future;
         future.setParser(
           sequence(
-            token("CHARACTERS"),
+            keyword("CHARACTERS"),
             star(
               locationPhrase()
             )
@@ -14943,9 +14954,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("ALL"),
-              token("LEADING"),
-              token("TRAILING")
+              keyword("ALL"),
+              keyword("LEADING"),
+              keyword("TRAILING")
             ),
             star(
               sequence(
@@ -14953,7 +14964,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   sequence(
                     identifier(),
                     not(
-                      token("FOR")
+                      keyword("FOR")
                     )
                   ),
                   literal()
@@ -14984,7 +14995,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         replacingPhraseParser = future;
         future.setParser(
           sequence(
-            token("REPLACING"),
+            keyword("REPLACING"),
             star(
               choice(
                 replacingCharactersPhrase(),
@@ -15012,8 +15023,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         replacingCharactersPhraseParser = future;
         future.setParser(
           sequence(
-            token("CHARACTERS"),
-            token("BY"),
+            keyword("CHARACTERS"),
+            keyword("BY"),
             choice(
               identifier(),
               literal()
@@ -15043,10 +15054,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("ALL"),
-              token("LEADING"),
-              token("FIRST"),
-              token("TRAILING")
+              keyword("ALL"),
+              keyword("LEADING"),
+              keyword("FIRST"),
+              keyword("TRAILING")
             ),
             star(
               sequence(
@@ -15054,7 +15065,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   identifier(),
                   literal()
                 ),
-                token("BY"),
+                keyword("BY"),
                 choice(
                   identifier(),
                   literal()
@@ -15086,11 +15097,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("BEFORE"),
-              token("AFTER")
+              keyword("BEFORE"),
+              keyword("AFTER")
             ),
             optional(
-              token("INITIAL")
+              keyword("INITIAL")
             ),
             choice(
               identifier(),
@@ -15117,27 +15128,27 @@ public class CobolGrammar extends CobolBaseGrammar {
         mergeStatementParser = future;
         future.setParser(
           sequence(
-            token("MERGE"),
+            keyword("MERGE"),
             fileName(),
             plus(
               as("key",
                 sequence(
                   optional(
-                    token("ON")
+                    keyword("ON")
                   ),
                   choice(
                     as("asc",
-                      token("ASCENDING")
+                      keyword("ASCENDING")
                     ),
                     as("desc",
-                      token("DESCENDING")
+                      keyword("DESCENDING")
                     )
                   ),
                   optional(
-                    token("KEY")
+                    keyword("KEY")
                   ),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   plus(
                     qualifiedDataName()
@@ -15150,12 +15161,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                 sequence(
                   optional(
                     as("collating",
-                      token("COLLATING")
+                      keyword("COLLATING")
                     )
                   ),
-                  token("SEQUENCE"),
+                  keyword("SEQUENCE"),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   alphabetName()
                 )
@@ -15163,7 +15174,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("using",
               sequence(
-                token("USING"),
+                keyword("USING"),
                 fileName(),
                 plus(
                   fileName()
@@ -15173,17 +15184,17 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               as("output",
                 sequence(
-                  token("OUTPUT"),
-                  token("PROCEDURE"),
+                  keyword("OUTPUT"),
+                  keyword("PROCEDURE"),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   procedureName(),
                   optional(
                     sequence(
                       choice(
-                        token("THROUGH"),
-                        token("THRU")
+                        keyword("THROUGH"),
+                        keyword("THRU")
                       ),
                       procedureName()
                     )
@@ -15192,7 +15203,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               ),
               as("giving",
                 sequence(
-                  token("GIVING"),
+                  keyword("GIVING"),
                   plus(
                     fileName()
                   )
@@ -15220,13 +15231,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         moveStatementParser = future;
         future.setParser(
           sequence(
-            token("MOVE"),
+            keyword("MOVE"),
             choice(
               as("corresponding",
                 sequence(
                   choice(
-                    token("CORRESPONDING"),
-                    token("CORR")
+                    keyword("CORRESPONDING"),
+                    keyword("CORR")
                   ),
                   identifier()
                 )
@@ -15236,7 +15247,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               ),
               literal()
             ),
-            token("TO"),
+            keyword("TO"),
             plus(
               identifier()
             ),
@@ -15268,7 +15279,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         multiplyStatementParser = future;
         future.setParser(
           sequence(
-            token("MULTIPLY"),
+            keyword("MULTIPLY"),
             choice(
               multiplyStatement$format1(),
               multiplyStatement$format2()
@@ -15280,7 +15291,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnSizeError()
             ),
             optional(
-              token("END-MULTIPLY")
+              keyword("END-MULTIPLY")
             )
           )
         );
@@ -15309,7 +15320,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("by",
               sequence(
-                token("BY"),
+                keyword("BY"),
                 choice(
                   identifier(),
                   literal()
@@ -15318,14 +15329,14 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("giving",
               sequence(
-                token("GIVING"),
+                keyword("GIVING"),
                 plus(
                   sequence(
                     as("identifier",
                       qualifiedDataName()
                     ),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -15358,12 +15369,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("by",
               sequence(
-                token("BY"),
+                keyword("BY"),
                 plus(
                   sequence(
                     qualifiedDataName(),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -15390,8 +15401,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         nextSentenceStatementParser = future;
         future.setParser(
           sequence(
-            token("NEXT"),
-            token("SENTENCE")
+            keyword("NEXT"),
+            keyword("SENTENCE")
           )
         );
       }
@@ -15413,7 +15424,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         onStatementParser = future;
         future.setParser(
           sequence(
-            token("ON"),
+            keyword("ON"),
             not(
               eventType()
             ),
@@ -15423,8 +15434,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("AND"),
-                token("EVERY"),
+                keyword("AND"),
+                keyword("EVERY"),
                 choice(
                   literal(),
                   identifier()
@@ -15433,7 +15444,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("UNTIL"),
+                keyword("UNTIL"),
                 choice(
                   literal(),
                   identifier()
@@ -15443,21 +15454,21 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               nestedStatements(),
               sequence(
-                token("NEXT"),
-                token("SENTENCE")
+                keyword("NEXT"),
+                keyword("SENTENCE")
               )
             ),
             optional(
               sequence(
                 choice(
-                  token("ELSE"),
-                  token("OTHERWISE")
+                  keyword("ELSE"),
+                  keyword("OTHERWISE")
                 ),
                 choice(
                   nestedStatements(),
                   sequence(
-                    token("NEXT"),
-                    token("SENTENCE")
+                    keyword("NEXT"),
+                    keyword("SENTENCE")
                   )
                 )
               )
@@ -15483,23 +15494,23 @@ public class CobolGrammar extends CobolBaseGrammar {
         openStatementParser = future;
         future.setParser(
           sequence(
-            token("OPEN"),
+            keyword("OPEN"),
             plus(
               choice(
                 sequence(
-                  token("INPUT"),
+                  keyword("INPUT"),
                   plus(
                     sequence(
                       fileName(),
                       optional(
                         choice(
-                          token("REVERSED"),
+                          keyword("REVERSED"),
                           sequence(
                             optional(
-                              token("WITH")
+                              keyword("WITH")
                             ),
-                            token("NO"),
-                            token("REWIND")
+                            keyword("NO"),
+                            keyword("REWIND")
                           )
                         )
                       )
@@ -15507,30 +15518,30 @@ public class CobolGrammar extends CobolBaseGrammar {
                   )
                 ),
                 sequence(
-                  token("OUTPUT"),
+                  keyword("OUTPUT"),
                   plus(
                     sequence(
                       fileName(),
                       optional(
                         sequence(
                           optional(
-                            token("WITH")
+                            keyword("WITH")
                           ),
-                          token("NO"),
-                          token("REWIND")
+                          keyword("NO"),
+                          keyword("REWIND")
                         )
                       )
                     )
                   )
                 ),
                 sequence(
-                  token("I-O"),
+                  keyword("I-O"),
                   plus(
                     fileName()
                   )
                 ),
                 sequence(
-                  token("EXTEND"),
+                  keyword("EXTEND"),
                   plus(
                     fileName()
                   )
@@ -15558,7 +15569,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         performStatementParser = future;
         future.setParser(
           sequence(
-            token("PERFORM"),
+            keyword("PERFORM"),
             choice(
               sequence(
                 optional(
@@ -15571,20 +15582,20 @@ public class CobolGrammar extends CobolBaseGrammar {
                 choice(
                   sequence(
                     nestedStatements(),
-                    token("END-PERFORM")
+                    keyword("END-PERFORM")
                   ),
                   as("nestedStatements",
                     sequence(
                       statement(),
                       not(
-                        token("THRU")
+                        keyword("THRU")
                       ),
                       not(
-                        token("THROUGH")
+                        keyword("THROUGH")
                       )
                     )
                   ),
-                  token("END-PERFORM")
+                  keyword("END-PERFORM")
                 )
               ),
               sequence(
@@ -15592,8 +15603,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                 optional(
                   sequence(
                     choice(
-                      token("THROUGH"),
-                      token("THRU")
+                      keyword("THROUGH"),
+                      keyword("THRU")
                     ),
                     procedureName()
                   )
@@ -15632,7 +15643,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               identifier(),
               integer()
             ),
-            token("TIMES")
+            keyword("TIMES")
           )
         );
       }
@@ -15655,12 +15666,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("TEST"),
+            keyword("TEST"),
             choice(
-              token("BEFORE"),
-              token("AFTER")
+              keyword("BEFORE"),
+              keyword("AFTER")
             )
           )
         );
@@ -15688,13 +15699,13 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             choice(
               sequence(
-                token("UNTIL"),
+                keyword("UNTIL"),
                 choice(
                   condition(),
-                  token("EXIT")
+                  keyword("EXIT")
                 )
               ),
-              token("FOREVER")
+              keyword("FOREVER")
             )
           )
         );
@@ -15720,11 +15731,11 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               testPosition()
             ),
-            token("VARYING"),
+            keyword("VARYING"),
             identifier(),
             as("from",
               sequence(
-                token("FROM"),
+                keyword("FROM"),
                 choice(
                   literal(),
                   identifier()
@@ -15733,7 +15744,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("by",
               sequence(
-                token("BY"),
+                keyword("BY"),
                 choice(
                   literal(),
                   identifier()
@@ -15742,18 +15753,18 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("until",
               sequence(
-                token("UNTIL"),
+                keyword("UNTIL"),
                 condition()
               )
             ),
             star(
               as("after",
                 sequence(
-                  token("AFTER"),
+                  keyword("AFTER"),
                   identifier(),
                   as("from",
                     sequence(
-                      token("FROM"),
+                      keyword("FROM"),
                       choice(
                         literal(),
                         identifier()
@@ -15762,7 +15773,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   ),
                   as("by",
                     sequence(
-                      token("BY"),
+                      keyword("BY"),
                       choice(
                         literal(),
                         identifier()
@@ -15771,7 +15782,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   ),
                   as("until",
                     sequence(
-                      token("UNTIL"),
+                      keyword("UNTIL"),
                       condition()
                     )
                   )
@@ -15799,7 +15810,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         purgeStatementParser = future;
         future.setParser(
           sequence(
-            token("PURGE"),
+            keyword("PURGE"),
             cdName()
           )
         );
@@ -15822,7 +15833,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         raiseStatementParser = future;
         future.setParser(
           sequence(
-            token("RAISE"),
+            keyword("RAISE"),
             optional(
               identifier()
             )
@@ -15847,52 +15858,52 @@ public class CobolGrammar extends CobolBaseGrammar {
         readStatementParser = future;
         future.setParser(
           sequence(
-            token("READ"),
+            keyword("READ"),
             fileName(),
             optional(
               choice(
-                token("NEXT"),
-                token("PREVIOUS")
+                keyword("NEXT"),
+                keyword("PREVIOUS")
               )
             ),
             optional(
-              token("RECORD")
+              keyword("RECORD")
             ),
             optional(
               sequence(
-                token("INTO"),
+                keyword("INTO"),
                 identifier_format2()
               )
             ),
             optional(
               choice(
                 sequence(
-                  token("ADVANCING"),
+                  keyword("ADVANCING"),
                   optional(
-                    token("ON")
+                    keyword("ON")
                   ),
-                  token("LOCK")
+                  keyword("LOCK")
                 ),
                 sequence(
-                  token("IGNORING"),
-                  token("LOCK")
+                  keyword("IGNORING"),
+                  keyword("LOCK")
                 ),
                 sequence(
                   optional(
-                    token("WITH")
+                    keyword("WITH")
                   ),
                   choice(
                     sequence(
                       optional(
                         choice(
-                          token("KEPT"),
-                          token("NO"),
-                          token("IGNORE")
+                          keyword("KEPT"),
+                          keyword("NO"),
+                          keyword("IGNORE")
                         )
                       ),
-                      token("LOCK")
+                      keyword("LOCK")
                     ),
-                    token("WAIT")
+                    keyword("WAIT")
                   )
                 ),
                 retryPhrase()
@@ -15900,9 +15911,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                token("KEY"),
+                keyword("KEY"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 qualifiedDataName()
               )
@@ -15920,7 +15931,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              token("END-READ")
+              keyword("END-READ")
             )
           )
         );
@@ -15944,11 +15955,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
             choice(
               readLockClause(),
-              token("WAIT")
+              keyword("WAIT")
             )
           )
         );
@@ -15973,12 +15984,12 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             optional(
               choice(
-                token("KEPT"),
-                token("NO"),
-                token("IGNORE")
+                keyword("KEPT"),
+                keyword("NO"),
+                keyword("IGNORE")
               )
             ),
-            token("LOCK")
+            keyword("LOCK")
           )
         );
       }
@@ -16000,8 +16011,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         readyTraceStatementParser = future;
         future.setParser(
           sequence(
-            token("READY"),
-            token("TRACE"),
+            keyword("READY"),
+            keyword("TRACE"),
             optional(
               literal(".")
             )
@@ -16026,31 +16037,31 @@ public class CobolGrammar extends CobolBaseGrammar {
         receiveStatementParser = future;
         future.setParser(
           sequence(
-            token("RECEIVE"),
+            keyword("RECEIVE"),
             choice(
               sequence(
                 dataName(),
-                token("FROM"),
+                keyword("FROM"),
                 choice(
                   sequence(
-                    token("THREAD"),
+                    keyword("THREAD"),
                     dataName()
                   ),
                   sequence(
-                    token("LAST"),
-                    token("THREAD")
+                    keyword("LAST"),
+                    keyword("THREAD")
                   ),
                   sequence(
-                    token("ANY"),
-                    token("THREAD")
+                    keyword("ANY"),
+                    keyword("THREAD")
                   )
                 ),
                 optional(
                   permuted(
                     sequence(
-                      token("BEFORE"),
+                      keyword("BEFORE"),
                       optional(
-                        token("TIME")
+                        keyword("TIME")
                       ),
                       choice(
                         numeric(),
@@ -16059,22 +16070,22 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     sequence(
                       optional(
-                        token("WITH")
+                        keyword("WITH")
                       ),
-                      token("NO"),
-                      token("WAIT")
+                      keyword("NO"),
+                      keyword("WAIT")
                     ),
                     sequence(
-                      token("THREAD"),
+                      keyword("THREAD"),
                       optional(
-                        token("IN")
+                        keyword("IN")
                       ),
                       dataName()
                     ),
                     sequence(
-                      token("SIZE"),
+                      keyword("SIZE"),
                       optional(
-                        token("IN")
+                        keyword("IN")
                       ),
                       choice(
                         numeric(),
@@ -16082,9 +16093,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                       )
                     ),
                     sequence(
-                      token("STATUS"),
+                      keyword("STATUS"),
                       optional(
-                        token("IN")
+                        keyword("IN")
                       ),
                       choice(
                         alphanumericLiteral(),
@@ -16099,11 +16110,11 @@ public class CobolGrammar extends CobolBaseGrammar {
               sequence(
                 cdName(),
                 choice(
-                  token("MESSAGE"),
-                  token("SEGMENT")
+                  keyword("MESSAGE"),
+                  keyword("SEGMENT")
                 ),
                 optional(
-                  token("INTO")
+                  keyword("INTO")
                 ),
                 identifier(),
                 optional(
@@ -16115,7 +16126,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              token("END-RECEIVE")
+              keyword("END-RECEIVE")
             )
           )
         );
@@ -16138,8 +16149,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         noDataParser = future;
         future.setParser(
           sequence(
-            token("NO"),
-            token("DATA"),
+            keyword("NO"),
+            keyword("DATA"),
             nestedStatements()
           )
         );
@@ -16162,8 +16173,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         withDataParser = future;
         future.setParser(
           sequence(
-            token("WITH"),
-            token("DATA"),
+            keyword("WITH"),
+            keyword("DATA"),
             nestedStatements()
           )
         );
@@ -16186,11 +16197,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         releaseStatementParser = future;
         future.setParser(
           sequence(
-            token("RELEASE"),
+            keyword("RELEASE"),
             recordName(),
             optional(
               sequence(
-                token("FROM"),
+                keyword("FROM"),
                 identifier()
               )
             )
@@ -16215,8 +16226,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         resetTraceStatementParser = future;
         future.setParser(
           sequence(
-            token("RESET"),
-            token("TRACE"),
+            keyword("RESET"),
+            keyword("TRACE"),
             optional(
               literal(".")
             )
@@ -16241,15 +16252,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         returnStatementParser = future;
         future.setParser(
           sequence(
-            token("RETURN"),
+            keyword("RETURN"),
             fileName(),
             optional(
-              token("RECORD")
+              keyword("RECORD")
             ),
             optional(
               as("into",
                 sequence(
-                  token("INTO"),
+                  keyword("INTO"),
                   identifier()
                 )
               )
@@ -16259,7 +16270,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notAtEnd()
             ),
             optional(
-              token("END-RETURN")
+              keyword("END-RETURN")
             )
           )
         );
@@ -16282,17 +16293,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         rewriteStatementParser = future;
         future.setParser(
           sequence(
-            token("REWRITE"),
+            keyword("REWRITE"),
             choice(
               sequence(
-                token("FILE"),
+                keyword("FILE"),
                 fileName()
               ),
               recordName()
             ),
             optional(
               sequence(
-                token("FROM"),
+                keyword("FROM"),
                 choice(
                   identifier(),
                   literal()
@@ -16305,12 +16316,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
                 optional(
-                  token("NO")
+                  keyword("NO")
                 ),
-                token("LOCK")
+                keyword("LOCK")
               )
             ),
             optional(
@@ -16320,7 +16331,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              token("END-REWRITE")
+              keyword("END-REWRITE")
             )
           )
         );
@@ -16342,7 +16353,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("rollbackStatement", PUBLIC, true);
         rollbackStatementParser = future;
         future.setParser(
-          token("ROLLBACK")
+          keyword("ROLLBACK")
         );
       }
     
@@ -16363,17 +16374,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         searchStatementParser = future;
         future.setParser(
           sequence(
-            token("SEARCH"),
+            keyword("SEARCH"),
             choice(
               sequence(
-                token("ALL"),
+                keyword("ALL"),
                 identifier()
               ),
               sequence(
                 identifier(),
                 optional(
                   sequence(
-                    token("VARYING"),
+                    keyword("VARYING"),
                     choice(
                       identifier(),
                       indexName()
@@ -16388,20 +16399,20 @@ public class CobolGrammar extends CobolBaseGrammar {
             plus(
               as("when",
                 sequence(
-                  token("WHEN"),
+                  keyword("WHEN"),
                   condition(),
                   choice(
                     nestedStatements(),
                     sequence(
-                      token("NEXT"),
-                      token("SENTENCE")
+                      keyword("NEXT"),
+                      keyword("SENTENCE")
                     )
                   )
                 )
               )
             ),
             optional(
-              token("END-SEARCH")
+              keyword("END-SEARCH")
             )
           )
         );
@@ -16425,9 +16436,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("AT")
+              keyword("AT")
             ),
-            token("END"),
+            keyword("END"),
             nestedStatements()
           )
         );
@@ -16450,11 +16461,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         notAtEndParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
+            keyword("NOT"),
             optional(
-              token("AT")
+              keyword("AT")
             ),
-            token("END"),
+            keyword("END"),
             nestedStatements()
           )
         );
@@ -16477,24 +16488,24 @@ public class CobolGrammar extends CobolBaseGrammar {
         sendStatementParser = future;
         future.setParser(
           sequence(
-            token("SEND"),
+            keyword("SEND"),
             choice(
               sequence(
                 dataName(),
-                token("TO"),
+                keyword("TO"),
                 choice(
                   sequence(
-                    token("LAST"),
-                    token("THREAD")
+                    keyword("LAST"),
+                    keyword("THREAD")
                   ),
                   sequence(
-                    token("ALL"),
-                    token("THREADS")
+                    keyword("ALL"),
+                    keyword("THREADS")
                   ),
                   plus(
                     sequence(
                       optional(
-                        token("THREAD")
+                        keyword("THREAD")
                       ),
                       dataName()
                     )
@@ -16505,32 +16516,32 @@ public class CobolGrammar extends CobolBaseGrammar {
                 cdName(),
                 optional(
                   sequence(
-                    token("FROM"),
+                    keyword("FROM"),
                     identifier()
                   )
                 ),
                 optional(
                   sequence(
                     optional(
-                      token("WITH")
+                      keyword("WITH")
                     ),
                     choice(
-                      token("ESI"),
-                      token("EMI"),
-                      token("EGI"),
+                      keyword("ESI"),
+                      keyword("EMI"),
+                      keyword("EGI"),
                       identifier()
                     ),
                     optional(
                       sequence(
                         choice(
-                          token("BEFORE"),
-                          token("AFTER")
+                          keyword("BEFORE"),
+                          keyword("AFTER")
                         ),
                         optional(
-                          token("ADVANCING")
+                          keyword("ADVANCING")
                         ),
                         choice(
-                          token("PAGE"),
+                          keyword("PAGE"),
                           sequence(
                             choice(
                               zero(),
@@ -16539,8 +16550,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                             ),
                             optional(
                               choice(
-                                token("LINE"),
-                                token("LINES")
+                                keyword("LINE"),
+                                keyword("LINES")
                               )
                             )
                           ),
@@ -16550,9 +16561,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     optional(
                       sequence(
-                        token("REPLACING"),
+                        keyword("REPLACING"),
                         optional(
-                          token("LINE")
+                          keyword("LINE")
                         )
                       )
                     )
@@ -16581,11 +16592,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         serviceStatementParser = future;
         future.setParser(
           sequence(
-            token("SERVICE"),
+            keyword("SERVICE"),
             choice(
-              token("LABEL"),
+              keyword("LABEL"),
               sequence(
-                token("RELOAD"),
+                keyword("RELOAD"),
                 identifier()
               )
             )
@@ -16611,29 +16622,29 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("SORT"),
+              keyword("SORT"),
               fileName(),
               plus(
                 sequence(
                   optional(
-                    token("ON")
+                    keyword("ON")
                   ),
                   plus(
                     as("key",
                       sequence(
                         choice(
                           as("asc",
-                            token("ASCENDING")
+                            keyword("ASCENDING")
                           ),
                           as("desc",
-                            token("DESCENDING")
+                            keyword("DESCENDING")
                           )
                         ),
                         optional(
-                          token("KEY")
+                          keyword("KEY")
                         ),
                         optional(
-                          token("IS")
+                          keyword("IS")
                         ),
                         plus(
                           qualifiedDataName()
@@ -16647,13 +16658,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                 as("duplicates",
                   sequence(
                     optional(
-                      token("WITH")
+                      keyword("WITH")
                     ),
-                    token("DUPLICATES"),
+                    keyword("DUPLICATES"),
                     optional(
                       sequence(
-                        token("IN"),
-                        token("ORDER")
+                        keyword("IN"),
+                        keyword("ORDER")
                       )
                     )
                   )
@@ -16663,11 +16674,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                 as("sequence",
                   sequence(
                     optional(
-                      token("COLLATING")
+                      keyword("COLLATING")
                     ),
-                    token("SEQUENCE"),
+                    keyword("SEQUENCE"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     alphabetName()
                   )
@@ -16676,17 +16687,17 @@ public class CobolGrammar extends CobolBaseGrammar {
               choice(
                 as("input",
                   sequence(
-                    token("INPUT"),
-                    token("PROCEDURE"),
+                    keyword("INPUT"),
+                    keyword("PROCEDURE"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     procedureName(),
                     optional(
                       sequence(
                         choice(
-                          token("THROUGH"),
-                          token("THRU")
+                          keyword("THROUGH"),
+                          keyword("THRU")
                         ),
                         procedureName()
                       )
@@ -16695,7 +16706,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 as("using",
                   sequence(
-                    token("USING"),
+                    keyword("USING"),
                     plus(
                       fileName()
                     )
@@ -16705,17 +16716,17 @@ public class CobolGrammar extends CobolBaseGrammar {
               choice(
                 as("output",
                   sequence(
-                    token("OUTPUT"),
-                    token("PROCEDURE"),
+                    keyword("OUTPUT"),
+                    keyword("PROCEDURE"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     procedureName(),
                     optional(
                       sequence(
                         choice(
-                          token("THROUGH"),
-                          token("THRU")
+                          keyword("THROUGH"),
+                          keyword("THRU")
                         ),
                         procedureName()
                       )
@@ -16724,7 +16735,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 as("giving",
                   sequence(
-                    token("GIVING"),
+                    keyword("GIVING"),
                     plus(
                       fileName()
                     )
@@ -16733,29 +16744,29 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             sequence(
-              token("SORT"),
+              keyword("SORT"),
               dataName(),
               plus(
                 sequence(
                   optional(
-                    token("ON")
+                    keyword("ON")
                   ),
                   plus(
                     as("key",
                       sequence(
                         choice(
                           as("asc",
-                            token("ASCENDING")
+                            keyword("ASCENDING")
                           ),
                           as("desc",
-                            token("DESCENDING")
+                            keyword("DESCENDING")
                           )
                         ),
                         optional(
-                          token("KEY")
+                          keyword("KEY")
                         ),
                         optional(
-                          token("IS")
+                          keyword("IS")
                         ),
                         plus(
                           qualifiedDataName()
@@ -16769,13 +16780,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                 as("duplicates",
                   sequence(
                     optional(
-                      token("WITH")
+                      keyword("WITH")
                     ),
-                    token("DUPLICATES"),
+                    keyword("DUPLICATES"),
                     optional(
                       sequence(
-                        token("IN"),
-                        token("ORDER")
+                        keyword("IN"),
+                        keyword("ORDER")
                       )
                     )
                   )
@@ -16785,11 +16796,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                 as("sequence",
                   sequence(
                     optional(
-                      token("COLLATING")
+                      keyword("COLLATING")
                     ),
-                    token("SEQUENCE"),
+                    keyword("SEQUENCE"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     alphabetName()
                   )
@@ -16817,7 +16828,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         setStatementParser = future;
         future.setParser(
           sequence(
-            token("SET"),
+            keyword("SET"),
             choice(
               setEnvironmentVariable(),
               setOther()
@@ -16852,13 +16863,13 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             as("environment",
               sequence(
-                token("ENVIRONMENT"),
+                keyword("ENVIRONMENT"),
                 literal()
               )
             ),
             as("to",
               sequence(
-                token("TO"),
+                keyword("TO"),
                 literal()
               )
             )
@@ -16893,38 +16904,38 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               as("to",
                 sequence(
-                  token("TO"),
+                  keyword("TO"),
                   choice(
                     as("on",
-                      token("ON")
+                      keyword("ON")
                     ),
                     as("off",
-                      token("OFF")
+                      keyword("OFF")
                     ),
                     as("true",
-                      token("TRUE")
+                      keyword("TRUE")
                     ),
                     as("false",
-                      token("FALSE")
+                      keyword("FALSE")
                     ),
                     addressOf(),
                     as("formatMonitor",
                       sequence(
                         optional(
-                          token("NOT")
+                          keyword("NOT")
                         ),
                         choice(
-                          token("BROWSING"),
-                          token("READING"),
-                          token("WRITING")
+                          keyword("BROWSING"),
+                          keyword("READING"),
+                          keyword("WRITING")
                         ),
                         optional(
                           sequence(
-                            token("CONVERTING"),
-                            token("FROM"),
+                            keyword("CONVERTING"),
+                            keyword("FROM"),
                             choice(
-                              token("BROWSING"),
-                              token("WRITING")
+                              keyword("BROWSING"),
+                              keyword("WRITING")
                             )
                           )
                         )
@@ -16932,7 +16943,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     as("entry",
                       sequence(
-                        token("ENTRY"),
+                        keyword("ENTRY"),
                         choice(
                           identifier(),
                           literal()
@@ -16940,10 +16951,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                       )
                     ),
                     as("null",
-                      token("NULL")
+                      keyword("NULL")
                     ),
                     as("null",
-                      token("NULLS")
+                      keyword("NULLS")
                     ),
                     figurativeConstant(),
                     name(),
@@ -16954,8 +16965,8 @@ public class CobolGrammar extends CobolBaseGrammar {
               ),
               as("up",
                 sequence(
-                  token("UP"),
-                  token("BY"),
+                  keyword("UP"),
+                  keyword("BY"),
                   choice(
                     identifier(),
                     integer()
@@ -16964,8 +16975,8 @@ public class CobolGrammar extends CobolBaseGrammar {
               ),
               as("down",
                 sequence(
-                  token("DOWN"),
-                  token("BY"),
+                  keyword("DOWN"),
+                  keyword("BY"),
                   choice(
                     identifier(),
                     integer()
@@ -16994,31 +17005,31 @@ public class CobolGrammar extends CobolBaseGrammar {
         startStatementParser = future;
         future.setParser(
           sequence(
-            token("START"),
+            keyword("START"),
             fileName(),
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("NO"),
-                token("LOCK")
+                keyword("NO"),
+                keyword("LOCK")
               )
             ),
             optional(
               choice(
-                token("FIRST"),
-                token("LAST"),
+                keyword("FIRST"),
+                keyword("LAST"),
                 sequence(
-                  token("KEY"),
+                  keyword("KEY"),
                   relop(),
                   identifier(),
                   optional(
                     sequence(
                       optional(
-                        token("WITH")
+                        keyword("WITH")
                       ),
-                      token("LENGTH"),
+                      keyword("LENGTH"),
                       arithmeticExpression()
                     )
                   )
@@ -17038,7 +17049,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              token("END-START")
+              keyword("END-START")
             )
           )
         );
@@ -17062,9 +17073,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("WITH")
+              keyword("WITH")
             ),
-            token("SIZE"),
+            keyword("SIZE"),
             choice(
               identifier(),
               integer()
@@ -17090,19 +17101,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         whileKeyModifierParser = future;
         future.setParser(
           sequence(
-            token("WHILE"),
+            keyword("WHILE"),
             optional(
               sequence(
-                token("KEY"),
+                keyword("KEY"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 )
               )
             ),
             optional(
-              token("NOT")
+              keyword("NOT")
             ),
-            token("LIKE"),
+            keyword("LIKE"),
             star(
               likeMods()
             ),
@@ -17133,21 +17144,21 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             as("trimmedRight",
               sequence(
-                token("TRIMMED"),
-                token("RIGHT")
+                keyword("TRIMMED"),
+                keyword("RIGHT")
               )
             ),
             as("trimmedLeft",
               sequence(
-                token("TRIMMED"),
-                token("LEFT")
+                keyword("TRIMMED"),
+                keyword("LEFT")
               )
             ),
             as("caseSensitive",
-              token("CASE-SENSITIVE")
+              keyword("CASE-SENSITIVE")
             ),
             as("caseInsensitive",
-              token("CASE-INSENSITIVE")
+              keyword("CASE-INSENSITIVE")
             )
           )
         );
@@ -17170,18 +17181,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         stopStatementParser = future;
         future.setParser(
           sequence(
-            token("STOP"),
+            keyword("STOP"),
             choice(
               sequence(
                 as("endpoint",
-                  token("RUN")
+                  keyword("RUN")
                 ),
                 optional(
                   choice(
                     sequence(
                       choice(
-                        token("GIVING"),
-                        token("RETURNING")
+                        keyword("GIVING"),
+                        keyword("RETURNING")
                       ),
                       choice(
                         addressOf(),
@@ -17190,9 +17201,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                           integer(),
                           optional(
                             sequence(
-                              token("SIZE"),
+                              keyword("SIZE"),
                               optional(
-                                token("IS")
+                                keyword("IS")
                               ),
                               integer()
                             )
@@ -17202,14 +17213,14 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     sequence(
                       optional(
-                        token("WITH")
+                        keyword("WITH")
                       ),
                       choice(
-                        token("ERROR"),
-                        token("NORMAL")
+                        keyword("ERROR"),
+                        keyword("NORMAL")
                       ),
                       optional(
-                        token("STATUS")
+                        keyword("STATUS")
                       ),
                       optional(
                         choice(
@@ -17222,7 +17233,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               ),
               as("endpoint",
-                token("ITERATOR")
+                keyword("ITERATOR")
               ),
               literal()
             )
@@ -17247,7 +17258,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         stringStatementParser = future;
         future.setParser(
           sequence(
-            token("STRING"),
+            keyword("STRING"),
             plus(
               sequence(
                 choice(
@@ -17256,12 +17267,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 optional(
                   sequence(
-                    token("DELIMITED"),
+                    keyword("DELIMITED"),
                     optional(
-                      token("BY")
+                      keyword("BY")
                     ),
                     choice(
-                      token("SIZE"),
+                      keyword("SIZE"),
                       identifier(),
                       literal()
                     )
@@ -17269,14 +17280,14 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            token("INTO"),
+            keyword("INTO"),
             identifier(),
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("POINTER"),
+                keyword("POINTER"),
                 identifier()
               )
             ),
@@ -17287,7 +17298,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnOverflow()
             ),
             optional(
-              token("END-STRING")
+              keyword("END-STRING")
             )
           )
         );
@@ -17310,7 +17321,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         subtractStatementParser = future;
         future.setParser(
           sequence(
-            token("SUBTRACT"),
+            keyword("SUBTRACT"),
             choice(
               subtractStatement$format1(),
               subtractStatement$format2(),
@@ -17323,7 +17334,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnSizeError()
             ),
             optional(
-              token("END-SUBTRACT")
+              keyword("END-SUBTRACT")
             )
           )
         );
@@ -17349,18 +17360,18 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("corresponding",
               sequence(
                 choice(
-                  token("CORRESPONDING"),
-                  token("CORR")
+                  keyword("CORRESPONDING"),
+                  keyword("CORR")
                 ),
                 identifier()
               )
             ),
             as("from",
               sequence(
-                token("FROM"),
+                keyword("FROM"),
                 identifier(),
                 optional(
-                  token("ROUNDED")
+                  keyword("ROUNDED")
                 )
               )
             )
@@ -17394,7 +17405,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               as("from",
                 sequence(
-                  token("FROM"),
+                  keyword("FROM"),
                   choice(
                     identifier(),
                     literal()
@@ -17404,12 +17415,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("giving",
               sequence(
-                token("GIVING"),
+                keyword("GIVING"),
                 plus(
                   sequence(
                     identifier(),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -17444,12 +17455,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             as("from",
               sequence(
-                token("FROM"),
+                keyword("FROM"),
                 plus(
                   sequence(
                     identifier(),
                     optional(
-                      token("ROUNDED")
+                      keyword("ROUNDED")
                     )
                   )
                 )
@@ -17476,9 +17487,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         suppressStatementParser = future;
         future.setParser(
           sequence(
-            token("SUPPRESS"),
+            keyword("SUPPRESS"),
             optional(
-              token("PRINTING")
+              keyword("PRINTING")
             )
           )
         );
@@ -17501,7 +17512,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         terminateStatementParser = future;
         future.setParser(
           sequence(
-            token("TERMINATE"),
+            keyword("TERMINATE"),
             plus(
               reportName()
             )
@@ -17526,18 +17537,18 @@ public class CobolGrammar extends CobolBaseGrammar {
         transformStatementParser = future;
         future.setParser(
           sequence(
-            token("TRANSFORM"),
+            keyword("TRANSFORM"),
             identifier(),
             optional(
-              token("CHARACTERS")
+              keyword("CHARACTERS")
             ),
-            token("FROM"),
+            keyword("FROM"),
             choice(
               figurativeConstant(),
               alphanumericLiteral(),
               identifier()
             ),
-            token("TO"),
+            keyword("TO"),
             choice(
               figurativeConstant(),
               alphanumericLiteral(),
@@ -17564,12 +17575,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         unlockStatementParser = future;
         future.setParser(
           sequence(
-            token("UNLOCK"),
+            keyword("UNLOCK"),
             fileName(),
             optional(
               choice(
-                token("RECORD"),
-                token("RECORDS")
+                keyword("RECORD"),
+                keyword("RECORDS")
               )
             )
           )
@@ -17593,16 +17604,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         unstringStatementParser = future;
         future.setParser(
           sequence(
-            token("UNSTRING"),
+            keyword("UNSTRING"),
             identifier(),
             optional(
               sequence(
-                token("DELIMITED"),
+                keyword("DELIMITED"),
                 optional(
-                  token("BY")
+                  keyword("BY")
                 ),
                 optional(
-                  token("ALL")
+                  keyword("ALL")
                 ),
                 choice(
                   identifier(),
@@ -17610,9 +17621,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 star(
                   sequence(
-                    token("OR"),
+                    keyword("OR"),
                     optional(
-                      token("ALL")
+                      keyword("ALL")
                     ),
                     choice(
                       identifier(),
@@ -17622,24 +17633,24 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            token("INTO"),
+            keyword("INTO"),
             plus(
               sequence(
                 identifier(),
                 optional(
                   sequence(
-                    token("DELIMITER"),
+                    keyword("DELIMITER"),
                     optional(
-                      token("IN")
+                      keyword("IN")
                     ),
                     identifier()
                   )
                 ),
                 optional(
                   sequence(
-                    token("COUNT"),
+                    keyword("COUNT"),
                     optional(
-                      token("IN")
+                      keyword("IN")
                     ),
                     identifier()
                   )
@@ -17649,17 +17660,17 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("POINTER"),
+                keyword("POINTER"),
                 identifier()
               )
             ),
             optional(
               sequence(
-                token("TALLYING"),
+                keyword("TALLYING"),
                 optional(
-                  token("IN")
+                  keyword("IN")
                 ),
                 identifier()
               )
@@ -17671,7 +17682,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnOverflow()
             ),
             optional(
-              token("END-UNSTRING")
+              keyword("END-UNSTRING")
             )
           )
         );
@@ -17694,7 +17705,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         useStatementParser = future;
         future.setParser(
           sequence(
-            token("USE"),
+            keyword("USE"),
             choice(
               errorDeclarative(),
               debugDeclarative(),
@@ -17723,32 +17734,32 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("GLOBAL")
+              keyword("GLOBAL")
             ),
-            token("AFTER"),
+            keyword("AFTER"),
             optional(
-              token("STANDARD")
+              keyword("STANDARD")
             ),
             choice(
-              token("ERROR"),
-              token("EXCEPTION")
+              keyword("ERROR"),
+              keyword("EXCEPTION")
             ),
-            token("PROCEDURE"),
+            keyword("PROCEDURE"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
             choice(
-              token("INPUT"),
-              token("OUTPUT"),
-              token("I-O"),
-              token("EXTEND"),
+              keyword("INPUT"),
+              keyword("OUTPUT"),
+              keyword("I-O"),
+              keyword("EXTEND"),
               star(
                 fileName()
               )
             ),
             optional(
               sequence(
-                token("GIVING"),
+                keyword("GIVING"),
                 dataName(),
                 optional(
                   dataName()
@@ -17777,27 +17788,27 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("FOR")
+              keyword("FOR")
             ),
-            token("DEBUGGING"),
+            keyword("DEBUGGING"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
             star(
               choice(
                 sequence(
-                  token("ALL"),
-                  token("PROCEDURES")
+                  keyword("ALL"),
+                  keyword("PROCEDURES")
                 ),
                 sequence(
                   optional(
                     sequence(
-                      token("ALL"),
+                      keyword("ALL"),
                       optional(
-                        token("REFERENCES")
+                        keyword("REFERENCES")
                       ),
                       optional(
-                        token("OF")
+                        keyword("OF")
                       )
                     )
                   ),
@@ -17829,35 +17840,35 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("GLOBAL")
+              keyword("GLOBAL")
             ),
-            token("AFTER"),
+            keyword("AFTER"),
             optional(
-              token("STANDARD")
+              keyword("STANDARD")
             ),
             optional(
               choice(
-                token("BEGINNING"),
-                token("ENDING")
+                keyword("BEGINNING"),
+                keyword("ENDING")
               )
             ),
             optional(
               choice(
-                token("FILE"),
-                token("REEL"),
-                token("UNIT")
+                keyword("FILE"),
+                keyword("REEL"),
+                keyword("UNIT")
               )
             ),
-            token("LABEL"),
-            token("PROCEDURE"),
+            keyword("LABEL"),
+            keyword("PROCEDURE"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
             choice(
-              token("INPUT"),
-              token("OUTPUT"),
-              token("I-O"),
-              token("EXTEND"),
+              keyword("INPUT"),
+              keyword("OUTPUT"),
+              keyword("I-O"),
+              keyword("EXTEND"),
               star(
                 fileName()
               )
@@ -17884,10 +17895,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("GLOBAL")
+              keyword("GLOBAL")
             ),
-            token("BEFORE"),
-            token("REPORTING"),
+            keyword("BEFORE"),
+            keyword("REPORTING"),
             identifier()
           )
         );
@@ -17911,25 +17922,25 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("WAIT"),
+              keyword("WAIT"),
               optional(
-                token("FOR")
+                keyword("FOR")
               ),
               threadPointer(),
               optional(
                 sequence(
-                  token("RETURNING"),
+                  keyword("RETURNING"),
                   optional(
-                    token("INTO")
+                    keyword("INTO")
                   ),
                   identifier()
                 )
               ),
               optional(
                 sequence(
-                  token("STATUS"),
+                  keyword("STATUS"),
                   optional(
-                    token("IS")
+                    keyword("IS")
                   ),
                   identifier()
                 )
@@ -17941,13 +17952,13 @@ public class CobolGrammar extends CobolBaseGrammar {
                 notOnException()
               ),
               optional(
-                token("END-WAIT")
+                keyword("END-WAIT")
               )
             ),
             sequence(
-              token("WAIT"),
+              keyword("WAIT"),
               optional(
-                token("FOR")
+                keyword("FOR")
               ),
               eventPointer()
             )
@@ -17972,17 +17983,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         writeStatementParser = future;
         future.setParser(
           sequence(
-            token("WRITE"),
+            keyword("WRITE"),
             choice(
               sequence(
-                token("FILE"),
+                keyword("FILE"),
                 fileName()
               ),
               recordName()
             ),
             optional(
               sequence(
-                token("FROM"),
+                keyword("FROM"),
                 choice(
                   identifier(),
                   literal()
@@ -17992,19 +18003,19 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 choice(
-                  token("AFTER"),
-                  token("BEFORE")
+                  keyword("AFTER"),
+                  keyword("BEFORE")
                 ),
                 optional(
                   choice(
-                    token("ADVANCING"),
-                    token("POSITIONING")
+                    keyword("ADVANCING"),
+                    keyword("POSITIONING")
                   )
                 ),
                 choice(
-                  token("TAB"),
-                  token("FORMFEED"),
-                  token("PAGE"),
+                  keyword("TAB"),
+                  keyword("FORMFEED"),
+                  keyword("PAGE"),
                   sequence(
                     choice(
                       identifier(),
@@ -18013,8 +18024,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                     ),
                     optional(
                       choice(
-                        token("LINE"),
-                        token("LINES")
+                        keyword("LINE"),
+                        keyword("LINES")
                       )
                     )
                   ),
@@ -18034,12 +18045,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
                 optional(
-                  token("NO")
+                  keyword("NO")
                 ),
-                token("LOCK")
+                keyword("LOCK")
               )
             ),
             optional(
@@ -18049,7 +18060,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              token("END-WRITE")
+              keyword("END-WRITE")
             )
           )
         );
@@ -18073,11 +18084,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("AT")
+              keyword("AT")
             ),
             choice(
-              token("END-OF-PAGE"),
-              token("EOP")
+              keyword("END-OF-PAGE"),
+              keyword("EOP")
             ),
             nestedStatements()
           )
@@ -18101,13 +18112,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         notAtEndOfPageParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
+            keyword("NOT"),
             optional(
-              token("AT")
+              keyword("AT")
             ),
             choice(
-              token("END-OF-PAGE"),
-              token("EOP")
+              keyword("END-OF-PAGE"),
+              keyword("EOP")
             ),
             nestedStatements()
           )
@@ -18131,16 +18142,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         xmlGenerateStatementParser = future;
         future.setParser(
           sequence(
-            token("XML"),
-            token("GENERATE"),
+            keyword("XML"),
+            keyword("GENERATE"),
             identifier(),
-            token("FROM"),
+            keyword("FROM"),
             identifier(),
             optional(
               sequence(
-                token("COUNT"),
+                keyword("COUNT"),
                 optional(
-                  token("IN")
+                  keyword("IN")
                 ),
                 identifier()
               )
@@ -18148,33 +18159,33 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("ENCODING"),
-                cobolWord()
+                keyword("ENCODING"),
+                justAName()
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("XML-DECLARATION")
+                keyword("XML-DECLARATION")
               )
             ),
             optional(
               sequence(
                 optional(
-                  token("WITH")
+                  keyword("WITH")
                 ),
-                token("ATTRIBUTES")
+                keyword("ATTRIBUTES")
               )
             ),
             optional(
               sequence(
-                token("NAMESPACE"),
+                keyword("NAMESPACE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 choice(
                   identifier(),
@@ -18182,9 +18193,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 optional(
                   sequence(
-                    token("NAMESPACE-PREFIX"),
+                    keyword("NAMESPACE-PREFIX"),
                     optional(
-                      token("IS")
+                      keyword("IS")
                     ),
                     choice(
                       identifier(),
@@ -18201,7 +18212,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnException()
             ),
             optional(
-              token("END-XML")
+              keyword("END-XML")
             )
           )
         );
@@ -18224,15 +18235,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         xmlParseStatementParser = future;
         future.setParser(
           sequence(
-            token("XML"),
-            token("PARSE"),
+            keyword("XML"),
+            keyword("PARSE"),
             identifier(),
             optional(
               sequence(
-                token("PROCESSING"),
-                token("PROCEDURE"),
+                keyword("PROCESSING"),
+                keyword("PROCEDURE"),
                 optional(
-                  token("IS")
+                  keyword("IS")
                 ),
                 procedureName()
               )
@@ -18240,8 +18251,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 choice(
-                  token("THROUGH"),
-                  token("THRU")
+                  keyword("THROUGH"),
+                  keyword("THRU")
                 ),
                 procedureName()
               )
@@ -18253,7 +18264,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               notOnException()
             ),
             optional(
-              token("END-XML")
+              keyword("END-XML")
             )
           )
         );
@@ -18278,7 +18289,7 @@ public class CobolGrammar extends CobolBaseGrammar {
           plus(
             choice(
               sequence(
-                token("ATTRIBUTE"),
+                keyword("ATTRIBUTE"),
                 attributeName(),
                 literal("("),
                 skipto(
@@ -18287,8 +18298,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                 literal(")")
               ),
               sequence(
-                token("CUSTOM-ATTRIBUTE"),
-                token("IS"),
+                keyword("CUSTOM-ATTRIBUTE"),
+                keyword("IS"),
                 className(),
                 optional(
                   sequence(
@@ -18323,9 +18334,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("OVERFLOW"),
+            keyword("OVERFLOW"),
             nestedStatements()
           )
         );
@@ -18348,11 +18359,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         notOnOverflowParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
+            keyword("NOT"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("OVERFLOW"),
+            keyword("OVERFLOW"),
             nestedStatements()
           )
         );
@@ -18376,9 +18387,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("EXCEPTION"),
+            keyword("EXCEPTION"),
             nestedStatements()
           )
         );
@@ -18401,11 +18412,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         notOnExceptionParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
+            keyword("NOT"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("EXCEPTION"),
+            keyword("EXCEPTION"),
             nestedStatements()
           )
         );
@@ -18429,10 +18440,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("SIZE"),
-            token("ERROR"),
+            keyword("SIZE"),
+            keyword("ERROR"),
             nestedStatements()
           )
         );
@@ -18455,12 +18466,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         notOnSizeErrorParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
+            keyword("NOT"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("SIZE"),
-            token("ERROR"),
+            keyword("SIZE"),
+            keyword("ERROR"),
             nestedStatements()
           )
         );
@@ -18484,9 +18495,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("ESCAPE"),
+            keyword("ESCAPE"),
             nestedStatements()
           )
         );
@@ -18509,11 +18520,11 @@ public class CobolGrammar extends CobolBaseGrammar {
         notOnEscapeParser = future;
         future.setParser(
           sequence(
-            token("NOT"),
+            keyword("NOT"),
             optional(
-              token("ON")
+              keyword("ON")
             ),
-            token("ESCAPE"),
+            keyword("ESCAPE"),
             nestedStatements()
           )
         );
@@ -18568,13 +18579,13 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             sequence(
               literal("\u0024"),
-              token("SET")
+              keyword("SET")
             ),
             skipto(
               choice(
                 sequence(
                   literal("\u0024"),
-                  token("SET")
+                  keyword("SET")
                 ),
                 divisionStart(),
                 sourceUnit(),
@@ -18603,20 +18614,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             literal("\u0024"),
-            token("IF"),
+            keyword("IF"),
             operand(),
             optional(
               choice(
-                token("SET"),
+                keyword("SET"),
                 sequence(
                   optional(
-                    token("NOT")
+                    keyword("NOT")
                   ),
-                  token("DEFINED")
+                  keyword("DEFINED")
                 ),
                 sequence(
                   optional(
-                    token("NOT")
+                    keyword("NOT")
                   ),
                   choice(
                     literal("<"),
@@ -18634,7 +18645,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 literal("\u0024"),
-                token("ELSE"),
+                keyword("ELSE"),
                 choice(
                   compilerStatement(),
                   nestedStatements()
@@ -18642,7 +18653,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             literal("\u0024"),
-            token("END")
+            keyword("END")
           )
         );
       }
@@ -18665,10 +18676,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             literal("\u0024"),
-            token("DISPLAY"),
+            keyword("DISPLAY"),
             choice(
               sequence(
-                token("VCS"),
+                keyword("VCS"),
                 literal("="),
                 literal()
               ),
@@ -18699,7 +18710,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             verb(),
             literal(),
             identifier(),
-            cobolWord()
+            justAName()
           )
         );
       }
@@ -18724,22 +18735,22 @@ public class CobolGrammar extends CobolBaseGrammar {
             choice(
               sequence(
                 choice(
-                  token("ID"),
-                  token("IDENTIFICATION")
+                  keyword("ID"),
+                  keyword("IDENTIFICATION")
                 ),
-                token("DIVISION")
+                keyword("DIVISION")
               ),
               sequence(
-                token("ENVIRONMENT"),
-                token("DIVISION")
+                keyword("ENVIRONMENT"),
+                keyword("DIVISION")
               ),
               sequence(
-                token("DATA"),
-                token("DIVISION")
+                keyword("DATA"),
+                keyword("DIVISION")
               ),
               sequence(
-                token("PROCEDURE"),
-                token("DIVISION"),
+                keyword("PROCEDURE"),
+                keyword("DIVISION"),
                 skipto(
                   literal(".")
                 )
@@ -18768,20 +18779,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("CONFIGURATION"),
-              token("INPUT-OUTPUT"),
-              token("FILE"),
-              token("WORKING-STORAGE"),
-              token("THREAD-LOCAL-STORAGE"),
-              token("OBJECT-STORAGE"),
-              token("LOCAL-STORAGE"),
-              token("LINKAGE"),
-              token("COMMUNICATION"),
-              token("OBJECT"),
-              token("REPORT"),
-              token("SCREEN")
+              keyword("CONFIGURATION"),
+              keyword("INPUT-OUTPUT"),
+              keyword("FILE"),
+              keyword("WORKING-STORAGE"),
+              keyword("THREAD-LOCAL-STORAGE"),
+              keyword("OBJECT-STORAGE"),
+              keyword("LOCAL-STORAGE"),
+              keyword("LINKAGE"),
+              keyword("COMMUNICATION"),
+              keyword("OBJECT"),
+              keyword("REPORT"),
+              keyword("SCREEN")
             ),
-            token("SECTION"),
+            keyword("SECTION"),
             literal(".")
           )
         );
@@ -18805,16 +18816,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              token("SOURCE-COMPUTER"),
-              token("OBJECT-COMPUTER"),
-              token("SPECIAL-NAMES"),
-              token("REPOSITORY"),
-              token("CONSTRAINTS"),
-              token("CLASS-ATTRIBUTES"),
-              token("ASSEMBLY-ATTRIBUTES"),
-              token("FILE-CONTROL"),
-              token("I-O-CONTROL"),
-              token("CLASS-CONTROL")
+              keyword("SOURCE-COMPUTER"),
+              keyword("OBJECT-COMPUTER"),
+              keyword("SPECIAL-NAMES"),
+              keyword("REPOSITORY"),
+              keyword("CONSTRAINTS"),
+              keyword("CLASS-ATTRIBUTES"),
+              keyword("ASSEMBLY-ATTRIBUTES"),
+              keyword("FILE-CONTROL"),
+              keyword("I-O-CONTROL"),
+              keyword("CLASS-CONTROL")
             ),
             literal(".")
           )
@@ -18838,7 +18849,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         functionParser = future;
         future.setParser(
           sequence(
-            token("FUNCTION"),
+            keyword("FUNCTION"),
             choice(
               as("functionName",
                 choice(
@@ -18919,8 +18930,8 @@ public class CobolGrammar extends CobolBaseGrammar {
                 argument(),
                 optional(
                   choice(
-                    token("LEADING"),
-                    token("TRAILING")
+                    keyword("LEADING"),
+                    keyword("TRAILING")
                   )
                 ),
                 literal(")")
@@ -19119,17 +19130,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         identifier_format6Parser = future;
         future.setParser(
           choice(
-            token("EXCEPTION-OBJECT"),
-            token("NULL"),
-            token("SELF"),
+            keyword("EXCEPTION-OBJECT"),
+            keyword("NULL"),
+            keyword("SELF"),
             sequence(
               optional(
                 sequence(
                   className(),
-                  token("OF")
+                  keyword("OF")
                 )
               ),
-              token("SUPER")
+              keyword("SUPER")
             )
           )
         );
@@ -19152,9 +19163,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         dataAddressIdentifierParser = future;
         future.setParser(
           sequence(
-            token("ADDRESS"),
+            keyword("ADDRESS"),
             optional(
-              token("OF")
+              keyword("OF")
             ),
             identifier()
           )
@@ -19178,12 +19189,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         qualifiedLinageCounterParser = future;
         future.setParser(
           sequence(
-            token("LINAGE-COUNTER"),
+            keyword("LINAGE-COUNTER"),
             optional(
               sequence(
                 choice(
-                  token("IN"),
-                  token("OF")
+                  keyword("IN"),
+                  keyword("OF")
                 ),
                 as("fileName",
                   name()
@@ -19213,17 +19224,17 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               as("pageCounter",
-                token("PAGE-COUNTER")
+                keyword("PAGE-COUNTER")
               ),
               as("lineCounter",
-                token("LINE-COUNTER")
+                keyword("LINE-COUNTER")
               )
             ),
             optional(
               sequence(
                 choice(
-                  token("IN"),
-                  token("OF")
+                  keyword("IN"),
+                  keyword("OF")
                 ),
                 as("reportName",
                   name()
@@ -19287,8 +19298,8 @@ public class CobolGrammar extends CobolBaseGrammar {
           plus(
             sequence(
               choice(
-                token("IN"),
-                token("OF")
+                keyword("IN"),
+                keyword("OF")
               ),
               dataName()
             )
@@ -19336,7 +19347,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         directSubscriptParser = future;
         future.setParser(
           choice(
-            token("ALL"),
+            keyword("ALL"),
             identifier(),
             integer()
           )
@@ -19438,7 +19449,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             bitwiseExclusiveDisjunction(),
             star(
               sequence(
-                token("B-OR"),
+                keyword("B-OR"),
                 bitwiseExclusiveDisjunction()
               )
             )
@@ -19467,8 +19478,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             star(
               sequence(
                 choice(
-                  token("B-XOR"),
-                  token("B-EXOR")
+                  keyword("B-XOR"),
+                  keyword("B-EXOR")
                 ),
                 bitwiseConjunction()
               )
@@ -19497,7 +19508,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             expression(),
             star(
               sequence(
-                token("B-AND"),
+                keyword("B-AND"),
                 expression()
               )
             )
@@ -19602,7 +19613,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             star(
               as("power",
                 sequence(
-                  literal("**"),
+                  literal("*"),
+                  opt(NOSKIP,
+                    literal("*")
+                  ),
                   base()
                 )
               )
@@ -19637,7 +19651,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   literal("-")
                 ),
                 as("bNOT",
-                  token("B-NOT")
+                  keyword("B-NOT")
                 )
               )
             ),
@@ -19700,15 +19714,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         moreArithmeticOpParser = future;
         future.setParser(
           choice(
-            token("B-AND"),
-            token("B-OR"),
-            token("B-XOR"),
-            token("B-EXOR"),
+            keyword("B-AND"),
+            keyword("B-OR"),
+            keyword("B-XOR"),
+            keyword("B-EXOR"),
             literal("+"),
             literal("-"),
+            sequence(
+              literal("*"),
+              opt(NOSKIP,
+                literal("*")
+              )
+            ),
             literal("*"),
-            literal("/"),
-            literal("**")
+            literal("/")
           )
         );
       }
@@ -19753,7 +19772,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             conjunction(),
             star(
               sequence(
-                token("OR"),
+                keyword("OR"),
                 conjunction()
               )
             )
@@ -19781,7 +19800,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             negation(),
             star(
               sequence(
-                token("AND"),
+                keyword("AND"),
                 negation()
               )
             )
@@ -19807,7 +19826,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("NOT")
+              keyword("NOT")
             ),
             simpleCondition()
           )
@@ -19832,10 +19851,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             as("true",
-              token("TRUE")
+              keyword("TRUE")
             ),
             as("false",
-              token("FALSE")
+              keyword("FALSE")
             ),
             parenthesizedCondition(),
             signCondition(),
@@ -19899,11 +19918,11 @@ public class CobolGrammar extends CobolBaseGrammar {
               relop()
             ),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             optional(
               as("not",
-                token("NOT")
+                keyword("NOT")
               )
             ),
             classType()
@@ -19928,15 +19947,15 @@ public class CobolGrammar extends CobolBaseGrammar {
         classTypeParser = future;
         future.setParser(
           choice(
-            token("NUMERIC"),
-            token("ALPHABETIC"),
-            token("ALPHABETIC-LOWER"),
-            token("ALPHABETIC-UPPER"),
-            token("DBCS"),
-            token("KANJI"),
-            token("BOOLEAN"),
-            token("INFINITY"),
-            token("REPRESENTS-NOT-A-NUMBER"),
+            keyword("NUMERIC"),
+            keyword("ALPHABETIC"),
+            keyword("ALPHABETIC-LOWER"),
+            keyword("ALPHABETIC-UPPER"),
+            keyword("DBCS"),
+            keyword("KANJI"),
+            keyword("BOOLEAN"),
+            keyword("INFINITY"),
+            keyword("REPRESENTS-NOT-A-NUMBER"),
             name()
           )
         );
@@ -19961,11 +19980,11 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             arithmeticExpression(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             optional(
               as("not",
-                token("NOT")
+                keyword("NOT")
               )
             ),
             signType()
@@ -19990,8 +20009,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         signTypeParser = future;
         future.setParser(
           choice(
-            token("POSITIVE"),
-            token("NEGATIVE"),
+            keyword("POSITIVE"),
+            keyword("NEGATIVE"),
             zero()
           )
         );
@@ -20016,14 +20035,14 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             dataName(),
             optional(
-              token("IS")
+              keyword("IS")
             ),
             optional(
               as("not",
-                token("NOT")
+                keyword("NOT")
               )
             ),
-            token("OMITTED")
+            keyword("OMITTED")
           )
         );
       }
@@ -20049,7 +20068,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             at(
               sequence(
                 optional(
-                  token("NOT")
+                  keyword("NOT")
                 ),
                 relop()
               )
@@ -20079,7 +20098,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             abbreviatedConjunction(),
             star(
               sequence(
-                token("OR"),
+                keyword("OR"),
                 abbreviatedConjunction()
               )
             )
@@ -20107,7 +20126,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             abbreviatedNegation(),
             star(
               sequence(
-                token("AND"),
+                keyword("AND"),
                 abbreviatedNegation()
               )
             )
@@ -20133,7 +20152,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              token("NOT")
+              keyword("NOT")
             ),
             relationObject()
           )
@@ -20193,9 +20212,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             not(
               choice(
                 literal("("),
-                token("IS"),
-                token("NOT"),
-                token("OMITTED"),
+                keyword("IS"),
+                keyword("NOT"),
+                keyword("OMITTED"),
                 relop(),
                 classType(),
                 signType()
@@ -20224,19 +20243,19 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             as("figurativeConstant",
               choice(
-                token("NULL"),
-                token("NULLS")
+                keyword("NULL"),
+                keyword("NULLS")
               )
             ),
             addressOf(),
             sequence(
-              literal(),
+              identifier(),
               not(
                 moreArithmeticOp()
               )
             ),
             sequence(
-              identifier(),
+              literal(),
               not(
                 moreArithmeticOp()
               )
@@ -20266,15 +20285,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             sequence(
               optional(
                 choice(
-                  token("IS"),
-                  token("ARE")
+                  keyword("IS"),
+                  keyword("ARE")
                 )
               ),
               choice(
                 sequence(
                   optional(
                     as("not",
-                      token("NOT")
+                      keyword("NOT")
                     )
                   ),
                   greaterOrEqualOp()
@@ -20282,15 +20301,16 @@ public class CobolGrammar extends CobolBaseGrammar {
                 sequence(
                   optional(
                     as("not",
-                      token("NOT")
+                      keyword("NOT")
                     )
                   ),
                   lessOrEqualOp()
                 ),
+                unequalToOp(),
                 sequence(
                   optional(
                     as("not",
-                      token("NOT")
+                      keyword("NOT")
                     )
                   ),
                   greaterThanOp()
@@ -20298,7 +20318,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 sequence(
                   optional(
                     as("not",
-                      token("NOT")
+                      keyword("NOT")
                     )
                   ),
                   lessThanOp()
@@ -20306,12 +20326,11 @@ public class CobolGrammar extends CobolBaseGrammar {
                 sequence(
                   optional(
                     as("not",
-                      token("NOT")
+                      keyword("NOT")
                     )
                   ),
                   equalToOp()
-                ),
-                unequalToOp()
+                )
               )
             ),
             exceedsOp(),
@@ -20338,9 +20357,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("GREATER"),
+              keyword("GREATER"),
               optional(
-                token("THAN")
+                keyword("THAN")
               )
             ),
             literal(">")
@@ -20366,9 +20385,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("LESS"),
+              keyword("LESS"),
               optional(
-                token("THAN")
+                keyword("THAN")
               )
             ),
             literal("<")
@@ -20394,9 +20413,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("EQUAL"),
+              keyword("EQUAL"),
               optional(
-                token("TO")
+                keyword("TO")
               )
             ),
             literal("=")
@@ -20422,17 +20441,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("GREATER"),
+              keyword("GREATER"),
               optional(
-                token("THAN")
+                keyword("THAN")
               ),
-              token("OR"),
-              token("EQUAL"),
+              keyword("OR"),
+              keyword("EQUAL"),
               optional(
-                token("TO")
+                keyword("TO")
               )
             ),
-            literal(">=")
+            sequence(
+              literal(">"),
+              opt(NOSKIP,
+                literal("=")
+              )
+            )
           )
         );
       }
@@ -20455,17 +20479,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("LESS"),
+              keyword("LESS"),
               optional(
-                token("THAN")
+                keyword("THAN")
               ),
-              token("OR"),
-              token("EQUAL"),
+              keyword("OR"),
+              keyword("EQUAL"),
               optional(
-                token("TO")
+                keyword("TO")
               )
             ),
-            literal("<=")
+            sequence(
+              literal("<"),
+              opt(NOSKIP,
+                literal("=")
+              )
+            )
           )
         );
       }
@@ -20488,12 +20517,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("UNEQUAL"),
+              keyword("UNEQUAL"),
               optional(
-                token("TO")
+                keyword("TO")
               )
             ),
-            literal("<>")
+            sequence(
+              literal("<"),
+              opt(NOSKIP,
+                literal(">")
+              )
+            )
           )
         );
       }
@@ -20514,7 +20548,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("exceedsOp", PUBLIC, true);
         exceedsOpParser = future;
         future.setParser(
-          token("EXCEEDS")
+          keyword("EXCEEDS")
         );
       }
     
@@ -20534,7 +20568,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("equalsOp", PUBLIC, true);
         equalsOpParser = future;
         future.setParser(
-          token("EQUALS")
+          keyword("EQUALS")
         );
       }
     
@@ -20583,8 +20617,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         programNameParser = future;
         future.setParser(
           choice(
-            cobolWord(),
-            alphanumeric()
+            alphanumeric(),
+            justAName()
           )
         );
       }
@@ -20605,11 +20639,36 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("dataName", PUBLIC, true);
         dataNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
       return dataNameParser;
+    }
+    
+    // ========================================================
+    // justAName
+    // ........................................................
+    
+    private ParserCombinator justANameParser = null;
+    
+    protected final Start justAName = Start.on(getNamespace(), "justAName");
+    
+    protected ParserCombinator justAName() {
+      if (justANameParser == null) {
+        FutureParser future = scoped("justAName", PRIVATE, true);
+        justANameParser = future;
+        future.setParser(
+          sequence(
+            not(
+              hexadecimalLiteral()
+            ),
+            cobolWord()
+          )
+        );
+      }
+    
+      return justANameParser;
     }
     
     // ========================================================
@@ -20659,7 +20718,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("screenName", PUBLIC, true);
         screenNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20727,8 +20786,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             optional(
               sequence(
                 choice(
-                  token("IN"),
-                  token("OF")
+                  keyword("IN"),
+                  keyword("OF")
                 ),
                 sectionName()
               )
@@ -20754,7 +20813,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         nameParser = future;
         future.setParser(
           choice(
-            cobolWord(),
+            justAName(),
             integer()
           )
         );
@@ -20836,7 +20895,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("threadPointer", PUBLIC, true);
         threadPointerParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20856,7 +20915,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("eventPointer", PUBLIC, true);
         eventPointerParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20896,7 +20955,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("indexName", PUBLIC, true);
         indexNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20916,7 +20975,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("className", PUBLIC, true);
         classNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20936,7 +20995,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("typeSpecifier", PUBLIC, true);
         typeSpecifierParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20956,7 +21015,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("parameterName", PUBLIC, true);
         parameterNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20976,7 +21035,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("interfaceName", PUBLIC, true);
         interfaceNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -20996,7 +21055,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("methodName", PUBLIC, true);
         methodNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21062,7 +21121,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("delegateName", PUBLIC, true);
         delegateNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21082,7 +21141,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("iteratorName", PUBLIC, true);
         iteratorNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21102,7 +21161,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("enumName", PUBLIC, true);
         enumNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21122,7 +21181,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("valuetypeName", PUBLIC, true);
         valuetypeNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21142,7 +21201,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("typeName", PUBLIC, true);
         typeNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21162,7 +21221,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("attributeName", PUBLIC, true);
         attributeNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21182,7 +21241,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("typedefName", PUBLIC, true);
         typedefNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21203,8 +21262,8 @@ public class CobolGrammar extends CobolBaseGrammar {
         fileNameParser = future;
         future.setParser(
           choice(
-            cobolWord(),
-            alphanumeric()
+            alphanumeric(),
+            justAName()
           )
         );
       }
@@ -21225,7 +21284,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("computerName", PUBLIC, true);
         computerNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21245,7 +21304,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("functionName", PUBLIC, true);
         functionNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21287,7 +21346,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             identifier(),
-            cobolWord()
+            justAName()
           )
         );
       }
@@ -21309,35 +21368,35 @@ public class CobolGrammar extends CobolBaseGrammar {
         environmentNameParser = future;
         future.setParser(
           choice(
-            token("SYSIN"),
-            token("SYSIPT"),
-            token("SYSOUT"),
-            token("SYSLIST"),
-            token("SYSLST"),
-            token("SYSPUNCH"),
-            token("SYSPCH"),
-            token("CONSOLE"),
-            token("CRT"),
-            token("CRT-UNDER"),
-            token("C01"),
-            token("C02"),
-            token("C03"),
-            token("C04"),
-            token("C05"),
-            token("C06"),
-            token("C07"),
-            token("C08"),
-            token("C09"),
-            token("C10"),
-            token("C11"),
-            token("C12"),
-            token("CSP"),
-            token("S01"),
-            token("S02"),
-            token("S03"),
-            token("S04"),
-            token("S05"),
-            token("AFP-5A")
+            keyword("SYSIN"),
+            keyword("SYSIPT"),
+            keyword("SYSOUT"),
+            keyword("SYSLIST"),
+            keyword("SYSLST"),
+            keyword("SYSPUNCH"),
+            keyword("SYSPCH"),
+            keyword("CONSOLE"),
+            keyword("CRT"),
+            keyword("CRT-UNDER"),
+            keyword("C01"),
+            keyword("C02"),
+            keyword("C03"),
+            keyword("C04"),
+            keyword("C05"),
+            keyword("C06"),
+            keyword("C07"),
+            keyword("C08"),
+            keyword("C09"),
+            keyword("C10"),
+            keyword("C11"),
+            keyword("C12"),
+            keyword("CSP"),
+            keyword("S01"),
+            keyword("S02"),
+            keyword("S03"),
+            keyword("S04"),
+            keyword("S05"),
+            keyword("AFP-5A")
           )
         );
       }
@@ -21358,7 +21417,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("alphabetName", PUBLIC, true);
         alphabetNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21378,7 +21437,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("cdName", PUBLIC, true);
         cdNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21398,7 +21457,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("reportName", PUBLIC, true);
         reportNameParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21455,8 +21514,8 @@ public class CobolGrammar extends CobolBaseGrammar {
             numericLiteral(),
             alphanumericLiteral(),
             figurativeConstant(),
-            token("TRUE"),
-            token("FALSE")
+            keyword("TRUE"),
+            keyword("FALSE")
           )
         );
       }
@@ -21529,26 +21588,26 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("ALL"),
+              keyword("ALL"),
               literal()
             ),
             sequence(
               optional(
-                token("ALL")
+                keyword("ALL")
               ),
               choice(
                 zero(),
                 space(),
-                token("HIGH-VALUE"),
-                token("HIGH-VALUES"),
-                token("LOW-VALUE"),
-                token("LOW-VALUES"),
-                token("QUOTE"),
-                token("QUOTES")
+                keyword("HIGH-VALUE"),
+                keyword("HIGH-VALUES"),
+                keyword("LOW-VALUE"),
+                keyword("LOW-VALUES"),
+                keyword("QUOTE"),
+                keyword("QUOTES")
               )
             ),
-            token("NULL"),
-            token("NULLS")
+            keyword("NULL"),
+            keyword("NULLS")
           )
         );
       }
@@ -21577,11 +21636,11 @@ public class CobolGrammar extends CobolBaseGrammar {
             hexadecimal(),
             sequence(
               choice(
-                token("LENGTH"),
-                token("BYTE-LENGTH")
+                keyword("LENGTH"),
+                keyword("BYTE-LENGTH")
               ),
               optional(
-                token("OF")
+                keyword("OF")
               ),
               identifier()
             )
@@ -21657,8 +21716,34 @@ public class CobolGrammar extends CobolBaseGrammar {
         floatingPointParser = future;
         future.setParser(
           sequence(
-            tagged(FLOATING_POINT_LITERAL),
-            any()
+            choice(
+              sequence(
+                optional(
+                  choice(
+                    literal("+"),
+                    literal("-")
+                  )
+                ),
+                opt(NOSKIP,
+                  uintgr()
+                )
+              ),
+              uintgr()
+            ),
+            opt(NOSKIP,
+              sequence(
+                literal("."),
+                uintgr(),
+                literal("E"),
+                optional(
+                  choice(
+                    literal("+"),
+                    literal("-")
+                  )
+                ),
+                uintgr()
+              )
+            )
           )
         );
       }
@@ -21680,9 +21765,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         addressOfParser = future;
         future.setParser(
           sequence(
-            token("ADDRESS"),
+            keyword("ADDRESS"),
             optional(
-              token("OF")
+              keyword("OF")
             ),
             identifier()
           )
@@ -21706,9 +21791,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         lengthOfParser = future;
         future.setParser(
           sequence(
-            token("LENGTH"),
+            keyword("LENGTH"),
             optional(
-              token("OF")
+              keyword("OF")
             ),
             identifier()
           )
@@ -21732,9 +21817,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         byteLengthOfParser = future;
         future.setParser(
           sequence(
-            token("BYTE-LENGTH"),
+            keyword("BYTE-LENGTH"),
             optional(
-              token("OF")
+              keyword("OF")
             ),
             identifier()
           )
@@ -21780,7 +21865,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("integerConstant", PUBLIC, true);
         integerConstantParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     
@@ -21823,7 +21908,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("alphanumericConstant", PUBLIC, true);
         alphanumericConstantParser = future;
         future.setParser(
-          cobolWord()
+          justAName()
         );
       }
     

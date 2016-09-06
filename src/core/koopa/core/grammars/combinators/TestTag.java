@@ -1,66 +1,52 @@
 package koopa.core.grammars.combinators;
 
-import java.util.Set;
-
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stream;
 
 /**
  * Checks whether the following token in the stream has a given tag. That token
  * is <b>not</b> consumed by this parser.
- * <p>
- * This will skip all intermediate separators.
  */
-public class TestTag extends ParserCombinator {
+public class TestTag extends GrammaticalCombinator {
 
-	private final Grammar grammar;
 	private final Object tag;
 
 	public TestTag(Grammar grammar, Object tag) {
-		this.grammar = grammar;
+		super(grammar);
 		this.tag = tag;
 	}
 
-	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
+	@Override
+	protected boolean matchesAfterSkipped(Parse parse) {
+		final Token peek = parse.getStream().peek();
 
-		grammar.skipSeparators(parse);
-
-		final Token token = stream.forward();
-
-		if (token == null) {
+		if (peek == null) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " has tag " + tag + " : no");
+				parse.getTrace().add(toString() + " : no, null");
 
 			return false;
-		}
 
-		if (token.hasTag(tag)) {
+		} else if (peek.hasTag(tag)) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " has tag " + tag + " : yes");
+				parse.getTrace().add(toString() + " : yes, " + peek);
 
-			stream.rewind(token);
 			return true;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " has tag " + tag + " : no");
+				parse.getTrace().add(toString() + " : no, " + peek);
 
-			stream.rewind(token);
 			return false;
 		}
 	}
 
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-	}
-
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "@" + tag.toString();
 	}

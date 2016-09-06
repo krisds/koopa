@@ -1,14 +1,14 @@
 package koopa.cobol.parser.preprocessing.replacing;
 
+import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
 import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhrase.isConsideredSingleSpace;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.cobol.data.tags.SyntacticTag;
-import koopa.cobol.sources.SeparationLogic;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
+import koopa.core.sources.TokenSeparationLogic;
 import koopa.core.trees.Tree;
 
 public class ReplacingPhraseOperand {
@@ -40,8 +40,8 @@ public class ReplacingPhraseOperand {
 		LinkedList<Token> tokens = new LinkedList<Token>();
 
 		for (Token token : operand.getTokens())
-			tokens.addAll(SeparationLogic.apply(//
-					token.withoutTags(SyntacticTag.PSEUDO_LITERAL)));
+			tokens.addAll(TokenSeparationLogic.apply(//
+					token.withoutTags(PSEUDO_LITERAL)));
 
 		return new ReplacingPhraseOperand(type, tokens);
 	}
@@ -52,7 +52,11 @@ public class ReplacingPhraseOperand {
 
 		// Discard the pseudo text markers.
 		if (type == Type.PSEUDO) {
+			// Two '=' at the start...
 			this.tokens.removeFirst();
+			this.tokens.removeFirst();
+			// Two '=' at the end...
+			this.tokens.removeLast();
 			this.tokens.removeLast();
 		}
 

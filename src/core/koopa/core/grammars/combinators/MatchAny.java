@@ -1,66 +1,42 @@
 package koopa.core.grammars.combinators;
 
-import java.util.Set;
-
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stream;
 
 /**
  * Accepts any and all tokens. Will only fail when there are no more tokens on
- * the token stream.
- * <p>
- * This will skip all intermediate separators.
+ * the token stream (ignoring separators).
  */
-public class MatchAny extends ParserCombinator {
+public class MatchAny extends GrammaticalCombinator {
 
-	private final Grammar grammar;
-	private final boolean testForKeywords;
+	private static final String SYMBOL = "_";
 
 	public MatchAny(Grammar grammar) {
-		this(grammar, false);
+		super(grammar);
 	}
 
-	public MatchAny(Grammar grammar, boolean testForKeywords) {
-		this.grammar = grammar;
-		this.testForKeywords = testForKeywords;
-	}
-
-	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
-
-		grammar.skipSeparators(parse);
-
-		final Token token = stream.forward();
+	@Override
+	protected boolean matchesAfterSkipped(Parse parse) {
+		final Token token = parse.getStream().forward();
 
 		if (token == null) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " is any : no");
-
-			return false;
-
-		} else if (testForKeywords
-				&& parse.getStack().isKeyword(token.getText())) {
-			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " is any : no, it's a keyword");
+				parse.getTrace().add(SYMBOL + " : no, null");
 
 			return false;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " is any : yes");
+				parse.getTrace().add(SYMBOL + " : yes, " + token);
 
 			parse.getStack().getScope().setRValue(token);
 			return true;
 		}
 	}
 
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-	}
-
+	@Override
 	public String toString() {
-		return "_";
+		return SYMBOL;
 	}
 }

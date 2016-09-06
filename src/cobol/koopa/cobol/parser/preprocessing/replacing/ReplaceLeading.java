@@ -17,7 +17,7 @@ import koopa.core.sources.Source;
 public class ReplaceLeading extends ReplacingPhrase {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.preprocessing.replacing.leading");
+			.getLogger("source.cobol.preprocessing.replacing.leading");
 
 	private final String pattern;
 	private final int patternLength;

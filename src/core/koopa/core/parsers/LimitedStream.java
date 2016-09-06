@@ -8,6 +8,10 @@ import koopa.core.data.Token;
 
 import org.apache.log4j.Logger;
 
+/**
+ * This stream will only return tokens from another stream up to a certain
+ * point, as defined by a {@linkplain ParserCombinator}.
+ */
 public class LimitedStream implements Stream {
 
 	private static final Logger LOGGER = Logger.getLogger("parse.stream");
@@ -51,7 +55,7 @@ public class LimitedStream implements Stream {
 	public Token skip() {
 		return stream.skip();
 	}
-	
+
 	/** {@inheritDoc} */
 	public void insert(Marker marker) {
 		stream.insert(marker);
@@ -96,9 +100,14 @@ public class LimitedStream implements Stream {
 	public void setParse(Parse parse) {
 		stream.setParse(parse);
 	}
-	
+
 	/** {@inheritDoc} */
 	public Iterator<Data> backToBookmarkIterator() {
 		return stream.backToBookmarkIterator();
+	}
+
+	/** {@inheritDoc} */
+	public Iterator<Data> fromBookmarkIterator() {
+		return stream.fromBookmarkIterator();
 	}
 }

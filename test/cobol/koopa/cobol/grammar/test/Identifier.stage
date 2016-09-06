@@ -1,34 +1,66 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
+target dataName;
+
++ Basic:cobolWord
+
+
+target qualifier;
+
++ [ OF ] dataName
++ [ IN ] dataName
+
+
+target directSubscript;
+
++ [ ALL ]
++ identifier
++ Basic:integer
+- Basic:decimal
+- Basic:floatingPoint
+
+target relativeSubscript;
+
++ dataName [ + ] Basic:integer
++ identifier [ + ] Basic:integer
++ identifier [ - ] Basic:integer
+
+
+target subscript;
+
++directSubscript
++relativeSubscript
+
+
+target qualifiedDataName;
+
++ dataName
++ dataName qualifier
++ dataName qualifier qualifier
+
++ dataName [ ( ] subscript [ ) ]
++ dataName [ ( ] subscript subscript [ ) ]
+
++ dataName qualifier [ ( ] subscript [ ) ]
+
+
+target referenceModifier;
+
++ [ ( ] Basic:cobolWord      [ : ] Basic:cobolWord      [ ) ]
++ [ ( ] Basic:cobolWord      [ : ] Basic:integerLiteral [ ) ]
++ [ ( ] Basic:integerLiteral [ : ] Basic:cobolWord      [ ) ]
++ [ ( ] Basic:integerLiteral [ : ] Basic:integerLiteral [ ) ]
+
++ [ ( ] Basic:cobolWord      [ : ) ]
++ [ ( ] Basic:integerLiteral [ : ) ]
+
 
 target identifier;
 
-+[ MY-FIELD ]
++ qualifiedDataName
++ qualifiedDataName referenceModifier
 
--[ 42 ]
--[ 42.42 ]
--[ "TEXT" ]
+- Basic:numericLiteral
+- Basic:alphanumericLiteral
 
-+[ MY-FIELD OF MY-RECORD ]
-+[ MY-FIELD IN MY-RECORD ]
-
-+[ MY-FIELD OF MY-RECORD-1 IN MY-RECORD-2 ]
-+[ MY-FIELD IN MY-RECORD-1 OF MY-RECORD-2 ]
-
-+[ MY-FIELD ( 42 ) ]
--[ MY-FIELD ( 42.0 ) ]
-
-+[ MY-FIELD ( MY-INDEX ) ]
-
-+[ MY-FIELD ( MY-INDEX + 42 ) ]
-+[ MY-FIELD ( MY-INDEX - 42 ) ]
-
-+[ MY-FIELD ( MY-INDEX : 42 ) ]
-+[ MY-FIELD ( MY-INDEX : MY-LENGTH ) ]
-
-+[ MY-FIELD ( 42 : ) ]
-+[ MY-FIELD ( MY-INDEX : ) ]
 
 +[ MY-FIELD ( 1 2 3 ) ( 42 : 11 ) ]
 +[ MY-FIELD ( A B C ) ( MY-POSITION : MY-LENGTH ) ]
@@ -37,9 +69,6 @@ target identifier;
 
 +[ FUNCTION CAT ]
 +[ FUNCTION CAT ( 1 : 7 ) ]
-
-+[ FUNCTION CAT ( 3 ) ]
-+[ FUNCTION CAT ( 3 ) ( 1 : 7 ) ]
 
 +[ FUNCTION CAT ( 3 ) ]
 +[ FUNCTION CAT ( 3 ) ( 1 : 7 ) ]
@@ -57,7 +86,7 @@ target identifier;
 +[ UNQUAL-ITEM ( SUB1 OF SUBSCRIPTS OF SUBSCRIPTS-PART1 ) ]
 
 
-+[ ADDRESS OF CAT ]
++[ ADDRESS OF ] Basic:cobolWord
 
 # Cfr. ISO/IEC 1989:20xx FCD 1.0 (E), 8.4.2.1.1
 +[ EXCEPTION-OBJECT ]
@@ -72,14 +101,14 @@ target identifier;
 
 
 +[ LINAGE-COUNTER ]
-+[ LINAGE-COUNTER IN FOO ]
-+[ LINAGE-COUNTER OF FOO ]
++[ LINAGE-COUNTER IN ] Basic:cobolWord
++[ LINAGE-COUNTER OF ] Basic:cobolWord
 
 +[ PAGE-COUNTER ]
-+[ PAGE-COUNTER IN FOO ]
-+[ PAGE-COUNTER OF FOO ]
++[ PAGE-COUNTER IN ] Basic:cobolWord
++[ PAGE-COUNTER OF ] Basic:cobolWord
 
 +[ LINE-COUNTER ]
-+[ LINE-COUNTER IN FOO ]
-+[ LINE-COUNTER OF FOO ]
++[ LINE-COUNTER IN ] Basic:cobolWord
++[ LINE-COUNTER OF ] Basic:cobolWord
 

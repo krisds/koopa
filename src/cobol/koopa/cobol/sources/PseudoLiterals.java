@@ -1,9 +1,8 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
-import static koopa.cobol.data.tags.SyntacticTag.PSEUDO_LITERAL;
-import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,11 +10,11 @@ import java.util.List;
 
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
 
-public class PseudoLiterals extends ThreadedSource<Token, Token> implements Source<Token> {
+public class PseudoLiterals extends ThreadedSource<Token, Token> implements
+		Source<Token> {
 
 	public PseudoLiterals(Source<Token> source) {
 		super("PseudoLiteralTokenizer", source);
@@ -24,68 +23,90 @@ public class PseudoLiterals extends ThreadedSource<Token, Token> implements Sour
 
 	protected void tokenize() throws IOException {
 		while (!hasClosed()) {
-			final Token token = this.source.next();
-
-			if (token == null)
+			if (atEnd())
 				break;
 
-			if (!token.hasTag(SEPARATOR) || !token.getText().equals("==")) {
-				enqueue(token);
+			if (!atStartMarker()) {
+				enqueue(source.next());
 
 			} else {
-				tokenizePseudoLiteral(token);
+				tokenizePseudoLiteral();
 			}
 		}
 	}
 
-	private void tokenizePseudoLiteral(final Token openingToken) {
-		List<Token> tokens = new ArrayList<Token>();
+	private boolean atEnd() {
+		final Token t = source.next();
 
-		tokens.add(openingToken);
+		if (t == null)
+			return true;
 
-		Token next = source.next();
-		while (next != null) {
-			if (next.hasTag(PROGRAM_TEXT_AREA)) {
-				if (next.hasTag(AreaTag.END_OF_LINE)) {
-					// Ignore newlines...
+		source.unshift(t);
+		return false;
+	}
 
-				} else if (next.getText().equals("==")) {
-					// We check that the very next thing is "whitespace".
-					// Because "=====" is legal...
+	private boolean atStartMarker() {
+		boolean match = false;
+		final Token a = source.next();
 
-					Token oneMore = source.next();
-					if (oneMore == null) {
-						tokens.add(next);
-						break;
-					}
+		if (a != null && a.getText().equals("=")) {
+			final Token b = source.next();
 
-					// This isn't the greatest solution to the problem, I
-					// think... :-)
-					if (oneMore.hasTag(PROGRAM_TEXT_AREA) && "=".equals(oneMore.getText())) {
+			if (b != null && b.getText().equals("="))
+				match = true;
 
-						tokens.add(Tokens.subtoken(next, 0, 1));
-
-						List<Token> endMarker = new ArrayList<Token>(2);
-						endMarker.add(Tokens.subtoken(next, 1));
-						endMarker.add(oneMore);
-
-						tokens.add(Tokens.join(endMarker, PROGRAM_TEXT_AREA, SEPARATOR));
-						break;
-
-					} else {
-						source.unshift(oneMore);
-						tokens.add(next);
-						break;
-					}
-
-				} else
-					tokens.add(next);
-			}
-
-			next = source.next();
+			source.unshift(b);
 		}
 
-		Token pseudoliteral = Tokens.join(tokens, PROGRAM_TEXT_AREA, CHARACTER_STRING, PSEUDO_LITERAL);
+		source.unshift(a);
+		return match;
+	}
+
+	private boolean atEndMarker() {
+		boolean match = false;
+		final Token a = source.next();
+
+		if (a != null && a.getText().equals("=")) {
+			final Token b = source.next();
+
+			if (b != null && b.getText().equals("=")) {
+				final Token c = source.next();
+
+				if (c == null || !c.getText().equals("=")) {
+					match = true;
+				}
+
+				source.unshift(c);
+			}
+
+			source.unshift(b);
+		}
+
+		source.unshift(a);
+		return match;
+	}
+
+	private void tokenizePseudoLiteral() {
+		List<Token> tokens = new ArrayList<Token>();
+
+		tokens.add(source.next());
+		tokens.add(source.next());
+
+		while (!atEnd()) {
+			if (atEndMarker()) {
+				tokens.add(source.next());
+				tokens.add(source.next());
+				break;
+			}
+
+			Token next = source.next();
+			if (next.hasTag(PROGRAM_TEXT_AREA) && !next.hasTag(END_OF_LINE))
+				tokens.add(next);
+			// else ignore...
+		}
+
+		Token pseudoliteral = Tokens.join(tokens, PROGRAM_TEXT_AREA,
+				PSEUDO_LITERAL);
 
 		enqueue(pseudoliteral);
 	}

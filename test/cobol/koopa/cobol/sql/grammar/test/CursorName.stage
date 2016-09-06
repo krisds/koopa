@@ -1,8 +1,7 @@
-package koopa.cobol.sql.grammar.test;
-grammar koopa.cobol.sql.grammar.SQLGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target cursorName;
 
 +[ HOPPER ]
 +[ MODULE.HOPPER ]
+
++[ C1 ]
++[ C-1 ]

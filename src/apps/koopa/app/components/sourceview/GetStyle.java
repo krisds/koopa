@@ -1,10 +1,10 @@
 package koopa.app.components.sourceview;
 
-import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.IslandTag.LAND;
+import static koopa.core.data.tags.SyntacticTag.STRING;
 
 import java.awt.Color;
 
@@ -49,7 +49,7 @@ public class GetStyle {
 			return getCommentStyle(document, isReplacement);
 		else if (token.hasTag(COMMENT))
 			return getCommentStyle(document, isReplacement);
-		else if (token.hasTag(STRING_LITERAL))
+		else if (token.hasTag(STRING))
 			return getStringStyle(document, isReplacement);
 		else if (token.hasTag(PROGRAM_TEXT_AREA) && token.hasTag(LAND))
 			return getLandStyle(document, isReplacement);

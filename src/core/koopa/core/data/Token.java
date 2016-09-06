@@ -144,7 +144,10 @@ public class Token implements Data {
 		return tags.contains(tag);
 	}
 
-	public boolean hasTags(Object[] tags) {
+	/**
+	 * Whether or not this token has <b>all</b> given tags.
+	 */
+	public boolean hasTags(Object... tags) {
 		for (Object tag : tags)
 			if (!hasTag(tag))
 				return false;
@@ -152,14 +155,17 @@ public class Token implements Data {
 		return true;
 	}
 
-	public boolean hasAnyTag(Object[] tags) {
+	/**
+	 * Whether or not this token has <b>any</b> of the given tags.
+	 */
+	public boolean hasAnyTag(Object... tags) {
 		for (Object tag : tags)
 			if (hasTag(tag))
 				return true;
 
 		return false;
 	}
-	
+
 	public int tagCount() {
 		return tags.size();
 	}

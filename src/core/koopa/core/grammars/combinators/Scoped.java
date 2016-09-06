@@ -56,11 +56,11 @@ public class Scoped extends FutureParser {
 	}
 
 	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
-		Token peek = stream.peek();
+		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent(name + " ? " + stream.peekMore() + "...");
+			parse.getTrace().indent(
+					toString() + " ? " + stream.peekMore() + "...");
 
 		parse.getStack().getHead().makeScoped();
 
@@ -68,7 +68,7 @@ public class Scoped extends FutureParser {
 		if (visibility.addsMarkers())
 			stream.insert(Start.on(grammar.getNamespace(), name));
 
-		boolean accepts = parser.accepts(parse);
+		final boolean accepts = parser.accepts(parse);
 
 		if (accepts) {
 			if (visibility.allowsMarkersToBeHidden()) {
@@ -85,9 +85,11 @@ public class Scoped extends FutureParser {
 		}
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent(
-					name + (accepts ? ": yes " : ": no ") + peek + " - up to "
-							+ stream.peekMore() + "...");
+			parse.getTrace()
+					.dedent(toString()
+							+ " : "
+							+ (accepts ? ("yes, up to " + stream.peekMore() + "...")
+									: "no"));
 
 		return accepts;
 	}
@@ -122,8 +124,8 @@ public class Scoped extends FutureParser {
 				if (next instanceof Token) {
 					Token token = (Token) next;
 					if (grammar.isProgramText(token)
-							&& !grammar.isSeparator(token, parse)
-							&& !grammar.isComment(token))
+							&& !grammar.canBeSkipped(token, parse))
+						// && !grammar.isComment(token))
 						count += 1;
 				}
 			}
@@ -147,11 +149,13 @@ public class Scoped extends FutureParser {
 	 * the Cobol program example again, it would now only know about the markers
 	 * for the overall structure of the program, and little else.
 	 */
+	@Override
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
 		if (allowKeywords)
 			parser.addAllLeadingKeywordsTo(keywords);
 	}
 
+	@Override
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		if (allowKeywords)
 			parser.addAllLeadingKeywordsTo(keywords);
@@ -165,10 +169,7 @@ public class Scoped extends FutureParser {
 			return super.isKeyword(word, frame);
 	}
 
-	public boolean canMatchEmptyInputs() {
-		return parser.canMatchEmptyInputs();
-	}
-
+	@Override
 	public boolean isMatching(String n) {
 		return name.equals(n);
 	}
@@ -177,6 +178,7 @@ public class Scoped extends FutureParser {
 		return name;
 	}
 
+	@Override
 	public String toString() {
 		return "def " + name;
 	}

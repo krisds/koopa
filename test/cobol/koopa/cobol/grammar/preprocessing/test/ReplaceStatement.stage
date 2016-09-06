@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.preprocessing.test;
-grammar koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target replaceStatement;
 
 +[ REPLACE      OFF . ]

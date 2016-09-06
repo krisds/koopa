@@ -110,4 +110,9 @@ public interface Stream {
 	 * bookmark.
 	 */
 	Iterator<Data> backToBookmarkIterator();
+
+	/**
+	 * Get an iterator which walks the stream from the latest bookmark.
+	 */
+	Iterator<Data> fromBookmarkIterator();
 }

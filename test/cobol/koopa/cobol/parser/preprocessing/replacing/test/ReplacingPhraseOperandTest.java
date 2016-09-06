@@ -1,11 +1,11 @@
 package koopa.cobol.parser.preprocessing.replacing.test;
 
-import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
-import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
 import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.LITERAL;
 import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.PSEUDO;
 import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.WORD;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.util.test.Util.asTokens;
 
 import java.util.Arrays;
@@ -54,8 +54,8 @@ public class ReplacingPhraseOperandTest {
 
 	@Test
 	public void canMatchPseudoTextSingleWord() {
-		ReplacingPhrase phrase = matching(pseudo("==", "COBOL", "=="),
-				pseudo("REPLACEMENT", "TOKENS"));
+		ReplacingPhrase phrase = matching(pseudo("=", "=", "COBOL", "=", "="),
+				pseudo("=", "=", "REPLACEMENT", "TOKENS", "=", "="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "COBOL"));
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "cobol"));
@@ -66,8 +66,8 @@ public class ReplacingPhraseOperandTest {
 
 	@Test
 	public void canMatchPseudoTextMultiWord() {
-		ReplacingPhrase phrase = matching(pseudo("==", "GRACE", "HOPPER", "=="),
-				pseudo("Grace", "Murray", "Hopper"));
+		ReplacingPhrase phrase = matching(pseudo("=", "=", "GRACE", "HOPPER", "=", "="),
+				pseudo("=", "=", "Grace", "Murray", "Hopper", "=", "="));
 
 		assertMatches(phrase,
 				input(PROGRAM_TEXT_AREA, "GRACE", PROGRAM_TEXT_AREA, "HOPPER"));
@@ -83,9 +83,9 @@ public class ReplacingPhraseOperandTest {
 	@Test
 	public void canMatchPseudoTextWithSurroundingSpaces() {
 		ReplacingPhrase phrase = matching(
-				pseudo("==", SEPARATOR, " ", "GRACE", "HOPPER", SEPARATOR, " ",
-						"=="), //
-				pseudo("Grace", "Murray", "Hopper"));
+				pseudo("=", "=", SEPARATOR, " ", "GRACE", "HOPPER", SEPARATOR, " ",
+						"=", "="), //
+				pseudo("=", "=", "Grace", "Murray", "Hopper", "=", "="));
 
 		assertMatches(phrase,
 				input(PROGRAM_TEXT_AREA, "GRACE", PROGRAM_TEXT_AREA, "HOPPER"));
@@ -99,9 +99,9 @@ public class ReplacingPhraseOperandTest {
 	@Test
 	public void canMatchPseudoTextWithMultiSpaces() {
 		ReplacingPhrase phrase = matching(
-				pseudo("==", "GRACE", SEPARATOR, " ", SEPARATOR, " ", "HOPPER",
-						"=="), //
-				pseudo("Grace", "Murray", "Hopper"));
+				pseudo("=", "=", "GRACE", SEPARATOR, " ", SEPARATOR, " ", "HOPPER",
+						"=", "="), //
+				pseudo("=", "=", "Grace", "Murray", "Hopper", "=", "="));
 
 		assertMatches(phrase,
 				input(PROGRAM_TEXT_AREA, "GRACE", PROGRAM_TEXT_AREA, "HOPPER"));
@@ -118,8 +118,8 @@ public class ReplacingPhraseOperandTest {
 	@Test
 	public void canHandleIssue54() {
 		final ReplacingPhrase phrase = matching(
-				pseudo("==", SEPARATOR, " ", ":", "L", ":", SEPARATOR, " ",
-						"=="), //
+				pseudo("=", "=", SEPARATOR, " ", ":", "L", ":", SEPARATOR, " ",
+						"=", "="), //
 				word("FOO"));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, ":", PROGRAM_TEXT_AREA,
@@ -128,20 +128,20 @@ public class ReplacingPhraseOperandTest {
 
 	@Test
 	public void canReplaceStartOfWordWithSomething() {
-		ReplacingPhrase phrase = leading(pseudo("==", "LANG", "=="),
-				pseudo("==", "COBOL", "=="));
+		ReplacingPhrase phrase = leading(pseudo("=", "=", "LANG", "=", "="),
+				pseudo("=", "=", "COBOL", "=", "="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "LANG-NAME"),
 				Arrays.asList(new Token[] {
-						new Token("COBOL-NAME", new Position(2, 0, 2),
+						new Token("COBOL-NAME", new Position(3, 0, 3),
 								new Position(10, 0, 10), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "LING-NAME"));
 	}
 
 	@Test
 	public void canReplaceStartOfWordWithNothing() {
-		ReplacingPhrase phrase = leading(pseudo("==", "LANG", "=="),
-				pseudo("==", "=="));
+		ReplacingPhrase phrase = leading(pseudo("=", "=", "LANG", "=", "="),
+				pseudo("=", "=", "=", "="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "LANG-NAME"),
 				Arrays.asList(
@@ -152,20 +152,20 @@ public class ReplacingPhraseOperandTest {
 
 	@Test
 	public void canReplaceEndOfWordWithSomething() {
-		ReplacingPhrase phrase = trailing(pseudo("==", "LANG", "=="),
-				pseudo("==", "COBOL", "=="));
+		ReplacingPhrase phrase = trailing(pseudo("=", "=", "LANG", "=", "="),
+				pseudo("=", "=", "COBOL", "=", "="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "NAME-LANG"),
 				Arrays.asList(new Token[] {
 						new Token("NAME-COBOL", new Position(1, 0, 1),
-								new Position(7, 0, 7), PROGRAM_TEXT_AREA) }));
+								new Position(8, 0, 8), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input(PROGRAM_TEXT_AREA, "NAME-LING"));
 	}
 
 	@Test
 	public void canReplaceEndOfWordWithNothing() {
-		ReplacingPhrase phrase = trailing(pseudo("==", "LANG", "=="),
-				pseudo("==", "=="));
+		ReplacingPhrase phrase = trailing(pseudo("=", "=", "LANG", "=", "="),
+				pseudo("=", "=", "=", "="));
 
 		assertMatches(phrase, input(PROGRAM_TEXT_AREA, "NAME-LANG"),
 				Arrays.asList(
@@ -219,7 +219,7 @@ public class ReplacingPhraseOperandTest {
 
 	private ReplacingPhraseOperand stringLiteral(String literal) {
 		return new ReplacingPhraseOperand(LITERAL,
-				asTokens(STRING_LITERAL, literal));
+				asTokens(STRING, literal));
 	}
 
 	private ReplacingPhraseOperand pseudo(Object... tagsAndTokens) {

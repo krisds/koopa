@@ -1,13 +1,6 @@
 package koopa.core.sources.test;
 
-import static koopa.core.data.tags.AreaTag.COMMENT;
-import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.END_OF_LINE;
-import static koopa.core.data.tags.AreaTag.IDENTIFICATION_AREA;
-import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
-import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
-import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -20,8 +13,6 @@ import java.util.Map;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
-import koopa.core.sources.test.AnnotatedSourceSample;
-import koopa.core.sources.test.TokenValidator;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
@@ -82,15 +73,6 @@ public class CoreSourcesValidationTest implements FileBasedTest, TokenValidator 
 		TAG_VALIDATIONS = new HashMap<String, Object[]>();
 
 		TAG_VALIDATIONS.put("EOLN", new Object[] { END_OF_LINE });
-		TAG_VALIDATIONS.put("COMPILER_DIRECTIVE",
-				new Object[] { COMPILER_DIRECTIVE });
-		TAG_VALIDATIONS.put("SEQNR", new Object[] { SEQUENCE_NUMBER_AREA });
-		TAG_VALIDATIONS.put("I", new Object[] { INDICATOR_AREA });
-		TAG_VALIDATIONS.put("TEXT", new Object[] { PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("IDENT", new Object[] { IDENTIFICATION_AREA });
-		TAG_VALIDATIONS.put("COMMENT", new Object[] { COMMENT });
-		TAG_VALIDATIONS.put("FORMATTING",
-				new Object[] { SOURCE_FORMATTING_DIRECTIVE });
 	}
 
 	public void validate(Token token, String category) {

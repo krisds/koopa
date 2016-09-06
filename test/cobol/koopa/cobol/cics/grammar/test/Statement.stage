@@ -1,7 +1,3 @@
-package koopa.cobol.cics.grammar.test;
-grammar koopa.cobol.cics.grammar.CICSGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target cicsStatement;
 
 

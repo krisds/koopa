@@ -9,19 +9,22 @@ import koopa.core.grammars.Grammar;
 import koopa.core.grammars.combinators.MatchAny;
 import koopa.core.grammars.combinators.MatchEndOfFile;
 import koopa.core.grammars.combinators.MatchToken;
-import koopa.core.grammars.combinators.Opt;
+import koopa.core.grammars.combinators.MatchKeyword;
 import koopa.core.grammars.combinators.Scoped;
+import koopa.core.grammars.combinators.TestForCase;
+import koopa.core.grammars.combinators.TestForKeyword;
 import koopa.core.grammars.combinators.TestTag;
-import koopa.core.grammars.combinators.WithOption;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.Not;
+import koopa.core.parsers.combinators.Opt;
 import koopa.core.parsers.combinators.Optional;
 import koopa.core.parsers.combinators.Plus;
 import koopa.core.parsers.combinators.Sequence;
 import koopa.core.parsers.combinators.SkipTo;
 import koopa.core.parsers.combinators.Star;
+import koopa.core.parsers.combinators.WithOption;
 
 public abstract class FluentGrammar extends Grammar {
 
@@ -144,6 +147,15 @@ public abstract class FluentGrammar extends Grammar {
 		};
 	}
 
+	protected Definition keyword(final String text) {
+		return new Definition() {
+			@Override
+			public ParserCombinator asParser() {
+				return new MatchKeyword(FluentGrammar.this, text);
+			}
+		};
+	}
+
 	protected Definition not(final Object... elements) {
 		return new Definition() {
 			private Definition def = all(elements);
@@ -173,15 +185,6 @@ public abstract class FluentGrammar extends Grammar {
 		};
 	}
 
-	protected Definition userDefined() {
-		return new Definition() {
-			@Override
-			public ParserCombinator asParser() {
-				return new MatchAny(FluentGrammar.this, true);
-			}
-		};
-	}
-
 	protected Definition eof() {
 		return new Definition() {
 			@Override
@@ -191,9 +194,45 @@ public abstract class FluentGrammar extends Grammar {
 		};
 	}
 
-	// ---
+	protected Definition allUppercase(final Object... elements) {
+		return new Definition() {
+			@Override
+			public ParserCombinator asParser() {
+				return new TestForCase(FluentGrammar.this, true, true, all(
+						elements).asParser());
+			}
+		};
+	}
 
-	private ParserCombinator convertToParser(Object object) {
+	protected Definition someLowercase(final Object... elements) {
+		return new Definition() {
+			@Override
+			public ParserCombinator asParser() {
+				return new TestForCase(FluentGrammar.this, true, false, all(
+						elements).asParser());
+			}
+		};
+	}
+
+	protected Definition notAKeyword(final Object... elements) {
+		return new Definition() {
+			@Override
+			public ParserCombinator asParser() {
+				return new TestForKeyword(FluentGrammar.this, false, all(
+						elements).asParser());
+			}
+		};
+	}
+
+	// ------------------------------------------------------------------------
+
+	public ParserCombinator keyword() {
+		return any().asParser();
+	}
+
+	// ------------------------------------------------------------------------
+
+	protected ParserCombinator convertToParser(Object object) {
 		if (object instanceof ParserCombinator)
 			return (ParserCombinator) object;
 		else if (object instanceof Definition)
@@ -201,8 +240,9 @@ public abstract class FluentGrammar extends Grammar {
 		else if (object instanceof String) {
 			String text = (String) object;
 			if (text.startsWith("==") && text.endsWith("=="))
-				return new MatchToken(FluentGrammar.this, text.substring(2,
-						text.length() - 2));
+				return token(text.substring(2, text.length() - 2)).asParser();
+			else if (text.startsWith("++") && text.endsWith("++"))
+				return keyword(text.substring(2, text.length() - 2)).asParser();
 			else if (definitions.containsKey(text))
 				return definitionOf(text).asParser();
 			else
@@ -211,7 +251,7 @@ public abstract class FluentGrammar extends Grammar {
 			throw new InternalError("Don't know how to convert: " + object);
 	}
 
-	private ParserCombinator[] convertAllToParsers(Object... elements) {
+	protected ParserCombinator[] convertAllToParsers(Object... elements) {
 		ParserCombinator[] pcs = new ParserCombinator[elements.length];
 		for (int i = 0; i < elements.length; i++)
 			pcs[i] = convertToParser(elements[i]);

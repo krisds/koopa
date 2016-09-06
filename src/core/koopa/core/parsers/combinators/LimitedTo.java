@@ -1,22 +1,25 @@
 package koopa.core.parsers.combinators;
 
-import java.util.Set;
-
 import koopa.core.parsers.LimitedStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
-public class LimitedTo extends ParserCombinator {
+/**
+ * This {@linkplain ParserCombinator} will attempt to match a given
+ * {@linkplain ParserCombinator}, while restricting the stream for that one to
+ * never pass a positive match for a limiting {@linkplain ParserCombinator}.
+ */
+public class LimitedTo extends UnaryParserDecorator {
 
-	private final ParserCombinator target;
 	private final ParserCombinator limiter;
 
 	public LimitedTo(ParserCombinator target, ParserCombinator limiter) {
-		this.target = target;
+		super(target);
 		this.limiter = limiter;
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
 		Stream stream = parse.getStream();
 
@@ -27,27 +30,15 @@ public class LimitedTo extends ParserCombinator {
 			parse.setStream(limitedParseStream);
 			// limitedParseStream.setParse(parse);
 
-			return target.accepts(parse);
+			return parser.accepts(parse);
 
 		} finally {
 			parse.setStream(stream);
 		}
 	}
 
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		target.addAllKeywordsInScopeTo(keywords);
-		// Not: limiter.addAllKeywordsInScopeTo(keywords);
-	}
-
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		target.addAllLeadingKeywordsTo(keywords);
-	}
-
-	public boolean canMatchEmptyInputs() {
-		return target.canMatchEmptyInputs();
-	}
-
+	@Override
 	public String toString() {
-		return "%limit " + target + " %by " + limiter;
+		return "%limit " + parser + " %by " + limiter;
 	}
 }

@@ -1,0 +1,233 @@
+# Comments. ###################################################################
+#
+
+123456* ANNOTATED SAMPLE                                                KOOPA
+<---->^<---------------------------------------------------------------><--->^
+SEQNR I COMMENT                                                         IDENT EOLN/TEXT
+
+           *> Stop bashing COBOL.
+<---->^<-->^^^<-->^<----->^<--->^^
+SEQNR I WS ::.WORD. WORD  .WORD :EOLN/TEXT
+
+
+# Basic character strings. #################################################### 
+#
+
+       IDENTIFICATION DIVISION.
+<---->^<------------>^<------>^^
+SEQNR I WORD         . WORD   :EOLN/TEXT
+
+       PROGRAM-ID. FOO.
+<---->^<-------->^^<->^^
+SEQNR I WORD     :. W :EOLN/TEXT
+
+
+# Basic string literals. ######################################################
+#
+
+       DISPLAY "Plain old Cobol String.".
+<---->^<----->^<----------------------->^^
+SEQNR I WORD  . STRING                  :EOLN/TEXT
+
+       DISPLAY 'Plain old Cobol String.'.
+<---->^<----->^<----------------------->^^
+SEQNR I WORD  . STRING                  :EOLN/TEXT
+
+
+# Null terminated string literals. ############################################
+#
+
+       DISPLAY z"Null terminated String.".
+<---->^<----->^^<----------------------->^^
+SEQNR I WORD  .W STRING                  :EOLN/TEXT
+
+       DISPLAY z'Null terminated String.'.
+<---->^<----->^^<----------------------->^^
+SEQNR I WORD  .W STRING                  :EOLN/TEXT
+
+       DISPLAY Z"Null terminated String".
+<---->^<----->^^<---------------------->^^
+SEQNR I WORD  .W STRING                 :EOLN/TEXT
+
+       DISPLAY Z'Null terminated String'.
+<---->^<----->^^<---------------------->^^
+SEQNR I WORD  .W STRING                 :EOLN/TEXT
+
+
+# National string literals. ###################################################
+#
+
+       DISPLAY n"National String.".
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY n'National String.'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY N"National String.".
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY N'National String.'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+
+# Boolean literals. ###########################################################
+#
+
+       DISPLAY B"01".
+<---->^<----->^^<-->^^
+SEQNR I WORD  .W STRING :EOLN/TEXT
+
+       DISPLAY B'01'.
+<---->^<----->^^<-->^^
+SEQNR I WORD  .W STRING :EOLN/TEXT
+
+       DISPLAY b"01".
+<---->^<----->^^<-->^^
+SEQNR I WORD  .W STRING :EOLN/TEXT
+
+       DISPLAY b'01'.
+<---->^<----->^^<-->^^
+SEQNR I WORD  .W STRING :EOLN/TEXT
+
+
+# Boolean hexadecimal literals. ###############################################
+#
+
+       DISPLAY BX"0123456789ABCDEF".
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+       DISPLAY BX'0123456789ABCDEF'.
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+       DISPLAY bx'0123456789ABCDEF'.
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+       DISPLAY bx'0123456789ABCDEF'.
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+
+# Numeric hexadecimal literals. ###############################################
+#
+
+       DISPLAY H"0123456789ABCDEF".
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY H'0123456789ABCDEF'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY h'0123456789ABCDEF'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY h'0123456789ABCDEF'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+
+# Alphanumeric hexadecimal literals. ##########################################
+#
+
+       DISPLAY X"0123456789ABCDEF".
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY X'0123456789ABCDEF'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY x'0123456789ABCDEF'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+       DISPLAY x'0123456789ABCDEF'.
+<---->^<----->^^<---------------->^^
+SEQNR I WORD  .W STRING           :EOLN/TEXT
+
+
+# National hexadecimal literals. ##############################################
+#
+
+       DISPLAY NX"0123456789ABCDEF".
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+       DISPLAY NX'0123456789ABCDEF'.
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+       DISPLAY nx'0123456789ABCDEF'.
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+       DISPLAY nx'0123456789ABCDEF'.
+<---->^<----->^<><---------------->^^
+SEQNR I WORD  .W STRING            :EOLN/TEXT
+
+
+# Integer literals. ###########################################################
+#
+
+       DISPLAY 1234567890.
+<---->^<----->^<-------->^^
+SEQNR I WORD  .NUMBER    :EOLN/TEXT
+
+       DISPLAY +1234567890.
+<---->^<----->^^<-------->^^
+SEQNR I WORD  .: NUMBER   :EOLN/TEXT
+
+       DISPLAY -1234567890.
+<---->^<----->^^<-------->^^
+SEQNR I WORD  .: NUMBER   :EOLN/TEXT
+
+
+# Decimal literals. ###########################################################
+#
+
+       DISPLAY 3.14159265359.
+<---->^<----->^^^<--------->^^
+SEQNR I WORD  .N:NUMBER     :EOLN/TEXT
+
+       DISPLAY 3,14159265359.
+<---->^<----->^^^<--------->^^
+SEQNR I WORD  .N:NUMBER     :EOLN/TEXT
+
+       DISPLAY +3.14159265359.
+<---->^<----->^^^^<--------->^^
+SEQNR I WORD  .:N:NUMBER     :EOLN/TEXT
+
+       DISPLAY +3,14159265359.
+<---->^<----->^^^^<--------->^^
+SEQNR I WORD  .:N:NUMBER     :EOLN/TEXT
+
+       DISPLAY -3.14159265359.
+<---->^<----->^^^^<--------->^^
+SEQNR I WORD  .:N:NUMBER     :EOLN/TEXT
+
+       DISPLAY -3,14159265359.
+<---->^<----->^^^^<--------->^^
+SEQNR I WORD  .:N:NUMBER     :EOLN/TEXT
+
+
+# If you're wondering why I'm splitting up decimals into parts, rather than
+# detecting them as a whole, here's why:
+
+       DISPLAY FOO (1,2).
+<---->^<----->^<->^^^^^^^^
+SEQNR I WORD  . W .:N:N::EOLN/TEXT
+
+# There is no way for the lexer to know whether the "1,2" in this example is
+# meant to be a decimal value, or whether it is just a list of two indexes. We
+# need context to figure that out, and that's something which is only really
+# available while parsing. So rather than guessing the wrong token types we
+# prefer to let the parser handle this complexity.
+

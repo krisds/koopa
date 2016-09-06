@@ -16,7 +16,7 @@ import koopa.core.sources.Source;
  */
 public class TestTokenizer extends ChainingSource<Token, Token> implements Source<Token> {
 
-	private static final Logger LOGGER = Logger.getLogger("tokenising.test");
+	private static final Logger LOGGER = Logger.getLogger("source.test");
 
 	public static final String MARKER_TEXT = "#";
 

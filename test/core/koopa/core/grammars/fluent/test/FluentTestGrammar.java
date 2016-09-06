@@ -2,36 +2,27 @@ package koopa.core.grammars.fluent.test;
 
 import koopa.core.data.Token;
 import koopa.core.grammars.fluent.FluentGrammar;
+import koopa.core.parsers.Parse;
 
 class FluentTestGrammar extends FluentGrammar {
 
 	@Override
-	public boolean isSeparator(String text) {
-		// TODO Auto-generated method stub
+	public boolean canBeSkipped(Token token, Parse parse) {
 		return false;
 	}
 
 	@Override
 	public boolean isProgramText(Token token) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isComment(Token token) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isCaseSensitive() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getNamespace() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

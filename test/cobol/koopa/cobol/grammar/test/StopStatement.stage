@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target stopStatement;
 
 +[ STOP RUN ]

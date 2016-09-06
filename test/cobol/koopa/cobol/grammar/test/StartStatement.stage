@@ -1,10 +1,6 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target startStatement;
 
-+[ START MY-FILE # . ]
++[ START MY-FILE ] <> [ . ]
 
 +[ START MY-FILE
    END-START ]

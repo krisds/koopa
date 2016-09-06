@@ -230,9 +230,18 @@ end
 ## Low level stuff.
 ## -----------------------------------------------------------------------------
 
-def identifier          =  (regularIdentifier | delimitedIdentifier)  end
-def regularIdentifier   =  _                                          end
-def delimitedIdentifier =  @CHARACTER_STRING @STRING_LITERAL _        end
+def identifier          =  (delimitedIdentifier | regularIdentifier)  end
+
+def regularIdentifier   = 
+    @WORD _
+    %noskip (
+      ( @NUMBER _
+      | @WORD _
+      )*
+    )
+end
+
+def delimitedIdentifier =  @STRING _  end
 
 
 def tableReferenceList =  tableReference (',' tableReference)*  end

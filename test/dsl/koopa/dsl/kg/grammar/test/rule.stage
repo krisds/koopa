@@ -1,7 +1,3 @@
-package koopa.dsl.kg.grammar.test;
-grammar koopa.dsl.kg.grammar.KGGrammar;
-tokenizer koopa.dsl.kg.sources.test.KGTestSource;
-
 target rule;
 
 +[ def cobol =  GRACE MURRAY HOPPER  end ]
@@ -29,4 +25,22 @@ target rule;
 
 +[ def `def = `where
      where def `where = `end end
+   end ]
+
+
++[ def emptyUsercode =
+     {}
+   end ]
+
++[ def usercode =
+     { System.out.println("DISPLAY UPON TERMINAL"); } 
+   end ]
+
++[ def nestedUsercode =
+     { if (display) {
+          System.out.println("DISPLAY UPON TERMINAL");
+       } else {
+          count += 1;
+       } 
+     }
    end ]

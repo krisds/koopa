@@ -17,7 +17,7 @@ import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
 import koopa.core.util.Encoding;
 import koopa.core.util.Iterables;
-import koopa.dsl.kg.source.KGTokenizer;
+import koopa.dsl.kg.grammar.KGGrammar;
 import koopa.templates.Template;
 import koopa.templates.TemplateLogic;
 
@@ -61,7 +61,7 @@ public class Generation {
 						+ importName + ";");
 			}
 		}
-		
+
 		// The order in which property names are listed is not stable.
 		// So we sort all imports to ensure stability in the generated output.
 		Collections.sort(additionalImports);
@@ -207,12 +207,22 @@ public class Generation {
 		}
 	}
 
+	private String unescaped(String identifier) {
+		if (identifier.charAt(0) == '`')
+			return identifier.substring(1);
+		else
+			return identifier;
+	}
+
 	private TemplateLogic partLogic(final Tree part,
 			final List<String> bindings, final List<String> unbindings) {
 		return new TemplateLogic() {
 			public String getValue(String name) {
 				if ("text".equals(name))
 					return part.getAllText();
+
+				if ("text_of_identifier".equals(name))
+					return unescaped(part.getChild("identifier").getAllText());
 
 				if (name.startsWith("text_of_"))
 					return part.getChild(name.substring("text_of_".length()))
@@ -456,9 +466,8 @@ public class Generation {
 	}
 
 	private String getRuleName(final Tree rule) {
-		return rule.getChild("identifier").getAllText();
+		return unescaped(rule.getChild("identifier").getAllText());
 	}
-
 
 	private String getFullyQualifiedRuleName(final Tree rule) {
 		final String localName = getRuleName(rule);
@@ -468,22 +477,29 @@ public class Generation {
 			return localName;
 		else if (parent.isNode("rule") || parent.isNode("nested_rule"))
 			return getFullyQualifiedRuleName(parent)
-					+ KGTokenizer.SCOPE_SEPARATOR_CHARACTER + localName;
+					+ KGGrammar.SCOPE_SEPARATOR + localName;
 		else
 			return localName;
 	}
 
 	private String getFullyQualifiedIdentifier(final Tree identifier) {
+		// This name may be escaped. Which is fine, we'll match it against
+		// another escaped name anyway.
 		final String name = identifier.getAllText();
 
 		final Tree scope = identifier.getAncestor("rule");
 
-		final Object match = Jaxen.getMatch(scope,
-				".//nested_rule[identifier[text()='" + name + "']]");
+		final List<?> nestedRules = Jaxen.getMatches(scope, ".//nested_rule");
+		for (Object nestedRule : nestedRules) {
+			if (nestedRule instanceof Tree) {
+				final Tree nestedRuleTree = (Tree) nestedRule;
+				final String nestedRuleName = nestedRuleTree.getChild(
+						"identifier").getAllText();
+				if (name.equals(nestedRuleName))
+					return getFullyQualifiedRuleName(nestedRuleTree);
+			}
+		}
 
-		if (match != null)
-			return getFullyQualifiedRuleName((Tree) match);
-
-		return name;
+		return unescaped(name);
 	}
 }

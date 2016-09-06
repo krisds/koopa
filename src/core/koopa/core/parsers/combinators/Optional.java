@@ -1,24 +1,27 @@
 package koopa.core.parsers.combinators;
 
-import java.util.Set;
-
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
-public class Optional extends ParserCombinator {
+/**
+ * A {@linkplain ParserCombinator} which will try to match a given
+ * {@linkplain ParserCombinator} once, but still pass if it couldn't.
+ */
+public class Optional extends UnaryParserDecorator {
 
-	private final ParserCombinator parser;
+	private static final String SYMBOL = "[...]";
 
 	public Optional(ParserCombinator parser) {
-		this.parser = parser;
+		super(parser);
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
 		Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent("[optional>");
+			parse.getTrace().indent(SYMBOL + " ?");
 
 		stream.bookmark();
 
@@ -31,17 +34,9 @@ public class Optional extends ParserCombinator {
 		}
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent("<optional]: " + accepts);
+			parse.getTrace().dedent(SYMBOL + " : " + (accepts ? "yes" : "no"));
 
 		return true;
-	}
-
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		parser.addAllKeywordsInScopeTo(keywords);
-	}
-
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		parser.addAllLeadingKeywordsTo(keywords);
 	}
 
 	public boolean canMatchEmptyInputs() {
@@ -49,6 +44,6 @@ public class Optional extends ParserCombinator {
 	}
 
 	public String toString() {
-		return "[...]";
+		return SYMBOL;
 	}
 }

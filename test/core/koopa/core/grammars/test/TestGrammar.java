@@ -6,10 +6,11 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.grammars.KoopaGrammar;
-import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.FutureParser;
+import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.Block;
+import koopa.core.parsers.combinators.Opt;
 
 /**
  * This class exposes all parser combinator methods for testing. It can be
@@ -36,18 +37,13 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public boolean isSeparator(String text) {
-		return separators.contains(text);
-	}
-
-	@Override
-	public boolean isComment(Token token) {
-		return false;
-	}
-
-	@Override
 	public boolean isProgramText(Token token) {
 		return true;
+	}
+
+	@Override
+	public boolean canBeSkipped(Token token, Parse parse) {
+		return separators.contains(token.getText());
 	}
 
 	@Override
@@ -98,6 +94,11 @@ public class TestGrammar extends KoopaGrammar {
 	@Override
 	public ParserCombinator token(String text) {
 		return super.token(text);
+	}
+
+	@Override
+	public ParserCombinator number(String text) {
+		return super.number(text);
 	}
 
 	@Override

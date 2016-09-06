@@ -16,7 +16,7 @@ public class Sequence extends ParserCombinator {
 	}
 
 	public boolean matches(Parse parse) {
-		for (ParserCombinator parser : parsers) 
+		for (ParserCombinator parser : parsers)
 			if (!parser.accepts(parse))
 				return false;
 

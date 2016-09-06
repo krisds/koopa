@@ -1,9 +1,14 @@
 package koopa.core.parsers;
 
+import java.io.PrintStream;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import koopa.core.data.Token;
+import koopa.core.grammars.Grammar;
 import koopa.core.grammars.combinators.Scoped;
 
 public class Stack {
@@ -41,10 +46,23 @@ public class Stack {
 		return p;
 	}
 
+	/**
+	 * Whether or not this stack can say that the given word is a keyword.
+	 * <p>
+	 * We assume that the given word has been passed through
+	 * {@linkplain Grammar#comparableText(String)} already.
+	 * <p>
+	 * By default this forwards the question to the {@link #head} frame. (via
+	 * {@linkplain Frame#isKeyword(String)}).
+	 */
 	public boolean isKeyword(String word) {
 		return head.isKeyword(word);
 	}
 
+	/**
+	 * Whether or not this stack is matching the given rules in the given order.
+	 * Earlier rules names should appear closer to the head of the stack.
+	 */
 	public boolean isMatching(String... ruleNames) {
 		Frame f = head;
 
@@ -96,6 +114,15 @@ public class Stack {
 			return new Frame(this, p);
 		}
 
+		/**
+		 * Whether or not this frame can say that the given word is a keyword.
+		 * <p>
+		 * We assume that the given word has been passed through
+		 * {@linkplain Grammar#comparableText(String)} already.
+		 * <p>
+		 * By default this forwards the question to the parser linked to this
+		 * frame (via {@linkplain ParserCombinator#isKeyword(String, Frame)}).
+		 */
 		public boolean isKeyword(String word) {
 			if (parser == null)
 				return false;
@@ -148,6 +175,23 @@ public class Stack {
 
 			return sb.toString();
 		}
+
+		@Override
+		public String toString() {
+			if (parser == null)
+				return "<base>";
+			else
+				return parser.toString();
+		}
+
+		public Set<String> getAllKeywords() {
+			if (parser == null)
+				return Collections.emptySet();
+
+			Set<String> keywords = new HashSet<String>();
+			parser.addAllKeywordsInScopeTo(keywords);
+			return keywords;
+		}
 	}
 
 	/**
@@ -181,6 +225,22 @@ public class Stack {
 
 		public void setValue(String name, Token value) {
 			values.put(name, value);
+		}
+	}
+
+	/**
+	 * This is just a debugging utility for printing the current frames in the
+	 * stack and their associated keywords.
+	 */
+	public void traceKeywords(PrintStream out) {
+		Frame f = head;
+		while (f != null) {
+			Set<String> keywords = f.getAllKeywords();
+			if (f == head)
+				out.println(f + " -- " + keywords);
+			else
+				out.println("at " + f + " -- " + keywords);
+			f = f.up();
 		}
 	}
 }

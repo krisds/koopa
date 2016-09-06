@@ -24,7 +24,7 @@ import koopa.core.targets.Pipe;
  * detects them, and makes them available for further processing.
  */
 class SourceWithParsedPreprocessingDirectives extends ChainingSource<Token, Data> implements Source<Data> {
-	private static final Logger LOGGER = Logger.getLogger("tokenising.preprocessing");
+	private static final Logger LOGGER = Logger.getLogger("source.cobol.preprocessing");
 	private static final ParserCombinator PREPROCESSING_PARSER = new CobolPreprocessingGrammar().preprocessing();
 
 	private Pipe<Data> dataFromParser = null;

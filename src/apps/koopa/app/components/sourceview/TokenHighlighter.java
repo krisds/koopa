@@ -6,10 +6,10 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import koopa.app.components.highlights.Highlights;
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.IslandTag;
+import koopa.core.data.tags.SyntacticTag;
 
 public class TokenHighlighter implements CaretListener {
 

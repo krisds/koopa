@@ -87,6 +87,65 @@ def numeric =
     )
 end
 
+def integerLiteral =
+    ( '+' %noskip uintgr
+    | '-' %noskip uintgr
+    | uintgr
+    )
+end
+
+def hexadecimal =
+    'H' %noskip (@STRING _)
+end
+
+def alphanumericHexadecimal =
+    'X' %noskip (@STRING _)
+end
+
+def nationalAlphanumericHexadecimal =
+    'NX' %noskip (@STRING _)
+end
+
+def booleanHexadecimal =
+    'BX' %noskip (@STRING _)
+end
+
+private def hexadecimalLiteral =
+    ( hexadecimal
+    | alphanumericHexadecimal
+    | nationalAlphanumericHexadecimal
+    | booleanHexadecimal
+    )
+end
+
+def booleanLiteral =
+    ( booleanHexadecimal
+    | 'B' %noskip (@STRING _)
+    )
+end
+
+def nullTerminatedStringLiteral =
+    'Z' %noskip (@STRING _)
+end
+
+def nationalStringLiteral =
+    'N' %noskip (@STRING _)
+end
+
+def alphanumericLiteral =
+    ( alphanumericHexadecimal
+    | nationalAlphanumericHexadecimal
+    | nullTerminatedStringLiteral
+    | nationalStringLiteral
+    | @STRING _
+    )
+end
+
+def pseudoLiteral =
+    @PSEUDO_LITERAL _
+end
+
+
 # -----------------------------------------------------------------------------
 # Decimals
 #
@@ -101,15 +160,11 @@ def decimal =
 end
 
 private def unsigned_decimal =
-    ( intgr %noskip ( (',' | '.') uintgr )
+    ( uintgr %noskip ( (',' | '.') uintgr )
     | '.' %noskip uintgr
     )
 end
 
-private def intgr =
-    @INTEGER_LITERAL _
-end
-
 private def uintgr =
-    @UNSIGNED @INTEGER_LITERAL _
+    @NUMBER _
 end

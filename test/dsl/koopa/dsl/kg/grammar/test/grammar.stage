@@ -1,0 +1,14 @@
+target grammar;
+
++[ grammar Cobol. ]
++[ grammar Cobol extends CobolBase. ]
++[ grammar CICS  extends CICSBase. ]
++[ grammar SQL   extends SQLBase. ]
+
+
++[ grammar ] basic:name [ extends Base.
+ ] rule:rule
+
++[ grammar ] basic:name [ extends Base.
+] rule:rule [
+] rule:rule

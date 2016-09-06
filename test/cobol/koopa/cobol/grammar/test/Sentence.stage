@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target sentence;
 
 +[ . ]
@@ -13,7 +9,7 @@ target sentence;
 
 # Leading compiler statements are considered to be in a sentence of their own.
 +[ COPY SOME-TEXT .
-   #
+   ] <> [
    DISPLAY FOO . ]
 
 # Nested COPY statements become part of the sentence they're in.

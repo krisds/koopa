@@ -8,39 +8,59 @@ import koopa.core.parsers.Stream;
 
 /**
  * This checks whether the stream is in a position where we can expect to not
- * match a given thing. It's basically a negative lookahead.
+ * match a given {@linkplain ParserCombinator}. It's basically a negative
+ * lookahead.
  */
-public class Not extends ParserCombinator {
-
-	private final ParserCombinator parser;
+public class Not extends UnaryParserDecorator {
 
 	public Not(ParserCombinator parser) {
-		this.parser = parser;
+		super(parser);
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
 		Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent("[not>");
+			parse.getTrace().indent(toString() + " ?");
 
 		stream.bookmark();
-		final boolean accepted = parser.accepts(parse);
+		final boolean accepted = !parser.accepts(parse);
 		stream.rewind();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent("<not]");
+			parse.getTrace().dedent(
+					toString() + " : " + (accepted ? "yes" : "no"));
 
-		return !accepted;
+		return accepted;
 	}
 
+	/**
+	 * This parser just tests the context of the stream it is in, and so does
+	 * not contribute any keywords.
+	 */
+	@Override
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
 	}
 
+	/**
+	 * This parser just tests the context of the stream it is in, and so does
+	 * not contribute any keywords.
+	 */
+	@Override
+	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	}
+
+	/**
+	 * This parser just tests the context of the stream it is in, and so never
+	 * actually consumes any input.
+	 */
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "%not " + parser.toString();
 	}

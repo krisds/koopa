@@ -14,14 +14,15 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Stream;
 
-import static koopa.core.grammars.combinators.Opt.NOSKIP;
+import static koopa.core.parsers.combinators.Opt.NOSKIP;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 import koopa.cobol.sql.grammar.SQLBaseGrammar;
-import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
-import static koopa.cobol.data.tags.SyntacticTag.STRING_LITERAL;
+import static koopa.core.data.tags.SyntacticTag.NUMBER;
+import static koopa.core.data.tags.SyntacticTag.STRING;
+import static koopa.core.data.tags.SyntacticTag.WORD;
 
 public class SQLGrammar extends SQLBaseGrammar {
     public SQLGrammar() {
@@ -77,7 +78,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         includeStatementParser = future;
         future.setParser(
           sequence(
-            token("INCLUDE"),
+            keyword("INCLUDE"),
             identifier()
           )
         );
@@ -100,11 +101,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         declareSessionStatementParser = future;
         future.setParser(
           sequence(
-            token("DECLARE"),
-            token("SESSION"),
+            keyword("DECLARE"),
+            keyword("SESSION"),
             literal("."),
             identifier(),
-            token("TABLE"),
+            keyword("TABLE"),
             optional(
               as("unknown",
                 skipto(
@@ -133,7 +134,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         declareCursorStatementParser = future;
         future.setParser(
           sequence(
-            token("DECLARE"),
+            keyword("DECLARE"),
             cursorName(),
             optional(
               declareCursorStatement$sensitivity()
@@ -141,14 +142,14 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               declareCursorStatement$scrollability()
             ),
-            token("CURSOR"),
+            keyword("CURSOR"),
             optional(
               declareCursorStatement$holdability()
             ),
             optional(
               declareCursorStatement$returnability()
             ),
-            token("FOR"),
+            keyword("FOR"),
             declareCursorStatement$queryExpression(),
             optional(
               declareCursorStatement$orderBy()
@@ -184,9 +185,9 @@ public class SQLGrammar extends SQLBaseGrammar {
         declareCursorStatement$sensitivityParser = future;
         future.setParser(
           choice(
-            token("SENSITIVE"),
-            token("INSENSITIVE"),
-            token("ASENSITIVE")
+            keyword("SENSITIVE"),
+            keyword("INSENSITIVE"),
+            keyword("ASENSITIVE")
           )
         );
       }
@@ -208,10 +209,10 @@ public class SQLGrammar extends SQLBaseGrammar {
         declareCursorStatement$scrollabilityParser = future;
         future.setParser(
           choice(
-            token("SCROLL"),
+            keyword("SCROLL"),
             sequence(
-              token("NO"),
-              token("SCROLL")
+              keyword("NO"),
+              keyword("SCROLL")
             )
           )
         );
@@ -235,12 +236,12 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("WITH"),
-              token("HOLD")
+              keyword("WITH"),
+              keyword("HOLD")
             ),
             sequence(
-              token("WITHOUT"),
-              token("HOLD")
+              keyword("WITHOUT"),
+              keyword("HOLD")
             )
           )
         );
@@ -264,12 +265,12 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("WITH"),
-              token("RETURN")
+              keyword("WITH"),
+              keyword("RETURN")
             ),
             sequence(
-              token("WITHOUT"),
-              token("RETURN")
+              keyword("WITHOUT"),
+              keyword("RETURN")
             )
           )
         );
@@ -312,8 +313,8 @@ public class SQLGrammar extends SQLBaseGrammar {
         declareCursorStatement$orderByParser = future;
         future.setParser(
           sequence(
-            token("ORDER"),
-            token("BY"),
+            keyword("ORDER"),
+            keyword("BY"),
             declareCursorStatement$unknown()
           )
         );
@@ -336,17 +337,17 @@ public class SQLGrammar extends SQLBaseGrammar {
         declareCursorStatement$updatabilityParser = future;
         future.setParser(
           sequence(
-            token("FOR"),
+            keyword("FOR"),
             choice(
               sequence(
-                token("READ"),
-                token("ONLY")
+                keyword("READ"),
+                keyword("ONLY")
               ),
               sequence(
-                token("UPDATE"),
+                keyword("UPDATE"),
                 optional(
                   sequence(
-                    token("OF"),
+                    keyword("OF"),
                     declareCursorStatement$unknown()
                   )
                 )
@@ -375,10 +376,10 @@ public class SQLGrammar extends SQLBaseGrammar {
           skipto(
             choice(
               sequence(
-                token("ORDER"),
-                token("BY")
+                keyword("ORDER"),
+                keyword("BY")
               ),
-              token("FOR"),
+              keyword("FOR"),
               eof()
             )
           )
@@ -402,11 +403,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         selectStatementParser = future;
         future.setParser(
           sequence(
-            token("SELECT"),
+            keyword("SELECT"),
             optional(
               as("unknown",
                 skipto(
-                  token("FROM")
+                  keyword("FROM")
                 )
               )
             ),
@@ -416,7 +417,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 optional(
                   as("unknown",
                     skipto(
-                      token("WHERE")
+                      keyword("WHERE")
                     )
                   )
                 ),
@@ -451,7 +452,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         selectStatement$fromParser = future;
         future.setParser(
           sequence(
-            token("FROM"),
+            keyword("FROM"),
             tableReferenceList(),
             optional(
               selectStatement$unknown()
@@ -477,7 +478,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         selectStatement$whereParser = future;
         future.setParser(
           sequence(
-            token("WHERE"),
+            keyword("WHERE"),
             optional(
               selectStatement$unknown()
             )
@@ -503,14 +504,14 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           skipto(
             choice(
-              token("FROM"),
-              token("WHERE"),
+              keyword("FROM"),
+              keyword("WHERE"),
               sequence(
-                token("GROUP"),
-                token("BY")
+                keyword("GROUP"),
+                keyword("BY")
               ),
-              token("HAVING"),
-              token("WINDOW"),
+              keyword("HAVING"),
+              keyword("WINDOW"),
               eof()
             )
           )
@@ -534,8 +535,8 @@ public class SQLGrammar extends SQLBaseGrammar {
         insertStatementParser = future;
         future.setParser(
           sequence(
-            token("INSERT"),
-            token("INTO"),
+            keyword("INSERT"),
+            keyword("INTO"),
             tableName(),
             optional(
               as("unknown",
@@ -565,14 +566,14 @@ public class SQLGrammar extends SQLBaseGrammar {
         updateStatementParser = future;
         future.setParser(
           sequence(
-            token("UPDATE"),
+            keyword("UPDATE"),
             targetTable(),
             optional(
               sequence(
                 optional(
                   as("unknown",
                     skipto(
-                      token("WHERE")
+                      keyword("WHERE")
                     )
                   )
                 ),
@@ -607,11 +608,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         updateStatement$whereParser = future;
         future.setParser(
           sequence(
-            token("WHERE"),
+            keyword("WHERE"),
             choice(
               sequence(
-                token("CURRENT"),
-                token("OF"),
+                keyword("CURRENT"),
+                keyword("OF"),
                 updateStatement$unknown()
               ),
               updateStatement$unknown()
@@ -659,8 +660,8 @@ public class SQLGrammar extends SQLBaseGrammar {
         deleteStatementParser = future;
         future.setParser(
           sequence(
-            token("DELETE"),
-            token("FROM"),
+            keyword("DELETE"),
+            keyword("FROM"),
             targetTable(),
             optional(
               skipto(
@@ -688,7 +689,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         openStatementParser = future;
         future.setParser(
           sequence(
-            token("OPEN"),
+            keyword("OPEN"),
             cursorName(),
             optional(
               openStatement$inputUsing()
@@ -715,7 +716,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           optional(
             sequence(
-              token("USING"),
+              keyword("USING"),
               as("unknown",
                 skipto(
                   eof()
@@ -743,7 +744,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         closeStatementParser = future;
         future.setParser(
           sequence(
-            token("CLOSE"),
+            keyword("CLOSE"),
             cursorName()
           )
         );
@@ -765,7 +766,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("rollbackStatement", PUBLIC, true);
         rollbackStatementParser = future;
         future.setParser(
-          token("ROLLBACK")
+          keyword("ROLLBACK")
         );
       }
     
@@ -786,8 +787,8 @@ public class SQLGrammar extends SQLBaseGrammar {
         lockTableStatementParser = future;
         future.setParser(
           sequence(
-            token("LOCK"),
-            token("TABLE"),
+            keyword("LOCK"),
+            keyword("TABLE"),
             tableName(),
             optional(
               as("unknown",
@@ -817,36 +818,36 @@ public class SQLGrammar extends SQLBaseGrammar {
         alterStatementParser = future;
         future.setParser(
           sequence(
-            token("ALTER"),
+            keyword("ALTER"),
             optional(
               as("subject",
                 choice(
-                  token("DATABASE"),
-                  token("DOMAIN"),
-                  token("INDEX"),
+                  keyword("DATABASE"),
+                  keyword("DOMAIN"),
+                  keyword("INDEX"),
                   sequence(
                     optional(
-                      token("SPECIFIC")
+                      keyword("SPECIFIC")
                     ),
-                    token("FUNCTION")
+                    keyword("FUNCTION")
                   ),
-                  token("MASK"),
-                  token("PERMISSION"),
-                  token("PROCEDURE"),
-                  token("SEQUENCE"),
-                  token("STOGROUP"),
-                  token("TABLE"),
-                  token("TABLESPACE"),
+                  keyword("MASK"),
+                  keyword("PERMISSION"),
+                  keyword("PROCEDURE"),
+                  keyword("SEQUENCE"),
+                  keyword("STOGROUP"),
+                  keyword("TABLE"),
+                  keyword("TABLESPACE"),
                   choice(
-                    token("TRANSFORM"),
-                    token("TRANSFORMS")
+                    keyword("TRANSFORM"),
+                    keyword("TRANSFORMS")
                   ),
-                  token("TRIGGER"),
+                  keyword("TRIGGER"),
                   sequence(
-                    token("TRUSTED"),
-                    token("CONTEXT")
+                    keyword("TRUSTED"),
+                    keyword("CONTEXT")
                   ),
-                  token("VIEW")
+                  keyword("VIEW")
                 )
               )
             ),
@@ -878,103 +879,103 @@ public class SQLGrammar extends SQLBaseGrammar {
         createStatementParser = future;
         future.setParser(
           sequence(
-            token("CREATE"),
+            keyword("CREATE"),
             optional(
               as("subject",
                 choice(
                   sequence(
                     optional(
-                      token("PUBLIC")
+                      keyword("PUBLIC")
                     ),
-                    token("ALIAS")
+                    keyword("ALIAS")
                   ),
-                  token("ASSERTION"),
-                  token("CAST"),
+                  keyword("ASSERTION"),
+                  keyword("CAST"),
                   sequence(
-                    token("CHARACTER"),
-                    token("SET")
+                    keyword("CHARACTER"),
+                    keyword("SET")
                   ),
-                  token("COLLATION"),
-                  token("DATABASE"),
-                  token("DOMAIN"),
-                  token("FUNCTION"),
+                  keyword("COLLATION"),
+                  keyword("DATABASE"),
+                  keyword("DOMAIN"),
+                  keyword("FUNCTION"),
                   sequence(
                     optional(
                       sequence(
-                        token("UNIQUE"),
+                        keyword("UNIQUE"),
                         optional(
                           sequence(
-                            token("WHERE"),
-                            token("NOT"),
-                            token("NULL")
+                            keyword("WHERE"),
+                            keyword("NOT"),
+                            keyword("NULL")
                           )
                         )
                       )
                     ),
-                    token("INDEX")
+                    keyword("INDEX")
                   ),
-                  token("MASK"),
+                  keyword("MASK"),
                   sequence(
                     optional(
                       choice(
-                        token("INSTANCE"),
-                        token("STATIC"),
-                        token("CONSTRUCTOR")
+                        keyword("INSTANCE"),
+                        keyword("STATIC"),
+                        keyword("CONSTRUCTOR")
                       )
                     ),
-                    token("METHOD")
+                    keyword("METHOD")
                   ),
-                  token("ORDERING"),
-                  token("PERMISSION"),
-                  token("PROCEDURE"),
-                  token("ROLE"),
-                  token("SCHEMA"),
-                  token("SEQUENCE"),
+                  keyword("ORDERING"),
+                  keyword("PERMISSION"),
+                  keyword("PROCEDURE"),
+                  keyword("ROLE"),
+                  keyword("SCHEMA"),
+                  keyword("SEQUENCE"),
                   sequence(
-                    token("SPECIFIC"),
-                    token("METHOD")
+                    keyword("SPECIFIC"),
+                    keyword("METHOD")
                   ),
-                  token("STOGROUP"),
-                  token("SYNONYM"),
+                  keyword("STOGROUP"),
+                  keyword("SYNONYM"),
                   sequence(
                     optional(
                       choice(
                         sequence(
                           choice(
-                            token("GLOBAL"),
-                            token("LOCAL")
+                            keyword("GLOBAL"),
+                            keyword("LOCAL")
                           ),
-                          token("TEMPORARY")
+                          keyword("TEMPORARY")
                         ),
-                        token("AUXILIARY"),
-                        token("AUX")
+                        keyword("AUXILIARY"),
+                        keyword("AUX")
                       )
                     ),
-                    token("TABLE")
+                    keyword("TABLE")
                   ),
                   sequence(
                     optional(
-                      token("LOB")
+                      keyword("LOB")
                     ),
-                    token("TABLESPACE")
+                    keyword("TABLESPACE")
                   ),
                   choice(
-                    token("TRANSFORM"),
-                    token("TRANSFORMS")
+                    keyword("TRANSFORM"),
+                    keyword("TRANSFORMS")
                   ),
-                  token("TRANSLATION"),
-                  token("TRIGGER"),
+                  keyword("TRANSLATION"),
+                  keyword("TRIGGER"),
                   sequence(
-                    token("TRUSTED"),
-                    token("CONTEXT")
+                    keyword("TRUSTED"),
+                    keyword("CONTEXT")
                   ),
-                  token("TYPE"),
-                  token("VARIABLE"),
+                  keyword("TYPE"),
+                  keyword("VARIABLE"),
                   sequence(
                     optional(
-                      token("RECURSIVE")
+                      keyword("RECURSIVE")
                     ),
-                    token("VIEW")
+                    keyword("VIEW")
                   )
                 )
               )
@@ -1007,44 +1008,44 @@ public class SQLGrammar extends SQLBaseGrammar {
         dropStatementParser = future;
         future.setParser(
           sequence(
-            token("DROP"),
+            keyword("DROP"),
             optional(
               as("subject",
                 choice(
                   sequence(
                     optional(
-                      token("PUBLIC")
+                      keyword("PUBLIC")
                     ),
-                    token("ALIAS")
+                    keyword("ALIAS")
                   ),
-                  token("CONSTRAINT"),
-                  token("DATABASE"),
+                  keyword("CONSTRAINT"),
+                  keyword("DATABASE"),
                   sequence(
                     optional(
-                      token("SPECIFIC")
+                      keyword("SPECIFIC")
                     ),
-                    token("FUNCTION")
+                    keyword("FUNCTION")
                   ),
-                  token("INDEX"),
-                  token("MASK"),
-                  token("PACKAGE"),
-                  token("PERMISSION"),
-                  token("PROCEDURE"),
-                  token("ROLE"),
-                  token("SCHEMA"),
-                  token("SEQUENCE"),
-                  token("STOGROUP"),
-                  token("SYNONYM"),
-                  token("TABLE"),
-                  token("TABLESPACE"),
-                  token("TRIGGER"),
+                  keyword("INDEX"),
+                  keyword("MASK"),
+                  keyword("PACKAGE"),
+                  keyword("PERMISSION"),
+                  keyword("PROCEDURE"),
+                  keyword("ROLE"),
+                  keyword("SCHEMA"),
+                  keyword("SEQUENCE"),
+                  keyword("STOGROUP"),
+                  keyword("SYNONYM"),
+                  keyword("TABLE"),
+                  keyword("TABLESPACE"),
+                  keyword("TRIGGER"),
                   sequence(
-                    token("TRUSTED"),
-                    token("CONTEXT")
+                    keyword("TRUSTED"),
+                    keyword("CONTEXT")
                   ),
-                  token("TYPE"),
-                  token("VARIABLE"),
-                  token("VIEW")
+                  keyword("TYPE"),
+                  keyword("VARIABLE"),
+                  keyword("VIEW")
                 )
               )
             ),
@@ -1076,11 +1077,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         renameStatementParser = future;
         future.setParser(
           sequence(
-            token("RENAME"),
+            keyword("RENAME"),
             optional(
               choice(
-                token("TABLE"),
-                token("INDEX")
+                keyword("TABLE"),
+                keyword("INDEX")
               )
             ),
             optional(
@@ -1111,8 +1112,8 @@ public class SQLGrammar extends SQLBaseGrammar {
         identifierParser = future;
         future.setParser(
           choice(
-            regularIdentifier(),
-            delimitedIdentifier()
+            delimitedIdentifier(),
+            regularIdentifier()
           )
         );
       }
@@ -1133,7 +1134,24 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("regularIdentifier", PUBLIC, true);
         regularIdentifierParser = future;
         future.setParser(
-          any()
+          sequence(
+            tagged(WORD),
+            any(),
+            opt(NOSKIP,
+              star(
+                choice(
+                  sequence(
+                    tagged(NUMBER),
+                    any()
+                  ),
+                  sequence(
+                    tagged(WORD),
+                    any()
+                  )
+                )
+              )
+            )
+          )
         );
       }
     
@@ -1154,8 +1172,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         delimitedIdentifierParser = future;
         future.setParser(
           sequence(
-            tagged(CHARACTER_STRING),
-            tagged(STRING_LITERAL),
+            tagged(STRING),
             any()
           )
         );
@@ -1253,7 +1270,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("module", PUBLIC, true);
         cursorName$moduleParser = future;
         future.setParser(
-          token("MODULE")
+          keyword("MODULE")
         );
       }
     
@@ -1313,7 +1330,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("module", PUBLIC, true);
         tableName$moduleParser = future;
         future.setParser(
-          token("MODULE")
+          keyword("MODULE")
         );
       }
     
@@ -1375,7 +1392,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              token("ONLY"),
+              keyword("ONLY"),
               literal("("),
               tableName(),
               literal(")")

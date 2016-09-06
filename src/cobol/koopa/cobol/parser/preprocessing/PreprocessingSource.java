@@ -2,7 +2,7 @@ package koopa.cobol.parser.preprocessing;
 
 import static koopa.core.trees.Trees.getTree;
 import static koopa.core.trees.jaxen.Jaxen.getMatches;
-import static koopa.core.trees.jaxen.Jaxen.getText;
+import static koopa.core.trees.jaxen.Jaxen.getAllText;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +41,7 @@ import koopa.core.util.Files;
  */
 public class PreprocessingSource extends BasicSource<Token> implements Source<Token> {
 
-	private static final Logger LOGGER = Logger.getLogger("tokenising.preprocessing");
+	private static final Logger LOGGER = Logger.getLogger("source.cobol.preprocessing");
 
 	private final Grammar grammar;
 	private final SourceFormat format;
@@ -166,8 +166,8 @@ public class PreprocessingSource extends BasicSource<Token> implements Source<To
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Processing a COPY statement");
 
-		final String textName = getText(copyStatement, "//textName//text()");
-		final String libraryName = getText(copyStatement, "//libraryName//text()");
+		final String textName = getAllText(copyStatement, "//textName");
+		final String libraryName = getAllText(copyStatement, "//libraryName");
 
 		if (LOGGER.isDebugEnabled()) {
 			if (libraryName == null)

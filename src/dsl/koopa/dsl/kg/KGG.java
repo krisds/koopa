@@ -2,15 +2,20 @@ package koopa.dsl.kg;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import koopa.core.grammars.KoopaGrammar;
 import koopa.core.trees.Tree;
+import koopa.core.util.Files;
 import koopa.dsl.kg.generator.KGGenerator;
 import koopa.dsl.kg.util.KGUtil;
 
+/**
+ * Main class to generate {@linkplain KoopaGrammar}s from .kg source files.
+ */
 public class KGG {
 
 	public static void main(String[] args) {
-
 		File file = new File(args[0]);
 		if (!file.exists()) {
 			System.err.println("Not found: " + file);
@@ -30,29 +35,17 @@ public class KGG {
 	}
 
 	private static void translateAllIn(File folder) {
-		File[] files = folder.listFiles();
-
-		for (File file : files) {
-			if (file.isFile() && file.getName().endsWith(".kg"))
-				translate(file);
-			else if (file.isDirectory())
-				translateAllIn(file);
-		}
+		final List<File> sources = Files.listFilesRecursively(folder,
+				KGUtil.getFilenameFilter());
+		for (File file : sources)
+			translate(file);
 	}
 
 	public static void translate(File file) {
 		try {
 			System.out.println("Reading " + file + "...");
 			Tree ast = KGUtil.getAST(file);
-
-			if (KGUtil.isTreeGrammar(ast)) {
-				System.out.println("This is a tree grammar...");
-				KGGenerator.translateTreeGrammar(file, KGUtil.getAST(file));
-
-			} else {
-				System.out.println("This is a regular grammar...");
-				KGGenerator.translate(file, KGUtil.getAST(file));
-			}
+			KGGenerator.translate(file, ast);
 
 		} catch (IOException e) {
 			System.err.println("Failed to parse the grammar...");

@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target multiplyStatement;
 
 +[ MULTIPLY A BY B GIVING C ]
@@ -38,9 +34,9 @@ target multiplyStatement;
 -[ MULTIPLY A BY ADDRESS OF SOMETHING ]
 
 
-+[ MULTIPLY A BY B # . ]
++[ MULTIPLY A BY B ] <> [ . ]
 
-+[ MULTIPLY A BY B GIVING C # . ]
++[ MULTIPLY A BY B GIVING C ] <> [ . ]
 
 +[ MULTIPLY A BY B
      ON SIZE ERROR

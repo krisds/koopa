@@ -44,7 +44,7 @@ import koopa.core.sources.Source;
  */
 public class SourceFormattingDirectives extends ChainingSource<Token, Token> implements Source<Token> {
 
-	private static final Logger LOGGER = Logger.getLogger("tokenising.source_formatting");
+	private static final Logger LOGGER = Logger.getLogger("source.cobol.source_format");
 
 	private static final String REGEX = "^\\s*(SKIP1|SKIP2|SKIP3|EJECT)\\s*\\.?\\s*$";
 

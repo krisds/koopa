@@ -1,27 +1,27 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
+import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
-import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
+import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
 
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
+import org.apache.log4j.Logger;
+
 public class CompilerDirectives extends ChainingSource<Token, Token> implements
 		Source<Token> {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.compiler-directives");
+			.getLogger("source.cobol.compiler_directives");
 
 	private final LinkedList<Token> queuedTokens = new LinkedList<Token>();
 
@@ -34,7 +34,6 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 		assert (source != null);
 		assert (initialReferenceFormat != null);
 
-		this.source = source;
 		this.referenceFormat = initialReferenceFormat;
 
 		if (LOGGER.isTraceEnabled())

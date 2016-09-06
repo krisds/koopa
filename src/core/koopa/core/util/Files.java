@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public final class Files {
@@ -164,4 +165,26 @@ public final class Files {
 		return null;
 	}
 
+	public static List<File> listFilesRecursively(File root,
+			FilenameFilter filenameFilter) {
+
+		LinkedList<File> matchingFiles = new LinkedList<File>();
+
+		LinkedList<File> queuedFolders = new LinkedList<File>();
+		queuedFolders.addLast(root);
+
+		while (!queuedFolders.isEmpty()) {
+			final File folder = queuedFolders.removeFirst();
+
+			for (File file : folder.listFiles()) {
+				if (file.isDirectory())
+					queuedFolders.addLast(file);
+				else if (file.isFile()
+						&& filenameFilter.accept(folder, file.getName()))
+					matchingFiles.add(file);
+			}
+		}
+
+		return matchingFiles;
+	}
 }

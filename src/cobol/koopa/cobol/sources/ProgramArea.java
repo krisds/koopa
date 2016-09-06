@@ -1,14 +1,14 @@
 package koopa.cobol.sources;
 
+import static koopa.cobol.data.tags.CobolAreaTag.IDENTIFICATION_AREA;
+import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
+import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.END_OF_LINE;
-import static koopa.core.data.tags.AreaTag.IDENTIFICATION_AREA;
-import static koopa.core.data.tags.AreaTag.INDICATOR_AREA;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SEQUENCE_NUMBER_AREA;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.io.IOException;
 
@@ -19,10 +19,11 @@ import koopa.core.sources.ThreadedSource;
 
 import org.apache.log4j.Logger;
 
-public class ProgramArea extends ThreadedSource<Token, Token> implements Source<Token> {
+public class ProgramArea extends ThreadedSource<Token, Token> implements
+		Source<Token> {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("tokenising.programarea");
+			.getLogger("source.cobol.program_area");
 
 	public ProgramArea(Source<Token> source) {
 		super(source);

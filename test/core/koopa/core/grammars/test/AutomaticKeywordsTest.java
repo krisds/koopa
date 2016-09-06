@@ -2,10 +2,10 @@ package koopa.core.grammars.test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import koopa.core.grammars.combinators.Opt;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stack;
+import koopa.core.parsers.combinators.Opt;
 
 import org.junit.Test;
 
@@ -117,8 +117,7 @@ public class AutomaticKeywordsTest extends GrammarTest {
 	}
 
 	/**
-	 * Literals are never considered possible keywords, apart from when they
-	 * lead a referenced rule.
+	 * Literals are never considered possible keywords.
 	 * <p>
 	 * E.g., given:
 	 * 
@@ -132,9 +131,7 @@ public class AutomaticKeywordsTest extends GrammarTest {
 	 * end
 	 * </pre>
 	 * 
-	 * This time the <code>hello</code> rule will know only two keywords:
-	 * <code>SWEET</code> and <code>KOOPA</code>, and only because they are
-	 * leading a referenced rule.
+	 * This time the <code>hello</code> rule will know no keywords.
 	 */
 	@Test
 	public void testLiterals() {
@@ -147,8 +144,8 @@ public class AutomaticKeywordsTest extends GrammarTest {
 		hello.setParser(G.sequence(G.literal("HELLO"), subject));
 
 		whileMatching(subject).keywordsExclude("SWEET", "WORLD", "KOOPA");
-		whileMatching(hello).keywordsInclude("SWEET", "KOOPA").and
-				.keywordsExclude("HELLO", "WORLD");
+		whileMatching(hello)
+				.keywordsExclude("SWEET", "KOOPA", "HELLO", "WORLD");
 	}
 
 	/**
@@ -213,14 +210,16 @@ public class AutomaticKeywordsTest extends GrammarTest {
 
 		public StackAssertions keywordsInclude(String... words) {
 			for (String word : words)
-				assertTrue(stack.isKeyword(word));
+				assertTrue("'" + word + "' should be a keyword",
+						stack.isKeyword(G.comparableText(word)));
 
 			return this;
 		}
 
 		public StackAssertions keywordsExclude(String... words) {
 			for (String word : words)
-				assertFalse(stack.isKeyword(word));
+				assertFalse("'" + word + "' should not be a keyword",
+						stack.isKeyword(G.comparableText(word)));
 
 			return this;
 		}

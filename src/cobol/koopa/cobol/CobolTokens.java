@@ -1,62 +1,73 @@
 package koopa.cobol;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.Reader;
+import java.util.List;
 
 import koopa.cobol.parser.preprocessing.PreprocessingSource;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
+import koopa.cobol.sources.InlineComments;
 import koopa.cobol.sources.LineContinuations;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.PseudoLiterals;
-import koopa.cobol.sources.Separators;
 import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sources.SourceFormattingDirectives;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
+import koopa.core.sources.TokenSeparator;
 import koopa.core.util.LineEndings;
 
-// TODO Make it so that CobolParser can reuse this. --> 
-// We'll need support for intermediate tokenizers and copybook lookup.
 public class CobolTokens {
 
-	public static Source<Token> getNewSource(String resourceName, Reader reader, Grammar grammar, SourceFormat format,
-			File file, Copybooks copybooks) {
+	public static Source<Token> getNewSource(String resourceName,
+			Reader reader, Grammar grammar, SourceFormat format, File file,
+			Copybooks copybooks) {
 
-		// We will be building up our tokenization stage in several steps. Each
-		// step takes the preceding tokenizer, and extends its abilities.
-		Source<Token> tokenizer;
+		// We will be building up our source in several steps. Each
+		// step takes the preceding source, and extends its abilities.
+		Source<Token> source;
 
 		// Split the input into lines.
-		tokenizer = new LineSplitter(resourceName, new BufferedReader(reader), LineEndings.getChoices());
-		// Filter out some compiler directives.
-		tokenizer = new CompilerDirectives(tokenizer, format);
-		// Split up the different areas of each line.
-		tokenizer = new ProgramArea(tokenizer);
-		// Filter out some source formatting directives.
-		tokenizer = new SourceFormattingDirectives(tokenizer);
+		final List<List<Character>> lineEndings = LineEndings.getChoices();
+		source = new LineSplitter(resourceName, reader, lineEndings);
 
-		// In case of fixed format: take care of line continuations.
-		tokenizer = new LineContinuations(tokenizer);
-		tokenizer = new ContinuationWelding(tokenizer);
+		// Filter out some compiler directives.
+		source = new CompilerDirectives(source, format);
+
+		// Split up the different areas of each line.
+		source = new ProgramArea(source);
+
+		// Filter out some source formatting directives.
+		source = new SourceFormattingDirectives(source);
+
+		// Take care of line continuations.
+		source = new LineContinuations(source);
+		source = new ContinuationWelding(source);
 
 		// Split up the lines into separators and non-separators.
-		tokenizer = new Separators(tokenizer);
+		source = new TokenSeparator(source);
+
+		// Find (and mark) inline comments.
+		source = new InlineComments(source);
+
 		// Find (and mark) pseudo literals.
-		tokenizer = new PseudoLiterals(tokenizer);
+		source = new PseudoLiterals(source);
 
-		// tokenizer = new Printing(tokenizer, "%% ");
+		// source = new Printing(source, "%% ");
 
+		// Apply preprocessing, when we know how to resolve copybooks.
 		if (copybooks != null)
-			tokenizer = new PreprocessingSource(tokenizer, grammar, format, file, copybooks);
+			source = new PreprocessingSource(source, grammar, format, file,
+					copybooks);
 
-		return tokenizer;
+		return source;
 	}
 
-	public static Source<Token> getNewSource(Reader reader, Grammar grammar, SourceFormat format) {
+	public static Source<Token> getNewSource(Reader reader, Grammar grammar,
+			SourceFormat format) {
 		return getNewSource(null, reader, grammar, format, null, null);
 	}
 }

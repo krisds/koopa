@@ -1,11 +1,10 @@
 package koopa.cobol.grammar;
 
-import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
-import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
-import static koopa.core.data.tags.AreaTag.END_OF_LINE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.NUMBER;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +43,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 				public boolean matches(Parse parse) {
 					Stream stream = parse.getStream();
 
-					skipSeparators(parse);
+					skipAll(parse);
 
 					int numberOfTokens = 0;
 					List<Token> picture = new ArrayList<Token>();
@@ -61,13 +60,11 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						}
 
 						String text = token.getText();
-						if (isSeparator(token, stream.getParse())) {
-							// Semicolons are not legal picture characters.
-							// Neither is whitespace.
-							if (";".equals(text) || text.trim().length() == 0) {
-								stream.rewind(token);
-								break;
-							}
+						// Semicolons are not legal picture characters.
+						// Neither is whitespace.
+						if (";".equals(text) || text.trim().length() == 0) {
+							stream.rewind(token);
+							break;
 						}
 
 						picture.add(token);
@@ -78,8 +75,9 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						return false;
 
 					final Token lastToken = picture.get(numberOfTokens - 1);
-					if (lastToken.hasTag(SEPARATOR)
-							&& lastToken.getText().equals(".")) {
+					if (/*
+						 * lastToken.hasTag(SEPARATOR) &&
+						 */lastToken.getText().equals(".")) {
 						picture.remove(numberOfTokens - 1);
 						stream.rewind(lastToken);
 					}
@@ -106,11 +104,13 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 				public boolean matches(Parse parse) {
 					Stream stream = parse.getStream();
 
-					skipSeparators(parse);
+					skipAll(parse);
 
 					Token token = stream.forward();
 
-					if (token != null && token.hasTag(CHARACTER_STRING)
+					// TODO @NUMBER _, but with extra semantic check ? Or list
+					// all possibilities ?
+					if (token != null && token.hasTag(NUMBER)
 							&& isLevelNumber(token.getText())) {
 
 						parse.getStack().getScope().setRValue(token);

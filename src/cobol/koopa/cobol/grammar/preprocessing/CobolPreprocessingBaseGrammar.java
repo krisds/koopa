@@ -1,17 +1,14 @@
 package koopa.cobol.grammar.preprocessing;
 
-import static koopa.cobol.data.tags.SyntacticTag.CHARACTER_STRING;
-import static koopa.cobol.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-
-import java.util.LinkedList;
-import java.util.List;
-
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.NUMBER;
+import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
+import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
+import static koopa.core.data.tags.SyntacticTag.WORD;
+import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import koopa.cobol.CobolWords;
-import koopa.cobol.data.tags.SyntacticTag;
 import koopa.core.data.Token;
-import koopa.core.data.Tokens;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
@@ -32,25 +29,12 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// Program text and separators
 	// ............................................................................
 
-	public boolean isProgramText(Token token) {
-		return token.hasTag(AreaTag.PROGRAM_TEXT_AREA)
-				&& !token.hasTag(AreaTag.COMMENT);
-	}
+	@Override
+	public boolean canBeSkipped(Token token, Parse parse) {
+		if (token.hasAnyTag(WHITESPACE, END_OF_LINE))
+			return true;
 
-	public boolean isComment(Token token) {
-		return token.hasTag(AreaTag.COMMENT);
-	}
-
-	public boolean isSeparator(String text) {
-		return text.equals(",") || text.equals(";")
-				|| text.trim().length() == 0;
-	}
-
-	public boolean isSeparator(Token token, Parse parse) {
-		if (!token.hasTag(SyntacticTag.SEPARATOR))
-			return false;
-
-		String text = token.getText();
+		final String text = token.getText();
 
 		// "Whereas in other contexts, the comma, semicolon, and space can be
 		// used interchangeably as separators, the comma has special relevance
@@ -66,14 +50,32 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 				&& parse.getStack().isMatching("function"))
 			return false;
 
-		return isSeparator(text);
+		return text.equals(",") || text.equals(";")
+				|| text.trim().length() == 0;
 	}
 
 	// ============================================================================
-	// cobolWord
+	// Words
 	// ............................................................................
 
-	private ParserCombinator cobolWordParser = null;
+	private ParserCombinator wordParser = null;
+
+	public ParserCombinator word() {
+		if (wordParser == null) {
+			FutureParser future = scoped("word", PRIVATE);
+			wordParser = future;
+			future.setParser(new ParserCombinator() {
+				public boolean matches(Parse parse) {
+					return matchesWord(parse);
+				}
+
+				public String toString() {
+					return "cobol-pp:word";
+				}
+			});
+		}
+		return wordParser;
+	}
 
 	/**
 	 * <i>"A COBOL word is a character-string of not more than 31 characters
@@ -100,265 +102,101 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	 * allow this behaviour to be configured via
 	 * {@linkplain CobolWords#useExtendedCharactersInCopybooks()} and
 	 * {@linkplain CobolWords#isExtendedPart(String)}.
+	 * <p>
+	 * Note: This will skip all intermediate separators.
 	 */
+	private boolean matchesWord(Parse parse) {
+		boolean extendedRules = CobolWords.useExtendedCharactersInCopybooks()
+				&& parse.getStack().isMatching("copybook");
+
+		final Stream stream = parse.getStream();
+
+		skipAll(parse);
+
+		StringBuilder word = new StringBuilder();
+		while (true) {
+			final Token token = stream.forward();
+
+			if (token == null) {
+				// End of the stream, so end of the token.
+				break;
+
+			} else if (extendedRules && token.hasTag(PROGRAM_TEXT_AREA)
+					&& CobolWords.isExtendedPart(token.getText())) {
+				// Allowing this separator to be part of a COBOL word.
+				word.append(token.getText());
+
+			} else if (!token.hasTag(PROGRAM_TEXT_AREA)
+					|| !isCobolWordPart(token)) {
+				// Not part of a legal word, so end of the token.
+				stream.rewind(token);
+				break;
+
+			} else {
+				// Everything else gets added to the word.
+				word.append(token.getText());
+			}
+		}
+
+		if (word.length() == 0)
+			return false;
+
+		final String text = word.toString();
+
+		if (!CobolWords.accepts(text)) {
+			if (parse.getTrace().isEnabled())
+				parse.getTrace().add("no; illegal word: " + text);
+
+			return false;
+
+		} else
+			return true;
+	}
+
+	private boolean isCobolWordPart(Token token) {
+		if (token.hasAnyTag(WORD, NUMBER))
+			return true;
+
+		if (token.hasTag(SEPARATOR)) {
+			String text = token.getText();
+
+			if ("_".equals(text) || "-".equals(text))
+				return true;
+		}
+
+		return false;
+	}
+
+	// ----------------------------------------------------------------------------
+	// cobolWord
+	// ............................................................................
+
+	private ParserCombinator cobolWordParser = null;
+
+	/**
+	 * A cobolWord is any {@link #word()} that is not a keyword.
+	 */
+	// TODO Add a %nokeyword to KG, and define this in CobolPreprocessing.kg
+	// instead.
 	public ParserCombinator cobolWord() {
 		if (cobolWordParser == null) {
 			FutureParser future = scoped("cobolWord");
 			cobolWordParser = future;
-			future.setParser(new ParserCombinator() {
-				public boolean matches(Parse parse) {
-					boolean extendedRules = CobolWords
-							.useExtendedCharactersInCopybooks()
-							&& parse.getStack().isMatching("copybook");
 
-					Stream stream = parse.getStream();
-
-					skipSeparators(parse);
-
-					List<Token> parts = new LinkedList<Token>();
-					while (true) {
-						Token token = stream.forward();
-
-						if (token == null) {
-							break;
-
-						} else if (extendedRules
-								&& token.hasTag(PROGRAM_TEXT_AREA)
-								&& token.hasTag(SEPARATOR)
-								&& CobolWords.isExtendedPart(token.getText())) {
-							// Allowing this separator to be part of a COBOL
-							// word.
-
-						} else if (!token.hasTag(PROGRAM_TEXT_AREA)
-								|| !token.hasTag(CHARACTER_STRING)
-								|| !isCobolWordPart(token.getText())) {
-							stream.rewind(token);
-							break;
-						}
-
-						parts.add(token);
-					}
-
-					if (parts.isEmpty())
-						return false;
-
-					final Token cobolWord = Tokens.join(parts,
-							CHARACTER_STRING, PROGRAM_TEXT_AREA);
-
-					final String text = cobolWord.getText();
-					if (!CobolWords.accepts(text)) {
-						if (parse.getTrace().isEnabled())
-							parse.getTrace().add(
-									"no; illegal cobol word: " + text);
-
-						return false;
-					}
-
-					if (parse.getStack().isKeyword(text.toUpperCase())) {
-						if (parse.getTrace().isEnabled())
-							parse.getTrace().add("no; keyword: " + text);
-
-						return false;
-					}
-
-					parse.getStack().getScope().setReturnValue(cobolWord);
-					return true;
-				}
-
-				private boolean isCobolWordPart(String text) {
-					final int len = text.length();
-
-					for (int i = 0; i < len; i++) {
-						final char c = text.charAt(i);
-
-						if (c >= 'A' && c <= 'Z')
-							continue;
-
-						if (c >= 'a' && c <= 'z')
-							continue;
-
-						if (c >= '0' && c <= '9')
-							continue;
-
-						if (c == '-' || c == '_')
-							continue;
-
-						return false;
-					}
-
-					return true;
-				}
-
-				public String toString() {
-					return "cobol-pp:cobolWord";
-				}
-			});
+			future.setParser(notAKeyword(word()));
 		}
 		return cobolWordParser;
 	}
 
-	// ============================================================================
-	// integerLiteral
+	// ----------------------------------------------------------------------------
+	// keyword
 	// ............................................................................
 
-	private ParserCombinator integerLiteralParser = null;
-
-	public ParserCombinator integerLiteral() {
-		if (integerLiteralParser == null) {
-			FutureParser future = scoped("integerLiteral");
-			integerLiteralParser = future;
-			future.setParser(new ParserCombinator() {
-				public boolean matches(Parse parse) {
-					Stream stream = parse.getStream();
-
-					skipSeparators(parse);
-
-					Token token = stream.forward();
-
-					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
-							&& token.hasTag(SyntacticTag.INTEGER_LITERAL)) {
-
-						parse.getStack().getScope().setReturnValue(token);
-						return true;
-
-					} else
-						return false;
-				}
-			});
-		}
-		return integerLiteralParser;
-	}
-
-	// ============================================================================
-	// booleanLiteral
-	// ............................................................................
-
-	private ParserCombinator booleanLiteralParser = null;
-
-	public ParserCombinator booleanLiteral() {
-		if (booleanLiteralParser == null) {
-			FutureParser future = scoped("booleanLiteral");
-			booleanLiteralParser = future;
-			future.setParser(new ParserCombinator() {
-				public boolean matches(Parse parse) {
-					Stream stream = parse.getStream();
-
-					skipSeparators(parse);
-
-					Token token = stream.forward();
-
-					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
-							&& token.hasTag(SyntacticTag.BOOLEAN_LITERAL)) {
-
-						parse.getStack().getScope().setReturnValue(token);
-						return true;
-
-					} else
-						return false;
-				}
-			});
-		}
-		return booleanLiteralParser;
-	}
-
-	// ============================================================================
-	// hexadecimal
-	// ............................................................................
-
-	private ParserCombinator hexadecimalParser = null;
-
-	public ParserCombinator hexadecimal() {
-		if (hexadecimalParser == null) {
-			FutureParser future = scoped("hexadecimal");
-			hexadecimalParser = future;
-			future.setParser(new ParserCombinator() {
-				public boolean matches(Parse parse) {
-					Stream stream = parse.getStream();
-
-					skipSeparators(parse);
-
-					Token token = stream.forward();
-
-					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
-							&& token.hasTag(SyntacticTag.HEXADECIMAL_LITERAL)) {
-
-						parse.getStack().getScope().setReturnValue(token);
-						return true;
-
-					} else
-						return false;
-				}
-			});
-		}
-		return hexadecimalParser;
-	}
-
-	// ============================================================================
-	// alphanumericLiteral
-	// ............................................................................
-
-	private ParserCombinator alphanumericLiteralParser = null;
-
-	public ParserCombinator alphanumericLiteral() {
-		if (alphanumericLiteralParser == null) {
-			FutureParser future = scoped("alphanumericLiteral");
-			alphanumericLiteralParser = future;
-			future.setParser(new ParserCombinator() {
-				public boolean matches(Parse parse) {
-					Stream stream = parse.getStream();
-
-					skipSeparators(parse);
-
-					Token token = stream.forward();
-
-					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
-							&& token.hasTag(SyntacticTag.STRING_LITERAL)) {
-
-						parse.getStack().getScope().setReturnValue(token);
-						return true;
-
-					} else
-						return false;
-				}
-			});
-		}
-		return alphanumericLiteralParser;
-	}
-
-	// ============================================================================
-	// pseudo literal
-	// ............................................................................
-
-	private ParserCombinator pseudoLiteralParser = null;
-
-	public ParserCombinator pseudoLiteral() {
-		if (pseudoLiteralParser == null) {
-			FutureParser future = scoped("pseudoLiteral");
-			pseudoLiteralParser = future;
-			future.setParser(new ParserCombinator() {
-				public boolean matches(Parse parse) {
-					Stream stream = parse.getStream();
-
-					skipSeparators(parse);
-
-					Token token = stream.forward();
-
-					if (token != null
-							&& token.hasTag(SyntacticTag.CHARACTER_STRING)
-							&& token.hasTag(SyntacticTag.PSEUDO_LITERAL)) {
-
-						parse.getStack().getScope().setReturnValue(token);
-						return true;
-
-					} else
-						return false;
-				}
-			});
-		}
-		return pseudoLiteralParser;
+	/**
+	 * Any {@link #word()} can be a keyword.
+	 */
+	@Override
+	public ParserCombinator keyword() {
+		return word();
 	}
 }

@@ -1,0 +1,211 @@
+target cobolWord;
+
+# NOTE. Be careful about making too many formative examples, as this may blow
+# up the number of overall tests.
+
+# Single words.
++[ HOPPER ]
+
+# Words combined with dashes.
++[ GRACE-HOPPER ]
++[ grace-hopper ]
++[ GRACE-MURRAY-HOPPER ]
++[ grace-murray-hopper ]
+
+# Words combined with underscores.
++[ GRACE_HOPPER ]
++[ grace_hopper ]
++[ GRACE_MURRAY_HOPPER ]
++[ grace_murray_hopper ]
+
+# Words and numbers mixed.
++[ ABC123 ]
++[ 123ABC ]
++[ A1B2C3 ]
++[ 1A2B3C ]
+
+# This is testing maximum length of cobol words, which is 32.
+# This maximum can be tweaked by setting 'koopa.maxCobolWordLength'.
+# Check the README, or the koopa.cobol.CobolWords class, for more details.
++[ ABCDEFGHIJKLMNOPQRSTUVWXYZ78901 ]
+-[ ABCDEFGHIJKLMNOPQRSTUVWXYZ789012 ]
+
+# Names can be made of digits only.
+# Example by Rob Stapper; confirmed by Simon Sobisch.
++[ 00-00 ]
+
+# Issue 30 has a similar one.
++[ 0020-0008 ]
+
+# But I'm disallowing numbers as legal cobol words for now.
+-[ 00 ]
+
+
+# Names which start with a verb, followed by a number.
+# This may pose a problem as token separation splits this in two different parts.
++[ IF401 ]
+
+
+# TODO Test rejection of all keywords.
+
+
+
+target integerLiteral;
+
++[ 0 ]
++[ 1 ]
+
+-decimal
+-alphanumericLiteral
+-cobolWord
+
+
+target decimal;
+
++[ 0.0 ]
++[ 1.0 ]
++[ 0.1 ]
++[ 0,1 ]
++[ .1 ]
+
+-integerLiteral
+-alphanumericLiteral
+-cobolWord
+
+
+target floatingPoint;
+
++[ +0.0E+00 ]
++[ -0.0E+00 ]
++[  0.0E+00 ]
+
++[ +1.0e+01 ]
++[ -1.0e+01 ]
++[  1.0e+01 ]
+
++[ +2.0E02 ]
++[ -2.0E02 ]
++[  2.0E02 ]
+
+# Left hand needs to be decimal:
+-[ +123E+00 ]
+
+
+# Bug found by Marc Dzaebel. The '.' and '01' were being merged into a decimal,
+# because the newline after the '.' was not seen by the parser.
+-[ .
+01 ]
+
+
+target booleanHexadecimal;
++[ bx"A" ]
++[ BX"A" ]
++[ BX'A' ]
+
+target booleanLiteral;
+
++[ b"0001" ]
++[ B"0010" ]
++[ B'0010' ]
++booleanHexadecimal
+
+
+target hexadecimal;
+
++[ h"00" ]
++[ H"00" ]
++[ H'00' ]
+
+
+target alphanumericHexadecimal;
++[ x"00" ]
++[ X"00" ]
++[ X'00' ]
+
+target nationalAlphanumericHexadecimal;
++[ nx"00" ]
++[ NX"00" ]
++[ NX'00' ]
+
+target nationalStringLiteral;
++[ n"00" ]
++[ N"00" ]
++[ N'00' ]
+
+target nullTerminatedStringLiteral;
++[ z"00" ]
++[ Z"00" ]
++[ Z'00' ]
+
+
+target alphanumericLiteral;
+
++[ "ABC" ]
++[ 'ABC' ]
+
++[ "THIS ISN""T WRONG" ]
++[ 'THIS ISN''T WRONG EITHER' ]
+
++alphanumericHexadecimal
++nationalAlphanumericHexadecimal
++nationalStringLiteral
++nullTerminatedStringLiteral
+
+-cobolWord
+-numericLiteral
+
+
+target numericLiteral;
+
++integerLiteral
++decimal
++floatingPoint
+-alphanumericLiteral
+
+
+
+target literal;
+
++numericLiteral
++alphanumericLiteral
++figurativeConstant
+
++ alphanumericLiteral [ & ] alphanumericLiteral
++ alphanumericLiteral [ & CRLF ]
+
+
+target figurativeConstant;
+
++[ ZERO ]
++[ ALL ZERO ]
++[ ZEROS ]
++[ ALL ZEROS ]
++[ ZEROES ]
++[ ALL ZEROES ]
++[ SPACE ]
++[ ALL SPACE ]
++[ SPACES ]
++[ ALL SPACES ]
++[ HIGH-VALUE ]
++[ ALL HIGH-VALUE ]
++[ HIGH-VALUES ]
++[ ALL HIGH-VALUES ]
++[ LOW-VALUE ]
++[ ALL LOW-VALUE ]
++[ LOW-VALUES ]
++[ ALL LOW-VALUES ]
++[ QUOTE ]
++[ ALL QUOTE ]
++[ QUOTES ]
++[ ALL QUOTES ]
++[ ALL "A" ]
++[ ALL 42 ]
++[ ALL 42.10 ]
+
+-numericLiteral
+-alphanumericLiteral
+
+
+target integer;
+
++integerLiteral

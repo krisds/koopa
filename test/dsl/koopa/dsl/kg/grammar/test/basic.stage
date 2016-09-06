@@ -1,0 +1,53 @@
+target word;
+
+-[ end
+def ]
+
+
+target identifier;
+
++[ cobol ]
++[ cobol1 ]
++[ cobol_1 ]
++[ cobol-1 ]
++[ cobol$1 ]
+
++[ cobolWord ]
+
++[ `where ]
++[ `def ]
++[ `end ]
+
+-[ 1cobol ]
+
+-literal
+
+
+
+target literal;
+
++[ COBOL ]
++[ COBOL1 ]
++[ COBOL_1 ]
++[ COBOL-1 ]
++[ COBOL$1 ]
+
+-[ 1COBOL ]
+-identifier
+
+
+target name;
+
++[ cobol ]
++[ cobol1 ]
++[ cobol_1 ]
++[ cobol-1 ]
++[ cobol$1 ]
+
++[ cobolWord ]
+
++[ COBOL ]
++[ COBOL1 ]
++[ COBOL_1 ]
++[ COBOL-1 ]
++[ COBOL$1 ]

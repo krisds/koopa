@@ -5,68 +5,57 @@ import java.util.Set;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stream;
 
 /**
  * Accepts a single token if its text matches the given text.
- * <p>
- * This will skip all intermediate separators, other than the text itself.
  */
-public class MatchToken extends ParserCombinator {
+public class MatchToken extends GrammaticalCombinator {
 
-	private final Grammar grammar;
-	private final boolean isSeparator;
-	private final String text;
+	private final String comparableText;
 
 	public MatchToken(Grammar grammar, String text) {
-		this.grammar = grammar;
-		this.isSeparator = grammar.isSeparator(text);
-		this.text = text;
+		super(grammar);
+		this.comparableText = grammar.comparableText(text);
 	}
 
-	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
+	@Override
+	protected boolean matchesAfterSkipped(Parse parse) {
+		final Token token = parse.getStream().forward();
 
-		if (!isSeparator)
-			grammar.skipSeparators(parse);
-		else
-			grammar.skipOtherSeparators(parse, text);
-
-		final Token token = stream.forward();
-
-		if (token != null && matchesText(token)) {
-
+		if (token == null) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " =~ " + text + " : yes");
+				parse.getTrace().add(toString() + " : no, null");
 
-			parse.getStack().getScope().setRValue(token);
-			return true;
+			return false;
+
+		} else if (!comparableText.equals(grammar.comparableText(token
+				.getText()))) {
+			if (parse.getTrace().isEnabled())
+				parse.getTrace().add(toString() + " : no, " + token);
+
+			return false;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(token + " =~ " + text + " : no");
+				parse.getTrace().add(toString() + " : yes, " + token);
 
-			return false;
+			parse.getStack().getScope().setRValue(token);
+			return true;
 		}
 	}
 
-	private boolean matchesText(final Token token) {
-		if (grammar.isCaseSensitive())
-			return token.getText().equals(text);
-		else
-			return token.getText().equalsIgnoreCase(text);
-	}
-
+	@Override
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		keywords.add(text);
+		keywords.add(comparableText);
 	}
 
+	@Override
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		keywords.add(text);
+		keywords.add(comparableText);
 	}
 
+	@Override
 	public String toString() {
-		return "'" + text + "'";
+		return "token " + comparableText;
 	}
 }

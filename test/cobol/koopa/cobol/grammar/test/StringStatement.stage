@@ -1,12 +1,8 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target stringStatement;
 
-+[ STRING A B C INTO TEXT # . ]
++[ STRING A B C INTO TEXT ] <> [ . ]
 
-+[ STRING A B C INTO TEXT WITH POINTER MY-POINTER # . ]
++[ STRING A B C INTO TEXT WITH POINTER MY-POINTER ] <> [ . ]
 
 +[ STRING A B C INTO TEXT WITH POINTER MY-POINTER
    END-STRING ]

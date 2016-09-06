@@ -1,6 +1,6 @@
 package koopa.core.sources;
 
-import static koopa.core.data.tags.AreaTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,15 +10,15 @@ import java.util.List;
 
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.data.tags.AreaTag;
+import koopa.core.data.tags.SyntacticTag;
 import koopa.core.util.LineEndings;
 
 import org.apache.log4j.Logger;
 
 /**
  * This class takes a {@link Reader} and spits out tokens. The tokens are either
- * "end of lines" which have an {@link AreaTag#END_OF_LINE} tag, or contain one
- * line of text (without tags).
+ * "end of lines" which have an {@link SyntacticTag#END_OF_LINE} tag, or contain
+ * one line of text (without tags).
  * <p>
  * The client can specify which line endings to use by providing a list of
  * character lists. Each will tried in order.
@@ -140,7 +140,8 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Detected line ending: "
-									+ LineEndings.encodeLineEnding(detectedLineEnding)
+									+ LineEndings
+											.encodeLineEnding(detectedLineEnding)
 									+ ". Stickying.");
 					}
 

@@ -96,16 +96,15 @@
 
 			<test name="koopa.core.grammars.fluent.test.FluentGrammarTest" />
 
-			<test name="koopa.core.treeparsers.test.TreeWalkerTest" />
-			<test name="koopa.core.treeparsers.test.TreeStreamTest" />
-			<test name="koopa.core.treegrammars.test.TreeGrammarTest" />
+			<test name="koopa.core.trees.test.ProgramTextTest" />
+			<test name="koopa.core.trees.test.TreeIteratorsTest" />
+			<test name="koopa.core.trees.test.TreePositionsTest" />
+			<test name="koopa.core.trees.test.TreeWalkerTest" />
+			<test name="koopa.core.trees.test.XMLSerializerTest" />
 
 			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
 			<test name="koopa.core.sources.test.TestTokenizerTest" />
 
-			<test name="koopa.core.trees.test.TreePositionsTest" />
-			<test name="koopa.core.trees.test.ProgramTextTest" />
-			<test name="koopa.core.trees.test.XMLSerializerTest" />
 			<test name="koopa.core.trees.jaxen.test.JaxenTest" />
 		</junit>
 	</target>
@@ -177,10 +176,11 @@
 
 			<formatter type="brief" usefile="no" />
 
+			<test name="koopa.dsl.stage.grammar.test.StageGrammarTests" />
 			<test name="koopa.dsl.kg.grammar.test.KGGrammarTests" />
 		</junit>
 	</target>
-	
+
 	<!-- COBOL PARSER -->
 
 	<target name="cobol" depends="core,dsl">
@@ -247,6 +247,28 @@
 		</junit>
 	</target>
 
+	<target name="random-cobol-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<sysproperty key="koopa.tests.random" value="true" />
+			<sysproperty key="koopa.tests.random.limit" value="3" />
+
+			<classpath>
+				<pathelement location="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<assertions>
+				<enable />
+			</assertions>
+
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
+		</junit>
+	</target>
+
 	<target name="run-cobol-regression-tests">
 		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
 			<classpath>
@@ -309,18 +331,11 @@
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/treegrammars/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
-			<classpath>
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
 
 		<echo>Copying additional resources...</echo>
 		<copy todir="build/">
+			<fileset dir="examples/basic/" excludes="**/*.java,**/*.g" />
 			<fileset dir="examples/jaxen/" excludes="**/*.java,**/*.g" />
-			<fileset dir="examples/treegrammars/" excludes="**/*.java,**/*.g" />
 		</copy>
 	</target>
 

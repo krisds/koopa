@@ -1,10 +1,6 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target writeStatement;
 
-+[ WRITE MY-RECORD # . ]
++[ WRITE MY-RECORD ] <> [ . ]
 
 +[ WRITE MY-RECORD
    END-WRITE ]

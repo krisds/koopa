@@ -1,7 +1,3 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target subtractStatement;
 
 +[ SUBTRACT CORRESPONDING A FROM B ]
@@ -36,9 +32,9 @@ target subtractStatement;
 +[ SUBTRACT A ZERO FROM C D ]
 
 
-+[ SUBTRACT A FROM B # . ]
++[ SUBTRACT A FROM B ] <> [ . ]
 
-+[ SUBTRACT A FROM B GIVING C # . ]
++[ SUBTRACT A FROM B GIVING C ] <> [ . ]
 
 +[ SUBTRACT A FROM B
      ON SIZE ERROR

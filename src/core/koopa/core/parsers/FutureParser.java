@@ -22,9 +22,27 @@ public class FutureParser extends ParserCombinator {
 		this.parser = parser;
 	}
 
-	public FutureParser with(ParserCombinator parser) {
-		setParser(parser);
-		return this;
+	@Override
+	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+		parser.addAllKeywordsInScopeTo(keywords);
+	}
+
+	@Override
+	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+		parser.addAllLeadingKeywordsTo(keywords);
+	}
+
+	@Override
+	public boolean canMatchEmptyInputs() {
+		return parser.canMatchEmptyInputs();
+	}
+
+	@Override
+	public boolean isKeyword(String word, Stack.Frame frame) {
+		if (getAllKeywordsInScope().contains(word))
+			return true;
+
+		return parser.isKeyword(word, frame);
 	}
 
 	private Set<String> getAllKeywordsInScope() {
@@ -36,15 +54,16 @@ public class FutureParser extends ParserCombinator {
 		return allKeywords;
 	}
 
-	public boolean isKeyword(String word, Stack.Frame frame) {
-		if (getAllKeywordsInScope().contains(word))
-			return true;
-
-		return super.isKeyword(word, frame);
-	}
-
 	@Override
 	protected boolean matches(Parse parse) {
 		return parser.matches(parse);
+	}
+
+	@Override
+	public String toString() {
+		if (parser == null)
+			return "&" + parser;
+		else
+			return "&" + parser.toString();
 	}
 }

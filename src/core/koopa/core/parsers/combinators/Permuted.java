@@ -2,25 +2,31 @@ package koopa.core.parsers.combinators;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
 
-public class Permuted extends ParserCombinator {
+/**
+ * This {@linkplain ParserCombinator} tries to match a list of
+ * {@linkplain ParserCombinator}s. Whenever it finds a match that parser gets
+ * removed from the list and another round of matching is started. We need at
+ * least one successful match to declare the overall matching successful.
+ */
+public class Permuted extends NAryParserDecorator {
 
-	private final ParserCombinator[] parsers;
+	private static final String SYMBOL = "!(...|...)";
 
 	public Permuted(ParserCombinator[] parsers) {
-		this.parsers = parsers;
+		super(parsers);
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
+		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent("[permuted>");
+			parse.getTrace().indent(SYMBOL + " ?");
 
 		List<ParserCombinator> remaining = new ArrayList<ParserCombinator>();
 		for (ParserCombinator parser : parsers)
@@ -41,33 +47,16 @@ public class Permuted extends ParserCombinator {
 			}
 		}
 
-		boolean accepts = remaining.size() < parsers.length;
+		final boolean accepts = remaining.size() < parsers.length;
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent("<permuted]: " + accepts);
+			parse.getTrace().dedent(SYMBOL + " : " + (accepts ? "yes" : "no"));
 
 		return accepts;
 	}
 
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		for (ParserCombinator parser : parsers)
-			parser.addAllKeywordsInScopeTo(keywords);
-	}
-
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		for (ParserCombinator parser : parsers)
-			parser.addAllLeadingKeywordsTo(keywords);
-	}
-
-	public boolean canMatchEmptyInputs() {
-		for (ParserCombinator parser : parsers)
-			if (parser.canMatchEmptyInputs())
-				return true;
-
-		return false;
-	}
-
+	@Override
 	public String toString() {
-		return "!(...|...)";
+		return SYMBOL;
 	}
 }

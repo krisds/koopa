@@ -1,5 +1,9 @@
 package koopa.app.components.grammarview;
 
+import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
+import static koopa.core.data.tags.SyntacticTag.WORD;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -36,7 +40,6 @@ import koopa.app.components.sourceview.LinePainter;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.dsl.kg.source.KGTokens;
-import koopa.dsl.kg.tags.KGTag;
 
 public class GrammarView extends JPanel {
 
@@ -157,23 +160,6 @@ public class GrammarView extends JPanel {
 		return identifierStyle;
 	}
 
-	private static Style tagStyle = null;
-
-	private static Style getTagStyle(StyledDocument document) {
-		if (tagStyle == null) {
-			Style style = tagStyle = document.addStyle("tag", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			// StyleConstants.setBackground(style, Color.WHITE);
-			StyleConstants.setForeground(style, new Color(255, 102, 0));
-		}
-
-		return tagStyle;
-	}
-
 	private static Style nativeStyle = null;
 
 	private static Style getNativeStyle(StyledDocument document) {
@@ -261,6 +247,8 @@ public class GrammarView extends JPanel {
 	}
 
 	private void colorize(StyledDocument document, String pathToGrammarResource) {
+		// TODO I should really parse the input and query the tree for coloring
+		// things. Pure tokens will no longer be enough.
 
 		try {
 			final InputStream resourceStream = GrammarView.class
@@ -280,7 +268,7 @@ public class GrammarView extends JPanel {
 					break;
 
 				Style style = null;
-				if (token.hasTag(KGTag.COMMENT)) {
+				if (token.hasTag(COMMENT)) {
 					style = getCommentStyle(document);
 					justSawDef = false;
 
@@ -292,22 +280,10 @@ public class GrammarView extends JPanel {
 					style = getKeywordStyle(document);
 					justSawDef = false;
 
-					// } else if (token.getType() == KGLexer.ANY
-					// || token.getType() == KGLexer.NOSKIP
-					// || token.getType() == KGLexer.SKIP_TO
-					// || token.getType() == KGLexer.OPEN_PAREN
-					// || token.getType() == KGLexer.CLOSE_PAREN
-					// || token.getType() == KGLexer.OPEN_BRACKET
-					// || token.getType() == KGLexer.CLOSE_BRACKET
-					// || token.getType() == KGLexer.BANG
-					// || token.getType() == KGLexer.CHOICE
-					// || token.getType() == KGLexer.STAR
-					// || token.getType() == KGLexer.PLUS
-					// || token.getType() == KGLexer.NOT
-					// || token.getType() == KGLexer.PIPE) {
-					// style = getKeywordStyle(document);
-
-				} else if (token.hasTag(KGTag.IDENTIFIER)) {
+				} else if (token.hasTag(WORD)) {
+					// TODO Picking up on the above TODO, here is why: an
+					// identifier may consist of multiple tokens. So the code
+					// below is no longer correct.
 					if (!token.getText().toUpperCase().equals(token.getText()))
 						style = getIdentifierStyle(document);
 
@@ -317,14 +293,12 @@ public class GrammarView extends JPanel {
 
 					justSawDef = false;
 
-				} else if (token.hasTag(KGTag.NATIVE_CODE_BLOCK)) {
-					style = getNativeStyle(document);
-					justSawDef = false;
+					// TODO This too now requires a parse tree to detect.
+					// } else if (token.hasTag(KGTag.NATIVE_CODE_BLOCK)) {
+					// style = getNativeStyle(document);
+					// justSawDef = false;
 
-					// } else if (token.getType() == KGLexer.TAG) {
-					// style = getTagStyle(document);
-
-				} else if (token.hasTag(KGTag.WHITESPACE)) {
+				} else if (token.hasTag(WHITESPACE)) {
 					// Nop.
 
 				} else {

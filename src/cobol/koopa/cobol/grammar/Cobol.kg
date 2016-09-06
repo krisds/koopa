@@ -386,10 +386,10 @@ end
 def operatorIdParagraph =
     OPERATOR-ID [.]
     ( '=' [EXTENSION]
-    | '<>'
-    | '>='
+    | '<' %noskip '>'
+    | '>' %noskip '='
     | '>'
-    | '<='
+    | '<' %noskip '='
     | '<'
     | '+'
     | '-'
@@ -668,23 +668,43 @@ def cobolDevice =
     | ENVIRONMENT-VALUE
     | SYSERR
     # Printer channels:
-    | C01 | C02 | C03 | C04 | C05 | C06
-    | C07 | C08 | C09 | C10 | C11 | C12
+    | C01
+    | C02
+    | C03
+    | C04
+    | C05
+    | C06
+    | C07
+    | C08
+    | C09
+    | C10
+    | C11
+    | C18
     # Select punch pockets:
-    | S01 | S02 | S03 | S04 | S05
+    | S01
+    | S02
+    | S03
+    | S04
+    | S05
     # Suppress spacing:
     | CSP
     # TODO: One-character non-numeric literal:
     | alphanumericLiteral
     # TODO: based on NC220M; find matching documentation.
-    | cobolWord
+    | justAName
     )
 end
 
 def cobolSwitch =
-    ( SWITCH-0 | SWITCH-1 | SWITCH-2
-    | SWITCH-3 | SWITCH-4 | SWITCH-5
-    | SWITCH-6 | SWITCH-7 | SWITCH-8
+    ( SWITCH-0
+    | SWITCH-1
+    | SWITCH-2
+    | SWITCH-3
+    | SWITCH-4
+    | SWITCH-5
+    | SWITCH-6
+    | SWITCH-7
+    | SWITCH-8
     )
 end
 
@@ -729,7 +749,7 @@ def explicitAlphabetType =
 end
 
 def codeNameAlphabetType =
-    cobolWord
+    justAName
 end
 
 def literalRange =
@@ -926,7 +946,7 @@ def diskClause =
     | [MULTIPLE] (REEL | UNIT) [FILE] (dataName | literal)+
     | [DISK] FILE (dataName | literal)+
     | (DISK | PRINTER) DISPLAY
-    | (DISK | KEYBOARD | DISPLAY | PRINTER | PRINTER-1) (dataName | literal)*
+    | (DISK | KEYBOARD | DISPLAY | PRINTER-1 | PRINTER) (dataName | literal)*
     )
 end
 
@@ -1384,15 +1404,15 @@ end
 
 private def constantEntry_level01 =
     ( levelNumber : (1 | 01)             )
-    ( entryName   : (FILLER | cobolWord) )
+    ( entryName   : (FILLER | justAName) )
     CONSTANT [globalClause]
-    ( [AS] identifier | FROM cobolWord ) .
+    ( [AS] identifier | FROM justAName ) .
 end
 
 # Seen in MF and GNU COBOL
 private def constantEntry_level78 =
     ( levelNumber : 78        )
-    ( entryName   : cobolWord ) 
+    ( entryName   : justAName ) 
     constantValueClause .
 end
 
@@ -1503,13 +1523,13 @@ end
 
 def valueOf =
     VALUE OF (
-      (IDENTIFICATION | ID | cobolWord) [IS] (dataName | literal)
+      (IDENTIFICATION | ID | justAName) [IS] (dataName | literal)
     )+
 end
 
 # Cfr. a.o. http://ibmmainframes.com/post-55387.html
 def cicsValue =
-    (DFHVALUE | DFHRESP) '(' cobolWord ')'
+    (DFHVALUE | DFHRESP) '(' justAName ')'
 end
 
 # See https://sourceforge.net/p/open-cobol/manual/, page 5-15.
@@ -1833,7 +1853,7 @@ def pictureClause =
 end
 
 def pictureLocaleClause =
-  LOCALE [[IS] cobolWord]
+  LOCALE [[IS] justAName]
   SIZE [IS] integer
 end
 
@@ -1977,18 +1997,18 @@ def usageOperand =
     | CHARACTER                             # *.NET *JVM
     | COMPUTATIONAL
     | COMP
-    | COMPUTATIONAL-1                       # *OSVS *VSC2 *MF
-    | COMP-1                                # *OSVS *VSC2 *MF
-    | COMPUTATIONAL-2                       # *OSVS *VSC2 *MF
-    | COMP-2                                # *OSVS *VSC2 *MF
+    | COMPUTATIONAL-1                       # *OSVS *VSC2 *MF *XOPEN
+    | COMPUTATIONAL-2                       # *OSVS *VSC2 *MF *XOPEN
     | COMPUTATIONAL-3                       # *OSVS *VSC2 *MF *XOPEN
+    | COMPUTATIONAL-4                       # *OSVS *VSC2 *MF *XOPEN
+    | COMPUTATIONAL-5                       # *OSVS *VSC2 *MF *XOPEN
+    | COMPUTATIONAL-6                       # *OSVS *VSC2 *MF *XOPEN
+    | COMP-1                                # *OSVS *VSC2 *MF *XOPEN
+    | COMP-2                                # *OSVS *VSC2 *MF *XOPEN
     | COMP-3                                # *OSVS *VSC2 *MF *XOPEN
-    | COMPUTATIONAL-4                       # *OSVS *VSC2 *MF
-    | COMP-4                                # *OSVS *VSC2 *MF
-    | COMPUTATIONAL-5                       # *OSVS *VSC2 *MF
-    | COMP-5                                # *OSVS *VSC2 *MF
-    | COMPUTATIONAL-6                       # *ACUCOBOL-GT
-    | COMP-6                                # *ACUCOBOL-GT
+    | COMP-4                                # *OSVS *VSC2 *MF *XOPEN
+    | COMP-5                                # *OSVS *VSC2 *MF *XOPEN
+    | COMP-6                                # *OSVS *VSC2 *MF *XOPEN
     | COMPUTATIONAL-X                       # *MF
     | COMP-X                                # *MF
     | COMPUTATIONAL-N                       # *ACUCOBOL-GT
@@ -2006,11 +2026,11 @@ def usageOperand =
     | HANDLE [[OF]                          # *ACUCOBOL-GT
         ( WINDOW
         | SUBWINDOW
-        | FONT [cobolWord]
+        | FONT [justAName]
         | THREAD
         | MENU
         | VARIANT
-        | LAYOUT-MANAGER [cobolWord]
+        | LAYOUT-MANAGER [justAName]
         ) 
       ]
     | MONITOR-POINTER                       # *MF
@@ -2650,8 +2670,8 @@ def callStatement =
     [END-CALL]
 
 
-  where def programName          =  ( identifier | alphanumericLiteral )  end
-  where def programPrototypeName =  cobolWord                             end
+  where def programName          =  ( alphanumericLiteral | identifier )  end
+  where def programPrototypeName =  justAName                             end
 
   where def using =
       USING ( byReference | byContent | byValue | copyStatement )+
@@ -4355,7 +4375,7 @@ end
 def xmlGenerateStatement =
     XML GENERATE identifier FROM identifier
     [COUNT [IN] identifier]
-    [[WITH] ENCODING cobolWord]
+    [[WITH] ENCODING justAName]
     [[WITH] XML-DECLARATION]
     [[WITH] ATTRIBUTES]
     [NAMESPACE [IS] (identifier | literal)
@@ -4475,7 +4495,7 @@ def replacementOperand =
     | verb
     | literal
     | identifier
-    | cobolWord
+    | justAName
     )
 end
 
@@ -4807,7 +4827,7 @@ hiding def term =
 end
 
 hiding def factor =
-    base (power: '**' base)* 
+    base (power: '*' %noskip '*' base)* 
 end
 
 hiding def base =
@@ -4830,7 +4850,7 @@ end
 # This is a helper for use in other rules.
 private def moreArithmeticOp =
     ( B-AND | B-OR | B-XOR | B-EXOR
-    | '+' | '-' | '*' | '/' | '**'
+    | '+' | '-' | '*' %noskip '*' | '*' | '/'
     )
 end
 
@@ -5070,8 +5090,8 @@ end
 private def relationOperand =
     ( figurativeConstant: (NULL | NULLS)
     | addressOf
-    | literal     (%not moreArithmeticOp)
     | identifier  (%not moreArithmeticOp)
+    | literal     (%not moreArithmeticOp)
     | arithmeticExpression
     )
 end
@@ -5080,10 +5100,10 @@ def relop =
     ( [IS | ARE]
       ( [not: NOT] greaterOrEqualOp
       | [not: NOT] lessOrEqualOp
+      | unequalToOp
       | [not: NOT] greaterThanOp
       | [not: NOT] lessThanOp
       | [not: NOT] equalToOp
-      | unequalToOp
       )
 
     | exceedsOp
@@ -5094,12 +5114,12 @@ end
 def greaterThanOp    = (GREATER [THAN]               | '>' )  end
 def lessThanOp       = (LESS [THAN]                  | '<' )  end
 def equalToOp        = (EQUAL [TO]                   | '=' )  end
-def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>=')  end
-def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<=')  end 
+def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>' %noskip '=')  end
+def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<' %noskip '=')  end 
 
 # "UNEQUAL" is found in MicroFocus. 
 # - [MF - Relation Conditions]
-def unequalToOp      = (UNEQUAL [TO]                 | '<>')  end
+def unequalToOp      = (UNEQUAL [TO]                 | '<' %noskip '>')  end
 
 # "EXCEEDS" and "EQUALS" are found in MicroFocus. 
 # - [MF - Relation Conditions]
@@ -5142,15 +5162,20 @@ end
 # http://publib.boulder.ibm.com/infocenter/comphelp/v101v121/index.jsp?topic=/com.ibm.aix.cbl.doc/PGandLR/ref/rlprg.htm
 #
 def programName =
-    ( cobolWord
-    | alphanumeric
+    ( alphanumeric
+    | justAName
     )
 end
 
 # Data name.
 def dataName =
-    cobolWord
+    justAName
 end
+
+private def justAName =
+    (%not hexadecimalLiteral)
+    cobolWord
+end 
 
 # Full Qualified Data name with subscripts.
 def qualifiedDataName =
@@ -5158,7 +5183,7 @@ def qualifiedDataName =
 end
 
 def screenName =
-    cobolWord
+    justAName
 end
 
 # Section name.
@@ -5183,7 +5208,7 @@ def procedureName =
 end
 
 def name =
-    ( cobolWord
+    ( justAName
     | integer
     )
 end
@@ -5205,11 +5230,11 @@ def operand =
 end
 
 def threadPointer =
-    cobolWord
+    justAName
 end
 
 def eventPointer =
-    cobolWord
+    justAName
 end
 
 def conditionName =
@@ -5217,27 +5242,27 @@ def conditionName =
 end 
 
 def indexName =
-    cobolWord
+    justAName
 end
 
 def className =
-    cobolWord
+    justAName
 end
 
 def typeSpecifier =
-    cobolWord
+    justAName
 end
 
 def parameterName =
-    cobolWord
+    justAName
 end
 
 def interfaceName =
-    cobolWord
+    justAName
 end
 
 def methodName =
-    cobolWord
+    justAName
 end
 
 def propertyName =
@@ -5253,45 +5278,45 @@ def propertyValue =
 end
 
 def delegateName =
-    cobolWord
+    justAName
 end
 
 def iteratorName =
-    cobolWord
+    justAName
 end
 
 def enumName =
-    cobolWord
+    justAName
 end
 
 def valuetypeName =
-    cobolWord
+    justAName
 end
 
 def typeName = 
-    cobolWord
+    justAName
 end
 
 def attributeName =
-    cobolWord
+    justAName
 end
 
 def typedefName =
-    cobolWord
+    justAName
 end
 
 def fileName =
-    ( cobolWord
-    | alphanumeric
+    ( alphanumeric
+    | justAName
     )
 end
 
 def computerName =
-    cobolWord
+    justAName
 end
 
 def functionName =
-    cobolWord
+    justAName
 end
 
 def recordName =
@@ -5299,7 +5324,7 @@ def recordName =
 end
 
 def mnemonicName =
-    (identifier | cobolWord)
+    (identifier | justAName)
 end
 
 def environmentName =
@@ -5336,15 +5361,15 @@ def environmentName =
 end
 
 def alphabetName =
-    cobolWord
+    justAName
 end
 
 def cdName =
-    cobolWord
+    justAName
 end
 
 def reportName =
-    cobolWord
+    justAName
 end
 
 def literal =
@@ -5433,7 +5458,14 @@ def integer =
     )
 end
 
-def floatingPoint =  @FLOATING_POINT_LITERAL _  end
+def floatingPoint =
+    ( ['+' | '-'] %noskip uintgr
+    | uintgr
+    )
+    %noskip (
+      . uintgr 'E' ['+' | '-'] uintgr
+    )
+end
 
 def addressOf    =  ADDRESS     [OF] identifier  end
 def lengthOf     =  LENGTH      [OF] identifier  end
@@ -5448,7 +5480,7 @@ end
 # Ideally we should check if the cobolWord actually is an integer constant.
 # This is, however, outside the current scope of Koopa.
 def integerConstant =
-    cobolWord
+    justAName
 end
 
 def alphanumeric =
@@ -5460,7 +5492,7 @@ end
 # Ideally we should check if the cobolWord actually is an alphanumeric constant.
 # This is, however, outside the current scope of Koopa.
 def alphanumericConstant =
-    cobolWord
+    justAName
 end
 
 

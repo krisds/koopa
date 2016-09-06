@@ -1,10 +1,6 @@
-package koopa.cobol.grammar.test;
-grammar koopa.cobol.grammar.CobolGrammar;
-tokenizer koopa.cobol.sources.test.CobolTestSource;
-
 target readStatement;
 
-+[ READ MY-FILE # . ]
++[ READ MY-FILE ] <> [ . ]
 
 +[ READ MY-FILE
    END-READ ]

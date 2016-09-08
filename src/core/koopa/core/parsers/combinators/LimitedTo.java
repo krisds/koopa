@@ -21,18 +21,15 @@ public class LimitedTo extends UnaryParserDecorator {
 
 	@Override
 	public boolean matches(Parse parse) {
-		Stream stream = parse.getStream();
+		final Stream stream = parse.getStream();
 
 		try {
-			LimitedStream limitedParseStream = new LimitedStream(stream,
-					limiter);
-
-			parse.setStream(limitedParseStream);
-			// limitedParseStream.setParse(parse);
-
+			final LimitedStream limited = new LimitedStream(stream, limiter);
+			parse.setStream(limited);
 			return parser.accepts(parse);
 
 		} finally {
+			// Restore the full stream.
 			parse.setStream(stream);
 		}
 	}

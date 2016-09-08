@@ -18,6 +18,8 @@ public abstract class ParserCombinator {
 	 * <p>
 	 * This method fires of the entire process of parsing by invoking the
 	 * {@link #matches(Parse)} method.
+	 * <p>
+	 * It will also commit the stream afterwards if it was the root parser.
 	 */
 	public final boolean accepts(Parse parse) {
 		final Stack stack = parse.getStack();
@@ -35,8 +37,8 @@ public abstract class ParserCombinator {
 				if (peek != null) {
 					final Position currentPosition = peek.getStart();
 					if (parse.getFinalPosition().compareTo(currentPosition) < 0)
-						parse.setFinalMatch(currentPosition, parse.getStack()
-								.getHead());
+						parse.setFinalMatch(currentPosition,
+								parse.getStack().getHead());
 				}
 			}
 

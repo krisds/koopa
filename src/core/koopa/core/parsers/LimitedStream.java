@@ -6,15 +6,11 @@ import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
 
-import org.apache.log4j.Logger;
-
 /**
  * This stream will only return tokens from another stream up to a certain
  * point, as defined by a {@linkplain ParserCombinator}.
  */
 public class LimitedStream implements Stream {
-
-	private static final Logger LOGGER = Logger.getLogger("parse.stream");
 
 	private final Stream stream;
 	private final ParserCombinator limiter;
@@ -31,17 +27,18 @@ public class LimitedStream implements Stream {
 	public Token forward() {
 		stream.bookmark();
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("%limited ?");
+		final Parse parse = stream.getParse();
+
+		if (parse.getTrace().isEnabled())
+			parse.getTrace().indent("%limited ?");
 
 		// TODO This twiddling ain't great...
-		Parse parse = stream.getParse();
 		parse.setStream(stream);
 		boolean hitLimit = limiter.accepts(parse);
 		parse.setStream(this);
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("%limited ? " + hitLimit);
+		if (parse.getTrace().isEnabled())
+			parse.getTrace().dedent("%limited : " + (hitLimit ? "yes" : "no"));
 
 		stream.rewind();
 
@@ -68,10 +65,16 @@ public class LimitedStream implements Stream {
 
 	/** {@inheritDoc} */
 	public Token peek() {
-		return stream.peek();
+		final Token t = forward();
+
+		if (t != null)
+			rewind(t);
+
+		return t;
 	}
 
 	/** {@inheritDoc} */
+	// TODO This doesn't respect the limiter.
 	public String peekMore() {
 		return stream.peekMore();
 	}

@@ -3,32 +3,29 @@ package koopa.core.parsers.test;
 import junit.framework.TestCase;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Stream;
-import koopa.core.sources.test.HardcodedSource;
 import koopa.core.targets.ListTarget;
 
-import org.junit.Test;
-
 /**
- * Tests the core operations which make up a {@linkplain Stream}.
+ * Base for testing the core operations which make up a {@linkplain Stream}.
  */
-public class ParseStreamTest extends TestCase {
+public abstract class ParseStreamTest extends TestCase {
 
-	private static final Object[] WORDS = "The quick brown fox jumped over the lazy dog"
-			.split("\\s+");
+	protected void assertCanStream(Stream stream, Object[] words,
+			ListTarget target) {
+		assertCanStream(stream, words, words.length, target);
+	}
 
-	@Test
-	public void testCanStream() {
-		HardcodedSource source = HardcodedSource.from(WORDS);
-		ListTarget target = new ListTarget();
-
-		Stream stream = new BaseStream(source, target);
+	protected void assertCanStream(Stream stream, Object[] words, int endIndex,
+			ListTarget target) {
 
 		// We just step through all words, until there are no more.
-		for (int i = 0; i < WORDS.length; i++)
-			assertNextTokenMatchesWord(stream, WORDS[i]);
+		for (int i = 0; i < endIndex; i++) {
+			assertPeekMatchesWord(stream, words[i]);
+			assertNextTokenMatchesWord(stream, words[i]);
+		}
 
+		// We expect the stream to be at its end now.
 		assertNoMoreTokens(stream);
 
 		// At this point the target should still be empty.
@@ -36,22 +33,25 @@ public class ParseStreamTest extends TestCase {
 
 		// When committing the stream all words should end up in the target.
 		stream.commit();
-		assertTargetHasAllWords(target, WORDS);
+		assertTargetHasAllWords(target, words, endIndex);
 	}
 
-	@Test
-	public void testCanRewind() {
-		HardcodedSource source = HardcodedSource.from(WORDS);
-		ListTarget target = new ListTarget();
+	protected void assertCanRewind(Stream stream, Object[] words,
+			ListTarget target) {
+		assertCanRewind(stream, words, words.length, target);
+	}
 
-		Stream stream = new BaseStream(source, target);
+	protected void assertCanRewind(Stream stream, Object[] words, int endIndex,
+			ListTarget target) {
 
 		// Each loop we step through all words and rewind all of them. But
 		// before the next loop we push one token to the target, so each
 		// iteration will have one less token to work with.
-		for (int w = 0; w < WORDS.length; w++) {
-			for (int i = w; i < WORDS.length; i++)
-				assertNextTokenMatchesWord(stream, WORDS[i]);
+		for (int w = 0; w < endIndex; w++) {
+			for (int i = w; i < endIndex; i++) {
+				assertPeekMatchesWord(stream, words[i]);
+				assertNextTokenMatchesWord(stream, words[i]);
+			}
 
 			// At the end of each iteration there should be no more tokens
 			// coming available.
@@ -67,24 +67,28 @@ public class ParseStreamTest extends TestCase {
 			assertEquals(w + 1, target.size());
 		}
 
+		// We expect the stream to be at its end now.
 		assertNoMoreTokens(stream);
 
-		assertTargetHasAllWords(target, WORDS);
+		// And all words should have ended up in the target.
+		assertTargetHasAllWords(target, words, endIndex);
 	}
 
-	@Test
-	public void testCanBookmark() {
-		HardcodedSource source = HardcodedSource.from(WORDS);
-		ListTarget target = new ListTarget();
+	protected void assertCanBookmark(Stream stream, Object[] words,
+			ListTarget target) {
+		assertCanBookmark(stream, words, words.length, target);
+	}
 
-		Stream stream = new BaseStream(source, target);
-
+	protected void assertCanBookmark(Stream stream, Object[] words,
+			int endIndex, ListTarget target) {
 		// Each loop we step through all words and rewind all of them. But
 		// before the next loop we push one token to the target, so each
 		// iteration will have one less token to work with.
-		for (int w = 0; w < WORDS.length; w++) {
-			for (int i = w; i < WORDS.length; i++)
-				assertNextTokenMatchesWord(stream, WORDS[i]);
+		for (int w = 0; w < endIndex; w++) {
+			for (int i = w; i < endIndex; i++) {
+				assertPeekMatchesWord(stream, words[i]);
+				assertNextTokenMatchesWord(stream, words[i]);
+			}
 
 			// At the end of each iteration there should be no more tokens
 			// coming available.
@@ -102,6 +106,7 @@ public class ParseStreamTest extends TestCase {
 			assertEquals(0, target.size());
 		}
 
+		// We expect the stream to be at its end now.
 		assertNoMoreTokens(stream);
 
 		// Because we bookmarked at the end of each loop there is still one
@@ -112,26 +117,43 @@ public class ParseStreamTest extends TestCase {
 		// This time there are no bookmarks left, and committing will push all
 		// tokens to the target.
 		stream.commit();
-		assertTargetHasAllWords(target, WORDS);
+		assertTargetHasAllWords(target, words, endIndex);
 	}
 
 	// =========================================================================
 
+	private Token assertPeekMatchesWord(Stream stream, Object text) {
+		final Token token = stream.peek();
+		if (text == null)
+			assertNull(token);
+		else {
+			assertNotNull(token);
+			token.getText().equals(text);
+		}
+		return token;
+	}
+
 	private Token assertNextTokenMatchesWord(Stream stream, Object text) {
-		Token token = stream.forward();
-		assertNotNull(token);
-		token.getText().equals(text);
+		final Token token = stream.forward();
+		if (text == null)
+			assertNull(token);
+		else {
+			assertNotNull(token);
+			token.getText().equals(text);
+		}
 		return token;
 	}
 
 	private void assertNoMoreTokens(Stream stream) {
+		assertNull(stream.peek());
 		assertNull(stream.forward());
 	}
 
-	private void assertTargetHasAllWords(ListTarget target, Object[] words) {
-		assertEquals(words.length, target.size());
+	private void assertTargetHasAllWords(ListTarget target, Object[] words,
+			int endIndex) {
+		assertEquals(endIndex, target.size());
 
-		for (int i = 0; i < words.length; i++) {
+		for (int i = 0; i < endIndex; i++) {
 			Data packet = target.get(i);
 			assertTrue(packet instanceof Token);
 			final Token token = (Token) packet;

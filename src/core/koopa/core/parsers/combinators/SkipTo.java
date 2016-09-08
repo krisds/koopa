@@ -63,7 +63,7 @@ public class SkipTo extends UnaryParserDecorator {
 			stream.insert(OnLand.getInstance());
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent(SYMBOL + " ]: yes");
+			parse.getTrace().dedent(SYMBOL + " : yes");
 
 		return true;
 	}

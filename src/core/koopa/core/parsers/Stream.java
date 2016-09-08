@@ -90,8 +90,8 @@ public interface Stream {
 	 * Commit all {@linkplain Data}s the latest bookmark (in effect removing
 	 * it). You won't be able to rewind beyond this point again.
 	 * <p>
-	 * If there was no bookmark then this will committing the entire stream so
-	 * far, which means pushing all tokens to that given {@linkplain Target}.
+	 * If there was no bookmark then this will commit the entire stream so far,
+	 * which means pushing all tokens to that given {@linkplain Target}.
 	 */
 	void commit();
 

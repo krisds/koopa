@@ -1,21 +1,20 @@
 package koopa.core.parsers;
 
-import static koopa.core.util.Iterators.descendingIterator;
 import static koopa.core.util.Iterators.emptyIterator;
-import static koopa.core.util.Iterators.listIterator;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
+
+import org.apache.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.sources.Source;
+import koopa.core.targets.HoldingTarget;
 import koopa.core.targets.Target;
-
-import org.apache.log4j.Logger;
 
 /**
  * This is not so much a stream, as a parse in progress. It holds on to all
@@ -39,29 +38,26 @@ public class BaseStream implements Stream {
 	private final Source<Token> source;
 
 	/**
-	 * The stream pushes {@linkplain Data} to this {@linkplain Target}.
-	 */
-	private final Target<Data> target;
-
-	/**
 	 * Everything the parser has processed, but which has not been committed yet
 	 * in full.
 	 * <p>
-	 * The data here is in reading order.
+	 * This {@linkplain Target} is basically a buffer leading up to the real
+	 * target, but for which we can control the release of its data, and even
+	 * take data back.
 	 */
-	private final LinkedList<Data> seen;
+	private final HoldingTarget pendingData;
 
 	/**
-	 * Markers which have been inserted, but not yet pushed to the {@link #seen}
-	 * list.
+	 * Markers which have been inserted, but not yet pushed to the
+	 * {@link #pendingData}.
 	 * <p>
 	 * See {@link #weShouldDelay(Marker)} for more.
 	 */
 	private LinkedList<Marker> delayedMarkers;
 
 	/**
-	 * Bookmarks in the {@link #seen} list for easy {@link #commit()}-ing and
-	 * {@link #rewind()}-ing.
+	 * Bookmarks in the {@link #pendingData} list for easy {@link #commit()}-ing
+	 * and {@link #rewind()}-ing.
 	 */
 	private final Stack<Bookmark> bookmarks;
 
@@ -75,9 +71,8 @@ public class BaseStream implements Stream {
 		assert (target != null);
 
 		this.source = source;
-		this.target = target;
 
-		this.seen = new LinkedList<Data>();
+		this.pendingData = new HoldingTarget(target);
 		this.delayedMarkers = new LinkedList<Marker>();
 
 		this.bookmarks = new Stack<Bookmark>();
@@ -106,7 +101,7 @@ public class BaseStream implements Stream {
 			if (packet instanceof Marker)
 				insert((Marker) packet);
 			else
-				seen.addLast(packet);
+				pendingData.push(packet);
 
 			if (packet instanceof Token) {
 				if (LOGGER.isTraceEnabled())
@@ -124,7 +119,7 @@ public class BaseStream implements Stream {
 
 		} else {
 			insertDelayedMarkers();
-			seen.addLast(marker);
+			pendingData.push(marker);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("+> " + marker);
@@ -133,8 +128,8 @@ public class BaseStream implements Stream {
 
 	/**
 	 * Should we delay a certain marker before inserting it into the
-	 * {@linkplain #seen} list ? Delaying it makes it possible for "skipped"
-	 * tokens to move in front of these markers.
+	 * {@linkplain #pendingData} list ? Delaying it makes it possible for
+	 * "skipped" tokens to move in front of these markers.
 	 * <p>
 	 * Right now all {@linkplain Start} markers may be delayed. This way any
 	 * skipped tokens which come right after a {@linkplain Start} marker end up
@@ -156,12 +151,12 @@ public class BaseStream implements Stream {
 	}
 
 	/**
-	 * Add all delayed markers to the {@linkplain #seen} list.
+	 * Add all delayed markers to the {@linkplain #pendingData} list.
 	 */
 	private void insertDelayedMarkers() {
 		while (!delayedMarkers.isEmpty()) {
 			Marker delayedMarker = delayedMarkers.removeFirst();
-			seen.addLast(delayedMarker);
+			pendingData.push(delayedMarker);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("+D " + delayedMarker);
@@ -171,7 +166,7 @@ public class BaseStream implements Stream {
 	/** {@inheritDoc} */
 	public void rewind(Token token) {
 		while (true) {
-			Data packet = seen.removeLast();
+			Data packet = pendingData.pop();
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("<< " + packet);
@@ -220,9 +215,9 @@ public class BaseStream implements Stream {
 			if (i == 0)
 				builder.append("[" + peeked[i].getStart() + "|");
 			builder.append(//
-			peeked[i].getText() //
-					.replaceAll("\n", "\\\\n")//
-					.replaceAll("\r", "\\\\r"));
+					peeked[i].getText() //
+							.replaceAll("\n", "\\\\n")//
+							.replaceAll("\r", "\\\\r"));
 		}
 
 		builder.append("]");
@@ -236,7 +231,7 @@ public class BaseStream implements Stream {
 	/** {@inheritDoc} */
 	public void bookmark() {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("!+ " + seen.size());
+			LOGGER.trace("!+ " + pendingData.size());
 
 		bookmarks.push(new Bookmark(this));
 	}
@@ -262,8 +257,8 @@ public class BaseStream implements Stream {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("!- " + position);
 
-		while (seen.size() > position) {
-			Data packet = seen.removeLast();
+		while (pendingData.size() > position) {
+			Data packet = pendingData.pop();
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("<< " + packet);
@@ -271,7 +266,6 @@ public class BaseStream implements Stream {
 			if (!(packet instanceof Token))
 				continue;
 
-			// unseen.addFirst((Token) packet);
 			source.unshift((Token) packet);
 		}
 	}
@@ -279,14 +273,7 @@ public class BaseStream implements Stream {
 	/** {@inheritDoc} */
 	public void commit() {
 		if (bookmarks.isEmpty()) {
-			while (!seen.isEmpty()) {
-				final Data data = seen.removeFirst();
-
-				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("!< " + data);
-
-				target.push(data);
-			}
+			pendingData.shiftAllToNextTarget();
 
 		} else {
 			Bookmark bookmark = bookmarks.pop();
@@ -306,6 +293,10 @@ public class BaseStream implements Stream {
 		this.parse = parse;
 	}
 
+	public HoldingTarget getTarget() {
+		return pendingData;
+	}
+
 	/** {@inheritDoc} */
 	public Iterator<Data> backToBookmarkIterator() {
 		if (bookmarks.isEmpty())
@@ -318,7 +309,7 @@ public class BaseStream implements Stream {
 				+ numberOfDelayedMarkers;
 
 		return new Iterator<Data>() {
-			int currentPosition = seen.size();
+			int currentPosition = pendingData.size();
 			Iterator<Data> reverseIterator = null;
 
 			public boolean hasNext() {
@@ -327,7 +318,7 @@ public class BaseStream implements Stream {
 
 			public Data next() {
 				if (reverseIterator == null)
-					reverseIterator = descendingIterator(seen);
+					reverseIterator = pendingData.descendingIterator();
 
 				currentPosition -= 1;
 				return reverseIterator.next();
@@ -351,7 +342,7 @@ public class BaseStream implements Stream {
 		final int positionOfBookmark = bookmark.position
 				+ numberOfDelayedMarkers;
 
-		return listIterator(seen, positionOfBookmark);
+		return pendingData.listIterator(positionOfBookmark);
 	}
 
 	private final class Bookmark {
@@ -359,7 +350,7 @@ public class BaseStream implements Stream {
 		private final LinkedList<Marker> delayedMarkers;
 
 		public Bookmark(BaseStream stream) {
-			position = stream.seen.size();
+			position = stream.pendingData.size();
 
 			if (stream.delayedMarkers.isEmpty())
 				delayedMarkers = null;

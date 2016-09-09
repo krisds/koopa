@@ -1,9 +1,13 @@
 package koopa.core.sources;
 
 import koopa.core.data.Data;
+import koopa.core.targets.Target;
 
 /**
- * A source of {@linkplain Data}.
+ * This is the counterpart to {@linkplain Target}s. They provide a place where
+ * {@linkplain Data} comes from. During parsing we will basically be taking data
+ * from a {@linkplain Source}, transforming it, and passing it to a
+ * {@linkplain Target}.
  */
 public interface Source<T extends Data> {
 

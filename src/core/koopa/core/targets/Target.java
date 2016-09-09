@@ -5,8 +5,9 @@ import koopa.core.sources.Source;
 
 /**
  * This is the counterpart to {@linkplain Source}s. They provide a place for
- * data to go. During parsing we will basically be taking data from a source,
- * transforming it, and passing it to a target.
+ * {@linkplain Data} to go. During parsing we will basically be taking data from
+ * a {@linkplain Source}, transforming it, and passing it to a
+ * {@linkplain Target}.
  */
 public interface Target<T extends Data> {
 
@@ -19,6 +20,4 @@ public interface Target<T extends Data> {
 	 * Lets us know the parse is done.
 	 */
 	void done();
-
-	// TODO Needed ? T pop();
 }

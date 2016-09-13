@@ -1,6 +1,7 @@
 package koopa.cobol.sources;
 
 import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
+import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
@@ -49,10 +50,10 @@ public class PseudoLiterals extends ThreadedSource<Token, Token> implements
 		boolean match = false;
 		final Token a = source.next();
 
-		if (a != null && a.getText().equals("=")) {
+		if (a != null && !a.hasTag(COMMENT) && a.getText().equals("=")) {
 			final Token b = source.next();
 
-			if (b != null && b.getText().equals("="))
+			if (b != null && !b.hasTag(COMMENT) && b.getText().equals("="))
 				match = true;
 
 			source.unshift(b);
@@ -66,13 +67,13 @@ public class PseudoLiterals extends ThreadedSource<Token, Token> implements
 		boolean match = false;
 		final Token a = source.next();
 
-		if (a != null && a.getText().equals("=")) {
+		if (a != null && !a.hasTag(COMMENT) && a.getText().equals("=")) {
 			final Token b = source.next();
 
-			if (b != null && b.getText().equals("=")) {
+			if (b != null && !b.hasTag(COMMENT) && b.getText().equals("=")) {
 				final Token c = source.next();
 
-				if (c == null || !c.getText().equals("=")) {
+				if (c == null || c.hasTag(COMMENT) || !c.getText().equals("=")) {
 					match = true;
 				}
 

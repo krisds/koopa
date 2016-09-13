@@ -1,5 +1,7 @@
 package koopa.cobol.parser.preprocessing.replacing;
 
+import static koopa.core.data.tags.AreaTag.COMMENT;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +58,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 			LOGGER.trace("  On " + next);
 		}
 
-		if (next != null) {
+		if (next != null && !next.hasTag(COMMENT)) {
 			final String text = next.getText().toUpperCase();
 			if (text.endsWith(pattern)) {
 				if (LOGGER.isTraceEnabled())

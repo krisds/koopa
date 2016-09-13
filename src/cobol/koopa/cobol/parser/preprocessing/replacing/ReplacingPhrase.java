@@ -79,13 +79,17 @@ public abstract class ReplacingPhrase {
 	}
 
 	public static boolean isConsideredSingleSpace(Token textWord) {
+		// "Comments, if any, are treated as a single space."
+		if (textWord.hasTag(AreaTag.COMMENT))
+			return true;
+		
 		// "Each occurrence of a separator comma, semicolon, or space in
 		// pseudo-text-1 or in the library text is considered to be a single
 		// space."
 
 		//if (!textWord.hasTag(SyntacticTag.SEPARATOR))
 		//	return false;
-
+		
 		final String text = textWord.getText();
 
 		if (",".equals(text))

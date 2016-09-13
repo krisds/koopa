@@ -31,6 +31,8 @@ import koopa.core.targets.Target;
 public class BaseStream implements Stream {
 
 	private static final Logger LOGGER = Logger.getLogger("parse.stream");
+	private static final Logger DELAYED_LOGGER = Logger
+			.getLogger("parse.stream.delayed");
 
 	/**
 	 * The stream fetches {@linkplain Token}s from this {@linkplain Source}.
@@ -148,6 +150,10 @@ public class BaseStream implements Stream {
 	 */
 	private void delay(Marker marker) {
 		delayedMarkers.addLast(marker);
+
+		if (DELAYED_LOGGER.isTraceEnabled())
+			DELAYED_LOGGER.trace("Delaying " + marker + ". Now "
+					+ delayedMarkers.size() + " in total.");
 	}
 
 	/**
@@ -158,8 +164,9 @@ public class BaseStream implements Stream {
 			Marker delayedMarker = delayedMarkers.removeFirst();
 			pendingData.push(delayedMarker);
 
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("+D " + delayedMarker);
+			if (DELAYED_LOGGER.isTraceEnabled())
+				DELAYED_LOGGER.trace("Inserting delayed " + delayedMarker + ". "
+						+ delayedMarkers.size() + " remaining.");
 		}
 	}
 
@@ -244,6 +251,10 @@ public class BaseStream implements Stream {
 			position = 0;
 			delayedMarkers.clear();
 
+			if (DELAYED_LOGGER.isTraceEnabled())
+				DELAYED_LOGGER
+						.trace("Rewound delayed markers, without bookmarks.");
+
 		} else {
 			Bookmark bookmark = bookmarks.pop();
 			position = bookmark.position;
@@ -252,6 +263,13 @@ public class BaseStream implements Stream {
 				delayedMarkers.clear();
 			else
 				delayedMarkers = bookmark.delayedMarkers;
+
+			if (DELAYED_LOGGER.isTraceEnabled()) {
+				DELAYED_LOGGER
+						.trace("Rewound delayed markers, through bookmarks:");
+				for (Marker marker : delayedMarkers)
+					DELAYED_LOGGER.trace(" * " + marker);
+			}
 		}
 
 		if (LOGGER.isTraceEnabled())

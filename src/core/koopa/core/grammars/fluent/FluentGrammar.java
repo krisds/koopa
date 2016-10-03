@@ -8,14 +8,15 @@ import java.util.Map;
 import koopa.core.grammars.Grammar;
 import koopa.core.grammars.combinators.MatchAny;
 import koopa.core.grammars.combinators.MatchEndOfFile;
-import koopa.core.grammars.combinators.MatchToken;
 import koopa.core.grammars.combinators.MatchKeyword;
+import koopa.core.grammars.combinators.MatchToken;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.grammars.combinators.TestForCase;
 import koopa.core.grammars.combinators.TestForKeyword;
 import koopa.core.grammars.combinators.TestTag;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.combinators.At;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.Not;
 import koopa.core.parsers.combinators.Opt;
@@ -198,8 +199,8 @@ public abstract class FluentGrammar extends Grammar {
 		return new Definition() {
 			@Override
 			public ParserCombinator asParser() {
-				return new TestForCase(FluentGrammar.this, true, true, all(
-						elements).asParser());
+				return new TestForCase(FluentGrammar.this, true, true,
+						all(elements).asParser());
 			}
 		};
 	}
@@ -208,8 +209,8 @@ public abstract class FluentGrammar extends Grammar {
 		return new Definition() {
 			@Override
 			public ParserCombinator asParser() {
-				return new TestForCase(FluentGrammar.this, true, false, all(
-						elements).asParser());
+				return new TestForCase(FluentGrammar.this, true, false,
+						all(elements).asParser());
 			}
 		};
 	}
@@ -218,8 +219,17 @@ public abstract class FluentGrammar extends Grammar {
 		return new Definition() {
 			@Override
 			public ParserCombinator asParser() {
-				return new TestForKeyword(FluentGrammar.this, false, all(
-						elements).asParser());
+				return new TestForKeyword(FluentGrammar.this, false,
+						all(elements).asParser());
+			}
+		};
+	}
+
+	protected Definition at(final Object... elements) {
+		return new Definition() {
+			@Override
+			public ParserCombinator asParser() {
+				return new At(all(elements).asParser());
 			}
 		};
 	}

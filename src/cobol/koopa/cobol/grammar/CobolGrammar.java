@@ -14003,11 +14003,12 @@ public class CobolGrammar extends CobolBaseGrammar {
               keyword("EXECUTE")
             ),
             keyword("SQL"),
-            limited(
-              optional(
-                sqlStatement()
-              ),
-              keyword("END-EXEC")
+            optional(
+              limited(
+                sqlStatement(),
+                // Closure:
+                keyword("END-EXEC")
+              )
             ),
             optional(
               as("unknown",
@@ -14043,11 +14044,12 @@ public class CobolGrammar extends CobolBaseGrammar {
               keyword("EXECUTE")
             ),
             keyword("CICS"),
-            limited(
-              optional(
-                cicsStatement()
-              ),
-              keyword("END-EXEC")
+            optional(
+              limited(
+                cicsStatement(),
+                // Closure:
+                keyword("END-EXEC")
+              )
             ),
             optional(
               as("unknown",

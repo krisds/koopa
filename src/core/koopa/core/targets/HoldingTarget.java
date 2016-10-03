@@ -2,8 +2,11 @@ package koopa.core.targets;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import koopa.core.data.Data;
+import koopa.core.data.Token;
 import koopa.core.util.Iterators;
 
 /**
@@ -22,15 +25,54 @@ public class HoldingTarget implements Target<Data> {
 	/** The {@linkplain Data} we're holding on to. */
 	private final LinkedList<Data> queue;
 
+	/** Who wants to be notified about incoming {@linkplain Data} ? */
+	private final List<Observer> observers;
+
+	private boolean notificationsInProgress = false;
+
 	public HoldingTarget(Target<Data> target) {
 		assert (target != null);
 		this.target = target;
 		this.queue = new LinkedList<Data>();
+		this.observers = new LinkedList<Observer>();
 	}
 
 	/** {@inheritDoc} */
 	public void push(Data data) {
 		queue.addLast(data);
+
+		if (!(data instanceof Token))
+			return;
+
+		final Token token = (Token) data;
+
+		if (token.isSkipped())
+			return;
+
+		if (!notificationsInProgress) {
+			notificationsInProgress = true;
+
+			for (Observer observer : observers)
+				observer.pushed(this, token);
+
+			assert (queue.getLast() == data);
+
+			notificationsInProgress = false;
+		}
+	}
+
+	public Token peekAtLastToken() {
+		ListIterator<Data> it = queue.listIterator(queue.size());
+
+		while (it.hasPrevious()) {
+			final Data d = it.previous();
+			if (d instanceof Token) {
+				final Token t = (Token) d;
+				return t;
+			}
+		}
+
+		return null;
 	}
 
 	/** {@inheritDoc} */
@@ -45,7 +87,26 @@ public class HoldingTarget implements Target<Data> {
 	 */
 	public Data pop() {
 		assert (!queue.isEmpty());
-		return queue.removeLast();
+		final Data last = queue.removeLast();
+
+		if (!notificationsInProgress && last instanceof Token) {
+			final Token token = (Token) last;
+
+			if (!token.isSkipped()) {
+				notificationsInProgress = true;
+
+				final Token data = peekAtLastToken();
+
+				for (Observer observer : observers)
+					observer.popping(this, token);
+
+				assert (peekAtLastToken() == data);
+
+				notificationsInProgress = false;
+			}
+		}
+
+		return last;
 	}
 
 	/**
@@ -85,5 +146,35 @@ public class HoldingTarget implements Target<Data> {
 	 */
 	public Iterator<Data> listIterator(int index) {
 		return Iterators.listIterator(queue, index);
+	}
+
+	// ========================================================================
+
+	public interface Observer {
+		void start(HoldingTarget holdingTarget, Token last);
+
+		void pushed(HoldingTarget holdingTarget, Token data);
+
+		void popping(HoldingTarget holdingTarget, Token last);
+	}
+
+	public void addObserver(Observer observer) {
+		observers.add(observer);
+
+		if (!notificationsInProgress) {
+			notificationsInProgress = true;
+
+			final Token token = peekAtLastToken();
+
+			observer.start(this, token);
+
+			assert (peekAtLastToken() == token);
+
+			notificationsInProgress = false;
+		}
+	}
+
+	public void removeObserver(Observer observer) {
+		observers.remove(observer);
 	}
 }

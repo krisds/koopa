@@ -138,7 +138,14 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public ParserCombinator dispatched(String[] keys, ParserCombinator[] parsers) {
+	public ParserCombinator upTo(ParserCombinator target,
+			ParserCombinator limiter) {
+		return super.upTo(target, limiter);
+	}
+
+	@Override
+	public ParserCombinator dispatched(String[] keys,
+			ParserCombinator[] parsers) {
 		return super.dispatched(keys, parsers);
 	}
 
@@ -153,7 +160,42 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	protected ParserCombinator literal(String text) {
+	public ParserCombinator literal(String text) {
 		return super.literal(text);
+	}
+
+	@Override
+	public ParserCombinator notAKeyword(ParserCombinator parser) {
+		return super.notAKeyword(parser);
+	}
+
+	@Override
+	public ParserCombinator notNested(ParserCombinator parser) {
+		return super.notNested(parser);
+	}
+
+	@Override
+	public ParserCombinator nested(ParserCombinator parser) {
+		return super.nested(parser);
+	}
+
+	@Override
+	public ParserCombinator balancing(ParserCombinator... parsers) {
+		return super.balancing(parsers);
+	}
+
+	@Override
+	public ParserCombinator at(ParserCombinator parser) {
+		return super.at(parser);
+	}
+
+	@Override
+	public ParserCombinator keyword(String text) {
+		return super.keyword(text);
+	}
+
+	@Override
+	public ParserCombinator optional(ParserCombinator... parsers) {
+		return super.optional(parsers);
 	}
 }

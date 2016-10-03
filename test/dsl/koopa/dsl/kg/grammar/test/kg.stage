@@ -54,6 +54,9 @@ end
 private def part =
     ( star : repeatable '*'
     | plus : repeatable '+'
+    | balancing
+    | before
+    | upto
     | atom
     )
 end
@@ -69,6 +72,8 @@ private def atom =
     | lookahead
     | noskip
     | tagged
+    | balanced
+    | unbalanced
 
     | assign : identifier '=' rvalue
     | rvalue
@@ -111,9 +116,7 @@ end
 def dispatched =  '$' '(' (alternating__ dispatch '|') ')'      end
 def dispatch   =  literal '=' %noskip('>') sequence             end
 
-def skipping   =  [limited] limiter                             end
-def limited    =  '-' %noskip('-' '-') part                     end
-def limiter    =  '-' %noskip('-' '>') part                     end
+def skipping   =  '-' %noskip('-' '>') part                     end
 
 def negation   =  '%' %noskip('not') part                       end
 def lookahead  =  '%' %noskip('at') part                        end
@@ -142,5 +145,37 @@ def number         =  @NUMBER _                                 end
 def native_code    =  braced                                    end
 
 private def braced =  '{' ( braced | %not('}') _ )* '}'         end
+
+def upto =
+    atom '%' %noskip('upto') closure
+end
+
+def before =
+    atom '%' %noskip('before') closure
+end
+
+def balancing =
+    '%' %noskip('balancing') pair+ part
+end
+
+def pair =
+    '<' closure closure '>'
+end
+
+def balanced =
+    '%% %noskip('nested') atom
+end
+
+def unbalanced =
+    '%% %noskip('notnested') atom
+end
+
+def closure =
+    '{' sequence '}'
+end
+
+def todo =
+    '.' %noskip ('.' '.')
+end
 
 ]

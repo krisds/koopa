@@ -60,12 +60,13 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 
 	private ParserCombinator wordParser = null;
 
-	public ParserCombinator word() {
+	private ParserCombinator word() {
 		if (wordParser == null) {
 			FutureParser future = scoped("word", PRIVATE);
 			wordParser = future;
 			future.setParser(new ParserCombinator() {
 				public boolean matches(Parse parse) {
+					skipAll(parse);
 					return matchesWord(parse);
 				}
 
@@ -93,8 +94,8 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	 * underline (_), however, can begin or end a user-defined word, and the
 	 * hyphen (-) cannot."</i>
 	 * 
-	 * Description from: <a
-	 * href="http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html">HP
+	 * Description from:
+	 * <a href="http://h71000.www7.hp.com/doc/82final/6296/6296pro_002.html">HP
 	 * COBOL Reference Manual - Character Strings</a>.
 	 * <p>
 	 * Because anything in a copybook can be replaced via the COPY statement,

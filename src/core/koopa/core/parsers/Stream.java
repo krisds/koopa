@@ -115,4 +115,9 @@ public interface Stream {
 	 * Get an iterator which walks the stream from the latest bookmark.
 	 */
 	Iterator<Data> fromBookmarkIterator();
+
+	/**
+	 * What {@linkplain Stream} is at the root of this one ?
+	 */
+	BaseStream getBaseStream();
 }

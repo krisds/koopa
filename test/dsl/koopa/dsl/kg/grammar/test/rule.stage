@@ -29,18 +29,49 @@ target rule;
 
 
 +[ def emptyUsercode =
-     {}
+     =={}==
    end ]
 
 +[ def usercode =
-     { System.out.println("DISPLAY UPON TERMINAL"); } 
+     =={ System.out.println("DISPLAY UPON TERMINAL"); }==
    end ]
 
 +[ def nestedUsercode =
-     { if (display) {
+     =={ if (display) {
           System.out.println("DISPLAY UPON TERMINAL");
        } else {
           count += 1;
        } 
-     }
+     }==
    end ]
+
++[ def before =  something %before { something else }  end ]
++[ def upto   =  something %upto   { something else }  end ]
+   
++[ def disjunction =
+       conjunction (OR conjunction)
+       
+     where def conjunction =
+         (unknown: _*) %upto { OR }
+     end
+   end ]
+
++[ def balancing =
+       %balancing 
+         <{ '(' } { ')' }>
+         <{ '[' } { ']' }>
+         <{ '{' } { '}' }>
+           condition
+   end ]
+
++[ def nested =
+       %nested FOO
+   end ]
+
++[ def not_nested =
+       %notnested FOO
+   end ]
+
++[ def skip =  --> END-PROGRAM  end ]
+
++[ def todo =  ...  end ]

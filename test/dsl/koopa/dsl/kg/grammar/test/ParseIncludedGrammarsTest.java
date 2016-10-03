@@ -5,12 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import koopa.core.trees.Tree;
-import koopa.core.util.Files;
-import koopa.dsl.kg.grammar.KGGrammar;
-import koopa.dsl.kg.util.KGUtil;
-import koopa.dsl.stage.runtime.GrammarTestSuite;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +13,11 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+
+import koopa.core.trees.Tree;
+import koopa.core.util.Files;
+import koopa.dsl.kg.grammar.KGGrammar;
+import koopa.dsl.kg.util.KGUtil;
 
 /**
  * This test comes in handy when tweaking {@linkplain KGGrammar}, as it can
@@ -52,7 +51,7 @@ public class ParseIncludedGrammarsTest {
 	public static class KGRunner extends Suite {
 		public KGRunner(Class<?> clazz) throws InitializationError {
 			super(clazz, getRunners(clazz));
-			assert (GrammarTestSuite.class.isAssignableFrom(clazz));
+			assert (ParseIncludedGrammarsTest.class.isAssignableFrom(clazz));
 		}
 
 		private static List<Runner> getRunners(Class<?> clazz)

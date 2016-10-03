@@ -3,7 +3,11 @@ grammar SQL extends SQLBase.
 # This is a grammar targeted at SQL statements which are embedded in Cobol
 # code. The rules assume they are always parsing a single SQL statement,
 # and will eat any remaining unidentified tokens as 'unknown'.
-
+#
+# I'm trying to set up the rules quite defensively to eat anything unknown.
+# Partly because the SQL grammar in itself is quite extensive and will take
+# some time to flesh out. But also because my set of samples to test against
+# is quite limited.
 
 def sqlStatement =
     ( includeStatement
@@ -58,15 +62,24 @@ end
 
 def selectStatement =
     SELECT
-
-    [ unknown: --> FROM ] from
-    [[unknown: --> WHERE] `where]
+    [ unknown: --> FROM ]
+    from
+    [ unknown: --> WHERE ]
+    [`where]
     [ unknown: --> eof ]
 
-  where def from   =  FROM  tableReferenceList  [unknown]  end
-  where def `where =  WHERE [unknown]                      end
+  where def from =  FROM  tableReferenceList  [unknown: --> nextBlockOrEnd]  end
 
-  where def unknown =  --> ( FROM | WHERE | GROUP BY | HAVING | WINDOW | eof )  end 
+  where def `where =
+      WHERE
+      ( searchCondition
+      | unknown : _*
+      ) %upto { nextBlockOrEnd }
+  end
+
+  where private def nextBlockOrEnd =
+      ( FROM | WHERE | GROUP BY | HAVING | WINDOW | eof )
+  end 
 end
 
 def insertStatement =
@@ -76,14 +89,20 @@ end
 
 def updateStatement =
     UPDATE targetTable
-
-    [[unknown: --> WHERE] `where]
-
+    set
+    [`where]
     [unknown: --> eof]
 
-  where def `where =  WHERE (CURRENT OF unknown | unknown)  end
+  where def set =  SET (unknown: --> (WHERE | eof))  end
 
-  where def unknown =  --> eof  end 
+  where def `where =
+     WHERE
+     ( CURRENT OF cursorName
+     | ( searchCondition
+       | unknown : _*
+       ) %upto { eof }
+     )
+  end
 end
 
 def deleteStatement = 
@@ -225,6 +244,121 @@ def renameStatement =
     [unknown: --> eof]
 end
 
+## #############################################################################
+## Search conditions (top-down)
+## -----------------------------------------------------------------------------
+
+# This will split the input according to the logical combinators AND, OR and
+# NOT, and grouping of these by means of parentheses.
+
+def searchCondition =
+    %balancing 
+        <{ '(' } { ')' }>
+        <{ '[' } { ']' }>
+        <{ '{' } { '}' }>
+        <{ leftBracketTrigraph } { rightBracketTrigraph }>
+      disjunction
+end
+
+private def leftBracketTrigraph  =  '?' %noskip('?' '(')  end
+private def rightBracketTrigraph =  '?' %noskip('?' ')')  end
+
+hiding def disjunction =
+    conjunction %upto { (or | eof) }
+    (or
+      conjunction %upto { (or | eof) }
+    )*
+    
+  where private def or =  %notnested OR  end
+end
+
+hiding def conjunction =
+    negation %upto { (and | eof) }
+    (and
+     negation %upto { (and | eof) }
+    )*
+    
+  where private def and =  %notnested AND  end
+end
+
+hiding def negation =
+    [NOT] term
+end
+
+hiding def term =
+    ( '(' 
+      ( 
+        %balancing 
+            <{ '(' } { ')' }>
+            <{ '[' } { ']' }>
+            <{ '{' } { '}' }>
+            <{ leftBracketTrigraph } { rightBracketTrigraph }>
+          ( searchCondition %upto { %notnested ')' } )
+      ) 
+      ')'
+
+    | likePredicate
+    | comparison
+    | unknown: _*
+    )
+end
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# LIKE predicate (top down)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def likePredicate =
+    rowValuePredicand
+    [NOT] LIKE pattern
+    [escape]
+    
+  where def rowValuePredicand =
+      (unknown: _*) %upto { [NOT] LIKE }
+  end
+  
+  where def pattern =
+      ( stringLiteral
+      | unknown: _*
+      ) %before { (ESCAPE | eof) }
+      
+      [--> (ESCAPE | eof)]
+  end
+  
+  where def escape =
+      ESCAPE (unknown: _*)
+  end
+end
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Comparison (top-down)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# This will split the input into two parts, separated by a comparison operator.
+
+def comparison =
+    (unknown: --> comparisonOp)
+    comparisonOp
+    (unknown: _+)
+end
+
+def comparisonOp =
+    ( greaterThanOp
+    | lessThanOrEqualsOp
+    | greaterThanOrEqualsOp
+    | equalsOp
+    | notEqualsOp
+    | lessThanOp
+    )
+end
+
+def equalsOp              =  '='                                    end
+def lessThanOp            =  '<'                                    end
+def greaterThanOp         =  '>'                                    end
+def notEqualsOp           =  ( '<' %noskip '>' | '!' %noskip '=' )  end
+def greaterThanOrEqualsOp =  ( '>' %noskip '=' | '!' %noskip '<' )  end
+def lessThanOrEqualsOp    =  ( '<' %noskip '=' | '!' %noskip '>' )  end
+
 
 ## #############################################################################
 ## Low level stuff.
@@ -269,6 +403,8 @@ end
 
 def targetTable =  ( ONLY '(' tableName ')' | tableName )   end
 
+
+def stringLiteral =  @STRING _  end
 
 
 # -----------------------------------------------------------------------------

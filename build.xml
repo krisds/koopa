@@ -94,6 +94,9 @@
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
 			<test name="koopa.core.grammars.test.AutomaticKeywordsTest" />
 			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
+			<test name="koopa.core.grammars.test.BinaryGrammarTest" />
+
+			<test name="koopa.core.parsers.combinators.test.BalancingTest" />
 
 			<test name="koopa.core.grammars.fluent.test.FluentGrammarTest" />
 
@@ -267,6 +270,8 @@
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
+			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
+			<test name="koopa.cobol.cics.grammar.test.EmbeddedCICSGrammarTests" />
 		</junit>
 	</target>
 

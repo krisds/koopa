@@ -230,8 +230,8 @@ public class BatchResults extends AbstractTableModel {
 		// TODO Nicer way to do the following ?
 		// Clear these as they can take up a lot of memory, and are not needed
 		// here anymore.
-		results.getParse().removeTarget(KoopaTreeBuilder.class);
-		results.getParse().removeTarget(TokenTracker.class);
+		results.getParse().getStreams().removeTarget(KoopaTreeBuilder.class);
+		results.getParse().getStreams().removeTarget(TokenTracker.class);
 	}
 
 	public ParseResults getResults(int i) {

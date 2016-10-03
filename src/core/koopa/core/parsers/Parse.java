@@ -11,98 +11,75 @@ import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.combinators.Opt;
-import koopa.core.sources.NullSource;
 import koopa.core.sources.Source;
-import koopa.core.targets.CompositeTarget;
-import koopa.core.targets.NullTarget;
+import koopa.core.streams.Streams;
 import koopa.core.targets.Target;
-import koopa.core.targets.WaterTagger;
 import koopa.core.util.Tuple;
 
 // TODO Take another look at this class, and split things up where useful.
 public class Parse {
 
-	private Stack stack;
+	private final Stack stack;
+	private final Streams streams;
+	private final Trace trace;
 
+	// TODO Move these to Stack ?
 	private Position finalPosition = Position.ZERO;
 	private Frame finalFrame = null;
-
-	private Source<Token> source = new NullSource<Token>();
-	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
-	private Stream stream = null;
-	private WaterTagger waterTagger;
 
 	private Set<Opt> options = new HashSet<Opt>();
 
 	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
 	private List<Tuple<Token, String>> errors = new LinkedList<Tuple<Token, String>>();
 
-	private Trace trace;
 
 	private Parse() {
 		this.stack = new Stack();
 		this.trace = new Trace();
+		this.streams = new Streams(this);
 	}
 
 	public static Parse of(Source<Token> source) {
 		Parse parse = new Parse();
-		parse.setSource(source);
+		parse.getStreams().setSource(source);
 		return parse;
+	}
+
+	public Parse to(Target<Data> target) {
+		streams.addTarget(target);
+		return this;
+	}
+
+	public <T extends Source<? extends Data>> T getSource(Class<T> clazz) {
+		return streams.getSource(clazz);
+	}
+
+	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
+		return streams.getTarget(clazz);
+	}
+
+	public void done() {
+		// TODO stack.done() ?
+		// TODO trace.done() ?
+		streams.done();
 	}
 
 	public Stack getStack() {
 		return stack;
 	}
 
-	public void setSource(Source<Token> source) {
-		if (source == null)
-			source = new NullSource<Token>();
-
-		this.source = source;
-	}
-
-	public void addTarget(Target<Data> target) {
-		if (target != null)
-			targets.add(target);
-	}
-
-	public Parse to(Target<Data> target) {
-		addTarget(target);
-		return this;
-	}
-
-	public void setStream(Stream stream) {
-		this.stream = stream;
-		this.stream.setParse(this);
-	}
-
-	public Stream getStream() {
-		if (stream == null) {
-			if (targets.isEmpty())
-				setStream(new BaseStream(source, new NullTarget<Data>()));
-			else {
-				waterTagger = new WaterTagger(all(targets));
-				setStream(new BaseStream(source, waterTagger));
-			}
-		}
-
-		return stream;
-	}
-
-	private Target<Data> all(List<Target<Data>> targets) {
-		if (targets.size() == 1)
-			return targets.get(0);
-
-		CompositeTarget<Data> composite = new CompositeTarget<Data>();
-		for (Target<Data> target : targets)
-			composite.addTarget(target);
-		return composite;
-	}
-
 	public Trace getTrace() {
 		return trace;
 	}
 
+	public Streams getStreams() {
+		return streams;
+	}
+	
+	public Stream getStream() {
+		return streams.getStream();
+	}
+	
 	public boolean getOption(Opt noskip) {
 		throw new UnsupportedOperationException();
 	}
@@ -160,28 +137,6 @@ public class Parse {
 		return errors.get(index);
 	}
 
-	public <T extends Source<? extends Data>> T getSource(Class<T> clazz) {
-		if (source == null)
-			return null;
-		else
-			return source.getSource(clazz);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
-		for (Target<Data> target : targets)
-			if (clazz.isInstance(target))
-				return (T) target;
-
-		return null;
-	}
-
-	public void removeTarget(Class<? extends Target<Data>> clazz) {
-		Target<Data> target = getTarget(clazz);
-		if (target != null)
-			targets.remove(target);
-	}
-
 	public Position getFinalPosition() {
 		return finalPosition;
 	}
@@ -195,18 +150,25 @@ public class Parse {
 		this.finalFrame = frame;
 	}
 
-	public void done() {
-		// Some of our sources may be threaded. We need to make sure that any
-		// threads they hold get stopped. This is what we do here. The message
-		// will get passed along the chain of sources, giving each a chance
-		// to stop running.
-		source.close();
+	// ========================================================================
 
-		// While there are no threaded targets at the time of writing, we do
-		// want to give them a chance to clean up on completion of the parse.
-		for (Target<?> target : targets)
-			target.done();
-		if (waterTagger != null)
-			waterTagger.done();
+	private static int hashCounter = 0;
+	private final int HASHCODE = hashCounter++;
+
+	/**
+	 * For {@linkplain Parse} instances, equality boils down to object identity.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return this == obj;
+	}
+
+	/**
+	 * Hashcodes for {@linkplain Parse} objects are nothing more than a
+	 * sequentially generated identifier.
+	 */
+	@Override
+	public int hashCode() {
+		return HASHCODE;
 	}
 }

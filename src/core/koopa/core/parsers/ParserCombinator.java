@@ -33,6 +33,10 @@ public abstract class ParserCombinator {
 				// was at that point. We do that so that we can give a more
 				// accurate and, hopefully, more useful error message in case of
 				// an incomplete parse.
+				final boolean enabled = parse.getStreams().getLimitsEnabled();
+				parse.getStreams().setLimitsEnabled(false);
+				parse.getTrace().quiet(true);
+				
 				final Token peek = parse.getStream().peek();
 				if (peek != null) {
 					final Position currentPosition = peek.getStart();
@@ -40,6 +44,9 @@ public abstract class ParserCombinator {
 						parse.setFinalMatch(currentPosition,
 								parse.getStack().getHead());
 				}
+				
+				parse.getTrace().quiet(false);
+				parse.getStreams().setLimitsEnabled(enabled);
 			}
 
 			return matches;
@@ -107,5 +114,28 @@ public abstract class ParserCombinator {
 	 */
 	public boolean isMatching(String name) {
 		return false;
+	}
+
+	// ========================================================================
+
+	private static int hashCounter = 0;
+	private final int HASHCODE = hashCounter++;
+
+	/**
+	 * For {@linkplain ParserCombinator} instances, equality boils down to
+	 * object identity.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return this == obj;
+	}
+
+	/**
+	 * Hashcodes for {@linkplain ParserCombinator} objects are nothing more than
+	 * a sequentially generated identifier.
+	 */
+	@Override
+	public int hashCode() {
+		return HASHCODE;
 	}
 }

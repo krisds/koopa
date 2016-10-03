@@ -241,6 +241,25 @@ public class KoopaGrammarTest extends GrammarTest {
 	}
 
 	@Test
+	public void testCanMatchUpTo() {
+		// (--> COBOL) COBOL
+		ParserCombinator base = G.sequence(G.skipto(G.token("COBOL")),
+				G.token("COBOL"));
+		// (%match base %upto .) .
+		ParserCombinator upTo = G.sequence(G.upTo(base, G.token(".")), G.token("."));
+
+		shouldAccept(upTo, input("COBOL", "."));
+		shouldAccept(upTo, input("FLOWMATIC", "COBOL", "."));
+		shouldAccept(upTo, input("PL/I", "FLOWMATIC", "COBOL", "."));
+
+		shouldReject(upTo, input("FLOWMATIC", "."));
+		shouldReject(upTo, input("COBOL"));
+
+		shouldReject(upTo, input("COBOL", "FLOWMATIC", "."));
+		shouldReject(upTo, input("FLOWMATIC", "COBOL", "PL/I", "."));
+	}
+
+	@Test
 	public void testCanMatchWithDispatch() {
 		ParserCombinator parser = G.dispatched(
 				new String[] { "ADD", "SUBTRACT", "MULTIPLY", "DIVIDE" },

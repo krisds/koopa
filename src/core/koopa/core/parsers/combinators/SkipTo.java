@@ -5,6 +5,7 @@ import java.util.Set;
 import koopa.core.data.Token;
 import koopa.core.data.markers.InWater;
 import koopa.core.data.markers.OnLand;
+import koopa.core.grammars.combinators.MatchEndOfFile;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
@@ -21,8 +22,6 @@ import koopa.core.parsers.Stream;
  */
 public class SkipTo extends UnaryParserDecorator {
 
-	private static final String SYMBOL = "--> ...";
-
 	public SkipTo(ParserCombinator parser) {
 		super(parser);
 	}
@@ -32,7 +31,7 @@ public class SkipTo extends UnaryParserDecorator {
 		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent(SYMBOL + " ?");
+			parse.getTrace().indent(toString() + " ?");
 
 		boolean inWater = false;
 
@@ -48,11 +47,19 @@ public class SkipTo extends UnaryParserDecorator {
 			final Token skipped = stream.forward();
 
 			if (skipped == null) {
+				if (parser instanceof MatchEndOfFile) {
+					stream.bookmark();
+					break;
+				}
+				
 				if (parse.getTrace().isEnabled())
-					parse.getTrace().dedent(SYMBOL + " : no");
+					parse.getTrace().dedent(toString() + " : no");
 
 				return false;
 			}
+
+			if (parse.getTrace().isEnabled())
+				parse.getTrace().add("skipped " + skipped);
 
 			stream.bookmark();
 		}
@@ -63,7 +70,7 @@ public class SkipTo extends UnaryParserDecorator {
 			stream.insert(OnLand.getInstance());
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent(SYMBOL + " : yes");
+			parse.getTrace().dedent(toString() + " : yes");
 
 		return true;
 	}
@@ -83,6 +90,6 @@ public class SkipTo extends UnaryParserDecorator {
 
 	@Override
 	public String toString() {
-		return SYMBOL;
+		return "--> " + parser.toString();
 	}
 }

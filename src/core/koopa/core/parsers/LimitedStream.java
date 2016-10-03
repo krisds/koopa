@@ -1,141 +1,146 @@
 package koopa.core.parsers;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
-import koopa.core.data.Data;
-import koopa.core.data.Marker;
 import koopa.core.data.Token;
 
 /**
- * This stream will only return tokens from another stream up to a certain
- * point, as defined by a {@linkplain ParserCombinator}.
+ * This stream will only return tokens from its parent stream up to a certain
+ * point, as defined by its {@link #limiters}.
  */
-public class LimitedStream implements Stream {
+public class LimitedStream extends StreamDecorator implements Stream {
 
-	private final Stream stream;
-	private final ParserCombinator limiter;
+	/**
+	 * The matching of limiters can introduce a lot of noise in the logging, so
+	 * I disable it by default. Toggle this to get the output.
+	 */
+	private final static boolean SILENCE = true;
 
-	/** We keep track of where the last limiter test ran. */
-	private Token lastTestAtToken = null;
-	/** So that we can reuse the result from the last test. */
-	private boolean lastTestHitLimit = false;
+	/**
+	 * Limiters are additive. Whenever any limiter matches the
+	 * {@link #forward()} method should return <code>null</code>.
+	 */
+	private Map<ParserCombinator, Integer> limiters = new LinkedHashMap<ParserCombinator, Integer>();
 
-	public LimitedStream(Stream stream, ParserCombinator limiter) {
-		assert (stream != null);
-		assert (limiter != null);
+	/**
+	 * This lists the limiters in the order or Most-Recently-Used. This is the
+	 * order in which they will be matched.
+	 */
+	private LinkedList<ParserCombinator> mru = new LinkedList<ParserCombinator>();
 
-		this.stream = stream;
-		this.limiter = limiter;
+	public LimitedStream(Stream stream) {
+		super(stream);
+	}
+
+	public void addLimiter(ParserCombinator limiter) {
+		final int count;
+		if (limiters.containsKey(limiter))
+			count = limiters.get(limiter);
+		else
+			count = 0;
+
+		limiters.put(limiter, count + 1);
+		if (count == 0)
+			mru.addFirst(limiter);
+	}
+
+	public void removeLimiter(ParserCombinator limiter) {
+		final int count = limiters.get(limiter) - 1;
+		assert (count >= 0);
+		if (count > 0)
+			limiters.put(limiter, count);
+		else {
+			limiters.remove(limiter);
+			mru.remove(limiter);
+		}
+	}
+
+	public boolean hasLimiters() {
+		return !limiters.isEmpty();
 	}
 
 	/** {@inheritDoc} */
 	public Token forward() {
-		final Parse parse = stream.getParse();
+		return forward(false);
+	}
 
-		// Let's check if we have been here before. If so we can reuse the
-		// result from last time.
-		final Token peek = stream.peek();
-		if (peek == lastTestAtToken) {
-			if (lastTestHitLimit) {
-				if (parse.getTrace().isEnabled())
-					parse.getTrace().add("%limited : yes (memoized)");
+	public Token forward(boolean skip) {
+		if (limiters.isEmpty())
+			return skip ? stream.skip() : stream.forward();
 
-				return null;
+		if (SILENCE)
+			stream.getParse().getTrace().silence(true);
 
-			} else {
-				if (parse.getTrace().isEnabled())
-					parse.getTrace().add("%limited : no (memoized)");
+		final boolean atLimit = streamIsAtALimiter();
 
-				return stream.forward();
+		if (SILENCE)
+			stream.getParse().getTrace().silence(false);
+
+		if (atLimit)
+			return null;
+		else
+			return skip ? stream.skip() : stream.forward();
+	}
+
+	private boolean streamIsAtALimiter() {
+		final Parse parse = getParse();
+
+		// TODO Ignore skippables ?
+
+		// Limits should not apply to limiters themselves.
+		parse.getStreams().setLimitsEnabled(false);
+
+		boolean atLimit = false;
+
+		final Iterator<ParserCombinator> it = mru.iterator();
+		while (it.hasNext()) {
+			final ParserCombinator limiter = it.next();
+
+			if (limitsStream(parse, limiter)) {
+				atLimit = true;
+				it.remove();
+				mru.addFirst(limiter);
+				break;
 			}
 		}
 
-		stream.bookmark();
+		// Here we restore the original stream.
+		parse.getStreams().setLimitsEnabled(true);
 
+		return atLimit;
+	}
+
+	private boolean limitsStream(Parse parse, ParserCombinator limiter) {
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().indent("%limited ?");
 
-		// TODO This twiddling ain't great...
-		parse.setStream(stream);
-		boolean hitLimit = limiter.accepts(parse);
-		parse.setStream(this);
+		// We can assume that the parse is using our parent stream. See
+		// forwardUpToLimiter.
 
-		lastTestAtToken = peek;
-		lastTestHitLimit = hitLimit;
+		stream.bookmark();
+		final boolean hitLimit = limiter.accepts(parse);
+		stream.rewind();
 
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().dedent("%limited : " + (hitLimit ? "yes" : "no"));
 
-		stream.rewind();
-
-		if (hitLimit)
-			return null;
-		else
-			return stream.forward();
-	}
-
-	/** {@inheritDoc} */
-	public Token skip() {
-		return stream.skip();
-	}
-
-	/** {@inheritDoc} */
-	public void insert(Marker marker) {
-		stream.insert(marker);
-	}
-
-	/** {@inheritDoc} */
-	public void rewind(Token token) {
-		stream.rewind(token);
+		return hitLimit;
 	}
 
 	/** {@inheritDoc} */
 	public Token peek() {
 		bookmark();
-		final Token t = forward();
+		final Token t = forward(true);
 		rewind();
-
 		return t;
 	}
 
 	/** {@inheritDoc} */
-	// TODO This doesn't respect the limiter.
+	// TODO This doesn't respect the limiter. OK or not ?
 	public String peekMore() {
-		return stream.peekMore();
-	}
-
-	/** {@inheritDoc} */
-	public void bookmark() {
-		stream.bookmark();
-	}
-
-	/** {@inheritDoc} */
-	public void rewind() {
-		stream.rewind();
-	}
-
-	/** {@inheritDoc} */
-	public void commit() {
-		stream.commit();
-	}
-
-	/** {@inheritDoc} */
-	public Parse getParse() {
-		return stream.getParse();
-	}
-
-	/** {@inheritDoc} */
-	public void setParse(Parse parse) {
-		stream.setParse(parse);
-	}
-
-	/** {@inheritDoc} */
-	public Iterator<Data> backToBookmarkIterator() {
-		return stream.backToBookmarkIterator();
-	}
-
-	/** {@inheritDoc} */
-	public Iterator<Data> fromBookmarkIterator() {
-		return stream.fromBookmarkIterator();
+		return super.peekMore();
 	}
 }

@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class TestTokenizerTest {
 
-	private final String input = "A B C # X Y Z";
+	private final String input = "A B C ^ X Y Z";
 
 	private final List<Object> tagsAndTokens = Arrays.asList(new Object[] {
 			PROGRAM_TEXT_AREA, "A", //
@@ -23,7 +23,7 @@ public class TestTokenizerTest {
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "C", //
 			PROGRAM_TEXT_AREA, " ", //
-			PROGRAM_TEXT_AREA, "#", //
+			PROGRAM_TEXT_AREA, "^", //
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "X", //
 			PROGRAM_TEXT_AREA, " ", //

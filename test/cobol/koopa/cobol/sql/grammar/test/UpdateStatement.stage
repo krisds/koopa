@@ -1,5 +1,9 @@
 target updateStatement;
 
 +[ UPDATE STUDENT
-     SET SCORE = 'C'
+     SET SCORE = 'A'
+     WHERE CURRENT OF ] CursorName:cursorName
+
++[ UPDATE STUDENT
+     SET SCORE = 'A'
      WHERE SID = 42 ]

@@ -22,10 +22,14 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.ApplyBlock;
 import koopa.core.parsers.combinators.AssignResultTo;
 import koopa.core.parsers.combinators.At;
+import koopa.core.parsers.combinators.Balancing;
 import koopa.core.parsers.combinators.Block;
 import koopa.core.parsers.combinators.Choice;
+import koopa.core.parsers.combinators.FailMatch;
 import koopa.core.parsers.combinators.LimitedTo;
+import koopa.core.parsers.combinators.Nested;
 import koopa.core.parsers.combinators.Not;
+import koopa.core.parsers.combinators.NotNested;
 import koopa.core.parsers.combinators.Opt;
 import koopa.core.parsers.combinators.Optional;
 import koopa.core.parsers.combinators.Permuted;
@@ -34,6 +38,7 @@ import koopa.core.parsers.combinators.ReturningValue;
 import koopa.core.parsers.combinators.Sequence;
 import koopa.core.parsers.combinators.SkipTo;
 import koopa.core.parsers.combinators.Star;
+import koopa.core.parsers.combinators.UpTo;
 import koopa.core.parsers.combinators.WithOption;
 
 /**
@@ -53,7 +58,8 @@ public abstract class KoopaGrammar extends Grammar {
 		return scoped(name, PUBLIC, true);
 	}
 
-	protected FutureParser scoped(final String name, final Visibility visibility) {
+	protected FutureParser scoped(final String name,
+			final Visibility visibility) {
 		return scoped(name, visibility, true);
 	}
 
@@ -144,13 +150,19 @@ public abstract class KoopaGrammar extends Grammar {
 		return new TestTag(this, tag);
 	}
 
-	protected ParserCombinator opt(final Opt opt, final ParserCombinator parser) {
+	protected ParserCombinator opt(final Opt opt,
+			final ParserCombinator parser) {
 		return new WithOption(opt, parser);
 	}
 
 	protected ParserCombinator limited(final ParserCombinator target,
 			final ParserCombinator limiter) {
 		return new LimitedTo(target, limiter);
+	}
+
+	protected ParserCombinator upTo(ParserCombinator target,
+			ParserCombinator limiter) {
+		return new UpTo(target, limiter);
 	}
 
 	protected ParserCombinator dispatched(final String[] keys,
@@ -172,6 +184,43 @@ public abstract class KoopaGrammar extends Grammar {
 	protected ParserCombinator notAKeyword(final ParserCombinator parser) {
 		return new TestForKeyword(this, false, parser);
 	}
+
+	protected ParserCombinator notNested(final ParserCombinator parser) {
+		return new NotNested(parser);
+	}
+
+	protected ParserCombinator nested(final ParserCombinator parser) {
+		return new Nested(parser);
+	}
+
+	protected ParserCombinator todo() {
+		return FailMatch.instance();
+	}
+
+	/**
+	 * The last parser will be used as the target. The preceding ones defining
+	 * the pairs to be balanced.
+	 */
+	protected ParserCombinator balancing(ParserCombinator... parsers) {
+		final int length = parsers.length;
+
+		assert (length >= 3 && length % 2 == 1);
+
+		final ParserCombinator target = parsers[length - 1];
+		final ParserCombinator[] pairs = new ParserCombinator[length - 1];
+
+		for (int i = 0; i < length - 1; i++)
+			pairs[i] = parsers[i];
+
+		return new Balancing(this, target, pairs);
+	}
+
+	protected ParserCombinator upto(ParserCombinator parser,
+			ParserCombinator edge) {
+		return new UpTo(parser, edge);
+	}
+
+	// ========================================================================
 
 	@Override
 	public ParserCombinator keyword() {

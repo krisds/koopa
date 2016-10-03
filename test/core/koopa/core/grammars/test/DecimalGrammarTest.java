@@ -46,7 +46,7 @@ public class DecimalGrammarTest extends GrammarTest {
 	 * This basically implements:
 	 * 
 	 * <pre>
-	 *  integer*
+	 *  integer+
 	 * </pre>
 	 */
 	private ParserCombinator list() {

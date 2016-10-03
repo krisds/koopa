@@ -1,0 +1,51 @@
+# NOTE: All of these are just hand-made dummies.
+
+target comparison;
+
++[ ANSWER = 42 ]
++[ ANSWER < 42 ]
++[ ANSWER > 42 ]
+
++[ ANSWER <> 42 ]
++[ ANSWER != 42 ]
+
++[ ANSWER <= 42 ]
++[ ANSWER !> 42 ]
+
++[ ANSWER >= 42 ]
++[ ANSWER !< 42 ]
+
+-[ THE ANSWER IS 42 ]
+
+
+target term;
+
++[ FOO ]
++[ NOT FOO ]
++[ ( ] searchCondition [ ) ]
++ comparison
+
+
+target conjunction;
+
++ term
++ term [ AND ] term
+
+
+target disjunction;
+
++ term
++ conjunction
++ conjunction [ OR ] conjunction
+
+
+target searchCondition;
+
++ term
++ conjunction
++ disjunction
+
++[ ( ] term [ OR ] term [ ) AND ( ] term [ OR ] term [ ) ]
+
++[ ( A OR B ) AND C ]
++[ ( ( A ) ) ]

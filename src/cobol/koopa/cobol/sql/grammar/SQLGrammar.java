@@ -413,16 +413,14 @@ public class SQLGrammar extends SQLBaseGrammar {
             ),
             selectStatement$from(),
             optional(
-              sequence(
-                optional(
-                  as("unknown",
-                    skipto(
-                      keyword("WHERE")
-                    )
-                  )
-                ),
-                selectStatement$where()
+              as("unknown",
+                skipto(
+                  keyword("WHERE")
+                )
               )
+            ),
+            optional(
+              selectStatement$where()
             ),
             optional(
               as("unknown",
@@ -455,7 +453,11 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("FROM"),
             tableReferenceList(),
             optional(
-              selectStatement$unknown()
+              as("unknown",
+                skipto(
+                  selectStatement$nextBlockOrEnd()
+                )
+              )
             )
           )
         );
@@ -479,8 +481,17 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("WHERE"),
-            optional(
-              selectStatement$unknown()
+            upto(
+              choice(
+                searchCondition(),
+                as("unknown",
+                  star(
+                    any()
+                  )
+                )
+              ),
+              // Closure:
+              selectStatement$nextBlockOrEnd()
             )
           )
         );
@@ -490,35 +501,33 @@ public class SQLGrammar extends SQLBaseGrammar {
     }
     
     // ========================================================
-    // unknown
+    // nextBlockOrEnd
     // ........................................................
     
-    private ParserCombinator selectStatement$unknownParser = null;
+    private ParserCombinator selectStatement$nextBlockOrEndParser = null;
     
-    public final Start selectStatement$unknown = Start.on(getNamespace(), "unknown");
+    protected final Start selectStatement$nextBlockOrEnd = Start.on(getNamespace(), "nextBlockOrEnd");
     
-    public ParserCombinator selectStatement$unknown() {
-      if (selectStatement$unknownParser == null) {
-        FutureParser future = scoped("unknown", PUBLIC, true);
-        selectStatement$unknownParser = future;
+    protected ParserCombinator selectStatement$nextBlockOrEnd() {
+      if (selectStatement$nextBlockOrEndParser == null) {
+        FutureParser future = scoped("nextBlockOrEnd", PRIVATE, true);
+        selectStatement$nextBlockOrEndParser = future;
         future.setParser(
-          skipto(
-            choice(
-              keyword("FROM"),
-              keyword("WHERE"),
-              sequence(
-                keyword("GROUP"),
-                keyword("BY")
-              ),
-              keyword("HAVING"),
-              keyword("WINDOW"),
-              eof()
-            )
+          choice(
+            keyword("FROM"),
+            keyword("WHERE"),
+            sequence(
+              keyword("GROUP"),
+              keyword("BY")
+            ),
+            keyword("HAVING"),
+            keyword("WINDOW"),
+            eof()
           )
         );
       }
     
-      return selectStatement$unknownParser;
+      return selectStatement$nextBlockOrEndParser;
     }
     
     // ========================================================
@@ -568,17 +577,9 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("UPDATE"),
             targetTable(),
+            updateStatement$set(),
             optional(
-              sequence(
-                optional(
-                  as("unknown",
-                    skipto(
-                      keyword("WHERE")
-                    )
-                  )
-                ),
-                updateStatement$where()
-              )
+              updateStatement$where()
             ),
             optional(
               as("unknown",
@@ -592,6 +593,36 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return updateStatementParser;
+    }
+    
+    // ========================================================
+    // set
+    // ........................................................
+    
+    private ParserCombinator updateStatement$setParser = null;
+    
+    public final Start updateStatement$set = Start.on(getNamespace(), "set");
+    
+    public ParserCombinator updateStatement$set() {
+      if (updateStatement$setParser == null) {
+        FutureParser future = scoped("set", PUBLIC, true);
+        updateStatement$setParser = future;
+        future.setParser(
+          sequence(
+            keyword("SET"),
+            as("unknown",
+              skipto(
+                choice(
+                  keyword("WHERE"),
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return updateStatement$setParser;
     }
     
     // ========================================================
@@ -613,37 +644,26 @@ public class SQLGrammar extends SQLBaseGrammar {
               sequence(
                 keyword("CURRENT"),
                 keyword("OF"),
-                updateStatement$unknown()
+                cursorName()
               ),
-              updateStatement$unknown()
+              upto(
+                choice(
+                  searchCondition(),
+                  as("unknown",
+                    star(
+                      any()
+                    )
+                  )
+                ),
+                // Closure:
+                eof()
+              )
             )
           )
         );
       }
     
       return updateStatement$whereParser;
-    }
-    
-    // ========================================================
-    // unknown
-    // ........................................................
-    
-    private ParserCombinator updateStatement$unknownParser = null;
-    
-    public final Start updateStatement$unknown = Start.on(getNamespace(), "unknown");
-    
-    public ParserCombinator updateStatement$unknown() {
-      if (updateStatement$unknownParser == null) {
-        FutureParser future = scoped("unknown", PUBLIC, true);
-        updateStatement$unknownParser = future;
-        future.setParser(
-          skipto(
-            eof()
-          )
-        );
-      }
-    
-      return updateStatement$unknownParser;
     }
     
     // ========================================================
@@ -1099,6 +1119,662 @@ public class SQLGrammar extends SQLBaseGrammar {
     }
     
     // ========================================================
+    // searchCondition
+    // ........................................................
+    
+    private ParserCombinator searchConditionParser = null;
+    
+    public final Start searchCondition = Start.on(getNamespace(), "searchCondition");
+    
+    public ParserCombinator searchCondition() {
+      if (searchConditionParser == null) {
+        FutureParser future = scoped("searchCondition", PUBLIC, true);
+        searchConditionParser = future;
+        future.setParser(
+          balancing(
+            // Closure:
+            literal("("),
+            // Closure:
+            literal(")"),
+            // Closure:
+            literal("["),
+            // Closure:
+            literal("]"),
+            // Closure:
+            literal("{"),
+            // Closure:
+            literal("}"),
+            // Closure:
+            leftBracketTrigraph(),
+            // Closure:
+            rightBracketTrigraph(),
+            disjunction()
+          )
+        );
+      }
+    
+      return searchConditionParser;
+    }
+    
+    // ========================================================
+    // leftBracketTrigraph
+    // ........................................................
+    
+    private ParserCombinator leftBracketTrigraphParser = null;
+    
+    protected final Start leftBracketTrigraph = Start.on(getNamespace(), "leftBracketTrigraph");
+    
+    protected ParserCombinator leftBracketTrigraph() {
+      if (leftBracketTrigraphParser == null) {
+        FutureParser future = scoped("leftBracketTrigraph", PRIVATE, true);
+        leftBracketTrigraphParser = future;
+        future.setParser(
+          sequence(
+            literal("?"),
+            opt(NOSKIP,
+              sequence(
+                literal("?"),
+                literal("(")
+              )
+            )
+          )
+        );
+      }
+    
+      return leftBracketTrigraphParser;
+    }
+    
+    // ========================================================
+    // rightBracketTrigraph
+    // ........................................................
+    
+    private ParserCombinator rightBracketTrigraphParser = null;
+    
+    protected final Start rightBracketTrigraph = Start.on(getNamespace(), "rightBracketTrigraph");
+    
+    protected ParserCombinator rightBracketTrigraph() {
+      if (rightBracketTrigraphParser == null) {
+        FutureParser future = scoped("rightBracketTrigraph", PRIVATE, true);
+        rightBracketTrigraphParser = future;
+        future.setParser(
+          sequence(
+            literal("?"),
+            opt(NOSKIP,
+              sequence(
+                literal("?"),
+                literal(")")
+              )
+            )
+          )
+        );
+      }
+    
+      return rightBracketTrigraphParser;
+    }
+    
+    // ========================================================
+    // disjunction
+    // ........................................................
+    
+    private ParserCombinator disjunctionParser = null;
+    
+    public final Start disjunction = Start.on(getNamespace(), "disjunction");
+    
+    public ParserCombinator disjunction() {
+      if (disjunctionParser == null) {
+        FutureParser future = scoped("disjunction", HIDING, true);
+        disjunctionParser = future;
+        future.setParser(
+          sequence(
+            upto(
+              conjunction(),
+              // Closure:
+              choice(
+                disjunction$or(),
+                eof()
+              )
+            ),
+            star(
+              sequence(
+                disjunction$or(),
+                upto(
+                  conjunction(),
+                  // Closure:
+                  choice(
+                    disjunction$or(),
+                    eof()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return disjunctionParser;
+    }
+    
+    // ========================================================
+    // or
+    // ........................................................
+    
+    private ParserCombinator disjunction$orParser = null;
+    
+    protected final Start disjunction$or = Start.on(getNamespace(), "or");
+    
+    protected ParserCombinator disjunction$or() {
+      if (disjunction$orParser == null) {
+        FutureParser future = scoped("or", PRIVATE, true);
+        disjunction$orParser = future;
+        future.setParser(
+          notNested(
+            keyword("OR")
+          )
+        );
+      }
+    
+      return disjunction$orParser;
+    }
+    
+    // ========================================================
+    // conjunction
+    // ........................................................
+    
+    private ParserCombinator conjunctionParser = null;
+    
+    public final Start conjunction = Start.on(getNamespace(), "conjunction");
+    
+    public ParserCombinator conjunction() {
+      if (conjunctionParser == null) {
+        FutureParser future = scoped("conjunction", HIDING, true);
+        conjunctionParser = future;
+        future.setParser(
+          sequence(
+            upto(
+              negation(),
+              // Closure:
+              choice(
+                conjunction$and(),
+                eof()
+              )
+            ),
+            star(
+              sequence(
+                conjunction$and(),
+                upto(
+                  negation(),
+                  // Closure:
+                  choice(
+                    conjunction$and(),
+                    eof()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return conjunctionParser;
+    }
+    
+    // ========================================================
+    // and
+    // ........................................................
+    
+    private ParserCombinator conjunction$andParser = null;
+    
+    protected final Start conjunction$and = Start.on(getNamespace(), "and");
+    
+    protected ParserCombinator conjunction$and() {
+      if (conjunction$andParser == null) {
+        FutureParser future = scoped("and", PRIVATE, true);
+        conjunction$andParser = future;
+        future.setParser(
+          notNested(
+            keyword("AND")
+          )
+        );
+      }
+    
+      return conjunction$andParser;
+    }
+    
+    // ========================================================
+    // negation
+    // ........................................................
+    
+    private ParserCombinator negationParser = null;
+    
+    public final Start negation = Start.on(getNamespace(), "negation");
+    
+    public ParserCombinator negation() {
+      if (negationParser == null) {
+        FutureParser future = scoped("negation", HIDING, true);
+        negationParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("NOT")
+            ),
+            term()
+          )
+        );
+      }
+    
+      return negationParser;
+    }
+    
+    // ========================================================
+    // term
+    // ........................................................
+    
+    private ParserCombinator termParser = null;
+    
+    public final Start term = Start.on(getNamespace(), "term");
+    
+    public ParserCombinator term() {
+      if (termParser == null) {
+        FutureParser future = scoped("term", HIDING, true);
+        termParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal("("),
+              balancing(
+                // Closure:
+                literal("("),
+                // Closure:
+                literal(")"),
+                // Closure:
+                literal("["),
+                // Closure:
+                literal("]"),
+                // Closure:
+                literal("{"),
+                // Closure:
+                literal("}"),
+                // Closure:
+                leftBracketTrigraph(),
+                // Closure:
+                rightBracketTrigraph(),
+                upto(
+                  searchCondition(),
+                  // Closure:
+                  notNested(
+                    literal(")")
+                  )
+                )
+              ),
+              literal(")")
+            ),
+            likePredicate(),
+            comparison(),
+            as("unknown",
+              star(
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return termParser;
+    }
+    
+    // ========================================================
+    // likePredicate
+    // ........................................................
+    
+    private ParserCombinator likePredicateParser = null;
+    
+    public final Start likePredicate = Start.on(getNamespace(), "likePredicate");
+    
+    public ParserCombinator likePredicate() {
+      if (likePredicateParser == null) {
+        FutureParser future = scoped("likePredicate", PUBLIC, true);
+        likePredicateParser = future;
+        future.setParser(
+          sequence(
+            likePredicate$rowValuePredicand(),
+            optional(
+              keyword("NOT")
+            ),
+            keyword("LIKE"),
+            likePredicate$pattern(),
+            optional(
+              likePredicate$escape()
+            )
+          )
+        );
+      }
+    
+      return likePredicateParser;
+    }
+    
+    // ========================================================
+    // rowValuePredicand
+    // ........................................................
+    
+    private ParserCombinator likePredicate$rowValuePredicandParser = null;
+    
+    public final Start likePredicate$rowValuePredicand = Start.on(getNamespace(), "rowValuePredicand");
+    
+    public ParserCombinator likePredicate$rowValuePredicand() {
+      if (likePredicate$rowValuePredicandParser == null) {
+        FutureParser future = scoped("rowValuePredicand", PUBLIC, true);
+        likePredicate$rowValuePredicandParser = future;
+        future.setParser(
+          upto(
+            as("unknown",
+              star(
+                any()
+              )
+            ),
+            // Closure:
+            sequence(
+              optional(
+                keyword("NOT")
+              ),
+              keyword("LIKE")
+            )
+          )
+        );
+      }
+    
+      return likePredicate$rowValuePredicandParser;
+    }
+    
+    // ========================================================
+    // pattern
+    // ........................................................
+    
+    private ParserCombinator likePredicate$patternParser = null;
+    
+    public final Start likePredicate$pattern = Start.on(getNamespace(), "pattern");
+    
+    public ParserCombinator likePredicate$pattern() {
+      if (likePredicate$patternParser == null) {
+        FutureParser future = scoped("pattern", PUBLIC, true);
+        likePredicate$patternParser = future;
+        future.setParser(
+          sequence(
+            limited(
+              choice(
+                stringLiteral(),
+                as("unknown",
+                  star(
+                    any()
+                  )
+                )
+              ),
+              // Closure:
+              choice(
+                keyword("ESCAPE"),
+                eof()
+              )
+            ),
+            optional(
+              skipto(
+                choice(
+                  keyword("ESCAPE"),
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return likePredicate$patternParser;
+    }
+    
+    // ========================================================
+    // escape
+    // ........................................................
+    
+    private ParserCombinator likePredicate$escapeParser = null;
+    
+    public final Start likePredicate$escape = Start.on(getNamespace(), "escape");
+    
+    public ParserCombinator likePredicate$escape() {
+      if (likePredicate$escapeParser == null) {
+        FutureParser future = scoped("escape", PUBLIC, true);
+        likePredicate$escapeParser = future;
+        future.setParser(
+          sequence(
+            keyword("ESCAPE"),
+            as("unknown",
+              star(
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return likePredicate$escapeParser;
+    }
+    
+    // ========================================================
+    // comparison
+    // ........................................................
+    
+    private ParserCombinator comparisonParser = null;
+    
+    public final Start comparison = Start.on(getNamespace(), "comparison");
+    
+    public ParserCombinator comparison() {
+      if (comparisonParser == null) {
+        FutureParser future = scoped("comparison", PUBLIC, true);
+        comparisonParser = future;
+        future.setParser(
+          sequence(
+            as("unknown",
+              skipto(
+                comparisonOp()
+              )
+            ),
+            comparisonOp(),
+            as("unknown",
+              plus(
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return comparisonParser;
+    }
+    
+    // ========================================================
+    // comparisonOp
+    // ........................................................
+    
+    private ParserCombinator comparisonOpParser = null;
+    
+    public final Start comparisonOp = Start.on(getNamespace(), "comparisonOp");
+    
+    public ParserCombinator comparisonOp() {
+      if (comparisonOpParser == null) {
+        FutureParser future = scoped("comparisonOp", PUBLIC, true);
+        comparisonOpParser = future;
+        future.setParser(
+          choice(
+            greaterThanOp(),
+            lessThanOrEqualsOp(),
+            greaterThanOrEqualsOp(),
+            equalsOp(),
+            notEqualsOp(),
+            lessThanOp()
+          )
+        );
+      }
+    
+      return comparisonOpParser;
+    }
+    
+    // ========================================================
+    // equalsOp
+    // ........................................................
+    
+    private ParserCombinator equalsOpParser = null;
+    
+    public final Start equalsOp = Start.on(getNamespace(), "equalsOp");
+    
+    public ParserCombinator equalsOp() {
+      if (equalsOpParser == null) {
+        FutureParser future = scoped("equalsOp", PUBLIC, true);
+        equalsOpParser = future;
+        future.setParser(
+          literal("=")
+        );
+      }
+    
+      return equalsOpParser;
+    }
+    
+    // ========================================================
+    // lessThanOp
+    // ........................................................
+    
+    private ParserCombinator lessThanOpParser = null;
+    
+    public final Start lessThanOp = Start.on(getNamespace(), "lessThanOp");
+    
+    public ParserCombinator lessThanOp() {
+      if (lessThanOpParser == null) {
+        FutureParser future = scoped("lessThanOp", PUBLIC, true);
+        lessThanOpParser = future;
+        future.setParser(
+          literal("<")
+        );
+      }
+    
+      return lessThanOpParser;
+    }
+    
+    // ========================================================
+    // greaterThanOp
+    // ........................................................
+    
+    private ParserCombinator greaterThanOpParser = null;
+    
+    public final Start greaterThanOp = Start.on(getNamespace(), "greaterThanOp");
+    
+    public ParserCombinator greaterThanOp() {
+      if (greaterThanOpParser == null) {
+        FutureParser future = scoped("greaterThanOp", PUBLIC, true);
+        greaterThanOpParser = future;
+        future.setParser(
+          literal(">")
+        );
+      }
+    
+      return greaterThanOpParser;
+    }
+    
+    // ========================================================
+    // notEqualsOp
+    // ........................................................
+    
+    private ParserCombinator notEqualsOpParser = null;
+    
+    public final Start notEqualsOp = Start.on(getNamespace(), "notEqualsOp");
+    
+    public ParserCombinator notEqualsOp() {
+      if (notEqualsOpParser == null) {
+        FutureParser future = scoped("notEqualsOp", PUBLIC, true);
+        notEqualsOpParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal("<"),
+              opt(NOSKIP,
+                literal(">")
+              )
+            ),
+            sequence(
+              literal("!"),
+              opt(NOSKIP,
+                literal("=")
+              )
+            )
+          )
+        );
+      }
+    
+      return notEqualsOpParser;
+    }
+    
+    // ========================================================
+    // greaterThanOrEqualsOp
+    // ........................................................
+    
+    private ParserCombinator greaterThanOrEqualsOpParser = null;
+    
+    public final Start greaterThanOrEqualsOp = Start.on(getNamespace(), "greaterThanOrEqualsOp");
+    
+    public ParserCombinator greaterThanOrEqualsOp() {
+      if (greaterThanOrEqualsOpParser == null) {
+        FutureParser future = scoped("greaterThanOrEqualsOp", PUBLIC, true);
+        greaterThanOrEqualsOpParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal(">"),
+              opt(NOSKIP,
+                literal("=")
+              )
+            ),
+            sequence(
+              literal("!"),
+              opt(NOSKIP,
+                literal("<")
+              )
+            )
+          )
+        );
+      }
+    
+      return greaterThanOrEqualsOpParser;
+    }
+    
+    // ========================================================
+    // lessThanOrEqualsOp
+    // ........................................................
+    
+    private ParserCombinator lessThanOrEqualsOpParser = null;
+    
+    public final Start lessThanOrEqualsOp = Start.on(getNamespace(), "lessThanOrEqualsOp");
+    
+    public ParserCombinator lessThanOrEqualsOp() {
+      if (lessThanOrEqualsOpParser == null) {
+        FutureParser future = scoped("lessThanOrEqualsOp", PUBLIC, true);
+        lessThanOrEqualsOpParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal("<"),
+              opt(NOSKIP,
+                literal("=")
+              )
+            ),
+            sequence(
+              literal("!"),
+              opt(NOSKIP,
+                literal(">")
+              )
+            )
+          )
+        );
+      }
+    
+      return lessThanOrEqualsOpParser;
+    }
+    
+    // ========================================================
     // identifier
     // ........................................................
     
@@ -1403,6 +2079,29 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return targetTableParser;
+    }
+    
+    // ========================================================
+    // stringLiteral
+    // ........................................................
+    
+    private ParserCombinator stringLiteralParser = null;
+    
+    public final Start stringLiteral = Start.on(getNamespace(), "stringLiteral");
+    
+    public ParserCombinator stringLiteral() {
+      if (stringLiteralParser == null) {
+        FutureParser future = scoped("stringLiteral", PUBLIC, true);
+        stringLiteralParser = future;
+        future.setParser(
+          sequence(
+            tagged(STRING),
+            any()
+          )
+        );
+      }
+    
+      return stringLiteralParser;
     }
     
 }

@@ -82,11 +82,14 @@ public class KGGrammar extends FluentGrammar {
 		define("sequence").as(oneOf( //
 				with("as").as("identifier", "==:==", "sequence"), //
 				oneOrMore("part") //
-				));
+		));
 
 		defineHelper("part").as(oneOf( //
 				with("star").as("repeatable", "==*=="), //
 				with("plus").as("repeatable", "==+=="), //
+				"balancing", //
+				"before", //
+				"upto", //
 				"atom" //
 		));
 
@@ -101,6 +104,9 @@ public class KGGrammar extends FluentGrammar {
 				"lookahead", //
 				"noskip", //
 				"tagged", //
+				"balanced", //
+				"unbalanced", //
+				"todo", //
 
 				with("assign").as("identifier", "=====", "rvalue"), //
 				"rvalue" //
@@ -123,7 +129,7 @@ public class KGGrammar extends FluentGrammar {
 				"native_code", //
 				with("any").as("==_=="), //
 				with("dot").as("==.==") //
-				));
+		));
 
 		// '(' sequence ('|' sequence)* ')'
 		define("nested").as( //
@@ -144,10 +150,10 @@ public class KGGrammar extends FluentGrammar {
 		// '!' '[' sequence ('|' sequence)* ']'
 		defineHelper("optional-permutation")
 				//
-				.with("optional").with("permutation")
-				.as( //
-				"==!==", //
-				noskip("==[=="), alternating("sequence", "==|=="), "==]==");
+				.with("optional").with("permutation").as( //
+						"==!==", //
+						noskip("==[=="), alternating("sequence", "==|=="),
+						"==]==");
 
 		// '$' '(' dispatch ('|' dispatch)* ')'
 		define("dispatched").as( //
@@ -158,10 +164,8 @@ public class KGGrammar extends FluentGrammar {
 		// literal '=>' sequence
 		define("dispatch").as("literal", "=====", noskip("==>=="), "sequence");
 
-		// [ limited : '---' part ' ] ( limiter: '-->' part )
-		define("skipping").as(optional("limited"), "limiter");
-		define("limited").as("==-==", noskip("==-==", "==-=="), "part");
-		define("limiter").as("==-==", noskip("==-==", "==>=="), "part");
+		// '-->' part
+		define("skipping").as("==-==", noskip("==-==", "==>=="), "part");
 
 		// '%not' part
 		define("negation").as("==%==", noskip("==not=="), "part");
@@ -211,11 +215,40 @@ public class KGGrammar extends FluentGrammar {
 		// @NUMBER _
 		define("number").as(tagged(NUMBER), any());
 
-		define("native_code").as("braced");
+		// TODO Get rid of support for native code, all together.
+		define("native_code").as( //
+				"=====", noskip("=====", at("=={==")), //
+				"braced", //
+				noskip("=====", "=====") //
+		);
 		defineHelper("braced").as( //
 				"=={==", //
 				many(oneOf("braced", all(not("==}=="), any()))), //
 				"==}==");
+
+		// atom '%before' part
+		define("before").as("atom", "==%==", noskip("==before=="), "closure");
+		
+		// atom '%upto' part
+		define("upto").as("atom", "==%==", noskip("==upto=="), "closure");
+
+		// '{' part '}'
+		define("closure").as("=={==", "sequence", "==}==");
+
+		// '%balancing' pair+ atom
+		define("balancing").as( //
+				"==%==", noskip("==balancing=="), oneOrMore("pair"), "atom");
+		// '(' closure closure ')'
+		define("pair").as("==<==", "closure", "closure", "==>==");
+
+		// '%nested' part
+		define("balanced").as("==%==", noskip("==nested=="), "atom");
+
+		// '%notnested' part
+		define("unbalanced").as("==%==", noskip("==notnested=="), "atom");
+		
+		// '...'
+		define("todo").as("==.==", noskip("==.==", "==.=="));
 	}
 
 	// ------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 package koopa.core.data;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class Tokens {
@@ -74,7 +73,7 @@ public final class Tokens {
 
 		assert (!ranges.isEmpty());
 
-		final Token sub = new Token(text, Collections.unmodifiableList(ranges),
+		final Token sub = new Token(text, ranges,
 				token.getTags(), token.getReplaced());
 
 		return sub;
@@ -150,7 +149,7 @@ public final class Tokens {
 
 		assert (!ranges.isEmpty());
 
-		final Token sub = new Token(text, Collections.unmodifiableList(ranges),
+		final Token sub = new Token(text, ranges,
 				token.getTags(), token.getReplaced());
 
 		return sub;

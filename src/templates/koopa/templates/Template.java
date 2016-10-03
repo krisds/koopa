@@ -46,7 +46,7 @@ public class Template {
 
 	public void apply(String name, StringBuilder builder, String indent,
 			TemplateLogic logic) {
-		assert (hasPartial(name));
+		assert (hasPartial(name)) : "Missing partial for '" + name + "'.";
 
 		partials.get(name).applyTo(builder, indent, logic);
 	}

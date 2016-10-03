@@ -28,6 +28,10 @@ public class Stack {
 		return head;
 	}
 
+	public void setHead(Frame head) {
+		this.head = head;
+	}
+
 	public Scope getScope() {
 		return head.getScope();
 	}
@@ -77,6 +81,15 @@ public class Stack {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Walk the {@link #up()} chain of {@linkplain Frame}s, starting at the
+	 * {@link #head}, to find the first one which has a {@link #parser} of the
+	 * given type.
+	 */
+	public Frame find(Class<?> clazz) {
+		return head.find(clazz);
 	}
 
 	public String toString() {
@@ -146,6 +159,10 @@ public class Stack {
 			return up;
 		}
 
+		public ParserCombinator getParser() {
+			return parser;
+		}
+
 		public void makeScoped() {
 			if (this.scope == null)
 				this.scope = new Scope();
@@ -184,13 +201,30 @@ public class Stack {
 				return parser.toString();
 		}
 
-		public Set<String> getAllKeywords() {
+		private Set<String> getAllKeywords() {
 			if (parser == null)
 				return Collections.emptySet();
 
 			Set<String> keywords = new HashSet<String>();
 			parser.addAllKeywordsInScopeTo(keywords);
 			return keywords;
+		}
+
+		/**
+		 * Walk the {@link #up()} chain of {@linkplain Frame}s to find the first
+		 * one which has a {@link #parser} of the given type.
+		 */
+		public Frame find(Class<?> clazz) {
+			Frame next = this;
+
+			while (next != null) {
+				if (next.parser != null && clazz.isInstance(next.parser))
+					return next;
+
+				next = next.up();
+			}
+
+			return null;
 		}
 	}
 

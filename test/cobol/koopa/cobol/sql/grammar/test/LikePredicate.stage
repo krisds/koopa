@@ -1,0 +1,11 @@
+target likePredicate;
+
+# Examples from http://www.ibm.com/support/knowledgecenter/SSEPEK_11.0.0/sqlref/src/tpc/db2z_likepredicate.html
++[ NAME LIKE '%SMITH%' ]
++[ NAME LIKE :PATTERN ESCAPE '+' ]
+
+
+# NOTE: All of these are just hand-made dummies.
++[ ANSWER LIKE '42' ]
++[ ANSWER LIKE '42%' ]
++[ ANSWER LIKE '%42' ]

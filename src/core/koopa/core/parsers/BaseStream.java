@@ -102,7 +102,11 @@ public class BaseStream implements Stream {
 
 			if (packet instanceof Marker)
 				insert((Marker) packet);
-			else
+			else if (skipped && packet instanceof Token) {
+				Token token = (Token) packet;
+				token.setSkipped(true);
+				pendingData.push(token);
+			} else
 				pendingData.push(packet);
 
 			if (packet instanceof Token) {
@@ -183,7 +187,10 @@ public class BaseStream implements Stream {
 
 			assert (packet == token);
 
-			source.unshift((Token) packet);
+			Token rewound = (Token) packet;
+			rewound.setSkipped(false);
+			source.unshift(rewound);
+
 			break;
 		}
 	}
@@ -284,7 +291,9 @@ public class BaseStream implements Stream {
 			if (!(packet instanceof Token))
 				continue;
 
-			source.unshift((Token) packet);
+			Token rewound = (Token) packet;
+			rewound.setSkipped(false);
+			source.unshift(rewound);
 		}
 	}
 
@@ -361,6 +370,10 @@ public class BaseStream implements Stream {
 				+ numberOfDelayedMarkers;
 
 		return pendingData.listIterator(positionOfBookmark);
+	}
+
+	public BaseStream getBaseStream() {
+		return this;
 	}
 
 	private final class Bookmark {

@@ -20,6 +20,7 @@ import koopa.core.sources.test.TestTokenizer;
 import koopa.core.targets.ListTarget;
 import koopa.core.util.Reflect;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -66,18 +67,29 @@ public abstract class GrammarTestSuite {
 		final ParserCombinator target = Reflect.getParser(grammar, targetName);
 		assertNotNull(target);
 
-		final TestTokenizer source = new TestTokenizer(getSourceForSample(
-				test.getSample(), grammar));
+		final TestTokenizer source = new TestTokenizer(
+				getSourceForSample(test.getSample(), grammar));
 
 		if (test.shouldAccept()) {
 			ListTarget resultingData = new ListTarget();
 			Parse parse = Parse.of(source).to(resultingData);
-			assertTrue(targetName + " should accept [" + test + "]",
-					target.accepts(parse));
-			assertTrue(targetName + " should accept [" + test
-					+ "] up to the expected point. Got to "
-					+ parse.getFinalFrame().toTrace() + ".", //
-					source.isWhereExpected());
+
+			try {
+				final boolean accepts = target.accepts(parse);
+
+				assertTrue(targetName + " should accept [" + test + "]",
+						accepts);
+				assertTrue(
+						targetName + " should accept [" + test
+								+ "] up to the expected point. Got to "
+								+ parse.getFinalFrame().toTrace() + ".", //
+						source.isWhereExpected());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				Assert.fail(targetName + " should accept [" + test
+						+ "], but threw " + e);
+			}
 
 			int inUnknown = 0;
 			for (Data data : resultingData) {
@@ -93,8 +105,8 @@ public abstract class GrammarTestSuite {
 
 				} else if (inUnknown == 0 && data instanceof Token) {
 					Token token = (Token) data;
-					assertFalse(targetName + " should find no water in ["
-							+ test + "]", token.hasTag(WATER));
+					assertFalse(targetName + " should find no water in [" + test
+							+ "]", token.hasTag(WATER));
 				}
 			}
 

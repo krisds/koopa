@@ -18,7 +18,7 @@ public class TestTokenizer extends ChainingSource<Token, Token> implements Sourc
 
 	private static final Logger LOGGER = Logger.getLogger("source.test");
 
-	public static final String MARKER_TEXT = "#";
+	public static final String MARKER_TEXT = "^";
 
 	private Token marker;
 	private LinkedList<Token> tokensSinceMarker = new LinkedList<Token>();
@@ -75,7 +75,8 @@ public class TestTokenizer extends ChainingSource<Token, Token> implements Sourc
 
 		if (marker != null) {
 			Token last = tokensSinceMarker.removeLast();
-			assert (token == last);
+			
+			assert (token == null && last == null || token.equals(last));
 
 			if (tokensSinceMarker.isEmpty()) {
 				if (LOGGER.isTraceEnabled())

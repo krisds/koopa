@@ -87,15 +87,15 @@ public class CobolParser {
 		TokenTracker tokenTracker = null;
 		if (keepingTrackOfTokens) {
 			tokenTracker = new TokenTracker();
-			parse.addTarget(tokenTracker);
+			parse.to(tokenTracker);
 		}
 
 		if (buildTrees)
-			parse.addTarget(new KoopaTreeBuilder(grammar, false));
+			parse.to(new KoopaTreeBuilder(grammar, false));
 
 		if (!targets.isEmpty())
 			for (Target<Data> next : targets)
-				parse.addTarget(next);
+				parse.to(next);
 
 		accepts = parser.accepts(parse);
 

@@ -31,8 +31,8 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent(
-					toString() + " ? " + stream.peekMore() + "...");
+			parse.getTrace()
+					.indent(toString() + " ? " + stream.peekMore() + "...");
 
 		stream.bookmark();
 
@@ -50,14 +50,16 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 
 		if (!matchesProgramText(parse, text)) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().dedent(toString() + ": no, was: " + text);
+				parse.getTrace()
+						.dedent(toString() + ": no, was: '" + text + "'");
 
 			stream.rewind();
 			return false;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().dedent(toString() + ": yes, is: " + text);
+				parse.getTrace()
+						.dedent(toString() + ": yes, is: '" + text + "'");
 
 			stream.commit();
 			return true;

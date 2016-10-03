@@ -11,10 +11,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
+import koopa.core.util.IndentingLogger;
 import koopa.core.util.Encoding;
 import koopa.core.util.Iterables;
 import koopa.dsl.kg.grammar.KGGrammar;
@@ -23,6 +26,9 @@ import koopa.templates.TemplateLogic;
 
 public class Generation {
 
+	private static final IndentingLogger LOGGER = new IndentingLogger(
+			Logger.getLogger("kg.generation"));
+
 	private final Template TEMPLATE;
 
 	public Generation(Template template) {
@@ -30,8 +36,10 @@ public class Generation {
 	}
 
 	public String generate(File grammarFile, Tree ast) throws IOException {
+		final File path = grammarFile.getParentFile();
 
-		File path = grammarFile.getParentFile();
+		if (LOGGER.isEnabled())
+			LOGGER.add("Processing " + grammarFile + " ...");
 
 		// Each grammar should have an associated properties file containing
 		// some extra info needed for creating a valid Java class. We don't make
@@ -39,9 +47,12 @@ public class Generation {
 		// native stuff out of there.
 		Properties meta = new Properties();
 
-		File propertiesFile = new File(path, grammarFile.getName().replace(
-				".kg", ".properties"));
+		File propertiesFile = new File(path,
+				grammarFile.getName().replace(".kg", ".properties"));
 		meta.load(new FileInputStream(propertiesFile));
+
+		if (LOGGER.isEnabled())
+			LOGGER.add("Loaded an additional " + meta.size() + " properties.");
 
 		// One of the things the properties file should define are all the
 		// required imports. We collect them here into actual valid Java import
@@ -51,8 +62,8 @@ public class Generation {
 			if (key.startsWith("import.")) {
 				final String importName = key.substring("import.".length());
 				final String packageName = meta.getProperty(key);
-				additionalImports.add("import " + packageName + "."
-						+ importName + ";");
+				additionalImports
+						.add("import " + packageName + "." + importName + ";");
 
 			} else if (key.startsWith("static.")) {
 				final String importName = key.substring("static.".length());
@@ -66,6 +77,13 @@ public class Generation {
 		// So we sort all imports to ensure stability in the generated output.
 		Collections.sort(additionalImports);
 
+		if (LOGGER.isEnabled()) {
+			LOGGER.add("Properties defined " + additionalImports.size()
+					+ " imports:");
+			for (String ai : additionalImports)
+				LOGGER.add("* " + ai);
+		}
+
 		return toCode(ast, meta, additionalImports);
 	}
 
@@ -78,8 +96,14 @@ public class Generation {
 			throw new InternalError(
 					"Was expecting a syntax tree for a Koopa grammar." + ast);
 
+		if (LOGGER.isEnabled())
+			LOGGER.indent("+ grammar");
+
 		TEMPLATE.apply("grammar", code, "",
 				grammarLogic(ast, meta, additionalImports));
+
+		if (LOGGER.isEnabled())
+			LOGGER.dedent();
 
 		return code.toString();
 	}
@@ -92,39 +116,58 @@ public class Generation {
 						ast.getDescendant("header", "grammar_name", "name")
 								.getAllText());
 
-				final Tree base = ast
-						.getDescendant("header", "extends", "name");
+				final Tree base = ast.getDescendant("header", "extends",
+						"name");
 				setValue("extending", //
 						base != null ? base.getAllText() : "Koopa");
 
 				setValue("package", meta.getProperty("package"));
 			}
 
-			public void call(String target, StringBuilder builder, String indent) {
-				if ("user_imports".equals(target))
+			public void call(String target, StringBuilder builder,
+					String indent) {
+
+				if (LOGGER.isEnabled())
+					LOGGER.indent("+ " + target);
+
+				if ("user_imports".equals(target)) {
+					if (LOGGER.isEnabled())
+						LOGGER.add("Including " + additionalImports.size()
+								+ " user-defined imports.");
+
 					for (String imp : additionalImports) {
 						builder.append(indent);
 						builder.append(imp);
 						builder.append(Encoding.lineSeparator());
 					}
 
-				else if ("rules".equals(target))
+				} else if ("rules".equals(target))
 					for (Tree rule : ast.getChildren("rule")) {
-						TEMPLATE.apply("rule", builder, indent, ruleLogic(rule));
+						TEMPLATE.apply("rule", builder, indent,
+								ruleLogic(rule));
 
 						List<?> nestedRules = Jaxen.getMatches(rule,
 								".//nested_rule");
-						if (nestedRules != null)
+						if (nestedRules != null) {
+							if (LOGGER.isEnabled())
+								LOGGER.indent();
+
 							for (Object nested : nestedRules)
 								if (nested instanceof Tree)
 									TEMPLATE.apply("rule", builder, indent,
 											ruleLogic((Tree) nested));
+
+							if (LOGGER.isEnabled())
+								LOGGER.dedent();
+						}
 					}
 
 				else
 					super.call(target, builder, indent);
-			}
 
+				if (LOGGER.isEnabled())
+					LOGGER.dedent();
+			}
 		};
 	}
 
@@ -135,18 +178,25 @@ public class Generation {
 			private List<String> unbindings = new LinkedList<String>();
 
 			{
-				setValue("name", getRuleName(rule));
-				setValue("fullyQualifiedName", getFullyQualifiedRuleName(rule));
+				final String name = getRuleName(rule);
+				final String fullyQualifiedName = getFullyQualifiedRuleName(
+						rule);
+				setValue("name", name);
+				setValue("fullyQualifiedName", fullyQualifiedName);
 
-				final boolean allowKeywords = rule.getDescendant("nokeywords") == null;
-				final boolean hasPrivateModifier = rule.getDescendant(
-						"modifier", "private") != null;
-				final boolean hasHidingModifier = rule.getDescendant(
-						"modifier", "hiding") != null;
+				if (LOGGER.isEnabled())
+					LOGGER.add("Generating rule " + fullyQualifiedName);
+
+				final boolean allowKeywords = rule
+						.getDescendant("nokeywords") == null;
+				final boolean hasPrivateModifier = rule
+						.getDescendant("modifier", "private") != null;
+				final boolean hasHidingModifier = rule.getDescendant("modifier",
+						"hiding") != null;
 
 				setValue("allowKeywords", allowKeywords ? "true" : "false");
-				setValue("modifier", hasPrivateModifier ? "protected"
-						: "public");
+				setValue("modifier",
+						hasPrivateModifier ? "protected" : "public");
 				setValue("visibility", hasPrivateModifier ? "PRIVATE"
 						: hasHidingModifier ? "HIDING" : "PUBLIC");
 
@@ -156,10 +206,10 @@ public class Generation {
 					for (final Tree decl : declarations) {
 						TemplateLogic l = new TemplateLogic() {
 							{
-								setValue("type", decl.getChild("type")
-										.getAllText());
-								setValue("name", decl.getChild("name")
-										.getAllText());
+								setValue("type",
+										decl.getChild("type").getAllText());
+								setValue("name",
+										decl.getChild("name").getAllText());
 							}
 						};
 
@@ -169,7 +219,12 @@ public class Generation {
 				}
 			}
 
-			public void call(String target, StringBuilder builder, String indent) {
+			public void call(String target, StringBuilder builder,
+					String indent) {
+
+				if (LOGGER.isEnabled())
+					LOGGER.indent("+ " + target);
+
 				if ("body".equals(target)) {
 					final Tree sequence = rule.getChild("sequence");
 					final Tree returnValue = rule.getChild("return_value");
@@ -188,6 +243,9 @@ public class Generation {
 
 				} else
 					super.call(target, builder, indent);
+
+				if (LOGGER.isEnabled())
+					LOGGER.dedent();
 			}
 		};
 	}
@@ -234,10 +292,17 @@ public class Generation {
 				if ("fully_qualified_identifier".equals(name))
 					return getFullyQualifiedIdentifier(part);
 
+				if ("native_codeblock".equals(name))
+					return nativeCodeblock(part.getAllText());
+
 				return super.getValue(name);
 			}
 
-			public void call(String target, StringBuilder builder, String indent) {
+			public void call(String target, StringBuilder builder,
+					String indent) {
+				if (LOGGER.isEnabled())
+					LOGGER.indent("+ " + target);
+
 				if ("all_part".equals(target))
 					addAllParts(part, builder, indent, bindings, unbindings);
 
@@ -247,10 +312,6 @@ public class Generation {
 				else if ("first_part".equals(target))
 					addFirstPart(part, builder, indent, bindings, unbindings);
 
-				else if ("limiter".equals(target))
-					addFirstPart(part.getChild("limiter"), builder, indent,
-							bindings, unbindings);
-
 				else if ("all_dispatch_literal".equals(target))
 					addAllDispatchLiterals(part, builder, indent);
 
@@ -258,12 +319,7 @@ public class Generation {
 					addAllDispatchSequences(part, builder, indent, bindings,
 							unbindings);
 
-				else if ("limited_and_comma".equals(target)) {
-					addFirstPart(part.getChild("limited"), builder, indent,
-							bindings, unbindings);
-					insertComma(builder);
-
-				} else if ("all_binding".equals(target)) {
+				else if ("all_binding".equals(target)) {
 					if (bindings != null)
 						for (String b : bindings) {
 							builder.append(indent);
@@ -279,6 +335,9 @@ public class Generation {
 
 				} else
 					super.call(target, builder, indent);
+
+				if (LOGGER.isEnabled())
+					LOGGER.dedent();
 			}
 		};
 	}
@@ -363,9 +422,8 @@ public class Generation {
 		}
 	}
 
-	private void addAllDispatchSequences(Tree dispatched,
-			StringBuilder builder, String indent, List<String> bindings,
-			List<String> unbindings) {
+	private void addAllDispatchSequences(Tree dispatched, StringBuilder builder,
+			String indent, List<String> bindings, List<String> unbindings) {
 
 		final List<Tree> children = dispatched.getChildren("dispatch");
 		for (int i = 0; i < children.size(); i++) {
@@ -390,7 +448,6 @@ public class Generation {
 		PART_NAMES.add("skipping");
 		PART_NAMES.add("negation");
 		PART_NAMES.add("lookahead");
-		PART_NAMES.add("limited");
 		PART_NAMES.add("noskip");
 		PART_NAMES.add("tagged");
 		PART_NAMES.add("assign");
@@ -402,6 +459,14 @@ public class Generation {
 		PART_NAMES.add("any");
 		PART_NAMES.add("dot");
 		PART_NAMES.add("return_value");
+		PART_NAMES.add("before");
+		PART_NAMES.add("upto");
+		PART_NAMES.add("balancing");
+		PART_NAMES.add("pair");
+		PART_NAMES.add("balanced");
+		PART_NAMES.add("unbalanced");
+		PART_NAMES.add("closure");
+		PART_NAMES.add("todo");
 	}
 
 	private boolean isPart(String name) {
@@ -425,13 +490,6 @@ public class Generation {
 	}
 
 	private String getPartialName(String name, Tree node) {
-		if ("skipping".equals(name)) {
-			if (node.getChild("limited") == null)
-				return "skip_to";
-			else
-				return "limited";
-		}
-
 		return name;
 	}
 
@@ -446,6 +504,10 @@ public class Generation {
 			return text.substring(1, text.length() - 1);
 		else
 			return text;
+	}
+
+	private String nativeCodeblock(String text) {
+		return text.substring(2, text.length() - 2);
 	}
 
 	/**
@@ -476,8 +538,8 @@ public class Generation {
 		if (parent == null)
 			return localName;
 		else if (parent.isNode("rule") || parent.isNode("nested_rule"))
-			return getFullyQualifiedRuleName(parent)
-					+ KGGrammar.SCOPE_SEPARATOR + localName;
+			return getFullyQualifiedRuleName(parent) + KGGrammar.SCOPE_SEPARATOR
+					+ localName;
 		else
 			return localName;
 	}
@@ -493,8 +555,8 @@ public class Generation {
 		for (Object nestedRule : nestedRules) {
 			if (nestedRule instanceof Tree) {
 				final Tree nestedRuleTree = (Tree) nestedRule;
-				final String nestedRuleName = nestedRuleTree.getChild(
-						"identifier").getAllText();
+				final String nestedRuleName = nestedRuleTree
+						.getChild("identifier").getAllText();
 				if (name.equals(nestedRuleName))
 					return getFullyQualifiedRuleName(nestedRuleTree);
 			}

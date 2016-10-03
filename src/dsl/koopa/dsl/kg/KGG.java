@@ -16,6 +16,11 @@ import koopa.dsl.kg.util.KGUtil;
 public class KGG {
 
 	public static void main(String[] args) {
+		if (args.length == 0) {
+			System.err.println("No path given.");
+			System.exit(-1);
+		}
+		
 		File file = new File(args[0]);
 		if (!file.exists()) {
 			System.err.println("Not found: " + file);

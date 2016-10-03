@@ -20,25 +20,28 @@ public class MatchLiteral extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
+		if (parse.getTrace().isEnabled())
+			parse.getTrace().indent(toString() + " ?");
+		
 		final Token token = parse.getStream().forward();
 
 		if (token == null) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : no, null");
+				parse.getTrace().dedent(toString() + " : no, null");
 
 			return false;
 
 		} else if (grammar.comparableText(token.getText()).equals(
 				comparableText)) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : yes, " + token);
+				parse.getTrace().dedent(toString() + " : yes, " + token);
 
 			parse.getStack().getScope().setRValue(token);
 			return true;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : no, " + token);
+				parse.getTrace().dedent(toString() + " : no, " + token);
 
 			return false;
 		}

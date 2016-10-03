@@ -2299,11 +2299,11 @@ end
 
 def continuationOfStatement (Token t) =
     ( t=eventPhrase 
-      { parse.warn(t, "Nested statement found out of line."); }
+      =={ parse.warn(t, "Nested statement found out of line."); }==
       statement
 
     | t=endOfStatementMarker
-      { parse.warn(t, "Loose end of statement."); }
+      =={ parse.warn(t, "Loose end of statement."); }==
     )
 end
 
@@ -3258,7 +3258,7 @@ end
 
 def execSQLStatement =
     (EXEC | EXECUTE) SQL 
-      (--- [sqlStatement] --> END-EXEC) 
+      [sqlStatement %before { END-EXEC }] 
       [unknown: --> END-EXEC]
     END-EXEC
 end
@@ -3267,7 +3267,7 @@ end
 
 def execCICSStatement =
     (EXEC | EXECUTE) CICS
-      (--- [cicsStatement] --> END-EXEC)
+      [cicsStatement %before { END-EXEC }] 
       [unknown: --> END-EXEC]
     END-EXEC
 end

@@ -7,7 +7,6 @@ import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.LimitedStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stream;
 import koopa.core.sources.test.HardcodedSource;
 import koopa.core.targets.ListTarget;
 
@@ -48,12 +47,15 @@ public class LimitedStreamTest extends ParseStreamTest {
 			final HardcodedSource source = HardcodedSource.from(WORDS);
 			final ListTarget target = new ListTarget();
 			final Parse parse = Parse.of(source).to(target);
-			final Stream stream = new LimitedStream(parse.getStream(),
-					new NthWord(n));
-			parse.setStream(stream);
+
+			final LimitedStream limitedStream = parse.getStreams().getLimitedStream();
+			final NthWord limiter = new NthWord(n);
+			limitedStream.addLimiter(limiter);
+
 			parse.getStack().push(new Dummy());
 
-			assertCanStream(stream, WORDS, n, target);
+			assertCanStream(limitedStream, WORDS, n, target);
+			limitedStream.removeLimiter(limiter);
 		}
 	}
 
@@ -63,12 +65,15 @@ public class LimitedStreamTest extends ParseStreamTest {
 			final HardcodedSource source = HardcodedSource.from(WORDS);
 			final ListTarget target = new ListTarget();
 			final Parse parse = Parse.of(source).to(target);
-			final Stream stream = new LimitedStream(parse.getStream(),
-					new NthWord(n));
-			parse.setStream(stream);
+
+			final LimitedStream limitedStream = parse.getStreams().getLimitedStream();
+			final NthWord limiter = new NthWord(n);
+			limitedStream.addLimiter(limiter);
+
 			parse.getStack().push(new Dummy());
 
-			assertCanRewind(stream, WORDS, n, target);
+			assertCanRewind(limitedStream, WORDS, n, target);
+			limitedStream.removeLimiter(limiter);
 		}
 	}
 
@@ -78,12 +83,15 @@ public class LimitedStreamTest extends ParseStreamTest {
 			final HardcodedSource source = HardcodedSource.from(WORDS);
 			final ListTarget target = new ListTarget();
 			final Parse parse = Parse.of(source).to(target);
-			final Stream stream = new LimitedStream(parse.getStream(),
-					new NthWord(n));
-			parse.setStream(stream);
+
+			final LimitedStream limitedStream = parse.getStreams().getLimitedStream();
+			final NthWord limiter = new NthWord(n);
+			limitedStream.addLimiter(limiter);
+
 			parse.getStack().push(new Dummy());
 
-			assertCanBookmark(stream, WORDS, n, target);
+			assertCanBookmark(limitedStream, WORDS, n, target);
+			limitedStream.removeLimiter(limiter);
 		}
 	}
 }

@@ -133,16 +133,15 @@ def as
     )
 end
 
-def skip_to
+def skipping
     skipto(
->     limiter
+>     all_part
     )
 end
 
-def limited
+def before
     limited(
->     limited_and_comma
->     limiter
+>     all_part
     )
 end
 
@@ -179,7 +178,7 @@ def native_code
     apply(new Block() {
       public void apply(Parse parse) {
 >       all_binding
-        #text#
+        #native_codeblock#
 >       all_unbinding
       }
     })
@@ -193,4 +192,41 @@ def noskip
     opt(NOSKIP,
 >     all_part
     )
+end
+
+def upto
+    upto(
+>     all_part
+    )
+end
+
+def balancing
+    balancing(
+>     all_part
+    )
+end
+
+def pair
+>   all_part
+end
+
+def balanced
+    nested(
+>     all_part
+    )
+end
+
+def unbalanced
+    notNested(
+>     all_part
+    )
+end
+
+def closure
+    // Closure:
+>   all_part
+end
+
+def todo
+    todo(/* TODO Define this grammar rule. */)
 end

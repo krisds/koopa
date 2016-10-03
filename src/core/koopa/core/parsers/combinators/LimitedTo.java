@@ -3,7 +3,6 @@ package koopa.core.parsers.combinators;
 import koopa.core.parsers.LimitedStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.Stream;
 
 /**
  * This {@linkplain ParserCombinator} will attempt to match a given
@@ -21,16 +20,18 @@ public class LimitedTo extends UnaryParserDecorator {
 
 	@Override
 	public boolean matches(Parse parse) {
-		final Stream stream = parse.getStream();
+		final LimitedStream limitedStream = parse.getStreams()
+				.getLimitedStream();
+
+		// TODO Only creature closure when really needed.
+		final Closure closedLimiter = new Closure(limiter, parse);
 
 		try {
-			final LimitedStream limited = new LimitedStream(stream, limiter);
-			parse.setStream(limited);
+			limitedStream.addLimiter(closedLimiter);
 			return parser.accepts(parse);
 
 		} finally {
-			// Restore the full stream.
-			parse.setStream(stream);
+			limitedStream.removeLimiter(closedLimiter);
 		}
 	}
 

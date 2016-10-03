@@ -255,7 +255,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 		try {
 			final ParseResults parseResults = coordinator.parse(file);
 			results.add(parseResults);
-			parseResults.getParse().removeTarget(TokenTracker.class);
+			parseResults.getParse().getStreams().removeTarget(TokenTracker.class);
 			return parseResults;
 
 		} catch (IOException e) {

@@ -2,12 +2,9 @@ package koopa.core.parsers;
 
 import java.io.PrintStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.grammars.combinators.Scoped;
 
@@ -17,7 +14,6 @@ public class Stack {
 
 	public Stack() {
 		head = new Frame(null, null);
-		head.makeScoped();
 	}
 
 	public boolean isEmpty() {
@@ -30,10 +26,6 @@ public class Stack {
 
 	public void setHead(Frame head) {
 		this.head = head;
-	}
-
-	public Scope getScope() {
-		return head.getScope();
 	}
 
 	public void push(ParserCombinator parser) {
@@ -114,13 +106,9 @@ public class Stack {
 		/** "Up" = towards the root of the stack. */
 		private final Frame up;
 
-		/** Each frame can establish an optional scope. */
-		private Scope scope;
-
 		public Frame(Frame up, ParserCombinator parser) {
 			this.up = up;
 			this.parser = parser;
-			this.scope = null;
 		}
 
 		private Frame push(ParserCombinator p) {
@@ -144,14 +132,6 @@ public class Stack {
 		}
 
 		public Frame pop() {
-			if (up == null)
-				return null;
-
-			if (scope != null) {
-				up.getScope().setRValue(scope.returnValue);
-				scope = null;
-			}
-
 			return up;
 		}
 
@@ -161,18 +141,6 @@ public class Stack {
 
 		public ParserCombinator getParser() {
 			return parser;
-		}
-
-		public void makeScoped() {
-			if (this.scope == null)
-				this.scope = new Scope();
-		}
-
-		public Scope getScope() {
-			if (scope != null || up == null)
-				return scope;
-			else
-				return up.getScope();
 		}
 
 		public String toTrace() {
@@ -225,40 +193,6 @@ public class Stack {
 			}
 
 			return null;
-		}
-	}
-
-	/**
-	 * This establishes a scope for variables defined in the grammar.
-	 * <p>
-	 * We also use it to resolve return values and "lvalues".
-	 */
-	public class Scope {
-		private Map<String, Object> values = new HashMap<String, Object>();
-		private Object returnValue = null;
-		private String lvalue;
-
-		public Object getValue(String name) {
-			return values.get(name);
-		}
-
-		public void setReturnValue(Object returnValue) {
-			this.returnValue = returnValue;
-		}
-
-		public void setLValue(String name) {
-			this.lvalue = name;
-		}
-
-		public void setRValue(Object rvalue) {
-			if (lvalue == null)
-				return;
-
-			values.put(lvalue, rvalue);
-		}
-
-		public void setValue(String name, Token value) {
-			values.put(name, value);
 		}
 	}
 

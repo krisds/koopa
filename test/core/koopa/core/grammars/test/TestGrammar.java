@@ -9,7 +9,6 @@ import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.combinators.Block;
 import koopa.core.parsers.combinators.Opt;
 
 /**
@@ -52,16 +51,6 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public ParserCombinator apply(Block func) {
-		return super.apply(func);
-	}
-
-	@Override
-	public ParserCombinator assign(String name, ParserCombinator parser) {
-		return super.assign(name, parser);
-	}
-
-	@Override
 	public ParserCombinator choice(ParserCombinator... parsers) {
 		return super.choice(parsers);
 	}
@@ -84,11 +73,6 @@ public class TestGrammar extends KoopaGrammar {
 	@Override
 	public ParserCombinator permuted(ParserCombinator... parsers) {
 		return super.permuted(parsers);
-	}
-
-	@Override
-	public ParserCombinator returning(String name) {
-		return super.returning(name);
 	}
 
 	@Override

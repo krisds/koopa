@@ -27,24 +27,6 @@ target rule;
      where def `where = `end end
    end ]
 
-
-+[ def emptyUsercode =
-     =={}==
-   end ]
-
-+[ def usercode =
-     =={ System.out.println("DISPLAY UPON TERMINAL"); }==
-   end ]
-
-+[ def nestedUsercode =
-     =={ if (display) {
-          System.out.println("DISPLAY UPON TERMINAL");
-       } else {
-          count += 1;
-       } 
-     }==
-   end ]
-
 +[ def before =  something %before { something else }  end ]
 +[ def upto   =  something %upto   { something else }  end ]
    

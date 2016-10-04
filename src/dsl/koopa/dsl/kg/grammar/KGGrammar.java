@@ -40,22 +40,19 @@ public class KGGrammar extends FluentGrammar {
 		define("grammar_name").as("++grammar++", "name");
 		define("extends").as("++extends++", "name");
 
-		// [modifier] 'def' [nokeywords] identifier [locals] [returning] '='
+		// [modifier] 'def' [nokeywords] identifier '='
 		// sequence (nested_rule)* 'end'
 		define("rule").as( //
 				optional("modifier"), //
 				"++def++", //
 				optional("nokeywords"), //
 				"identifier", //
-				optional("local-variables"), //
-				optional("return_value"), //
 				"=====", "sequence", //
 				many("nested_rule"), //
 				"++end++" //
 		);
 
-		// 'where' [modifier] 'def' [nokeywords] identifier [locals] [returning]
-		// '='
+		// 'where' [modifier] 'def' [nokeywords] identifier '='
 		// sequence (nested_rule)* 'end'
 		define("nested_rule").as( //
 				"++where++", //
@@ -63,8 +60,6 @@ public class KGGrammar extends FluentGrammar {
 				"++def++", //
 				optional("nokeywords"), //
 				"identifier", //
-				optional("local-variables"), //
-				optional("return_value"), //
 				"=====", "sequence", //
 				many("nested_rule"), //
 				"++end++" //
@@ -74,10 +69,6 @@ public class KGGrammar extends FluentGrammar {
 				with("public").as("++public++"), //
 				with("private").as("++private++"), //
 				with("hiding").as("++hiding++")));
-		define("local-variables").as( //
-				"==(==", alternating("declaration", "==,=="), "==)==");
-		define("declaration").as("type", "name");
-		define("return_value").as("++returns++", "identifier");
 
 		define("sequence").as(oneOf( //
 				with("as").as("identifier", "==:==", "sequence"), //
@@ -107,8 +98,6 @@ public class KGGrammar extends FluentGrammar {
 				"balanced", //
 				"unbalanced", //
 				"todo", //
-
-				with("assign").as("identifier", "=====", "rvalue"), //
 				"rvalue" //
 		));
 
@@ -126,7 +115,6 @@ public class KGGrammar extends FluentGrammar {
 				"literal", //
 				"number", //
 				"quoted_literal", //
-				"native_code", //
 				with("any").as("==_=="), //
 				with("dot").as("==.==") //
 		));
@@ -148,8 +136,7 @@ public class KGGrammar extends FluentGrammar {
 				noskip("==(=="), alternating("sequence", "==|=="), "==)==");
 
 		// '!' '[' sequence ('|' sequence)* ']'
-		defineHelper("optional-permutation")
-				//
+		defineHelper("optional-permutation") //
 				.with("optional").with("permutation").as( //
 						"==!==", //
 						noskip("==[=="), alternating("sequence", "==|=="),
@@ -215,20 +202,9 @@ public class KGGrammar extends FluentGrammar {
 		// @NUMBER _
 		define("number").as(tagged(NUMBER), any());
 
-		// TODO Get rid of support for native code, all together.
-		define("native_code").as( //
-				"=====", noskip("=====", at("=={==")), //
-				"braced", //
-				noskip("=====", "=====") //
-		);
-		defineHelper("braced").as( //
-				"=={==", //
-				many(oneOf("braced", all(not("==}=="), any()))), //
-				"==}==");
-
 		// atom '%before' part
 		define("before").as("atom", "==%==", noskip("==before=="), "closure");
-		
+
 		// atom '%upto' part
 		define("upto").as("atom", "==%==", noskip("==upto=="), "closure");
 
@@ -246,7 +222,7 @@ public class KGGrammar extends FluentGrammar {
 
 		// '%notnested' part
 		define("unbalanced").as("==%==", noskip("==notnested=="), "atom");
-		
+
 		// '...'
 		define("todo").as("==.==", noskip("==.==", "==.=="));
 	}

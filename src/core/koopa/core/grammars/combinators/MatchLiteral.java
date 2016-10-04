@@ -36,7 +36,6 @@ public class MatchLiteral extends GrammaticalCombinator {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().dedent(toString() + " : yes, " + token);
 
-			parse.getStack().getScope().setRValue(token);
 			return true;
 
 		} else {

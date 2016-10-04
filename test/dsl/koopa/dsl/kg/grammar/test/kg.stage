@@ -21,14 +21,14 @@ def grammar_name =  'grammar' name                              end
 def `extends     =  'extends' name                              end
 
 def rule =
-    [modifier] 'def' [nokeywords] identifier [local-variables] [return_value] '='
+    [modifier] 'def' [nokeywords] identifier '='
       sequence
       (nested_rule)*
     'end'
 end
 
 def nested_rule =
-    'where' [modifier] 'def' [nokeywords] identifier [local-variables] [return_value] '='
+    'where' [modifier] 'def' [nokeywords] identifier '='
       sequence
       (nested_rule)*
     'end'
@@ -40,10 +40,6 @@ def modifier =
     | `hiding  : 'hiding'
     )
 end
-
-def local-variables =  '(' (alternating__ declaration ',') ')'  end
-def declaration     =  type name                                end
-def return_value    =  'returns' identifier                     end
 
 def sequence =
     ( as : identifier ':' sequence
@@ -74,8 +70,6 @@ private def atom =
     | tagged
     | balanced
     | unbalanced
-
-    | assign : identifier '=' rvalue
     | rvalue
     )
 end
@@ -96,8 +90,8 @@ private def rvalue =
     | number
     | quoted_literal
     | native_code
-    | any = '_'
-    | dot = .
+    | any : '_'
+    | dot : .
     )
 end
 

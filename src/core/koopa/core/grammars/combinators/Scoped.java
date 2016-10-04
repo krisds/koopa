@@ -62,8 +62,6 @@ public class Scoped extends FutureParser {
 			parse.getTrace().indent(
 					toString() + " ? " + stream.peekMore() + "...");
 
-		parse.getStack().getHead().makeScoped();
-
 		stream.bookmark();
 		if (visibility.addsMarkers())
 			stream.insert(Start.on(grammar.getNamespace(), name));

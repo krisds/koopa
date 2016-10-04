@@ -7,7 +7,6 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.parsers.combinators.Block;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -10093,30 +10092,10 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              assign("t",
-                eventPhrase()
-              ),
-              apply(new Block() {
-                public void apply(Parse parse) {
-                  Token t = (Token) parse.getStack().getScope().getValue("t");
-                  { parse.warn(t, "Nested statement found out of line."); }
-                  parse.getStack().getScope().setValue("t", t);
-                }
-              }),
+              eventPhrase(),
               statement()
             ),
-            sequence(
-              assign("t",
-                endOfStatementMarker()
-              ),
-              apply(new Block() {
-                public void apply(Parse parse) {
-                  Token t = (Token) parse.getStack().getScope().getValue("t");
-                  { parse.warn(t, "Loose end of statement."); }
-                  parse.getStack().getScope().setValue("t", t);
-                }
-              })
-            )
+            endOfStatementMarker()
           )
         );
       }
@@ -10169,10 +10148,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 keyword("AT")
               )
             ),
-            assign("t",
-              eventType()
-            ),
-            returning("t")
+            eventType()
           )
         );
       }
@@ -10193,39 +10169,22 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("eventType", PRIVATE, true);
         eventTypeParser = future;
         future.setParser(
-          sequence(
-            choice(
-              assign("t",
-                keyword("EXCEPTION")
-              ),
-              sequence(
-                assign("t",
-                  keyword("SIZE")
-                ),
-                keyword("ERROR")
-              ),
-              assign("t",
-                keyword("OVERFLOW")
-              ),
-              sequence(
-                assign("t",
-                  keyword("INVALID")
-                ),
-                optional(
-                  keyword("KEY")
-                )
-              ),
-              assign("t",
-                keyword("END")
-              ),
-              assign("t",
-                keyword("END-OF-PAGE")
-              ),
-              assign("t",
-                keyword("EOP")
+          choice(
+            keyword("EXCEPTION"),
+            sequence(
+              keyword("SIZE"),
+              keyword("ERROR")
+            ),
+            keyword("OVERFLOW"),
+            sequence(
+              keyword("INVALID"),
+              optional(
+                keyword("KEY")
               )
             ),
-            returning("t")
+            keyword("END"),
+            keyword("END-OF-PAGE"),
+            keyword("EOP")
           )
         );
       }
@@ -10286,76 +10245,29 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("endOfStatementMarker", PRIVATE, true);
         endOfStatementMarkerParser = future;
         future.setParser(
-          sequence(
-            choice(
-              assign("t",
-                keyword("END-ACCEPT")
-              ),
-              assign("t",
-                keyword("END-ADD")
-              ),
-              assign("t",
-                keyword("END-CALL")
-              ),
-              assign("t",
-                keyword("END-CHAIN")
-              ),
-              assign("t",
-                keyword("END-COMPUTE")
-              ),
-              assign("t",
-                keyword("END-DELETE")
-              ),
-              assign("t",
-                keyword("END-DIVIDE")
-              ),
-              assign("t",
-                keyword("END-EVALUATE")
-              ),
-              assign("t",
-                keyword("END-EXEC")
-              ),
-              assign("t",
-                keyword("END-IF")
-              ),
-              assign("t",
-                keyword("END-MULTIPLY")
-              ),
-              assign("t",
-                keyword("END-PERFORM")
-              ),
-              assign("t",
-                keyword("END-READ")
-              ),
-              assign("t",
-                keyword("END-RETURN")
-              ),
-              assign("t",
-                keyword("END-REWRITE")
-              ),
-              assign("t",
-                keyword("END-SEARCH")
-              ),
-              assign("t",
-                keyword("END-START")
-              ),
-              assign("t",
-                keyword("END-STRING")
-              ),
-              assign("t",
-                keyword("END-SUBTRACT")
-              ),
-              assign("t",
-                keyword("END-UNSTRING")
-              ),
-              assign("t",
-                keyword("END-WAIT")
-              ),
-              assign("t",
-                keyword("END-WRITE")
-              )
-            ),
-            returning("t")
+          choice(
+            keyword("END-ACCEPT"),
+            keyword("END-ADD"),
+            keyword("END-CALL"),
+            keyword("END-CHAIN"),
+            keyword("END-COMPUTE"),
+            keyword("END-DELETE"),
+            keyword("END-DIVIDE"),
+            keyword("END-EVALUATE"),
+            keyword("END-EXEC"),
+            keyword("END-IF"),
+            keyword("END-MULTIPLY"),
+            keyword("END-PERFORM"),
+            keyword("END-READ"),
+            keyword("END-RETURN"),
+            keyword("END-REWRITE"),
+            keyword("END-SEARCH"),
+            keyword("END-START"),
+            keyword("END-STRING"),
+            keyword("END-SUBTRACT"),
+            keyword("END-UNSTRING"),
+            keyword("END-WAIT"),
+            keyword("END-WRITE")
           )
         );
       }
@@ -13409,7 +13321,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("giving",
               sequence(
                 keyword("GIVING"),
-                assign("identifier",
+                as("identifier",
                   qualifiedDataName()
                 ),
                 optional(

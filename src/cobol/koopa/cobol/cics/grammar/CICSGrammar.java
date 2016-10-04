@@ -7,7 +7,6 @@ import java.util.Set;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.parsers.combinators.Block;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;

@@ -16,7 +16,6 @@ import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
-import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
@@ -75,14 +74,11 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						return false;
 
 					final Token lastToken = picture.get(numberOfTokens - 1);
-					if (/*
-						 * lastToken.hasTag(SEPARATOR) &&
-						 */lastToken.getText().equals(".")) {
+					if (lastToken.getText().equals(".")) {
 						picture.remove(numberOfTokens - 1);
 						stream.rewind(lastToken);
 					}
 
-					parse.getStack().getScope().setRValue(Tokens.join(picture));
 					return true;
 				}
 			});
@@ -113,7 +109,6 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 					if (token != null && token.hasTag(NUMBER)
 							&& isLevelNumber(token.getText())) {
 
-						parse.getStack().getScope().setRValue(token);
 						return true;
 
 					} else

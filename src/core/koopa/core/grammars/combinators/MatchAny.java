@@ -30,7 +30,6 @@ public class MatchAny extends GrammaticalCombinator {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(SYMBOL + " : yes, " + token);
 
-			parse.getStack().getScope().setRValue(token);
 			return true;
 		}
 	}

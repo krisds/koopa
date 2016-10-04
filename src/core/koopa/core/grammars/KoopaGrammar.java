@@ -19,11 +19,8 @@ import koopa.core.grammars.combinators.TestTag;
 import koopa.core.grammars.combinators.WrappedAs;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
-import koopa.core.parsers.combinators.ApplyBlock;
-import koopa.core.parsers.combinators.AssignResultTo;
 import koopa.core.parsers.combinators.At;
 import koopa.core.parsers.combinators.Balancing;
-import koopa.core.parsers.combinators.Block;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.FailMatch;
 import koopa.core.parsers.combinators.LimitedTo;
@@ -34,7 +31,6 @@ import koopa.core.parsers.combinators.Opt;
 import koopa.core.parsers.combinators.Optional;
 import koopa.core.parsers.combinators.Permuted;
 import koopa.core.parsers.combinators.Plus;
-import koopa.core.parsers.combinators.ReturningValue;
 import koopa.core.parsers.combinators.Sequence;
 import koopa.core.parsers.combinators.SkipTo;
 import koopa.core.parsers.combinators.Star;
@@ -71,19 +67,6 @@ public abstract class KoopaGrammar extends Grammar {
 	protected ParserCombinator as(final String name,
 			final ParserCombinator parser) {
 		return new WrappedAs(this, parser, name);
-	}
-
-	protected ParserCombinator assign(final String name,
-			final ParserCombinator parser) {
-		return new AssignResultTo(name, parser);
-	}
-
-	protected ParserCombinator returning(final String name) {
-		return new ReturningValue(name);
-	}
-
-	protected ParserCombinator apply(final Block func) {
-		return new ApplyBlock(func);
 	}
 
 	protected ParserCombinator skipto(final ParserCombinator parser) {

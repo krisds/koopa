@@ -47,7 +47,6 @@ public class MatchNumber extends GrammaticalCombinator {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : yes, " + token);
 
-			parse.getStack().getScope().setRValue(token);
 			return true;
 		}
 	}

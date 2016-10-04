@@ -2297,13 +2297,13 @@ def statement =
     )
 end
 
-def continuationOfStatement (Token t) =
-    ( t=eventPhrase 
-      =={ parse.warn(t, "Nested statement found out of line."); }==
+def continuationOfStatement =
+    ( eventPhrase 
+#      =={ parse.warn(t, "Nested statement found out of line."); }==
       statement
 
-    | t=endOfStatementMarker
-      =={ parse.warn(t, "Loose end of statement."); }==
+    | endOfStatementMarker
+#      =={ parse.warn(t, "Loose end of statement."); }==
     )
 end
 
@@ -2311,18 +2311,18 @@ def nestedStatements =
     (statement)+
 end
 
-private def eventPhrase (Token t) returns t =
-    [NOT] [ON | AT] t=eventType
+private def eventPhrase =
+    [NOT] [ON | AT] eventType
 end
 
-private def eventType (Token t) returns t =
-    ( t=EXCEPTION
-    | t=SIZE ERROR
-    | t=OVERFLOW
-    | t=INVALID [KEY]
-    | t=END
-    | t=END-OF-PAGE
-    | t=EOP
+private def eventType =
+    ( EXCEPTION
+    | SIZE ERROR
+    | OVERFLOW
+    | INVALID [KEY]
+    | END
+    | END-OF-PAGE
+    | EOP
     )
 end
 
@@ -2334,29 +2334,29 @@ def retryPhrase =
     )
 end
 
-private def endOfStatementMarker (Token t) returns t =
-    ( t=END-ACCEPT
-    | t=END-ADD
-    | t=END-CALL
-    | t=END-CHAIN       # *MF
-    | t=END-COMPUTE
-    | t=END-DELETE
-    | t=END-DIVIDE
-    | t=END-EVALUATE
-    | t=END-EXEC
-    | t=END-IF
-    | t=END-MULTIPLY
-    | t=END-PERFORM
-    | t=END-READ
-    | t=END-RETURN
-    | t=END-REWRITE
-    | t=END-SEARCH
-    | t=END-START
-    | t=END-STRING
-    | t=END-SUBTRACT
-    | t=END-UNSTRING
-    | t=END-WAIT        # *MF
-    | t=END-WRITE
+private def endOfStatementMarker =
+    ( END-ACCEPT
+    | END-ADD
+    | END-CALL
+    | END-CHAIN       # *MF
+    | END-COMPUTE
+    | END-DELETE
+    | END-DIVIDE
+    | END-EVALUATE
+    | END-EXEC
+    | END-IF
+    | END-MULTIPLY
+    | END-PERFORM
+    | END-READ
+    | END-RETURN
+    | END-REWRITE
+    | END-SEARCH
+    | END-START
+    | END-STRING
+    | END-SUBTRACT
+    | END-UNSTRING
+    | END-WAIT        # *MF
+    | END-WRITE
     )
 end
 
@@ -3110,7 +3110,7 @@ def divideStatement =
   where private def format1 =
       (identifier | literal)
       ( into      : (INTO | BY) (identifier | literal) )
-      ( giving    : GIVING (identifier = qualifiedDataName) [ROUNDED] )
+      ( giving    : GIVING (identifier : qualifiedDataName) [ROUNDED] )
       ( remainder : REMAINDER qualifiedDataName )
   end
 

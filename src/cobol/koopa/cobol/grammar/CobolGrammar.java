@@ -11831,10 +11831,13 @@ public class CobolGrammar extends CobolBaseGrammar {
               keyword("RECORD")
             ),
             optional(
-              invalidKey()
+              retryPhrase()
             ),
             optional(
-              notInvalidKey()
+              permuted(
+                invalidKey(),
+                notInvalidKey()
+              )
             ),
             optional(
               keyword("END-DELETE")

@@ -352,23 +352,7 @@ target writeStatement;
 
 
 +[ WRITE MY-RECORD 
-   RETRY N TIMES
-   END-WRITE ]
-
-+[ WRITE MY-RECORD 
-   RETRY 3 TIMES
-   END-WRITE ]
-
-+[ WRITE MY-RECORD 
-   RETRY FOR N SECONDS
-   END-WRITE ]
-
-+[ WRITE MY-RECORD 
-   RETRY FOR 3 SECONDS
-   END-WRITE ]
-
-+[ WRITE MY-RECORD 
-   RETRY FOREVER
+     ] Phrases:retryPhrase [
    END-WRITE ]
 
    

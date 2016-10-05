@@ -140,26 +140,9 @@ target readStatement;
  
  
 +[ READ MY-FILE 
-     RETRY N TIMES
+     ] Phrases:retryPhrase [
    END-READ ]
 
-+[ READ MY-FILE 
-     RETRY 3 TIMES
-   END-READ ]
-
-+[ READ MY-FILE 
-     RETRY FOR N SECONDS
-   END-READ ]
-
-+[ READ MY-FILE 
-     RETRY FOR 3 SECONDS
-   END-READ ]
-
-+[ READ MY-FILE 
-     RETRY FOREVER
-   END-READ ]
- 
- 
  
 # Issue #28; adding extra checks for places where functions, object refs and
 # reference mods are not allowed

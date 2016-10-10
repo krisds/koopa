@@ -1,17 +1,16 @@
-package koopa.cobol.sql.grammar.test;
+package koopa.sql.grammar.test;
 
 import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 
-import koopa.cobol.CobolTokens;
-import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
+import koopa.core.sources.BasicTokens;
 import koopa.core.sources.Source;
 import koopa.dsl.stage.runtime.GrammarTestSuite;
 import koopa.dsl.stage.util.StageUtil;
+import koopa.sql.grammar.SQLGrammar;
 
 /**
  * Triggers all SQL grammar unit tests.
@@ -21,7 +20,7 @@ import koopa.dsl.stage.util.StageUtil;
  */
 public class EmbeddedSQLGrammarTests extends GrammarTestSuite {
 	public File[] getStageFiles() {
-		return new File("test/cobol/koopa/cobol/sql/grammar/test/")
+		return new File("test/sql/koopa/sql/grammar/test/")
 				.listFiles(StageUtil.getFilenameFilter());
 	}
 
@@ -31,8 +30,7 @@ public class EmbeddedSQLGrammarTests extends GrammarTestSuite {
 
 	public Source<Token> getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
-		final SourceFormat initialSourceFormat = SourceFormat.FREE;
 
-		return CobolTokens.getNewSource(reader, grammar, initialSourceFormat);
+		return BasicTokens.getNewSource("test", reader);
 	}
 }

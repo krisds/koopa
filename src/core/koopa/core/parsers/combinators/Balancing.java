@@ -5,7 +5,6 @@ import java.util.Stack;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.data.tags.SyntacticTag;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Parse;

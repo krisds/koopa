@@ -1,0 +1,7 @@
+target retryPhrase;
+
++[ RETRY N TIMES ]
++[ RETRY 3 TIMES ]
++[ RETRY FOR N SECONDS ]
++[ RETRY FOR 3 SECONDS ]
++[ RETRY FOREVER ]

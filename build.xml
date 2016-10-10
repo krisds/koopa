@@ -14,14 +14,14 @@
 		<delete dir="build/" />
 	</target>
 
-	<target name="build" depends="clean,core,core-tests,dsl,dsl-tests,cobol,cobol-tests,apps,examples,report-java-version">
+	<target name="build" depends="clean,core,core-tests,dsl,dsl-tests,cics,cics-tests,sql,sql-tests,cobol,cobol-tests,apps,examples,report-java-version">
 		<!-- Include all readme's in the output. -->
 		<copy todir="build/">
 			<fileset dir="." includes="*.md" />
 		</copy>
 	</target>
 
-	<target name="run-tests" depends="run-core-tests,run-dsl-tests,run-cobol-tests,run-cobol-regression-tests">
+	<target name="run-tests" depends="run-core-tests,run-dsl-tests,run-cics-tests,run-sql-tests,run-cobol-tests,run-cobol-regression-tests">
 	</target>
 
 	<!-- CORE / ISLAND PARSER GENERATOR -->
@@ -185,9 +185,129 @@
 		</junit>
 	</target>
 
+	<!-- CICS -->
+
+	<target name="cics" depends="core,dsl">
+		<echo>Generating parsers...</echo>
+		<kgg path="src/cics/" />
+
+		<echo>Compiling parsers...</echo>
+		<javac srcdir="src/cics/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<echo>Copying additional grammar resources...</echo>
+		<copy todir="build/">
+			<fileset dir="src/cics/" excludes="**/*.java,**/*.g" />
+		</copy>
+	</target>
+
+	<!-- CICS PARSER TESTS -->
+
+	<target name="cics-tests" depends="core,core-tests,cics">
+		<echo>Compiling unit tests...</echo>
+		<javac srcdir="test/cics/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<echo>Copying additional resources...</echo>
+		<copy todir="build/">
+			<fileset dir="test/cics/" excludes="**/*.java,**/*.g" />
+		</copy>
+	</target>
+
+	<target name="run-cics-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<classpath>
+				<pathelement location="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<assertions>
+				<enable />
+			</assertions>
+
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests" />
+		</junit>
+	</target>
+
+	<!-- SQL -->
+
+	<target name="sql" depends="core,dsl">
+		<echo>Generating parsers...</echo>
+		<kgg path="src/sql/" />
+
+		<echo>Compiling parsers...</echo>
+		<javac srcdir="src/sql/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<echo>Copying additional grammar resources...</echo>
+		<copy todir="build/">
+			<fileset dir="src/sql/" excludes="**/*.java,**/*.g" />
+		</copy>
+	</target>
+
+	<!-- SQL PARSER TESTS -->
+
+	<target name="sql-tests" depends="core,core-tests,sql">
+		<echo>Compiling unit tests...</echo>
+		<javac srcdir="test/sql/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+			<classpath>
+				<fileset dir="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+
+		<echo>Copying additional resources...</echo>
+		<copy todir="build/">
+			<fileset dir="test/sql/" excludes="**/*.java,**/*.g" />
+		</copy>
+	</target>
+
+	<target name="run-sql-tests">
+		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
+			<classpath>
+				<pathelement location="build/" />
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<assertions>
+				<enable />
+			</assertions>
+
+			<formatter type="brief" usefile="no" />
+
+			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests" />
+		</junit>
+	</target>
+
 	<!-- COBOL PARSER -->
 
-	<target name="cobol" depends="core,dsl">
+	<target name="cobol" depends="core,dsl,cics">
 		<echo>Generating parsers...</echo>
 		<kgg path="src/cobol/" />
 
@@ -244,14 +364,12 @@
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
 			<test name="koopa.cobol.grammar.preprocessing.test.CobolPreprocessingGrammarTests" />
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
-			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
-			<test name="koopa.cobol.cics.grammar.test.EmbeddedCICSGrammarTests" />
 			<test name="koopa.cobol.parser.preprocessing.replacing.test.ReplacingPhraseOperandTest" />
 			<test name="koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest" />
 		</junit>
 	</target>
 
-	<target name="random-cobol-tests">
+	<target name="random-tests">
 		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
 			<sysproperty key="koopa.tests.random" value="true" />
 			<sysproperty key="koopa.tests.random.limit" value="3" />
@@ -270,8 +388,8 @@
 			<formatter type="brief" usefile="no" />
 
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
-			<test name="koopa.cobol.sql.grammar.test.EmbeddedSQLGrammarTests" />
-			<test name="koopa.cobol.cics.grammar.test.EmbeddedCICSGrammarTests" />
+			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests" />
+			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests" />
 		</junit>
 	</target>
 

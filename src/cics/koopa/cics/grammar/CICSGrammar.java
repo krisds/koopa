@@ -1,4 +1,4 @@
-package koopa.cobol.cics.grammar;
+package koopa.cics.grammar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +18,7 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.cobol.cics.grammar.CICSBaseGrammar;
+import koopa.cics.grammar.CICSBaseGrammar;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
 public class CICSGrammar extends CICSBaseGrammar {

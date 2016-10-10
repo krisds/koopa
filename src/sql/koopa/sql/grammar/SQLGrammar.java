@@ -1,4 +1,4 @@
-package koopa.cobol.sql.grammar;
+package koopa.sql.grammar;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +18,7 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.cobol.sql.grammar.SQLBaseGrammar;
+import koopa.sql.grammar.SQLBaseGrammar;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WORD;

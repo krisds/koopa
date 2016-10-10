@@ -11,16 +11,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import koopa.cobol.cics.grammar.CICSGrammar;
+import koopa.cics.grammar.CICSGrammar;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sql.grammar.SQLGrammar;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
+import koopa.sql.grammar.SQLGrammar;
 
 public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 

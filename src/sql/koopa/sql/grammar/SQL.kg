@@ -8,6 +8,8 @@ grammar SQL extends SQLBase.
 # Partly because the SQL grammar in itself is quite extensive and will take
 # some time to flesh out. But also because my set of samples to test against
 # is quite limited.
+#
+# I'm mostly basing this off [SQL-2003 BNF]. 
 
 def sqlStatement =
     ( includeStatement
@@ -61,10 +63,24 @@ def declareCursorStatement =
 end
 
 def selectStatement =
-    SELECT    [ unknown: --> (INTO | FROM) ]
+    SELECT
+    [setQuantifier]
+    selectList
     [into]
-    from      [ unknown: --> WHERE ]
-    [`where]  [ unknown: --> eof ]
+    from              [ unknown: --> WHERE ]
+    [`where]          [ unknown: --> eof ]
+
+  where def setQuantifier =  ( distinct: DISTINCT | all: ALL )  end
+  
+  where def selectList =
+      (sublist (',' sublist)*) %upto { (INTO | FROM) }
+      
+    where private def sublist =
+      ( aggregateFunction
+      | unknown: _+
+      ) %upto { ',' }
+    end
+  end
 
   where def into =
       INTO 
@@ -72,7 +88,7 @@ def selectStatement =
       
     where private def target =
       ( hostParameterSpecification
-      | unknown: _*
+      | unknown: _+
       ) %upto { ',' }
     end
   end
@@ -367,6 +383,20 @@ def greaterThanOp         =  '>'                                    end
 def notEqualsOp           =  ( '<' %noskip '>' | '!' %noskip '=' )  end
 def greaterThanOrEqualsOp =  ( '>' %noskip '=' | '!' %noskip '<' )  end
 def lessThanOrEqualsOp    =  ( '<' %noskip '=' | '!' %noskip '>' )  end
+
+
+## ############################################################################
+## Functions
+## ----------------------------------------------------------------------------
+
+# This is a very incomplete definition, so make sure call sites allow for that. 
+def aggregateFunction =
+    countAll
+end
+
+def countAll =
+    COUNT '(' '*' ')'
+end
 
 
 ## ############################################################################

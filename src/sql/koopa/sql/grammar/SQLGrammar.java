@@ -404,15 +404,9 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("SELECT"),
             optional(
-              as("unknown",
-                skipto(
-                  choice(
-                    keyword("INTO"),
-                    keyword("FROM")
-                  )
-                )
-              )
+              selectStatement$setQuantifier()
             ),
+            selectStatement$selectList(),
             optional(
               selectStatement$into()
             ),
@@ -439,6 +433,99 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatementParser;
+    }
+    
+    // ========================================================
+    // setQuantifier
+    // ........................................................
+    
+    private ParserCombinator selectStatement$setQuantifierParser = null;
+    
+    public final Start selectStatement$setQuantifier = Start.on(getNamespace(), "setQuantifier");
+    
+    public ParserCombinator selectStatement$setQuantifier() {
+      if (selectStatement$setQuantifierParser == null) {
+        FutureParser future = scoped("setQuantifier", PUBLIC, true);
+        selectStatement$setQuantifierParser = future;
+        future.setParser(
+          choice(
+            as("distinct",
+              keyword("DISTINCT")
+            ),
+            as("all",
+              keyword("ALL")
+            )
+          )
+        );
+      }
+    
+      return selectStatement$setQuantifierParser;
+    }
+    
+    // ========================================================
+    // selectList
+    // ........................................................
+    
+    private ParserCombinator selectStatement$selectListParser = null;
+    
+    public final Start selectStatement$selectList = Start.on(getNamespace(), "selectList");
+    
+    public ParserCombinator selectStatement$selectList() {
+      if (selectStatement$selectListParser == null) {
+        FutureParser future = scoped("selectList", PUBLIC, true);
+        selectStatement$selectListParser = future;
+        future.setParser(
+          upto(
+            sequence(
+              selectStatement$selectList$sublist(),
+              star(
+                sequence(
+                  literal(","),
+                  selectStatement$selectList$sublist()
+                )
+              )
+            ),
+            // Closure:
+            choice(
+              keyword("INTO"),
+              keyword("FROM")
+            )
+          )
+        );
+      }
+    
+      return selectStatement$selectListParser;
+    }
+    
+    // ========================================================
+    // sublist
+    // ........................................................
+    
+    private ParserCombinator selectStatement$selectList$sublistParser = null;
+    
+    protected final Start selectStatement$selectList$sublist = Start.on(getNamespace(), "sublist");
+    
+    protected ParserCombinator selectStatement$selectList$sublist() {
+      if (selectStatement$selectList$sublistParser == null) {
+        FutureParser future = scoped("sublist", PRIVATE, true);
+        selectStatement$selectList$sublistParser = future;
+        future.setParser(
+          upto(
+            choice(
+              aggregateFunction(),
+              as("unknown",
+                plus(
+                  any()
+                )
+              )
+            ),
+            // Closure:
+            literal(",")
+          )
+        );
+      }
+    
+      return selectStatement$selectList$sublistParser;
     }
     
     // ========================================================
@@ -493,7 +580,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             choice(
               hostParameterSpecification(),
               as("unknown",
-                star(
+                plus(
                   any()
                 )
               )
@@ -1843,6 +1930,51 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return lessThanOrEqualsOpParser;
+    }
+    
+    // ========================================================
+    // aggregateFunction
+    // ........................................................
+    
+    private ParserCombinator aggregateFunctionParser = null;
+    
+    public final Start aggregateFunction = Start.on(getNamespace(), "aggregateFunction");
+    
+    public ParserCombinator aggregateFunction() {
+      if (aggregateFunctionParser == null) {
+        FutureParser future = scoped("aggregateFunction", PUBLIC, true);
+        aggregateFunctionParser = future;
+        future.setParser(
+          countAll()
+        );
+      }
+    
+      return aggregateFunctionParser;
+    }
+    
+    // ========================================================
+    // countAll
+    // ........................................................
+    
+    private ParserCombinator countAllParser = null;
+    
+    public final Start countAll = Start.on(getNamespace(), "countAll");
+    
+    public ParserCombinator countAll() {
+      if (countAllParser == null) {
+        FutureParser future = scoped("countAll", PUBLIC, true);
+        countAllParser = future;
+        future.setParser(
+          sequence(
+            keyword("COUNT"),
+            literal("("),
+            literal("*"),
+            literal(")")
+          )
+        );
+      }
+    
+      return countAllParser;
     }
     
     // ========================================================

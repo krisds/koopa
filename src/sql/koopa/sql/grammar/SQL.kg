@@ -61,12 +61,21 @@ def declareCursorStatement =
 end
 
 def selectStatement =
-    SELECT
-    [ unknown: --> FROM ]
-    from
-    [ unknown: --> WHERE ]
-    [`where]
-    [ unknown: --> eof ]
+    SELECT    [ unknown: --> (INTO | FROM) ]
+    [into]
+    from      [ unknown: --> WHERE ]
+    [`where]  [ unknown: --> eof ]
+
+  where def into =
+      INTO 
+      (target (',' target)*) %upto { FROM }
+      
+    where private def target =
+      ( hostParameterSpecification
+      | unknown: _*
+      ) %upto { ',' }
+    end
+  end
 
   where def from =  FROM  tableReferenceList  [unknown: --> nextBlockOrEnd]  end
 
@@ -130,9 +139,9 @@ def lockTableStatement =
     [unknown: --> eof]
 end
 
-## #############################################################################
+## ############################################################################
 ## Data Definition Language Statements
-## -----------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 
 def alterStatement =
     ALTER
@@ -244,9 +253,9 @@ def renameStatement =
     [unknown: --> eof]
 end
 
-## #############################################################################
+## ############################################################################
 ## Search conditions (top-down)
-## -----------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 
 # This will split the input according to the logical combinators AND, OR and
 # NOT, and grouping of these by means of parentheses.
@@ -360,9 +369,25 @@ def greaterThanOrEqualsOp =  ( '>' %noskip '=' | '!' %noskip '<' )  end
 def lessThanOrEqualsOp    =  ( '<' %noskip '=' | '!' %noskip '>' )  end
 
 
-## #############################################################################
+## ############################################################################
+## Host parameters
+## ----------------------------------------------------------------------------
+
+def hostParameterSpecification =
+    hostParameterName [ indicator ]
+
+  # [IBM References to host variables] details the use of indicators.
+  where def indicator =
+      [ INDICATOR ] hostParameterName
+  end
+end
+
+def hostParameterName =  ':' %noskip identifier  end
+
+
+## ############################################################################
 ## Low level stuff.
-## -----------------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 
 def identifier          =  (delimitedIdentifier | regularIdentifier)  end
 
@@ -417,3 +442,5 @@ def stringLiteral =  @STRING _  end
 # [IBM DB2 SQL Statements]
 #   http://www.ibm.com/support/knowledgecenter/en/SSEPEK_11.0.0/com.ibm.db2z11.doc.sqlref/src/tpc/db2z_sql_statementsintro.html
 #
+# [IBM References to host variables]
+#   http://www.ibm.com/support/knowledgecenter/ssw_ibm_i_71/db2/rbafzch2host.htm

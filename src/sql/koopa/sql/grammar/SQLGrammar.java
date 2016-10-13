@@ -406,9 +406,15 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               as("unknown",
                 skipto(
-                  keyword("FROM")
+                  choice(
+                    keyword("INTO"),
+                    keyword("FROM")
+                  )
                 )
               )
+            ),
+            optional(
+              selectStatement$into()
             ),
             selectStatement$from(),
             optional(
@@ -433,6 +439,72 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatementParser;
+    }
+    
+    // ========================================================
+    // into
+    // ........................................................
+    
+    private ParserCombinator selectStatement$intoParser = null;
+    
+    public final Start selectStatement$into = Start.on(getNamespace(), "into");
+    
+    public ParserCombinator selectStatement$into() {
+      if (selectStatement$intoParser == null) {
+        FutureParser future = scoped("into", PUBLIC, true);
+        selectStatement$intoParser = future;
+        future.setParser(
+          sequence(
+            keyword("INTO"),
+            upto(
+              sequence(
+                selectStatement$into$target(),
+                star(
+                  sequence(
+                    literal(","),
+                    selectStatement$into$target()
+                  )
+                )
+              ),
+              // Closure:
+              keyword("FROM")
+            )
+          )
+        );
+      }
+    
+      return selectStatement$intoParser;
+    }
+    
+    // ========================================================
+    // target
+    // ........................................................
+    
+    private ParserCombinator selectStatement$into$targetParser = null;
+    
+    protected final Start selectStatement$into$target = Start.on(getNamespace(), "target");
+    
+    protected ParserCombinator selectStatement$into$target() {
+      if (selectStatement$into$targetParser == null) {
+        FutureParser future = scoped("target", PRIVATE, true);
+        selectStatement$into$targetParser = future;
+        future.setParser(
+          upto(
+            choice(
+              hostParameterSpecification(),
+              as("unknown",
+                star(
+                  any()
+                )
+              )
+            ),
+            // Closure:
+            literal(",")
+          )
+        );
+      }
+    
+      return selectStatement$into$targetParser;
     }
     
     // ========================================================
@@ -1771,6 +1843,81 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return lessThanOrEqualsOpParser;
+    }
+    
+    // ========================================================
+    // hostParameterSpecification
+    // ........................................................
+    
+    private ParserCombinator hostParameterSpecificationParser = null;
+    
+    public final Start hostParameterSpecification = Start.on(getNamespace(), "hostParameterSpecification");
+    
+    public ParserCombinator hostParameterSpecification() {
+      if (hostParameterSpecificationParser == null) {
+        FutureParser future = scoped("hostParameterSpecification", PUBLIC, true);
+        hostParameterSpecificationParser = future;
+        future.setParser(
+          sequence(
+            hostParameterName(),
+            optional(
+              hostParameterSpecification$indicator()
+            )
+          )
+        );
+      }
+    
+      return hostParameterSpecificationParser;
+    }
+    
+    // ========================================================
+    // indicator
+    // ........................................................
+    
+    private ParserCombinator hostParameterSpecification$indicatorParser = null;
+    
+    public final Start hostParameterSpecification$indicator = Start.on(getNamespace(), "indicator");
+    
+    public ParserCombinator hostParameterSpecification$indicator() {
+      if (hostParameterSpecification$indicatorParser == null) {
+        FutureParser future = scoped("indicator", PUBLIC, true);
+        hostParameterSpecification$indicatorParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("INDICATOR")
+            ),
+            hostParameterName()
+          )
+        );
+      }
+    
+      return hostParameterSpecification$indicatorParser;
+    }
+    
+    // ========================================================
+    // hostParameterName
+    // ........................................................
+    
+    private ParserCombinator hostParameterNameParser = null;
+    
+    public final Start hostParameterName = Start.on(getNamespace(), "hostParameterName");
+    
+    public ParserCombinator hostParameterName() {
+      if (hostParameterNameParser == null) {
+        FutureParser future = scoped("hostParameterName", PUBLIC, true);
+        hostParameterNameParser = future;
+        future.setParser(
+          sequence(
+            literal(":"),
+            opt(NOSKIP,
+              identifier()
+            )
+          )
+        );
+      }
+    
+      return hostParameterNameParser;
     }
     
     // ========================================================

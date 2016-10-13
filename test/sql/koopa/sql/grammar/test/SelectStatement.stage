@@ -14,3 +14,12 @@ target selectStatement;
 +[ SELECT TEACHERS.NAME, COURSES.NAME
      FROM TEACHERS, COURSES
      WHERE COURSES.TEACHER_ID = TEACHERS.ID ]
+
++[ SELECT COUNT(*) INTO ] HostParameter:hostParameterSpecification [
+   FROM STUDENTS ]
+
++[ SELECT NAME, AGE INTO ]
+     HostParameter:hostParameterSpecification 
+     [, ]
+     HostParameter:hostParameterSpecification [
+   FROM STUDENTS WHERE ID = 42 ]

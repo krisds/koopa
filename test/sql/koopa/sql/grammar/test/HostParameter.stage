@@ -1,0 +1,16 @@
+target hostParameterName;
+
++[ :COBOL ]
++[ :WS-COUNT ]
++[ :WS-12345 ]
++[ :"ws count" ]
+
+-[ COBOL ]
+-[ : COBOL ]
+
+
+target hostParameterSpecification;
+
++ hostParameterName
++ hostParameterName [ INDICATOR ] hostParameterName
++ hostParameterName               hostParameterName

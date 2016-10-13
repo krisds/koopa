@@ -77,17 +77,17 @@ public abstract class GrammarTestSuite {
 			try {
 				final boolean accepts = target.accepts(parse);
 
-				assertTrue(targetName + " should accept [" + test + "]",
-						accepts);
+				assertTrue(targetName + " should accept [" + test.getSample()
+						+ "]", accepts);
 				assertTrue(
-						targetName + " should accept [" + test
+						targetName + " should accept [" + test.getSample()
 								+ "] up to the expected point. Got to "
 								+ parse.getFinalFrame().toTrace() + ".", //
 						source.isWhereExpected());
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Assert.fail(targetName + " should accept [" + test
+				Assert.fail(targetName + " should accept [" + test.getSample()
 						+ "], but threw " + e);
 			}
 
@@ -105,14 +105,17 @@ public abstract class GrammarTestSuite {
 
 				} else if (inUnknown == 0 && data instanceof Token) {
 					Token token = (Token) data;
-					assertFalse(targetName + " should find no water in [" + test
-							+ "]", token.hasTag(WATER));
+					assertFalse(
+							targetName + " should find no water in ["
+									+ test.getSample() + "]",
+							token.hasTag(WATER));
 				}
 			}
 
 		} else {
 			Parse parse = Parse.of(source);
-			assertFalse(targetName + " should reject [" + test + "]",
+			assertFalse(
+					targetName + " should reject [" + test.getSample() + "]",
 					target.accepts(parse) && source.isWhereExpected());
 		}
 	}

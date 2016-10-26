@@ -780,7 +780,11 @@ def decimalIsComma =
 end
 
 def numericSignIs =
-    NUMERIC SIGN [IS] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
+    NUMERIC SIGN [IS]
+    ( leading:  LEADING
+    | trailing: TRAILING
+    )
+    [separate: SEPARATE [CHARACTER]]
 end
 
 def callConvention =
@@ -1949,7 +1953,11 @@ def selectWhenClause =
 end
 
 def signClause =
-    [SIGN [IS]] (LEADING | TRAILING) [SEPARATE [CHARACTER]]
+    [SIGN [IS]] 
+    ( leading:  LEADING
+    | trailing: TRAILING
+    )
+    [separate: SEPARATE [CHARACTER]]
 end
 
 def sourceClause =

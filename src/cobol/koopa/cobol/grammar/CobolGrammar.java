@@ -3168,14 +3168,20 @@ public class CobolGrammar extends CobolBaseGrammar {
               keyword("IS")
             ),
             choice(
-              keyword("LEADING"),
-              keyword("TRAILING")
+              as("leading",
+                keyword("LEADING")
+              ),
+              as("trailing",
+                keyword("TRAILING")
+              )
             ),
             optional(
-              sequence(
-                keyword("SEPARATE"),
-                optional(
-                  keyword("CHARACTER")
+              as("separate",
+                sequence(
+                  keyword("SEPARATE"),
+                  optional(
+                    keyword("CHARACTER")
+                  )
                 )
               )
             )
@@ -8738,14 +8744,20 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             choice(
-              keyword("LEADING"),
-              keyword("TRAILING")
+              as("leading",
+                keyword("LEADING")
+              ),
+              as("trailing",
+                keyword("TRAILING")
+              )
             ),
             optional(
-              sequence(
-                keyword("SEPARATE"),
-                optional(
-                  keyword("CHARACTER")
+              as("separate",
+                sequence(
+                  keyword("SEPARATE"),
+                  optional(
+                    keyword("CHARACTER")
+                  )
                 )
               )
             )

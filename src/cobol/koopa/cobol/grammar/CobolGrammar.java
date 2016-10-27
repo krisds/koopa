@@ -7857,11 +7857,15 @@ public class CobolGrammar extends CobolBaseGrammar {
                     sequence(
                       optional(
                         sequence(
-                          integer(),
+                          as("min",
+                            integer()
+                          ),
                           keyword("TO")
                         )
                       ),
-                      integer(),
+                      as("max",
+                        integer()
+                      ),
                       optional(
                         keyword("TIMES")
                       )

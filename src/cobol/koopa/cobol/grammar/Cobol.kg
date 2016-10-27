@@ -1819,7 +1819,7 @@ def occursClause =
           [INITIALIZED]
         
       | # fixed-table, occurs-depending-table, report-writer
-        fixed : [integer TO] integer [TIMES] 
+        fixed : [(min: integer) TO] (max: integer) [TIMES] 
       )
     
       # occurs-depending-table, report-writer

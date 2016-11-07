@@ -18087,7 +18087,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                   keyword("WITH")
                 ),
                 keyword("ENCODING"),
-                justAName()
+                xmlGenerateStatement$codepage()
               )
             ),
             optional(
@@ -18147,6 +18147,29 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
+    // codepage
+    // ........................................................
+    
+    private ParserCombinator xmlGenerateStatement$codepageParser = null;
+    
+    public final Start xmlGenerateStatement$codepage = Start.on(getNamespace(), "codepage");
+    
+    public ParserCombinator xmlGenerateStatement$codepage() {
+      if (xmlGenerateStatement$codepageParser == null) {
+        FutureParser future = scoped("codepage", PUBLIC, true);
+        xmlGenerateStatement$codepageParser = future;
+        future.setParser(
+          choice(
+            integer(),
+            justAName()
+          )
+        );
+      }
+    
+      return xmlGenerateStatement$codepageParser;
+    }
+    
+    // ========================================================
     // xmlParseStatement
     // ........................................................
     
@@ -18165,14 +18188,40 @@ public class CobolGrammar extends CobolBaseGrammar {
             identifier(),
             optional(
               sequence(
-                keyword("PROCESSING"),
-                keyword("PROCEDURE"),
                 optional(
-                  keyword("IS")
+                  keyword("WITH")
                 ),
-                procedureName()
+                keyword("ENCODING"),
+                xmlParseStatement$codepage()
               )
             ),
+            optional(
+              sequence(
+                keyword("RETURNING"),
+                keyword("NATIONAL")
+              )
+            ),
+            optional(
+              sequence(
+                keyword("VALIDATING"),
+                optional(
+                  keyword("WITH")
+                ),
+                choice(
+                  sequence(
+                    keyword("FILE"),
+                    xmlParseStatement$xmlSchemaName()
+                  ),
+                  identifier()
+                )
+              )
+            ),
+            keyword("PROCESSING"),
+            keyword("PROCEDURE"),
+            optional(
+              keyword("IS")
+            ),
+            procedureName(),
             optional(
               sequence(
                 choice(
@@ -18196,6 +18245,49 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return xmlParseStatementParser;
+    }
+    
+    // ========================================================
+    // codepage
+    // ........................................................
+    
+    private ParserCombinator xmlParseStatement$codepageParser = null;
+    
+    public final Start xmlParseStatement$codepage = Start.on(getNamespace(), "codepage");
+    
+    public ParserCombinator xmlParseStatement$codepage() {
+      if (xmlParseStatement$codepageParser == null) {
+        FutureParser future = scoped("codepage", PUBLIC, true);
+        xmlParseStatement$codepageParser = future;
+        future.setParser(
+          choice(
+            integer(),
+            justAName()
+          )
+        );
+      }
+    
+      return xmlParseStatement$codepageParser;
+    }
+    
+    // ========================================================
+    // xmlSchemaName
+    // ........................................................
+    
+    private ParserCombinator xmlParseStatement$xmlSchemaNameParser = null;
+    
+    public final Start xmlParseStatement$xmlSchemaName = Start.on(getNamespace(), "xmlSchemaName");
+    
+    public ParserCombinator xmlParseStatement$xmlSchemaName() {
+      if (xmlParseStatement$xmlSchemaNameParser == null) {
+        FutureParser future = scoped("xmlSchemaName", PUBLIC, true);
+        xmlParseStatement$xmlSchemaNameParser = future;
+        future.setParser(
+          justAName()
+        );
+      }
+    
+      return xmlParseStatement$xmlSchemaNameParser;
     }
     
     // ========================================================

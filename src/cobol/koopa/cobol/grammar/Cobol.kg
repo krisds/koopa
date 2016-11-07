@@ -4369,11 +4369,11 @@ end
 ## XML GENERATE statement.
 ## -----------------------------------------------------------------------------
 
-# Based on "Cobol zOS Language Reference".
+# Cfr. [IBM Cobol zOS 4.2], XML GENERATE Statement
 def xmlGenerateStatement =
     XML GENERATE identifier FROM identifier
     [COUNT [IN] identifier]
-    [[WITH] ENCODING justAName]
+    [[WITH] ENCODING codepage]
     [[WITH] XML-DECLARATION]
     [[WITH] ATTRIBUTES]
     [NAMESPACE [IS] (identifier | literal)
@@ -4381,6 +4381,8 @@ def xmlGenerateStatement =
     ]
     ![onException | notOnException]
     [END-XML]
+
+  where def codepage      =  (integer | justAName)  end
 end
 
 
@@ -4388,12 +4390,18 @@ end
 ## XML PARSE statement.
 ## -----------------------------------------------------------------------------
 
+# Cfr. [IBM Cobol zOS 4.2], XML PARSE Statement
 def xmlParseStatement =
     XML PARSE identifier
-    [PROCESSING PROCEDURE [IS] procedureName]
-        [(THROUGH | THRU) procedureName]
+    [[WITH] ENCODING codepage]
+    [RETURNING NATIONAL]
+    [VALIDATING [WITH] (FILE xmlSchemaName | identifier)]
+    PROCESSING PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
     ![onException | notOnException]
     [END-XML]
+  
+  where def codepage      =  (integer | justAName)  end
+  where def xmlSchemaName =  justAName              end
 end
 
 

@@ -2519,9 +2519,7 @@ end
 def acceptFromMnemonic =
     identifier_format2
     FROM mnemonicName
-    
-    [ onException | onEscape ]
-    [ notOnException | notOnEscape ]
+    ![onException | notOnException | onEscape | notOnEscape]
 end
 
 def acceptFromOther =
@@ -2549,8 +2547,8 @@ def acceptScreenFormat =
     [ FROM CRT ]
     [ modeIsBlockPhrase ]
     [ WITH (screenEntryPhrase)+ ]
-    [ onException | onEscape ]
-    [ notOnException | notOnEscape ]
+    
+    ![onException | notOnException | onEscape | notOnEscape]
 end
 
 def acceptFromDate =
@@ -2595,8 +2593,7 @@ end
 
 def addStatement =
     ADD ( format1 | format2 | format3 )
-    [onSizeError]
-    [notOnSizeError]
+    ![onSizeError | notOnSizeError]
     [END-ADD]
 
 
@@ -2779,8 +2776,7 @@ def computeStatement =
     (qualifiedDataName [ROUNDED])+
     ('=' | EQUAL)
     arithmeticExpression
-    [onSizeError]
-    [notOnSizeError]
+    ![onSizeError | notOnSizeError]
     [END-COMPUTE]
 end
 
@@ -2855,9 +2851,7 @@ def displayStatement =
     | [WITH] (screenEntryPhrase)+
     )*
     
-    [onException]
-    [notOnException]
-    
+    ![onException | notOnException]
     [END-DISPLAY]
 end
 
@@ -2875,8 +2869,7 @@ def displayDeviceFormat =
     (identifier | literal)+
     [uponClause]
     [withNoAdvancing]
-    [onException]
-    [notOnException]
+    ![onException | notOnException]
 end
 
 def uponClause =
@@ -3113,8 +3106,7 @@ end
 
 def divideStatement =
     DIVIDE ( format1 | format2 | format3 )
-    [onSizeError]
-    [notOnSizeError]
+    ![onSizeError | notOnSizeError]
     [END-DIVIDE]
 
 
@@ -3614,8 +3606,7 @@ end
 
 def multiplyStatement =
     MULTIPLY ( format1 | format2 )
-    [onSizeError]
-    [notOnSizeError]
+    ![onSizeError | notOnSizeError]
     [END-MULTIPLY]
 
   # The order of these is important!
@@ -4169,8 +4160,7 @@ def stringStatement =
     STRING
     ( ( identifier | literal ) [DELIMITED [BY] (SIZE | identifier | literal)] )+
     INTO identifier [[WITH] POINTER identifier]
-    [onOverflow]
-    [notOnOverflow]
+    ![onOverflow | notOnOverflow]
     [END-STRING]
 end
 
@@ -4180,8 +4170,7 @@ end
 
 def subtractStatement =
     SUBTRACT ( format1 | format2 | format3 )
-    [onSizeError]
-    [notOnSizeError]
+    ![onSizeError | notOnSizeError]
     [END-SUBTRACT]
 
   where private def format1 =
@@ -4262,8 +4251,7 @@ def unstringStatement =
     [[WITH] POINTER identifier]
     [TALLYING [IN] identifier]
     
-    [onOverflow]
-    [notOnOverflow]
+    ![onOverflow | notOnOverflow]
     [END-UNSTRING]
 end
 
@@ -4326,8 +4314,7 @@ def waitStatement =
     ( WAIT [FOR] threadPointer
         [RETURNING [INTO] identifier]
         [STATUS [IS] identifier]
-        [onException]
-        [notOnException]
+        ![onException | notOnException]
         [END-WAIT]
     | WAIT [FOR] eventPointer
     )
@@ -4392,8 +4379,7 @@ def xmlGenerateStatement =
     [NAMESPACE [IS] (identifier | literal)
        [NAMESPACE-PREFIX [IS] (identifier | literal)]
     ]
-    [onException]
-    [notOnException]
+    ![onException | notOnException]
     [END-XML]
 end
 
@@ -4406,8 +4392,7 @@ def xmlParseStatement =
     XML PARSE identifier
     [PROCESSING PROCEDURE [IS] procedureName]
         [(THROUGH | THRU) procedureName]
-    [onException]
-    [notOnException]
+    ![onException | notOnException]
     [END-XML]
 end
 

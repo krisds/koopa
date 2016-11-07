@@ -21,6 +21,14 @@ target displayStatement;
 +[ DISPLAY foo NOT EXCEPTION DISPLAY "foo" ]
 +[ DISPLAY foo NOT ON EXCEPTION DISPLAY "foo" ]
 
++[ DISPLAY foo
+   ON EXCEPTION GOBACK 
+   NOT ON EXCEPTION DISPLAY "foo" ]
+
++[ DISPLAY foo
+   NOT ON EXCEPTION DISPLAY "foo"
+   ON EXCEPTION GOBACK ]
+
 +[ DISPLAY "Do you want to run the function "
      function-name "? " WITH NO ADVANCING ]
 

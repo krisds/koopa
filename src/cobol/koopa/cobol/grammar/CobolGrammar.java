@@ -10566,14 +10566,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             keyword("FROM"),
             mnemonicName(),
             optional(
-              choice(
+              permuted(
                 onException(),
-                onEscape()
-              )
-            ),
-            optional(
-              choice(
                 notOnException(),
+                onEscape(),
                 notOnEscape()
               )
             )
@@ -10697,14 +10693,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              choice(
+              permuted(
                 onException(),
-                onEscape()
-              )
-            ),
-            optional(
-              choice(
                 notOnException(),
+                onEscape(),
                 notOnEscape()
               )
             )
@@ -10919,10 +10911,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               addStatement$format3()
             ),
             optional(
-              onSizeError()
-            ),
-            optional(
-              notOnSizeError()
+              permuted(
+                onSizeError(),
+                notOnSizeError()
+              )
             ),
             optional(
               keyword("END-ADD")
@@ -11792,10 +11784,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             arithmeticExpression(),
             optional(
-              onSizeError()
-            ),
-            optional(
-              notOnSizeError()
+              permuted(
+                onSizeError(),
+                notOnSizeError()
+              )
             ),
             optional(
               keyword("END-COMPUTE")
@@ -12036,10 +12028,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              onException()
-            ),
-            optional(
-              notOnException()
+              permuted(
+                onException(),
+                notOnException()
+              )
             ),
             optional(
               keyword("END-DISPLAY")
@@ -12112,10 +12104,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               withNoAdvancing()
             ),
             optional(
-              onException()
-            ),
-            optional(
-              notOnException()
+              permuted(
+                onException(),
+                notOnException()
+              )
             )
           )
         );
@@ -13292,10 +13284,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               divideStatement$format3()
             ),
             optional(
-              onSizeError()
-            ),
-            optional(
-              notOnSizeError()
+              permuted(
+                onSizeError(),
+                notOnSizeError()
+              )
             ),
             optional(
               keyword("END-DIVIDE")
@@ -15218,10 +15210,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               multiplyStatement$format2()
             ),
             optional(
-              onSizeError()
-            ),
-            optional(
-              notOnSizeError()
+              permuted(
+                onSizeError(),
+                notOnSizeError()
+              )
             ),
             optional(
               keyword("END-MULTIPLY")
@@ -17225,10 +17217,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              onOverflow()
-            ),
-            optional(
-              notOnOverflow()
+              permuted(
+                onOverflow(),
+                notOnOverflow()
+              )
             ),
             optional(
               keyword("END-STRING")
@@ -17261,10 +17253,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               subtractStatement$format3()
             ),
             optional(
-              onSizeError()
-            ),
-            optional(
-              notOnSizeError()
+              permuted(
+                onSizeError(),
+                notOnSizeError()
+              )
             ),
             optional(
               keyword("END-SUBTRACT")
@@ -17609,10 +17601,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              onOverflow()
-            ),
-            optional(
-              notOnOverflow()
+              permuted(
+                onOverflow(),
+                notOnOverflow()
+              )
             ),
             optional(
               keyword("END-UNSTRING")
@@ -17879,10 +17871,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               ),
               optional(
-                onException()
-              ),
-              optional(
-                notOnException()
+                permuted(
+                  onException(),
+                  notOnException()
+                )
               ),
               optional(
                 keyword("END-WAIT")
@@ -18139,10 +18131,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              onException()
-            ),
-            optional(
-              notOnException()
+              permuted(
+                onException(),
+                notOnException()
+              )
             ),
             optional(
               keyword("END-XML")
@@ -18191,10 +18183,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              onException()
-            ),
-            optional(
-              notOnException()
+              permuted(
+                onException(),
+                notOnException()
+              )
             ),
             optional(
               keyword("END-XML")

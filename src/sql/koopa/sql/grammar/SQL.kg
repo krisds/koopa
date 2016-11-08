@@ -177,6 +177,7 @@ def alterStatement =
       | TRIGGER                                      # [IBM DB2 SQL Statements]
       | TRUSTED CONTEXT                              # [IBM DB2 SQL Statements]
       | VIEW                                         # [IBM DB2 SQL Statements]
+      | SESSION                                      # IBM, Oracle
       )
     ]
 

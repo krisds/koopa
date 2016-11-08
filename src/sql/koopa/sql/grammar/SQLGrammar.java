@@ -1025,7 +1025,8 @@ public class SQLGrammar extends SQLBaseGrammar {
                     keyword("TRUSTED"),
                     keyword("CONTEXT")
                   ),
-                  keyword("VIEW")
+                  keyword("VIEW"),
+                  keyword("SESSION")
                 )
               )
             ),

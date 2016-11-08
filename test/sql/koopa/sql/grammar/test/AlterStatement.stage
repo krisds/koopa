@@ -17,3 +17,7 @@ target alterStatement;
 +[ ALTER VIEW                   FOO etc etc ]
 # Catch-all:
 +[ ALTER                        FOO etc etc ]
+
++[ alter session set nls_date_format = 'DD-MON-YYYY HH24:MI:SS' ]
++[ ALTER SESSION SET PRIORITY TO CRITICAL ]
++[ ALTER SESSION 42 ROLLBACK TRANSACTION ]

@@ -1,35 +1,83 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <--------------------------------------------------------------------------->^
+FIXED                                                                        FIXED
+_                                                                            _
 _                                                                            EOLN
+
 
 -INC TEXTNAME  witty remark
 <-->^<------><------------>^
-CD SEP/CD CD COMMENT       EOLN
+FXD F FIXED  FIXED         FIXED
+DIR D DIR    COMMENT       _
+_   : _      _             EOLN
+
 
        >> source format is free
 <----------------------------->^
-CD                             eoln
+FIXED                          FREE
+COMPILER_DIRECTIVE             _
+_                              EOLN
+
 
 >> source format is fixed
 <----------------------->^
-cd                       EOLN
+FREE                     FIXED
+COMPILER_DIRECTIVE       _
+_                        EOLN
+
 
        >> source format is free    *> witty remark
 <---------------------------------><------------->^
-CD                                 COMMENT        eoln
+FIXED                              FIXED          FREE
+COMPILER_DIRECTIVE                 COMMENT        _
+_                                  _              EOLN
+
 
 >> source format is fixed    *> witty remark
 <---------------------------><------------->^
-cd                           comment        EOLN
+FREE                         FREE           FIXED
+COMPILER_DIRECTIVE           COMMENT        _
+_                            _              EOLN
+
 
        >> source free
 <------------------->^
-CD                   eoln
+FIXED                FREE
+COMPILER_DIRECTIVE   _
+_                    EOLN
+
 
 >> source fixed
 <------------->^
-cd             EOLN
+FREE           FIXED
+DIRECTIVE      _
+_              EOLN
+
 
 $ SET SOURCEFORMAT "FREE"
 <----------------------->^
-CD                       EOLN
+FIXED                    FREE
+COMPILER_DIRECTIVE       _
+_                        EOLN
+
+
+$ SET SOURCEFORMAT (FIXED)
+<------------------------>^
+FREE                      FIXED
+COMPILER_DIRECTIVE        _
+_                         EOLN
+
+
+# This one comes from the real world:
+$set SOURCEFORMAT"VARIABLE" OUTDD"SYSOUT 121 R"
+<--------------------------------------------->^
+FIXED                                          VARIABLE
+COMPILER_DIRECTIVE                             _
+_                                              EOLN
+
+
+       >> source fixed
+<-------------------->^
+VARIABLE              FIXED
+COMPILER_DIRECTIVE    _
+_                     EOLN

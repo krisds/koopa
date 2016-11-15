@@ -4,7 +4,6 @@ import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
 import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
 import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
 import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
-import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
@@ -57,6 +56,9 @@ public class ContinuationWelding extends ChainingSource<Token, Token> implements
 		// parts.
 		List<Token> tokens = new ArrayList<Token>();
 		tokens.add(token);
+		
+		// We'll retain the format of the leading token.
+		final SourceFormat format = SourceFormat.forToken(token);
 
 		// While the token is being continued...
 		while (token != null && token.hasTag(CONTINUED)) {
@@ -95,7 +97,7 @@ public class ContinuationWelding extends ChainingSource<Token, Token> implements
 		}
 
 		final Token composedToken = Tokens.join(tokens, PROGRAM_TEXT_AREA,
-				FIXED);
+				format);
 
 		// Add the composed token.
 		buffer.addLast(composedToken);

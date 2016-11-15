@@ -1,3 +1,5 @@
            *> Stop bashing COBOL.
 <---->^<-->^^^<-->^<----->^<--->^^
-SEQNR I WS COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT COMMENT EOLN/TEXT
+FIXED F FXD  F F F F F F  F FXD F FIXED
+_     _ TEXT C C C C C C  C C   C TEXT
+SEQNR I WS   _ _ _ _ _ _  _ _   _ EOLN

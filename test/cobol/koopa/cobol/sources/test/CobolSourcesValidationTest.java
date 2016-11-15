@@ -10,24 +10,13 @@ import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
 import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
-import static koopa.core.data.tags.AreaTag.COMMENT;
-import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
-import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
-import static koopa.core.data.tags.SyntacticTag.NUMBER;
-import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
-import static koopa.core.data.tags.SyntacticTag.STRING;
-import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
-import static koopa.core.data.tags.SyntacticTag.WORD;
-import static org.junit.Assert.assertTrue;
+import static koopa.cobol.sources.SourceFormat.VARIABLE;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationWelding;
@@ -41,60 +30,31 @@ import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.sources.TokenSeparator;
-import koopa.core.sources.test.AnnotatedSourceSample;
-import koopa.core.sources.test.TokenValidator;
-import koopa.core.util.test.FileBasedTest;
+import koopa.core.sources.test.CoreSourcesValidationTest;
+import koopa.core.sources.test.samples.Sample;
 import koopa.core.util.test.Files;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * This class provides the infrastructure for testing the different Cobol
- * tokenizer stages. It looks for ".sample" files, and runs each one it finds
- * through a JUnit test.
+ * sources. It looks for ".sample" files, and runs each one it finds through a
+ * JUnit test.
  */
 @RunWith(Files.class)
-public class CobolSourcesValidationTest implements FileBasedTest,
-		TokenValidator {
+public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
-	public File[] getFiles() {
-		File folder = new File("test/cobol/koopa/cobol/sources/test/");
-
-		File[] sources = folder.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				name = name.toLowerCase();
-				return name.endsWith(".sample");
-			}
-		});
-
-		return sources;
+	@Override
+	protected File getFolder() {
+		return new File("test/cobol/koopa/cobol/sources/test/");
 	}
 
-	private File file;
+	@Override
+	protected Source<Token> getSource(String resourceName, Sample sample) {
+		SourceFormat format = SourceFormat.FIXED;
 
-	public void setFile(File file) {
-		this.file = file;
-	}
-
-	@Test
-	public void testSampleValidates() throws IOException {
-		AnnotatedSourceSample sample = new AnnotatedSourceSample(
-				new FileReader(file));
-
-		Source<Token> source = getSource(file.getAbsolutePath(), sample, FIXED);
-
-		sample.assertOutputIsAsExpected(source, this);
-	}
-
-	private Source<Token> getSource(String resourceName,
-			AnnotatedSourceSample sample, SourceFormat format) {
 		Source<Token> source = null;
 
 		source = new LineSplitter(resourceName, sample.getReader());
 
-		// TODO Get source format from file name as well, somehow.
 		source = new CompilerDirectives(source, format);
 		if (file.getName().startsWith("CompilerDirectives"))
 			return source;
@@ -134,90 +94,40 @@ public class CobolSourcesValidationTest implements FileBasedTest,
 		return null;
 	}
 
-	private static final Map<String, Object[]> TAG_VALIDATIONS;
-	static {
-		TAG_VALIDATIONS = new HashMap<String, Object[]>();
+	@Before
+	public void initialize() {
+		super.initialize();
 
-		TAG_VALIDATIONS.put(":", new Object[] { SEPARATOR });
-		TAG_VALIDATIONS.put("SEP", new Object[] { SEPARATOR });
+		final Object[] fixed = new Object[] { FIXED };
+		addCategory("FIXED", fixed);
+		addCategory("FXD", fixed);
+		addCategory("F", fixed);
 
-		TAG_VALIDATIONS.put(".", new Object[] { SEPARATOR, WHITESPACE });
-		TAG_VALIDATIONS.put("WS", new Object[] { SEPARATOR, WHITESPACE });
+		final Object[] free = new Object[] { FREE };
+		addCategory("FREE", free);
+		addCategory("f", free);
 
-		TAG_VALIDATIONS.put("EOLN", new Object[] { END_OF_LINE, FIXED });
-		TAG_VALIDATIONS.put("eoln", new Object[] { END_OF_LINE, FREE });
+		final Object[] variable = new Object[] { VARIABLE };
+		addCategory("VARIABLE", variable);
+		addCategory("VAR", variable);
+		addCategory("V", variable);
 
-		TAG_VALIDATIONS.put("CD", new Object[] { COMPILER_DIRECTIVE, FIXED });
-		TAG_VALIDATIONS.put("cd", new Object[] { COMPILER_DIRECTIVE, FREE });
+		addCategory("SEQNR", new Object[] { SEQUENCE_NUMBER_AREA });
 
-		TAG_VALIDATIONS.put("COMMENT", new Object[] { COMMENT, FIXED });
-		TAG_VALIDATIONS.put("comment", new Object[] { COMMENT, FREE });
+		addCategory("I", new Object[] { INDICATOR_AREA });
 
-		TAG_VALIDATIONS.put("SEQNR",
-				new Object[] { SEQUENCE_NUMBER_AREA, FIXED });
-		TAG_VALIDATIONS.put("seqnr",
-				new Object[] { SEQUENCE_NUMBER_AREA, FREE });
+		addCategory("IDENT", new Object[] { IDENTIFICATION_AREA });
 
-		TAG_VALIDATIONS.put("I", new Object[] { INDICATOR_AREA, FIXED });
-		TAG_VALIDATIONS.put("i", new Object[] { INDICATOR_AREA, FREE });
+		addCategory("PSEUDO", new Object[] { PSEUDO_LITERAL });
 
-		TAG_VALIDATIONS.put("TEXT", new Object[] { PROGRAM_TEXT_AREA, FIXED });
-		TAG_VALIDATIONS.put("text", new Object[] { PROGRAM_TEXT_AREA, FREE });
+		addCategory("CTD__", new Object[] { CONTINUED });
+		addCategory("_CTD_", new Object[] { CONTINUING, CONTINUED });
+		addCategory("__CTD", new Object[] { CONTINUING });
 
-		TAG_VALIDATIONS.put("IDENT",
-				new Object[] { IDENTIFICATION_AREA, FIXED });
-		TAG_VALIDATIONS
-				.put("ident", new Object[] { IDENTIFICATION_AREA, FREE });
+		addCategory("LQ", new Object[] { LEADING_QUOTE });
 
-		TAG_VALIDATIONS.put("FORMATTING", new Object[] {
-				SOURCE_FORMATTING_DIRECTIVE, FIXED });
-		TAG_VALIDATIONS.put("formatting", new Object[] {
-				SOURCE_FORMATTING_DIRECTIVE, FREE });
-
-		TAG_VALIDATIONS.put("STRING",
-				new Object[] { STRING, PROGRAM_TEXT_AREA });
-
-		TAG_VALIDATIONS.put("N", new Object[] { NUMBER, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("NUM", new Object[] { NUMBER, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("NUMBER",
-				new Object[] { NUMBER, PROGRAM_TEXT_AREA });
-
-		TAG_VALIDATIONS.put("W", new Object[] { WORD, PROGRAM_TEXT_AREA });
-		TAG_VALIDATIONS.put("WORD", new Object[] { WORD, PROGRAM_TEXT_AREA });
-
-		TAG_VALIDATIONS.put("PSEUDO", new Object[] { PSEUDO_LITERAL,
-				PROGRAM_TEXT_AREA });
-
-		TAG_VALIDATIONS.put("CTD__", new Object[] { CONTINUED });
-		TAG_VALIDATIONS.put("_CTD_", new Object[] { CONTINUING, CONTINUED });
-		TAG_VALIDATIONS.put("__CTD", new Object[] { CONTINUING });
-
-		TAG_VALIDATIONS.put("LQ", new Object[] { LEADING_QUOTE });
-
-		TAG_VALIDATIONS.put("SKIPPED", new Object[] { SKIPPED });
-	}
-
-	public void validate(Token token, String category) {
-		if ("_".equalsIgnoreCase(category)) {
-			// Don't care.
-			return;
-		}
-
-		if ("?".equalsIgnoreCase(category)) {
-			// This one is used for debugging.
-			System.out.println(token);
-			return;
-		}
-
-		if (TAG_VALIDATIONS.containsKey(category)) {
-			Object[] expectedTags = TAG_VALIDATIONS.get(category);
-			for (Object tag : expectedTags) {
-				assertTrue("Missing " + tag + " on " + token + ".",
-						token.hasTag(tag));
-			}
-
-		} else {
-			System.out.println("Warning! Unknown category: " + category);
-		}
+		final Object[] skipped = new Object[] { SKIPPED };
+		addCategory("SKIPPED", skipped);
+		addCategory("SKP", skipped);
 	}
 }

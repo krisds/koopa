@@ -2,6 +2,7 @@ package koopa.cobol.grammar;
 
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
+import static koopa.cobol.sources.SourceFormat.VARIABLE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
@@ -220,8 +221,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						return false;
 
 					// So, what is it ?
-					final SourceFormat format = peek.hasTag(FREE) ? FREE
-							: FIXED;
+					final SourceFormat format = SourceFormat.forToken(peek);
 
 					// We want to only confirm a comment entry match if we saw
 					// something other than whitespace.
@@ -270,7 +270,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						// We're allowing words in area A, except for those
 						// mentioned by OSVS. It seems like a reasonable
 						// default.
-						if (format == FIXED
+						if ((format == FIXED || format == VARIABLE)
 								&& token.getStart().getPositionInLine() < 11
 								&& END_OF_COMMENT_ENTRY_MARKERS.contains(text)) {
 							stream.rewind(token);

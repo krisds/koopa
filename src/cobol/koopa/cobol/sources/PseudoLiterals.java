@@ -106,8 +106,9 @@ public class PseudoLiterals extends ThreadedSource<Token, Token> implements
 			// else ignore...
 		}
 
-		Token pseudoliteral = Tokens.join(tokens, PROGRAM_TEXT_AREA,
-				PSEUDO_LITERAL);
+		final SourceFormat format = SourceFormat.forToken(tokens.get(0));
+		final Token pseudoliteral = Tokens.join(tokens, PROGRAM_TEXT_AREA,
+				PSEUDO_LITERAL, format);
 
 		enqueue(pseudoliteral);
 	}

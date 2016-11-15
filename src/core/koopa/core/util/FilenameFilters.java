@@ -61,4 +61,26 @@ public final class FilenameFilters {
 			}
 		};
 	}
+
+	/**
+	 * Return a {@linkplain FilenameFilter} which only accepts files which have
+	 * the given extension (as determined by
+	 * {@linkplain Files#getExtension(String)}).
+	 */
+	public static FilenameFilter forExtension(final String expectedExtension,
+			final boolean ignoreCase) {
+		return new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				final String actualExtension = Files.getExtension(name);
+
+				if (expectedExtension == null)
+					return actualExtension == null
+							|| actualExtension.equals("");
+				else if (ignoreCase)
+					return expectedExtension.equalsIgnoreCase(actualExtension);
+				else
+					return expectedExtension.equals(actualExtension);
+			}
+		};
+	}
 }

@@ -1,6 +1,8 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN/TEXT
+FIXED F FIXED                                                           FIXED FIXED
+_     _ COMMENT                                                         _     TEXT
+SEQNR I _                                                               IDENT EOLN
 
 
 # Continued string literals. ##################################################
@@ -8,11 +10,18 @@ SEQNR I COMMENT                                                         IDENT EO
 
         DISPLAY "HELLO
 <---->^<------------->^
-SEQNR I CTD__/TEXT    EOLN/SKIPPED/COMMENT
+FIXED F FIXED         FIXED
+_     _ CTD__         SKIPPED
+_     _ TEXT          COMMENT
+SEQNR I _             EOLN
+
 
       -         " WORLD".
 <---->^<-------><------->^
-SEQNR I SKIPPED  __CTD/LQ/TEXT EOLN/TEXT
+FIXED F FIXED   FIXED    FIXED
+_     _ SKIPPED __CTD/LQ _
+_     _ _       TEXT     TEXT
+SEQNR I _       _        EOLN
 
 
 # Continued string literals. ##################################################
@@ -20,11 +29,18 @@ SEQNR I SKIPPED  __CTD/LQ/TEXT EOLN/TEXT
 
         DISPLAY 'HELLO
 <---->^<------------->^
-SEQNR I CTD__/TEXT    EOLN/SKIPPED/COMMENT
+FIXED F FIXED         FIXED
+_     _ CTD__         SKIPPED
+_     _ TEXT          COMMENT
+SEQNR I _             EOLN
+
 
       -         ' WORLD'.
 <---->^<-------><------->^
-SEQNR I SKIPPED  __CTD/LQ/TEXT  EOLN/TEXT
+FIXED F FIXED   FIXED    FIXED
+_     _ SKIPPED __CTD/LQ _
+_     _ _       TEXT     TEXT
+SEQNR I _       _        EOLN
 
 
 # Continued picture strings. ##################################################
@@ -32,11 +48,18 @@ SEQNR I SKIPPED  __CTD/LQ/TEXT  EOLN/TEXT
 
        01 FIELD-37A PIC S9(
 <---->^<------------------>^
-SEQNR I CTD__/TEXT         EOLN/SKIPPED/COMMENT
+FIXED F FIXED              FIXED
+_     _ CTD__              SKIPPED
+_     _ TEXT               COMMENT
+SEQNR I _                  EOLN
+
 
       -                    6)V9(6).
 <---->^<------------------><------>^
-SEQNR I SKIPPED         __CTD/TEXT EOLN/TEXT
+FIXED F FIXED              FIXED   FIXED
+_     _ SKIPPED            __CTD   _
+_     _ _                  TEXT    TEXT
+SEQNR I _                  _       EOLN
 
 
 # Continued cobol words. ######################################################
@@ -44,33 +67,57 @@ SEQNR I SKIPPED         __CTD/TEXT EOLN/TEXT
 
        MOVE SPACEMAN-SPIFF TO THE-FIFTH-
 <---->^<------------------------------->^
-SEQNR I CTD__/TEXT                      EOLN/SKIPPED/COMMENT
+FIXED F FIXED                           FIXED
+_     _ CTD__                           SKIPPED
+_     _ TEXT                            COMMENT
+SEQNR I _                               EOLN
 
       -     DIMENSION.
 <---->^<---><-------->^
-SEQNR I SKIPPED __CTD/TEXT EOLN/TEXT
+FIXED F FXD  FIXED    FIXED
+_     _ SKP  __CTD    _
+_     _ _    TEXT     TEXT
+SEQNR I _    _        EOLN
 
 
        ACCEPT THE-ANSWER-TO-QUESTION-7
 <---->^<----------------------------->^
-SEQNR I CTD__/TEXT                    EOLN/SKIPPED/COMMENT
+FIXED F FIXED                         FIXED
+_     _ CTD__                         SKIPPED
+_     _ TEXT                          COMMENT
+SEQNR I _                             EOLN
+
 
       -       -FROM-SUSIE-DERKINS.
 <---->^<-----><------------------>^
-SEQNR I SKIPPED __CTD/TEXT        EOLN/TEXT
+FIXED F FIXED  FIXED              FIXED
+_     _ SKP    __CTD              _
+_     _ _      TEXT               TEXT
+SEQNR I _      _                  EOLN
 
 
        ADD 100 TO MONEY-SAVED-
 <---->^<--------------------->^
-SEQNR I CTD__/TEXT            EOLN/SKIPPED/COMMENT
+FIXED F FIXED                 FIXED
+_     _ CTD__                 SKIPPED
+_     _ TEXT                  COMMENT
+SEQNR I _                     EOLN
+
 
       -           WHILE
 <---->^<---------><--->^
-SEQNR I SKIPPED  _CTD_/TEXT EOLN/SKIPPED/COMMENT
+FIXED F FIXED    FIXED FIXED
+_     _ SKIPPED  _CTD_ SKIPPED
+_     _ _        TEXT  COMMENT
+SEQNR I _        _     EOLN
+
 
       -           -BUILDING-CHARACTER.
 <---->^<---------><------------------>^
-SEQNR I SKIPPED    __CTD/TEXT         EOLN/TEXT
+FIXED F FIXED     FIXED               FIXED
+_     _ SKIPPED   __CTD               _
+_     _ _         TEXT                TEXT
+SEQNR I _         _                   EOLN
 
 
 # Intermediate comment lines. #################################################
@@ -78,29 +125,50 @@ SEQNR I SKIPPED    __CTD/TEXT         EOLN/TEXT
 
        DISPLAY THE-FIFTH-
 <---->^<---------------->^
-SEQNR I CTD__/TEXT       EOLN/SKIPPED/COMMENT
+FIXED F FIXED            FIXED
+_     _ CTD__            SKIPPED
+_     _ TEXT             COMMENT
+SEQNR I _                EOLN
+
 
       * This comment is here. Obviously.
 <---->^<------------------------------->^
-SEQNR I SKIPPED                         EOLN/SKIPPED/COMMENT
+FIXED F FIXED                           FIXED
+_     _ SKIPPED                         SKIPPED
+_     _ COMMENT                         COMMENT
+SEQNR I _                               EOLN
+
 
       -     DIMENSION.
 <---->^<---><-------->^
-SEQNR I SKIPPED __CTD/TEXT EOLN/TEXT
-
+FIXED F FXD  FIXED    FIXED
+_     _ SKP  __CTD    _
+_     _ _    TEXT     TEXT
+SEQNR I _    _        EOLN
 
 
        DISPLAY THE-FIFTH-
 <---->^<---------------->^
-SEQNR I CTD__/TEXT       EOLN/SKIPPED/COMMENT
+FIXED F FIXED            FIXED
+_     _ CTD__            SKIPPED
+_     _ TEXT             COMMENT
+SEQNR I _                EOLN
+
 
       *
 <---->^^
-SEQNR I EOLN/SKIPPED/COMMENT
+FIXED F FIXED
+_     _ SKIPPED
+_     _ COMMENT
+SEQNR I EOLN
+
 
       -     DIMENSION.
 <---->^<---><-------->^
-SEQNR I SKIPPED __CTD/TEXT EOLN/TEXT
+FIXED F FXD  FIXED    FIXED
+_     _ SKP  __CTD    _
+_     _ _    TEXT     TEXT
+SEQNR I _    _        EOLN
 
 
 # Continued decimals. #########################################################
@@ -108,31 +176,57 @@ SEQNR I SKIPPED __CTD/TEXT EOLN/TEXT
 
        MOVE -
 <---->^<---->^
-SEQNR I CTD__/TEXT EOLN/SKIPPED/COMMENT
+FIXED F FIXED FIXED
+_     _ CTD__ SKIPPED
+_     _ TEXT  COMMENT
+SEQNR I _     EOLN
+
 
       -     100
 <---->^<---><->^
-SEQNR I SKIPPED  _CTD_/TEXT  EOLN/SKIPPED/COMMENT
+FIXED F FXD FIXED FIXED
+_     _ SKP _CTD_ SKIPPED
+_     _ _   TEXT  COMMENT
+SEQNR I _   _     EOLN
+
 
       -     000
 <---->^<---><->^
-SEQNR I SKIPPED  _CTD_/TEXT  EOLN/SKIPPED/COMMENT
+FIXED F FXD  FIXED FIXED
+_     _ SKP  _CTD_ SKIPPED
+_     _ _    TEXT  COMMENT
+SEQNR I _    _     EOLN
+
 
       -     000
 <---->^<---><->^
-SEQNR I SKIPPED  _CTD_/TEXT  EOLN/SKIPPED/COMMENT
+FIXED F FXD FIXED FIXED
+_     _ SKP _CTD_ SKIPPED
+_     _ _   TEXT  COMMENT
+SEQNR I _   _     EOLN
+
 
       -     .
 <---->^<--->^^
-SEQNR I SKIPPED  _CTD_/TEXT  EOLN/SKIPPED/COMMENT
+FIXED F FXD FIXED FIXED
+_     _ SKP _CTD_ SKIPPED
+_     _ _   TEXT  COMMENT
+SEQNR I _   _     EOLN
+
 
       -     000
 <---->^<---><->^
-SEQNR I SKIPPED  _CTD_/TEXT  EOLN/SKIPPED/COMMENT
+FIXED F FXD FIXED FIXED
+_     _ SKP _CTD_ SKIPPED
+_     _ _   TEXT  COMMENT
+SEQNR I _   _     EOLN
 
       -     000 TO TWELVE-AND-SEVEN.
 <---->^<---><---------------------->^
-SEQNR I SKIPPED  __CTD/TEXT         EOLN/TEXT
+FIXED F FXD  FIXED                  FIXED
+_     _ SKP  __CTD                  _
+_     _ _    TEXT                   TEXT
+SEQNR I _    _                      EOLN
 
 
 # Continuations and quoted quotes. ############################################
@@ -140,32 +234,58 @@ SEQNR I SKIPPED  __CTD/TEXT         EOLN/TEXT
 
        DISPLAY "I want to be introduced as ""Calvin, boy of destiny."" B
 <---->^<--------------------------------------------------------------->^
-SEQNR I CTD__/TEXT                                                      EOLN/SKIPPED/COMMENT
+FIXED F FIXED                                                           FIXED
+_     _ CTD__                                                           SKIPPED
+_     _ TEXT                                                            COMMENT
+SEQNR I _                                                               EOLN
+
 
       -        "ut you have to say it right, pause a little after ""boy,
 <---->^<------><------------------------------------------------------->^
-SEQNR I SKIPPED  _CTD_/LQ/TEXT                                          EOLN/SKIPPED/COMMENT
+FIXED F FIXED    FIXED                                                  FIXED
+_     _ SKIPPED  _CTD_/LQ                                               SKIPPED
+_     _ _        TEXT                                                   COMMENT
+SEQNR I _        _                                                      EOLN
+
 
       -        """ and say ""Destiny"" a bit slower and deeper for empha
 <---->^<------><------------------------------------------------------->^
-SEQNR I SKIPPED  _CTD_/LQ/TEXT                                          EOLN/SKIPPED/COMMENT
+FIXED F FIXED    FIXED                                                  FIXED
+_     _ SKIPPED  _CTD_/LQ                                               SKIPPED
+_     _ _        TEXT                                                   COMMENT
+SEQNR I _        _                                                      EOLN
+
 
       -        "sis. Say it, ""Boy... Of Dessstiny,"" Like that!".
 <---->^<------><------------------------------------------------->^
-SEQNR I SKIPPED  __CTD/LQ/TEXT                                    EOLN/TEXT
+FIXED F FIXED    FIXED                                            FIXED
+_     _ SKIPPED  __CTD/LQ                                         _
+_     _ _        TEXT                                             TEXT
+SEQNR I _        _                                                EOLN
 
       
        MOVE    'thoroughly
 <---->^<----------------->^
-SEQNR I CTD__/TEXT        EOLN/SKIPPED/COMMENT
+FIXED F FIXED             FIXED
+_     _ CTD__             SKIPPED
+_     _ TEXT              COMMENT
+SEQNR I _                 EOLN
+
 
       -        ' useless 
 <---->^<------><-------->^
-SEQNR I SKIPPED _CTD_/LQ/TEXT EOLN/SKIPPED/COMMENT
+FIXED F FIXED   FIXED    FIXED
+_     _ SKIPPED _CTD_/LQ SKIPPED
+_     _ _       TEXT     COMMENT
+SEQNR I _       _        EOLN
+
 
       -        'information' TO CALVINS-COMMAND.
 <---->^<------><------------------------------->^
-SEQNR I SKIPPED __CTD/LQ/TEXT                   EOLN/TEXT
+FIXED F FIXED   FIXED                           FIXED
+_     _ SKIPPED __CTD/LQ                        _
+_     _ _       TEXT                            TEXT
+SEQNR I _       _                               EOLN
 
       
 # The quoted quote may also be continued in mid-quoting. Which means adding yet
@@ -173,13 +293,23 @@ SEQNR I SKIPPED __CTD/LQ/TEXT                   EOLN/TEXT
 
        MOVE                                'Our class voted Calvin the '
 <---->^<--------------------------------------------------------------->^
-SEQNR I CTD__/TEXT                                                      EOLN/SKIPPED/COMMENT
+FIXED F FIXED                                                           FIXED
+_     _ CTD__                                                           SKIPPED
+SEQNR I TEXT                                                            COMMENT
+SEQNR I _                                                               EOLN
+
 
       -                   ''Most likely to be seen on the news some day'
 <---->^<-----------------><-------------------------------------------->^
-SEQNR I SKIPPED            _CTD_/LQ/TEXT                                EOLN/SKIPPED/COMMENT
+FIXED F FIXED              FIXED                                        FIXED
+_     _ SKIPPED            _CTD_/LQ                                     SKIPPED
+_     _ _                  TEXT                                         COMMENT
+SEQNR I _                  _                                            EOLN
+
 
       -     ''.' TO SUSIE-QUOTE.
 <---->^<---><------------------>^
-SEQNR I SKIPPED __CTD/LQ/TEXT   EOLN/TEXT
-
+FIXED F FIXED   FIXED           FIXED
+_     _ SKIPPED __CTD/LQ        _
+_     _ _       TEXT            TEXT
+SEQNR I _       _               EOLN

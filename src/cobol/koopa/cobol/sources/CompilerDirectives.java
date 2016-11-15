@@ -2,6 +2,8 @@ package koopa.cobol.sources;
 
 import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
 import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
+import static koopa.cobol.sources.SourceFormat.FIXED;
+import static koopa.cobol.sources.SourceFormat.VARIABLE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
@@ -17,8 +19,8 @@ import koopa.core.sources.Source;
 
 import org.apache.log4j.Logger;
 
-public class CompilerDirectives extends ChainingSource<Token, Token> implements
-		Source<Token> {
+public class CompilerDirectives extends ChainingSource<Token, Token>
+		implements Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.compiler_directives");
@@ -53,13 +55,13 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 		if (token.tagCount() > 0)
 			return token.withTags(referenceFormat);
 
+		if (isMicroFocusCompilerDirective(token))
+			return queuedTokens.removeFirst();
+		
 		if (isCompilerDirective(token))
 			return queuedTokens.removeFirst();
 
 		if (isLibrarianIncDirective(token))
-			return queuedTokens.removeFirst();
-
-		if (isMicroFocusCompilerDirective(token))
 			return queuedTokens.removeFirst();
 
 		if (isTitleStatement(token))
@@ -93,14 +95,14 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 	private static final int INLINE_COMMENT_GROUP = 4;
 
 	/**
-	 * Based on ISO/IEC 1989:20xx FCD 1.0 (E), section 7.3
-	 * "Compiler directives".
+	 * Based on ISO/IEC 1989:20xx FCD 1.0 (E), section 7.3 "Compiler directives"
+	 * .
 	 */
 	private boolean isCompilerDirective(Token token) {
 		final String text = token.getText().toUpperCase();
 
 		final Matcher matcher;
-		if (referenceFormat == SourceFormat.FIXED)
+		if (referenceFormat == FIXED || referenceFormat == VARIABLE)
 			matcher = FIXED_FORM_COMPILER_DIRECTIVE.matcher(text);
 		else
 			matcher = FREE_FORM_COMPILER_DIRECTIVE.matcher(text);
@@ -158,14 +160,14 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 		int start = matcher.start(LIBRARIAN_INC_TEXTNAME_GROUP);
 		int end = matcher.end(LIBRARIAN_INC_TEXTNAME_GROUP);
 
-		final Token inc = Tokens.subtoken(token, 0, 4).withTags(
-				COMPILER_DIRECTIVE, referenceFormat);
+		final Token inc = Tokens.subtoken(token, 0, 4)
+				.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
-		final Token ws = Tokens.subtoken(token, 4, start).withTags(
-				COMPILER_DIRECTIVE, SEPARATOR, referenceFormat);
+		final Token ws = Tokens.subtoken(token, 4, start)
+				.withTags(COMPILER_DIRECTIVE, SEPARATOR, referenceFormat);
 
-		final Token textName = Tokens.subtoken(token, start, end).withTags(
-				COMPILER_DIRECTIVE, referenceFormat);
+		final Token textName = Tokens.subtoken(token, start, end)
+				.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace(inc);
@@ -192,6 +194,7 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 
 	// ========================================================================
 
+	// TODO Does this need support for "VARIABLE" ?
 	private static final Pattern SOURCE_FORMAT_DIRECTIVE = Pattern
 			.compile("^SOURCE(\\s+FORMAT)?(\\s+IS)?\\s+(FREE|FIXED)\\s*$");
 
@@ -219,28 +222,41 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 
 	// ========================================================================
 
+	// References
+	// https://supportline.microfocus.com/documentation/books/sx2011sp1/cyadir.htm
+	// http://documentation.microfocus.com/help/index.jsp?topic=%2FGUID-0E0191D8-C39A-44D1-BA4C-D67107BAF784%2FHRCDRHCDIR56.html
+	// http://documentation.microfocus.com/help/index.jsp?topic=%2FGUID-0E0191D8-C39A-44D1-BA4C-D67107BAF784%2FHRCDRHCDIR0W.html
+
 	// For the '$ SET SOURCEFORMAT'. A MicroFocus compiler directive.
 	private static final Pattern MF_SET_DIRECTIVE = Pattern
-			.compile("^\\s*\\$\\s*SET\\s+SOURCEFORMAT(\\s|\"|\\().*");
+			.compile("^\\s*\\$\\s*SET\\s+SOURCEFORMAT\\s*(\\S+).*");
+
+	private static final int MF_SOURCEFORMAT_FORMAT_GROUP = 1;
 
 	private boolean isMicroFocusCompilerDirective(Token token) {
-		// TODO Find some real documentation on this statement.
-		// TODO When the directive sets the sourceformat, use that to switch the
-		// Koopa tokenizer source referenceFormat ?
 		final String text = token.getText();
 
 		// TODO Make this match more exact ? Right now it can accept bad inputs,
 		// but that may be fine...
 		final Matcher matcher = MF_SET_DIRECTIVE.matcher(text.toUpperCase());
 
-		if (!matcher.find()) {
+		if (!matcher.find())
 			return false;
-		}
 
 		token = token.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("MicroFocus compiler directive: " + token);
+		
+		String format = matcher.group(MF_SOURCEFORMAT_FORMAT_GROUP);
+		format = format.substring(1, format.length() - 1).toUpperCase();
+		
+		if ("FREE".equals(format))
+			referenceFormat = SourceFormat.FREE;
+		else if ("VARIABLE".equals(format))
+			referenceFormat = SourceFormat.VARIABLE;
+		else
+			referenceFormat = SourceFormat.FIXED;
 
 		queuedTokens.addFirst(token);
 		return true;
@@ -292,8 +308,8 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 
 		final String text = token.getText();
 
-		final Matcher matcher = CBL_PROCESS_STATEMENT.matcher(text
-				.toUpperCase());
+		final Matcher matcher = CBL_PROCESS_STATEMENT
+				.matcher(text.toUpperCase());
 
 		if (!matcher.find()) {
 			return false;
@@ -342,8 +358,7 @@ public class CompilerDirectives extends ChainingSource<Token, Token> implements
 		}
 
 		final int endOfToken = Math.min(text.length(), 72);
-		final Token directive = Tokens
-				.subtoken(token, startOfToken, endOfToken) //
+		final Token directive = Tokens.subtoken(token, startOfToken, endOfToken) //
 				.withTags(COMPILER_DIRECTIVE, referenceFormat);
 
 		if (LOGGER.isTraceEnabled())

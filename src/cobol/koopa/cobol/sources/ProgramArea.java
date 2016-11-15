@@ -5,6 +5,7 @@ import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
 import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
+import static koopa.cobol.sources.SourceFormat.VARIABLE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
@@ -19,8 +20,8 @@ import koopa.core.sources.ThreadedSource;
 
 import org.apache.log4j.Logger;
 
-public class ProgramArea extends ThreadedSource<Token, Token> implements
-		Source<Token> {
+public class ProgramArea extends ThreadedSource<Token, Token>
+		implements Source<Token> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.program_area");
@@ -49,7 +50,6 @@ public class ProgramArea extends ThreadedSource<Token, Token> implements
 			}
 
 			if (token.hasTag(COMMENT) || token.hasTag(COMPILER_DIRECTIVE)) {
-
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("Whitespace: " + token);
 
@@ -65,9 +65,7 @@ public class ProgramArea extends ThreadedSource<Token, Token> implements
 				continue;
 			}
 
-			SourceFormat format = FIXED;
-			if (token.hasTag(FREE))
-				format = FREE;
+			final SourceFormat format = SourceFormat.forToken(token);
 
 			if (format == FREE) {
 				int c = text.charAt(0);
@@ -76,28 +74,11 @@ public class ProgramArea extends ThreadedSource<Token, Token> implements
 					// This is only an indicator if it gets followed by a space.
 					// Otherwise it's program text.
 					if (text.charAt(1) == ' ') {
-						final Token indicator = tokenizeArea(token, 0, 1,
-								INDICATOR_AREA, format);
-
-						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Indicator: " + indicator);
-
-						enqueue(indicator);
-
-						final Token comment = tokenizeArea(token, 1, length,
-								COMMENT, format);
-
-						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Comment: " + comment);
-
-						enqueue(comment);
+						extract(token, 0, 1, INDICATOR_AREA, format);
+						extract(token, 1, length, COMMENT, format);
 
 					} else {
-						// Program text.
-						token = token.withTags(PROGRAM_TEXT_AREA, format);
-						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Program text: " + token);
-						enqueue(token);
+						extract(token, PROGRAM_TEXT_AREA);
 					}
 
 				} else if (indicatesComment(c)) {
@@ -105,92 +86,36 @@ public class ProgramArea extends ThreadedSource<Token, Token> implements
 					//
 					// Note: Keep this after the debug line check, as the
 					// indicatesComment method accepts 'd' and 'D' as well.
-					final Token indicator = tokenizeArea(token, 0, 1,
-							INDICATOR_AREA, format);
-
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("Indicator: " + indicator);
-
-					enqueue(indicator);
-
-					final Token comment = tokenizeArea(token, 1, length,
-							COMMENT, format);
-
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("Comment: " + comment);
-
-					enqueue(comment);
+					extract(token, 0, 1, INDICATOR_AREA, format);
+					extract(token, 1, length, COMMENT, format);
 
 				} else {
-					// Program text.
-					token = token.withTags(PROGRAM_TEXT_AREA, format);
-
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("Program text: " + token);
-
-					enqueue(token);
+					extract(token, PROGRAM_TEXT_AREA);
 				}
 
 			} else if (format == FIXED) {
-				// 1-6 (in Java: 0-5) = sequence number
+				extract(token, 0, 6, SEQUENCE_NUMBER_AREA, format);
 
-				final int endOfSequenceNumber = Math.min(6, length);
-				final Token sequenceNumber = tokenizeArea(token, 0,
-						endOfSequenceNumber, SEQUENCE_NUMBER_AREA, format);
+				final Token indicator = extract(token, 6, 7, INDICATOR_AREA,
+						format);
+				final boolean lineIsComment = indicator != null
+						&& indicatesComment(indicator.charAt(0));
 
-				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("Sequence number: " + sequenceNumber);
+				extract(token, 7, 72,
+						lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
 
-				enqueue(sequenceNumber);
+				extract(token, 72, length, IDENTIFICATION_AREA, format);
 
-				// 7 (in Java: 6) = indicator
-				boolean lineIsComment = false;
-				if (length >= 7) {
-					final int endOfIndicator = Math.min(7, length);
-					final Token indicator = tokenizeArea(token, 6,
-							endOfIndicator, INDICATOR_AREA, format);
+			} else if (format == VARIABLE) {
+				extract(token, 0, 6, SEQUENCE_NUMBER_AREA, format);
 
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("Indicator: " + indicator);
+				final Token indicator = extract(token, 6, 7, INDICATOR_AREA,
+						format);
+				final boolean lineIsComment = indicator != null
+						&& indicatesComment(indicator.charAt(0));
 
-					enqueue(indicator);
-
-					lineIsComment = indicatesComment(text.charAt(6));
-				}
-
-				// 8-72 (in Java: 7-71) = program text
-				if (length >= 8) {
-					final int endOfProgramText = Math.min(72, length);
-					if (lineIsComment) {
-						final Token comment = tokenizeArea(token, 7,
-								endOfProgramText, COMMENT, format);
-
-						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Comment: " + comment);
-
-						enqueue(comment);
-
-					} else {
-						final Token programText = tokenizeArea(token, 7,
-								endOfProgramText, PROGRAM_TEXT_AREA, format);
-
-						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Program text: " + programText);
-
-						enqueue(programText);
-					}
-				}
-
-				// 73-... (in Java: 72-...) = identification
-				if (length >= 73) {
-					final Token identification = tokenizeArea(token, 72,
-							length, IDENTIFICATION_AREA, format);
-
-					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("Identification: " + identification);
-
-					enqueue(identification);
-				}
+				extract(token, 7, length,
+						lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
 
 			} else {
 				// Unexpected referenceFormat.
@@ -202,11 +127,38 @@ public class ProgramArea extends ThreadedSource<Token, Token> implements
 		}
 	}
 
+	private Token extract(Token token, int start, int end, Object tag,
+			final SourceFormat format) {
+		final int length = token.getLength();
+
+		if (start >= length)
+			return null;
+
+		end = Math.min(end, length);
+		final Token extracted = tokenizeArea(token, start, end, tag, format);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(tag + ": " + extracted);
+
+		enqueue(extracted);
+		return extracted;
+	}
+
+	private Token extract(Token token, Object tag) {
+		Token extracted = token.withTags(tag);
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(tag + ": " + extracted);
+
+		enqueue(extracted);
+		return extracted;
+	}
+
 	public static boolean indicatesComment(int c) {
 		return c == '*' || c == '/' || c == '$' || c == 'D' || c == 'd';
 	}
 
-	private Token tokenizeArea(Token token, int begin, int end, Object... tags) {
+	private Token tokenizeArea(Token token, int begin, int end,
+			Object... tags) {
 		return Tokens.subtoken(token, begin, end).withTags(tags);
 	}
 }

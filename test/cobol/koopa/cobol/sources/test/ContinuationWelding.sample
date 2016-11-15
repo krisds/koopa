@@ -1,6 +1,8 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN
+FIXED F FIXED                                                           FIXED FIXED
+_     _ COMMENT                                                         _     TEXT
+SEQNR I _                                                               IDENT EOLN
 
 
 # Continued string literals. ##################################################
@@ -8,9 +10,14 @@ SEQNR I COMMENT                                                         IDENT EO
 
         DISPLAY "HELLO
 <---->^<-------------+^
-SEQNR I +5/TEXT       EOLN/SKIPPED/COMMENT
+FIXED F %             FIXED
+_     _ %             COMMENT
+_     _ %             SKIPPED
+SEQNR I %             EOLN
 
       -         " WORLD".
 <---->^<------->^+------>^
-SEQNR I SKIPPED LQ/COMMENT EOLN
-
+FIXED F FIXED   FIXED   FIXED  FIXED
+_     _ _       COMMENT TEXT   _
+_     _ SKIPPED LQ      _      _
+SEQNR I _       _       _      EOLN

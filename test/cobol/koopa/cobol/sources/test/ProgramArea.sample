@@ -1,34 +1,57 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN/TEXT
+FIXED F FIXED                                                           FIXED FIXED
+_     _ COMMENT                                                         _     TEXT
+SEQNR I _                                                               IDENT EOLN
 
-123456*789A123456789B123456789C123456789D123456789E123456789F123456789G1
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12
 <---->^<--------------------------------------------------------------->^
-SEQNR I COMMENT                                                         EOLN/TEXT
+FIXED F FIXED                                                           FIXED
+_     _ COMMENT                                                         TEXT
+SEQNR I _                                                               EOLN
+
 
        IDENTIFICATION DIVISION.
 <---->^<---------------------->^
-SEQNR I TEXT                   EOLN/TEXT
+FIXED F FIXED                  FIXED
+_     _ TEXT                   TEXT
+SEQNR I _                      EOLN
+
 
        PROGRAM-ID. FOO.
 <---->^<-------------->^
-SEQNR I TEXT           EOLN/TEXT
+FIXED F FIXED          FIXED
+_     _ TEXT           TEXT
+SEQNR I _              EOLN
+
 
        PROCEDURE DIVISION.
 <---->^<----------------->^
-SEQNR I TEXT              EOLN/TEXT
+FIXED F FIXED             FIXED
+_     _ TEXT              TEXT
+SEQNR I _                 EOLN
+
 
 123456*Hello world.
 <---->^<---------->^
-SEQNR I COMMENT    EOLN/TEXT
+FIXED F FIXED       FIXED
+_     _ COMMENT     TEXT
+SEQNR I _           EOLN
+
 
        DISPLAY FOO
 <---->^<--------->^
-SEQNR I TEXT      EOLN/TEXT
+FIXED F FIXED     FIXED
+_     _ TEXT      TEXT
+SEQNR I _         EOLN
+
 
        .
 <---->^^^
-SEQNR I TEXT EOLN/TEXT
+FIXED F FIXED FIXED
+_     _ TEXT      TEXT
+SEQNR I _         EOLN
 
 
 # =============================================================================
@@ -36,22 +59,68 @@ SEQNR I TEXT EOLN/TEXT
 
        >> source free
 <------------------->^
-CD                   eoln
+FIXED                FREE
+COMPILER_DIRECTIVE   TEXT
+_                    EOLN
+
+
+123456789A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
+<--------------------------------------------------------------------------->^
+FREE                                                                         FREE
+TEXT                                                                         TEXT
+_                                                                            EOLN
+
+
+*23456789A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
+^<-------------------------------------------------------------------------->^
+f FREE                                                                       FREE
+_ COMMENT                                                                    TEXT
+I _                                                                          EOLN
+
 
 display "freedom".
 <---------------->^
-text              eoln
+FREE              FREE
+TEXT              TEXT
+_                 EOLN
+
+
+# =============================================================================
+# Switching to VARIABLE mode.
+
+$ SET SOURCEFORMAT "VARIABLE"
+<--------------------------->^
+FREE                         VARIABLE
+COMPILER_DIRECTIVE           TEXT
+_                            EOLN
+
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
+<---->^<-------------------------------------------------------------------->^
+VAR   V VARIABLE                                                             VARIABLE
+_     _ COMMENT                                                              TEXT
+SEQNR I _                                                                    EOLN
+
+
+       DISPLAY FOO.
+<---->^<---------->^
+VAR   V VARIABLE   VARIABLE
+_     _ TEXT       TEXT
+SEQNR I _          EOLN
 
 
 # =============================================================================
 # Switching to FIXED mode.
 
->> source fixed
-<------------->^
-cd             EOLN
+       >> source fixed
+<-------------------->^
+VARIABLE              FIXED
+COMPILER_DIRECTIVE    TEXT
+_                     EOLN
+
 
        DISPLAY FOO.
 <---->^<---------->^
-SEQNR I TEXT       EOLN/TEXT
-
-
+FIXED F FIXED      FIXED
+_     _ TEXT       TEXT
+SEQNR I _          EOLN

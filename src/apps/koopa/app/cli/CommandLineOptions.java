@@ -20,11 +20,13 @@ public class CommandLineOptions {
 			if (option.startsWith("--")) {
 				if (option.equals("--free-format"))
 					format = SourceFormat.FREE;
+				else if (option.equals("--variable-format"))
+					format = SourceFormat.VARIABLE;
 				else if (option.equals("--preprocess"))
 					preprocess = true;
 				else
-					throw new IllegalArgumentException("Unknown option: "
-							+ option);
+					throw new IllegalArgumentException(
+							"Unknown option: " + option);
 
 			} else if (option.startsWith("-")) {
 				if (option.equals("-I")) {
@@ -37,8 +39,8 @@ public class CommandLineOptions {
 					copybookPaths.add(args[i]);
 
 				} else
-					throw new IllegalArgumentException("Unknown option: "
-							+ option);
+					throw new IllegalArgumentException(
+							"Unknown option: " + option);
 
 			} else
 				other.add(option);
@@ -62,7 +64,7 @@ public class CommandLineOptions {
 	}
 
 	public String usage() {
-		return "Usage: [--free-format] "
+		return "Usage: [--free-format | --variable-format] "
 				+ "[--preprocess -I <copyboopath>] [source]";
 	}
 }

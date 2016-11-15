@@ -1,5 +1,9 @@
 package koopa.app.menus;
 
+import static koopa.cobol.sources.SourceFormat.FIXED;
+import static koopa.cobol.sources.SourceFormat.FREE;
+import static koopa.cobol.sources.SourceFormat.VARIABLE;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 
@@ -10,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
 import koopa.app.Application;
+import koopa.app.actions.SetSourceFormatAction;
 import koopa.app.components.cobolwords.CobolWordSettings;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
 import koopa.app.components.detail.Detail;
@@ -17,7 +22,6 @@ import koopa.app.components.fileextensions.FileExtensions;
 import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
 import koopa.cobol.parser.Coordinated;
-import koopa.cobol.sources.SourceFormat;
 
 public class ParserSettingsMenu extends JMenu {
 
@@ -28,6 +32,7 @@ public class ParserSettingsMenu extends JMenu {
 	private JMenu sourceFormat = null;
 	private JRadioButtonMenuItem fixedFormat = null;
 	private JRadioButtonMenuItem freeFormat = null;
+	private JRadioButtonMenuItem variableFormat = null;
 	private JMenu preprocessing = null;
 	private JRadioButtonMenuItem preprocessingEnabled = null;
 	private JRadioButtonMenuItem preprocessingDisabled = null;
@@ -47,37 +52,26 @@ public class ParserSettingsMenu extends JMenu {
 		final ButtonGroup group = new ButtonGroup();
 
 		fixedFormat = new JRadioButtonMenuItem();
-
-		AbstractAction selectFixedFormat = new AbstractAction("Fixed") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = application.getCoordinatedView();
-				view.getParsingCoordinator().setFormat(SourceFormat.FIXED);
-			}
-		};
-
-		fixedFormat.setAction(selectFixedFormat);
+		fixedFormat.setAction(
+				new SetSourceFormatAction(application, "Fixed", FIXED));
 
 		fixedFormat.setSelected(true);
 		group.add(fixedFormat);
 		sourceFormat.add(fixedFormat);
 
 		freeFormat = new JRadioButtonMenuItem();
-
-		AbstractAction selectFreeFormat = new AbstractAction("Free") {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = application.getCoordinatedView();
-				view.getParsingCoordinator().setFormat(SourceFormat.FREE);
-			}
-		};
-
-		freeFormat.setAction(selectFreeFormat);
+		freeFormat.setAction(
+				new SetSourceFormatAction(application, "Free", FREE));
 
 		group.add(freeFormat);
 		sourceFormat.add(freeFormat);
+
+		variableFormat = new JRadioButtonMenuItem();
+		variableFormat.setAction(
+				new SetSourceFormatAction(application, "Variable", VARIABLE));
+
+		group.add(variableFormat);
+		sourceFormat.add(variableFormat);
 
 		preprocessing = new JMenu("Preprocessing");
 		add(preprocessing);
@@ -149,6 +143,9 @@ public class ParserSettingsMenu extends JMenu {
 			case FREE:
 				freeFormat.setSelected(true);
 				break;
+			case VARIABLE:
+				variableFormat.setSelected(true);
+				break;
 			}
 
 			if (overview.getParsingCoordinator().isPreprocessing())
@@ -166,6 +163,9 @@ public class ParserSettingsMenu extends JMenu {
 			case FREE:
 				freeFormat.setSelected(true);
 				break;
+			case VARIABLE:
+				variableFormat.setSelected(true);
+				break;
 			}
 
 			if (detail.getParsingCoordinator().isPreprocessing())
@@ -174,5 +174,4 @@ public class ParserSettingsMenu extends JMenu {
 				preprocessingEnabled.setSelected(false);
 		}
 	}
-
 }

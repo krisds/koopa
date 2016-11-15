@@ -1,8 +1,12 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <---->^<---------------------------------------------------------------><--->^
-SEQNR I COMMENT                                                         IDENT EOLN/TEXT
+FIXED F FIXED                                                           FIXED FIXED
+_     _ COMMENT                                                         _     TEXT
+SEQNR I _                                                               IDENT EOLN
+
 
          == A Pseudo Literal ==
 <---->^<><-------------------->^
-SEQNR I : PSEUDO               EOLN/TEXT
-
+FIXED F F FIXED                FIXED
+_     _ T TEXT                 TEXT
+SEQNR I : PSEUDO               EOLN

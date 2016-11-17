@@ -21,6 +21,7 @@ import koopa.app.components.detail.Detail;
 import koopa.app.components.fileextensions.FileExtensions;
 import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
+import koopa.app.components.tabs.TabSettings;
 import koopa.cobol.parser.Coordinated;
 
 public class ParserSettingsMenu extends JMenu {
@@ -122,6 +123,10 @@ public class ParserSettingsMenu extends JMenu {
 		JMenuItem lineEndings = new JMenuItem();
 		lineEndings.setAction(LineEndingSettings.actionToShow(application));
 		add(lineEndings);
+
+		JMenuItem tabSettings = new JMenuItem();
+		tabSettings.setAction(TabSettings.actionToShow(application));
+		add(tabSettings);
 
 		JMenuItem cobolWords = new JMenuItem();
 		cobolWords.setAction(CobolWordSettings.actionToShow(application));

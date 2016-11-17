@@ -26,6 +26,25 @@ public class ProgramArea extends ThreadedSource<Token, Token>
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.program_area");
 
+	private static final String TAB_SIZE_KEY = "koopa.tabLength";
+	private static final int DEFAULT_TAB_LENGTH = 1;
+	private static int tabLength = DEFAULT_TAB_LENGTH;
+
+	static {
+		final String definition = System.getProperty(TAB_SIZE_KEY);
+		if (definition != null) {
+			try {
+				setTabLength(Integer.parseUnsignedInt(definition));
+
+			} catch (NumberFormatException e) {
+				tabLength = DEFAULT_TAB_LENGTH;
+				System.err.println("Warning: value for " + TAB_SIZE_KEY
+						+ " was not an unsigned integer: '" + definition
+						+ "'. Using " + DEFAULT_TAB_LENGTH + " instead.");
+			}
+		}
+	}
+
 	public ProgramArea(Source<Token> source) {
 		super(source);
 
@@ -34,9 +53,7 @@ public class ProgramArea extends ThreadedSource<Token, Token>
 
 	protected void tokenize() throws IOException {
 		while (!hasClosed()) {
-			// TODO If the queue is growing too large/too full: back off.
-
-			Token token = source.next();
+			final Token token = source.next();
 
 			if (token == null)
 				return;
@@ -129,13 +146,19 @@ public class ProgramArea extends ThreadedSource<Token, Token>
 
 	private Token extract(Token token, int start, int end, Object tag,
 			final SourceFormat format) {
-		final int length = token.getLength();
+		final int columns = columns(token);
 
-		if (start >= length)
+		if (start >= columns)
 			return null;
 
-		end = Math.min(end, length);
-		final Token extracted = tokenizeArea(token, start, end, tag, format);
+		int startIndex = characterIndexForColumn(token, start);
+		int endIndex = characterIndexForColumn(token, end);
+
+		if (endIndex <= startIndex)
+			return null;
+
+		final Token extracted = tokenizeArea(token, startIndex, endIndex, tag,
+				format);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace(tag + ": " + extracted);
@@ -160,5 +183,62 @@ public class ProgramArea extends ThreadedSource<Token, Token>
 	private Token tokenizeArea(Token token, int begin, int end,
 			Object... tags) {
 		return Tokens.subtoken(token, begin, end).withTags(tags);
+	}
+
+	private int columns(Token token) {
+		final String text = token.getText();
+
+		if (tabLength == 1)
+			return text.length();
+
+		int columns = 0;
+
+		for (int i = 0; i < text.length(); i++)
+			if (text.charAt(i) == '\t')
+				columns += tabLength;
+			else
+				columns += 1;
+
+		return columns;
+	}
+
+	private int characterIndexForColumn(Token token, int column) {
+		if (column <= 0)
+			return 0;
+
+		final String text = token.getText();
+		int columns = 0;
+
+		for (int i = 0; i < text.length(); i++) {
+			if (column <= columns)
+				return i;
+
+			if (text.charAt(i) == '\t')
+				columns += tabLength;
+			else
+				columns += 1;
+		}
+
+		return text.length();
+	}
+
+	public static int getTabLength() {
+		return tabLength;
+	}
+
+	public static void setTabLength(int length) {
+		if (tabLength == 0) {
+			System.err.println("Warning: value for " + TAB_SIZE_KEY
+					+ " is zero. Using " + DEFAULT_TAB_LENGTH + " instead.");
+			tabLength = DEFAULT_TAB_LENGTH;
+
+		} else if (tabLength < 0) {
+			System.err.println("Warning: value for " + TAB_SIZE_KEY
+					+ " is negative (" + length + "). Using "
+					+ DEFAULT_TAB_LENGTH + " instead.");
+			tabLength = DEFAULT_TAB_LENGTH;
+
+		} else
+			tabLength = length;
 	}
 }

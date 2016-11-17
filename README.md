@@ -6,7 +6,7 @@ Koopa is a Cobol parser (generator). It can handle source files in isolation (no
 
 * Island parser generator
 * Cobol lexer and parser
-* Accepts free and fixed format Cobol
+* Accepts free, fixed and variable format Cobol
 * Covered by a Cobol 85 testsuite, and grammar unit testing
 * Cobol viewer with syntax highlighting, outline, quick navigation and XPath-based querying
 * XML dumps of parse trees
@@ -32,7 +32,7 @@ Following options can be set on the command line by passing them as  "-D<option>
 * `koopa.sources`: a comma-separated list of file extensions use to identify Cobol source files. This defaults to "cbl,cob". (Cfr. the `koopa.cobol.CobolFiles` class.)
 * `koopa.copybooks`: a comma-separated list of file extensions use to identify Cobol copybook files. This defaults to "cpy,copy". (Cfr. the `koopa.cobol.CobolFiles` class.)
 * `koopa.copybooks.locator`: use a specific `koopa.cobol.copybooks.CopybookLocator` subclass when searching for copybooks on the file system. This defaults to `koopa.cobol.copybooks.DefaultCopybookLocator`.
-
+* `koopa.tabLength`: an integer defining the length of a tab. This defaults to four. (Cfr. the `koopa.cobol.sources.ProgramArea` class.)
 
 ### GUI
 

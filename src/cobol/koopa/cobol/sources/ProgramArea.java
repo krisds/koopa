@@ -13,12 +13,12 @@ import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.sources.Source;
 import koopa.core.sources.ThreadedSource;
-
-import org.apache.log4j.Logger;
 
 public class ProgramArea extends ThreadedSource<Token, Token>
 		implements Source<Token> {
@@ -34,7 +34,7 @@ public class ProgramArea extends ThreadedSource<Token, Token>
 		final String definition = System.getProperty(TAB_SIZE_KEY);
 		if (definition != null) {
 			try {
-				setTabLength(Integer.parseUnsignedInt(definition));
+				setTabLength(Integer.parseInt(definition));
 
 			} catch (NumberFormatException e) {
 				tabLength = DEFAULT_TAB_LENGTH;

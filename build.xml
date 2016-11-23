@@ -361,6 +361,11 @@
 
 			<formatter type="brief" usefile="no" />
 
+			<test name="koopa.cobol.directives.test.ISODirectiveTest" />
+			<test name="koopa.cobol.directives.test.MFSetStatementTest" />
+			<test name="koopa.cobol.directives.test.MFIncStatementTest" />
+			<test name="koopa.cobol.directives.test.MFIncludeStatementTest" />
+			<test name="koopa.cobol.directives.test.IBMCompilerDirectingStatementTest" />
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
 			<test name="koopa.cobol.grammar.preprocessing.test.CobolPreprocessingGrammarTests" />
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />

@@ -1,0 +1,21 @@
+123456* ANNOTATED SAMPLE                                                KOOPA
+<--------------------------------------------------------------------------->^
+FIXED                                                                        FIXED
+_                                                                            _
+_                                                                            EOLN
+
+# Example from MasterProgrammer in the forums.
+# https://sourceforge.net/p/koopa/discussion/989430/thread/1f9c6886/
+001470     TITLE 'PBO - PRODUCT BASIS OVERRIDE'
+<--------------------------------------------->^
+FIXED                                          FIXED
+COMPILER_DIRECTIVE                             _
+_                                              EOLN
+
+# Example from MasterProgrammer in the forums.
+# https://sourceforge.net/p/koopa/discussion/989430/thread/1f9c6886/
+CBL NOADV XREF MAP OFFSET OPTIMIZE                                      00000010
+<------------------------------------------------------------------------------>^
+FIXED                                                                           FIXED
+COMPILER_DIRECTIVE                                                              _
+_                                                                               EOLN

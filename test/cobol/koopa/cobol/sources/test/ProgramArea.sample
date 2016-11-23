@@ -88,11 +88,11 @@ _                 EOLN
 # =============================================================================
 # Switching to VARIABLE mode.
 
-$ SET SOURCEFORMAT "VARIABLE"
-<--------------------------->^
-FREE                         VARIABLE
-COMPILER_DIRECTIVE           TEXT
-_                            EOLN
+$SET SOURCEFORMAT"VARIABLE"
+<------------------------->^
+FREE                       VARIABLE
+COMPILER_DIRECTIVE         TEXT
+_                          EOLN
 
 
 123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12+++++

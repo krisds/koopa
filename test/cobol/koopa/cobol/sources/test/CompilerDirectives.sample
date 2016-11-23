@@ -5,13 +5,6 @@ _                                                                            _
 _                                                                            EOLN
 
 
--INC TEXTNAME  witty remark
-<-->^<------><------------>^
-FXD F FIXED  FIXED         FIXED
-DIR D DIR    COMMENT       _
-_   : _      _             EOLN
-
-
        >> source format is free
 <----------------------------->^
 FIXED                          FREE
@@ -26,18 +19,18 @@ COMPILER_DIRECTIVE       _
 _                        EOLN
 
 
-       >> source format is free    *> witty remark
-<---------------------------------><------------->^
-FIXED                              FIXED          FREE
-COMPILER_DIRECTIVE                 COMMENT        _
-_                                  _              EOLN
+        >> source format is free    *> witty remark
+<------------------------------------------------->^
+FIXED                                              FREE
+COMPILER_DIRECTIVE                                 _
+_                                                  EOLN
 
 
 >> source format is fixed    *> witty remark
-<---------------------------><------------->^
-FREE                         FREE           FIXED
-COMPILER_DIRECTIVE           COMMENT        _
-_                            _              EOLN
+<------------------------------------------>^
+FREE                                        FIXED
+COMPILER_DIRECTIVE                          _
+_                                           EOLN
 
 
        >> source free
@@ -54,30 +47,16 @@ DIRECTIVE      _
 _              EOLN
 
 
-$ SET SOURCEFORMAT "FREE"
-<----------------------->^
-FIXED                    FREE
-COMPILER_DIRECTIVE       _
-_                        EOLN
+       >> SOURCE FORMAT IS FREE
+<----------------------------->^
+FIXED                          FREE
+COMPILER_DIRECTIVE             _
+_                              EOLN
 
 
-$ SET SOURCEFORMAT (FIXED)
-<------------------------>^
-FREE                      FIXED
-COMPILER_DIRECTIVE        _
-_                         EOLN
-
-
-# This one comes from the real world:
-$set SOURCEFORMAT"VARIABLE" OUTDD"SYSOUT 121 R"
-<--------------------------------------------->^
-FIXED                                          VARIABLE
-COMPILER_DIRECTIVE                             _
-_                                              EOLN
-
-
-       >> source fixed
+>> SOURCE FORMAT FIXED
 <-------------------->^
-VARIABLE              FIXED
+FREE                  FIXED
 COMPILER_DIRECTIVE    _
 _                     EOLN
+

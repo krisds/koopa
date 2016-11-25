@@ -26,6 +26,7 @@ import koopa.core.parsers.combinators.FailMatch;
 import koopa.core.parsers.combinators.LimitedTo;
 import koopa.core.parsers.combinators.Nested;
 import koopa.core.parsers.combinators.Not;
+import koopa.core.parsers.combinators.NotEmpty;
 import koopa.core.parsers.combinators.NotNested;
 import koopa.core.parsers.combinators.Opt;
 import koopa.core.parsers.combinators.Optional;
@@ -201,6 +202,10 @@ public abstract class KoopaGrammar extends Grammar {
 	protected ParserCombinator upto(ParserCombinator parser,
 			ParserCombinator edge) {
 		return new UpTo(parser, edge);
+	}
+
+	protected ParserCombinator notEmpty(ParserCombinator parser) {
+		return new NotEmpty(parser);
 	}
 
 	// ========================================================================

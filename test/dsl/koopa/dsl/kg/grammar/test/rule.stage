@@ -57,3 +57,7 @@ target rule;
 +[ def skip =  --> END-PROGRAM  end ]
 
 +[ def todo =  ...  end ]
+
++[ def not_empty =
+       %notempty FOO
+   end ]

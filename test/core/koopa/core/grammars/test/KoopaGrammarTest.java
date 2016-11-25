@@ -87,7 +87,8 @@ public class KoopaGrammarTest extends GrammarTest {
 		ParserCombinator parser = G.sequence(G.token("COmmon"),
 				G.token("Business"), G.token("Oriented"), G.token("Language"));
 
-		List<Object> input = input("COmmon", "Business", "Oriented", "Language");
+		List<Object> input = input("COmmon", "Business", "Oriented",
+				"Language");
 
 		shouldAccept(parser, input);
 	}
@@ -97,7 +98,8 @@ public class KoopaGrammarTest extends GrammarTest {
 		ParserCombinator parser = G.sequence(G.token("COmmon"),
 				G.token("Business"), G.token("Oriented"), G.token("Language"));
 
-		List<Object> input = input("Oriented", "Language", "COmmon", "Business");
+		List<Object> input = input("Oriented", "Language", "COmmon",
+				"Business");
 
 		shouldReject(parser, input);
 	}
@@ -150,7 +152,8 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldAccept(parser, input());
 		shouldAccept(parser, input("Developers!"));
 		shouldAccept(parser, input("Developers!", "Developers!"));
-		shouldAccept(parser, input("Developers!", "Developers!", "Developers!"));
+		shouldAccept(parser,
+				input("Developers!", "Developers!", "Developers!"));
 	}
 
 	@Test
@@ -159,7 +162,8 @@ public class KoopaGrammarTest extends GrammarTest {
 
 		shouldAccept(parser, input("Developers!"));
 		shouldAccept(parser, input("Developers!", "Developers!"));
-		shouldAccept(parser, input("Developers!", "Developers!", "Developers!"));
+		shouldAccept(parser,
+				input("Developers!", "Developers!", "Developers!"));
 
 		shouldReject(parser, input());
 	}
@@ -246,7 +250,8 @@ public class KoopaGrammarTest extends GrammarTest {
 		ParserCombinator base = G.sequence(G.skipto(G.token("COBOL")),
 				G.token("COBOL"));
 		// (%match base %upto .) .
-		ParserCombinator upTo = G.sequence(G.upTo(base, G.token(".")), G.token("."));
+		ParserCombinator upTo = G.sequence(G.upTo(base, G.token(".")),
+				G.token("."));
 
 		shouldAccept(upTo, input("COBOL", "."));
 		shouldAccept(upTo, input("FLOWMATIC", "COBOL", "."));
@@ -282,6 +287,33 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldAccept(parser, input(SyntacticTag.NUMBER, "11"));
 		shouldReject(parser, input(SyntacticTag.NUMBER, "22"));
 		shouldReject(parser, input("11"));
+	}
+
+	@Test
+	public void testCanMatchNotEmpty() {
+		ParserCombinator parser = G.sequence( //
+				G.optional(G.token("COmmon")), //
+				G.optional(G.token("Business")), //
+				G.optional(G.token("Oriented")), //
+				G.optional(G.token("Language")));
+
+		shouldAccept(parser, input("COmmon"));
+		shouldAccept(parser, input("Business"));
+		shouldAccept(parser, input("Oriented"));
+		shouldAccept(parser, input("Language"));
+		shouldAccept(parser, input());
+
+		shouldReject(parser, input("PL/I"));
+
+		ParserCombinator notEmpty = G.notEmpty(parser);
+
+		shouldAccept(notEmpty, input("COmmon"));
+		shouldAccept(notEmpty, input("Business"));
+		shouldAccept(notEmpty, input("Oriented"));
+		shouldAccept(notEmpty, input("Language"));
+
+		shouldReject(notEmpty, input());
+		shouldReject(notEmpty, input("PL/I"));
 	}
 
 	// TODO Add some recursive tests.

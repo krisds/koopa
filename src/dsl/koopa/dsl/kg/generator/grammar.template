@@ -229,3 +229,9 @@ end
 def todo
     todo(/* TODO Define this grammar rule. */)
 end
+
+def notempty
+    notEmpty(
+>     all_part
+    )
+end

@@ -12,7 +12,7 @@ import koopa.core.parsers.ParserCombinator;
  */
 public class FailMatch extends ParserCombinator {
 
-	private static final String SYMBOL = "...";
+	private static final String SYMBOL = "%%fail%%";
 
 	private static final FailMatch INSTANCE = new FailMatch();
 

@@ -217,13 +217,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 programPrototypeIdParagraph(),
@@ -308,13 +310,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 functionPrototypeIdParagraph(),
@@ -396,42 +400,54 @@ public class CobolGrammar extends CobolBaseGrammar {
         programDefinitionParser = future;
         future.setParser(
           sequence(
-            as("identificationDivision",
+            notEmpty(
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("identificationDivision",
+                    notEmpty(
+                      sequence(
+                        optional(
+                          as("header",
+                            sequence(
+                              choice(
+                                keyword("ID"),
+                                keyword("IDENTIFICATION")
+                              ),
+                              keyword("DIVISION"),
+                              literal(".")
+                            )
+                          )
+                        ),
+                        optional(
+                          programIdParagraph()
+                        ),
+                        optional(
+                          replaceStatement()
+                        ),
+                        optional(
+                          optionsParagraph()
+                        ),
+                        optional(
+                          metadata()
+                        )
+                      )
+                    )
                   )
                 ),
-                programIdParagraph(),
                 optional(
-                  replaceStatement()
+                  environmentDivision()
                 ),
                 optional(
-                  optionsParagraph()
+                  dataDivision()
                 ),
                 optional(
-                  metadata()
-                )
-              )
-            ),
-            optional(
-              environmentDivision()
-            ),
-            optional(
-              dataDivision()
-            ),
-            optional(
-              sequence(
-                procedureDivision(),
-                star(
-                  as("sourceUnit",
-                    programDefinition()
+                  sequence(
+                    procedureDivision(),
+                    star(
+                      as("sourceUnit",
+                        programDefinition()
+                      )
+                    )
                   )
                 )
               )
@@ -440,7 +456,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               sequence(
                 keyword("END"),
                 keyword("PROGRAM"),
-                programName(),
+                optional(
+                  programName()
+                ),
                 literal(".")
               )
             )
@@ -520,13 +538,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 functionIdParagraph(),
@@ -607,13 +627,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 classIdParagraph(),
@@ -757,13 +779,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 factoryParagraph(),
@@ -842,13 +866,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 objectParagraph(),
@@ -929,13 +955,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 interfaceIdParagraph(),
@@ -1035,13 +1063,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 methodIdParagraph(),
@@ -1147,13 +1177,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 callPrototypeIdParagraph(),
@@ -1239,13 +1271,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 delegateIdParagraph()
@@ -1334,13 +1368,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 enumIdParagraph()
@@ -1435,13 +1471,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 iteratorIdParagraph()
@@ -1536,13 +1574,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 operatorIdParagraph()
@@ -1652,13 +1692,15 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("identificationDivision",
               sequence(
                 optional(
-                  sequence(
-                    choice(
-                      keyword("ID"),
-                      keyword("IDENTIFICATION")
-                    ),
-                    keyword("DIVISION"),
-                    literal(".")
+                  as("header",
+                    sequence(
+                      choice(
+                        keyword("ID"),
+                        keyword("IDENTIFICATION")
+                      ),
+                      keyword("DIVISION"),
+                      literal(".")
+                    )
                   )
                 ),
                 valueTypeIdParagraph()
@@ -2090,16 +2132,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              keyword("ENVIRONMENT"),
-              keyword("DIVISION"),
-              literal("."),
+              as("header",
+                sequence(
+                  keyword("ENVIRONMENT"),
+                  keyword("DIVISION"),
+                  literal(".")
+                )
+              ),
               optional(
                 environmentDivisionBody()
               )
             ),
             environmentDivisionBody(),
             sequence(
-              configurationSectionBody(),
+              configurationSection$body(),
               optional(
                 ioSection()
               ),
@@ -2185,16 +2231,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("configurationSection", PUBLIC, true);
         configurationSectionParser = future;
         future.setParser(
-          choice(
+          notEmpty(
             sequence(
-              keyword("CONFIGURATION"),
-              keyword("SECTION"),
-              literal("."),
               optional(
-                configurationSectionBody()
+                as("header",
+                  sequence(
+                    keyword("CONFIGURATION"),
+                    keyword("SECTION"),
+                    literal(".")
+                  )
+                )
+              ),
+              optional(
+                configurationSection$body()
               )
-            ),
-            configurationSectionBody()
+            )
           )
         );
       }
@@ -2203,17 +2254,17 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // configurationSectionBody
+    // body
     // ........................................................
     
-    private ParserCombinator configurationSectionBodyParser = null;
+    private ParserCombinator configurationSection$bodyParser = null;
     
-    protected final Start configurationSectionBody = Start.on(getNamespace(), "configurationSectionBody");
+    protected final Start configurationSection$body = Start.on(getNamespace(), "body");
     
-    protected ParserCombinator configurationSectionBody() {
-      if (configurationSectionBodyParser == null) {
-        FutureParser future = scoped("configurationSectionBody", PRIVATE, true);
-        configurationSectionBodyParser = future;
+    protected ParserCombinator configurationSection$body() {
+      if (configurationSection$bodyParser == null) {
+        FutureParser future = scoped("body", PRIVATE, true);
+        configurationSection$bodyParser = future;
         future.setParser(
           sequence(
             plus(
@@ -2240,7 +2291,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return configurationSectionBodyParser;
+      return configurationSection$bodyParser;
     }
     
     // ========================================================
@@ -2496,8 +2547,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         specialNamesParagraphParser = future;
         future.setParser(
           sequence(
-            keyword("SPECIAL-NAMES"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("SPECIAL-NAMES"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 specialNameStatement(),
@@ -3646,9 +3701,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              keyword("INPUT-OUTPUT"),
-              keyword("SECTION"),
-              literal("."),
+              as("header",
+                sequence(
+                  keyword("INPUT-OUTPUT"),
+                  keyword("SECTION"),
+                  literal(".")
+                )
+              ),
               optional(
                 ioSectionBody()
               )
@@ -3712,8 +3771,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              keyword("FILE-CONTROL"),
-              literal("."),
+              as("header",
+                sequence(
+                  keyword("FILE-CONTROL"),
+                  literal(".")
+                )
+              ),
               optional(
                 fileControlEntry()
               )
@@ -4649,9 +4712,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              keyword("OBJECT"),
-              keyword("SECTION"),
-              literal("."),
+              as("header",
+                sequence(
+                  keyword("OBJECT"),
+                  keyword("SECTION"),
+                  literal(".")
+                )
+              ),
               optional(
                 objectSectionBody()
               )
@@ -4741,9 +4808,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             sequence(
-              keyword("DATA"),
-              keyword("DIVISION"),
-              literal("."),
+              as("header",
+                sequence(
+                  keyword("DATA"),
+                  keyword("DIVISION"),
+                  literal(".")
+                )
+              ),
               optional(
                 dataDivisionBody()
               )
@@ -4805,9 +4876,13 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               sequence(
-                keyword("FILE"),
-                keyword("SECTION"),
-                literal("."),
+                as("header",
+                  sequence(
+                    keyword("FILE"),
+                    keyword("SECTION"),
+                    literal(".")
+                  )
+                ),
                 optional(
                   fileSectionContents()
                 )
@@ -4979,9 +5054,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         workingStorageSectionParser = future;
         future.setParser(
           sequence(
-            keyword("WORKING-STORAGE"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("WORKING-STORAGE"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 recordDescriptionEntry(),
@@ -5015,9 +5094,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         threadLocalStorageSectionParser = future;
         future.setParser(
           sequence(
-            keyword("THREAD-LOCAL-STORAGE"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("THREAD-LOCAL-STORAGE"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 recordDescriptionEntry(),
@@ -5051,9 +5134,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         objectStorageSectionParser = future;
         future.setParser(
           sequence(
-            keyword("OBJECT-STORAGE"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("OBJECT-STORAGE"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 recordDescriptionEntry(),
@@ -5087,9 +5174,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         localStorageSectionParser = future;
         future.setParser(
           sequence(
-            keyword("LOCAL-STORAGE"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("LOCAL-STORAGE"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 recordDescriptionEntry(),
@@ -5123,9 +5214,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         linkageSectionParser = future;
         future.setParser(
           sequence(
-            keyword("LINKAGE"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("LINKAGE"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 recordDescriptionEntry(),
@@ -5159,9 +5254,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         communicationSectionParser = future;
         future.setParser(
           sequence(
-            keyword("COMMUNICATION"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("COMMUNICATION"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               choice(
                 communicationDescriptionEntry(),
@@ -5551,9 +5650,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         reportSectionParser = future;
         future.setParser(
           sequence(
-            keyword("REPORT"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("REPORT"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               sequence(
                 reportDescriptionEntry(),
@@ -5661,9 +5764,13 @@ public class CobolGrammar extends CobolBaseGrammar {
         screenSectionParser = future;
         future.setParser(
           sequence(
-            keyword("SCREEN"),
-            keyword("SECTION"),
-            literal("."),
+            as("header",
+              sequence(
+                keyword("SCREEN"),
+                keyword("SECTION"),
+                literal(".")
+              )
+            ),
             star(
               screenDescriptionEntry()
             ),

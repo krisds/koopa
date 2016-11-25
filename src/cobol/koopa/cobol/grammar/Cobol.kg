@@ -81,7 +81,7 @@ end
 
 def programPrototype =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         programPrototypeIdParagraph
         [optionsParagraph]
     ) 
@@ -102,7 +102,7 @@ end
 
 def functionPrototype =
     ( identificationDivision:
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         functionPrototypeIdParagraph
         [optionsParagraph]
     )
@@ -122,18 +122,40 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def programDefinition =
-    ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
-        programIdParagraph
-        [replaceStatement]                       # SM208A.CBL
-        [optionsParagraph]
-        [metadata]                               # Found in the testsuite.
+    # In Micro Focus Cobol all parts are optional (cfr. [MF - Compilation 
+    # Groups]), which means this grammar rule could match empty inputs.
+    # Allowing that would just cause trouble, so we add an extra restriction
+    # on this match to make sure we at least consumed something.
+    %notempty (
+        [ identificationDivision : %notempty (
+            [header: (ID | IDENTIFICATION) DIVISION .]
+            
+            # Micro Focus makes the program-id-paragraph optional, which is
+            # why we need the '%notempty' restriction above.
+            # Cfr. [MF - Compilation Groups]
+            [programIdParagraph]
+            
+            [replaceStatement]                       # SM208A.CBL
+            [optionsParagraph]
+            [metadata]                               # Found in the testsuite.
+        )]
+        
+        [environmentDivision]
+        [dataDivision]
+        [procedureDivision (sourceUnit : programDefinition)*]
     )
     
-    [environmentDivision]
-    [dataDivision]
-    [procedureDivision (sourceUnit : programDefinition)*]
-    [END PROGRAM programName .]
+    # The end marker shouldn't count towards the contents of the program
+    # definition. If it would then it would get caught up in the recursive call
+    # above as an empty program.
+    [ END PROGRAM
+      # Given that the program-id-paragraph may be optional in Micro Focus you
+      # don't always have a program name to mention here. I have seen it being
+      # omitted in actual code, though I can't find any documentation (not even
+      # from Micro Focus) which states that it is indeed optional...
+      [programName]
+      .
+    ]
 end
 
 def programIdParagraph =
@@ -147,7 +169,7 @@ end
 
 def functionDefinition =
     ( identificationDivision: 
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         functionIdParagraph
         [optionsParagraph]
     )
@@ -168,7 +190,7 @@ end
 
 def classDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         classIdParagraph
         [optionsParagraph]
     )
@@ -192,7 +214,7 @@ end
 
 def factoryDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         factoryParagraph
         [optionsParagraph]
     )
@@ -209,7 +231,7 @@ end
 
 def instanceDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         objectParagraph
         [optionsParagraph]
     )
@@ -230,7 +252,7 @@ end
 
 def interfaceDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         interfaceIdParagraph
         [optionsParagraph]
     )
@@ -253,7 +275,7 @@ end
 
 def methodDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         methodIdParagraph
         [optionsParagraph]
     )
@@ -285,7 +307,7 @@ end
 
 def callPrototypeDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         callPrototypeIdParagraph
         [optionsParagraph]
     )
@@ -308,7 +330,7 @@ end
 
 def delegateDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         delegateIdParagraph
     )
     
@@ -329,7 +351,7 @@ end
 
 def enumDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         enumIdParagraph
     )
     
@@ -352,7 +374,7 @@ end
 
 def iteratorDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         iteratorIdParagraph
     )
     
@@ -375,7 +397,7 @@ end
 
 def operatorDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         operatorIdParagraph
     )
     
@@ -415,7 +437,7 @@ end
 
 def valueTypeDefinition =
     ( identificationDivision :
-        [(ID | IDENTIFICATION) DIVISION .]
+        [header: (ID | IDENTIFICATION) DIVISION .]
         valueTypeIdParagraph
     )
     
@@ -516,58 +538,48 @@ end
 ## -----------------------------------------------------------------------------
 
 def environmentDivision =
-    ( ENVIRONMENT DIVISION .
-      [environmentDivisionBody]
-      
-    # *MF: First division header is optional.
-      
-    | environmentDivisionBody
-    
-    | configurationSectionBody
-      [ioSection]
-      [--> (paragraphStart | sectionStart | divisionStart)]
-      
-    | ioSectionBody
-      [configurationSection]
-      [--> (paragraphStart | sectionStart | divisionStart)]
+    (
+      # Micro Focus Cobol makes the environment division header optional.
+      # Cfr. [MF - Environment Division]
+      [ header: ENVIRONMENT DIVISION . ]
+
+      [ body ]
     )
+
+  where def body =
+      !( configurationSection
+       | ioSection
+       | objectSection
+       )
+      [--> (paragraphStart | sectionStart | divisionStart)]
+  end
 end
 
-def environmentDivisionBody =
-    ( configurationSection
-    | ioSection
-    | objectSection
-    )+
-    [--> (paragraphStart | sectionStart | divisionStart)]
-end
-
-# Refs:
-# MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDF201.html
 
 ## #############################################################################
 ## CONFIGURATION SECTION
 ## -----------------------------------------------------------------------------
 
 def configurationSection =
-    ( CONFIGURATION SECTION .
-      [ configurationSectionBody ]
-    
-    # The CONFIGURATION SECTION header seems optional in MF. But I don't want
-    # to match a configuration section unless there's something there.
-    | configurationSectionBody
+    %notempty (
+      # Micro Focus Cobol makes the configuration section header optional.
+      # Cfr. [MF - Configuration Section].
+      [ header: CONFIGURATION SECTION . ]
+      
+      [ body ]
     )
-end
 
-private def configurationSectionBody =
-    ( sourceComputerParagraph
-    | objectComputerParagraph
-    | specialNamesParagraph
-    | repositoryParagraph
-    | constraintsParagraph          # *.NET *JVM
-    | classAttributesParagraph      # *.NET *JVM
-    | assemblyAttributesParagraph   # *.NET *JVM
-    )+
-    [--> (paragraphStart | sectionStart | divisionStart)]
+  where private def body =
+      ( sourceComputerParagraph
+      | objectComputerParagraph
+      | specialNamesParagraph
+      | repositoryParagraph
+      | constraintsParagraph          # *.NET *JVM
+      | classAttributesParagraph      # *.NET *JVM
+      | assemblyAttributesParagraph   # *.NET *JVM
+      )+
+      [--> (paragraphStart | sectionStart | divisionStart)]
+  end
 end
 
 def sourceComputerParagraph =
@@ -618,7 +630,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def specialNamesParagraph =
-    SPECIAL-NAMES .
+    ( header: SPECIAL-NAMES . )
     ( specialNameStatement
     | copyStatement
     )*
@@ -865,32 +877,33 @@ end
 ## -----------------------------------------------------------------------------
 
 def ioSection =
-    ( INPUT-OUTPUT SECTION .
-      [ ioSectionBody ]
+    %notempty (
+      # The INPUT-OUTPUT SECTION header seems optional in Micro Focus Cobol. 
+      # TODO The docs ([MF - Input-Output Section]) don't back that up though...
+      [ header: INPUT-OUTPUT SECTION . ]
     
-    # The INPUT-OUTPUT SECTION header seems optional in MF. But I don't want
-    # to match an input-output section unless there's something there.
-    | ioSectionBody
+      [ body ]
     )
+
+  where private def body =
+      ( fileControlParagraph
+      | ioControlParagraph
+      )+
+      [--> (paragraphStart | sectionStart | divisionStart)]
+  end
 end
 
-private def ioSectionBody =
-    ( fileControlParagraph
-    | ioControlParagraph
-    )+
-    [--> (paragraphStart | sectionStart | divisionStart)]
-end
-
-# TODO only skeletal implementation of this paragraph until now...
-# http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.help.windows%2Fhtml%2Flhpdf209.htm
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# FILE-CONTROL paragraph.
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def fileControlParagraph =
-    ( FILE-CONTROL .
+    %notentry (
+      # Micro Focus Cobol makes the file-control paragraph header optional.
+      # Cfr. [MF - The File-Control Paragraph]
+      [ header: FILE-CONTROL . ]
+      
       [fileControlEntry]
-    
-    # The FILE-CONTROL header is optional in MF. But in that case I want to
-    # only match it when there are actual file control entries.
-    | fileControlEntry
     )
 end
 
@@ -1057,21 +1070,25 @@ def ioControlParagraph =
     [--> (paragraphStart | sectionStart | divisionStart)]
 end
 
+
 ## ###############################################################################
 ## OBJECT SECTION
 ## -------------------------------------------------------------------------------
 
 def objectSection =
-    ( OBJECT SECTION . [objectSectionBody]
-    | objectSectionBody
+    %notempty (
+      [ header: OBJECT SECTION . ]     # MF: optional ?
+      
+      [ body ]
     )
+
+  where def body =
+      ( classControlParagraph
+      | copyStatement
+      )+
+  end
 end
 
-def objectSectionBody =
-    ( classControlParagraph
-    | copyStatement
-    )+
-end
 
 ## ###############################################################################
 ## CLASS-CONTROL
@@ -1090,23 +1107,27 @@ end
 ## -----------------------------------------------------------------------------
 
 def dataDivision =
-    ( DATA DIVISION . [dataDivisionBody]
-    | dataDivisionBody
+    ( 
+      # Micro Focus Cobol makes the data division header optional.
+      # Cfr. [MF - Data Division]
+      [ header: DATA DIVISION . ]
+      
+      [ body ]
     )
-end
 
-def dataDivisionBody =
-    ( fileSection
-    | workingStorageSection
-    | threadLocalStorageSection
-    | objectStorageSection
-    | localStorageSection
-    | linkageSection
-    | communicationSection
-    | reportSection
-    | screenSection
-    | copyStatement
-    )+
+  private def body =
+      ( fileSection
+      | workingStorageSection
+      | threadLocalStorageSection
+      | objectStorageSection
+      | localStorageSection
+      | linkageSection
+      | communicationSection
+      | reportSection
+      | screenSection
+      | copyStatement
+      )+
+  end
 end
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1114,22 +1135,22 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def fileSection =
-    ( FILE SECTION .
-      [fileSectionContents]
-    
-    # The FILE SECTION header is optional in MF. But in that case I want to
-    # only match it when there are actual file description entries.
-    | fileSectionContents
+    %notempty (
+      # Micro Focus Cobol makes the file section header optional.
+      # Cfr. [MF - Data Division]
+      [ header: FILE SECTION . ]
+      
+      [ body ]
     )
-    
     [--> (paragraphStart | sectionStart | divisionStart)]
+
+  where private def body =
+      ( copyStatement
+      | fileDescriptionEntry (recordDescriptionEntry)*
+      )+
+  end
 end
 
-private def fileSectionContents =
-  ( copyStatement
-  | fileDescriptionEntry (recordDescriptionEntry)*
-  )+
-end
 
 def fileDescriptionEntry =
     ( fdFileDescriptionEntry
@@ -1177,7 +1198,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def workingStorageSection =
-    WORKING-STORAGE SECTION .
+    ( header: WORKING-STORAGE SECTION . )
     ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
@@ -1187,7 +1208,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def threadLocalStorageSection =
-    THREAD-LOCAL-STORAGE SECTION .
+    ( header: THREAD-LOCAL-STORAGE SECTION . )
     ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
@@ -1197,7 +1218,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def objectStorageSection =
-    OBJECT-STORAGE SECTION .
+    ( header: OBJECT-STORAGE SECTION . )
     ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
@@ -1209,7 +1230,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def localStorageSection =
-    LOCAL-STORAGE SECTION .
+    ( header: LOCAL-STORAGE SECTION . )
     ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
@@ -1221,7 +1242,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def linkageSection =
-    LINKAGE SECTION .
+    ( header: LINKAGE SECTION . )
     ( recordDescriptionEntry
     | replaceStatement
     | execStatement [.]
@@ -1234,7 +1255,7 @@ end
 # * MF: http://supportline.microfocus.com/documentation/books/mx20books/atcomm.htm
 
 def communicationSection =
-    COMMUNICATION SECTION .
+    ( header: COMMUNICATION SECTION . )
     ( communicationDescriptionEntry
     | recordDescriptionEntry
     )*
@@ -1300,7 +1321,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def reportSection =
-    REPORT SECTION .
+    ( header: REPORT SECTION . )
     ( reportDescriptionEntry (reportGroupDescriptionEntry)+ )*
 end
 
@@ -1340,7 +1361,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def screenSection =
-    SCREEN SECTION .
+    ( header: SCREEN SECTION . )
     ( screenDescriptionEntry )*
     [--> (paragraphStart | sectionStart | divisionStart)]
 end
@@ -5511,6 +5532,18 @@ end
 #   http://supportline.microfocus.com/documentation/books/nx60/lhpdf602.htm
 # [MF - CALL statement]
 #   https://supportline.microfocus.com/Documentation/books/nx50/lhpdf804.htm
+# [MF - Compilation Groups]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf101.htm
+# [MF - Environment Division]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf201.htm
+# [MF - Configuration Section]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf202.htm
+# [MF - Input-Output Section]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf207.htm
+# [MF - The File-Control Paragraph]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf208.htm
+# [MF - Data Division]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf301.htm
 #
 # [GNU Cobol 2.0]
 #   "GNU COBOL 2.0 Programmers Guide"

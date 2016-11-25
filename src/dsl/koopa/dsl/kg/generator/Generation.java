@@ -467,6 +467,7 @@ public class Generation {
 		PART_NAMES.add("unbalanced");
 		PART_NAMES.add("closure");
 		PART_NAMES.add("todo");
+		PART_NAMES.add("notempty");
 	}
 
 	private boolean isPart(String name) {

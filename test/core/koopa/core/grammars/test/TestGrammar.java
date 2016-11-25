@@ -182,4 +182,9 @@ public class TestGrammar extends KoopaGrammar {
 	public ParserCombinator optional(ParserCombinator... parsers) {
 		return super.optional(parsers);
 	}
+
+	@Override
+	protected ParserCombinator notEmpty(ParserCombinator parser) {
+		return super.notEmpty(parser);
+	}
 }

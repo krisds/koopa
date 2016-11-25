@@ -97,6 +97,7 @@ public class KGGrammar extends FluentGrammar {
 				"tagged", //
 				"balanced", //
 				"unbalanced", //
+				"notempty", //
 				"todo", //
 				"rvalue" //
 		));
@@ -220,8 +221,11 @@ public class KGGrammar extends FluentGrammar {
 		// '%nested' part
 		define("balanced").as("==%==", noskip("==nested=="), "atom");
 
-		// '%notnested' part
+		// '%notnested' atom
 		define("unbalanced").as("==%==", noskip("==notnested=="), "atom");
+
+		// '%notempty' atom
+		define("notempty").as("==%==", noskip("==notempty=="), "atom");
 
 		// '...'
 		define("todo").as("==.==", noskip("==.==", "==.=="));

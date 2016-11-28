@@ -212,3 +212,14 @@ target callStatement;
            BY VALUE     LENGTH OF baz
      RETURNING ret
    END-CALL ]
+
+
+# IBM and MF style SIZE IS   
++[ CALL "bar"
+     USING BY VALUE  777  SIZE 4
+   END-CALL ]
+
+# GNU COBOL style SIZE IS   
++[ CALL "bar"
+     USING BY VALUE  SIZE 4  777
+   END-CALL ]

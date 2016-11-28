@@ -538,7 +538,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def environmentDivision =
-    (
+    %notempty (
       # Micro Focus Cobol makes the environment division header optional.
       # Cfr. [MF - Environment Division]
       [ header: ENVIRONMENT DIVISION . ]
@@ -546,7 +546,7 @@ def environmentDivision =
       [ body ]
     )
 
-  where def body =
+  where private def body =
       !( configurationSection
        | ioSection
        | objectSection
@@ -898,7 +898,7 @@ end
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def fileControlParagraph =
-    %notentry (
+    %notempty (
       # Micro Focus Cobol makes the file-control paragraph header optional.
       # Cfr. [MF - The File-Control Paragraph]
       [ header: FILE-CONTROL . ]
@@ -1107,7 +1107,7 @@ end
 ## -----------------------------------------------------------------------------
 
 def dataDivision =
-    ( 
+    %notempty ( 
       # Micro Focus Cobol makes the data division header optional.
       # Cfr. [MF - Data Division]
       [ header: DATA DIVISION . ]
@@ -1115,7 +1115,7 @@ def dataDivision =
       [ body ]
     )
 
-  private def body =
+  where private def body =
       ( fileSection
       | workingStorageSection
       | threadLocalStorageSection
@@ -2702,17 +2702,30 @@ def callStatement =
   where def using =
       USING ( byReference | byContent | byValue | copyStatement )+
 
-    where def byReference =  [[BY] REFERENCE] (arg)+  end
-    where def byContent   =   [BY] CONTENT    (arg)+  end
-    where def byValue     =   [BY] VALUE      (arg)+  end
+    where def byReference =  [[BY] REFERENCE] (modifier | arg)+  end
+    where def byContent   =   [BY] CONTENT    (modifier | arg)+  end
+    where def byValue     =   [BY] VALUE      (modifier | arg)+  end
+
+    where def modifier =
+        (
+        # [GNU Cobol 2.0], CALL: preceding a literal or identifier.
+          unsigned: UNSIGNED
+        
+        # [MF - CALL Statement]: following an integer.
+        # [IBM ILE CALL Statement]: following a float or an integer.
+        # [GNU Cobol 2.0], CALL: preceding a literal or identifier.
+        | sizeIs
+        )
+
+      where def sizeIs =
+          SIZE [IS]
+          ( AUTO | DEFAULT                  # GNU Cobol
+          | integer                         # GNU Cobol, IBM
+          )
+      end
+    end
 
     where def arg =
-        [UNSIGNED]                        # [GNU Cobol 2.0], CALL
-        [sizeIs]                          # [GNU Cobol 2.0], CALL
-        value
-        
-      
-      where def value =
         ( addressOf                       # [IBM Cobol zOS 4.2], CALL statement
         | lengthOf                        # [IBM Cobol zOS 4.2], CALL statement
         | omitted: OMITTED
@@ -2720,14 +2733,6 @@ def callStatement =
         | literal    (%not moreArithmeticOp)
         | arithmeticExpression
         )
-      end
-    
-      where def sizeIs =
-          SIZE [IS]
-          ( AUTO | DEFAULT                  # GNU Cobol
-          | integer                         # GNU Cobol, IBM
-          )
-      end
     end
   end
   
@@ -5525,6 +5530,8 @@ end
 #
 # [IBM Cobol zOS 4.2]
 #   "IBM - Enterprise COBOL for z/OS - Language Reference - Version 4 Release 2"
+# [IBM ILE CALL Statement]
+#   http://www.ibm.com/support/knowledgecenter/SSAE4W_9.0.0/com.ibm.etools.iseries.langref.doc/c0925395349.htm#HDRCALLST
 #
 # [MF - Relation Conditions]
 #   http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FHRLHLHPDF60A.html
@@ -5544,6 +5551,8 @@ end
 #   https://supportline.microfocus.com/documentation/books/nx60/lhpdf208.htm
 # [MF - Data Division]
 #   https://supportline.microfocus.com/documentation/books/nx60/lhpdf301.htm
+# [MF - CALL Statement]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhpdf804.htm
 #
 # [GNU Cobol 2.0]
 #   "GNU COBOL 2.0 Programmers Guide"

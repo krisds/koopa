@@ -2130,48 +2130,19 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("environmentDivision", PUBLIC, true);
         environmentDivisionParser = future;
         future.setParser(
-          choice(
+          notEmpty(
             sequence(
-              as("header",
-                sequence(
-                  keyword("ENVIRONMENT"),
-                  keyword("DIVISION"),
-                  literal(".")
-                )
-              ),
               optional(
-                environmentDivisionBody()
-              )
-            ),
-            environmentDivisionBody(),
-            sequence(
-              configurationSection$body(),
-              optional(
-                ioSection()
-              ),
-              optional(
-                skipto(
-                  choice(
-                    paragraphStart(),
-                    sectionStart(),
-                    divisionStart()
+                as("header",
+                  sequence(
+                    keyword("ENVIRONMENT"),
+                    keyword("DIVISION"),
+                    literal(".")
                   )
                 )
-              )
-            ),
-            sequence(
-              ioSectionBody(),
-              optional(
-                configurationSection()
               ),
               optional(
-                skipto(
-                  choice(
-                    paragraphStart(),
-                    sectionStart(),
-                    divisionStart()
-                  )
-                )
+                environmentDivision$body()
               )
             )
           )
@@ -2182,25 +2153,23 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // environmentDivisionBody
+    // body
     // ........................................................
     
-    private ParserCombinator environmentDivisionBodyParser = null;
+    private ParserCombinator environmentDivision$bodyParser = null;
     
-    public final Start environmentDivisionBody = Start.on(getNamespace(), "environmentDivisionBody");
+    protected final Start environmentDivision$body = Start.on(getNamespace(), "body");
     
-    public ParserCombinator environmentDivisionBody() {
-      if (environmentDivisionBodyParser == null) {
-        FutureParser future = scoped("environmentDivisionBody", PUBLIC, true);
-        environmentDivisionBodyParser = future;
+    protected ParserCombinator environmentDivision$body() {
+      if (environmentDivision$bodyParser == null) {
+        FutureParser future = scoped("body", PRIVATE, true);
+        environmentDivision$bodyParser = future;
         future.setParser(
           sequence(
-            plus(
-              choice(
-                configurationSection(),
-                ioSection(),
-                objectSection()
-              )
+            permuted(
+              configurationSection(),
+              ioSection(),
+              objectSection()
             ),
             optional(
               skipto(
@@ -2215,7 +2184,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return environmentDivisionBodyParser;
+      return environmentDivision$bodyParser;
     }
     
     // ========================================================
@@ -3699,20 +3668,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("ioSection", PUBLIC, true);
         ioSectionParser = future;
         future.setParser(
-          choice(
+          notEmpty(
             sequence(
-              as("header",
-                sequence(
-                  keyword("INPUT-OUTPUT"),
-                  keyword("SECTION"),
-                  literal(".")
+              optional(
+                as("header",
+                  sequence(
+                    keyword("INPUT-OUTPUT"),
+                    keyword("SECTION"),
+                    literal(".")
+                  )
                 )
               ),
               optional(
-                ioSectionBody()
+                ioSection$body()
               )
-            ),
-            ioSectionBody()
+            )
           )
         );
       }
@@ -3721,17 +3691,17 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // ioSectionBody
+    // body
     // ........................................................
     
-    private ParserCombinator ioSectionBodyParser = null;
+    private ParserCombinator ioSection$bodyParser = null;
     
-    protected final Start ioSectionBody = Start.on(getNamespace(), "ioSectionBody");
+    protected final Start ioSection$body = Start.on(getNamespace(), "body");
     
-    protected ParserCombinator ioSectionBody() {
-      if (ioSectionBodyParser == null) {
-        FutureParser future = scoped("ioSectionBody", PRIVATE, true);
-        ioSectionBodyParser = future;
+    protected ParserCombinator ioSection$body() {
+      if (ioSection$bodyParser == null) {
+        FutureParser future = scoped("body", PRIVATE, true);
+        ioSection$bodyParser = future;
         future.setParser(
           sequence(
             plus(
@@ -3753,7 +3723,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return ioSectionBodyParser;
+      return ioSection$bodyParser;
     }
     
     // ========================================================
@@ -3769,19 +3739,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("fileControlParagraph", PUBLIC, true);
         fileControlParagraphParser = future;
         future.setParser(
-          choice(
+          notEmpty(
             sequence(
-              as("header",
-                sequence(
-                  keyword("FILE-CONTROL"),
-                  literal(".")
+              optional(
+                as("header",
+                  sequence(
+                    keyword("FILE-CONTROL"),
+                    literal(".")
+                  )
                 )
               ),
               optional(
                 fileControlEntry()
               )
-            ),
-            fileControlEntry()
+            )
           )
         );
       }
@@ -4710,20 +4681,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("objectSection", PUBLIC, true);
         objectSectionParser = future;
         future.setParser(
-          choice(
+          notEmpty(
             sequence(
-              as("header",
-                sequence(
-                  keyword("OBJECT"),
-                  keyword("SECTION"),
-                  literal(".")
+              optional(
+                as("header",
+                  sequence(
+                    keyword("OBJECT"),
+                    keyword("SECTION"),
+                    literal(".")
+                  )
                 )
               ),
               optional(
-                objectSectionBody()
+                objectSection$body()
               )
-            ),
-            objectSectionBody()
+            )
           )
         );
       }
@@ -4732,17 +4704,17 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // objectSectionBody
+    // body
     // ........................................................
     
-    private ParserCombinator objectSectionBodyParser = null;
+    private ParserCombinator objectSection$bodyParser = null;
     
-    public final Start objectSectionBody = Start.on(getNamespace(), "objectSectionBody");
+    public final Start objectSection$body = Start.on(getNamespace(), "body");
     
-    public ParserCombinator objectSectionBody() {
-      if (objectSectionBodyParser == null) {
-        FutureParser future = scoped("objectSectionBody", PUBLIC, true);
-        objectSectionBodyParser = future;
+    public ParserCombinator objectSection$body() {
+      if (objectSection$bodyParser == null) {
+        FutureParser future = scoped("body", PUBLIC, true);
+        objectSection$bodyParser = future;
         future.setParser(
           plus(
             choice(
@@ -4753,7 +4725,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return objectSectionBodyParser;
+      return objectSection$bodyParser;
     }
     
     // ========================================================
@@ -4806,20 +4778,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("dataDivision", PUBLIC, true);
         dataDivisionParser = future;
         future.setParser(
-          choice(
+          notEmpty(
             sequence(
-              as("header",
-                sequence(
-                  keyword("DATA"),
-                  keyword("DIVISION"),
-                  literal(".")
+              optional(
+                as("header",
+                  sequence(
+                    keyword("DATA"),
+                    keyword("DIVISION"),
+                    literal(".")
+                  )
                 )
               ),
               optional(
-                dataDivisionBody()
+                dataDivision$body()
               )
-            ),
-            dataDivisionBody()
+            )
           )
         );
       }
@@ -4828,17 +4801,17 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // dataDivisionBody
+    // body
     // ........................................................
     
-    private ParserCombinator dataDivisionBodyParser = null;
+    private ParserCombinator dataDivision$bodyParser = null;
     
-    public final Start dataDivisionBody = Start.on(getNamespace(), "dataDivisionBody");
+    protected final Start dataDivision$body = Start.on(getNamespace(), "body");
     
-    public ParserCombinator dataDivisionBody() {
-      if (dataDivisionBodyParser == null) {
-        FutureParser future = scoped("dataDivisionBody", PUBLIC, true);
-        dataDivisionBodyParser = future;
+    protected ParserCombinator dataDivision$body() {
+      if (dataDivision$bodyParser == null) {
+        FutureParser future = scoped("body", PRIVATE, true);
+        dataDivision$bodyParser = future;
         future.setParser(
           plus(
             choice(
@@ -4857,7 +4830,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return dataDivisionBodyParser;
+      return dataDivision$bodyParser;
     }
     
     // ========================================================
@@ -4874,20 +4847,21 @@ public class CobolGrammar extends CobolBaseGrammar {
         fileSectionParser = future;
         future.setParser(
           sequence(
-            choice(
+            notEmpty(
               sequence(
-                as("header",
-                  sequence(
-                    keyword("FILE"),
-                    keyword("SECTION"),
-                    literal(".")
+                optional(
+                  as("header",
+                    sequence(
+                      keyword("FILE"),
+                      keyword("SECTION"),
+                      literal(".")
+                    )
                   )
                 ),
                 optional(
-                  fileSectionContents()
+                  fileSection$body()
                 )
-              ),
-              fileSectionContents()
+              )
             ),
             optional(
               skipto(
@@ -4906,17 +4880,17 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // fileSectionContents
+    // body
     // ........................................................
     
-    private ParserCombinator fileSectionContentsParser = null;
+    private ParserCombinator fileSection$bodyParser = null;
     
-    protected final Start fileSectionContents = Start.on(getNamespace(), "fileSectionContents");
+    protected final Start fileSection$body = Start.on(getNamespace(), "body");
     
-    protected ParserCombinator fileSectionContents() {
-      if (fileSectionContentsParser == null) {
-        FutureParser future = scoped("fileSectionContents", PRIVATE, true);
-        fileSectionContentsParser = future;
+    protected ParserCombinator fileSection$body() {
+      if (fileSection$bodyParser == null) {
+        FutureParser future = scoped("body", PRIVATE, true);
+        fileSection$bodyParser = future;
         future.setParser(
           plus(
             choice(
@@ -4932,7 +4906,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return fileSectionContentsParser;
+      return fileSection$bodyParser;
     }
     
     // ========================================================
@@ -11436,7 +11410,10 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             plus(
-              callStatement$using$arg()
+              choice(
+                callStatement$using$modifier(),
+                callStatement$using$arg()
+              )
             )
           )
         );
@@ -11464,7 +11441,10 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             keyword("CONTENT"),
             plus(
-              callStatement$using$arg()
+              choice(
+                callStatement$using$modifier(),
+                callStatement$using$arg()
+              )
             )
           )
         );
@@ -11492,13 +11472,71 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             keyword("VALUE"),
             plus(
-              callStatement$using$arg()
+              choice(
+                callStatement$using$modifier(),
+                callStatement$using$arg()
+              )
             )
           )
         );
       }
     
       return callStatement$using$byValueParser;
+    }
+    
+    // ========================================================
+    // modifier
+    // ........................................................
+    
+    private ParserCombinator callStatement$using$modifierParser = null;
+    
+    public final Start callStatement$using$modifier = Start.on(getNamespace(), "modifier");
+    
+    public ParserCombinator callStatement$using$modifier() {
+      if (callStatement$using$modifierParser == null) {
+        FutureParser future = scoped("modifier", PUBLIC, true);
+        callStatement$using$modifierParser = future;
+        future.setParser(
+          choice(
+            as("unsigned",
+              keyword("UNSIGNED")
+            ),
+            callStatement$using$modifier$sizeIs()
+          )
+        );
+      }
+    
+      return callStatement$using$modifierParser;
+    }
+    
+    // ========================================================
+    // sizeIs
+    // ........................................................
+    
+    private ParserCombinator callStatement$using$modifier$sizeIsParser = null;
+    
+    public final Start callStatement$using$modifier$sizeIs = Start.on(getNamespace(), "sizeIs");
+    
+    public ParserCombinator callStatement$using$modifier$sizeIs() {
+      if (callStatement$using$modifier$sizeIsParser == null) {
+        FutureParser future = scoped("sizeIs", PUBLIC, true);
+        callStatement$using$modifier$sizeIsParser = future;
+        future.setParser(
+          sequence(
+            keyword("SIZE"),
+            optional(
+              keyword("IS")
+            ),
+            choice(
+              keyword("AUTO"),
+              keyword("DEFAULT"),
+              integer()
+            )
+          )
+        );
+      }
+    
+      return callStatement$using$modifier$sizeIsParser;
     }
     
     // ========================================================
@@ -11513,34 +11551,6 @@ public class CobolGrammar extends CobolBaseGrammar {
       if (callStatement$using$argParser == null) {
         FutureParser future = scoped("arg", PUBLIC, true);
         callStatement$using$argParser = future;
-        future.setParser(
-          sequence(
-            optional(
-              keyword("UNSIGNED")
-            ),
-            optional(
-              callStatement$using$arg$sizeIs()
-            ),
-            callStatement$using$arg$value()
-          )
-        );
-      }
-    
-      return callStatement$using$argParser;
-    }
-    
-    // ========================================================
-    // value
-    // ........................................................
-    
-    private ParserCombinator callStatement$using$arg$valueParser = null;
-    
-    public final Start callStatement$using$arg$value = Start.on(getNamespace(), "value");
-    
-    public ParserCombinator callStatement$using$arg$value() {
-      if (callStatement$using$arg$valueParser == null) {
-        FutureParser future = scoped("value", PUBLIC, true);
-        callStatement$using$arg$valueParser = future;
         future.setParser(
           choice(
             addressOf(),
@@ -11565,37 +11575,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return callStatement$using$arg$valueParser;
-    }
-    
-    // ========================================================
-    // sizeIs
-    // ........................................................
-    
-    private ParserCombinator callStatement$using$arg$sizeIsParser = null;
-    
-    public final Start callStatement$using$arg$sizeIs = Start.on(getNamespace(), "sizeIs");
-    
-    public ParserCombinator callStatement$using$arg$sizeIs() {
-      if (callStatement$using$arg$sizeIsParser == null) {
-        FutureParser future = scoped("sizeIs", PUBLIC, true);
-        callStatement$using$arg$sizeIsParser = future;
-        future.setParser(
-          sequence(
-            keyword("SIZE"),
-            optional(
-              keyword("IS")
-            ),
-            choice(
-              keyword("AUTO"),
-              keyword("DEFAULT"),
-              integer()
-            )
-          )
-        );
-      }
-    
-      return callStatement$using$arg$sizeIsParser;
+      return callStatement$using$argParser;
     }
     
     // ========================================================

@@ -112,6 +112,7 @@ public class KGGrammar extends FluentGrammar {
 		));
 
 		defineHelper("rvalue").as(oneOf( //
+				"scoped_identifier", //
 				"identifier", //
 				"literal", //
 				"number", //
@@ -187,6 +188,10 @@ public class KGGrammar extends FluentGrammar {
 		// %uppercase word
 		define("literal").as(allUppercase("word"));
 
+		// identifier %noskip (':' ':' identifier)
+		define("scoped_identifier").as( //
+				"identifier", noskip("==:==", "==:==", "identifier"));
+		
 		defineHelper("word").as( //
 				tagged(WORD), any(), //
 				noskip(many(oneOf( //
@@ -239,6 +244,10 @@ public class KGGrammar extends FluentGrammar {
 
 	public ParserCombinator rule() {
 		return definitionOf("rule").asParser();
+	}
+
+	public ParserCombinator scopedIdentifier() {
+		return definitionOf("scoped_identifier").asParser();
 	}
 
 	public ParserCombinator identifier() {

@@ -153,31 +153,25 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	}
 
 	// ============================================================================
-	// sqlStatement
+	// Embedded grammars
 	// ............................................................................
 
 	private SQLGrammar sqlGrammar = null;
 
-	// TODO This is a poor man's version of grammar composition...
-	public ParserCombinator sqlStatement() {
+	protected SQLGrammar sqlGrammar() {
 		if (sqlGrammar == null)
 			sqlGrammar = new SQLGrammar();
 
-		return sqlGrammar.sqlStatement();
+		return sqlGrammar;
 	}
-
-	// ============================================================================
-	// cicsStatement
-	// ............................................................................
 
 	private CICSGrammar cicsGrammar = null;
 
-	// TODO This is a poor man's version of grammar composition...
-	public ParserCombinator cicsStatement() {
+	public CICSGrammar cicsGrammar() {
 		if (cicsGrammar == null)
 			cicsGrammar = new CICSGrammar();
 
-		return cicsGrammar.cicsStatement();
+		return cicsGrammar;
 	}
 
 	// ============================================================================
@@ -189,8 +183,8 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	 * this list.
 	 */
 	private static final List<String> END_OF_COMMENT_ENTRY_MARKERS //
-	= Collections.unmodifiableList(Arrays.asList(new String[] { //
-			"PROGRAM-ID", "AUTHOR", "INSTALLATION", "DATE-WRITTEN",
+			= Collections.unmodifiableList(Arrays.asList(new String[] { //
+					"PROGRAM-ID", "AUTHOR", "INSTALLATION", "DATE-WRITTEN",
 					"DATE-COMPILED", "SECURITY", "ENVIRONMENT", "DATA",
 					"PROCEDURE" }));
 
@@ -272,7 +266,8 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						// default.
 						if ((format == FIXED || format == VARIABLE)
 								&& token.getStart().getPositionInLine() < 11
-								&& END_OF_COMMENT_ENTRY_MARKERS.contains(text)) {
+								&& END_OF_COMMENT_ENTRY_MARKERS
+										.contains(text)) {
 							stream.rewind(token);
 							return sawSomething;
 						}

@@ -70,6 +70,7 @@ private def atom =
     | tagged
     | balanced
     | unbalanced
+    | notempty
     | rvalue
     )
 end
@@ -127,6 +128,10 @@ def identifier =
     )
 end
 
+def scoped-identifier =
+    identifier %noskip (':' ':' identifier)
+end
+
 def literal    =  (allUppercase__  word)                        end
 
 private def word =
@@ -162,6 +167,10 @@ end
 
 def unbalanced =
     '%% %noskip('notnested') atom
+end
+
+def notempty =
+    '%% %noskip('notempty') atom
 end
 
 def closure =

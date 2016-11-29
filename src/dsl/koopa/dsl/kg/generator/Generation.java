@@ -17,8 +17,8 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.trees.Tree;
 import koopa.core.trees.jaxen.Jaxen;
-import koopa.core.util.IndentingLogger;
 import koopa.core.util.Encoding;
+import koopa.core.util.IndentingLogger;
 import koopa.core.util.Iterables;
 import koopa.dsl.kg.grammar.KGGrammar;
 import koopa.templates.Template;
@@ -276,24 +276,22 @@ public class Generation {
 			final List<String> bindings, final List<String> unbindings) {
 		return new TemplateLogic() {
 			public String getValue(String name) {
+				if (name.startsWith("unescaped:"))
+					return unescaped(
+							getValue(name.substring("unescaped:".length())));
+
+				if (name.startsWith("unquoted:"))
+					return unquoted(
+							getValue(name.substring("unquoted:".length())));
+				
+				if (name.startsWith("xpath:"))
+					return xpath(name.substring("xpath:".length()), part);
+				
 				if ("text".equals(name))
 					return part.getAllText();
 
-				if ("text_of_identifier".equals(name))
-					return unescaped(part.getChild("identifier").getAllText());
-
-				if (name.startsWith("text_of_"))
-					return part.getChild(name.substring("text_of_".length()))
-							.getAllText();
-
-				if ("unquoted_text".equals(name))
-					return unquoted(part.getAllText());
-
 				if ("fully_qualified_identifier".equals(name))
 					return getFullyQualifiedIdentifier(part);
-
-				if ("native_codeblock".equals(name))
-					return nativeCodeblock(part.getAllText());
 
 				return super.getValue(name);
 			}
@@ -353,7 +351,6 @@ public class Generation {
 				continue;
 
 			final String name = child.getName();
-
 			if (!isPart(name))
 				continue;
 
@@ -366,8 +363,8 @@ public class Generation {
 	}
 
 	private void insertComma(StringBuilder builder) {
-		int lastParen = builder.lastIndexOf(")");
-		builder.insert(lastParen + 1, ',');
+		int lastParen = builder.lastIndexOf("\n");
+		builder.insert(lastParen, ',');
 	}
 
 	private void addFirstPart(Tree node, StringBuilder builder, String indent,
@@ -450,12 +447,11 @@ public class Generation {
 		PART_NAMES.add("lookahead");
 		PART_NAMES.add("noskip");
 		PART_NAMES.add("tagged");
-		PART_NAMES.add("assign");
 		PART_NAMES.add("identifier");
+		PART_NAMES.add("scoped_identifier");
 		PART_NAMES.add("literal");
 		PART_NAMES.add("number");
 		PART_NAMES.add("quoted_literal");
-		PART_NAMES.add("native_code");
 		PART_NAMES.add("any");
 		PART_NAMES.add("dot");
 		PART_NAMES.add("return_value");
@@ -507,8 +503,8 @@ public class Generation {
 			return text;
 	}
 
-	private String nativeCodeblock(String text) {
-		return text.substring(2, text.length() - 2);
+	private String xpath(String query, Tree part) {
+		return Jaxen.getAllText(part, query);
 	}
 
 	/**

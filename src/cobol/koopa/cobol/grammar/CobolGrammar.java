@@ -1,25 +1,14 @@
 package koopa.cobol.grammar;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
-import koopa.core.grammars.KoopaGrammar;
-import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.FutureParser;
-import koopa.core.parsers.Stream;
 
 import static koopa.core.parsers.combinators.Opt.NOSKIP;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PUBLIC;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
-import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
-import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
 public class CobolGrammar extends CobolBaseGrammar {
     public CobolGrammar() {
@@ -14015,7 +14004,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             keyword("SQL"),
             optional(
               limited(
-                sqlStatement(),
+                sqlGrammar().sqlStatement(),
                 // Closure:
                 keyword("END-EXEC")
               )
@@ -14056,7 +14045,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             keyword("CICS"),
             optional(
               limited(
-                cicsStatement(),
+                cicsGrammar().cicsStatement(),
                 // Closure:
                 keyword("END-EXEC")
               )

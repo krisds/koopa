@@ -51,3 +51,10 @@ target name;
 +[ COBOL_1 ]
 +[ COBOL-1 ]
 +[ COBOL$1 ]
+
+
+target scopedIdentifier;
+
++[ sql::statement ]
++[ sql::`where ]
+-identifier

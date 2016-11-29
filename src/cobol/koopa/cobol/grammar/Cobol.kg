@@ -3287,16 +3287,17 @@ end
 
 def execSQLStatement =
     (EXEC | EXECUTE) SQL 
-      [sqlStatement %before { END-EXEC }] 
+      [sql::sqlStatement %before { END-EXEC }] 
       [unknown: --> END-EXEC]
     END-EXEC
 end
 
 # EXEC CICS support. -----------------------------------------------------------
+# This is supported by a separate grammar.
 
 def execCICSStatement =
     (EXEC | EXECUTE) CICS
-      [cicsStatement %before { END-EXEC }] 
+      [cics::cicsStatement %before { END-EXEC }] 
       [unknown: --> END-EXEC]
     END-EXEC
 end

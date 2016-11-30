@@ -103,6 +103,10 @@ public final class Files {
 		return getExtension(file.getName());
 	}
 
+	/**
+	 * Returns a {@linkplain Reader} for the given file, using the character set
+	 * returned by {@linkplain Encoding#getCharset()}.
+	 */
 	public static Reader getReader(File file) throws FileNotFoundException {
 		final FileInputStream stream = new FileInputStream(file);
 		return new InputStreamReader(stream, Encoding.getCharset());
@@ -122,8 +126,8 @@ public final class Files {
 	 * Given a list of paths, return a new list of paths which have been offset
 	 * by the given relative path name.
 	 * <p>
-	 * If the given path name is
-	 * <code>null</null> returns the paths as they were given.
+	 * If the given path name is <code>null</null> returns the paths as they
+	 * were given.
 	 */
 	public static List<File> offset(String relativePathName, List<File> paths) {
 		if (paths == null || paths.size() == 0)

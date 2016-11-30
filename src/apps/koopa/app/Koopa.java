@@ -22,6 +22,7 @@ import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.overview.Overview;
 import koopa.app.menus.FileMenu;
 import koopa.app.menus.HelpMenu;
+import koopa.app.menus.LoggingMenu;
 import koopa.app.menus.NavigationMenu;
 import koopa.app.menus.ParserSettingsMenu;
 import koopa.app.menus.SyntaxTreeMenu;
@@ -123,6 +124,9 @@ public class Koopa extends JFrame implements Application {
 		syntaxTreeMenu = new SyntaxTreeMenu(this);
 		bar.add(syntaxTreeMenu);
 
+		LoggingMenu loggingMenu = new LoggingMenu();
+		bar.add(loggingMenu);
+		
 		helpMenu = new HelpMenu(this);
 		bar.add(helpMenu);
 

@@ -54,4 +54,21 @@ public class Strings {
 
 		return builder.toString();
 	}
+
+	/**
+	 * Splits the given string into words, capitalizes each one, and joins them
+	 * back together.
+	 */
+	public static String titleCase(String s) {
+		final String[] words = s.split("\\s+");
+		final StringBuilder builder = new StringBuilder();
+
+		for (int i = 0; i < words.length; i++) {
+			builder.append(words[i].substring(0, 1).toUpperCase());
+			builder.append(words[i].substring(1).toLowerCase());
+			builder.append(" ");
+		}
+
+		return builder.toString();
+	}
 }

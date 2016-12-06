@@ -1437,8 +1437,12 @@ end
 # Seen in MF and GNU COBOL
 private def constantEntry_level78 =
     ( levelNumber : 78        )
-    ( entryName   : justAName ) 
-    constantValueClause .
+    
+    ( ( entryName   : justAName ) 
+      constantValueClause
+    | unknown: --> .
+    )
+    .
 end
 
 
@@ -1512,9 +1516,12 @@ end
 
 private def dataDescriptionEntry_format2 =
     ( levelNumber : 66       )
-    ( entryName   : dataName )
-    renamesClause
-    . 
+    
+    ( ( entryName   : dataName )
+      renamesClause
+    | unknown: --> .
+    )
+    .
 end
 
 private def dataDescriptionEntry_format3_and_4 =

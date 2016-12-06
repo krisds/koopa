@@ -25,6 +25,8 @@ public class HoldingTarget implements Target<Data> {
 	/** The {@linkplain Data} we're holding on to. */
 	private final LinkedList<Data> queue;
 
+	private final List<RawObserver> rawObservers;
+
 	/** Who wants to be notified about incoming {@linkplain Data} ? */
 	private final List<Observer> observers;
 
@@ -34,12 +36,16 @@ public class HoldingTarget implements Target<Data> {
 		assert (target != null);
 		this.target = target;
 		this.queue = new LinkedList<Data>();
+		this.rawObservers = new LinkedList<RawObserver>();
 		this.observers = new LinkedList<Observer>();
 	}
 
 	/** {@inheritDoc} */
 	public void push(Data data) {
 		queue.addLast(data);
+
+		for (RawObserver observer : rawObservers)
+			observer.pushed(data);
 
 		if (!(data instanceof Token))
 			return;
@@ -88,6 +94,9 @@ public class HoldingTarget implements Target<Data> {
 	public Data pop() {
 		assert (!queue.isEmpty());
 		final Data last = queue.removeLast();
+
+		for (RawObserver observer : rawObservers)
+			observer.popping(last);
 
 		if (!notificationsInProgress && last instanceof Token) {
 			final Token token = (Token) last;
@@ -150,12 +159,26 @@ public class HoldingTarget implements Target<Data> {
 
 	// ========================================================================
 
+	public interface RawObserver {
+		void pushed(Data data);
+
+		void popping(Data last);
+	}
+
 	public interface Observer {
 		void start(HoldingTarget holdingTarget, Token last);
 
 		void pushed(HoldingTarget holdingTarget, Token data);
 
 		void popping(HoldingTarget holdingTarget, Token last);
+	}
+
+	public void addObserver(RawObserver observer) {
+		rawObservers.add(observer);
+	}
+
+	public void removeObserver(RawObserver observer) {
+		rawObservers.remove(observer);
 	}
 
 	public void addObserver(Observer observer) {

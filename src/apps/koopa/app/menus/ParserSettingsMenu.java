@@ -17,7 +17,6 @@ import koopa.app.Application;
 import koopa.app.actions.SetSourceFormatAction;
 import koopa.app.components.cobolwords.CobolWordSettings;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
-import koopa.app.components.detail.Detail;
 import koopa.app.components.fileextensions.FileExtensions;
 import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
@@ -135,31 +134,11 @@ public class ParserSettingsMenu extends JMenu {
 
 	public void update() {
 		Overview overview = application.getOverview();
+		setEnabled(!overview.isParsing());
+
 		Component view = application.getView();
-
-		if (view == overview) {
-			boolean isParsing = overview.isParsing();
-
-			setEnabled(!isParsing);
-			switch (overview.getParsingCoordinator().getFormat()) {
-			case FIXED:
-				fixedFormat.setSelected(true);
-				break;
-			case FREE:
-				freeFormat.setSelected(true);
-				break;
-			case VARIABLE:
-				variableFormat.setSelected(true);
-				break;
-			}
-
-			if (overview.getParsingCoordinator().isPreprocessing())
-				preprocessingEnabled.setSelected(true);
-			else
-				preprocessingEnabled.setSelected(false);
-
-		} else {
-			Detail detail = (Detail) view;
+		if (view instanceof Coordinated) {
+			Coordinated detail = (Coordinated) view;
 
 			switch (detail.getParsingCoordinator().getFormat()) {
 			case FIXED:

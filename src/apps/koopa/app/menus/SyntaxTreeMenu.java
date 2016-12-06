@@ -14,7 +14,6 @@ import koopa.app.actions.QueryUsingXPathAction;
 import koopa.app.actions.ShowASTAction;
 import koopa.app.actions.ShowGrammarAction;
 import koopa.app.components.detail.Detail;
-import koopa.app.components.overview.Overview;
 
 public class SyntaxTreeMenu extends JMenu {
 
@@ -49,26 +48,25 @@ public class SyntaxTreeMenu extends JMenu {
 		add(saveXML);
 
 		queryUsingXath = new JMenuItem(new QueryUsingXPathAction(application));
-		setAccelerators(queryUsingXath, MODIFIER + " D");
+		setAccelerators(queryUsingXath, MODIFIER + " K");
 		add(queryUsingXath);
 	}
 
 	public void update() {
-		Overview overview = application.getOverview();
 		Component view = application.getView();
 
-		if (view == overview) {
-			showAST.setEnabled(false);
-			saveXML.setEnabled(false);
-			queryUsingXath.setEnabled(false);
-
-		} else {
+		if (view instanceof Detail) {
 			Detail detail = (Detail) view;
 
 			boolean hasSyntaxTree = detail.hasSyntaxTree();
 			showAST.setEnabled(hasSyntaxTree);
 			saveXML.setEnabled(hasSyntaxTree);
 			queryUsingXath.setEnabled(hasSyntaxTree);
+
+		} else {
+			showAST.setEnabled(false);
+			saveXML.setEnabled(false);
+			queryUsingXath.setEnabled(false);
 		}
 	}
 }

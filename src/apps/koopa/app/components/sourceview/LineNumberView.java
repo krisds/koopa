@@ -188,7 +188,7 @@ public class LineNumberView extends JComponent {
 			}
 			int lastChar = map.getElement(index).getEndOffset() - 1;
 			Rectangle r = text.modelToView(lastChar);
-			height = (r.y - lastPos) + r.height;
+			height = (r == null) ? -1 : (r.y - lastPos) + r.height;
 		} catch (BadLocationException ex) {
 			ex.printStackTrace();
 		}
@@ -249,6 +249,8 @@ public class LineNumberView extends JComponent {
 		String text = "";
 
 		for (int i = first; i <= last; i++) {
+			if (sizes.getSize(i) < 0)
+				continue;
 			text = String.valueOf(i + 1);
 			int x = getComponentWidth() - MARGIN
 					- viewFontMetrics.stringWidth(text);

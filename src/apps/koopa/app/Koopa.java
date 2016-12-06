@@ -16,10 +16,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.log4j.PropertyConfigurator;
+
 import koopa.app.cli.CommandLineOptions;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.grammarview.GrammarView;
 import koopa.app.components.overview.Overview;
+import koopa.app.components.progress.ProgressDialog;
+import koopa.app.debug.Debug;
 import koopa.app.menus.FileMenu;
 import koopa.app.menus.HelpMenu;
 import koopa.app.menus.LoggingMenu;
@@ -34,8 +38,6 @@ import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
-
-import org.apache.log4j.PropertyConfigurator;
 
 public class Koopa extends JFrame implements Application {
 
@@ -126,7 +128,7 @@ public class Koopa extends JFrame implements Application {
 
 		LoggingMenu loggingMenu = new LoggingMenu();
 		bar.add(loggingMenu);
-		
+
 		helpMenu = new HelpMenu(this);
 		bar.add(helpMenu);
 
@@ -221,21 +223,24 @@ public class Koopa extends JFrame implements Application {
 		// TODO Check if there already exists a tab for the given fileMenu. In
 		// that case do a reload instead.
 
+		final ProgressDialog progress = new ProgressDialog(getFrame(),
+				"Parsing " + file + "...");
+		progress.setMessage("Parsing...");
+		progress.setVisible(true);
+
 		final Detail detail = new Detail(this, file, parsingCoordinator);
 		overview.addParseResults(detail.getParseResults());
 
 		String title = getTitleForDetail(detail);
 
-		// Tab tab = new Tab(title, this, detail);
-
 		tabbedPane.addTab(title, detail);
-		// tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(detail),
-		// tab);
 
 		if (selectedToken != null)
 			detail.selectDetail(selectedToken);
 
 		tabbedPane.setSelectedComponent(detail);
+
+		progress.setVisible(false);
 	}
 
 	private String getTitleForDetail(Detail detail) {
@@ -273,6 +278,12 @@ public class Koopa extends JFrame implements Application {
 			// tab.setTitle(getTitleForDetail(detail));
 			tabbedPane.setTitleAt(tabbedPane.indexOfComponent(detail),
 					getTitleForDetail(detail));
+
+			updateMenus();
+			fireUpdatedView(view);
+
+		} else if (view instanceof Debug) {
+			((Debug) view).reload();
 
 			updateMenus();
 			fireUpdatedView(view);
@@ -338,10 +349,30 @@ public class Koopa extends JFrame implements Application {
 
 		if (component instanceof Detail)
 			((Detail) component).close();
+		else if (component instanceof Debug)
+			((Debug) component).close();
 	}
 
 	public void closeView() {
 		closeView(getView());
+	}
+
+	public void swapView(Component oldView, Component newView) {
+		if (oldView == overview)
+			return;
+
+		int index = tabbedPane.indexOfComponent(oldView);
+		tabbedPane.setComponentAt(index, newView);
+
+		if (oldView instanceof Detail)
+			fireClosedDetail((Detail) oldView);
+
+		updateMenus();
+
+		if (oldView instanceof Detail)
+			((Detail) oldView).close();
+		else if (oldView instanceof Debug)
+			((Debug) oldView).close();
 	}
 
 	public void showGrammarRules() {

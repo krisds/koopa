@@ -13,6 +13,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.app.Application;
+import koopa.app.Textual;
 import koopa.app.batchit.ParseDetails;
 import koopa.app.components.detail.source.SourceDetails;
 import koopa.app.components.detail.token.TokenDetails;
@@ -31,8 +32,7 @@ import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
-// TODO Extract commonalities with Overview into a common superclass ?
-public class Detail extends JPanel implements Coordinated {
+public class Detail extends JPanel implements Coordinated, Textual {
 	private static final long serialVersionUID = 1L;
 
 	private Application application = null;
@@ -97,8 +97,8 @@ public class Detail extends JPanel implements Coordinated {
 		JScrollPane detailsScroll = new JScrollPane(detailsTable);
 		detailsScroll.setBorder(null);
 
-		JSplitPane horizontalSplit = new JSplitPane(
-				JSplitPane.HORIZONTAL_SPLIT, outline, sourceView);
+		JSplitPane horizontalSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				outline, sourceView);
 		horizontalSplit.setResizeWeight(0.3);
 
 		JPanel x = new JPanel();
@@ -183,10 +183,10 @@ public class Detail extends JPanel implements Coordinated {
 		return cobolFile;
 	}
 
-	public int getNumberOfLines() {
-		return sourceView.getNumberOfLines();
+	public int getAdjustedLineCount() {
+		return sourceView.getAdjustedLineCount();
 	}
-
+	
 	public boolean find(String search) {
 		return sourceView.find(search);
 	}

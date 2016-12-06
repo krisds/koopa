@@ -194,6 +194,20 @@ public class Stack {
 
 			return null;
 		}
+
+		public int depth() {
+			if (up == null)
+				return 0;
+			else
+				return 1 + up.depth();
+		}
+
+		public Frame getFrameUpBy(int offset) {
+			if (offset == 0)
+				return this;
+			else
+				return up.getFrameUpBy(offset - 1);
+		}
 	}
 
 	/**

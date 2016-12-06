@@ -17,8 +17,9 @@ import javax.swing.text.StyledDocument;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 
-public class TreeBasedDocument extends DefaultStyledDocument implements
-		StyledDocument {
+// TODO This vs Code class.
+public class TreeBasedDocument extends DefaultStyledDocument
+		implements StyledDocument {
 
 	private static final long serialVersionUID = 1L;
 
@@ -90,13 +91,5 @@ public class TreeBasedDocument extends DefaultStyledDocument implements
 			return offsetsForTokens.get(token);
 		else
 			return -1;
-	}
-
-	public int getNumberOfLines() {
-		return offsetsForLines.size();
-	}
-
-	public int getOffsetForLine(int line) {
-		return offsetsForLines.get(line);
 	}
 }

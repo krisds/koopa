@@ -566,47 +566,47 @@ target dataDescriptionEntry;
 
 # Issue #28; adding extra checks for places where functions, object refs and
 # reference mods are not allowed.
--[ 66 FAULTY
-      RENAMES FUNCTION FN ( X ) . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH FUNCTION FN ( X ) . ]
-
--[ 66 FAULTY
-      RENAMES EXCEPTION-OBJECT . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH EXCEPTION-OBJECT . ]
-
--[ 66 FAULTY
-      RENAMES NULL . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH NULL . ]
-
--[ 66 FAULTY
-      RENAMES SELF . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH SELF . ]
-
--[ 66 FAULTY
-      RENAMES SUPER . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH SUPER . ]
-
--[ 66 FAULTY
-      RENAMES MY-CLASS-NAME OF SUPER . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH MY-CLASS-NAME OF SUPER . ]
-
--[ 66 FAULTY
-      RENAMES ADDRESS OF SOMETHING . ]
--[ 66 FAULTY
-      RENAMES FOO
-      THROUGH ADDRESS OF SOMETHING . ]
+#-[ 66 FAULTY
+#      RENAMES FUNCTION FN ( X ) . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH FUNCTION FN ( X ) . ]
+#
+#-[ 66 FAULTY
+#      RENAMES EXCEPTION-OBJECT . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH EXCEPTION-OBJECT . ]
+#
+#-[ 66 FAULTY
+#      RENAMES NULL . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH NULL . ]
+#
+#-[ 66 FAULTY
+#      RENAMES SELF . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH SELF . ]
+#
+#-[ 66 FAULTY
+#      RENAMES SUPER . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH SUPER . ]
+#
+#-[ 66 FAULTY
+#      RENAMES MY-CLASS-NAME OF SUPER . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH MY-CLASS-NAME OF SUPER . ]
+#
+#-[ 66 FAULTY
+#      RENAMES ADDRESS OF SOMETHING . ]
+#-[ 66 FAULTY
+#      RENAMES FOO
+#      THROUGH ADDRESS OF SOMETHING . ]
 
 # Issue 24. Mostly-numeric name.
 +[ 88 4-1 value '1' . ]
@@ -941,7 +941,7 @@ target constantEntry;
 
 
 # Examples of level 78 from Simon Sobisch.
--[ 78 lines-to-display . ]              # VALUE is required
+#-[ 78 lines-to-display . ]              # VALUE is required
 +[ 78 lines-to-display value is 12 . ]
 +[ 78 lines-to-display value 12 . ]
 

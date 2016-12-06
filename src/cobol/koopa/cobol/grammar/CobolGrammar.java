@@ -5952,10 +5952,19 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("levelNumber",
               number("78")
             ),
-            as("entryName",
-              justAName()
+            choice(
+              sequence(
+                as("entryName",
+                  justAName()
+                ),
+                constantValueClause()
+              ),
+              as("unknown",
+                skipto(
+                  literal(".")
+                )
+              )
             ),
-            constantValueClause(),
             literal(".")
           )
         );
@@ -6096,10 +6105,19 @@ public class CobolGrammar extends CobolBaseGrammar {
             as("levelNumber",
               number("66")
             ),
-            as("entryName",
-              dataName()
+            choice(
+              sequence(
+                as("entryName",
+                  dataName()
+                ),
+                renamesClause()
+              ),
+              as("unknown",
+                skipto(
+                  literal(".")
+                )
+              )
             ),
-            renamesClause(),
             literal(".")
           )
         );

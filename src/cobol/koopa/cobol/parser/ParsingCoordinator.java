@@ -45,14 +45,14 @@ public class ParsingCoordinator {
 	}
 
 	public ParseResults parse(File file) throws IOException {
-		return getConfiguredParser().parse(file);
+		return getParser().parse(file);
 	}
 
 	public ParseResults parse(File file, Reader reader) throws IOException {
-		return getConfiguredParser().parse(file, reader);
+		return getParser().parse(file, reader);
 	}
 
-	private CobolParser getConfiguredParser() {
+	public CobolParser getParser() {
 		CobolParser parser = new CobolParser();
 
 		parser.setFormat(format);

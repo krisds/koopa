@@ -39,10 +39,12 @@ public interface Application {
 
 	// TODO Set up a View type.
 	Component getView();
-	
+
 	Coordinated getCoordinatedView();
 
 	void closeView(Component component);
+
+	void swapView(Component oldView, Component newView);
 
 	void showGrammarRule(String name);
 

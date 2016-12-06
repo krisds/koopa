@@ -9,10 +9,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import koopa.app.Application;
+import koopa.app.Textual;
 import koopa.app.actions.FindAction;
 import koopa.app.actions.FindAgainAction;
 import koopa.app.actions.GoToLineAction;
-import koopa.app.components.overview.Overview;
 
 public class NavigationMenu extends JMenu {
 
@@ -47,20 +47,13 @@ public class NavigationMenu extends JMenu {
 	}
 
 	public void update() {
-		Overview overview = application.getOverview();
-		Component view = application.getView();
+		final Component view = application.getView();
 
-		if (view == overview) {
-			setEnabled(false);
-			goToLine.setEnabled(false);
-			find.setEnabled(false);
-			findAgain.setEnabled(false);
+		final boolean textual = (view instanceof Textual);
 
-		} else {
-			setEnabled(true);
-			goToLine.setEnabled(true);
-			find.setEnabled(true);
-			findAgain.setEnabled(true);
-		}
+		setEnabled(textual);
+		find.setEnabled(textual);
+		findAgain.setEnabled(textual);
+		goToLine.setEnabled(textual);
 	}
 }

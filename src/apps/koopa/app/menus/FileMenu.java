@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 
 import koopa.app.Application;
 import koopa.app.actions.CloseFileAction;
+import koopa.app.actions.DebugAction;
 import koopa.app.actions.ExportBatchResultsToCSVAction;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QuitParsingAction;
@@ -18,6 +19,7 @@ import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.overview.Overview;
+import koopa.app.debug.Debug;
 import koopa.app.util.Getter;
 import koopa.cobol.CobolFiles;
 
@@ -29,6 +31,7 @@ public class FileMenu extends JMenu {
 
 	private JMenuItem open = null;
 	private JMenuItem reload = null;
+	private JMenuItem debug = null;
 	private JMenuItem close = null;
 	private JMenuItem quitParsing = null;
 	private JMenuItem clearResults = null;
@@ -53,6 +56,10 @@ public class FileMenu extends JMenu {
 		setAccelerators(reload, MODIFIER + " R");
 		add(reload);
 
+		debug = new JMenuItem(new DebugAction(application));
+		setAccelerators(debug, MODIFIER + " D");
+		add(debug);
+
 		close = new JMenuItem(new CloseFileAction(application));
 		setAccelerators(close, MODIFIER + " W", "ESCAPE");
 		add(close);
@@ -65,12 +72,12 @@ public class FileMenu extends JMenu {
 
 		addSeparator();
 
-		clearResults = new JMenuItem(new ClearResultsAction(
-				application.getOverview()));
+		clearResults = new JMenuItem(
+				new ClearResultsAction(application.getOverview()));
 		add(clearResults);
 
-		saveCSV = new JMenuItem(new ExportBatchResultsToCSVAction(
-				new Getter<BatchResults>() {
+		saveCSV = new JMenuItem(
+				new ExportBatchResultsToCSVAction(new Getter<BatchResults>() {
 					public BatchResults getIt() {
 						return application.getOverview().getResults();
 					}
@@ -90,23 +97,37 @@ public class FileMenu extends JMenu {
 			boolean hasResults = !isParsing
 					&& overview.getResults().getRowCount() > 0;
 
-			// File menu ...
 			open.setEnabled(!isParsing);
 			reload.setEnabled(false);
+			debug.setEnabled(false);
 			close.setEnabled(false);
 			quitParsing.setEnabled(isParsing);
 			clearResults.setEnabled(hasResults);
 			saveCSV.setEnabled(hasResults);
 
-		} else {
+		} else if (view instanceof Detail) {
 			Detail detail = (Detail) view;
 
 			boolean isParsing = overview.isParsing();
 			boolean canDoExtraActions = !isParsing && !detail.isParsing();
 
-			// File menu ...
 			open.setEnabled(canDoExtraActions);
 			reload.setEnabled(canDoExtraActions);
+			debug.setEnabled(canDoExtraActions);
+			close.setEnabled(canDoExtraActions);
+			quitParsing.setEnabled(isParsing);
+			clearResults.setEnabled(false);
+			saveCSV.setEnabled(false);
+			
+		} else if (view instanceof Debug) {
+			Debug debug = (Debug) view;
+
+			boolean isParsing = overview.isParsing();
+			boolean canDoExtraActions = !isParsing && !debug.isParsing();
+
+			open.setEnabled(canDoExtraActions);
+			reload.setEnabled(canDoExtraActions);
+			debug.setEnabled(canDoExtraActions);
 			close.setEnabled(canDoExtraActions);
 			quitParsing.setEnabled(isParsing);
 			clearResults.setEnabled(false);

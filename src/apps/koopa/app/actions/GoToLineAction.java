@@ -7,7 +7,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 
 import koopa.app.Application;
-import koopa.app.components.detail.Detail;
+import koopa.app.Textual;
 
 public class GoToLineAction extends AbstractAction implements Action {
 
@@ -23,13 +23,13 @@ public class GoToLineAction extends AbstractAction implements Action {
 	public void actionPerformed(ActionEvent ae) {
 		new Thread(new Runnable() {
 			public void run() {
-				Detail detail = (Detail) application.getView();
+				Textual textual = (Textual) application.getView();
 
-				final int numberOfLines = detail.getNumberOfLines();
+				final int numberOfLines = textual.getAdjustedLineCount();
 
 				String input = (String) JOptionPane.showInputDialog(
-						application.getFrame(), "Enter line number (1 to "
-								+ numberOfLines + ")");
+						application.getFrame(),
+						"Enter line number (1 to " + numberOfLines + ")");
 
 				if (input == null)
 					return;
@@ -44,7 +44,7 @@ public class GoToLineAction extends AbstractAction implements Action {
 								"Line number out of range.",
 								JOptionPane.ERROR_MESSAGE);
 					else
-						detail.scrollToLine(lineNumber - 1);
+						textual.scrollToLine(lineNumber - 1);
 
 				} catch (NumberFormatException e) {
 					JOptionPane.showMessageDialog(application.getFrame(),

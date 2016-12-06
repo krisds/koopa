@@ -8,7 +8,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 
 import koopa.app.Application;
-import koopa.app.components.detail.Detail;
+import koopa.app.Textual;
 
 public class FindAction extends AbstractAction implements Action {
 
@@ -53,19 +53,16 @@ public class FindAction extends AbstractAction implements Action {
 				return;
 			}
 
-			Detail detail = (Detail) application.getView();
+			Textual detail = (Textual) application.getView();
 			if (!detail.find(input))
 				JOptionPane.showMessageDialog(application.getFrame(),
 						"No match for '" + input + "'.", "Not found",
 						JOptionPane.ERROR_MESSAGE);
 
 		} catch (PatternSyntaxException e) {
-			JOptionPane
-					.showMessageDialog(
-							application.getFrame(),
-							"Syntax error in pattern at position "
-									+ e.getIndex() + ".", "Not found",
-							JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(application.getFrame(),
+					"Syntax error in pattern at position " + e.getIndex() + ".",
+					"Not found", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

@@ -112,6 +112,10 @@ public class Streams {
 			return source.getSource(clazz);
 	}
 
+	public Source<Token> getSource() {
+		return source;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
 		for (Target<Data> target : targets)
@@ -134,7 +138,7 @@ public class Streams {
 	public boolean getLimitsEnabled() {
 		return limitsEnabled;
 	}
-	
+
 	@Deprecated
 	public void disableLimits() {
 		limitsEnabled = false;

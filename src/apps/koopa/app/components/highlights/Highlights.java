@@ -13,6 +13,7 @@ import koopa.core.data.Position;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
 
+// TODO Make it work against a TextPanel ?
 public class Highlights {
 
 	private final SourceView sourceView;

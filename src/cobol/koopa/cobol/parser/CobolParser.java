@@ -64,42 +64,24 @@ public class CobolParser {
 	}
 
 	public ParseResults parse(File file, Reader reader) throws IOException {
-		final boolean isCopybook = CobolFiles.isCopybook(file);
+		final Parse parse = getParseSetup(file, reader);
+		return parse(file, parse);
+	}
 
-		// Build the tokenisation stage.
-		Source<Token> source = CobolTokens.getNewSource(file.getCanonicalPath(), reader, grammar, format, file,
-				preprocessing ? copybooks : null);
-		LOCCount loc = new LOCCount(source);
-		source = loc;
+	public ParseResults parse(File file, Parse parse) throws IOException {
+		final boolean isCopybook = CobolFiles.isCopybook(file);
 
 		// Depending on the type of file we ask the grammar for the right
 		// parser.
-		ParserCombinator parser = null;
+		final ParserCombinator parser;
 		if (isCopybook)
 			parser = grammar.copybook();
 		else
 			parser = grammar.compilationGroup();
 
-		Parse parse = Parse.of(source);
-		boolean accepts = false;
+		boolean accepts = parser.accepts(parse);
 
-		// Keep track of all tokens passing through here, if so requested.
-		TokenTracker tokenTracker = null;
-		if (keepingTrackOfTokens) {
-			tokenTracker = new TokenTracker();
-			parse.to(tokenTracker);
-		}
-
-		if (buildTrees)
-			parse.to(new KoopaTreeBuilder(grammar, false));
-
-		if (!targets.isEmpty())
-			for (Target<Data> next : targets)
-				parse.to(next);
-
-		accepts = parser.accepts(parse);
-
-		ParseResults results = new ParseResults(file);
+		final ParseResults results = new ParseResults(file);
 		results.setValidInput(accepts);
 		results.setParse(parse);
 
@@ -110,17 +92,20 @@ public class CobolParser {
 				LOGGER.info("There were warnings from the grammar:");
 
 				for (Tuple<Token, String> warning : parse.getWarnings())
-					LOGGER.info("  " + warning.getFirst() + ": " + warning.getSecond());
+					LOGGER.info("  " + warning.getFirst() + ": "
+							+ warning.getSecond());
 			}
 		}
 
 		// Lets figure out whether we have seen all program text.
 		// This will also push any remaining tokens to the token tracker, if one
 		// was set up.
-		final Stream tail = new BaseStream(source, new NullTarget<Data>());
+		final Stream tail = new BaseStream(parse.getStreams().getSource(),
+				new NullTarget<Data>());
 		tail.bookmark();
 
-		final boolean sawMoreProgramText = grabRemainingProgramText(grammar, tail, tokenTracker);
+		final boolean sawMoreProgramText = grabRemainingProgramText(grammar,
+				tail, parse.getTarget(TokenTracker.class));
 
 		// Here we check if the parser really consumed all input. If it didn't
 		// we try to flag the point of failure as best we can.
@@ -138,6 +123,7 @@ public class CobolParser {
 				LOGGER.trace(msg);
 
 			tail.rewind();
+			tail.bookmark();
 			final Position finalPosition = parse.getFinalPosition();
 			final Token token = findTokenAt(tail, finalPosition);
 
@@ -145,6 +131,7 @@ public class CobolParser {
 				parse.error(token, msg);
 		}
 
+		tail.rewind();
 		parse.done();
 
 		// It is now safe to quit the method if we want/need to.
@@ -152,11 +139,44 @@ public class CobolParser {
 			return results;
 
 		// Grab the LOC statistics.
+		LOCCount loc = parse.getSource(LOCCount.class);
 		results.setNumberOfLines(loc.getNumberOfLines());
 		results.setNumberOfLinesWithCode(loc.getNumberOfLinesWithCode());
-		results.setNumberOfLinesWithComments(loc.getNumberOfLinesWithComments());
+		results.setNumberOfLinesWithComments(
+				loc.getNumberOfLinesWithComments());
 
 		return results;
+	}
+
+	public Parse getParseSetup(File file) throws IOException {
+		return getParseSetup(file, Files.getReader(file));
+	}
+
+	public Parse getParseSetup(File file, Reader reader) throws IOException {
+		Parse parse;
+		// Build the tokenisation stage.
+		Source<Token> source = CobolTokens.getNewSource(file.getCanonicalPath(),
+				reader, grammar, format, file,
+				preprocessing ? copybooks : null);
+		LOCCount loc = new LOCCount(source);
+		source = loc;
+
+		parse = Parse.of(source);
+
+		// Keep track of all tokens passing through here, if so requested.
+		TokenTracker tokenTracker = null;
+		if (keepingTrackOfTokens) {
+			tokenTracker = new TokenTracker();
+			parse.to(tokenTracker);
+		}
+
+		if (buildTrees)
+			parse.to(new KoopaTreeBuilder(grammar, false));
+
+		if (!targets.isEmpty())
+			for (Target<Data> next : targets)
+				parse.to(next);
+		return parse;
 	}
 
 	public void addTarget(Target<Data> target) {
@@ -196,7 +216,8 @@ public class CobolParser {
 		this.copybooks = copybooks;
 	}
 
-	private boolean grabRemainingProgramText(CobolGrammar grammar, Stream stream, TokenTracker tracker) {
+	private boolean grabRemainingProgramText(CobolGrammar grammar,
+			Stream stream, TokenTracker tracker) {
 
 		boolean sawMoreProgramText = false;
 
@@ -212,7 +233,8 @@ public class CobolParser {
 				tracker.push(t);
 
 			// Have we found more program text ?
-			if (!sawMoreProgramText && grammar.isProgramText(t) && !grammar.canBeSkipped(t, null))
+			if (!sawMoreProgramText && grammar.isProgramText(t)
+					&& !grammar.canBeSkipped(t, null))
 				sawMoreProgramText = true;
 
 			// Stop after we found program text, unless we're tracking all

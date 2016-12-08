@@ -295,35 +295,33 @@ public class Token implements Data {
 		return s;
 	}
 
-	@Override
-	public int hashCode() {
-		return text.hashCode() * 37 + ranges.hashCode() * 11 + tags.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Token))
-			return false;
-
-		final Token other = (Token) obj;
-
-		if (!text.equals(other.text))
-			return false;
-
-		if (!ranges.equals(other.ranges))
-			return false;
-
-		if (!tags.equals(other.tags))
-			return false;
-
-		return true;
-	}
-
 	public boolean isSkipped() {
 		return skipped;
 	}
 
 	public void setSkipped(boolean skipped) {
 		this.skipped = skipped;
+	}
+
+	// ========================================================================
+
+	private static int hashCounter = 0;
+	private final int HASHCODE = hashCounter++;
+
+	/**
+	 * For {@linkplain Token} instances, equality boils down to object identity.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		return this == obj;
+	}
+
+	/**
+	 * Hashcodes for {@linkplain Token} objects are nothing more than a
+	 * sequentially generated identifier.
+	 */
+	@Override
+	public int hashCode() {
+		return HASHCODE;
 	}
 }

@@ -13,8 +13,8 @@ import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Parse;
+import koopa.core.streams.BaseStream;
 import koopa.core.targets.HoldingTarget;
 import koopa.core.util.Files;
 
@@ -57,7 +57,7 @@ public class Code extends DefaultStyledDocument {
 
 			log.setParse(parse);
 
-			final BaseStream baseStream = parse.getStreams().getBaseStream();
+			final BaseStream baseStream = parse.getFlow().getBaseStream();
 			final HoldingTarget target = baseStream.getTarget();
 
 			final ParsedDocumentBuilder observer = new ParsedDocumentBuilder(

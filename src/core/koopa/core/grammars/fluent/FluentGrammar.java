@@ -10,11 +10,13 @@ import koopa.core.grammars.combinators.MatchAny;
 import koopa.core.grammars.combinators.MatchEndOfFile;
 import koopa.core.grammars.combinators.MatchKeyword;
 import koopa.core.grammars.combinators.MatchToken;
+import koopa.core.grammars.combinators.OptimizingChoice;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.grammars.combinators.TestForCase;
 import koopa.core.grammars.combinators.TestForKeyword;
 import koopa.core.grammars.combinators.TestTag;
 import koopa.core.parsers.FutureParser;
+import koopa.core.parsers.Optimizer;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.At;
 import koopa.core.parsers.combinators.Choice;
@@ -73,6 +75,9 @@ public abstract class FluentGrammar extends Grammar {
 			public ParserCombinator asParser() {
 				if (elements.length == 1)
 					return convertToParser(elements[0]);
+				else if (Optimizer.shouldRun())
+					return new OptimizingChoice(FluentGrammar.this,
+							convertAllToParsers(elements));
 				else
 					return new Choice(convertAllToParsers(elements));
 			}

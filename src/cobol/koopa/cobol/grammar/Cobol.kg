@@ -1508,7 +1508,7 @@ private def dataDescriptionEntry_format1 =
     | attributeClause
     
     | usageClause      # STD.BK -- Note: This has some catch-alls in it.
-    | literal
+#   | literal          # TODO Why ?
     ]
     (unknown: --> .)  # TODO Handle skipped.
     .
@@ -2879,7 +2879,6 @@ def displayStatement =
     | UNIT (identifier | literal)
     | dtAtPositioning
     | dtLineColPositioning
-    | uponClause
     | modeIsBlockPhrase
     | [WITH] (screenEntryPhrase)+
     )*

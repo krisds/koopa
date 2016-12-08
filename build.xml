@@ -88,8 +88,8 @@
 			<test name="koopa.core.data.test.TokensTest" />
 
 			<test name="koopa.core.parsers.test.ParseStackTest" />
-			<test name="koopa.core.parsers.test.BaseStreamTest" />
-			<test name="koopa.core.parsers.test.LimitedStreamTest" />
+			<test name="koopa.core.streams.test.BaseStreamTest" />
+			<test name="koopa.core.streams.test.LimitedStreamTest" />
 
 			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
 			<test name="koopa.core.grammars.test.AutomaticKeywordsTest" />

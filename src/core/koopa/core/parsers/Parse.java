@@ -12,7 +12,7 @@ import koopa.core.data.Token;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.combinators.Opt;
 import koopa.core.sources.Source;
-import koopa.core.streams.Streams;
+import koopa.core.streams.Flow;
 import koopa.core.targets.Target;
 import koopa.core.util.Tuple;
 
@@ -20,7 +20,7 @@ import koopa.core.util.Tuple;
 public class Parse {
 
 	private final Stack stack;
-	private final Streams streams;
+	private final Flow flow;
 	private final Trace trace;
 
 	// TODO Move these to Stack ?
@@ -36,32 +36,32 @@ public class Parse {
 	private Parse() {
 		this.stack = new Stack();
 		this.trace = new Trace();
-		this.streams = new Streams(this);
+		this.flow = new Flow(this);
 	}
 
 	public static Parse of(Source<Token> source) {
 		Parse parse = new Parse();
-		parse.getStreams().setSource(source);
+		parse.getFlow().setSource(source);
 		return parse;
 	}
 
 	public Parse to(Target<Data> target) {
-		streams.addTarget(target);
+		flow.addTarget(target);
 		return this;
 	}
 
 	public <T extends Source<? extends Data>> T getSource(Class<T> clazz) {
-		return streams.getSource(clazz);
+		return flow.getSource(clazz);
 	}
 
 	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
-		return streams.getTarget(clazz);
+		return flow.getTarget(clazz);
 	}
 
 	public void done() {
 		// TODO stack.done() ?
 		// TODO trace.done() ?
-		streams.done();
+		flow.done();
 	}
 
 	public Stack getStack() {
@@ -72,12 +72,12 @@ public class Parse {
 		return trace;
 	}
 
-	public Streams getStreams() {
-		return streams;
+	public Flow getFlow() {
+		return flow;
 	}
 	
 	public Stream getStream() {
-		return streams.getStream();
+		return flow.getStream();
 	}
 	
 	public boolean getOption(Opt noskip) {

@@ -28,8 +28,8 @@ public class At extends UnaryParserDecorator {
 		stream.rewind();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent(
-					toString() + " : " + (accepted ? "yes" : "no"));
+			parse.getTrace()
+					.dedent(toString() + " : " + (accepted ? "yes" : "no"));
 
 		return accepted;
 	}
@@ -50,6 +50,15 @@ public class At extends UnaryParserDecorator {
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 	}
 
+	/**
+	 * This parser just tests the context of the stream it is in, and so does
+	 * not contribute any keywords.
+	 */
+	@Override
+	public boolean allowsLookahead() {
+		return false;
+	}
+	
 	/**
 	 * This parser just tests the context of the stream it is in, and so never
 	 * actually consumes any input.

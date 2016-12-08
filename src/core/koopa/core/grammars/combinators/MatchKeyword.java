@@ -31,6 +31,11 @@ public class MatchKeyword extends TestProgramText {
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		keywords.add(word);
 	}
+	
+	@Override
+	public boolean allowsLookahead() {
+		return true;
+	}
 
 	@Override
 	public String toString() {

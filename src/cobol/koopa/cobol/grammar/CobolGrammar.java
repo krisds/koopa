@@ -6071,8 +6071,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 keyword("PROTECTED"),
                 keyword("INTERNAL"),
                 attributeClause(),
-                usageClause(),
-                literal()
+                usageClause()
               )
             ),
             as("unknown",
@@ -12109,7 +12108,6 @@ public class CobolGrammar extends CobolBaseGrammar {
                 ),
                 dtAtPositioning(),
                 dtLineColPositioning(),
-                uponClause(),
                 modeIsBlockPhrase(),
                 sequence(
                   optional(

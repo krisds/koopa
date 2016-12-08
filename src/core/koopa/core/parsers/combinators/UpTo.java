@@ -1,9 +1,9 @@
 package koopa.core.parsers.combinators;
 
-import koopa.core.parsers.LimitedStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
+import koopa.core.streams.LimitedStream;
 
 /**
  * This {@linkplain ParserCombinator} will attempt to match a given
@@ -27,7 +27,7 @@ public class UpTo extends UnaryParserDecorator {
 
 	@Override
 	public boolean matches(Parse parse) {
-		final LimitedStream limitedStream = parse.getStreams()
+		final LimitedStream limitedStream = parse.getFlow()
 				.getLimitedStream();
 
 		// TODO Only create closure when really needed.

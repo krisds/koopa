@@ -33,6 +33,15 @@ public class FutureParser extends ParserCombinator {
 	}
 
 	@Override
+	public boolean allowsLookahead() {
+		if (parser == null) {
+			System.out.println("Too Soon !");
+			return false;
+		}else
+			return parser.allowsLookahead();
+	}
+	
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return parser.canMatchEmptyInputs();
 	}

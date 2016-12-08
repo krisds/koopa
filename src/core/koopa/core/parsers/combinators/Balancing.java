@@ -6,10 +6,10 @@ import java.util.Stack;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
-import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
+import koopa.core.streams.BaseStream;
 import koopa.core.targets.HoldingTarget;
 
 /**
@@ -53,7 +53,7 @@ public class Balancing extends UnaryParserDecorator {
 
 	@Override
 	protected boolean matches(Parse parse) {
-		final BaseStream baseStream = parse.getStreams().getBaseStream();
+		final BaseStream baseStream = parse.getFlow().getBaseStream();
 		final HoldingTarget target = baseStream.getTarget();
 
 		final Balancer newBalancer = new Balancer(parser, parse);
@@ -180,13 +180,13 @@ public class Balancing extends UnaryParserDecorator {
 			if (SILENCE)
 				parse.getTrace().silence(true);
 
-			if (tryClosing(parse.getStreams().getStream())) {
+			if (tryClosing(parse.getFlow().getStream())) {
 				final Pair closed = open.peek();
 				push(new Match(last, Kind.CLOSE, closed));
 
 			} else {
 				for (Pair pair : closedPairs)
-					if (tryOpening(parse.getStreams().getStream(), pair)) {
+					if (tryOpening(parse.getFlow().getStream(), pair)) {
 						// pairMatchingAtStart = pair;
 						push(new Match(last, Kind.OPEN, pair));
 						break;
@@ -214,13 +214,13 @@ public class Balancing extends UnaryParserDecorator {
 				}
 
 			} else {
-				if (tryClosing(parse.getStreams().getStream())) {
+				if (tryClosing(parse.getFlow().getStream())) {
 					final Pair closed = open.peek();
 					push(new Match(token, Kind.CLOSE, closed));
 
 				} else {
 					for (Pair pair : closedPairs)
-						if (tryOpening(parse.getStreams().getStream(), pair)) {
+						if (tryOpening(parse.getFlow().getStream(), pair)) {
 							push(new Match(token, Kind.OPEN, pair));
 							break;
 						}
@@ -371,7 +371,7 @@ public class Balancing extends UnaryParserDecorator {
 				return false;
 
 			// TODO Do we care about seeing skipped tokens ?
-			final Data lastData = parse.getStreams().getBaseStream().getTarget()
+			final Data lastData = parse.getFlow().getBaseStream().getTarget()
 					.peekAtLastToken();
 			return lastMatch.data == lastData;
 		}

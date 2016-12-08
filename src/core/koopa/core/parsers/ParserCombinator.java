@@ -33,10 +33,10 @@ public abstract class ParserCombinator {
 				// was at that point. We do that so that we can give a more
 				// accurate and, hopefully, more useful error message in case of
 				// an incomplete parse.
-				final boolean enabled = parse.getStreams().getLimitsEnabled();
-				parse.getStreams().setLimitsEnabled(false);
+				final boolean enabled = parse.getFlow().getLimitsEnabled();
+				parse.getFlow().setLimitsEnabled(false);
 				parse.getTrace().quiet(true);
-				
+
 				final Token peek = parse.getStream().peek();
 				if (peek != null) {
 					final Position currentPosition = peek.getStart();
@@ -44,9 +44,9 @@ public abstract class ParserCombinator {
 						parse.setFinalMatch(currentPosition,
 								parse.getStack().getHead());
 				}
-				
+
 				parse.getTrace().quiet(false);
-				parse.getStreams().setLimitsEnabled(enabled);
+				parse.getFlow().setLimitsEnabled(enabled);
 			}
 
 			return matches;
@@ -81,6 +81,18 @@ public abstract class ParserCombinator {
 	 * By default this leaves the set untouched.
 	 */
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	}
+
+	/**
+	 * Can the leading keywords be used for lookahead ? That is, must the first
+	 * thing matched by this parser be an element returned by
+	 * {@link #addAllLeadingKeywordsTo(Set)} ?
+	 * <p>
+	 * By default this returns <code>false</code>, disabling lookahead for this
+	 * parser, thereby defaulting to the old behaviour.
+	 */
+	public boolean allowsLookahead() {
+		return false;
 	}
 
 	/**

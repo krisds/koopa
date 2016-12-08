@@ -1,13 +1,13 @@
-package koopa.core.parsers.test;
+package koopa.core.streams.test;
 
 import org.junit.Test;
 
 import koopa.core.data.Token;
-import koopa.core.parsers.BaseStream;
-import koopa.core.parsers.LimitedStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.test.HardcodedSource;
+import koopa.core.streams.BaseStream;
+import koopa.core.streams.LimitedStream;
 import koopa.core.targets.ListTarget;
 
 /**
@@ -48,7 +48,7 @@ public class LimitedStreamTest extends ParseStreamTest {
 			final ListTarget target = new ListTarget();
 			final Parse parse = Parse.of(source).to(target);
 
-			final LimitedStream limitedStream = parse.getStreams().getLimitedStream();
+			final LimitedStream limitedStream = parse.getFlow().getLimitedStream();
 			final NthWord limiter = new NthWord(n);
 			limitedStream.addLimiter(limiter);
 
@@ -66,7 +66,7 @@ public class LimitedStreamTest extends ParseStreamTest {
 			final ListTarget target = new ListTarget();
 			final Parse parse = Parse.of(source).to(target);
 
-			final LimitedStream limitedStream = parse.getStreams().getLimitedStream();
+			final LimitedStream limitedStream = parse.getFlow().getLimitedStream();
 			final NthWord limiter = new NthWord(n);
 			limitedStream.addLimiter(limiter);
 
@@ -84,7 +84,7 @@ public class LimitedStreamTest extends ParseStreamTest {
 			final ListTarget target = new ListTarget();
 			final Parse parse = Parse.of(source).to(target);
 
-			final LimitedStream limitedStream = parse.getStreams().getLimitedStream();
+			final LimitedStream limitedStream = parse.getFlow().getLimitedStream();
 			final NthWord limiter = new NthWord(n);
 			limitedStream.addLimiter(limiter);
 

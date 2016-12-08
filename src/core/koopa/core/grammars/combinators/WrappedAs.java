@@ -21,6 +21,7 @@ public class WrappedAs extends ParserCombinator {
 		this.name = name;
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
 		Stream stream = parse.getStream();
 
@@ -41,28 +42,38 @@ public class WrappedAs extends ParserCombinator {
 		}
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent(
-					name + " ? " + (accepts ? ": yes " : ": no "));
+			parse.getTrace()
+					.dedent(name + " ? " + (accepts ? ": yes " : ": no "));
 
 		return accepts;
 	}
 
+	@Override
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
 		parser.addAllKeywordsInScopeTo(keywords);
 	}
 
+	@Override
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		parser.addAllLeadingKeywordsTo(keywords);
 	}
 
+	@Override
+	public boolean allowsLookahead() {
+		return parser.allowsLookahead();
+	}
+
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return parser.canMatchEmptyInputs();
 	}
 
+	@Override
 	public boolean isMatching(String n) {
 		return name.equals(n);
 	}
 
+	@Override
 	public String toString() {
 		return "... %as " + name;
 	}

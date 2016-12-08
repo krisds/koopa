@@ -7,6 +7,7 @@ import koopa.core.data.Marker;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.sources.Source;
+import koopa.core.streams.BaseStream;
 import koopa.core.targets.Target;
 
 /**

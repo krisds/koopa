@@ -21,7 +21,7 @@ public class Choice extends NAryParserDecorator {
 		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent(SYMBOL + " ?");
+			parse.getTrace().indent(toString() + " ?");
 
 		for (int i = 0; i < parsers.length; i++) {
 			final ParserCombinator parser = parsers[i];
@@ -29,7 +29,7 @@ public class Choice extends NAryParserDecorator {
 			stream.bookmark();
 			if (parser.accepts(parse)) {
 				if (parse.getTrace().isEnabled())
-					parse.getTrace().dedent(SYMBOL + " : yes");
+					parse.getTrace().dedent(toString() + " : yes");
 
 				stream.commit();
 				return true;
@@ -40,7 +40,7 @@ public class Choice extends NAryParserDecorator {
 		}
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().dedent(SYMBOL + " : no");
+			parse.getTrace().dedent(toString() + " : no");
 
 		return false;
 	}

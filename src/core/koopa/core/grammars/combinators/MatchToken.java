@@ -52,6 +52,11 @@ public class MatchToken extends GrammaticalCombinator {
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		keywords.add(comparableText);
 	}
+	
+	@Override
+	public boolean allowsLookahead() {
+		return true;
+	}
 
 	@Override
 	public String toString() {

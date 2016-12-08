@@ -1,4 +1,4 @@
-package koopa.core.parsers.test;
+package koopa.core.streams.test;
 
 import junit.framework.TestCase;
 import koopa.core.data.Data;

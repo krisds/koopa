@@ -17,12 +17,12 @@ import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
-import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.Stream;
 import koopa.core.sources.Source;
+import koopa.core.streams.BaseStream;
 import koopa.core.targets.NullTarget;
 import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
@@ -100,7 +100,7 @@ public class CobolParser {
 		// Lets figure out whether we have seen all program text.
 		// This will also push any remaining tokens to the token tracker, if one
 		// was set up.
-		final Stream tail = new BaseStream(parse.getStreams().getSource(),
+		final Stream tail = new BaseStream(parse.getFlow().getSource(),
 				new NullTarget<Data>());
 		tail.bookmark();
 

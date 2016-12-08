@@ -1,4 +1,4 @@
-package koopa.core.parsers;
+package koopa.core.streams;
 
 import static koopa.core.util.Iterators.emptyIterator;
 
@@ -12,6 +12,8 @@ import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.Stream;
 import koopa.core.sources.Source;
 import koopa.core.targets.HoldingTarget;
 import koopa.core.targets.Target;

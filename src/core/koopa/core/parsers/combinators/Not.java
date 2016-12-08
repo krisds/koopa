@@ -52,6 +52,15 @@ public class Not extends UnaryParserDecorator {
 	}
 
 	/**
+	 * This parser just tests the context of the stream it is in, and so does
+	 * not contribute any keywords.
+	 */
+	@Override
+	public boolean allowsLookahead() {
+		return false;
+	}
+	
+	/**
 	 * This parser just tests the context of the stream it is in, and so never
 	 * actually consumes any input.
 	 */

@@ -36,6 +36,14 @@ public abstract class UnaryParserDecorator extends ParserCombinator {
 	 * Will pass the message on to {@link #parser}.
 	 */
 	@Override
+	public boolean allowsLookahead() {
+		return parser.allowsLookahead();
+	}
+	
+	/**
+	 * Will pass the message on to {@link #parser}.
+	 */
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return parser.canMatchEmptyInputs();
 	}

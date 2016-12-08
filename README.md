@@ -33,6 +33,7 @@ Following options can be set on the command line by passing them as  "-D<option>
 * `koopa.copybooks`: a comma-separated list of file extensions use to identify Cobol copybook files. This defaults to "cpy,copy". (Cfr. the `koopa.cobol.CobolFiles` class.)
 * `koopa.copybooks.locator`: use a specific `koopa.cobol.copybooks.CopybookLocator` subclass when searching for copybooks on the file system. This defaults to `koopa.cobol.copybooks.DefaultCopybookLocator`.
 * `koopa.tabLength`: an integer defining the length of a tab. This defaults to four. (Cfr. the `koopa.cobol.sources.ProgramArea` class.)
+* `koopa.optimize`: set to `false` to switch off optimization of choices and permutations.
 
 ### GUI
 

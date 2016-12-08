@@ -14,7 +14,8 @@ import koopa.core.sources.Source;
  * expected endpoint. That point is either indicated by an explicit marker (see
  * {@linkplain #MARKER_TEXT}, or just the end of regular input.
  */
-public class TestTokenizer extends ChainingSource<Token, Token> implements Source<Token> {
+public class TestTokenizer extends ChainingSource<Token, Token>
+		implements Source<Token> {
 
 	private static final Logger LOGGER = Logger.getLogger("source.test");
 
@@ -75,8 +76,8 @@ public class TestTokenizer extends ChainingSource<Token, Token> implements Sourc
 
 		if (marker != null) {
 			Token last = tokensSinceMarker.removeLast();
-			
-			assert (token == null && last == null || token.equals(last));
+
+			assert (token == last);
 
 			if (tokensSinceMarker.isEmpty()) {
 				if (LOGGER.isTraceEnabled())

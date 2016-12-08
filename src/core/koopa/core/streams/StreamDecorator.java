@@ -1,10 +1,12 @@
-package koopa.core.parsers;
+package koopa.core.streams;
 
 import java.util.Iterator;
 
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
 import koopa.core.data.Token;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.Stream;
 
 public abstract class StreamDecorator implements Stream {
 

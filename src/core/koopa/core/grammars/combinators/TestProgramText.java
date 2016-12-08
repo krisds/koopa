@@ -1,17 +1,14 @@
 package koopa.core.grammars.combinators;
 
-import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-
-import java.util.Iterator;
 import java.util.Set;
 
-import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
+import koopa.core.streams.Streams;
 
 /**
  * This {@linkplain ParserCombinator} provides the basis for testing the
@@ -46,7 +43,7 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 			return false;
 		}
 
-		final String text = getMatchedProgramText(stream);
+		final String text = Streams.getProgramTextFromBookmark(grammar, stream);
 
 		if (!matchesProgramText(parse, text)) {
 			if (parse.getTrace().isEnabled())
@@ -66,29 +63,10 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 		}
 	}
 
-	private String getMatchedProgramText(final Stream stream) {
-		final StringBuilder programText = new StringBuilder();
-
-		final Iterator<Data> it = stream.fromBookmarkIterator();
-		while (it.hasNext()) {
-			final Data d = it.next();
-
-			if (!(d instanceof Token))
-				continue;
-
-			final Token t = (Token) d;
-
-			if (t.hasTag(PROGRAM_TEXT_AREA))
-				programText.append(t.getText());
-		}
-
-		return programText.toString();
-	}
-
 	/**
 	 * To be implemented by subclasses, this is equivalent to
-	 * {@link #accepts(Parse)}, but passes along the contents of the
-	 * {@linkplain AreaTag#PROGRAM_TEXT_AREA} which was matched.
+	 * {@link #accepts(Parse)}, but passes along the contents of all matched
+	 * tokens which are accepted by {@linkplain Grammar#isProgramText(Token)}.
 	 * <p>
 	 * This will not get called if the {@link #parser} did not match.
 	 */
@@ -103,5 +81,10 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 	@Override
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		parser.addAllLeadingKeywordsTo(keywords);
+	}
+
+	@Override
+	public boolean allowsLookahead() {
+		return parser.allowsLookahead();
 	}
 }

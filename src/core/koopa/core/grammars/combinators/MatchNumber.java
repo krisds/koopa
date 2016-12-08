@@ -60,6 +60,11 @@ public class MatchNumber extends GrammaticalCombinator {
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		keywords.add(comparableText);
 	}
+	
+	@Override
+	public boolean allowsLookahead() {
+		return false;
+	}
 
 	@Override
 	public String toString() {

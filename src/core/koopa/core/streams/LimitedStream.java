@@ -1,4 +1,4 @@
-package koopa.core.parsers;
+package koopa.core.streams;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -6,6 +6,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import koopa.core.data.Token;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
+import koopa.core.parsers.Stream;
 
 /**
  * This stream will only return tokens from its parent stream up to a certain
@@ -91,7 +94,7 @@ public class LimitedStream extends StreamDecorator implements Stream {
 		// TODO Ignore skippables ?
 
 		// Limits should not apply to limiters themselves.
-		parse.getStreams().setLimitsEnabled(false);
+		parse.getFlow().setLimitsEnabled(false);
 
 		boolean atLimit = false;
 
@@ -108,7 +111,7 @@ public class LimitedStream extends StreamDecorator implements Stream {
 		}
 
 		// Here we restore the original stream.
-		parse.getStreams().setLimitsEnabled(true);
+		parse.getFlow().setLimitsEnabled(true);
 
 		return atLimit;
 	}

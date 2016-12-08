@@ -51,7 +51,7 @@ public class SkipTo extends UnaryParserDecorator {
 					stream.bookmark();
 					break;
 				}
-				
+
 				if (parse.getTrace().isEnabled())
 					parse.getTrace().dedent(toString() + " : no");
 
@@ -81,6 +81,11 @@ public class SkipTo extends UnaryParserDecorator {
 
 	@Override
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	}
+
+	@Override
+	public boolean allowsLookahead() {
+		return false;
 	}
 
 	@Override

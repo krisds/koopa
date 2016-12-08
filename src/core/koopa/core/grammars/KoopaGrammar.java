@@ -12,12 +12,15 @@ import koopa.core.grammars.combinators.MatchKeyword;
 import koopa.core.grammars.combinators.MatchLiteral;
 import koopa.core.grammars.combinators.MatchNumber;
 import koopa.core.grammars.combinators.MatchToken;
+import koopa.core.grammars.combinators.OptimizingChoice;
+import koopa.core.grammars.combinators.OptimizingPermuted;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.grammars.combinators.Scoped.Visibility;
 import koopa.core.grammars.combinators.TestForKeyword;
 import koopa.core.grammars.combinators.TestTag;
 import koopa.core.grammars.combinators.WrappedAs;
 import koopa.core.parsers.FutureParser;
+import koopa.core.parsers.Optimizer;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.At;
 import koopa.core.parsers.combinators.Balancing;
@@ -95,11 +98,17 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected ParserCombinator choice(final ParserCombinator... parsers) {
-		return new Choice(parsers);
+		if (Optimizer.shouldRun())
+			return new OptimizingChoice(this, parsers);
+		else
+			return new Choice(parsers);
 	}
 
 	protected ParserCombinator permuted(final ParserCombinator... parsers) {
-		return new Permuted(parsers);
+		if (Optimizer.shouldRun())
+			return new OptimizingPermuted(this, parsers);
+		else
+			return new Permuted(parsers);
 	}
 
 	protected ParserCombinator optional(final ParserCombinator parser) {

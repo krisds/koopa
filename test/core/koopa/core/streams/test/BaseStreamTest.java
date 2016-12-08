@@ -1,10 +1,10 @@
-package koopa.core.parsers.test;
+package koopa.core.streams.test;
 
 import org.junit.Test;
 
-import koopa.core.parsers.BaseStream;
 import koopa.core.parsers.Stream;
 import koopa.core.sources.test.HardcodedSource;
+import koopa.core.streams.BaseStream;
 import koopa.core.targets.ListTarget;
 
 /**

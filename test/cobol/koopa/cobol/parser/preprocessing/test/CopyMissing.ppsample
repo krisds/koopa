@@ -1,0 +1,11 @@
+Any COPY statement for which we can't resolve the matching copybook should
+just remain as is it was in the source code.
+
+< MOVE 11 TO XXX.
+< COPY "UNKNOWN".
+< MOVE 33 TO ZZZ.
+
+> MOVE 11 TO XXX.
+> COPY "UNKNOWN".
+> MOVE 33 TO ZZZ.
+

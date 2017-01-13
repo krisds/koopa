@@ -12,6 +12,7 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
+import koopa.core.sources.TagAll;
 import koopa.core.sources.test.HardcodedSource;
 import koopa.core.trees.Tree;
 
@@ -84,9 +85,15 @@ public final class Util {
 		return token(text, AreaTag.COMMENT);
 	}
 
+	/**
+	 * Given an list of tags and strings return a list of {@linkplain Token}s
+	 * representing them. All tokens will also be tagged as
+	 * {@linkplain AreaTag#PROGRAM_TEXT_AREA}.
+	 */
 	public static List<Token> asTokens(Object... tagsAndTokens) {
 		final HardcodedSource source = HardcodedSource.from(tagsAndTokens);
-		final List<Token> tokens = getAllTokens(source);
+		final TagAll tag = new TagAll(source, PROGRAM_TEXT_AREA);
+		final List<Token> tokens = getAllTokens(tag);
 		return tokens;
 	}
 

@@ -209,3 +209,8 @@ target figurativeConstant;
 target integer;
 
 +integerLiteral
+
+
+target pseudoLiteral;
+
++[ == PERFORM FAIL. == ]

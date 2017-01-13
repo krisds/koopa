@@ -1,6 +1,7 @@
 package koopa.core.sources;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.SyntacticTag.INCOMPLETE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.STRING;
@@ -10,11 +11,11 @@ import static koopa.core.data.tags.SyntacticTag.WORD;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.data.tags.SyntacticTag;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class knows how to split up a {@linkplain Token} into its basic
@@ -39,7 +40,6 @@ public class TokenSeparationLogic {
 				position = whitespace(token, text, position, length, tokens);
 
 			} else if (startsString(c)) {
-				// STRING LITERAL.
 				position = string(token, text, position, 0, length, tokens);
 
 			} else if (isDigit(c)) {
@@ -120,8 +120,19 @@ public class TokenSeparationLogic {
 			}
 
 			// Completed string literal.
-			final Token stringliteral = Tokens.subtoken(token, start,
-					position + 1).withTags(PROGRAM_TEXT_AREA, STRING);
+
+			// Check for floating continuation marker.
+			final boolean hasFloatingContinuationIndicator = (d == '-');
+			if (hasFloatingContinuationIndicator)
+				position += 1;
+
+			final Token stringliteral;
+			if (hasFloatingContinuationIndicator)
+				stringliteral = Tokens.subtoken(token, start, position + 1)
+						.withTags(PROGRAM_TEXT_AREA, STRING, INCOMPLETE);
+			else
+				stringliteral = Tokens.subtoken(token, start, position + 1)
+						.withTags(PROGRAM_TEXT_AREA, STRING);
 
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("String literal: " + stringliteral);
@@ -130,9 +141,9 @@ public class TokenSeparationLogic {
 			return position + 1;
 		}
 
-		// TODO Incomplete string literal. Throw error?
-		final Token stringliteral = Tokens.subtoken(token, start).withTags(
-				PROGRAM_TEXT_AREA, STRING);
+		// Incomplete string literal.
+		final Token stringliteral = Tokens.subtoken(token, start)
+				.withTags(PROGRAM_TEXT_AREA, STRING, INCOMPLETE);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Incomplete string literal: " + stringliteral);
@@ -152,8 +163,8 @@ public class TokenSeparationLogic {
 			position += 1;
 		}
 
-		final Token word = Tokens.subtoken(token, start, position).withTags(
-				PROGRAM_TEXT_AREA, WORD);
+		final Token word = Tokens.subtoken(token, start, position)
+				.withTags(PROGRAM_TEXT_AREA, WORD);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Word: " + word);
@@ -173,8 +184,8 @@ public class TokenSeparationLogic {
 			position += 1;
 		}
 
-		Token number = Tokens.subtoken(token, start, position).withTags(
-				PROGRAM_TEXT_AREA, NUMBER);
+		Token number = Tokens.subtoken(token, start, position)
+				.withTags(PROGRAM_TEXT_AREA, NUMBER);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Number: " + number);

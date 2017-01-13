@@ -1,62 +1,62 @@
-123456* ANNOTATED SAMPLE                                                KOOPA
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
 <--------------------------------------------------------------------------->^
-FIXED                                                                        FIXED
-_                                                                            _
-_                                                                            EOLN
+FIXED                                                                        =
+!DIRECTIVE                                                                   =
+!TEXT                                                                        EOLN
 
 
        >> source format is free
 <----------------------------->^
 FIXED                          FREE
-COMPILER_DIRECTIVE             _
-_                              EOLN
+DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
+!TEXT                          EOLN
 
 
 >> source format is fixed
 <----------------------->^
 FREE                     FIXED
-COMPILER_DIRECTIVE       _
-_                        EOLN
+DIRECTIVE/SOURCE_FORMAT  !DIRECTIVE
+!TEXT                    EOLN
 
 
         >> source format is free    *> witty remark
 <------------------------------------------------->^
 FIXED                                              FREE
-COMPILER_DIRECTIVE                                 _
-_                                                  EOLN
+DIRECTIVE/SOURCE_FORMAT                            !DIRECTIVE
+!TEXT                                              EOLN
 
 
 >> source format is fixed    *> witty remark
 <------------------------------------------>^
 FREE                                        FIXED
-COMPILER_DIRECTIVE                          _
-_                                           EOLN
+DIRECTIVE/SOURCE_FORMAT                     !DIRECTIVE
+!TEXT                                       EOLN
 
 
        >> source free
 <------------------->^
 FIXED                FREE
-COMPILER_DIRECTIVE   _
-_                    EOLN
+DIR/SOURCE_FORMAT    !DIRECTIVE
+!TEXT                EOLN
 
 
 >> source fixed
 <------------->^
 FREE           FIXED
-DIRECTIVE      _
-_              EOLN
+DIR/FORMAT     !DIRECTIVE
+!TEXT          EOLN
 
 
        >> SOURCE FORMAT IS FREE
 <----------------------------->^
 FIXED                          FREE
-COMPILER_DIRECTIVE             _
-_                              EOLN
+DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
+!TEXT                          EOLN
 
 
 >> SOURCE FORMAT FIXED
 <-------------------->^
 FREE                  FIXED
-COMPILER_DIRECTIVE    _
-_                     EOLN
+DIR/SOURCE_FORMAT     !DIRECTIVE
+!TEXT                 EOLN
 

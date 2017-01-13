@@ -1,0 +1,13 @@
+If we can find the matching copybook then its contents should be included.
+While there is a matching replacement defined, the copybook will still appear
+verbatim as the replacement has no positive matches.
+
+< DISPLAY "Start".
+< COPY "MOVES" REPLACING ==class== BY ==FOO==.
+< GO TO END.
+
+> DISPLAY "Start".
+> MOVE 11 TO XXX.
+>MOVE 22 TO YYY.
+>MOVE 33 TO ZZZ.
+> GO TO END.

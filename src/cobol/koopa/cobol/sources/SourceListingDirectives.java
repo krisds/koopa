@@ -1,12 +1,15 @@
 package koopa.cobol.sources;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static koopa.cobol.data.tags.CobolTag.SOURCE_LISTING_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
 
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
@@ -42,48 +45,48 @@ import koopa.core.sources.Source;
  * "https://supportline.microfocus.com/documentation/books/mx31/lhcomp0q.htm" >
  * Micro Focus Support Line - The SKIP1, SKIP2 and SKIP3 Statements</a>
  */
-public class SourceFormattingDirectives extends ChainingSource<Token, Token> implements Source<Token> {
+public class SourceListingDirectives extends ChainingSource<Data, Data>
+		implements Source<Data> {
 
-	private static final Logger LOGGER = Logger.getLogger("source.cobol.source_format");
+	private static final Logger LOGGER = Logger
+			.getLogger("source.cobol.source_listing");
 
-	private static final String REGEX = "^\\s*(SKIP1|SKIP2|SKIP3|EJECT)\\s*\\.?\\s*$";
+	private static final String REGEX //
+			= "^\\s*(SKIP1|SKIP2|SKIP3|EJECT)\\s*\\.?\\s*$";
 
-	private static final Pattern PATTERN = Pattern.compile(REGEX);
+	private static final Pattern PATTERN //
+			= Pattern.compile(REGEX, CASE_INSENSITIVE);
 
-	private Source<? extends Token> source = null;
-
-	public SourceFormattingDirectives(Source<Token> source) {
+	public SourceListingDirectives(Source<Data> source) {
 		super(source);
-		assert (source != null);
-		this.source = source;
 	}
 
 	@Override
-	public Token nxt1() {
-		Token token = source.next();
+	public Data nxt1() {
+		final Data d = source.next();
 
-		if (token == null)
-			return token;
+		if (d == null || !(d instanceof Token))
+			return d;
 
-		if (!token.hasTag(PROGRAM_TEXT_AREA))
-			return token;
+		final Token t = (Token) d;
 
-		final String text = token.getText();
+		if (!t.hasTag(PROGRAM_TEXT_AREA))
+			return t;
+
+		final String text = t.getText();
 
 		if (text == null)
-			return token;
+			return t;
 
-		if (PATTERN.matcher(text.toUpperCase()).matches()) {
+		if (PATTERN.matcher(text).matches()) {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Marking " + token + " as a source formatting directive.");
+				LOGGER.trace(
+						"Marking " + t + " as a source listing directive.");
 
-			token = token.replacingTag(PROGRAM_TEXT_AREA, SOURCE_FORMATTING_DIRECTIVE);
-		}
+			return t.withoutTags(PROGRAM_TEXT_AREA)
+					.withTags(SOURCE_LISTING_DIRECTIVE, COMPILER_DIRECTIVE);
 
-		return token;
-	}
-
-	public void close() {
-		source.close();
+		} else
+			return t;
 	}
 }

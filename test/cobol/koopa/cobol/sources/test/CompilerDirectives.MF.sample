@@ -1,27 +1,27 @@
-123456* ANNOTATED SAMPLE                                                KOOPA
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
 <--------------------------------------------------------------------------->^
-FIXED                                                                        FIXED
-_                                                                            _
-_                                                                            EOLN
+FIXED                                                                        =
+!DIRECTIVE                                                                   =
+!TEXT                                                                        EOLN
 
 
 -INC TEXTNAME  witty remark
 <------------------------->^
-FIXED                      FIXED
-COMPILER_DIRECTIVE         _
-_                          EOLN
+FIXED                      =
+COMPILER_DIRECTIVE         !DIRECTIVE
+!TEXT                      EOLN
 
 
        ++INCLUDE TEXTNAME  witty remark
 <------------------------------------->^
-FIXED                                  FIXED
-COMPILER_DIRECTIVE                     _
-_                                      EOLN
+FIXED                                  =
+COMPILER_DIRECTIVE                     !DIRECTIVE
+!TEXT                                  EOLN
 
 
 # This one comes from the real world:
       $set SOURCEFORMAT"VARIABLE" OUTDD"SYSOUT 121 R"
 <--------------------------------------------------->^
 FIXED                                                VARIABLE
-COMPILER_DIRECTIVE                                   _
-_                                                    EOLN
+COMPILER_DIRECTIVE                                   !DIRECTIVE
+!TEXT                                                EOLN

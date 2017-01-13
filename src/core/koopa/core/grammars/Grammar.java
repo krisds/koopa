@@ -2,9 +2,11 @@ package koopa.core.grammars;
 
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.parsers.combinators.Opt.NOSKIP;
+
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.SyntacticTag;
@@ -38,10 +40,12 @@ public abstract class Grammar {
 	 * <p>
 	 * The default implementation tests whether a token is program text by
 	 * looking for the presence of a {@linkplain AreaTag#PROGRAM_TEXT_AREA} tag,
-	 * and the absence of a {@linkplain AreaTag#COMMENT} tag.
+	 * and the absence of a {@linkplain AreaTag#COMMENT} or
+	 * {@linkplain SyntacticTag#SKIPPED} tag.
 	 */
 	public boolean isProgramText(Token token) {
-		return token.hasTag(PROGRAM_TEXT_AREA) && !token.hasTag(COMMENT);
+		return token.hasTag(PROGRAM_TEXT_AREA)
+				&& !token.hasAnyTag(COMMENT, SKIPPED);
 	}
 
 	/**

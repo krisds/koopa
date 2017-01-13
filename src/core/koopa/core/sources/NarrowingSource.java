@@ -1,6 +1,7 @@
 package koopa.core.sources;
 
 import koopa.core.data.Data;
+import koopa.core.data.Token;
 
 /**
  * This class adapts a {@linkplain Source} of one type, say A, to become a
@@ -37,5 +38,10 @@ public class NarrowingSource<A extends Data, B extends A>
 			else if (clazz.isInstance(data))
 				return (B) data;
 		}
+	}
+
+	public static <X extends Data, Y extends X> NarrowingSource<X, Y> narrowing(
+			Source<X> source, Class<Y> clazz) {
+		return new NarrowingSource<X, Y>(source, clazz);
 	}
 }

@@ -1,15 +1,13 @@
 package koopa.cobol.parser.preprocessing.replacing;
 
-import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type.PSEUDO;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
-import koopa.cobol.parser.preprocessing.replacing.ReplacingPhraseOperand.Type;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
@@ -23,48 +21,50 @@ public class ReplaceLeading extends ReplacingPhrase {
 
 	private final String pattern;
 	private final int patternLength;
-	private final List<Token> replacement;
+	private final LinkedList<Token> replacement;
 
 	public ReplaceLeading(ReplacingPhraseOperand replacing,
 			ReplacingPhraseOperand by) {
 		super(replacing, by);
 
-		final List<Token> replacingWords = replacing.getTextWords();
-		final List<Token> byWords = by.getTextWords();
+		final List<String> replacingWords = replacing.getTextWords();
+		final List<String> byWords = by.getTextWords();
 
-		assert (replacing.getType() == Type.PSEUDO && replacingWords.size() == 1);
-		assert (by.getType() == Type.PSEUDO && byWords.size() <= 1);
+		assert (replacing.getType() == PSEUDO && replacingWords.size() == 1);
+		assert (by.getType() == PSEUDO && byWords.size() <= 1);
 
-		final Token leading = replacingWords.get(0);
-		pattern = leading.getText().toUpperCase();
+		final String leading = replacingWords.get(0);
+		pattern = leading.toUpperCase();
 		patternLength = pattern.length();
 
 		if (byWords.size() == 0)
 			replacement = null;
 		else {
-			replacement = new ArrayList<Token>(2);
-			replacement.add(byWords.get(0));
+			replacement = new LinkedList<Token>();
+			replacement.addAll(by.getTokens());
 			replacement.add(null);
 		}
 	}
 
-	public boolean appliedTo(Source<Data> library, LinkedList<Token> newTokens) {
+	public boolean appliedTo(Source<Data> library,
+			LinkedList<Token> newTokens) {
 
 		final Stack<Token> seen = new Stack<Token>();
-		final Token next = nextTextWord(library, seen);
+		final List<Token> next = nextTextWord(library, seen);
 
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Trying " + this);
 			LOGGER.trace("  On " + next);
 		}
 
-		if (next != null && !next.hasTag(COMMENT)) {
-			final String text = next.getText().toUpperCase();
+		if (next != null) {
+			final String text = text(next).toUpperCase();
 			if (text.startsWith(pattern)) {
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("  We have a match.");
 
-				final Token tail = Tokens.subtoken(next, patternLength);
+				final Token tail = Tokens.subtoken(Tokens.join(next),
+						patternLength);
 
 				if (replacement == null) {
 					if (LOGGER.isTraceEnabled())
@@ -74,7 +74,9 @@ public class ReplaceLeading extends ReplacingPhrase {
 					return true;
 
 				} else {
-					replacement.set(1, tail);
+					replacement.removeLast();
+					replacement.addLast(tail);
+
 					final Token newToken = Tokens.join(replacement,
 							AreaTag.PROGRAM_TEXT_AREA);
 
@@ -87,7 +89,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 			}
 		}
 
-		library.unshift(next);
+		// library.unshift(next);
 		unshiftStack(library, seen);
 
 		return false;

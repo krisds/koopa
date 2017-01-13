@@ -1,5 +1,6 @@
 package koopa.core.sources.test.samples;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -54,15 +55,20 @@ public abstract class SourcesValidationTest
 	protected abstract Source<Token> getSource(String resourceName,
 			Sample sample);
 
-	private Map<String, Object[]> CATEGORIES = new HashMap<String, Object[]>();
+	private Map<String, Tags> CATEGORIES = new HashMap<String, Tags>();
 
-	protected void addCategory(String category, Object[] tags) {
-		assert (!CATEGORIES.containsKey(category));
-		CATEGORIES.put(category, tags);
+	protected void addCategory(String category, Object[] required) {
+		addCategory(category, required, null);
 	}
 
-	public void validate(Token token, String category) {
-		if ("_".equalsIgnoreCase(category)) {
+	protected void addCategory(String category, Object[] required,
+			Object[] forbidden) {
+		assert (!CATEGORIES.containsKey(category));
+		CATEGORIES.put(category, new Tags(required, forbidden));
+	}
+
+	public void validate(Token token, String category, boolean required) {
+		if ("-".equalsIgnoreCase(category)) {
 			// A "don't care". For when you don't care.
 			return;
 		}
@@ -74,14 +80,50 @@ public abstract class SourcesValidationTest
 		}
 
 		if (CATEGORIES.containsKey(category)) {
-			Object[] expectedTags = CATEGORIES.get(category);
-			for (Object tag : expectedTags) {
-				assertTrue("Missing " + tag + " on " + token + ".",
-						token.hasTag(tag));
-			}
+			final Tags tags = CATEGORIES.get(category);
+
+			if (required)
+				assertRequiredCategory(token, category, tags);
+			else
+				assertForbiddenCategory(token, category, tags);
 
 		} else {
-			System.out.println("Warning! Unknown category: " + category);
+			System.out.println(
+					"Warning! Unknown category '" + category + "' on " + token);
+		}
+	}
+
+	private void assertRequiredCategory(Token token, String category,
+			final Tags tags) {
+		if (tags.required != null)
+			for (Object tag : tags.required)
+				assertTrue("Category " + category + ": requires " + tag + " on "
+						+ token + ".", token.hasTag(tag));
+
+		if (tags.forbidden != null)
+			for (Object tag : tags.forbidden)
+				assertFalse("Category " + category + ": forbids " + tag + " on "
+						+ token + ".", token.hasTag(tag));
+	}
+
+	private void assertForbiddenCategory(Token token, String category,
+			final Tags tags) {
+		if (tags.required != null)
+			for (Object tag : tags.required)
+				assertFalse("Category !" + category + ": forbids " + tag
+						+ " on " + token + ".", token.hasTag(tag));
+
+		// We don't assume that the negation of a category suddenly makes its
+		// forbidden elements required.
+	}
+
+	private final class Tags {
+		final Object[] required;
+		final Object[] forbidden;
+
+		public Tags(Object[] required, Object[] forbidden) {
+			this.required = required;
+			this.forbidden = forbidden;
 		}
 	}
 }

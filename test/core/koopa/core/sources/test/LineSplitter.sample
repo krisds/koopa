@@ -1,27 +1,27 @@
 123456* ANNOTATED SAMPLE                                                KOOPA
 <--------------------------------------------------------------------------->^
-_                                                                            EOLN
+!TEXT                                                                        EOLN
 
        IDENTIFICATION DIVISION.
 <----------------------------->^
-_                              EOLN
+!TEXT                          EOLN
 
        PROGRAM-ID. FOO.
 <--------------------->^
-_                      EOLN
+!TEXT                  EOLN
 
        PROCEDURE DIVISION.
 <------------------------>^
-_                         EOLN
+!TEXT                     EOLN
 
 123456*Hello world.
 <----------------->^
-_                  EOLN
+!TEXT              EOLN
 
        DISPLAY FOO
 <---------------->^
-_                 EOLN
+!TEXT             EOLN
 
        .
 <------>^
-_       EOLN
+!TEXT   EOLN

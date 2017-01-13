@@ -3,8 +3,9 @@ package koopa.core.sources.test;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SOURCE_FORMATTING_DIRECTIVE;
+import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.INCOMPLETE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.STRING;
@@ -39,12 +40,17 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 	@Before
 	public void initialize() {
 		final Object[] programText = new Object[] { PROGRAM_TEXT_AREA };
-		addCategory("T", programText);
 		addCategory("TEXT", programText);
+		addCategory("T", programText);
 
 		final Object[] comment = new Object[] { COMMENT };
-		addCategory("C", comment);
 		addCategory("COMMENT", comment);
+		addCategory("C", comment);
+
+		final Object[] skipped = new Object[] { SKIPPED };
+		addCategory("SKIPPED", skipped, programText);
+		addCategory("SKIP", skipped, programText);
+		addCategory("SKP", skipped, programText);
 
 		final Object[] compilerDirective = new Object[] { COMPILER_DIRECTIVE };
 		addCategory("COMPILER_DIRECTIVE", compilerDirective);
@@ -52,37 +58,41 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 		addCategory("DIR", compilerDirective);
 		addCategory("D", compilerDirective);
 
-		addCategory("FORMATTING", new Object[] { SOURCE_FORMATTING_DIRECTIVE });
-
 		final Object[] separator = new Object[] { SEPARATOR };
 		addCategory(":", separator);
 		addCategory("SEP", separator);
 
-		addCategory("EOLN", new Object[] { END_OF_LINE });
+		final Object[] eoln = new Object[] { END_OF_LINE };
+		addCategory("EOLN", eoln);
 
 		final Object[] whitespace = new Object[] { SEPARATOR, WHITESPACE };
 		addCategory(".", whitespace);
 		addCategory("WS", whitespace);
 
-		addCategory("STRING", new Object[] { STRING });
+		final Object[] string = new Object[] { STRING };
+		addCategory("STRING", string);
+		addCategory("STR", string);
+		addCategory("S", string);
 
 		final Object[] number = new Object[] { NUMBER };
-		addCategory("N", number);
-		addCategory("NUM", number);
 		addCategory("NUMBER", number);
+		addCategory("NUM", number);
+		addCategory("N", number);
 
 		final Object[] word = new Object[] { WORD };
-		addCategory("W", word);
 		addCategory("WORD", word);
+		addCategory("W", word);
+
+		final Object[] incomplete = new Object[] { INCOMPLETE };
+		addCategory("INCOMPLETE", incomplete);
 	}
 
 	@Override
 	protected Source<Token> getSource(String resourceName, Sample sample) {
-		Source<Token> source = null;
-
-		source = new LineSplitter(resourceName, sample.getReader());
+		final LineSplitter lineSplitter //
+				= new LineSplitter(resourceName, sample.getReader());
 		if (file.getName().startsWith("LineSplitter"))
-			return source;
+			return lineSplitter;
 
 		Assert.fail("Don't know how to setup source for " + file.getName());
 		return null;

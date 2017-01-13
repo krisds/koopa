@@ -95,19 +95,19 @@ def integerLiteral =
 end
 
 def hexadecimal =
-    'H' %noskip (@STRING _)
+    'H' %noskip str
 end
 
 def alphanumericHexadecimal =
-    'X' %noskip (@STRING _)
+    'X' %noskip str
 end
 
 def nationalAlphanumericHexadecimal =
-    'NX' %noskip (@STRING _)
+    'NX' %noskip str
 end
 
 def booleanHexadecimal =
-    'BX' %noskip (@STRING _)
+    'BX' %noskip str
 end
 
 private def hexadecimalLiteral =
@@ -120,16 +120,16 @@ end
 
 def booleanLiteral =
     ( booleanHexadecimal
-    | 'B' %noskip (@STRING _)
+    | 'B' %noskip str
     )
 end
 
 def nullTerminatedStringLiteral =
-    'Z' %noskip (@STRING _)
+    'Z' %noskip str
 end
 
 def nationalStringLiteral =
-    'N' %noskip (@STRING _)
+    'N' %noskip str
 end
 
 def alphanumericLiteral =
@@ -137,12 +137,23 @@ def alphanumericLiteral =
     | nationalAlphanumericHexadecimal
     | nullTerminatedStringLiteral
     | nationalStringLiteral
-    | @STRING _
+    | str
     )
 end
 
+private def str =
+    (@STRING _)
+    
+    # Because of continuations, strings may be split across lines. So we need
+    # to check if there are any more parts (STRINGs) following the initial one,
+    # albeit without skipping whitespace.
+    [%noskip ((@STRING _)+)]
+end
+
 def pseudoLiteral =
-    @PSEUDO_LITERAL _
+    ('=' %noskip '=') 
+    ((_)*) %upto {'=' %noskip ('=' %not '=')}
+    ('=' %noskip '=') 
 end
 
 
@@ -166,5 +177,10 @@ private def unsigned_decimal =
 end
 
 private def uintgr =
-    @NUMBER _
+    @NUMBER _ 
+    
+    # Because of continuations, the digits of a number may be split across
+    # lines. So we need to check if there are any more digits (NUMBERs)
+    # following the initial one, albeit without skipping whitespace.
+    [%noskip ((@NUMBER _)+)]
 end

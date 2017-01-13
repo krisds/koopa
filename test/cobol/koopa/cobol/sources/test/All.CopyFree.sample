@@ -1,0 +1,35 @@
+# This is a test of switching the source format in a copybook.
+
+# The file starts of in FIXED format. So we expect to see a sequence number, 
+# fixed indicator, program text (areas A and B) and an identifier.
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =    =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
+
+
+# We're still in FIXED format, but are now COPYing a copybook which switches
+# the format to become FREE.
+# Everything on this line will still be FIXED, as format gets applied on a
+# line-by-line basis.
+# The COPY statement itself will disappear, so we don't have any annotations
+# for it (as indicated by the '%' markers).
+# The contents of the copybook itself won't get tested, so we don't provide
+# annotations for that either.
+
+       COPY "FREE".
+<---->^            ^
+!TEXT =     %      TEXT
+SEQNR I     %      EOLN
+
+
+# At this point we should be in FREE format. Which means we expect to see
+# an indicator and program text (single area).
+
+*23456789A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+^<-------------------------------------------------------------------------->^
+FREE   =                                                                     =
+!TEXT  COMMENT                                                               TEXT
+I      -                                                                     EOLN

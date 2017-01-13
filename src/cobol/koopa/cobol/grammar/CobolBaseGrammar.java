@@ -4,6 +4,7 @@ import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 
@@ -53,6 +54,13 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
 						if (token == null)
 							break;
+
+						if (token.hasTag(SKIPPED)) {
+							// Skipped by continuation. So not part of the
+							// picture string, but not a definite end to it
+							// either.
+							continue;
+						}
 
 						if (!isProgramText(token)) {
 							stream.rewind(token);

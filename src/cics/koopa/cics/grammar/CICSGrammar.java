@@ -10,7 +10,6 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 import koopa.cics.grammar.CICSBaseGrammar;
-import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
 public class CICSGrammar extends CICSBaseGrammar {
     public CICSGrammar() {

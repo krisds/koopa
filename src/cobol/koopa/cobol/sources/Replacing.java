@@ -1,16 +1,25 @@
-package koopa.cobol.parser.preprocessing.replacing;
+package koopa.cobol.sources;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import koopa.cobol.parser.preprocessing.replacing.ReplacingPhrase;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
-import koopa.core.data.markers.End;
-import koopa.core.data.markers.Start;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class ReplacingSource extends ChainingSource<Data, Data> implements Source<Data> {
+/**
+ * A {@linkplain Source} which applies replacement instructions it gets from its
+ * source by means of {@linkplain ReplacementData}.
+ */
+public class Replacing extends ChainingSource<Data, Data>
+		implements Source<Data> {
+
+	private static final Logger LOGGER //
+			= Logger.getLogger("source.cobol.replacing");
 
 	/**
 	 * The list of all active {@linkplain ReplacingPhrase}s. It is sorted in
@@ -24,39 +33,8 @@ public class ReplacingSource extends ChainingSource<Data, Data> implements Sourc
 	 */
 	private LinkedList<Token> replacementTokens = new LinkedList<Token>();
 
-	/**
-	 * We don't want to match against the internals of already parsed
-	 * structures. To that end we'll need to keep track of where we are in such
-	 * structures.
-	 */
-	private int openStartTags = 0;
-
-	public ReplacingSource() {
-		super(null);
-	}
-
-	public ReplacingSource(Source<Data> source) {
+	public Replacing(Source<Data> source) {
 		super(source);
-	}
-
-	/**
-	 * Removes all {@linkplain Replacing}.
-	 */
-	public void clearAllReplacements() {
-		replacements.clear();
-	}
-
-	public void popReplacements() {
-		if (!replacements.isEmpty())
-			replacements.removeFirst();
-	}
-
-	/**
-	 * Adds and activates the given {@linkplain Replacement}. The new one will
-	 * take precedence over all others.
-	 */
-	public void pushReplacements(List<ReplacingPhrase> r) {
-		replacements.addFirst(r);
 	}
 
 	@Override
@@ -72,20 +50,43 @@ public class ReplacingSource extends ChainingSource<Data, Data> implements Sourc
 			if (data == null)
 				return null;
 
-			// Anything which is bracketed by a Start and matching End will be
-			// forwarded as is. To be able to do that we must track the number
-			// of open Start tags, and act accordingly.
-			if (data instanceof Start)
-				openStartTags += 1;
-			else if (data instanceof End)
-				openStartTags -= 1;
+			if (data instanceof ReplacementData) {
+				final ReplacementData r = (ReplacementData) data;
+				if (r.activates()) {
+					if (r.isGlobal()) {
+						if (LOGGER.isDebugEnabled())
+							LOGGER.debug(
+									"Activating only " + r.getReplacements());
 
-			// So if we are within the reach of a Start tag we just pass the
-			// data on as is.
-			// Note that this won't apply to the final End tag, but that one
-			// will get covered by the next check.
-			if (openStartTags > 0)
-				return data;
+						clearReplacements();
+						pushReplacements(r.getReplacements());
+
+					} else {
+						if (LOGGER.isDebugEnabled())
+							LOGGER.debug("Additionally activating "
+									+ r.getReplacements());
+
+						pushReplacements(r.getReplacements());
+					}
+
+				} else {
+					if (r.isGlobal()) {
+						if (LOGGER.isDebugEnabled())
+							LOGGER.debug("Deactivating all replacements.");
+
+						clearReplacements();
+
+					} else {
+						if (LOGGER.isDebugEnabled())
+							LOGGER.debug(
+									"Deactivating " + replacements.getFirst());
+
+						popReplacements();
+					}
+				}
+
+				continue;
+			}
 
 			// Anything that's not a Token will get passed on as is.
 			// Most of that should have been covered by the logic for the
@@ -102,11 +103,11 @@ public class ReplacingSource extends ChainingSource<Data, Data> implements Sourc
 			// "The leftmost library text-word that is not a separator comma or
 			// a separator semicolon is the first text-word used for
 			// comparison."
-			//if (leftmost.hasTag(SyntacticTag.SEPARATOR)) {
-				final String text = leftmost.getText();
-				if (",".equals(text) || ";".equals(text))
-					return leftmost;
-			//}
+			// if (leftmost.hasTag(SyntacticTag.SEPARATOR)) {
+			final String text = leftmost.getText();
+			if (",".equals(text) || ";".equals(text))
+				return leftmost;
+			// }
 
 			// Repositioning the token stream to start with the leftmost token.
 			source.unshift(leftmost);
@@ -159,8 +160,25 @@ public class ReplacingSource extends ChainingSource<Data, Data> implements Sourc
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "REPLACING " + replacements;
+	/**
+	 * Adds and activates the given {@linkplain Replacement}. The new one will
+	 * take precedence over all others.
+	 */
+	private void pushReplacements(List<ReplacingPhrase> r) {
+		assert (r != null);
+
+		replacements.addFirst(r);
+	}
+
+	private void clearReplacements() {
+		replacements.clear();
+	}
+
+	private void popReplacements() {
+		if (!replacements.isEmpty())
+			replacements.removeFirst();
+
+		else if (LOGGER.isInfoEnabled())
+			LOGGER.info("Tried to pop empty replacements.");
 	}
 }

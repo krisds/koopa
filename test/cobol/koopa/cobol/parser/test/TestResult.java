@@ -12,23 +12,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import koopa.cobol.parser.Metrics;
-import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.preprocessing.PreprocessingSource;
-import koopa.core.data.Token;
-import koopa.core.util.Tuple;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import koopa.cobol.parser.Metrics;
+import koopa.cobol.parser.ParseResults;
+import koopa.cobol.sources.CopyInclude;
+import koopa.cobol.sources.Replace;
+import koopa.core.data.Token;
+import koopa.core.parsers.Parse;
+import koopa.core.trees.Tree;
+import koopa.core.util.Tuple;
 
 public class TestResult {
 
 	/**
-	 * Just a quick override, useful when working on the tokenizers.
+	 * Just a quick override, useful when working on the sources.
 	 */
 	private static final boolean TEST_TOKEN_COUNT = true;
 
 	/**
-	 * Just a quick override, useful when working on the tokenizers.
+	 * Just a quick override, useful when working on the sources.
 	 */
 	private static final boolean TEST_COVERAGE = true;
 
@@ -48,21 +51,30 @@ public class TestResult {
 	public static TestResult from(ParseResults parseResults) {
 		TestResult result = new TestResult();
 
+		final Parse parse = parseResults.getParse();
+
 		result.name = parseResults.getFile().getName();
 		result.valid = parseResults.isValidInput();
 		result.tokenCount = Metrics.getSignificantTokenCount(parseResults);
 		result.coverage = Metrics.getCoverage(parseResults);
-		result.errorCount = parseResults.getParse().getErrorCount();
-		result.warningCount = parseResults.getParse().getWarningCount();
+		result.errorCount = parse.getErrorCount();
+		result.warningCount = parse.getWarningCount();
 
-		result.errors = parseResults.getParse().getErrors();
-		result.warnings = parseResults.getParse().getWarnings();
+		result.errors = parse.getErrors();
+		result.warnings = parse.getWarnings();
 
-		PreprocessingSource preprocessing = parseResults.getParse().getSource(
-				PreprocessingSource.class);
-		if (preprocessing != null)
-			result.preprocessedDirectivesCount = preprocessing
-					.getHandledDirectives().size();
+		final CopyInclude copyInclude = parse.getSource(CopyInclude.class);
+		if (copyInclude != null) {
+			final List<Tree> handledDirectives = copyInclude
+					.getHandledDirectives();
+			result.preprocessedDirectivesCount += handledDirectives.size();
+		}
+
+		final Replace replace = parse.getSource(Replace.class);
+		if (replace != null) {
+			final List<Tree> handledDirectives = replace.getHandledDirectives();
+			result.preprocessedDirectivesCount += handledDirectives.size();
+		}
 
 		return result;
 	}
@@ -119,7 +131,8 @@ public class TestResult {
 		return preprocessedDirectivesCount;
 	}
 
-	public void setPreprocessedDirectivesCount(int preprocessedDirectivesCount) {
+	public void setPreprocessedDirectivesCount(
+			int preprocessedDirectivesCount) {
 		this.preprocessedDirectivesCount = preprocessedDirectivesCount;
 	}
 
@@ -129,7 +142,8 @@ public class TestResult {
 			if (this.valid)
 				messages.add("- This file used to parse. It no longer does.");
 			else
-				messages.add("+ This file used to fail parsing. It is now valid.");
+				messages.add(
+						"+ This file used to fail parsing. It is now valid.");
 		}
 
 		if (TEST_TOKEN_COUNT && actual.tokenCount != this.tokenCount) {
@@ -150,8 +164,8 @@ public class TestResult {
 						+ " to " + actual.coverage + ".");
 
 			} else {
-				messages.add("+ Coverage went up from " + this.coverage
-						+ " to " + actual.coverage + ".");
+				messages.add("+ Coverage went up from " + this.coverage + " to "
+						+ actual.coverage + ".");
 			}
 		}
 
@@ -168,14 +182,13 @@ public class TestResult {
 
 		if (actual.warningCount != this.warningCount) {
 			if (actual.warningCount < this.warningCount)
-				messages.add("+ Warning count went down from "
-						+ this.warningCount + " to " + actual.warningCount
-						+ ".");
+				messages.add(
+						"+ Warning count went down from " + this.warningCount
+								+ " to " + actual.warningCount + ".");
 
 			else
-				messages.add("- Warning count went up from "
-						+ this.warningCount + " to " + actual.warningCount
-						+ ".");
+				messages.add("- Warning count went up from " + this.warningCount
+						+ " to " + actual.warningCount + ".");
 		}
 
 		// TODO Warnings.
@@ -229,8 +242,8 @@ public class TestResult {
 				// TODO List of errors.
 				results.setWarningCount(Integer.parseInt(warningCount));
 				// TODO List of warnings.
-				results.setPreprocessedDirectivesCount(Integer
-						.parseInt(preprocessedDirectivesCount));
+				results.setPreprocessedDirectivesCount(
+						Integer.parseInt(preprocessedDirectivesCount));
 
 				targets.put(name, results);
 			}

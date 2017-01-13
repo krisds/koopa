@@ -1,7 +1,9 @@
 package koopa.core.data.tags;
 
+import koopa.core.data.Token;
+
 /**
- * Every token which goes into the parser should have one (and only one) of
+ * Every token which goes into the parser should have one (and only one ?) of
  * these tags.
  */
 public enum AreaTag {
@@ -20,12 +22,25 @@ public enum AreaTag {
 	COMMENT,
 
 	/**
-	 * This token holds a source formatting directive.
+	 * This token is something we don't care about. But is definitely <i>NOT</i>
+	 * {@link #PROGRAM_TEXT_AREA}.
 	 */
-	SOURCE_FORMATTING_DIRECTIVE,
+	SKIPPED,
 
 	/**
 	 * This token holds a compiler directive.
 	 */
-	COMPILER_DIRECTIVE
+	COMPILER_DIRECTIVE;
+
+	/**
+	 * Whether or not the given {@linkplain Token} has any of the tags defined
+	 * in this enum.
+	 */
+	public static boolean isDefinedOn(Token token) {
+		return token.hasAnyTag( //
+				PROGRAM_TEXT_AREA, //
+				COMMENT, //
+				SKIPPED, //
+				COMPILER_DIRECTIVE);
+	}
 }

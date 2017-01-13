@@ -10,7 +10,6 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
-import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 
@@ -479,10 +478,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             literal("H"),
             opt(NOSKIP,
-              sequence(
-                tagged(STRING),
-                any()
-              )
+              str()
             )
           )
         );
@@ -507,10 +503,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             literal("X"),
             opt(NOSKIP,
-              sequence(
-                tagged(STRING),
-                any()
-              )
+              str()
             )
           )
         );
@@ -535,10 +528,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             literal("NX"),
             opt(NOSKIP,
-              sequence(
-                tagged(STRING),
-                any()
-              )
+              str()
             )
           )
         );
@@ -563,10 +553,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             literal("BX"),
             opt(NOSKIP,
-              sequence(
-                tagged(STRING),
-                any()
-              )
+              str()
             )
           )
         );
@@ -618,10 +605,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
             sequence(
               literal("B"),
               opt(NOSKIP,
-                sequence(
-                  tagged(STRING),
-                  any()
-                )
+                str()
               )
             )
           )
@@ -647,10 +631,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             literal("Z"),
             opt(NOSKIP,
-              sequence(
-                tagged(STRING),
-                any()
-              )
+              str()
             )
           )
         );
@@ -675,10 +656,7 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
           sequence(
             literal("N"),
             opt(NOSKIP,
-              sequence(
-                tagged(STRING),
-                any()
-              )
+              str()
             )
           )
         );
@@ -705,15 +683,47 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
             nationalAlphanumericHexadecimal(),
             nullTerminatedStringLiteral(),
             nationalStringLiteral(),
-            sequence(
-              tagged(STRING),
-              any()
-            )
+            str()
           )
         );
       }
     
       return alphanumericLiteralParser;
+    }
+    
+    // ========================================================
+    // str
+    // ........................................................
+    
+    private ParserCombinator strParser = null;
+    
+    protected final Start str = Start.on(getNamespace(), "str");
+    
+    protected ParserCombinator str() {
+      if (strParser == null) {
+        FutureParser future = scoped("str", PRIVATE, true);
+        strParser = future;
+        future.setParser(
+          sequence(
+            sequence(
+              tagged(STRING),
+              any()
+            ),
+            optional(
+              opt(NOSKIP,
+                plus(
+                  sequence(
+                    tagged(STRING),
+                    any()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return strParser;
     }
     
     // ========================================================
@@ -730,8 +740,35 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         pseudoLiteralParser = future;
         future.setParser(
           sequence(
-            tagged(PSEUDO_LITERAL),
-            any()
+            sequence(
+              literal("="),
+              opt(NOSKIP,
+                literal("=")
+              )
+            ),
+            upto(
+              star(
+                any()
+              ),
+              // Closure:
+              sequence(
+                literal("="),
+                opt(NOSKIP,
+                  sequence(
+                    literal("="),
+                    not(
+                      literal("=")
+                    )
+                  )
+                )
+              )
+            ),
+            sequence(
+              literal("="),
+              opt(NOSKIP,
+                literal("=")
+              )
+            )
           )
         );
       }
@@ -824,7 +861,17 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
         future.setParser(
           sequence(
             tagged(NUMBER),
-            any()
+            any(),
+            optional(
+              opt(NOSKIP,
+                plus(
+                  sequence(
+                    tagged(NUMBER),
+                    any()
+                  )
+                )
+              )
+            )
           )
         );
       }

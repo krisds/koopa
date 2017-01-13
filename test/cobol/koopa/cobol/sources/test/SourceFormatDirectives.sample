@@ -1,0 +1,61 @@
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<--------------------------------------------------------------------------->^
+FIXED                                                                        =
+!DIRECTIVE                                                                   =
+!TEXT                                                                        EOLN
+
+
+       >> source format is free
+<----------------------------->^
+FIXED                          FREE
+DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
+!TEXT                          EOLN
+
+
+>> source format is fixed
+<----------------------->^
+FREE                     FIXED
+DIRECTIVE/SOURCE_FORMAT  !DIRECTIVE
+!TEXT                    EOLN
+
+
+        >> source format is free    *> witty remark
+<------------------------------------------------->^
+FIXED                                              FREE
+DIRECTIVE/SOURCE_FORMAT                            !DIRECTIVE
+!TEXT                                              EOLN
+
+
+>> source format is fixed    *> witty remark
+<------------------------------------------>^
+FREE                                        FIXED
+DIRECTIVE/SOURCE_FORMAT                     !DIRECTIVE
+!TEXT                                       EOLN
+
+
+       >> source free
+<------------------->^
+FIXED                FREE
+DIR/SOURCE_FORMAT    !DIRECTIVE
+!TEXT                EOLN
+
+
+>> source fixed
+<------------->^
+FREE           FIXED
+DIR/FORMAT     !DIRECTIVE
+!TEXT          EOLN
+
+
+       >> SOURCE FORMAT IS FREE
+<----------------------------->^
+FIXED                          FREE
+DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
+!TEXT                          EOLN
+
+
+>> SOURCE FORMAT FIXED
+<-------------------->^
+FREE                  FIXED
+DIR/SOURCE_FORMAT     !DIRECTIVE
+!TEXT                 EOLN

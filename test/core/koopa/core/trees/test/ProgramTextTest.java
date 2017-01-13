@@ -36,7 +36,7 @@ public class ProgramTextTest extends TestCase {
 		Tree tree = tree("test", text("Stop", 0, 3), text("bashing", 5, 11),
 				text("Cobol", 13, 17));
 
-		String expected = "Stop bashing Cobol";
+		String expected = "StopbashingCobol";
 
 		assertEquals(expected, tree.getProgramText());
 	}
@@ -48,7 +48,7 @@ public class ProgramTextTest extends TestCase {
 				comment("-or making jokes about-"), text("Cobol", 13, 17),
 				comment("-seriously!-"));
 
-		String expected = "Stop bashing Cobol";
+		String expected = "StopbashingCobol";
 
 		assertEquals(expected, tree.getProgramText());
 	}

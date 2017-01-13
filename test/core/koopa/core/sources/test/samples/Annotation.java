@@ -3,27 +3,37 @@ package koopa.core.sources.test.samples;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import koopa.core.util.Strings;
-
 class Annotation {
 
-	private Set<String> categories = new LinkedHashSet<String>();
+	private final Set<String> required = new LinkedHashSet<String>();
+	private final Set<String> forbidden = new LinkedHashSet<String>();
 
-	public void add(String category) {
-		categories.add(category);
+	public Annotation() {
 	}
 
-	public Set<String> getCategories() {
-		return categories;
+	public Annotation(Annotation annotation) {
+		this.required.addAll(annotation.required);
+		this.forbidden.addAll(annotation.forbidden);
 	}
 
-	@Override
-	public String toString() {
-		return Strings.join("/", categories);
+	public void add(String category, boolean required) {
+		if (required)
+			this.required.add(category);
+		else
+			this.forbidden.add(category);
+	}
+
+	public Set<String> getRequired() {
+		return required;
+	}
+
+	public Set<String> getForbidden() {
+		return forbidden;
 	}
 
 	public void mergeWith(Annotation other) {
 		// Offsets are not overwritten.
-		categories.addAll(other.categories);
+		required.addAll(other.required);
+		forbidden.addAll(other.forbidden);
 	}
 }

@@ -2080,24 +2080,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("regularIdentifier", PUBLIC, true);
         regularIdentifierParser = future;
         future.setParser(
-          sequence(
-            tagged(WORD),
-            any(),
-            opt(NOSKIP,
-              star(
-                choice(
-                  sequence(
-                    tagged(NUMBER),
-                    any()
-                  ),
-                  sequence(
-                    tagged(WORD),
-                    any()
-                  )
-                )
-              )
-            )
-          )
+          word()
         );
       }
     
@@ -2117,10 +2100,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("delimitedIdentifier", PUBLIC, true);
         delimitedIdentifierParser = future;
         future.setParser(
-          sequence(
-            tagged(STRING),
-            any()
-          )
+          str()
         );
       }
     
@@ -2364,14 +2344,84 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("stringLiteral", PUBLIC, true);
         stringLiteralParser = future;
         future.setParser(
-          sequence(
-            tagged(STRING),
-            any()
-          )
+          str()
         );
       }
     
       return stringLiteralParser;
+    }
+    
+    // ========================================================
+    // str
+    // ........................................................
+    
+    private ParserCombinator strParser = null;
+    
+    protected final Start str = Start.on(getNamespace(), "str");
+    
+    protected ParserCombinator str() {
+      if (strParser == null) {
+        FutureParser future = scoped("str", PRIVATE, true);
+        strParser = future;
+        future.setParser(
+          sequence(
+            sequence(
+              tagged(STRING),
+              any()
+            ),
+            optional(
+              opt(NOSKIP,
+                plus(
+                  sequence(
+                    tagged(STRING),
+                    any()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return strParser;
+    }
+    
+    // ========================================================
+    // word
+    // ........................................................
+    
+    private ParserCombinator wordParser = null;
+    
+    protected final Start word = Start.on(getNamespace(), "word");
+    
+    protected ParserCombinator word() {
+      if (wordParser == null) {
+        FutureParser future = scoped("word", PRIVATE, true);
+        wordParser = future;
+        future.setParser(
+          sequence(
+            tagged(WORD),
+            any(),
+            opt(NOSKIP,
+              star(
+                choice(
+                  sequence(
+                    tagged(NUMBER),
+                    any()
+                  ),
+                  sequence(
+                    tagged(WORD),
+                    any()
+                  ),
+                  literal("_")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return wordParser;
     }
     
 }

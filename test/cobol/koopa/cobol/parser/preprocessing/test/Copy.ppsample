@@ -1,0 +1,12 @@
+If we can find the matching copybook then its contents should be included.
+Given that there are no replacements defined it should be included verbatim.
+
+< DISPLAY "Start".
+< COPY "MOVES".
+< GO TO END.
+
+> DISPLAY "Start".
+> MOVE 11 TO XXX.
+>MOVE 22 TO YYY.
+>MOVE 33 TO ZZZ.
+> GO TO END.

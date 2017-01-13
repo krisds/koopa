@@ -229,7 +229,7 @@ public class CobolFiles {
 				if (!filesOnly && path.isDirectory())
 					return true;
 
-				return isCopybook(path);
+				return isCopybook(name);
 			}
 		};
 	}

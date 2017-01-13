@@ -1,13 +1,13 @@
 package koopa.core.sources;
 
 import static koopa.core.data.tags.AreaTag.COMMENT;
-import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
-import java.io.IOException;
+import java.util.LinkedList;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 
@@ -19,41 +19,36 @@ import koopa.core.data.tags.AreaTag;
  * {@linkplain AreaTag#PROGRAM_TEXT_AREA}, which are not
  * {@linkplain AreaTag#COMMENT}s or {@linkplain AreaTag#COMPILER_DIRECTIVE}s.
  */
-public class TokenSeparator extends ThreadedSource<Token, Token> implements
-		Source<Token> {
+public class TokenSeparator extends ChainingSource<Data, Data>
+		implements Source<Data> {
 
-	public TokenSeparator(Source<Token> source) {
+	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
+
+	public TokenSeparator(Source<Data> source) {
 		super(source);
-
-		assert (source != null);
-	}
-
-	protected void tokenize() throws IOException {
-		while (!hasClosed()) {
-			final Token token = source.next();
-
-			if (token == null) {
-				break;
-
-			} else if (token.hasTag(END_OF_LINE)) {
-				enqueue(token.withTags(SEPARATOR));
-
-			} else if (token.hasTag(PROGRAM_TEXT_AREA) //
-					&& !token.hasTag(COMMENT) //
-					&& !token.hasTag(COMPILER_DIRECTIVE)) {
-
-				for (Token t : TokenSeparationLogic.apply(token))
-					enqueue(t);
-
-			} else {
-				enqueue(token);
-			}
-		}
 	}
 
 	@Override
-	public void close() {
-		super.close();
-		source.close();
+	protected Data nxt1() {
+		if (!pendingTokens.isEmpty())
+			return pendingTokens.removeFirst();
+
+		final Data d = source.next();
+		if (d == null || !(d instanceof Token))
+			return d;
+
+		final Token t = (Token) d;
+		if (t.hasTag(END_OF_LINE))
+			return t.withTags(SEPARATOR);
+		else if (!t.hasTag(PROGRAM_TEXT_AREA) || t.hasTag(COMMENT))
+			return t;
+
+		tokenizeProgramText(t);
+		return pendingTokens.removeFirst();
+	}
+
+	protected void tokenizeProgramText(final Token token) {
+		for (Token t : TokenSeparationLogic.apply(token))
+			pendingTokens.add(t);
 	}
 }

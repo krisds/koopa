@@ -422,16 +422,8 @@ def hostParameterName =  ':' %noskip identifier  end
 
 def identifier          =  (delimitedIdentifier | regularIdentifier)  end
 
-def regularIdentifier   = 
-    @WORD _
-    %noskip (
-      ( @NUMBER _
-      | @WORD _
-      )*
-    )
-end
-
-def delimitedIdentifier =  @STRING _  end
+def regularIdentifier   =  word  end
+def delimitedIdentifier =  str   end
 
 
 def tableReferenceList =  tableReference (',' tableReference)*  end
@@ -460,7 +452,27 @@ end
 def targetTable =  ( ONLY '(' tableName ')' | tableName )   end
 
 
-def stringLiteral =  @STRING _  end
+def stringLiteral =  str  end
+
+private def str =
+    (@STRING _)
+    
+    # Because of continuations, strings may be split across lines. So we need
+    # to check if there are any more parts (STRINGs) following the initial one,
+    # albeit without skipping whitespace.
+    [%noskip ((@STRING _)+)]
+end
+
+
+private def word =
+    @WORD _
+    %noskip (
+      ( @NUMBER _
+      | @WORD _
+      | '_'
+      )*
+    )
+end
 
 
 # -----------------------------------------------------------------------------

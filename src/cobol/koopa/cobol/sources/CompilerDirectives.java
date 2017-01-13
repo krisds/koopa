@@ -1,8 +1,7 @@
 package koopa.cobol.sources;
 
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-
-import java.util.LinkedList;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import org.apache.log4j.Logger;
 
@@ -11,86 +10,55 @@ import koopa.cobol.directives.ISODirective;
 import koopa.cobol.directives.MFIncStatement;
 import koopa.cobol.directives.MFIncludeStatement;
 import koopa.cobol.directives.MFSetStatement;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class CompilerDirectives extends ChainingSource<Token, Token>
-		implements Source<Token> {
+public class CompilerDirectives extends ChainingSource<Data, Data>
+		implements Source<Data> {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.compiler_directives");
 
-	private final LinkedList<Token> queuedTokens = new LinkedList<Token>();
-
-	private SourceFormat referenceFormat;
-
-	public CompilerDirectives(Source<Token> source,
-			SourceFormat initialReferenceFormat) {
+	public CompilerDirectives(Source<Data> source) {
 		super(source);
-
-		assert (source != null);
-		assert (initialReferenceFormat != null);
-
-		this.referenceFormat = initialReferenceFormat;
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Initial reference format: " + referenceFormat);
 	}
 
 	@Override
-	public Token nxt1() {
-		if (!queuedTokens.isEmpty())
-			return queuedTokens.removeFirst();
+	public Data nxt1() {
+		final Data d = source.next();
 
-		final Token token = source.next();
+		if (d == null || !(d instanceof Token))
+			return d;
 
-		if (token == null)
-			return null;
+		final Token t = (Token) d;
 
-		if (token.tagCount() > 0)
-			return token.withTags(referenceFormat);
+		if (t.hasAnyTag(COMPILER_DIRECTIVE, END_OF_LINE))
+			return t;
 
-		if (isMicroFocusSetStatement(token))
-			return queuedTokens.removeFirst();
+		if (isMicroFocusSetStatement(t) //
+				|| isCompilerDirective(t) //
+				|| isMicroFocusIncDirective(t) //
+				|| isMicroFocusIncludeDirective(t) //
+				|| isIBMCompilerDirectingStatement(t))
+			return t.withTags(COMPILER_DIRECTIVE);
 
-		if (isCompilerDirective(token))
-			return queuedTokens.removeFirst();
-
-		if (isMicroFocusIncDirective(token))
-			return queuedTokens.removeFirst();
-
-		if (isMicroFocusIncludeDirective(token))
-			return queuedTokens.removeFirst();
-
-		if (isIBMCompilerDirectingStatement(token))
-			return queuedTokens.removeFirst();
-
-		return token.withTags(referenceFormat);
-	}
-
-	public void close() {
-		source.close();
+		return t;
 	}
 
 	// ========================================================================
 
 	private boolean isCompilerDirective(Token token) {
+		final SourceFormat referenceFormat = SourceFormat.forToken(token);
+
 		if (!ISODirective.matches(referenceFormat, token))
 			return false;
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("ISO directive: " + token);
 
-		final SourceFormat format = ISODirective.getSourceFormat(token);
-
-		queuedTokens.addFirst(//
-				token.withTags(COMPILER_DIRECTIVE, referenceFormat));
-
 		// TODO Split off inline comments ? Indicator area ?
-
-		if (format != null)
-			referenceFormat = format;
 
 		return true;
 	}
@@ -104,9 +72,6 @@ public class CompilerDirectives extends ChainingSource<Token, Token>
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Micro Focus -INC statement: " + token);
 
-		queuedTokens
-				.addFirst(token.withTags(COMPILER_DIRECTIVE, referenceFormat));
-
 		return true;
 	}
 
@@ -119,28 +84,19 @@ public class CompilerDirectives extends ChainingSource<Token, Token>
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Micro Focus ++INCLUDE statement: " + token);
 
-		queuedTokens
-				.addFirst(token.withTags(COMPILER_DIRECTIVE, referenceFormat));
-
 		return true;
 	}
 
 	// ========================================================================
 
 	private boolean isMicroFocusSetStatement(Token token) {
+		final SourceFormat referenceFormat = SourceFormat.forToken(token);
+
 		if (!MFSetStatement.matches(referenceFormat, token))
 			return false;
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Micro Focus compiler directive: " + token);
-
-		final SourceFormat format = MFSetStatement.getSourceFormat(token);
-
-		queuedTokens
-				.addFirst(token.withTags(COMPILER_DIRECTIVE, referenceFormat));
-
-		if (format != null)
-			referenceFormat = format;
 
 		return true;
 	}
@@ -148,14 +104,13 @@ public class CompilerDirectives extends ChainingSource<Token, Token>
 	// ========================================================================
 
 	private boolean isIBMCompilerDirectingStatement(Token token) {
+		final SourceFormat referenceFormat = SourceFormat.forToken(token);
+
 		if (!IBMCompilerDirectingStatement.matches(referenceFormat, token))
 			return false;
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("IBM compiler directive: " + token);
-
-		queuedTokens
-				.addFirst(token.withTags(COMPILER_DIRECTIVE, referenceFormat));
 
 		return true;
 	}

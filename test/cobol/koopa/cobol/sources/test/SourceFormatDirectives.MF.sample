@@ -1,0 +1,34 @@
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<--------------------------------------------------------------------------->^
+FIXED                                                                        =
+-                                                                            !DIRECTIVE
+!TEXT                                                                        EOLN
+
+
+# This one comes from the real world:
+      $set SOURCEFORMAT"VARIABLE" OUTDD"SYSOUT 121 R"
+<--------------------------------------------------->^
+FIXED                                                VARIABLE
+DIRECTIVE/SOURCE_FORMAT                              !DIRECTIVE
+!TEXT                                                EOLN
+
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<--------------------------------------------------------------------------->^
+VARIABLE                                                                     =
+!DIRECTIVE                                                                   =
+!TEXT                                                                        EOLN
+
+
+      $set SOURCEFORMAT"FIXED"
+<---------------------------->^
+VARIABLE                      FIXED
+DIRECTIVE/SOURCE_FORMAT       !DIRECTIVE
+!TEXT                         EOLN
+
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<--------------------------------------------------------------------------->^
+FIXED                                                                        =
+!DIRECTIVE                                                                   =
+!TEXT                                                                        EOLN

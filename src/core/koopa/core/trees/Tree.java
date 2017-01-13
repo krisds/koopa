@@ -67,18 +67,8 @@ public class Tree {
 	 */
 	public String getProgramText() {
 		StringBuilder builder = new StringBuilder();
-
-		Token previous = null;
-		for (Token t : allTokens(new ProgramTextFilter())) {
-			if (previous != null && builder.length() > 0
-					&& previous.getEnd().getPositionInFile() + 1 //
-					< t.getStart().getPositionInFile())
-				builder.append(" ");
-
+		for (Token t : allTokens(new ProgramTextFilter()))
 			builder.append(t.getText());
-			previous = t;
-		}
-
 		return builder.toString();
 	}
 

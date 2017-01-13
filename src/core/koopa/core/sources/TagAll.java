@@ -24,8 +24,4 @@ public class TagAll extends ChainingSource<Token, Token> implements
 
 		return token.withTags(tags);
 	}
-
-	public void close() {
-		source.close();
-	}
 }

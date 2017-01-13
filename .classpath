@@ -7,18 +7,18 @@
 	<classpathentry kind="lib" path="lib/swingx-1.0.jar"/>
 	<classpathentry kind="src" path="src/core"/>
 	<classpathentry kind="src" path="test/core"/>
-	<classpathentry kind="src" path="src/cobol"/>
-	<classpathentry kind="src" path="test/cobol"/>
-	<classpathentry kind="src" path="examples/jaxen"/>
-	<classpathentry kind="src" path="src/apps"/>
-	<classpathentry kind="src" path="examples/basic"/>
-	<classpathentry kind="src" path="src/dsl"/>
 	<classpathentry kind="src" path="src/templates"/>
+	<classpathentry kind="src" path="src/dsl"/>
 	<classpathentry kind="src" path="test/dsl"/>
 	<classpathentry kind="src" path="src/cics"/>
 	<classpathentry kind="src" path="test/cics"/>
 	<classpathentry kind="src" path="src/sql"/>
 	<classpathentry kind="src" path="test/sql"/>
+	<classpathentry kind="src" path="src/cobol"/>
+	<classpathentry kind="src" path="test/cobol"/>
+	<classpathentry kind="src" path="src/apps"/>
+	<classpathentry kind="src" path="examples/jaxen"/>
+	<classpathentry kind="src" path="examples/basic"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

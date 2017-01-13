@@ -90,7 +90,11 @@ public class Sample {
 		Range incompleteRange = null;
 
 		for (Block block : blocks) {
-			for (Range range : block.getRanges()) {
+			final List<Range> blockRanges = block.getRanges();
+			if (blockRanges == null)
+				continue;
+
+			for (Range range : blockRanges) {
 				final boolean continuesARange = range.getStart() == null;
 				final boolean rangeIsContinued = range.getEnd() == null;
 
@@ -126,9 +130,19 @@ public class Sample {
 		final List<Annotation> annotations = new ArrayList<Annotation>();
 
 		for (Block block : blocks)
-			annotations.addAll(block.getAnnotations());
+			if (block.hasAnnotations())
+				annotations.addAll(block.getAnnotations());
+			else if (block.getRanges() != null)
+				annotations.addAll(emptyAnnotations(block.getRanges().size()));
 
 		return annotations;
+	}
+
+	private static List<Annotation> emptyAnnotations(int size) {
+		List<Annotation> l = new ArrayList<Annotation>(size);
+		for (int i = 0; i < size; i++)
+			l.add(null);
+		return l;
 	}
 
 	public Reader getReader() {
@@ -156,8 +170,11 @@ public class Sample {
 					+ range.getStart().getPositionInLine() + "--"
 					+ range.getEnd().getPositionInLine();
 
-			Token token = source.next();
+			final Token token = source.next();
 			assertNotNull(message, token);
+			
+			if (token.isReplacement())
+				continue;
 
 			message += ". Found " + token + " instead.";
 
@@ -172,10 +189,19 @@ public class Sample {
 					token.getEnd().getPositionInLine());
 
 			final Annotation annotation = annotations.get(i);
-			final Set<String> categories = annotation.getCategories();
-			if (categories != null && !categories.isEmpty())
-				for (String category : categories)
-					validator.validate(token, category);
+			if (annotation != null) {
+				final Set<String> required //
+						= annotation.getRequired();
+				if (required != null && !required.isEmpty())
+					for (String category : required)
+						validator.validate(token, category, true);
+
+				final Set<String> forbidden //
+						= annotation.getForbidden();
+				if (forbidden != null && !forbidden.isEmpty())
+					for (String category : forbidden)
+						validator.validate(token, category, false);
+			}
 
 			i += 1;
 		}

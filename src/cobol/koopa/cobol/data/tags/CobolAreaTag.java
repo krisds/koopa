@@ -1,5 +1,7 @@
 package koopa.cobol.data.tags;
 
+import koopa.core.data.Token;
+
 /**
  * Some Cobol specific specializations of what can be found in a program.
  */
@@ -11,5 +13,16 @@ public enum CobolAreaTag {
 	INDICATOR_AREA,
 
 	/** Columns 72 and on in a fixed-format source file. */
-	IDENTIFICATION_AREA
+	IDENTIFICATION_AREA;
+
+	/**
+	 * Whether or not the given {@linkplain Token} has any of the tags defined
+	 * in this enum.
+	 */
+	public static boolean isDefinedOn(Token token) {
+		return token.hasAnyTag( //
+				SEQUENCE_NUMBER_AREA, //
+				INDICATOR_AREA, //
+				IDENTIFICATION_AREA);
+	}
 }

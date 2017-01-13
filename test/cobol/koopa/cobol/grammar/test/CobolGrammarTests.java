@@ -28,6 +28,7 @@ public class CobolGrammarTests extends GrammarTestSuite {
 		final Reader reader = new StringReader(sample);
 		final SourceFormat initialSourceFormat = SourceFormat.FREE;
 
-		return CobolTokens.getNewSource(reader, grammar, initialSourceFormat);
+		return CobolTokens.getNewSource(reader, (CobolGrammar) grammar,
+				initialSourceFormat);
 	}
 }

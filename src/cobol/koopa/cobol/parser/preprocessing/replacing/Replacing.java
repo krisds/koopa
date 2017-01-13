@@ -22,7 +22,7 @@ public final class Replacing {
 		return replacingPhrases;
 	}
 
-	public static ReplacingPhrase phraseFrom(Tree definition) {
+	private static ReplacingPhrase phraseFrom(Tree definition) {
 		final Mode mode = Mode.from(definition);
 
 		final ReplacingPhraseOperand replacing = ReplacingPhraseOperand.from(//

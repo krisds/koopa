@@ -155,9 +155,8 @@ public class CobolParser {
 	public Parse getParseSetup(File file, Reader reader) throws IOException {
 		Parse parse;
 		// Build the tokenisation stage.
-		Source<Token> source = CobolTokens.getNewSource(file.getCanonicalPath(),
-				reader, grammar, format, file,
-				preprocessing ? copybooks : null);
+		Source<Token> source = CobolTokens.getNewSource(file, reader, grammar,
+				format, preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
 

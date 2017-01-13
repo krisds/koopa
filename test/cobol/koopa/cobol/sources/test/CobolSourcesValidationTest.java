@@ -3,31 +3,34 @@ package koopa.cobol.sources.test;
 import static koopa.cobol.data.tags.CobolAreaTag.IDENTIFICATION_AREA;
 import static koopa.cobol.data.tags.CobolAreaTag.INDICATOR_AREA;
 import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
-import static koopa.cobol.data.tags.CobolTag.PSEUDO_LITERAL;
-import static koopa.cobol.data.tags.ContinuationsTag.CONTINUED;
-import static koopa.cobol.data.tags.ContinuationsTag.CONTINUING;
-import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
-import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
+import static koopa.cobol.data.tags.CobolTag.SOURCE_FORMAT_DIRECTIVE;
+import static koopa.cobol.data.tags.CobolTag.SOURCE_LISTING_DIRECTIVE;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import koopa.cobol.CobolTokens;
+import koopa.cobol.Copybooks;
+import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.CompilerDirectives;
-import koopa.cobol.sources.ContinuationWelding;
+import koopa.cobol.sources.ContinuationOfLines;
 import koopa.cobol.sources.InlineComments;
-import koopa.cobol.sources.LineContinuations;
 import koopa.cobol.sources.ProgramArea;
-import koopa.cobol.sources.PseudoLiterals;
 import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.SourceFormattingDirectives;
+import koopa.cobol.sources.SourceFormatDirectives;
+import koopa.cobol.sources.SourceListingDirectives;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
+import koopa.core.sources.NarrowingSource;
 import koopa.core.sources.Source;
 import koopa.core.sources.TokenSeparator;
 import koopa.core.sources.test.CoreSourcesValidationTest;
@@ -42,6 +45,19 @@ import koopa.core.util.test.Files;
 @RunWith(Files.class)
 public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
+	private static final HashMap<String, Class<? extends Source<? extends Data>>> CLASSES //
+			= new HashMap<String, Class<? extends Source<? extends Data>>>();
+	static {
+		CLASSES.put("LineSplitter", LineSplitter.class);
+		CLASSES.put("SourceFormatDirectives", SourceFormatDirectives.class);
+		CLASSES.put("CompilerDirectives", CompilerDirectives.class);
+		CLASSES.put("ProgramArea", ProgramArea.class);
+		CLASSES.put("SourceListingDirectives", SourceListingDirectives.class);
+		CLASSES.put("TokenSeparator", TokenSeparator.class);
+		CLASSES.put("InlineComments", InlineComments.class);
+		CLASSES.put("ContinuationOfLines", ContinuationOfLines.class);
+	}
+
 	@Override
 	protected File getFolder() {
 		return new File("test/cobol/koopa/cobol/sources/test/");
@@ -49,49 +65,38 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
 	@Override
 	protected Source<Token> getSource(String resourceName, Sample sample) {
-		SourceFormat format = SourceFormat.FIXED;
+		final String fileName = file.getName();
+		final String className = fileName.substring(0, fileName.indexOf('.'));
 
-		Source<Token> source = null;
+		final Class<? extends Source<? extends Data>> clazz;
+		if ("All".equals(className))
+			clazz = null;
+		else {
+			clazz = CLASSES.get(className);
+			Assert.assertNotNull("Missing key: " + className, clazz);
+		}
 
-		source = new LineSplitter(resourceName, sample.getReader());
+		final SourceFormat format = SourceFormat.FIXED;
+		final CobolGrammar grammar = new CobolGrammar();
+		// We set up a Copybooks instance (though empty) so that we force all
+		// the stages to be present.
+		final Copybooks copybooks = new Copybooks();
 
-		source = new CompilerDirectives(source, format);
-		if (file.getName().startsWith("CompilerDirectives"))
-			return source;
+		final Source<Token> source = CobolTokens.getNewSource(file,
+				sample.getReader(), grammar, format, copybooks);
 
-		source = new ProgramArea(source);
-		if (file.getName().startsWith("ProgramArea"))
-			return source;
+		final Source<? extends Data> selectedSource;
+		if (clazz == null)
+			selectedSource = source;
+		else
+			selectedSource = source.getSource(clazz);
 
-		source = new SourceFormattingDirectives(source);
-		if (file.getName().startsWith("SourceFormattingDirectives"))
-			return source;
+		Assert.assertNotNull("No such source: " + clazz, selectedSource);
 
-		source = new LineContinuations(source);
-		if (file.getName().startsWith("LineContinuations"))
-			return source;
+		@SuppressWarnings("unchecked")
+		final Source<Data> narrowed = (Source<Data>) selectedSource;
 
-		source = new ContinuationWelding(source);
-		if (file.getName().startsWith("ContinuationWelding"))
-			return source;
-
-		source = new TokenSeparator(source);
-		if (file.getName().startsWith("TokenSeparator"))
-			return source;
-
-		source = new InlineComments(source);
-		if (file.getName().startsWith("InlineComments"))
-			return source;
-
-		source = new PseudoLiterals(source);
-		if (file.getName().startsWith("PseudoLiterals"))
-			return source;
-
-		if (file.getName().startsWith("Full"))
-			return source;
-
-		Assert.fail("Don't know how to setup source for " + file.getName());
-		return null;
+		return new NarrowingSource<Data, Token>(narrowed, Token.class);
 	}
 
 	@Before
@@ -112,22 +117,26 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		addCategory("VAR", variable);
 		addCategory("V", variable);
 
-		addCategory("SEQNR", new Object[] { SEQUENCE_NUMBER_AREA });
+		final Object[] seqnr = new Object[] { SEQUENCE_NUMBER_AREA };
+		addCategory("SEQNR", seqnr);
 
-		addCategory("I", new Object[] { INDICATOR_AREA });
+		final Object[] indicator = new Object[] { INDICATOR_AREA };
+		addCategory("INDIC", indicator);
+		addCategory("I", indicator);
 
-		addCategory("IDENT", new Object[] { IDENTIFICATION_AREA });
+		final Object[] identification = new Object[] { IDENTIFICATION_AREA };
+		addCategory("IDENT", identification);
 
-		addCategory("PSEUDO", new Object[] { PSEUDO_LITERAL });
+		final Object[] sourceListingDirective = new Object[] {
+				SOURCE_LISTING_DIRECTIVE, COMPILER_DIRECTIVE };
+		addCategory("SOURCE_LISTING_DIRECTIVE", sourceListingDirective);
+		addCategory("SOURCE_LISTING", sourceListingDirective);
+		addCategory("LISTING", sourceListingDirective);
 
-		addCategory("CTD__", new Object[] { CONTINUED });
-		addCategory("_CTD_", new Object[] { CONTINUING, CONTINUED });
-		addCategory("__CTD", new Object[] { CONTINUING });
-
-		addCategory("LQ", new Object[] { LEADING_QUOTE });
-
-		final Object[] skipped = new Object[] { SKIPPED };
-		addCategory("SKIPPED", skipped);
-		addCategory("SKP", skipped);
+		final Object[] sourceFormatDirective = new Object[] {
+				SOURCE_FORMAT_DIRECTIVE, COMPILER_DIRECTIVE };
+		addCategory("SOURCE_FORMAT_DIRECTIVE", sourceFormatDirective);
+		addCategory("SOURCE_FORMAT", sourceFormatDirective);
+		addCategory("FORMAT", sourceFormatDirective);
 	}
 }

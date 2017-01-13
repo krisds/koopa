@@ -1,16 +1,16 @@
 package koopa.cobol.sources;
 
-import static koopa.cobol.data.tags.ContinuationsTag.LEADING_QUOTE;
-import static koopa.cobol.data.tags.ContinuationsTag.SKIPPED;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+
 import koopa.core.data.Token;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class LOCCount extends ChainingSource<Token, Token> implements
-		Source<Token> {
+public class LOCCount extends ChainingSource<Token, Token>
+		implements Source<Token> {
 
 	private final Source<? extends Token> source;
 
@@ -55,7 +55,7 @@ public class LOCCount extends ChainingSource<Token, Token> implements
 
 			done = (token == null);
 
-		} else if (token.hasTag(LEADING_QUOTE) || token.hasTag(SKIPPED)) {
+		} else if (token.hasTag(SKIPPED)) {
 
 		} else if (token.hasTag(COMMENT)) {
 			sawComment = true;

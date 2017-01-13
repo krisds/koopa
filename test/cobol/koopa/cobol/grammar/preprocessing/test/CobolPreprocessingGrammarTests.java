@@ -19,15 +19,17 @@ public class CobolPreprocessingGrammarTests extends GrammarTestSuite {
 		return new File("test/cobol/koopa/cobol/grammar/preprocessing/test/")
 				.listFiles(StageUtil.getFilenameFilter());
 	}
-	
+
 	public Grammar getGrammar() {
 		return new CobolPreprocessingGrammar();
 	}
-	
+
 	public Source<Token> getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 		final SourceFormat initialSourceFormat = SourceFormat.FREE;
 
-		return CobolTokens.getNewSource(reader, grammar, initialSourceFormat);
+		return CobolTokens.getNewSource(//
+				reader, (CobolPreprocessingGrammar) grammar,
+				initialSourceFormat);
 	}
 }

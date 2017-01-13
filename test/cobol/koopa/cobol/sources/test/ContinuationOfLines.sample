@@ -1,0 +1,173 @@
+123456* ANNOTATED SAMPLE                                                KOOPA
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =     =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
+
+
+# TODO Continuation of closed string literals.
+
+# Basic continuations. ########################################################
+#
+
+BASIC1 ADD 1 TO ABC-
+<---->^<->^^^<>^<-->^
+FIXED = = ==== ==   =
+!TEXT = T ==== ==   !TEXT
+!SKIP = = ==== ==   SKIPPED
+-     - W .N.W .W   -
+SEQNR I - ---- --   EOLN
+
+
+BASIC2-DEFGHIJ.
+<---->^<----->^^
+FIXED = =     ==
+!TEXT = T     ==
+SKIP  = !SKIP ==
+-     - WORD  :-
+SEQNR I -     -EOLN
+
+
+# Basic continuations, with blanks. ###########################################
+#
+
+BLANK1 ADD 1 TO ABC-      
+<---->^<->^^^<>^<--><---->^
+FIXED = = ==== ==   =     =
+!TEXT = T ==== ==   !TEXT =
+!SKIP = = ==== ==   SKIP  =
+-     - W .N.W .W   .     -
+SEQNR I - ---- --   -     EOLN
+
+
+BLANK2-    DEFGHIJKL.
+<---->^<--><------->^^
+FIXED = =  =        ==
+!TEXT = =  TEXT     ==
+SKIP  = =  !SKIPPED ==
+-     - .  WORD     :-
+SEQNR I -  -        -EOLN
+
+
+# Continued open string literals. #############################################
+#
+
+OPENL1 DISPLAY "HELLO
+<---->^<----->^<---->^
+FIXED = =     ==     =
+!TEXT = TEXT  ==     !TEXT
+!SKIP = =     ==     SKIPPED
+-     - WORD  .STR   -
+SEQNR I -     - -    EOLN
+
+
+OPENL2-         " WORLD".
+<---->^<------->^<----->^^
+FIXED = =       = =     ==
+!TEXT = =       = TEXT  ==
+SKIP  = =       = !SKIP ==
+-     - -       - STR   : -
+SEQNR I -       - -     - EOLN
+
+
+# Floating literal continuation indicator. ####################################
+#
+
+FLOAT1 DISPLAY "HELLO"-
+<---->^<----->^<----><>^
+FIXED = =     ==     = =
+!TEXT = TEXT  == !TEXT =
+!SKIP = =     ==   SKP =
+-     - WORD  .STR   - -
+SEQNR I -     - -    - EOLN
+
+
+FLOAT2-         " WORLD".
+<---->^<------->^<----->^^
+FIXED = =       = =     ==
+!TEXT = =       = TEXT  ==
+SKIP  = =       = !SKIP ==
+-     - -       - STR   :-
+SEQNR I -       - -     -EOLN
+
+
+FLOAT3 DISPLAY 'HELLO'-
+<---->^<----->^<----><>^
+FIXED = =     ==     = =
+!TEXT = TEXT  == !TEXT =
+!SKIP = =     ==   SKP =
+-     - WORD  .STR   - -
+SEQNR I -     - -    - EOLN
+
+
+FLOAT4-         ' WORLD'.
+<---->^<------->^<----->^^
+FIXED = =       = =     ==
+!TEXT = =       = TEXT  ==
+SKIP  = =       = !SKIP ==
+-     - -       - STR   :-
+SEQNR I -       - -     -EOLN
+
+
+# Continued closed string literals. ###########################################
+#
+
+CLOSE1 DISPLAY "======================================================="
+<---->^<----->^<------------------------------------------------------->^
+FIXED = =     ==                                                        =
+!TEXT = TEXT  ==                                                        !TEXT
+!SKIP = =     ==                                                        SKIPPED
+-     - WORD  .STRING                                                   -
+SEQNR I -     --                                                        EOLN
+
+
+CLOSE2-         "":::::".
+<---->^<------->^<----->^^
+FIXED = =       = =     ==
+!TEXT = =       = TEXT  ==
+SKIP  = =       = !SKIP ==
+-     - -       - STR   :-
+SEQNR I -       - -     -EOLN
+
+
+# Split picture string (NC205A). ##############################################
+#
+
+004500                        PIC S9(                                   NC2054.2
+<---->^<---------------------><->^^^^<---------------------------------><------>^
+FIXED = =                     = == == =                                 =       =
+!TEXT = TEXT                  = == == !TEXT                             =       =
+!SKIP = =                     = == == SKIPPED                           =       =
+-     - .                     W .W N: -                                 -       -
+SEQNR I -                     - -- -- -                                 IDENT   EOLN
+
+
+004600-                              6)V9(6).                           NC2054.2
+<---->^<---------------------------->^^^^^^^^<-------------------------><------>^
+FIXED = =                           === ======                          =       =
+!TEXT = =                           T== ======                          !TEXT   TEXT
+SKIP  = =                       !SKIP== ======                          =       =
+-     - -                           N:W N:N::.                          -       -
+SEQNR I -                           --- ------                          IDENT   EOLN
+
+
+# A case from some actual code. ###############################################
+#
+# I'm not sure what this continuation is supposed to accomplish though...
+
+008900   88 FIBONAC VALUE  '00' '01' '01' '02' '03' '05' '08' '13' '21'
+<---->^<><>^<----->^<---><><-->^<-->^<-->^<-->^<-->^<-->^<-->^<-->^<-->^
+FIXED = == ==      ==    = =   ==   ==   ==   ==   ==   ==   ==   ==   =
+!TEXT = T= ==      ==    = =   ==   ==   ==   ==   ==   ==   ==   ==   =
+!SKIP = == ==      ==    = =   ==   ==   ==   ==   ==   ==   ==   ==   =
+-     - .N .WORD   .WORD . STR .STR .STR .STR .STR .STR .STR .STR .STR -
+SEQNR I -- --      --    - -   --   --   --   --   --   --   --   --   EOLN
+
+
+008920-                    '34' '55' '89'.
+<---->^<------------------><-->^<-->^<-->^^
+FIXED = =                  =   ==   ==   ==
+!TEXT = TEXT               =   ==   ==   ==
+!SKIP = =                  =   ==   ==   ==
+-     - .                  STR -STR -STR :-
+SEQNR I -                  -   --   --   -EOLN

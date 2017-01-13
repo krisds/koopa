@@ -1,12 +1,14 @@
 package koopa.cobol.grammar.preprocessing;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.data.tags.SyntacticTag.WORD;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
+
 import koopa.cobol.CobolWords;
 import koopa.core.data.Token;
 import koopa.core.grammars.KoopaGrammar;
@@ -121,6 +123,10 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 			if (token == null) {
 				// End of the stream, so end of the token.
 				break;
+
+			} else if (token.hasTag(SKIPPED)) {
+				// Skipped by continuation. So not part of the word, but not a
+				// definite end to it either.
 
 			} else if (extendedRules && token.hasTag(PROGRAM_TEXT_AREA)
 					&& CobolWords.isExtendedPart(token.getText())) {

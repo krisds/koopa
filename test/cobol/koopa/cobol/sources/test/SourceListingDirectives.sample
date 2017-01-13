@@ -1,0 +1,33 @@
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =     =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
+
+
+       SKIP1
+<---->^<--->^
+FIXED = =          =
+!TEXT = !T/LISTING TEXT
+SEQNR I -          EOLN
+
+
+       SKIP2
+<---->^<--->^
+FIXED = =          =
+!TEXT = !T/LISTING TEXT
+SEQNR I -          EOLN
+
+
+       SKIP3
+<---->^<--->^
+FIXED = =          =
+!TEXT = !T/LISTING TEXT
+SEQNR I -          EOLN
+
+
+       EJECT
+<---->^<--->^
+FIXED = =          =
+!TEXT = !T/LISTING TEXT
+SEQNR I -          EOLN

@@ -50,11 +50,10 @@ public class PreprocessingSourceTest implements FileBasedTest {
 		Sample sample = new Sample(file);
 
 		Source<Token> source = CobolTokens.getNewSource( //
-				file.getName(), //
+				file, //
 				new StringReader(sample.input.toString()), //
 				new CobolGrammar(), //
 				SourceFormat.FREE, //
-				file, //
 				new Copybooks());
 
 		StringBuilder actual = new StringBuilder();

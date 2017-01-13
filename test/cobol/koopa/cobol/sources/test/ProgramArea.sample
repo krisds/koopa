@@ -1,57 +1,57 @@
-123456* ANNOTATED SAMPLE                                                KOOPA
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
 <---->^<---------------------------------------------------------------><--->^
-FIXED F FIXED                                                           FIXED FIXED
-_     _ COMMENT                                                         _     TEXT
-SEQNR I _                                                               IDENT EOLN
+FIXED = =                                                               =    =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
 
 
 123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12
 <---->^<--------------------------------------------------------------->^
-FIXED F FIXED                                                           FIXED
-_     _ COMMENT                                                         TEXT
-SEQNR I _                                                               EOLN
+FIXED = =                                                               =
+!TEXT = !TEXT/COMMENT                                                   TEXT
+SEQNR I -                                                               EOLN
 
 
        IDENTIFICATION DIVISION.
 <---->^<---------------------->^
-FIXED F FIXED                  FIXED
-_     _ TEXT                   TEXT
-SEQNR I _                      EOLN
+FIXED = =                      =
+!TEXT = TEXT                   =
+SEQNR I -                      EOLN
 
 
        PROGRAM-ID. FOO.
 <---->^<-------------->^
-FIXED F FIXED          FIXED
-_     _ TEXT           TEXT
-SEQNR I _              EOLN
+FIXED = =              =
+!TEXT = TEXT           =
+SEQNR I -              EOLN
 
 
        PROCEDURE DIVISION.
 <---->^<----------------->^
-FIXED F FIXED             FIXED
-_     _ TEXT              TEXT
-SEQNR I _                 EOLN
+FIXED = =                 =
+!TEXT = TEXT              =
+SEQNR I -                 EOLN
 
 
 123456*Hello world.
 <---->^<---------->^
-FIXED F FIXED       FIXED
-_     _ COMMENT     TEXT
-SEQNR I _           EOLN
+FIXED = =          =
+!TEXT = !T/COMMENT TEXT
+SEQNR I -          EOLN
 
 
        DISPLAY FOO
 <---->^<--------->^
-FIXED F FIXED     FIXED
-_     _ TEXT      TEXT
-SEQNR I _         EOLN
+FIXED = =         =
+!TEXT = TEXT      =
+SEQNR I -         EOLN
 
 
        .
 <---->^^^
-FIXED F FIXED FIXED
-_     _ TEXT      TEXT
-SEQNR I _         EOLN
+FIXED = =    =
+!TEXT = TEXT =
+SEQNR I -    EOLN
 
 
 # =============================================================================
@@ -60,29 +60,29 @@ SEQNR I _         EOLN
        >> source free
 <------------------->^
 FIXED                FREE
-COMPILER_DIRECTIVE   TEXT
-_                    EOLN
+!TEXT/DIRECTIVE      TEXT
+-                    EOLN
 
 
 123456789A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
 <--------------------------------------------------------------------------->^
-FREE                                                                         FREE
-TEXT                                                                         TEXT
-_                                                                            EOLN
+FREE                                                                         =
+TEXT                                                                         =
+-                                                                            EOLN
 
 
 *23456789A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
 ^<-------------------------------------------------------------------------->^
-f FREE                                                                       FREE
-_ COMMENT                                                                    TEXT
-I _                                                                          EOLN
+FREE   =                                                                     =
+!TEXT  !TEXT/COMMENT                                                         TEXT
+INDIC  -                                                                     EOLN
 
 
 display "freedom".
 <---------------->^
-FREE              FREE
-TEXT              TEXT
-_                 EOLN
+FREE              =
+TEXT              =
+-                 EOLN
 
 
 # =============================================================================
@@ -91,22 +91,22 @@ _                 EOLN
 $SET SOURCEFORMAT"VARIABLE"
 <------------------------->^
 FREE                       VARIABLE
-COMPILER_DIRECTIVE         TEXT
-_                          EOLN
+!TEXT/DIRECTIVE            TEXT
+-                          EOLN
 
 
 123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
 <---->^<-------------------------------------------------------------------->^
-VAR   V VARIABLE                                                             VARIABLE
-_     _ COMMENT                                                              TEXT
-SEQNR I _                                                                    EOLN
+VAR   = =                                                                    =
+!TEXT = !TEXT/COMMENT                                                        TEXT
+SEQNR I -                                                                    EOLN
 
 
        DISPLAY FOO.
 <---->^<---------->^
-VAR   V VARIABLE   VARIABLE
-_     _ TEXT       TEXT
-SEQNR I _          EOLN
+VAR   = =          =
+!TEXT = TEXT       =
+SEQNR I -          EOLN
 
 
 # =============================================================================
@@ -115,12 +115,12 @@ SEQNR I _          EOLN
        >> source fixed
 <-------------------->^
 VARIABLE              FIXED
-COMPILER_DIRECTIVE    TEXT
-_                     EOLN
+!TEXT/DIRECTIVE       TEXT
+-                     EOLN
 
 
        DISPLAY FOO.
 <---->^<---------->^
-FIXED F FIXED      FIXED
-_     _ TEXT       TEXT
-SEQNR I _          EOLN
+FIXED = =          =
+!TEXT = TEXT       =
+SEQNR I   -        EOLN

@@ -1,5 +1,5 @@
-           *> Stop bashing COBOL.
-<---->^<-->^^^<-->^<----->^<--->^^
-FIXED F FXD  F F F F F F  F FXD F FIXED
-_     _ TEXT C C C C C C  C C   C TEXT
-SEQNR I WS   _ _ _ _ _ _  _ _   _ EOLN
+            *> Stop bashing COBOL.
+<---->^<--->^^^<-->^<----->^<--->^^
+FIXED = =   ====   ==      ==    = =
+!TEXT = T T/C===   ==      ==    = TEXT
+SEQNR I WS  ----   --      --    - EOLN

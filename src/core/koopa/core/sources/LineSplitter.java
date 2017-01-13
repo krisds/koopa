@@ -3,17 +3,18 @@ package koopa.core.sources;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.util.LineEndings;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class takes a {@link Reader} and spits out tokens. The tokens are either
@@ -27,10 +28,10 @@ import org.apache.log4j.Logger;
  * {@linkplain LineEndings#getDefaults()} instead.
  */
 public class LineSplitter extends BasicSource<Token> implements Source<Token> {
-
 	private static final Logger LOGGER = Logger
 			.getLogger("source.linesplitter");
 
+	private File file = null;
 	private final String resourceName;
 	private PushbackReader reader = null;
 	private final char[] lookahead;
@@ -48,11 +49,30 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 	private StringBuffer buffer = null;
 
 	public LineSplitter(Reader reader) {
-		this(null, reader, LineEndings.getDefaults());
+		this((String) null, reader, LineEndings.getDefaults());
 	}
 
 	public LineSplitter(String resourceName, Reader reader) {
 		this(resourceName, reader, LineEndings.getDefaults());
+	}
+
+	public LineSplitter(File file, Reader reader,
+			List<List<Character>> lineEndings) {
+		this(getResourceName(file), reader, lineEndings);
+		this.file = file;
+	}
+
+	private static String getResourceName(File file) {
+		if (file == null)
+			return null;
+
+		try {
+			return file.getCanonicalPath();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return file.getName();
+		}
 	}
 
 	public LineSplitter(String resourceName, Reader reader,
@@ -140,8 +160,8 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace("Detected line ending: "
-									+ LineEndings
-											.encodeLineEnding(detectedLineEnding)
+									+ LineEndings.encodeLineEnding(
+											detectedLineEnding)
 									+ ". Stickying.");
 					}
 
@@ -227,12 +247,17 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 		}
 	}
 
-	private static int maxLengthOfLineEnding(List<List<Character>> lineEndings) {
+	private static int maxLengthOfLineEnding(
+			List<List<Character>> lineEndings) {
 		int max = 0;
 
 		for (List<Character> list : lineEndings)
 			max = Math.max(max, list.size());
 
 		return max;
+	}
+
+	public File getFile() {
+		return file;
 	}
 }

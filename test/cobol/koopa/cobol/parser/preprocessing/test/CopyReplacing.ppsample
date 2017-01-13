@@ -1,0 +1,13 @@
+If we can find the matching copybook then its contents should be included.
+Given that there is a matching replacement defined, the contents of the
+copybook will appear modified.
+
+< DISPLAY "Start".
+< COPY "MOVES" REPLACING ==XXX== BY ==FOO==.
+< GO TO END.
+
+> DISPLAY "Start".
+> MOVE 11 TO FOO.
+>MOVE 22 TO YYY.
+>MOVE 33 TO ZZZ.
+> GO TO END.

@@ -26,10 +26,14 @@ public class LoggingMenu extends JMenu {
 
 		addSeparator();
 
-		addMenuFor("Line separation", "source.linesplitter");
+		addMenuFor("Line Separation", "source.linesplitter");
+		addMenuFor("Source Formatting", "source.cobol.source_format_directives");
 		addMenuFor("Compiler Directives", "source.cobol.compiler_directives");
+		addMenuFor("Source Listing Directives", "source.cobol.source_listing");
 		addMenuFor("Program Area", "source.cobol.program_area");
-		addMenuFor("Source Formatting", "source.cobol.source_format");
+		addMenuFor("COPY Statements", "source.cobol.copy_include");
+		addMenuFor("REPLACE Statements", "source.cobol.replace");
+		addMenuFor("Replacements", "source.cobol.replacing");
 		addMenuFor("Line Continuations", "source.cobol.continuations");
 		addMenuFor("Inline Comments", "source.cobol.inline_comments");
 		addMenuFor("Token Separation", "token_separation");

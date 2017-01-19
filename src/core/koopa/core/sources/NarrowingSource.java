@@ -1,7 +1,6 @@
 package koopa.core.sources;
 
 import koopa.core.data.Data;
-import koopa.core.data.Token;
 
 /**
  * This class adapts a {@linkplain Source} of one type, say A, to become a

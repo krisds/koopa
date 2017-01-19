@@ -13,7 +13,7 @@ import koopa.core.sources.Source;
 public class ReplaceMatching extends ReplacingPhrase {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.preprocessing.replacing.matching");
+			.getLogger("source.cobol.replacing.matching");
 
 	public ReplaceMatching(ReplacingPhraseOperand replacing,
 			ReplacingPhraseOperand by) {

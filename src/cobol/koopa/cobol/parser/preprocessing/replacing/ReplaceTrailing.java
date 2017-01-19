@@ -17,7 +17,7 @@ import koopa.core.sources.Source;
 public class ReplaceTrailing extends ReplacingPhrase {
 
 	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.preprocessing.replacing.trailing");
+			.getLogger("source.cobol.replacing.trailing");
 
 	private final String pattern;
 	private final int patternLength;

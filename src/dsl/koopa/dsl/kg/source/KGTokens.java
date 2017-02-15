@@ -29,7 +29,7 @@ public class KGTokens {
 		// Separate the tokens...
 		final TokenSeparator tokenSeparator //
 				= new TokenSeparator(
-						widening(Data.class, tagAllAsProgramText, Token.class));
+						widening(tagAllAsProgramText, Token.class, Data.class));
 
 		// And mark comments...
 		return new BashStyleComments(narrowing(tokenSeparator, Token.class));

@@ -95,6 +95,7 @@ public class KGGrammar extends FluentGrammar {
 				"lookahead", //
 				"noskip", //
 				"tagged", //
+				"ranged", //
 				"balanced", //
 				"unbalanced", //
 				"notempty", //
@@ -171,6 +172,13 @@ public class KGGrammar extends FluentGrammar {
 		// @ %noskip name
 		define("tagged").as("==@==", noskip("name"));
 
+		// '<' %noskip ( number '.' '.' number '>' )
+		define("ranged").as("==<==", //
+				noskip(with("begin").as(oneOf("==_==", "number")), //
+						"==.==", "==.==", //
+						with("end").as(oneOf("==_==", "number")), //
+						"==>=="));
+
 		// identifier
 		define("name").as(notAKeyword("word"));
 
@@ -191,7 +199,7 @@ public class KGGrammar extends FluentGrammar {
 		// identifier %noskip (':' ':' identifier)
 		define("scoped_identifier").as( //
 				"identifier", noskip("==:==", "==:==", "identifier"));
-		
+
 		defineHelper("word").as( //
 				tagged(WORD), any(), //
 				noskip(many(oneOf( //

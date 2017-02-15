@@ -5,12 +5,12 @@ import static koopa.core.grammars.test.TestTag.CHARACTER_STRING;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.Opt;
-
-import org.junit.Test;
 
 /**
  * Tries to put the basic parser combinators offered in a
@@ -316,5 +316,66 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldReject(notEmpty, input("PL/I"));
 	}
 
-	// TODO Add some recursive tests.
+	@Test
+	public void testCanMatchRange() {
+		List<Object> cobol = input("COmmon", "Business", "Oriented",
+				"Language");
+
+		final ParserCombinator any = G.any();
+		shouldAccept(G.sequence(any, any, any, any), cobol);
+
+		// Test exact ranges.
+		shouldAccept(G.sequence( //
+				G.ranged(1, 6), any, // COmmon
+				G.ranged(7, 14), any, // Business
+				G.ranged(15, 22), any, // Oriented
+				G.ranged(23, 30), any // Language
+		), cobol);
+
+		// Test loose ranges.
+		shouldAccept(G.sequence( //
+				G.ranged(0, 8), any, // COmmon
+				G.ranged(6, 15), any, // Business
+				G.ranged(14, 23), any, // Oriented
+				G.ranged(22, 31), any // Language
+		), cobol);
+
+		// Test common range.
+		final ParserCombinator fullRange = G.ranged(1, 30);
+		shouldAccept(G.sequence( //
+				fullRange, any, // COmmon
+				fullRange, any, // Business
+				fullRange, any, // Oriented
+				fullRange, any // Language
+		), cobol);
+
+		// Test beginnings only.
+		shouldAccept(G.sequence( //
+				G.ranged(1, -1), any, // COmmon
+				G.ranged(7, -1), any, // Business
+				G.ranged(15, -1), any, // Oriented
+				G.ranged(23, -1), any // Language
+		), cobol);
+
+		// Test endings only.
+		shouldAccept(G.sequence( //
+				G.ranged(-1, 6), any, // COmmon
+				G.ranged(-1, 14), any, // Business
+				G.ranged(-1, 22), any, // Oriented
+				G.ranged(-1, 30), any // Language
+		), cobol);
+
+		// Test failures...
+		shouldReject(G.sequence(G.ranged(2, 6), any, any, any, any), cobol);
+		shouldReject(G.sequence(G.ranged(1, 5), any, any, any, any), cobol);
+
+		shouldReject(G.sequence(any, G.ranged(8, 14), any, any, any), cobol);
+		shouldReject(G.sequence(any, G.ranged(7, 13), any, any, any), cobol);
+
+		shouldReject(G.sequence(any, any, G.ranged(16, 22), any, any), cobol);
+		shouldReject(G.sequence(any, any, G.ranged(15, 21), any, any), cobol);
+
+		shouldReject(G.sequence(any, any, any, G.ranged(24, 30), any), cobol);
+		shouldReject(G.sequence(any, any, any, G.ranged(23, 29), any), cobol);
+	}
 }

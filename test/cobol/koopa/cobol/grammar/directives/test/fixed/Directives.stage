@@ -1,0 +1,200 @@
+target iso;
+
+# Beware! These are all hand-made examples, based on the docs.
+# None are tested against actual compilers...
+
++[123456 >> CALL-CONVENTION COBOL ]
+-[123456>> CALL-CONVENTION COBOL ]
+-[ >> CALL-CONVENTION COBOL ]
+
++[123456 >>CALL-CONVENTION COBOL ]
++[123456 >> CALL-CONVENTION COBOL *> ...is worth a thousand expert opinions. ]
+
+
++[123456 >> DEFINE GRACE_HOPPER AS OFF ]
++[123456 >> DEFINE GRACE_HOPPER    OFF ]
++[123456 >> DEFINE GRACE_HOPPER AS PARAMETER ]
++[123456 >> DEFINE GRACE_HOPPER    PARAMETER ]
++[123456 >> DEFINE GRACE_HOPPER AS PARAMETER OVERRIDE ]
++[123456 >> DEFINE GRACE_HOPPER    PARAMETER OVERRIDE ]
+
++[123456 >> EVALUATE TRUE ]
++[123456 >> EVALUATE COMPILER_CONDITION ]
+
++[123456 >> WHEN 1 ]
++[123456 >> WHEN 1 THROUGH 10 ]
++[123456 >> WHEN 1 THRU    10 ]
+
++[123456 >> WHEN OTHER ]
+
++[123456 >> END-EVALUATE ]
+
++[123456 >> FLAG-02 ALL ]
++[123456 >> FLAG-02 ALL ON ]
++[123456 >> FLAG-02 ALL OFF ]
+
++[123456 >> FLAG-85 ALL ]
++[123456 >> FLAG-85 ALL ON ]
++[123456 >> FLAG-85 ALL OFF ]
+
++[123456 >> FLAG-NATIVE-ARITHMETIC ON ]
++[123456 >> FLAG-NATIVE-ARITHMETIC OFF ]
+
++[123456 >> IF COMPILER_CONDITION ]
+
++[123456 >> ELSE ]
+
++[123456 >> END-IF ]
+
++[123456 >> LEAP-SECOND ON ]
++[123456 >> LEAP-SECOND OFF ]
+
++[123456 >> LISTING ON ]
++[123456 >> LISTING OFF ]
+
++[123456 >> PAGE The Quick Brown Fox ]
+
++[123456 >> PROPAGATE ON ]
++[123456 >> PROPAGATE OFF ]
+
++[123456 >> SOURCE FORMAT IS FIXED ]
++[123456 >> SOURCE FORMAT IS FREE  ]
++[123456 >> SOURCE FORMAT    FIXED ]
++[123456 >> SOURCE FORMAT    FREE  ]
++[123456 >> SOURCE        IS FIXED ]
++[123456 >> SOURCE        IS FREE  ]
++[123456 >> SOURCE           FIXED ]
++[123456 >> SOURCE           FREE  ]
+
++[123456 >> TURN FOO CHECKING ON WITH LOCATION ]
++[123456 >> TURN FOO CHECKING ON      LOCATION ]
++[123456 >> TURN FOO CHECKING ON  ]
++[123456 >> TURN FOO CHECKING OFF ]
+
+
++[123456 >> REPOSITORY UPDATE ON ]
++[123456 >> REPOSITORY        ON ]
++[123456 >> REPOSITORY UPDATE OFF WITH CHECKING ]
++[123456 >> REPOSITORY        OFF WITH CHECKING ]
++[123456 >> REPOSITORY UPDATE OFF      CHECKING ]
++[123456 >> REPOSITORY        OFF      CHECKING ]
++[123456 >> REPOSITORY UPDATE OFF ]
++[123456 >> REPOSITORY        OFF ]
+
+
+target ibm;
+
++[123456 BASIS FOO ]
++[ BASIS FOO ]
+-[ABCDEF BASIS FOO ]
+-[ BASIS FOO NON BLANK ]
+
++[ CBL ]
++[ CBL FOO BAR BAZ ]
++[ CBL FOO,BAR,BAZ ]
++[123456 CBL ]
++[123456 CBL FOO BAR BAZ ]
++[123456 CBL FOO,BAR,BAZ ]
++[123ABC CBL FOO BAR BAZ ]
+-[ABCDEF CBL FOO BAR BAZ ]
+
++[ PROCESS ]
++[ PROCESS FOO BAR BAZ ]
++[ PROCESS FOO,BAR,BAZ ]
++[123456 PROCESS ]
++[123456 PROCESS FOO BAR BAZ ]
++[123456 PROCESS FOO,BAR,BAZ ]
++[123ABC PROCESS FOO BAR BAZ ]
+-[ABCDEF PROCESS FOO BAR BAZ ]
+
++[      *CBL SOURCE ]
++[      *CBL SOURCE . ]
+-[     *CBL SOURCE ]
++[      *CBL     SOURCE NOSOURCE LIST NOLIST MAP NOMAP . ]
++[      *CBL     SOURCE NOSOURCE LIST NOLIST MAP NOMAP   ]
++[      *CBL     SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP . ]
++[      *CBL     SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP   ]
++[      *CONTROL SOURCE NOSOURCE LIST NOLIST MAP NOMAP . ]
++[      *CONTROL SOURCE NOSOURCE LIST NOLIST MAP NOMAP   ]
++[      *CONTROL SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP . ]
++[      *CONTROL SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP   ]
+
+
+# From http://publibz.boulder.ibm.com/cgi-bin/bookmgr_OS390/handheld/Connected/BOOKS/igy3lr40/8.1.5?SHELF=&DT=20071214160555&CASE=
++[000250 DELETE  000010-000050, 000400, 000450]
+# Own variations:
++[ DELETE 000010-000050, 000400, 000450 ]
++[000250 DELETE 000010-000050 ]
++[000250 DELETE 000010 ]
++[ DELETE 000010-000050 ]
++[ DELETE 000010 ]
+-[000250 DELETE 000010-000050 000400 000450]
+
+
++[ ENTER COBOL . ]
++[ ENTER COBOL ROUTINE-NAME . ]
+
++[000250 INSERT 000010 ]
++[ INSERT 000010 ]
+-[000250 INSERT 000010 000020 ]
+-[ INSERT 000010 000020 ]
+-[000250 INSERT 000010-000020 ]
+-[ INSERT 000010-000020 ]
+
++[ READY TRACE . ]
++[ RESET TRACE . ] 
+
+
+target mf;
+
++[-INC TEXTNAME ]
++[-INC TEXTNAME  ...is worth a thousand expert opinions. ]
+
+
++[       ++INCLUDE TEXTNAME ]
++[       ++INCLUDE TEXTNAME  ...is worth a thousand expert opinions. ]
+
+
+# This one comes from the real world:
++[      $set SOURCEFORMAT"VARIABLE" OUTDD"SYSOUT 121 R"]
+
++[      $display ...is worth a thousand expert opinions. ]
++[      $display VCS = 1.2.3.COBOL ]
+-[     $display ...is worth a thousand expert opinions. ]
+-[      $display]
+
++[      $else]
+-[      $else ...is worth a thousand expert opinions. ]
+-[     $else]
+
++[      $end]
+-[      $end ...is worth a thousand expert opinions. ]
+-[     $end]
+
++[      $if something]
+-[     $if something]
+
+
+target listing;
+
++[       EJECT .]
++[       EJECT ]
+-[      EJECT .]
+-[      EJECT ]
+-[       EJECT . SOMETHING ELSE ]
+
++[       SKIP1 . ]
++[       SKIP2 . ]
++[       SKIP3 . ]
++[       SKIP1 ]
++[       SKIP2 ]
++[       SKIP3 ]
+-[      SKIP1 . ]
+-[      SKIP2 . ]
+-[      SKIP3 . ]
+
++[       TITLE "Stop bashing COBOL" . ]
++[       TITLE "Stop bashing COBOL" ]
+-[      TITLE "Stop bashing COBOL" . ]
+-[      TITLE "Stop bashing COBOL" ]
+

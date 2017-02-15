@@ -61,3 +61,9 @@ target rule;
 +[ def not_empty =
        %notempty FOO
    end ]
+
++[ def tagged =  @FOO  end ]
+
++[ def ranged1 =  <1..256> _  end ]
++[ def ranged2 =  <_..256> _  end ]
++[ def ranged3 =  <1.._>   _  end ]

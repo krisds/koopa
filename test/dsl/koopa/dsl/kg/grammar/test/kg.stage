@@ -68,6 +68,7 @@ private def atom =
     | lookahead
     | noskip
     | tagged
+    | ranged
     | balanced
     | unbalanced
     | notempty
@@ -118,6 +119,14 @@ def lookahead  =  '%' %noskip('at') part                        end
 def noskip     =  '%' %noskip('noskip') part                    end
 def nokeywords =  '%' %noskip('nokeywords')                     end
 def tagged     =  '@' %noskip(name)                             end
+
+def ranged =
+    '<' %noskip(
+      (begin: ('_' | number))
+      '.' '.' 
+      (`end: ('_' | number))
+    '>')
+end
 
 def name       =  (notAKeyword__ word)                          end
 def type       =  (notAKeyword__ word)                          end

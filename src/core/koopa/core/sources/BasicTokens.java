@@ -24,7 +24,7 @@ public class BasicTokens {
 		// Separate the tokens...
 		final TokenSeparator tokenSeparator //
 				= new TokenSeparator(
-						widening(Data.class, tagAllAsProgramText, Token.class));
+						widening(tagAllAsProgramText, Token.class, Data.class));
 
 		return narrowing(tokenSeparator, Token.class);
 	}

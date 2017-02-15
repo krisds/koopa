@@ -133,7 +133,7 @@ public class ReplacingPhraseOperandTest {
 		assertMatches(phrase, input("LANG-NAME"),
 				Arrays.asList(new Token[] {
 						new Token("COBOL-NAME", new Position(3, 0, 3),
-								new Position(10, 0, 10), PROGRAM_TEXT_AREA) }));
+								new Position(9, 0, 9), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("LING-NAME"));
 	}
 
@@ -145,7 +145,7 @@ public class ReplacingPhraseOperandTest {
 		assertMatches(phrase, input("LANG-NAME"),
 				Arrays.asList(
 						new Token[] { new Token("-NAME", new Position(5, 0, 5),
-								new Position(10, 0, 10), PROGRAM_TEXT_AREA) }));
+								new Position(9, 0, 9), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("LING-NAME"));
 	}
 
@@ -157,7 +157,7 @@ public class ReplacingPhraseOperandTest {
 		assertMatches(phrase, input("NAME-LANG"),
 				Arrays.asList(new Token[] {
 						new Token("NAME-COBOL", new Position(1, 0, 1),
-								new Position(8, 0, 8), PROGRAM_TEXT_AREA) }));
+								new Position(7, 0, 7), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("NAME-LING"));
 	}
 

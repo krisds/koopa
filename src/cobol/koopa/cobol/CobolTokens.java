@@ -13,8 +13,6 @@ import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.Replace;
 import koopa.cobol.sources.Replacing;
 import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.SourceFormatDirectives;
-import koopa.cobol.sources.SourceListingDirectives;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
@@ -48,27 +46,20 @@ public final class CobolTokens {
 		inputStack.push(
 				new WideningSource<Data, Token>(lineSplitter, Token.class));
 
-		// * Resolve source formatting directives. [not threaded]
-		final SourceFormatDirectives sourceFormatDirectives //
-				= new SourceFormatDirectives(inputStack, format);
-
-		// * Compiler directives. [not threaded]
+		// * Detect compiler directives, source format and source listing
+		// statements. Apply source format switches.
 		final CompilerDirectives compilerDirectives //
-				= new CompilerDirectives(sourceFormatDirectives);
+				= new CompilerDirectives(inputStack, format);
 
-		// * Split lines according to the source format. [not threaded]
+		// * Split lines according to the source format.
 		final ProgramArea programArea //
 				= new ProgramArea(compilerDirectives);
 
-		// * Source listing directives. [not threaded]
-		final SourceListingDirectives sourceListingDirectives //
-				= new SourceListingDirectives(programArea);
-
-		// * Split program text into tokens. [not threaded]
+		// * Split program text into tokens.
 		final TokenSeparator tokenSeparator //
-				= new TokenSeparator(sourceListingDirectives);
+				= new TokenSeparator(programArea);
 
-		// * Inline comments. [not threaded]
+		// * Inline comments.
 		final InlineComments inlineComments //
 				= new InlineComments(tokenSeparator);
 
@@ -84,18 +75,18 @@ public final class CobolTokens {
 			// This stage is tested in
 			// koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest2
 
-			// * Handle COPY includes. [not threaded]
+			// * Handle COPY includes.
 			final CopyInclude copyInclude //
 					= new CopyInclude( //
 							inlineComments, grammar, copybooks, inputStack);
 
-			// * Handle COPY REPLACING. [not threaded]
+			// * Handle COPY REPLACING.
 			final Replacing copyReplacing //
 					= new Replacing(copyInclude);
 			optionalCopybookExpansion = copyReplacing;
 		}
 
-		// * Line continuations. [not threaded]
+		// * Line continuations.
 		final ContinuationOfLines continuationOfLines //
 				= new ContinuationOfLines(optionalCopybookExpansion);
 
@@ -116,10 +107,10 @@ public final class CobolTokens {
 			// This stage is tested in
 			// koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest2
 
-			// * Handle REPLACE statements. [not threaded]
+			// * Handle REPLACE statements.
 			final Replace replace //
 					= new Replace(continuationOfLines, grammar);
-			// * Handle actual replacements. [not threaded]
+			// * Handle actual replacements.
 			final Replacing replacing //
 					= new Replacing(replace);
 

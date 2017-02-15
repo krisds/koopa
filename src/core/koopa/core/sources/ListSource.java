@@ -12,6 +12,9 @@ public class ListSource<T extends Data> implements Source<T> {
 
 	private LinkedList<T> data = new LinkedList<T>();
 
+	public ListSource() {
+	}
+
 	public ListSource(List<T> data) {
 		this.data.addAll(data);
 	}
@@ -44,5 +47,13 @@ public class ListSource<T extends Data> implements Source<T> {
 			return (S) this;
 		else
 			return null;
+	}
+
+	public boolean addAll(List<T> c) {
+		return data.addAll(c);
+	}
+
+	public void clear() {
+		data.clear();
 	}
 }

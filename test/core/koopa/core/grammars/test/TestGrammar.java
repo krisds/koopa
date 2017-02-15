@@ -184,7 +184,12 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	protected ParserCombinator notEmpty(ParserCombinator parser) {
+	public ParserCombinator notEmpty(ParserCombinator parser) {
 		return super.notEmpty(parser);
+	}
+
+	@Override
+	public ParserCombinator ranged(int begin, int end) {
+		return super.ranged(begin, end);
 	}
 }

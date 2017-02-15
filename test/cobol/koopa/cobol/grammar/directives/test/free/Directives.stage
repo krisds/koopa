@@ -1,0 +1,200 @@
+target iso;
+
+# Beware! These are all hand-made examples, based on the docs.
+# None are tested against actual compilers...
+
++[ >> CALL-CONVENTION COBOL ]
++[ >> CALL-CONVENTION ANSIC ]
+
++[ >>CALL-CONVENTION COBOL ]
++[ >> CALL-CONVENTION COBOL *> One accurate measurement... ]
+
+-[123456 >> CALL-CONVENTION COBOL ]
+
++[ >> DEFINE GRACE_HOPPER AS OFF ]
++[ >> DEFINE GRACE_HOPPER    OFF ]
++[ >> DEFINE GRACE_HOPPER AS PARAMETER ]
++[ >> DEFINE GRACE_HOPPER    PARAMETER ]
++[ >> DEFINE GRACE_HOPPER AS PARAMETER OVERRIDE ]
++[ >> DEFINE GRACE_HOPPER    PARAMETER OVERRIDE ]
+
++[ >> EVALUATE TRUE ]
++[ >> EVALUATE COMPILER_CONDITION ]
+
++[ >> WHEN 1 ]
++[ >> WHEN 1 THROUGH 10 ]
++[ >> WHEN 1 THRU    10 ]
+
++[ >> WHEN OTHER ]
+
++[ >> END-EVALUATE ]
+
++[ >> FLAG-02 ALL ]
++[ >> FLAG-02 ALL ON ]
++[ >> FLAG-02 ALL OFF ]
+
++[ >> FLAG-85 ALL ]
++[ >> FLAG-85 ALL ON ]
++[ >> FLAG-85 ALL OFF ]
+
++[ >> FLAG-NATIVE-ARITHMETIC ON ]
++[ >> FLAG-NATIVE-ARITHMETIC OFF ]
+
++[ >> IF COMPILER_CONDITION ]
+
++[ >> ELSE ]
+
++[ >> END-IF ]
+
++[ >> LEAP-SECOND ON ]
++[ >> LEAP-SECOND OFF ]
+
++[ >> LISTING ON ]
++[ >> LISTING OFF ]
+
++[ >> PAGE The Quick Brown Fox ]
+
++[ >> PROPAGATE ON ]
++[ >> PROPAGATE OFF ]
+
++[ >> SOURCE FORMAT IS FIXED ]
++[ >> SOURCE FORMAT IS FREE  ]
++[ >> SOURCE FORMAT    FIXED ]
++[ >> SOURCE FORMAT    FREE  ]
++[ >> SOURCE        IS FIXED ]
++[ >> SOURCE        IS FREE  ]
++[ >> SOURCE           FIXED ]
++[ >> SOURCE           FREE  ]
+
++[ >> TURN FOO CHECKING ON WITH LOCATION ]
++[ >> TURN FOO CHECKING ON      LOCATION ]
++[ >> TURN FOO CHECKING ON  ]
++[ >> TURN FOO CHECKING OFF ]
+
+
++[ >> REPOSITORY UPDATE ON ]
++[ >> REPOSITORY        ON ]
++[ >> REPOSITORY UPDATE OFF WITH CHECKING ]
++[ >> REPOSITORY        OFF WITH CHECKING ]
++[ >> REPOSITORY UPDATE OFF      CHECKING ]
++[ >> REPOSITORY        OFF      CHECKING ]
++[ >> REPOSITORY UPDATE OFF ]
++[ >> REPOSITORY        OFF ]
+
+
+target ibm;
+
++[123456 BASIS FOO ]
++[ BASIS FOO ]
+-[ABCDEF BASIS FOO ]
+-[ BASIS FOO NON BLANK ]
+
++[ CBL ]
++[ CBL FOO BAR BAZ ]
++[ CBL FOO,BAR,BAZ ]
++[123456 CBL ]
++[123456 CBL FOO BAR BAZ ]
++[123456 CBL FOO,BAR,BAZ ]
++[123ABC CBL FOO BAR BAZ ]
+-[ABCDEF CBL FOO BAR BAZ ]
+
++[ PROCESS ]
++[ PROCESS FOO BAR BAZ ]
++[ PROCESS FOO,BAR,BAZ ]
++[123456 PROCESS ]
++[123456 PROCESS FOO BAR BAZ ]
++[123456 PROCESS FOO,BAR,BAZ ]
++[123ABC PROCESS FOO BAR BAZ ]
+-[ABCDEF PROCESS FOO BAR BAZ ]
+
++[      *CBL SOURCE ]
++[      *CBL SOURCE . ]
+-[     *CBL SOURCE ]
++[      *CBL     SOURCE NOSOURCE LIST NOLIST MAP NOMAP . ]
++[      *CBL     SOURCE NOSOURCE LIST NOLIST MAP NOMAP   ]
++[      *CBL     SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP . ]
++[      *CBL     SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP   ]
++[      *CONTROL SOURCE NOSOURCE LIST NOLIST MAP NOMAP . ]
++[      *CONTROL SOURCE NOSOURCE LIST NOLIST MAP NOMAP   ]
++[      *CONTROL SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP . ]
++[      *CONTROL SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP   ]
+
+
+# From http://publibz.boulder.ibm.com/cgi-bin/bookmgr_OS390/handheld/Connected/BOOKS/igy3lr40/8.1.5?SHELF=&DT=20071214160555&CASE=
++[000250 DELETE  000010-000050, 000400, 000450]
+# Own variations:
++[ DELETE 000010-000050, 000400, 000450 ]
++[000250 DELETE 000010-000050 ]
++[000250 DELETE 000010 ]
++[ DELETE 000010-000050 ]
++[ DELETE 000010 ]
+-[000250 DELETE 000010-000050 000400 000450]
+
+
++[ ENTER COBOL . ]
++[ ENTER COBOL ROUTINE-NAME . ]
+
++[000250 INSERT 000010 ]
++[ INSERT 000010 ]
+-[000250 INSERT 000010 000020 ]
+-[ INSERT 000010 000020 ]
+-[000250 INSERT 000010-000020 ]
+-[ INSERT 000010-000020 ]
+
++[ READY TRACE . ]
++[ RESET TRACE . ] 
+
+
+target mf;
+
++[-INC TEXTNAME ]
++[-INC TEXTNAME  One accurate measurement... ]
+
+
++[       ++INCLUDE TEXTNAME ]
++[       ++INCLUDE TEXTNAME  One accurate measurement... ]
+
+
+# This one comes from the real world:
++[$set SOURCEFORMAT"VARIABLE" OUTDD"SYSOUT 121 R"]
+
++[$display One accurate measurement... ]
++[$display VCS = 1.2.3.COBOL ]
+-[ $display One accurate measurement... ]
+-[$display]
+
++[$else]
+-[$else One accurate measurement... ]
+-[ $else]
+
++[$end]
+-[$end One accurate measurement... ]
+-[ $end]
+
++[$if something]
+-[ $if something]
+
+
+target listing;
+
++[       EJECT .]
++[       EJECT ]
+-[      EJECT .]
+-[      EJECT ]
+-[       EJECT . SOMETHING ELSE ]
+
++[       SKIP1 . ]
++[       SKIP2 . ]
++[       SKIP3 . ]
++[       SKIP1 ]
++[       SKIP2 ]
++[       SKIP3 ]
+-[      SKIP1 . ]
+-[      SKIP2 . ]
+-[      SKIP3 . ]
+
++[       TITLE "Stop bashing COBOL" . ]
++[       TITLE "Stop bashing COBOL" ]
+-[      TITLE "Stop bashing COBOL" . ]
+-[      TITLE "Stop bashing COBOL" ]
+

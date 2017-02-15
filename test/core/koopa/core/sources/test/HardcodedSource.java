@@ -15,8 +15,8 @@ import koopa.core.sources.Source;
  * <p>
  * <b>For testing purposes only.</b>
  */
-public class HardcodedSource extends BasicSource<Token> implements
-		Source<Token> {
+public class HardcodedSource extends BasicSource<Token>
+		implements Source<Token> {
 
 	private final List<Object> tagsAndTokens;
 	private int index;
@@ -50,13 +50,15 @@ public class HardcodedSource extends BasicSource<Token> implements
 		if (text == null)
 			return null;
 
-		final Position end = position.offsetBy(text.length());
+		final Position end = position.offsetBy(text.length() - 1);
 		Token token = new Token(text, position, end);
 
 		for (; from < index; from++)
 			token = token.withTags(tagsAndTokens.get(from));
 
 		index += 1;
+
+		position = end;
 
 		return token;
 	}

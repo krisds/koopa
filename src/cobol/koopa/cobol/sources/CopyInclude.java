@@ -1,7 +1,6 @@
 package koopa.cobol.sources;
 
 import static koopa.core.data.tags.AreaTag.COMMENT;
-import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.trees.jaxen.Jaxen.getAllText;
 import static koopa.core.trees.jaxen.Jaxen.getMatches;
 
@@ -29,6 +28,7 @@ import koopa.core.sources.LineSplitter;
 import koopa.core.sources.ListSource;
 import koopa.core.sources.NarrowingSource;
 import koopa.core.sources.Source;
+import koopa.core.sources.Sources;
 import koopa.core.sources.StackOfSources;
 import koopa.core.sources.WideningSource;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -69,7 +69,7 @@ public class CopyInclude extends ChainingSource<Data, Data>
 				return pending.removeFirst();
 
 			// Grab line from source.
-			final LinkedList<Data> line = getLine();
+			final LinkedList<Data> line = Sources.getLine(source);
 			if (line == null)
 				return null;
 
@@ -124,25 +124,6 @@ public class CopyInclude extends ChainingSource<Data, Data>
 		}
 	}
 
-	private LinkedList<Data> getLine() {
-		LinkedList<Data> line = null;
-
-		while (true) {
-			final Data d = source.next();
-
-			if (d == null)
-				return line;
-
-			if (line == null)
-				line = new LinkedList<Data>();
-
-			line.add(d);
-
-			if (d instanceof Token && ((Token) d).hasTag(END_OF_LINE))
-				return line;
-		}
-	}
-
 	private void anythingUpToCopyBecomesPending(LinkedList<Data> line) {
 		// "A COPY statement shall be preceded by a space except when it is
 		// the first statement in a compilation group."
@@ -185,7 +166,7 @@ public class CopyInclude extends ChainingSource<Data, Data>
 			// Do we need to read another line ?
 			if (line.isEmpty()) {
 				// Yes, we do.
-				final LinkedList<Data> nextLine = getLine();
+				final LinkedList<Data> nextLine = Sources.getLine(source);
 
 				// Did we get another line ?
 				if (nextLine != null) {
@@ -248,7 +229,7 @@ public class CopyInclude extends ChainingSource<Data, Data>
 			// Do we need more data ?
 			if (line.isEmpty()) {
 				// Yes, we do.
-				final LinkedList<Data> nextLine = getLine();
+				final LinkedList<Data> nextLine = Sources.getLine(source);
 
 				// Did we get another line ?
 				if (nextLine != null) {

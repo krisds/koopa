@@ -25,8 +25,6 @@ import koopa.cobol.sources.ContinuationOfLines;
 import koopa.cobol.sources.InlineComments;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.SourceFormat;
-import koopa.cobol.sources.SourceFormatDirectives;
-import koopa.cobol.sources.SourceListingDirectives;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
@@ -49,10 +47,10 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 			= new HashMap<String, Class<? extends Source<? extends Data>>>();
 	static {
 		CLASSES.put("LineSplitter", LineSplitter.class);
-		CLASSES.put("SourceFormatDirectives", SourceFormatDirectives.class);
+		CLASSES.put("SourceFormatDirectives", CompilerDirectives.class);
 		CLASSES.put("CompilerDirectives", CompilerDirectives.class);
+		CLASSES.put("SourceListingDirectives", CompilerDirectives.class);
 		CLASSES.put("ProgramArea", ProgramArea.class);
-		CLASSES.put("SourceListingDirectives", SourceListingDirectives.class);
 		CLASSES.put("TokenSeparator", TokenSeparator.class);
 		CLASSES.put("InlineComments", InlineComments.class);
 		CLASSES.put("ContinuationOfLines", ContinuationOfLines.class);

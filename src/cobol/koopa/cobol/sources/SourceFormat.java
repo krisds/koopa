@@ -47,4 +47,17 @@ public enum SourceFormat {
 		else
 			return FIXED;
 	}
+
+	/**
+	 * Same as {@link #valueOf(String)}, except that it returns
+	 * <code>null</code> rather than throw an
+	 * {@linkplain IllegalArgumentException} when the given name does not match.
+	 */
+	public static SourceFormat fromName(String name) {
+		try {
+			return valueOf(name.toUpperCase());
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
 }

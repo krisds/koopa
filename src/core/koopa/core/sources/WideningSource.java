@@ -36,10 +36,9 @@ public class WideningSource<B extends Data, A extends B>
 		if (clazz.isInstance(data))
 			source.unshift((A) data);
 	}
-	
 
 	public static <Y extends Data, X extends Y> WideningSource<Y, X> widening(
-			Class<Y> clazzY, Source<X> source, Class<X> clazz) {
+			Source<X> source, Class<X> clazz, Class<Y> clazzY) {
 		return new WideningSource<Y, X>(source, clazz);
 	}
 }

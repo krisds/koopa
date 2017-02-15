@@ -23,6 +23,7 @@ import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
+import koopa.core.sources.Sources;
 import koopa.core.sources.TokenSeparationLogic;
 import koopa.core.util.Iterators;
 
@@ -639,7 +640,7 @@ public class ContinuationOfLines extends ChainingSource<Data, Data>
 		// If there isn't one in the pending lines, then grab more from the
 		// source.
 		while (true) {
-			final LinkedList<Data> nextLine = getLine();
+			final LinkedList<Data> nextLine = Sources.getLine(source);
 			if (nextLine == null || !isBlank(nextLine))
 				return nextLine;
 
@@ -649,28 +650,9 @@ public class ContinuationOfLines extends ChainingSource<Data, Data>
 
 	private LinkedList<Data> getPendingLine() {
 		if (pendingLines.isEmpty())
-			return getLine();
+			return Sources.getLine(source);
 		else
 			return pendingLines.removeFirst();
-	}
-
-	private LinkedList<Data> getLine() {
-		LinkedList<Data> line = null;
-
-		while (true) {
-			final Data d = source.next();
-
-			if (d == null)
-				return line;
-
-			if (line == null)
-				line = new LinkedList<Data>();
-
-			line.add(d);
-
-			if (d instanceof Token && ((Token) d).hasTag(END_OF_LINE))
-				return line;
-		}
 	}
 
 	private boolean hasIncompleteToken(LinkedList<Data> line) {

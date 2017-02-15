@@ -166,6 +166,10 @@ def tagged
     tagged(#xpath:name#)
 end
 
+def ranged
+    ranged(#xpath[-1]:begin/number#, #xpath[-1]:end/number#)
+end
+
 def noskip
     opt(NOSKIP,
 >     all_part

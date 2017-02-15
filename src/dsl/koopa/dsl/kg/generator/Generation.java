@@ -283,10 +283,20 @@ public class Generation {
 				if (name.startsWith("unquoted:"))
 					return unquoted(
 							getValue(name.substring("unquoted:".length())));
-				
+
+				// Straight XPath...
 				if (name.startsWith("xpath:"))
-					return xpath(name.substring("xpath:".length()), part);
-				
+					return xpath(name.substring("xpath:".length()), part, null);
+
+				// XPath with a fallback value...
+				if (name.startsWith("xpath[")) {
+					final int index = name.indexOf("]:");
+					final String defaultText //
+					= name.substring("xpath[".length(), index);
+					return xpath(name.substring(index + "]:".length()), part,
+							defaultText);
+				}
+
 				if ("text".equals(name))
 					return part.getAllText();
 
@@ -447,6 +457,7 @@ public class Generation {
 		PART_NAMES.add("lookahead");
 		PART_NAMES.add("noskip");
 		PART_NAMES.add("tagged");
+		PART_NAMES.add("ranged");
 		PART_NAMES.add("identifier");
 		PART_NAMES.add("scoped_identifier");
 		PART_NAMES.add("literal");
@@ -503,8 +514,12 @@ public class Generation {
 			return text;
 	}
 
-	private String xpath(String query, Tree part) {
-		return Jaxen.getAllText(part, query);
+	private String xpath(String query, Tree part, String defaultValue) {
+		final String allText = Jaxen.getAllText(part, query);
+		if (allText == null)
+			return defaultValue;
+		else
+			return allText;
 	}
 
 	/**
@@ -546,19 +561,38 @@ public class Generation {
 		// another escaped name anyway.
 		final String name = identifier.getAllText();
 
-		final Tree scope = identifier.getAncestor("rule");
-
-		final List<?> nestedRules = Jaxen.getMatches(scope, ".//nested_rule");
-		for (Object nestedRule : nestedRules) {
-			if (nestedRule instanceof Tree) {
-				final Tree nestedRuleTree = (Tree) nestedRule;
-				final String nestedRuleName = nestedRuleTree
-						.getChild("identifier").getAllText();
+		// Find the rule this identifier is being used in.
+		Tree rule = getOwningScope(identifier);
+		while (rule != null) {
+			// Check all rules which are defined directly inside it.
+			final List<Tree> nestedRules = rule.getChildren("nested_rule");
+			for (Tree nestedRule : nestedRules) {
+				final String nestedRuleName //
+						= nestedRule.getChild("identifier").getAllText();
+				// If the names match, return the fully qualified name for the
+				// rule we found.
 				if (name.equals(nestedRuleName))
-					return getFullyQualifiedRuleName(nestedRuleTree);
+					return getFullyQualifiedRuleName(nestedRule);
 			}
+			// If there is no match in the scope of this rule then move up to
+			// the scope which defines this rule.
+			rule = getOwningScope(rule);
 		}
 
+		// If we find no match at all we just assume the name is a global and
+		// return it (unescaped).
 		return unescaped(name);
+	}
+
+	/**
+	 * Retrieves the scope (rule or nested_rule) the given item was defined in.
+	 */
+	private Tree getOwningScope(Tree item) {
+		Tree parent = item.getParent();
+		while (parent != null //
+				&& !parent.isNode("rule") //
+				&& !parent.isNode("nested_rule"))
+			parent = parent.getParent();
+		return parent;
 	}
 }

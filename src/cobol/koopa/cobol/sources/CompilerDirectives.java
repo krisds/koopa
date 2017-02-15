@@ -1,117 +1,192 @@
 package koopa.cobol.sources;
 
+import static koopa.cobol.data.tags.CobolTag.SOURCE_FORMAT_DIRECTIVE;
+import static koopa.cobol.data.tags.CobolTag.SOURCE_LISTING_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
-import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static koopa.core.sources.NarrowingSource.narrowing;
+import static koopa.core.sources.WideningSource.widening;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import koopa.cobol.directives.IBMCompilerDirectingStatement;
-import koopa.cobol.directives.ISODirective;
-import koopa.cobol.directives.MFIncStatement;
-import koopa.cobol.directives.MFIncludeStatement;
-import koopa.cobol.directives.MFSetStatement;
+import koopa.cobol.grammar.directives.DirectivesGrammar;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
+import koopa.core.data.tags.SyntacticTag;
+import koopa.core.parsers.Parse;
+import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.ChainingSource;
+import koopa.core.sources.ListSource;
 import koopa.core.sources.Source;
+import koopa.core.sources.Sources;
+import koopa.core.sources.TagAll;
+import koopa.core.sources.TokenSeparator;
+import koopa.core.trees.KoopaTreeBuilder;
+import koopa.core.trees.Tree;
 
 public class CompilerDirectives extends ChainingSource<Data, Data>
 		implements Source<Data> {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.compiler_directives");
+	private static final Logger LOGGER //
+			= Logger.getLogger("source.cobol.compiler_directives");
 
-	public CompilerDirectives(Source<Data> source) {
+	private final DirectivesGrammar grammar;
+
+	private SourceFormat format;
+
+	private final LinkedList<Data> pending = new LinkedList<Data>();
+
+	private List<Tree> handled = new LinkedList<Tree>();
+
+	public CompilerDirectives(Source<Data> source, SourceFormat initialFormat) {
 		super(source);
+
+		this.format = initialFormat;
+		this.grammar = new DirectivesGrammar();
 	}
 
 	@Override
-	public Data nxt1() {
-		final Data d = source.next();
+	protected Data nxt1() {
+		while (true) {
+			if (!pending.isEmpty())
+				return pending.removeFirst();
 
-		if (d == null || !(d instanceof Token))
-			return d;
+			// Grab line from source.
+			final LinkedList<Data> line = Sources.getLine(source);
+			if (line == null)
+				return null;
 
-		final Token t = (Token) d;
+			// Check if it contains a compiler directive.
+			final Tree directive = tryToParseCompilerDirective(line);
+			if (directive == null) {
+				// If not, mark it all with the current active source format,
+				// and start returning that.
+				return nextFrom(tagged(line, format));
 
-		if (t.hasAnyTag(COMPILER_DIRECTIVE, END_OF_LINE))
-			return t;
+			} else {
+				// If there is one, handle it, and start returning the result.
+				if (LOGGER.isTraceEnabled())
+					LOGGER.trace("Found a compiler directive in: " + line);
 
-		if (isMicroFocusSetStatement(t) //
-				|| isCompilerDirective(t) //
-				|| isMicroFocusIncDirective(t) //
-				|| isMicroFocusIncludeDirective(t) //
-				|| isIBMCompilerDirectingStatement(t))
-			return t.withTags(COMPILER_DIRECTIVE);
-
-		return t;
+				return nextFrom(handleCompilerDirective(directive, line));
+			}
+		}
 	}
 
-	// ========================================================================
+	private Tree tryToParseCompilerDirective(LinkedList<Data> line) {
+		// TODO Speed: can we reuse the sources?
+		final ListSource<Data> lineSource = new ListSource<Data>(line);
+		// TODO All this "widening" and "narrowing" is annoying...
+		// TODO Program-Area splits ?
+		// TODO Make TagAll (work on) a Source of Data ?
+		final TagAll tagAll //
+				= new TagAll(narrowing(lineSource, Token.class), format,
+						PROGRAM_TEXT_AREA);
+		final TokenSeparator tokenSeparator //
+				= new TokenSeparator(widening(tagAll, Token.class, Data.class));
+		final Source<Token> source = narrowing(tokenSeparator, Token.class);
 
-	private boolean isCompilerDirective(Token token) {
-		final SourceFormat referenceFormat = SourceFormat.forToken(token);
+		final ParserCombinator directive = grammar.directive();
 
-		if (!ISODirective.matches(referenceFormat, token))
-			return false;
+		final KoopaTreeBuilder treeBuilder = new KoopaTreeBuilder(grammar);
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("ISO directive: " + token);
+		final Parse parse = Parse.of(source).to(treeBuilder);
+		final boolean accepts = directive.accepts(parse);
 
-		// TODO Split off inline comments ? Indicator area ?
-
-		return true;
+		return accepts ? treeBuilder.getTree() : null;
 	}
 
-	// ========================================================================
+	private LinkedList<Data> handleCompilerDirective(Tree directive,
+			LinkedList<Data> line) {
 
-	private boolean isMicroFocusIncDirective(Token token) {
-		if (!MFIncStatement.matches(token))
-			return false;
+		handled.add(directive);
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Micro Focus -INC statement: " + token);
+		final Tree isoSourceFormat = directive.getDescendant( //
+				"iso", "instruction", "source", "format");
+		if (isoSourceFormat != null) {
+			final String value = isoSourceFormat.getAllText().toUpperCase();
+			final SourceFormat declaredFormat = SourceFormat.fromName(value);
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("ISO SOURCE FORMAT " + declaredFormat);
+			if (declaredFormat != null)
+				return sourceformatDirective(line, declaredFormat);
+			else
+				return compilerDirective(line);
+		}
 
-		return true;
+		final Tree mfSet = directive.getDescendant("mf", "set");
+		if (mfSet != null) {
+			SourceFormat newFormat = null;
+			final List<Tree> sourceformats = mfSet.getChildren("sourceformat");
+			for (Tree t : sourceformats) {
+				final String rawValue = t.getChild("parameter").getAllText();
+				final String value = rawValue
+						.substring(1, rawValue.length() - 1).toUpperCase();
+				final SourceFormat declaredFormat //
+						= SourceFormat.fromName(value);
+				if (declaredFormat != null)
+					newFormat = declaredFormat;
+			}
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("MF SET SOURCEFORMAT " + newFormat);
+
+			if (newFormat != null)
+				return sourceformatDirective(line, newFormat);
+			else
+				return compilerDirective(line);
+		}
+
+		if (directive.hasChild("listing"))
+			return sourceListingDirective(line);
+
+		return compilerDirective(line);
 	}
 
-	// ========================================================================
-
-	private boolean isMicroFocusIncludeDirective(Token token) {
-		if (!MFIncludeStatement.matches(token))
-			return false;
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Micro Focus ++INCLUDE statement: " + token);
-
-		return true;
+	private LinkedList<Data> sourceformatDirective(LinkedList<Data> line,
+			SourceFormat newFormat) {
+		return tagged(line, newFormat, //
+				COMPILER_DIRECTIVE, SOURCE_FORMAT_DIRECTIVE);
 	}
 
-	// ========================================================================
-
-	private boolean isMicroFocusSetStatement(Token token) {
-		final SourceFormat referenceFormat = SourceFormat.forToken(token);
-
-		if (!MFSetStatement.matches(referenceFormat, token))
-			return false;
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Micro Focus compiler directive: " + token);
-
-		return true;
+	private LinkedList<Data> compilerDirective(LinkedList<Data> line) {
+		return tagged(line, format, COMPILER_DIRECTIVE);
 	}
 
-	// ========================================================================
+	private LinkedList<Data> sourceListingDirective(LinkedList<Data> line) {
+		return tagged(line, format, //
+				COMPILER_DIRECTIVE, SOURCE_LISTING_DIRECTIVE);
+	}
 
-	private boolean isIBMCompilerDirectingStatement(Token token) {
-		final SourceFormat referenceFormat = SourceFormat.forToken(token);
+	private LinkedList<Data> tagged(LinkedList<Data> data,
+			SourceFormat newFormat, Object... tags) {
 
-		if (!IBMCompilerDirectingStatement.matches(referenceFormat, token))
-			return false;
+		final LinkedList<Data> tagged = new LinkedList<Data>();
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("IBM compiler directive: " + token);
+		for (Data d : data)
+			if (d instanceof Token) {
+				final Token t = (Token) d;
+				if (t.hasTag(SyntacticTag.END_OF_LINE))
+					tagged.add(t.withTags(newFormat));
+				else
+					tagged.add(t.withTags(format).withTags(tags));
+			} else
+				tagged.add(d);
 
-		return true;
+		format = newFormat;
+
+		return tagged;
+	}
+
+	private Data nextFrom(LinkedList<Data> data) {
+		pending.addAll(data);
+		return pending.removeFirst();
+	}
+
+	public List<Tree> getHandledDirectives() {
+		return handled;
 	}
 }

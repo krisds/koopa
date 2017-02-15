@@ -17,6 +17,7 @@ import koopa.core.grammars.combinators.OptimizingPermuted;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.grammars.combinators.Scoped.Visibility;
 import koopa.core.grammars.combinators.TestForKeyword;
+import koopa.core.grammars.combinators.TestRange;
 import koopa.core.grammars.combinators.TestTag;
 import koopa.core.grammars.combinators.WrappedAs;
 import koopa.core.parsers.FutureParser;
@@ -215,6 +216,10 @@ public abstract class KoopaGrammar extends Grammar {
 
 	protected ParserCombinator notEmpty(ParserCombinator parser) {
 		return new NotEmpty(parser);
+	}
+
+	protected ParserCombinator ranged(int begin, int end) {
+		return new TestRange(this, begin, end);
 	}
 
 	// ========================================================================

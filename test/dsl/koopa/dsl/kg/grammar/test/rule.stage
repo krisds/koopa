@@ -67,3 +67,8 @@ target rule;
 +[ def ranged1 =  <1..256> _  end ]
 +[ def ranged2 =  <_..256> _  end ]
 +[ def ranged3 =  <1.._>   _  end ]
+
++[ def no_skip1  =  ++ foo           end ]
++[ def no_skip2  =  ++ 'fum'         end ]
++[ def no_skip3a =  ++ (foo 'fum')   end ]
++[ def no_skip3b =  ++ foo ++ 'fum'  end ]

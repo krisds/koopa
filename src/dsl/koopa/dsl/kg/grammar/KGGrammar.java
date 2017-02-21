@@ -77,7 +77,7 @@ public class KGGrammar extends FluentGrammar {
 
 		defineHelper("part").as(oneOf( //
 				with("star").as("repeatable", "==*=="), //
-				with("plus").as("repeatable", "==+=="), //
+				with("plus").as("repeatable", "==+==", not(noskip("==+=="))), //
 				"balancing", //
 				"before", //
 				"upto", //
@@ -163,16 +163,16 @@ public class KGGrammar extends FluentGrammar {
 		// '%at' part
 		define("lookahead").as("==%==", noskip("==at=="), "part");
 
-		// '%noskip' part
-		define("noskip").as("==%==", noskip("==noskip=="), "part");
+		// ('+' ++ '+' part)+
+		define("noskip").as(oneOrMore("==+==", noskip("==+=="), "part"));
 
 		// '%nokeywords'
 		define("nokeywords").as("==%==", noskip("==nokeywords=="));
 
-		// @ %noskip name
+		// @ ++ name
 		define("tagged").as("==@==", noskip("name"));
 
-		// '<' %noskip ( number '.' '.' number '>' )
+		// '<' ++ ( number '.' '.' number '>' )
 		define("ranged").as("==<==", //
 				noskip(with("begin").as(oneOf("==_==", "number")), //
 						"==.==", "==.==", //
@@ -185,7 +185,7 @@ public class KGGrammar extends FluentGrammar {
 		// identifier
 		define("type").as(notAKeyword("word"));
 
-		// ( '`' %noskip (%someLowercase word)
+		// ( '`' ++ (%someLowercase word)
 		// | %noKeyword (%someLowercase word) )
 		define("identifier").as(oneOf(//
 				// Any escaped identifier.
@@ -196,7 +196,7 @@ public class KGGrammar extends FluentGrammar {
 		// %uppercase word
 		define("literal").as(allUppercase("word"));
 
-		// identifier %noskip (':' ':' identifier)
+		// identifier ++ (':' ':' identifier)
 		define("scoped_identifier").as( //
 				"identifier", noskip("==:==", "==:==", "identifier"));
 

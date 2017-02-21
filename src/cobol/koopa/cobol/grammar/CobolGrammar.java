@@ -19722,9 +19722,11 @@ public class CobolGrammar extends CobolBaseGrammar {
             star(
               as("power",
                 sequence(
-                  literal("*"),
-                  opt(NOSKIP,
-                    literal("*")
+                  sequence(
+                    literal("*"),
+                    opt(NOSKIP,
+                      literal("*")
+                    )
                   ),
                   base()
                 )
@@ -21840,18 +21842,16 @@ public class CobolGrammar extends CobolBaseGrammar {
               uintgr()
             ),
             opt(NOSKIP,
-              sequence(
-                literal("."),
-                uintgr(),
-                literal("E"),
-                optional(
-                  choice(
-                    literal("+"),
-                    literal("-")
-                  )
-                ),
-                uintgr()
-              )
+              literal("."),
+              uintgr(),
+              literal("E"),
+              optional(
+                choice(
+                  literal("+"),
+                  literal("-")
+                )
+              ),
+              uintgr()
             )
           )
         );

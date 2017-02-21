@@ -286,8 +286,8 @@ def searchCondition =
       disjunction
 end
 
-private def leftBracketTrigraph  =  '?' %noskip('?' '(')  end
-private def rightBracketTrigraph =  '?' %noskip('?' ')')  end
+private def leftBracketTrigraph  =  '?' ++ ('?' '(')  end
+private def rightBracketTrigraph =  '?' ++ ('?' ')')  end
 
 hiding def disjunction =
     conjunction %upto { (or | eof) }
@@ -381,9 +381,9 @@ end
 def equalsOp              =  '='                                    end
 def lessThanOp            =  '<'                                    end
 def greaterThanOp         =  '>'                                    end
-def notEqualsOp           =  ( '<' %noskip '>' | '!' %noskip '=' )  end
-def greaterThanOrEqualsOp =  ( '>' %noskip '=' | '!' %noskip '<' )  end
-def lessThanOrEqualsOp    =  ( '<' %noskip '=' | '!' %noskip '>' )  end
+def notEqualsOp           =  ( '<' ++ '>' | '!' ++ '=' )  end
+def greaterThanOrEqualsOp =  ( '>' ++ '=' | '!' ++ '<' )  end
+def lessThanOrEqualsOp    =  ( '<' ++ '=' | '!' ++ '>' )  end
 
 
 ## ############################################################################
@@ -413,7 +413,7 @@ def hostParameterSpecification =
   end
 end
 
-def hostParameterName =  ':' %noskip identifier  end
+def hostParameterName =  ':' ++ identifier  end
 
 
 ## ############################################################################
@@ -460,13 +460,12 @@ private def str =
     # Because of continuations, strings may be split across lines. So we need
     # to check if there are any more parts (STRINGs) following the initial one,
     # albeit without skipping whitespace.
-    [%noskip ((@STRING _)+)]
+    [++ ((@STRING _)+)]
 end
 
 
 private def word =
-    @WORD _
-    %noskip (
+    (@WORD _) ++ (
       ( @NUMBER _
       | @WORD _
       | '_'

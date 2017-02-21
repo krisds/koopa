@@ -105,9 +105,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
               tagged(FREE),
               ranged(8, -1)
             ),
-            literal(">"),
-            opt(NOSKIP,
-              literal(">")
+            sequence(
+              literal(">"),
+              opt(NOSKIP,
+                literal(">")
+              )
             )
           )
         );
@@ -329,9 +331,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         iso$instruction$flag02Parser = future;
         future.setParser(
           sequence(
-            keyword("FLAG-"),
-            opt(NOSKIP,
-              number("02")
+            sequence(
+              keyword("FLAG-"),
+              opt(NOSKIP,
+                number("02")
+              )
             ),
             as("unknown",
               plus(
@@ -359,9 +363,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         iso$instruction$flag85Parser = future;
         future.setParser(
           sequence(
-            keyword("FLAG-"),
-            opt(NOSKIP,
-              number("85")
+            sequence(
+              keyword("FLAG-"),
+              opt(NOSKIP,
+                number("85")
+              )
             ),
             as("unknown",
               plus(
@@ -1080,11 +1086,13 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         future.setParser(
           sequence(
             sequence(
-              ranged(1, 1),
-              literal("-")
-            ),
-            opt(NOSKIP,
-              literal("INC")
+              sequence(
+                ranged(1, 1),
+                literal("-")
+              ),
+              opt(NOSKIP,
+                literal("INC")
+              )
             ),
             anything(),
             optional(
@@ -1116,13 +1124,15 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         future.setParser(
           sequence(
             sequence(
-              ranged(8, 8),
-              literal("+")
-            ),
-            opt(NOSKIP,
               sequence(
-                literal("+"),
-                literal("INCLUDE")
+                ranged(8, 8),
+                literal("+")
+              ),
+              opt(NOSKIP,
+                sequence(
+                  literal("+"),
+                  literal("INCLUDE")
+                )
               )
             ),
             anything(),
@@ -1154,9 +1164,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         mf$setParser = future;
         future.setParser(
           sequence(
-            mf$indicator(),
-            opt(NOSKIP,
-              keyword("SET")
+            sequence(
+              mf$indicator(),
+              opt(NOSKIP,
+                keyword("SET")
+              )
             ),
             plus(
               choice(
@@ -1231,9 +1243,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         mf$displayParser = future;
         future.setParser(
           sequence(
-            mf$indicator(),
-            opt(NOSKIP,
-              keyword("DISPLAY")
+            sequence(
+              mf$indicator(),
+              opt(NOSKIP,
+                keyword("DISPLAY")
+              )
             ),
             optional(
               sequence(
@@ -1315,9 +1329,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         mf$ifParser = future;
         future.setParser(
           sequence(
-            mf$indicator(),
-            opt(NOSKIP,
-              keyword("IF")
+            sequence(
+              mf$indicator(),
+              opt(NOSKIP,
+                keyword("IF")
+              )
             ),
             as("unknown",
               plus(

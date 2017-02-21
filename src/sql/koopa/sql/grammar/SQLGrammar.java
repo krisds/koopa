@@ -2400,8 +2400,10 @@ public class SQLGrammar extends SQLBaseGrammar {
         wordParser = future;
         future.setParser(
           sequence(
-            tagged(WORD),
-            any(),
+            sequence(
+              tagged(WORD),
+              any()
+            ),
             opt(NOSKIP,
               star(
                 choice(

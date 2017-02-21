@@ -49,7 +49,7 @@ end
 
 private def part =
     ( star : repeatable '*'
-    | plus : repeatable '+'
+    | plus : repeatable '+' %not (++ '+')
     | balancing
     | before
     | upto
@@ -99,29 +99,29 @@ end
 
 def nested      =  '(' (alternating__ sequence '|') ')'                end
 def optional    =  '[' (nested : (alternating__ sequence '|')) ']'     end
-def permutation =  '!' %noskip('(') (alternating__  sequence '|') ')'  end
+def permutation =  '!' ++('(') (alternating__  sequence '|') ')'  end
 
 private def optional-permutation =
     ( optional :
       ( permutation :
-        '!' %noskip('[') (alternating__ sequence '|') ']'
+        '!' ++('[') (alternating__ sequence '|') ']'
       )
     )
 end
 
 def dispatched =  '$' '(' (alternating__ dispatch '|') ')'      end
-def dispatch   =  literal '=' %noskip('>') sequence             end
+def dispatch   =  literal '=' ++('>') sequence             end
 
-def skipping   =  '-' %noskip('-' '>') part                     end
+def skipping   =  '-' ++('-' '>') part                     end
 
-def negation   =  '%' %noskip('not') part                       end
-def lookahead  =  '%' %noskip('at') part                        end
-def noskip     =  '%' %noskip('noskip') part                    end
-def nokeywords =  '%' %noskip('nokeywords')                     end
-def tagged     =  '@' %noskip(name)                             end
+def negation   =  '%' ++('not') part                       end
+def lookahead  =  '%' ++('at') part                        end
+def noskip     =  (('+' ++ '+') part)+                     end
+def nokeywords =  '%' ++('nokeywords')                     end
+def tagged     =  '@' ++(name)                             end
 
 def ranged =
-    '<' %noskip(
+    '<' ++(
       (begin: ('_' | number))
       '.' '.' 
       (`end: ('_' | number))
@@ -132,20 +132,20 @@ def name       =  (notAKeyword__ word)                          end
 def type       =  (notAKeyword__ word)                          end
 
 def identifier =
-    ( '`' %noskip(someLowercase__ word)
+    ( '`' ++(someLowercase__ word)
     | (notAKeyword__ (someLowercase__ word))
     )
 end
 
 def scoped-identifier =
-    identifier %noskip (':' ':' identifier)
+    identifier ++ (':' ':' identifier)
 end
 
 def literal    =  (allUppercase__  word)                        end
 
 private def word =
     @WORD _
-    %noskip( ( '-' | '_' | '$' | @WORD _ | @NUMBER _ )* )
+    ++( ( '-' | '_' | '$' | @WORD _ | @NUMBER _ )* )
 end
 
 def quoted_literal =  @STRING _                                 end
@@ -155,15 +155,15 @@ def native_code    =  braced                                    end
 private def braced =  '{' ( braced | %not('}') _ )* '}'         end
 
 def upto =
-    atom '%' %noskip('upto') closure
+    atom '%' ++('upto') closure
 end
 
 def before =
-    atom '%' %noskip('before') closure
+    atom '%' ++('before') closure
 end
 
 def balancing =
-    '%' %noskip('balancing') pair+ part
+    '%' ++('balancing') pair+ part
 end
 
 def pair =
@@ -171,15 +171,15 @@ def pair =
 end
 
 def balanced =
-    '%% %noskip('nested') atom
+    '%% ++('nested') atom
 end
 
 def unbalanced =
-    '%% %noskip('notnested') atom
+    '%% ++('notnested') atom
 end
 
 def notempty =
-    '%% %noskip('notempty') atom
+    '%% ++('notempty') atom
 end
 
 def closure =
@@ -187,7 +187,7 @@ def closure =
 end
 
 def todo =
-    '.' %noskip ('.' '.')
+    '.' ++ ('.' '.')
 end
 
 ]

@@ -37,7 +37,7 @@ def iso =
     indicator instruction [inlineComment]
 
   where private def indicator =
-      ( @FREE | <8.._> ) '>' %noskip '>'
+      ( @FREE | <8.._> ) ('>' ++ '>')
   end
   
   where def instruction =
@@ -72,8 +72,8 @@ def iso =
     where def define               =  DEFINE (unknown: _+)                  end
     where def evaluate             =  EVALUATE (true: TRUE | unknown: _+)   end
     where def when                 =  WHEN (unknown: _+)                    end
-    where def flag02               =  FLAG- %noskip 02 (unknown: _+)        end
-    where def flag85               =  FLAG- %noskip 85 (unknown: _+)        end
+    where def flag02               =  (FLAG- ++ 02) (unknown: _+)           end
+    where def flag85               =  (FLAG- ++ 85) (unknown: _+)           end
     where def flagNativeArithmetic =  FLAG-NATIVE-ARITHMETIC (unknown: _+)  end
     where def if                   =  IF (unknown: _+)                      end
     where def leapSecond           =  LEAP-SECOND (unknown: _+)             end
@@ -112,13 +112,13 @@ def ibm =
     )
 
   where def basis =
-      [ (sequenceNumber: <1..6> @NUMBER _) %noskip (@WHITESPACE _) ]
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       BASIS anything
   end
 
   where def process =
       # "The first character of the sequence number must be numeric"
-      [ (sequenceNumber: <1..6> @NUMBER _ (<1..6> _)*) %noskip (@WHITESPACE _) ]
+      [ (sequenceNumber: <1..6> @NUMBER _ (<1..6> _)*) ++ (@WHITESPACE _) ]
       (CBL | PROCESS) anything*
   end
 
@@ -126,16 +126,16 @@ def ibm =
       # TODO Seqnr allowed ?
       cblControl option ([','] option)* [.]
     
-    where private def cblControl =  ((<7.._> '*') %noskip (CBL | CONTROL))  end
+    where private def cblControl =  ((<7.._> '*') ++ (CBL | CONTROL))  end
     where def option =  (SOURCE | NOSOURCE | LIST | NOLIST | MAP | NOMAP)   end
   end
   
   where def delete =
-      [ (sequenceNumber: <1..6> @NUMBER _) %noskip (@WHITESPACE _) ]
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       DELETE sequenceNumberFieldOrRange (',' sequenceNumberFieldOrRange)*
 
     where private def sequenceNumberFieldOrRange =
-       ( sequenceNumberRange: sequenceNumberField %noskip ('-' sequenceNumberField)
+       ( sequenceNumberRange: sequenceNumberField ++ ('-' sequenceNumberField)
        | sequenceNumberField
        )
     end
@@ -147,7 +147,7 @@ def ibm =
   end
   
   where def insert =
-      [ (sequenceNumber: <1..6> @NUMBER _) %noskip (@WHITESPACE _) ]
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       INSERT sequenceNumberField
   end
   
@@ -183,18 +183,20 @@ def mf =
     )
 
   where def inc =
-      (<1..1> '-') %noskip 'INC' anything [comment: anything*]
+      ((<1..1> '-') ++ 'INC')
+      anything [comment: anything*]
   end
 
   where def include =
-      (<8..8> '+') %noskip ('+' 'INCLUDE') anything [comment: anything*]
+      ((<8..8> '+') ++ ('+' 'INCLUDE'))
+      anything [comment: anything*]
   end
   
   # [MF - $SET Statements in the Source Code]
   # [MF - Directives for Compiler]
   # [MF - Compiler Directives - Alphabetical List]
   where def set =
-      indicator %noskip SET
+      (indicator ++ SET)
       ( sourceformat: SOURCEFORMAT parameter
       | directive: name [parameter]
       )+
@@ -206,10 +208,10 @@ def mf =
     end
   end
   
-  where def display =  indicator %noskip DISPLAY [VCS '='] anything+  end
-  where def else    =  indicator %noskip ELSE                         end
-  where def `end    =  indicator %noskip END                          end
-  where def if      =  indicator %noskip IF (unknown: _+)             end
+  where def display =  (indicator ++ DISPLAY) [VCS '='] anything+  end
+  where def else    =  (indicator ++ ELSE   )                      end
+  where def `end    =  (indicator ++ END    )                      end
+  where def if      =  (indicator ++ IF     ) (unknown: _+)        end
 
   # Fixed vs. free formatting is not well documented. I'm basing this off a
   # comment found in an online discussion, which stated: "When in fixed
@@ -245,7 +247,7 @@ def listing =
   
   where def skip =
       # TODO Seqnr/Indicator allowed ?
-      (<8.._> (SKIP %noskip (1 | 2 | 3))) [.]
+      (<8.._> (SKIP ++ (1 | 2 | 3))) [.]
   end
   
   where def title =
@@ -258,10 +260,10 @@ end
 ###############################################################################
 
 def inlineComment                  =  inlineCommentIndicator _*  end
-private def inlineCommentIndicator =  '*' %noskip '>'            end
+private def inlineCommentIndicator =  '*' ++ '>'                 end
 
-def name     =  (@WORD _) %noskip ( ( @WORD _ | @NUMBER _ )* )   end
-def anything =  _ [%noskip ((%not @WHITESPACE _)*)]              end
+def name     =  (@WORD _) ++ ( ( @WORD _ | @NUMBER _ )* )        end
+def anything =  _ [++ ((%not @WHITESPACE _)*)]                   end
 
 
 

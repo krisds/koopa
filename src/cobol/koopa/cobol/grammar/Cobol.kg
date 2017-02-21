@@ -408,10 +408,10 @@ end
 def operatorIdParagraph =
     OPERATOR-ID [.]
     ( '=' [EXTENSION]
-    | '<' %noskip '>'
-    | '>' %noskip '='
+    | '<' ++ '>'
+    | '>' ++ '='
     | '>'
-    | '<' %noskip '='
+    | '<' ++ '='
     | '<'
     | '+'
     | '-'
@@ -4864,7 +4864,7 @@ hiding def term =
 end
 
 hiding def factor =
-    base (power: '*' %noskip '*' base)* 
+    base (power: ('*' ++ '*') base)* 
 end
 
 hiding def base =
@@ -4887,7 +4887,7 @@ end
 # This is a helper for use in other rules.
 private def moreArithmeticOp =
     ( B-AND | B-OR | B-XOR | B-EXOR
-    | '+' | '-' | '*' %noskip '*' | '*' | '/'
+    | '+' | '-' | ('*' ++ '*') | '*' | '/'
     )
 end
 
@@ -5148,15 +5148,15 @@ def relop =
     )
 end
 
-def greaterThanOp    = (GREATER [THAN]               | '>' )  end
-def lessThanOp       = (LESS [THAN]                  | '<' )  end
-def equalToOp        = (EQUAL [TO]                   | '=' )  end
-def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>' %noskip '=')  end
-def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<' %noskip '=')  end 
+def greaterThanOp    = (GREATER [THAN]               | '>'       )  end
+def lessThanOp       = (LESS [THAN]                  | '<'       )  end
+def equalToOp        = (EQUAL [TO]                   | '='       )  end
+def greaterOrEqualOp = (GREATER [THAN] OR EQUAL [TO] | '>' ++ '=')  end
+def lessOrEqualOp    = (LESS    [THAN] OR EQUAL [TO] | '<' ++ '=')  end 
 
 # "UNEQUAL" is found in MicroFocus. 
 # - [MF - Relation Conditions]
-def unequalToOp      = (UNEQUAL [TO]                 | '<' %noskip '>')  end
+def unequalToOp      = (UNEQUAL [TO]                 | '<' ++ '>')  end
 
 # "EXCEEDS" and "EQUALS" are found in MicroFocus. 
 # - [MF - Relation Conditions]
@@ -5496,12 +5496,10 @@ def integer =
 end
 
 def floatingPoint =
-    ( ['+' | '-'] %noskip uintgr
+    ( ['+' | '-'] ++ uintgr
     | uintgr
     )
-    %noskip (
-      . uintgr 'E' ['+' | '-'] uintgr
-    )
+    ++ . ++ uintgr ++ 'E' ++ ['+' | '-'] ++ uintgr
 end
 
 def addressOf    =  ADDRESS     [OF] identifier  end

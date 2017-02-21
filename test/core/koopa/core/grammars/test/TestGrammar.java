@@ -111,8 +111,8 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public ParserCombinator opt(Opt opt, ParserCombinator parser) {
-		return super.opt(opt, parser);
+	public ParserCombinator opt(Opt opt, ParserCombinator... parsers) {
+		return super.opt(opt, parsers);
 	}
 
 	@Override

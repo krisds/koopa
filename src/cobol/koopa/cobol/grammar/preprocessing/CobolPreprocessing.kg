@@ -88,26 +88,26 @@ def numeric =
 end
 
 def integerLiteral =
-    ( '+' %noskip uintgr
-    | '-' %noskip uintgr
+    ( '+' ++ uintgr
+    | '-' ++ uintgr
     | uintgr
     )
 end
 
 def hexadecimal =
-    'H' %noskip str
+    'H' ++ str
 end
 
 def alphanumericHexadecimal =
-    'X' %noskip str
+    'X' ++ str
 end
 
 def nationalAlphanumericHexadecimal =
-    'NX' %noskip str
+    'NX' ++ str
 end
 
 def booleanHexadecimal =
-    'BX' %noskip str
+    'BX' ++ str
 end
 
 private def hexadecimalLiteral =
@@ -120,16 +120,16 @@ end
 
 def booleanLiteral =
     ( booleanHexadecimal
-    | 'B' %noskip str
+    | 'B' ++ str
     )
 end
 
 def nullTerminatedStringLiteral =
-    'Z' %noskip str
+    'Z' ++ str
 end
 
 def nationalStringLiteral =
-    'N' %noskip str
+    'N' ++ str
 end
 
 def alphanumericLiteral =
@@ -147,13 +147,13 @@ private def str =
     # Because of continuations, strings may be split across lines. So we need
     # to check if there are any more parts (STRINGs) following the initial one,
     # albeit without skipping whitespace.
-    [%noskip ((@STRING _)+)]
+    [++ ((@STRING _)+)]
 end
 
 def pseudoLiteral =
-    ('=' %noskip '=') 
-    ((_)*) %upto {'=' %noskip ('=' %not '=')}
-    ('=' %noskip '=') 
+    ('=' ++ '=') 
+    ((_)*) %upto {'=' ++ ('=' %not '=')}
+    ('=' ++ '=') 
 end
 
 
@@ -165,14 +165,14 @@ end
 #
 # TODO Allow ",2"; which is still tricky.
 def decimal =
-    ( ('+' | '-') %noskip unsigned_decimal
+    ( ('+' | '-') ++ unsigned_decimal
     | unsigned_decimal
     )
 end
 
 private def unsigned_decimal =
-    ( uintgr %noskip ( (',' | '.') uintgr )
-    | '.' %noskip uintgr
+    ( uintgr ++ ( (',' | '.') uintgr )
+    | '.' ++ uintgr
     )
 end
 
@@ -182,5 +182,5 @@ private def uintgr =
     # Because of continuations, the digits of a number may be split across
     # lines. So we need to check if there are any more digits (NUMBERs)
     # following the initial one, albeit without skipping whitespace.
-    [%noskip ((@NUMBER _)+)]
+    [++ ((@NUMBER _)+)]
 end

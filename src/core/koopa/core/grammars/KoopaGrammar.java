@@ -95,7 +95,10 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected ParserCombinator sequence(final ParserCombinator... parsers) {
-		return new Sequence(parsers);
+		if (parsers != null && parsers.length == 1)
+			return parsers[0];
+		else
+			return new Sequence(parsers);
 	}
 
 	protected ParserCombinator choice(final ParserCombinator... parsers) {
@@ -145,8 +148,8 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected ParserCombinator opt(final Opt opt,
-			final ParserCombinator parser) {
-		return new WithOption(opt, parser);
+			final ParserCombinator... parsers) {
+		return new WithOption(opt, sequence(parsers));
 	}
 
 	protected ParserCombinator limited(final ParserCombinator target,

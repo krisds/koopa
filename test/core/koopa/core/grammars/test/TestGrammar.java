@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.FutureParser;
@@ -36,13 +37,13 @@ public class TestGrammar extends KoopaGrammar {
 	}
 
 	@Override
-	public boolean isProgramText(Token token) {
+	public boolean isProgramText(Data d) {
 		return true;
 	}
 
 	@Override
-	public boolean canBeSkipped(Token token, Parse parse) {
-		return separators.contains(token.getText());
+	public boolean canBeSkipped(Data d, Parse parse) {
+		return d instanceof Token && separators.contains(((Token) d).getText());
 	}
 
 	@Override

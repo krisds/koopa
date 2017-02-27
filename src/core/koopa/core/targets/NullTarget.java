@@ -5,9 +5,9 @@ import koopa.core.data.Data;
 /**
  * A {@linkplain Target} which just discards all the data it receives.
  */
-public class NullTarget<T extends Data> implements Target<T> {
+public class NullTarget implements Target {
 
-	public void push(T packet) {
+	public void push(Data packet) {
 	}
 
 	public void done() {

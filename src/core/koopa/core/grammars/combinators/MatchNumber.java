@@ -2,6 +2,7 @@ package koopa.core.grammars.combinators;
 
 import java.util.Set;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.grammars.Grammar;
@@ -22,30 +23,34 @@ public class MatchNumber extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
-		final Token token = parse.getStream().forward();
+		final Data d = parse.getStream().forward();
 
-		if (token == null) {
+		if (d == null || !(d instanceof Token)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : no, null");
 
 			return false;
 
-		} else if (!token.hasTag(SyntacticTag.NUMBER)) {
+		}
+
+		final Token t = (Token) d;
+
+		if (!t.hasTag(SyntacticTag.NUMBER)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(
-						toString() + " : no, not tagged as a NUMBER, " + token);
+						toString() + " : no, not tagged as a NUMBER, " + t);
 
 			return false;
 
-		} else if (!comparableText.equals(token.getText())) {
+		} else if (!comparableText.equals(t.getText())) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : no, " + token);
+				parse.getTrace().add(toString() + " : no, " + t);
 
 			return false;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : yes, " + token);
+				parse.getTrace().add(toString() + " : yes, " + t);
 
 			return true;
 		}

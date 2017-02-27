@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.ChainingSource;
@@ -14,53 +15,54 @@ import koopa.core.sources.Source;
  * expected endpoint. That point is either indicated by an explicit marker (see
  * {@linkplain #MARKER_TEXT}, or just the end of regular input.
  */
-public class TestTokenizer extends ChainingSource<Token, Token>
-		implements Source<Token> {
+public class TestTokenizer extends ChainingSource
+		implements Source {
 
+	private static final boolean TRACE = false;
 	private static final Logger LOGGER = Logger.getLogger("source.test");
 
 	public static final String MARKER_TEXT = "^";
 
 	private Token marker;
-	private LinkedList<Token> tokensSinceMarker = new LinkedList<Token>();
+	private LinkedList<Data> dataSinceMarker = new LinkedList<Data>();
 
-	public TestTokenizer(Source<Token> source) {
+	public TestTokenizer(Source source) {
 		super(source);
 	}
 
 	@Override
-	protected Token nxt1() {
-		Token next = source.next();
+	protected Data nxt1() {
+		Data d = source.next();
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("%% " + next);
+		if (TRACE && LOGGER.isTraceEnabled())
+			LOGGER.trace("%% " + d);
 
-		return next;
+		return d;
 	}
 
 	@Override
-	public Token next() {
-		Token token = super.next();
+	public Data next() {
+		Data d = super.next();
 
-		if (token == null)
+		if (d == null)
 			return null;
 
-		if (MARKER_TEXT.equals(token.getText())) {
-			marker = token;
+		if (d instanceof Token && MARKER_TEXT.equals(((Token) d).getText())) {
+			marker = (Token) d;
 
-			if (LOGGER.isTraceEnabled())
+			if (TRACE && LOGGER.isTraceEnabled())
 				LOGGER.trace("+> MARKER ");
 
-			token = super.next();
+			d = super.next();
 		}
 
-		if (marker != null && token != null)
-			tokensSinceMarker.add(token);
+		if (marker != null && d != null)
+			dataSinceMarker.add(d);
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("> " + token);
+		if (TRACE && LOGGER.isTraceEnabled())
+			LOGGER.trace("> " + d);
 
-		return token;
+		return d;
 	}
 
 	public void close() {
@@ -68,19 +70,19 @@ public class TestTokenizer extends ChainingSource<Token, Token>
 	}
 
 	@Override
-	public void unshift(Token token) {
-		if (LOGGER.isTraceEnabled())
+	public void unshift(Data token) {
+		if (TRACE && LOGGER.isTraceEnabled())
 			LOGGER.trace("<<< " + token);
 
 		super.unshift(token);
 
 		if (marker != null) {
-			Token last = tokensSinceMarker.removeLast();
+			Data last = dataSinceMarker.removeLast();
 
 			assert (token == last);
 
-			if (tokensSinceMarker.isEmpty()) {
-				if (LOGGER.isTraceEnabled())
+			if (dataSinceMarker.isEmpty()) {
+				if (TRACE && LOGGER.isTraceEnabled())
 					LOGGER.trace("<- MARKER");
 
 				super.unshift(marker);
@@ -98,42 +100,51 @@ public class TestTokenizer extends ChainingSource<Token, Token>
 
 	private boolean isAtMarkerOrEndOfSource() {
 		while (true) {
-			Token token = next();
+			Data d = next();
 
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("@ " + (marker == null ? "" : "#") + token);
+			if (TRACE && LOGGER.isTraceEnabled())
+				LOGGER.trace("@ " + (marker == null ? "" : "#") + d);
 
 			if (marker != null)
 				return true;
 
-			if (token == null)
+			if (d == null)
 				return true;
 
 			// TODO Would prefer to fall back on
 			// KoopaGrammar.isProgramText/isSeparator.
 
-			if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA))
-				continue;
-
-			final String text = token.getText();
-
-			if (text.trim().length() > 0)
-				return false;
+			if (d instanceof Token) {
+				final Token t = (Token)d;
+				
+				if (!t.hasTag(AreaTag.PROGRAM_TEXT_AREA))
+					continue;
+				
+				final String text = t.getText();
+				
+				if (text.trim().length() > 0)
+					return false;
+			}
 		}
 	}
 
 	private boolean isAtMarker() {
-		for (Token token : tokensSinceMarker) {
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("M@ " + token);
+		for (Data d : dataSinceMarker) {
+			if (TRACE && LOGGER.isTraceEnabled())
+				LOGGER.trace("M@ " + d);
 
+			if (!(d instanceof Token))
+				continue;
+			
 			// TODO Would prefer to fall back on
 			// KoopaGrammar.isProgramText/isSeparator.
 
-			if (!token.hasTag(AreaTag.PROGRAM_TEXT_AREA))
+			final Token t = (Token) d;
+			
+			if (!t.hasTag(AreaTag.PROGRAM_TEXT_AREA))
 				continue;
 
-			if (token.getText().trim().length() > 0)
+			if (t.getText().trim().length() > 0)
 				return false;
 		}
 

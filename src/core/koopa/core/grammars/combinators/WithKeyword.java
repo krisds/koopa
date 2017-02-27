@@ -1,6 +1,6 @@
 package koopa.core.grammars.combinators;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -49,7 +49,7 @@ public abstract class WithKeyword extends GrammaticalCombinator {
 		final Memo memo = Memo.forSubject("kw-" + parse.hashCode());
 
 		final Stream stream = parse.getStream();
-		final Token peek = stream.peek();
+		final Data peek = stream.peek();
 
 		final String memoizedKeyword = memo.get(peek, String.class);
 		if (memoizedKeyword != null)

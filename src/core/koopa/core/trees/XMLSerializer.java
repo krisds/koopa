@@ -14,11 +14,7 @@ import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.data.tags.AreaTag;
 
-import org.apache.log4j.Logger;
-
 public class XMLSerializer {
-
-	protected static final Logger LOGGER = Logger.getLogger("to_xml");
 
 	private static final boolean INCLUDE_POSITIONING;
 	static {
@@ -71,8 +67,6 @@ public class XMLSerializer {
 			throws IOException {
 
 		Data data = tree.getData();
-
-		LOGGER.trace(tree.getText());
 
 		if (data instanceof Start) {
 			Start start = (Start) data;

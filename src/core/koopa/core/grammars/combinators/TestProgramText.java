@@ -2,7 +2,7 @@ package koopa.core.grammars.combinators;
 
 import java.util.Set;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
@@ -66,7 +66,7 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 	/**
 	 * To be implemented by subclasses, this is equivalent to
 	 * {@link #accepts(Parse)}, but passes along the contents of all matched
-	 * tokens which are accepted by {@linkplain Grammar#isProgramText(Token)}.
+	 * tokens which are accepted by {@linkplain Grammar#isProgramText(Data)}.
 	 * <p>
 	 * This will not get called if the {@link #parser} did not match.
 	 */

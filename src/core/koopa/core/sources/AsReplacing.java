@@ -1,28 +1,31 @@
 package koopa.core.sources;
 
+import koopa.core.data.Data;
 import koopa.core.data.Replaced;
 import koopa.core.data.Token;
 
 /**
  * Marks all {@linkplain Token}s as replacing something {@linkplain Replaced}.
  */
-public class AsReplacing extends ChainingSource<Token, Token>
-		implements Source<Token> {
+public class AsReplacing extends ChainingSource
+		implements Source {
 
 	private Replaced replaced;
 
-	public AsReplacing(Source<Token> source, Replaced replaced) {
+	public AsReplacing(Source source, Replaced replaced) {
 		super(source);
 		this.replaced = replaced;
 	}
 
 	@Override
-	protected Token nxt1() {
-		Token token = source.next();
+	protected Data nxt1() {
+		final Data d = source.next();
 
-		if (token == null)
-			return null;
+		if (d == null || !(d instanceof Token))
+			return d;
 
-		return token.asReplacing(replaced);
+		final Token t = (Token) d;
+		
+		return t.asReplacing(replaced);
 	}
 }

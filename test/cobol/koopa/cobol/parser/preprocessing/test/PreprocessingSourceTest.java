@@ -15,6 +15,7 @@ import koopa.cobol.CobolTokens;
 import koopa.cobol.Copybooks;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.util.test.FileBasedTest;
@@ -27,7 +28,8 @@ public class PreprocessingSourceTest implements FileBasedTest {
 	private static final String EXPECTED_PREFIX = ">";
 
 	public File[] getFiles() {
-		File folder = new File("test/cobol/koopa/cobol/parser/preprocessing/test/");
+		File folder = new File(
+				"test/cobol/koopa/cobol/parser/preprocessing/test/");
 
 		File[] sources = folder.listFiles(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -49,7 +51,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 	public void testSampleValidates() throws IOException {
 		Sample sample = new Sample(file);
 
-		Source<Token> source = CobolTokens.getNewSource( //
+		Source source = CobolTokens.getNewSource( //
 				file, //
 				new StringReader(sample.input.toString()), //
 				new CobolGrammar(), //
@@ -57,9 +59,10 @@ public class PreprocessingSourceTest implements FileBasedTest {
 				new Copybooks());
 
 		StringBuilder actual = new StringBuilder();
-		Token t = null;
-		while ((t = source.next()) != null)
-			actual.append(t.getText());
+		Data d = null;
+		while ((d = source.next()) != null)
+			if (d instanceof Token)
+				actual.append(((Token) d).getText());
 
 		Assert.assertEquals(sample.expected.toString(), actual.toString());
 	}
@@ -78,7 +81,8 @@ public class PreprocessingSourceTest implements FileBasedTest {
 						input.append('\n');
 
 					} else if (line.startsWith(EXPECTED_PREFIX)) {
-						expected.append(line.substring(EXPECTED_PREFIX.length()));
+						expected.append(
+								line.substring(EXPECTED_PREFIX.length()));
 						expected.append('\n');
 					}
 				}

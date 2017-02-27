@@ -10,8 +10,6 @@ import static koopa.core.data.tags.SyntacticTag.WORD;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
 import koopa.core.data.tags.SyntacticTag;
@@ -21,8 +19,6 @@ import koopa.core.data.tags.SyntacticTag;
  * elements, as defined in {@linkplain SyntacticTag}.
  */
 public class TokenSeparationLogic {
-
-	private static final Logger LOGGER = Logger.getLogger("token_separation");
 
 	public static List<Token> apply(final Token token) {
 		final List<Token> tokens = new LinkedList<Token>();
@@ -35,19 +31,19 @@ public class TokenSeparationLogic {
 		while (position < length) {
 			final char c = text.charAt(position);
 
-			if (isWhitespace(c)) {
+			if (isWhitespace(c))
 				position = whitespace(token, text, position, length, tokens);
 
-			} else if (startsString(c)) {
+			else if (startsString(c))
 				position = string(token, text, position, 0, length, tokens);
 
-			} else if (isDigit(c)) {
+			else if (isDigit(c))
 				position = number(token, text, position, length, tokens);
 
-			} else if (isLetter(c)) {
+			else if (isLetter(c))
 				position = word(token, text, position, length, tokens);
 
-			} else {
+			else {
 				// Everything else...
 				position = separator(token, text, position, length, tokens);
 			}
@@ -68,17 +64,11 @@ public class TokenSeparationLogic {
 			final int start, final int length, List<Token> tokens) {
 
 		int position = start + 1;
-		while (position < length && isWhitespace(text.charAt(position))) {
+		while (position < length && isWhitespace(text.charAt(position)))
 			position += 1;
-		}
 
-		final Token separator = Tokens.subtoken(token, start, position)
-				.withTags(SEPARATOR, WHITESPACE);
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Separator: " + separator);
-
-		tokens.add(separator);
+		tokens.add(Tokens.subtoken(token, start, position) //
+				.withTags(SEPARATOR, WHITESPACE));
 
 		return position;
 	}
@@ -100,13 +90,7 @@ public class TokenSeparationLogic {
 			}
 
 			if (position + 1 == length) {
-				final Token stringliteral = Tokens.subtoken(token, start)
-						.withTags(STRING);
-
-				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("String literal: " + stringliteral);
-
-				tokens.add(stringliteral);
+				tokens.add(Tokens.subtoken(token, start).withTags(STRING));
 				return position + 1;
 			}
 
@@ -125,29 +109,19 @@ public class TokenSeparationLogic {
 			if (hasFloatingContinuationIndicator)
 				position += 1;
 
-			final Token stringliteral;
 			if (hasFloatingContinuationIndicator)
-				stringliteral = Tokens.subtoken(token, start, position + 1)
-						.withTags(STRING, INCOMPLETE);
+				tokens.add(Tokens.subtoken(token, start, position + 1)
+						.withTags(STRING, INCOMPLETE));
 			else
-				stringliteral = Tokens.subtoken(token, start, position + 1)
-						.withTags(STRING);
+				tokens.add(Tokens.subtoken(token, start, position + 1)
+						.withTags(STRING));
 
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("String literal: " + stringliteral);
-
-			tokens.add(stringliteral);
 			return position + 1;
 		}
 
 		// Incomplete string literal.
-		final Token stringliteral = Tokens.subtoken(token, start)
-				.withTags(STRING, INCOMPLETE);
+		tokens.add(Tokens.subtoken(token, start).withTags(STRING, INCOMPLETE));
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Incomplete string literal: " + stringliteral);
-
-		tokens.add(stringliteral);
 		return length;
 	}
 
@@ -156,19 +130,14 @@ public class TokenSeparationLogic {
 
 		int position = start + 1;
 		while (position < length) {
-			char c = text.charAt(position);
+			final char c = text.charAt(position);
 			if (!isLetter(c) && c != '-')
 				break;
 			position += 1;
 		}
 
-		final Token word = Tokens.subtoken(token, start, position)
-				.withTags(WORD);
+		tokens.add(Tokens.subtoken(token, start, position).withTags(WORD));
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Word: " + word);
-
-		tokens.add(word);
 		return position;
 	}
 
@@ -177,19 +146,14 @@ public class TokenSeparationLogic {
 
 		int position = start + 1;
 		while (position < length) {
-			char c = text.charAt(position);
+			final char c = text.charAt(position);
 			if (!isDigit(c))
 				break;
 			position += 1;
 		}
 
-		final Token number = Tokens.subtoken(token, start, position)
-				.withTags(NUMBER);
+		tokens.add(Tokens.subtoken(token, start, position).withTags(NUMBER));
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Number: " + number);
-
-		tokens.add(number);
 		return position;
 	}
 
@@ -204,14 +168,8 @@ public class TokenSeparationLogic {
 	private static int separator(final Token token, final String text,
 			final int start, final int length, List<Token> tokens) {
 
-		int position = start + 1;
-		final Token separator = Tokens.subtoken(token, start, position)
-				.withTags(SEPARATOR);
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Other: " + separator);
-
-		tokens.add(separator);
+		final int position = start + 1;
+		tokens.add(Tokens.subtoken(token, start, position).withTags(SEPARATOR));
 		return position;
 	}
 }

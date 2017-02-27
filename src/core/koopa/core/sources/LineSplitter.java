@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.tags.SyntacticTag;
@@ -27,7 +28,7 @@ import koopa.core.util.LineEndings;
  * If the client does not specify line endings, this will use
  * {@linkplain LineEndings#getDefaults()} instead.
  */
-public class LineSplitter extends BasicSource<Token> implements Source<Token> {
+public class LineSplitter extends BasicSource implements Source {
 	private static final Logger LOGGER = Logger
 			.getLogger("source.linesplitter");
 
@@ -101,7 +102,7 @@ public class LineSplitter extends BasicSource<Token> implements Source<Token> {
 	}
 
 	@Override
-	public Token nxt1() {
+	public Data nxt1() {
 		try {
 			if (atEndOfFile())
 				return null;

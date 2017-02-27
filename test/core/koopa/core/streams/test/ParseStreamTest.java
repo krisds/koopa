@@ -122,26 +122,26 @@ public abstract class ParseStreamTest extends TestCase {
 
 	// =========================================================================
 
-	private Token assertPeekMatchesWord(Stream stream, Object text) {
-		final Token token = stream.peek();
+	private void assertPeekMatchesWord(Stream stream, Object text) {
+		final Data d = stream.peek();
 		if (text == null)
-			assertNull(token);
+			assertNull(d);
 		else {
-			assertNotNull(token);
-			token.getText().equals(text);
+			assertNotNull(d);
+			assertTrue(d instanceof Token);
+			assertTrue(((Token) d).getText().equals(text));
 		}
-		return token;
 	}
 
-	private Token assertNextTokenMatchesWord(Stream stream, Object text) {
-		final Token token = stream.forward();
+	private void assertNextTokenMatchesWord(Stream stream, Object text) {
+		final Data d = stream.forward();
 		if (text == null)
-			assertNull(token);
+			assertNull(d);
 		else {
-			assertNotNull(token);
-			token.getText().equals(text);
+			assertNotNull(d);
+			assertTrue(d instanceof Token);
+			assertTrue(((Token) d).getText().equals(text));
 		}
-		return token;
 	}
 
 	private void assertNoMoreTokens(Stream stream) {

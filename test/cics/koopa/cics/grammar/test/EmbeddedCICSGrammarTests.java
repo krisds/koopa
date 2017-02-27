@@ -5,7 +5,6 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import koopa.cics.grammar.CICSGrammar;
-import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.sources.BasicTokens;
 import koopa.core.sources.Source;
@@ -25,7 +24,7 @@ public class EmbeddedCICSGrammarTests extends GrammarTestSuite {
 		return new CICSGrammar();
 	}
 
-	public Source<Token> getSourceForSample(String sample, Grammar grammar) {
+	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 
 		return BasicTokens.getNewSource("test", reader);

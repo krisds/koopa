@@ -299,6 +299,7 @@ public class Token implements Data {
 		return skipped;
 	}
 
+	// TODO Move to Data ?
 	public void setSkipped(boolean skipped) {
 		this.skipped = skipped;
 	}

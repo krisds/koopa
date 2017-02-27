@@ -17,6 +17,7 @@ import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.parsers.Messages;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stack.Frame;
@@ -36,7 +37,7 @@ public class CobolParser {
 
 	private static final CobolGrammar grammar = new CobolGrammar();
 
-	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
+	private List<Target> targets = new LinkedList<Target>();
 
 	private boolean keepingTrackOfTokens = false;
 
@@ -85,13 +86,14 @@ public class CobolParser {
 		results.setValidInput(accepts);
 		results.setParse(parse);
 
+		final Messages messages = parse.getMessages();
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info((accepts ? "Valid file: " : "Invalid file: ") + file);
 
-			if (parse.hasWarnings()) {
+			if (messages.hasWarnings()) {
 				LOGGER.info("There were warnings from the grammar:");
 
-				for (Tuple<Token, String> warning : parse.getWarnings())
+				for (Tuple<Token, String> warning : messages.getWarnings())
 					LOGGER.info("  " + warning.getFirst() + ": "
 							+ warning.getSecond());
 			}
@@ -101,7 +103,7 @@ public class CobolParser {
 		// This will also push any remaining tokens to the token tracker, if one
 		// was set up.
 		final Stream tail = new BaseStream(parse.getFlow().getSource(),
-				new NullTarget<Data>());
+				new NullTarget());
 		tail.bookmark();
 
 		final boolean sawMoreProgramText = grabRemainingProgramText(grammar,
@@ -128,7 +130,7 @@ public class CobolParser {
 			final Token token = findTokenAt(tail, finalPosition);
 
 			if (token != null)
-				parse.error(token, msg);
+				messages.error(token, msg);
 		}
 
 		tail.rewind();
@@ -155,8 +157,8 @@ public class CobolParser {
 	public Parse getParseSetup(File file, Reader reader) throws IOException {
 		Parse parse;
 		// Build the tokenisation stage.
-		Source<Token> source = CobolTokens.getNewSource(file, reader, grammar,
-				format, preprocessing ? copybooks : null);
+		Source source = CobolTokens.getNewSource(file, reader, grammar, format,
+				preprocessing ? copybooks : null);
 		LOCCount loc = new LOCCount(source);
 		source = loc;
 
@@ -173,12 +175,12 @@ public class CobolParser {
 			parse.to(new KoopaTreeBuilder(grammar, false));
 
 		if (!targets.isEmpty())
-			for (Target<Data> next : targets)
+			for (Target next : targets)
 				parse.to(next);
 		return parse;
 	}
 
-	public void addTarget(Target<Data> target) {
+	public void addTarget(Target target) {
 		this.targets.add(target);
 	}
 
@@ -221,19 +223,21 @@ public class CobolParser {
 		boolean sawMoreProgramText = false;
 
 		while (true) {
-			final Token t = stream.forward();
+			final Data d = stream.forward();
 
 			// End-of-input ?
-			if (t == null)
+			if (d == null)
 				break;
 
-			// If we're tracking tokens, push them to the tracker.
+			// If we're tracking data, push them to the tracker.
 			if (tracker != null)
-				tracker.push(t);
+				tracker.push(d);
 
 			// Have we found more program text ?
-			if (!sawMoreProgramText && grammar.isProgramText(t)
-					&& !grammar.canBeSkipped(t, null))
+			if (!sawMoreProgramText //
+					&& d instanceof Token //
+					&& grammar.isProgramText((Token) d) //
+					&& !grammar.canBeSkipped((Token) d, null))
 				sawMoreProgramText = true;
 
 			// Stop after we found program text, unless we're tracking all
@@ -246,13 +250,24 @@ public class CobolParser {
 	}
 
 	private Token findTokenAt(Stream tail, Position best) {
-		Token token = tail.forward();
-		Token first = token;
-		while (token != null && token.getStart().compareTo(best) < 0)
-			token = tail.forward();
+		Data d = tail.forward();
+		Token first = null;
 
-		if (token == null)
-			token = first;
-		return token;
+		while (true) {
+			if (d == null)
+				return first;
+
+			if (d instanceof Token) {
+				final Token token = (Token) d;
+
+				if (first == null)
+					first = token;
+
+				if (token.getStart().compareTo(best) >= 0)
+					return token;
+			}
+
+			d = tail.forward();
+		}
 	}
 }

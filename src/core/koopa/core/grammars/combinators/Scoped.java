@@ -5,6 +5,7 @@ import java.util.Set;
 
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
+import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.markers.End;
 import koopa.core.data.markers.Start;
@@ -13,6 +14,8 @@ import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.Stream;
+import koopa.core.streams.BaseStream;
+import koopa.core.targets.HoldingTarget;
 
 public class Scoped extends FutureParser {
 
@@ -55,12 +58,32 @@ public class Scoped extends FutureParser {
 		this.allowKeywords = allowKeywords;
 	}
 
+	@Override
+	public boolean accepts(Parse parse) {
+		final boolean accepts = super.accepts(parse);
+
+		if (accepts) {
+			final BaseStream baseStream = parse.getFlow().getBaseStream();
+			final HoldingTarget target = baseStream.getTarget();
+			final Token t = target.peekAtLastToken();
+			if (t != null) {
+				final Position currentPosition = t.getStart();
+				if (parse.getFinalPosition().compareTo(currentPosition) < 0)
+					parse.setFinalMatch(currentPosition,
+							parse.getStack().getHead());
+			}
+		}
+
+		return accepts;
+	}
+
+	@Override
 	public boolean matches(Parse parse) {
 		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().indent(
-					toString() + " ? " + stream.peekMore() + "...");
+			parse.getTrace()
+					.indent(toString() + " ? " + stream.peekMore() + "...");
 
 		stream.bookmark();
 		if (visibility.addsMarkers())
@@ -84,10 +107,9 @@ public class Scoped extends FutureParser {
 
 		if (parse.getTrace().isEnabled())
 			parse.getTrace()
-					.dedent(toString()
-							+ " : "
-							+ (accepts ? ("yes, up to " + stream.peekMore() + "...")
-									: "no"));
+					.dedent(toString() + " : " + (accepts
+							? ("yes, up to " + stream.peekMore() + "...")
+							: "no"));
 
 		return accepts;
 	}
@@ -115,17 +137,17 @@ public class Scoped extends FutureParser {
 					it.remove();
 					return true;
 
-				} else if (depth == 0)
+				} else if (depth == 0) {
 					count += 1;
-
-			} else if (depth == 0) {
-				if (next instanceof Token) {
-					Token token = (Token) next;
-					if (grammar.isProgramText(token)
-							&& !grammar.canBeSkipped(token, parse))
-						// && !grammar.isComment(token))
-						count += 1;
+					if (count > 1)
+						return false;
 				}
+
+			} else if (depth == 0 && grammar.isProgramText(next)
+					&& !grammar.canBeSkipped(next, parse)) {
+				count += 1;
+				if (count > 1)
+					return false;
 			}
 		}
 

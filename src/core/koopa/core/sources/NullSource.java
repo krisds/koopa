@@ -2,11 +2,10 @@ package koopa.core.sources;
 
 import koopa.core.data.Data;
 
-public class NullSource<T extends Data> extends BasicSource<T> implements
-		Source<T> {
+public class NullSource extends BasicSource implements Source {
 
 	@Override
-	protected T nxt1() {
+	protected Data nxt1() {
 		return null;
 	}
 

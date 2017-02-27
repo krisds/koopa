@@ -1,5 +1,6 @@
 package koopa.core.grammars.combinators;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
@@ -19,23 +20,27 @@ public class TestTag extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
-		final Token peek = parse.getStream().peek();
+		final Data d = parse.getStream().peek();
 
-		if (peek == null) {
+		if (d == null || !(d instanceof Token)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : no, null");
 
 			return false;
 
-		} else if (peek.hasTag(tag)) {
+		}
+
+		final Token t = (Token) d;
+
+		if (t.hasTag(tag)) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : yes, " + peek);
+				parse.getTrace().add(toString() + " : yes, " + t);
 
 			return true;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : no, " + peek);
+				parse.getTrace().add(toString() + " : no, " + t);
 
 			return false;
 		}

@@ -4,8 +4,6 @@ import static koopa.cobol.data.tags.CobolTag.SOURCE_FORMAT_DIRECTIVE;
 import static koopa.cobol.data.tags.CobolTag.SOURCE_LISTING_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.sources.NarrowingSource.narrowing;
-import static koopa.core.sources.WideningSource.widening;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +25,8 @@ import koopa.core.sources.TokenSeparator;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 
-public class CompilerDirectives extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class CompilerDirectives extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER //
 			= Logger.getLogger("source.cobol.compiler_directives");
@@ -41,7 +39,7 @@ public class CompilerDirectives extends ChainingSource<Data, Data>
 
 	private List<Tree> handled = new LinkedList<Tree>();
 
-	public CompilerDirectives(Source<Data> source, SourceFormat initialFormat) {
+	public CompilerDirectives(Source source, SourceFormat initialFormat) {
 		super(source);
 
 		this.format = initialFormat;
@@ -78,16 +76,15 @@ public class CompilerDirectives extends ChainingSource<Data, Data>
 
 	private Tree tryToParseCompilerDirective(LinkedList<Data> line) {
 		// TODO Speed: can we reuse the sources?
-		final ListSource<Data> lineSource = new ListSource<Data>(line);
-		// TODO All this "widening" and "narrowing" is annoying...
+		final ListSource lineSource = new ListSource(line);
 		// TODO Program-Area splits ?
 		// TODO Make TagAll (work on) a Source of Data ?
 		final TagAll tagAll //
-				= new TagAll(narrowing(lineSource, Token.class), format,
+				= new TagAll(lineSource, format,
 						PROGRAM_TEXT_AREA);
 		final TokenSeparator tokenSeparator //
-				= new TokenSeparator(widening(tagAll, Token.class, Data.class));
-		final Source<Token> source = narrowing(tokenSeparator, Token.class);
+				= new TokenSeparator(tagAll);
+		final Source source = tokenSeparator;
 
 		final ParserCombinator directive = grammar.directive();
 

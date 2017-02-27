@@ -2,8 +2,6 @@ package koopa.core.parsers;
 
 import java.util.Set;
 
-import koopa.core.data.Position;
-import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 
 /**
@@ -21,35 +19,12 @@ public abstract class ParserCombinator {
 	 * <p>
 	 * It will also commit the stream afterwards if it was the root parser.
 	 */
-	public final boolean accepts(Parse parse) {
+	public boolean accepts(Parse parse) {
 		final Stack stack = parse.getStack();
 
 		stack.push(this);
 		try {
-			boolean matches = matches(parse);
-
-			if (matches) {
-				// We keep track of how far the parse got, and what the parse
-				// was at that point. We do that so that we can give a more
-				// accurate and, hopefully, more useful error message in case of
-				// an incomplete parse.
-				final boolean enabled = parse.getFlow().getLimitsEnabled();
-				parse.getFlow().setLimitsEnabled(false);
-				parse.getTrace().quiet(true);
-
-				final Token peek = parse.getStream().peek();
-				if (peek != null) {
-					final Position currentPosition = peek.getStart();
-					if (parse.getFinalPosition().compareTo(currentPosition) < 0)
-						parse.setFinalMatch(currentPosition,
-								parse.getStack().getHead());
-				}
-
-				parse.getTrace().quiet(false);
-				parse.getFlow().setLimitsEnabled(enabled);
-			}
-
-			return matches;
+			return matches(parse);
 
 		} finally {
 			stack.pop();

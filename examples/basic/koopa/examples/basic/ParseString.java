@@ -6,7 +6,6 @@ import java.util.List;
 import koopa.cobol.CobolTokens;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.SourceFormat;
-import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.Source;
@@ -33,7 +32,7 @@ public class ParseString {
 
 		StringReader reader = new StringReader(text);
 
-		Source<Token> source = CobolTokens
+		Source source = CobolTokens
 				.getNewSource(reader, grammar, format);
 
 		Parse parse = Parse.of(source).to(new KoopaTreeBuilder(grammar));

@@ -17,15 +17,14 @@ import koopa.core.data.tags.SyntacticTag;
 import koopa.core.parsers.Parse;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.ListSource;
-import koopa.core.sources.NarrowingSource;
 import koopa.core.sources.Source;
 import koopa.core.sources.Sources;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 
 // TODO Extract common stuff with CopyInclude ?
-public class Replace extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class Replace extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER //
 			= Logger.getLogger("source.cobol.replace");
@@ -40,7 +39,7 @@ public class Replace extends ChainingSource<Data, Data>
 	 */
 	private List<Tree> handledReplaceStatements = new LinkedList<Tree>();
 
-	public Replace(Source<Data> source, CobolPreprocessingGrammar grammar) {
+	public Replace(Source source, CobolPreprocessingGrammar grammar) {
 		super(source);
 
 		this.grammar = grammar;
@@ -269,14 +268,12 @@ public class Replace extends ChainingSource<Data, Data>
 	}
 
 	private Tree parseReplaceStatement(LinkedList<Data> replaceStatement) {
-		final ListSource<Data> replaceStatementSource //
-				= new ListSource<Data>(replaceStatement);
-		final Source<Token> source = new NarrowingSource<Data, Token>(
-				replaceStatementSource, Token.class);
+		final ListSource replaceStatementSource //
+				= new ListSource(replaceStatement);
 
 		final KoopaTreeBuilder treeBuilder = new KoopaTreeBuilder(grammar);
 
-		final Parse parse = Parse.of(source).to(treeBuilder);
+		final Parse parse = Parse.of(replaceStatementSource).to(treeBuilder);
 		final boolean accepts = grammar.replaceStatement().accepts(parse);
 
 		return accepts ? treeBuilder.getTree() : null;

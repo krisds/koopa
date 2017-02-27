@@ -3,7 +3,6 @@ package koopa.cobol.parser.preprocessing.replacing;
 import java.util.LinkedList;
 
 import koopa.core.data.Data;
-import koopa.core.data.Token;
 import koopa.core.sources.Source;
 
 /**
@@ -16,7 +15,7 @@ public class ReplaceNone extends ReplacingPhrase {
 		super(null, null);
 	}
 
-	public boolean appliedTo(Source<Data> source, LinkedList<Token> newTokens) {
+	public boolean appliedTo(Source source, LinkedList<Data> newTokens) {
 		return false;
 	}
 }

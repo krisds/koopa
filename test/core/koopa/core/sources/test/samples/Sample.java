@@ -3,6 +3,7 @@ package koopa.core.sources.test.samples;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import koopa.core.data.Data;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
@@ -53,7 +55,7 @@ public class Sample {
 		try {
 			fileReader = new FileReader(file);
 
-			final Source<Token> source = new LineSplitter(fileReader);
+			final Source source = new LineSplitter(fileReader);
 			final List<Block> blocks = new ArrayList<Block>();
 
 			while (true) {
@@ -153,7 +155,7 @@ public class Sample {
 	 * Verifies that the tokens coming from the given source align with the
 	 * expected output as defined in the sample.
 	 */
-	public void assertOutputIsAsExpected(Source<Token> source,
+	public void assertOutputIsAsExpected(Source source,
 			TokenValidator validator) {
 
 		int i = 0;
@@ -170,9 +172,11 @@ public class Sample {
 					+ range.getStart().getPositionInLine() + "--"
 					+ range.getEnd().getPositionInLine();
 
-			final Token token = source.next();
-			assertNotNull(message, token);
+			final Data d = source.next();
+			assertNotNull(message, d);
+			assertTrue(d instanceof Token);
 			
+			final Token token = (Token) d;
 			if (token.isReplacement())
 				continue;
 

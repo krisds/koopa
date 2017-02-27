@@ -12,7 +12,7 @@ public final class Sources {
 	private Sources() {
 	}
 
-	public static LinkedList<Data> getLine(Source<Data> source) {
+	public static LinkedList<Data> getLine(Source source) {
 		LinkedList<Data> line = null;
 
 		while (true) {

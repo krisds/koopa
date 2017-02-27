@@ -1,12 +1,11 @@
 package koopa.core.grammars;
 
-import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.parsers.combinators.Opt.NOSKIP;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.SyntacticTag;
@@ -33,33 +32,32 @@ public abstract class Grammar {
 	public abstract String getNamespace();
 
 	/**
-	 * Whether or not a token contributes to program text.
+	 * Whether or not a piece of {@linkplain Data} contributes to program text.
 	 * <p>
-	 * Program text is the part of the tokens which will be parsed. Anything
-	 * which is not program text will be ignored.
+	 * Program text is the part of the data which will be parsed. Anything which
+	 * is not program text will be ignored.
 	 * <p>
-	 * The default implementation tests whether a token is program text by
-	 * looking for the presence of a {@linkplain AreaTag#PROGRAM_TEXT_AREA} tag,
-	 * and the absence of a {@linkplain AreaTag#COMMENT} or
-	 * {@linkplain SyntacticTag#SKIPPED} tag.
+	 * The default implementation only accepts {@linkplain Token}s which have
+	 * the {@linkplain AreaTag#PROGRAM_TEXT_AREA} tag.
 	 */
-	public boolean isProgramText(Token token) {
-		return token.hasTag(PROGRAM_TEXT_AREA)
-				&& !token.hasAnyTag(COMMENT, SKIPPED);
+	public boolean isProgramText(Data d) {
+		return d instanceof Token && ((Token) d).hasTag(PROGRAM_TEXT_AREA);
 	}
 
 	/**
-	 * Whether or not a token can be skipped at a given point in the parse.
+	 * Whether or not a piece of {@linkplain Data} can be skipped at a given
+	 * point in the parse.
 	 * <p>
-	 * This should only be called on tokens which are program text (as decided
-	 * by {@link #isProgramText(Token)}).
+	 * This should only be called on datums which are program text (as decided
+	 * by {@link #isProgramText(Data)}).
 	 * <p>
-	 * The default implementation tests whether a token is program text by
-	 * looking for the presence of either a {@linkplain SyntacticTag#WHITESPACE}
-	 * tag, or a {@linkplain SyntacticTag#END_OF_LINE} tag.
+	 * The default implementation only accepts {@linkplain Token}s which have a
+	 * {@linkplain SyntacticTag#WHITESPACE} tag or a
+	 * {@linkplain SyntacticTag#END_OF_LINE} tag.
 	 */
-	public boolean canBeSkipped(Token token, Parse parse) {
-		return token.hasAnyTag(WHITESPACE, END_OF_LINE);
+	public boolean canBeSkipped(Data d, Parse parse) {
+		return d instanceof Token
+				&& ((Token) d).hasAnyTag(WHITESPACE, END_OF_LINE);
 	}
 
 	/**
@@ -93,8 +91,8 @@ public abstract class Grammar {
 
 	/**
 	 * Skips all tokens which are either not program text (via
-	 * {@linkplain #isProgramText(Token)}), or which can be skipped (via
-	 * {@linkplain #canBeSkipped(Token, Parse)}).
+	 * {@linkplain #isProgramText(Data)}), or which can be skipped (via
+	 * {@linkplain #canBeSkipped(Data, Parse)}).
 	 * <p>
 	 * This will not skip program text tokens matching the <code>text</code>
 	 * parameter, unless it is set to <code>null</code>.
@@ -108,12 +106,12 @@ public abstract class Grammar {
 		text = comparableText(text);
 		while (true) {
 			Stream stream = parse.getStream();
-			Token token = stream.peek();
+			final Data d = stream.peek();
 
-			if (token == null)
+			if (d == null)
 				return;
 
-			if (!isProgramText(token)) {
+			if (!isProgramText(d)) {
 				stream.skip();
 				continue;
 			}
@@ -121,10 +119,11 @@ public abstract class Grammar {
 			if (parse.isSet(NOSKIP))
 				return;
 
-			if (text != null && text.equals(comparableText(token.getText())))
+			if (text != null && d instanceof Token
+					&& text.equals(comparableText(((Token) d).getText())))
 				return;
 
-			if (canBeSkipped(token, stream.getParse())) {
+			if (canBeSkipped(d, stream.getParse())) {
 				stream.skip();
 				continue;
 			}

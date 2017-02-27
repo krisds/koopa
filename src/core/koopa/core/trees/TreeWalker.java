@@ -1,13 +1,9 @@
 package koopa.core.trees;
 
-import org.apache.log4j.Logger;
-
 /**
  * Utility class for walking a {@linkplain Tree} depth-first.
  */
 public class TreeWalker {
-
-	protected static final Logger LOGGER = Logger.getLogger("treewalker");
 
 	/**
 	 * This stores the state at a certain point in the traversal. You can use

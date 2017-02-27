@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import koopa.app.Icons;
 import koopa.cobol.parser.ParseResults;
-import koopa.core.parsers.Parse;
+import koopa.core.parsers.Messages;
 
 @SuppressWarnings("serial")
 public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -53,13 +53,13 @@ public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		} else if (object instanceof ParseResults) {
 			final ParseResults results = (ParseResults) object;
-			final Parse parse = results.getParse();
+			final Messages messages = results.getParse().getMessages();
 			final File file = results.getFile();
 
 			setText(file.getName());
-			if (parse.hasErrors())
+			if (messages.hasErrors())
 				setIcon(ERROR);
-			else if (parse.hasWarnings())
+			else if (messages.hasWarnings())
 				setIcon(WARNING);
 			else
 				setIcon(OK);

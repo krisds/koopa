@@ -6,7 +6,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 
-import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.sources.Source;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -32,7 +31,7 @@ public final class KGUtil {
 	 * contents.
 	 */
 	public static Tree getAST(String name, Reader reader) throws IOException {
-		final Source<Token> source = KGTokens.getNewSource(name, reader);
+		final Source source = KGTokens.getNewSource(name, reader);
 
 		final KGGrammar kg = new KGGrammar();
 

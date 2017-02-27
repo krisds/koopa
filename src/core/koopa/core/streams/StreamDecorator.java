@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
-import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.Stream;
 
@@ -19,12 +18,12 @@ public abstract class StreamDecorator implements Stream {
 	}
 
 	/** {@inheritDoc} */
-	public Token forward() {
+	public Data forward() {
 		return stream.forward();
 	}
 
 	/** {@inheritDoc} */
-	public Token skip() {
+	public Data skip() {
 		return stream.skip();
 	}
 
@@ -34,12 +33,12 @@ public abstract class StreamDecorator implements Stream {
 	}
 
 	/** {@inheritDoc} */
-	public void rewind(Token token) {
-		stream.rewind(token);
+	public void rewind(Data d) {
+		stream.rewind(d);
 	}
 
 	/** {@inheritDoc} */
-	public Token peek() {
+	public Data peek() {
 		return stream.peek();
 	}
 

@@ -2,7 +2,7 @@ package koopa.core.parsers.combinators;
 
 import java.util.Set;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.data.markers.InWater;
 import koopa.core.data.markers.OnLand;
 import koopa.core.grammars.combinators.MatchEndOfFile;
@@ -44,7 +44,7 @@ public class SkipTo extends UnaryParserDecorator {
 				inWater = true;
 			}
 
-			final Token skipped = stream.forward();
+			final Data skipped = stream.forward();
 
 			if (skipped == null) {
 				if (parser instanceof MatchEndOfFile) {

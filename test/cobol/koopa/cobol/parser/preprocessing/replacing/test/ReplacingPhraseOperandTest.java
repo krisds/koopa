@@ -8,6 +8,7 @@ import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.util.test.Util.asTokens;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -26,7 +27,6 @@ import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.TagAll;
-import koopa.core.sources.WideningSource;
 import koopa.core.sources.test.HardcodedSource;
 
 public class ReplacingPhraseOperandTest {
@@ -131,7 +131,7 @@ public class ReplacingPhraseOperandTest {
 				pseudo("=", "=", "COBOL", "=", "="));
 
 		assertMatches(phrase, input("LANG-NAME"),
-				Arrays.asList(new Token[] {
+				Arrays.asList(new Data[] {
 						new Token("COBOL-NAME", new Position(3, 0, 3),
 								new Position(9, 0, 9), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("LING-NAME"));
@@ -144,7 +144,7 @@ public class ReplacingPhraseOperandTest {
 
 		assertMatches(phrase, input("LANG-NAME"),
 				Arrays.asList(
-						new Token[] { new Token("-NAME", new Position(5, 0, 5),
+						new Data[] { new Token("-NAME", new Position(5, 0, 5),
 								new Position(9, 0, 9), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("LING-NAME"));
 	}
@@ -155,7 +155,7 @@ public class ReplacingPhraseOperandTest {
 				pseudo("=", "=", "COBOL", "=", "="));
 
 		assertMatches(phrase, input("NAME-LANG"),
-				Arrays.asList(new Token[] {
+				Arrays.asList(new Data[] {
 						new Token("NAME-COBOL", new Position(1, 0, 1),
 								new Position(7, 0, 7), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("NAME-LING"));
@@ -168,48 +168,49 @@ public class ReplacingPhraseOperandTest {
 
 		assertMatches(phrase, input("NAME-LANG"),
 				Arrays.asList(
-						new Token[] { new Token("NAME-", new Position(1, 0, 1),
+						new Data[] { new Token("NAME-", new Position(1, 0, 1),
 								new Position(5, 0, 5), PROGRAM_TEXT_AREA) }));
 		assertRejects(phrase, input("NAME-LING"));
 	}
 
 	// ------------------------------------------------------------------------
 
-	private static void assertMatches(ReplacingPhrase phrase,
-			Source<Token> library) {
-		assertMatches(phrase, library, phrase.getBy().getTokens());
+	private static void assertMatches(ReplacingPhrase phrase, Source library) {
+		assertMatches(phrase, library,
+				new LinkedList<Data>(phrase.getBy().getTokens()));
 	}
 
-	private static void assertMatches(ReplacingPhrase phrase,
-			Source<Token> library, List<Token> expected) {
+	private static void assertMatches(ReplacingPhrase phrase, Source library,
+			List<Data> expected) {
 
-		LinkedList<Token> result = new LinkedList<Token>();
-		Assert.assertTrue(phrase.appliedTo(
-				new WideningSource<Data, Token>(library, Token.class), result));
+		LinkedList<Data> result = new LinkedList<Data>();
+		Assert.assertTrue(phrase.appliedTo(library, result));
 
-		final Token next = library.next();
+		final Data next = library.next();
 		Assert.assertNull("Not null: " + next, next);
 
 		Assert.assertEquals(expected.size(), result.size());
 		for (int i = 0; i < expected.size(); i++) {
-			Token a = expected.get(i);
-			Token b = result.get(i);
-			Assert.assertEquals(a.getText(), b.getText());
-			Assert.assertEquals(a.getStart(), b.getStart());
-			Assert.assertEquals(a.getEnd(), b.getEnd());
-			Assert.assertEquals(a.getTags(), b.getTags());
+			Data a = expected.get(i);
+			Data b = result.get(i);
+			assertEquals(a.getClass(), b.getClass());
+			if (a instanceof Token) {
+				Token at = (Token) a;
+				Token bt = (Token) b;
+				assertEquals(at.getText(), bt.getText());
+				assertEquals(at.getStart(), bt.getStart());
+				assertEquals(at.getEnd(), bt.getEnd());
+				assertEquals(at.getTags(), bt.getTags());
+			}
 		}
 	}
 
-	private static void assertRejects(ReplacingPhrase phrase,
-			Source<Token> library) {
-		final Token firstToken = library.next();
+	private static void assertRejects(ReplacingPhrase phrase, Source library) {
+		final Data firstToken = library.next();
 		if (firstToken != null)
 			library.unshift(firstToken);
 
-		Assert.assertFalse(phrase.appliedTo(//
-				new WideningSource<Data, Token>(library, Token.class),
-				new LinkedList<Token>()));
+		Assert.assertFalse(phrase.appliedTo(library, new LinkedList<Data>()));
 		Assert.assertSame(firstToken, library.next());
 	}
 
@@ -225,7 +226,7 @@ public class ReplacingPhraseOperandTest {
 		return new ReplacingPhraseOperand(PSEUDO, asTokens(tagsAndTokens));
 	}
 
-	private static Source<Token> input(Object... tagsAndTokens) {
+	private static Source input(Object... tagsAndTokens) {
 		return new TagAll(HardcodedSource.from(tagsAndTokens),
 				PROGRAM_TEXT_AREA);
 	}

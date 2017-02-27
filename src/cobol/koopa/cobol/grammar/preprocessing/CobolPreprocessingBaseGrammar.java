@@ -10,6 +10,7 @@ import static koopa.core.data.tags.SyntacticTag.WORD;
 import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 
 import koopa.cobol.CobolWords;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.KoopaGrammar;
 import koopa.core.parsers.FutureParser;
@@ -32,11 +33,16 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 	// ............................................................................
 
 	@Override
-	public boolean canBeSkipped(Token token, Parse parse) {
-		if (token.hasAnyTag(WHITESPACE, END_OF_LINE))
+	public boolean canBeSkipped(Data d, Parse parse) {
+		if (!(d instanceof Token))
+			return false;
+
+		final Token t = (Token) d;
+
+		if (t.hasAnyTag(WHITESPACE, END_OF_LINE))
 			return true;
 
-		final String text = token.getText();
+		final String text = t.getText();
 
 		// "Whereas in other contexts, the comma, semicolon, and space can be
 		// used interchangeably as separators, the comma has special relevance
@@ -118,30 +124,37 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 
 		StringBuilder word = new StringBuilder();
 		while (true) {
-			final Token token = stream.forward();
+			final Data d = stream.forward();
 
-			if (token == null) {
+			if (d == null) {
 				// End of the stream, so end of the token.
 				break;
+			}
 
-			} else if (token.hasTag(SKIPPED)) {
+			if (!(d instanceof Token)) {
+				stream.rewind(d);
+				break;
+			}
+
+			final Token t = (Token) d;
+
+			if (t.hasTag(SKIPPED)) {
 				// Skipped by continuation. So not part of the word, but not a
 				// definite end to it either.
 
-			} else if (extendedRules && token.hasTag(PROGRAM_TEXT_AREA)
-					&& CobolWords.isExtendedPart(token.getText())) {
+			} else if (extendedRules && t.hasTag(PROGRAM_TEXT_AREA)
+					&& CobolWords.isExtendedPart(t.getText())) {
 				// Allowing this separator to be part of a COBOL word.
-				word.append(token.getText());
+				word.append(t.getText());
 
-			} else if (!token.hasTag(PROGRAM_TEXT_AREA)
-					|| !isCobolWordPart(token)) {
+			} else if (!t.hasTag(PROGRAM_TEXT_AREA) || !isCobolWordPart(t)) {
 				// Not part of a legal word, so end of the token.
-				stream.rewind(token);
+				stream.rewind(t);
 				break;
 
 			} else {
 				// Everything else gets added to the word.
-				word.append(token.getText());
+				word.append(t.getText());
 			}
 		}
 

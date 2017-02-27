@@ -27,8 +27,8 @@ import koopa.core.sources.Source;
  * different program areas (cfr. {@linkplain AreaTag} and
  * {@linkplain CobolAreaTag}) as defined by the {@linkplain SourceFormat}.
  */
-public class ProgramArea extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class ProgramArea extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.program_area");
@@ -54,7 +54,7 @@ public class ProgramArea extends ChainingSource<Data, Data>
 
 	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
 
-	public ProgramArea(Source<Data> source) {
+	public ProgramArea(Source source) {
 		super(source);
 	}
 

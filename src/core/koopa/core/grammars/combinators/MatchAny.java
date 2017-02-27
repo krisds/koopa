@@ -1,6 +1,6 @@
 package koopa.core.grammars.combinators;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 
@@ -18,9 +18,9 @@ public class MatchAny extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
-		final Token token = parse.getStream().forward();
+		final Data d = parse.getStream().forward();
 
-		if (token == null) {
+		if (d == null) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(SYMBOL + " : no, null");
 
@@ -28,7 +28,7 @@ public class MatchAny extends GrammaticalCombinator {
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(SYMBOL + " : yes, " + token);
+				parse.getTrace().add(SYMBOL + " : yes, " + d);
 
 			return true;
 		}

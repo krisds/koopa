@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 
-import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.sources.Source;
 import koopa.dsl.stage.grammar.StageGrammar;
@@ -23,7 +22,7 @@ public class StageGrammarTests extends GrammarTestSuite {
 		return new StageGrammar();
 	}
 
-	public Source<Token> getSourceForSample(String sample, Grammar grammar) {
+	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 
 		return StageTokens.getNewSource("", reader);

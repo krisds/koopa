@@ -9,12 +9,12 @@ import koopa.core.sources.Source;
  * a {@linkplain Source}, transforming it, and passing it to a
  * {@linkplain Target}.
  */
-public interface Target<T extends Data> {
+public interface Target {
 
 	/**
 	 * Add a data item to this target.
 	 */
-	void push(T data);
+	void push(Data data);
 
 	/**
 	 * Lets us know the parse is done.

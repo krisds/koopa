@@ -17,16 +17,16 @@ import koopa.core.data.tags.IslandTag;
  * {@linkplain IslandTag#WATER} on the tokens themselves.
  */
 // TODO: place "unknown" things in the water too ?
-public class WaterTagger implements Target<Data> {
+public class WaterTagger implements Target {
 
 	// TODO !!! If water/land markers can be nested in other water/land
 	// markers we should use a counting scheme rather than a simple boolean.
 	private boolean inWater = false;
 	private boolean inUnknown = false;
 
-	private Target<Data> target = null;
+	private Target target = null;
 
-	public WaterTagger(Target<Data> target) {
+	public WaterTagger(Target target) {
 		this.target = target;
 	}
 

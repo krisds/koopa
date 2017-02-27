@@ -37,6 +37,7 @@ import javax.swing.text.TabStop;
 import koopa.app.ApplicationSupport;
 import koopa.app.components.sourceview.LineNumberView;
 import koopa.app.components.sourceview.LinePainter;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.dsl.kg.source.KGTokens;
@@ -246,7 +247,8 @@ public class GrammarView extends JPanel {
 		pane.setParagraphAttributes(paraSet, false);
 	}
 
-	private void colorize(StyledDocument document, String pathToGrammarResource) {
+	private void colorize(StyledDocument document,
+			String pathToGrammarResource) {
 		// TODO I should really parse the input and query the tree for coloring
 		// things. Pure tokens will no longer be enough.
 
@@ -257,15 +259,20 @@ public class GrammarView extends JPanel {
 			final InputStreamReader reader = new InputStreamReader(
 					resourceStream);
 
-			Source<Token> tokens = KGTokens.getNewSource(pathToGrammarResource,
+			final Source source = KGTokens.getNewSource(pathToGrammarResource,
 					reader);
 
 			boolean justSawDef = false;
 			while (true) {
-				Token token = tokens.next();
+				final Data d = source.next();
 
-				if (token == null)
+				if (d == null)
 					break;
+
+				if (!(d instanceof Token))
+					continue;
+
+				final Token token = (Token) d;
 
 				Style style = null;
 				if (token.hasTag(COMMENT)) {
@@ -288,8 +295,8 @@ public class GrammarView extends JPanel {
 						style = getIdentifierStyle(document);
 
 					if (justSawDef)
-						ruleNameOffsets.put(token.getText(), token.getStart()
-								.getPositionInFile());
+						ruleNameOffsets.put(token.getText(),
+								token.getStart().getPositionInFile());
 
 					justSawDef = false;
 
@@ -320,8 +327,8 @@ public class GrammarView extends JPanel {
 		final GrammarView grammarView = new GrammarView(
 				"/koopa/cobol/grammar/Cobol.kg");
 
-		ApplicationSupport.inFrame("Cobol grammar", grammarView).setVisible(
-				true);
+		ApplicationSupport.inFrame("Cobol grammar", grammarView)
+				.setVisible(true);
 	}
 
 	public void showRule(String name) {

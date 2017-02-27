@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 
-import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.sources.BasicTokens;
 import koopa.core.sources.Source;
@@ -28,7 +27,7 @@ public class EmbeddedSQLGrammarTests extends GrammarTestSuite {
 		return new SQLGrammar();
 	}
 
-	public Source<Token> getSourceForSample(String sample, Grammar grammar) {
+	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 
 		return BasicTokens.getNewSource("test", reader);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
@@ -319,30 +320,32 @@ class Block {
 	 * If there was no block to be found in the source this returns
 	 * <code>null</code> instead.
 	 */
-	public static Block nextFrom(int index, Source<Token> source) {
-		Token token = source.next();
+	public static Block nextFrom(int index, Source source) {
+		Data d = source.next();
 
 		// Skip empty lines...
-		while (token != null //
-				&& (isEndOfLine(token) //
-						|| isComment(token) //
-						|| isBlank(token))) {
-			token = source.next();
+		while (d != null //
+				&& (!(d instanceof Token) //
+						|| isEndOfLine((Token) d) //
+						|| isComment((Token) d) //
+						|| isBlank((Token) d))) {
+			d = source.next();
 		}
 
 		// Grab non-empty lines...
 		final List<Token> lines = new ArrayList<Token>();
-		while (token != null //
-				&& !isEndOfLine(token) //
-				&& !isComment(token) //
-				&& !isBlank(token)) {
+		while (d != null //
+				&& (d instanceof Token)
+				&& !isEndOfLine((Token) d) //
+				&& !isComment((Token) d) //
+				&& !isBlank((Token) d)) {
 
-			lines.add(token);
-			token = source.next();
+			lines.add((Token) d);
+			d = source.next();
 
 			// Skip end-of-lines...
-			if (token != null && isEndOfLine(token))
-				token = source.next();
+			if (d != null && d instanceof Token && isEndOfLine((Token) d))
+				d = source.next();
 		}
 
 		if (lines.isEmpty())
@@ -351,22 +354,22 @@ class Block {
 			return new Block(index, lines);
 	}
 
-	private static boolean isEndOfLine(Token token) {
-		return token.hasTag(END_OF_LINE);
+	private static boolean isEndOfLine(Token t) {
+		return t.hasTag(END_OF_LINE);
 	}
 
 	/**
 	 * A line is blank when it has nothing but whitespace characters.
 	 */
-	private static boolean isBlank(Token line) {
-		return line.getText().trim().length() == 0;
+	private static boolean isBlank(Token t) {
+		return t.getText().trim().length() == 0;
 	}
 
 	/**
 	 * A line is a comment when it starts with a hash mark (<code>#</code>) as
 	 * the first character.
 	 */
-	private static boolean isComment(Token line) {
-		return line.getText().startsWith("#");
+	private static boolean isComment(Token t) {
+		return t.getText().startsWith("#");
 	}
 }

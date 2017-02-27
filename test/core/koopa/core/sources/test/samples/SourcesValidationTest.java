@@ -47,12 +47,12 @@ public abstract class SourcesValidationTest
 	public void testSampleValidates() throws IOException {
 		Sample sample = Sample.from(file);
 
-		Source<Token> source = getSource(file.getAbsolutePath(), sample);
+		Source source = getSource(file.getAbsolutePath(), sample);
 
 		sample.assertOutputIsAsExpected(source, this);
 	}
 
-	protected abstract Source<Token> getSource(String resourceName,
+	protected abstract Source getSource(String resourceName,
 			Sample sample);
 
 	private Map<String, Tags> CATEGORIES = new HashMap<String, Tags>();

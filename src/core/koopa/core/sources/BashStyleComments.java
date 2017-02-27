@@ -3,44 +3,47 @@ package koopa.core.sources;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 
 /**
  * This looks for bash-style comments (starting with a hash '#' mark, up to the
  * end of the line) in the source and marks them as comment.
  */
-public class BashStyleComments extends ChainingSource<Token, Token> implements
-		Source<Token> {
+public class BashStyleComments extends ChainingSource implements Source {
 
 	private boolean inComment = false;
 
-	public BashStyleComments(Source<Token> source) {
+	public BashStyleComments(Source source) {
 		super(source);
 	}
 
 	@Override
-	protected Token nxt1() {
-		Token token = source.next();
+	protected Data nxt1() {
+		final Data d = source.next();
 
-		if (token == null)
-			return null;
+		if (d == null || !(d instanceof Token))
+			return d;
 
-		if (!token.hasTag(PROGRAM_TEXT_AREA))
-			return token;
+		final Token t = (Token) d;
+
+		if (!t.hasTag(PROGRAM_TEXT_AREA))
+			return t;
 
 		if (inComment) {
-			if (!token.hasTag(END_OF_LINE))
-				return token.withTags(COMMENT);
+			if (!t.hasTag(END_OF_LINE))
+				return t.withTags(COMMENT).withoutTags(PROGRAM_TEXT_AREA);
 
 			inComment = false;
-			return token;
+			return t;
 
 		} else {
-			if (!"#".equals(token.getText()))
-				return token;
+			if (!"#".equals(t.getText()))
+				return t;
 
 			inComment = true;
-			return token.withTags(COMMENT);
+			return t.withTags(COMMENT).withoutTags(PROGRAM_TEXT_AREA);
 		}
 	}
 

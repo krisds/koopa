@@ -3,8 +3,6 @@ package koopa.core.streams;
 import java.util.LinkedList;
 import java.util.List;
 
-import koopa.core.data.Data;
-import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.Stream;
 import koopa.core.sources.NullSource;
@@ -19,8 +17,8 @@ public class Flow {
 
 	private final Parse parse;
 
-	private Source<Token> source = new NullSource<Token>();
-	private List<Target<Data>> targets = new LinkedList<Target<Data>>();
+	private Source source = new NullSource();
+	private List<Target> targets = new LinkedList<Target>();
 
 	private WaterTagger waterTagger;
 
@@ -45,7 +43,7 @@ public class Flow {
 			return base;
 
 		if (targets.isEmpty())
-			base = new BaseStream(source, new NullTarget<Data>());
+			base = new BaseStream(source, new NullTarget());
 		else {
 			waterTagger = new WaterTagger(all(targets));
 			base = new BaseStream(source, waterTagger);
@@ -66,12 +64,12 @@ public class Flow {
 		return limited;
 	}
 
-	private Target<Data> all(List<Target<Data>> targets) {
+	private Target all(List<Target> targets) {
 		if (targets.size() == 1)
 			return targets.get(0);
 
-		CompositeTarget<Data> composite = new CompositeTarget<Data>();
-		for (Target<Data> target : targets)
+		CompositeTarget composite = new CompositeTarget();
+		for (Target target : targets)
 			composite.addTarget(target);
 		return composite;
 	}
@@ -85,47 +83,47 @@ public class Flow {
 
 		// While there are no threaded targets at the time of writing, we do
 		// want to give them a chance to clean up on completion of the parse.
-		for (Target<?> target : targets)
+		for (Target target : targets)
 			target.done();
 
 		if (waterTagger != null)
 			waterTagger.done();
 	}
 
-	public void setSource(Source<Token> source) {
+	public void setSource(Source source) {
 		if (source == null)
-			source = new NullSource<Token>();
+			source = new NullSource();
 
 		this.source = source;
 	}
 
-	public void addTarget(Target<Data> target) {
+	public void addTarget(Target target) {
 		if (target != null)
 			targets.add(target);
 	}
 
-	public <T extends Source<? extends Data>> T getSource(Class<T> clazz) {
+	public <T extends Source> T getSource(Class<T> clazz) {
 		if (source == null)
 			return null;
 		else
 			return source.getSource(clazz);
 	}
 
-	public Source<Token> getSource() {
+	public Source getSource() {
 		return source;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
-		for (Target<Data> target : targets)
+	public <T extends Target> T getTarget(Class<T> clazz) {
+		for (Target target : targets)
 			if (clazz.isInstance(target))
 				return (T) target;
 
 		return null;
 	}
 
-	public void removeTarget(Class<? extends Target<Data>> clazz) {
-		Target<Data> target = getTarget(clazz);
+	public void removeTarget(Class<? extends Target> clazz) {
+		Target target = getTarget(clazz);
 		if (target != null)
 			targets.remove(target);
 	}

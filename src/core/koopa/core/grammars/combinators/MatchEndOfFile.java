@@ -1,6 +1,6 @@
 package koopa.core.grammars.combinators;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
 
@@ -18,13 +18,12 @@ public class MatchEndOfFile extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
-		final Token token = parse.getStream().forward();
-		final boolean atEndOfFile = token == null;
+		final Data d = parse.getStream().forward();
+		final boolean atEndOfFile = d == null;
 
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().add(
-					SYMBOL + " : " + (atEndOfFile ? "yes" : "no") + ", "
-							+ token);
+					SYMBOL + " : " + (atEndOfFile ? "yes" : "no") + ", " + d);
 
 		return atEndOfFile;
 	}

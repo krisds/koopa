@@ -3,6 +3,7 @@ package koopa.core.sources.test;
 import java.util.Arrays;
 import java.util.List;
 
+import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.sources.BasicSource;
@@ -15,8 +16,8 @@ import koopa.core.sources.Source;
  * <p>
  * <b>For testing purposes only.</b>
  */
-public class HardcodedSource extends BasicSource<Token>
-		implements Source<Token> {
+public class HardcodedSource extends BasicSource
+		implements Source {
 
 	private final List<Object> tagsAndTokens;
 	private int index;
@@ -29,7 +30,7 @@ public class HardcodedSource extends BasicSource<Token>
 	}
 
 	@Override
-	public Token nxt1() {
+	public Data nxt1() {
 		if (index >= tagsAndTokens.size())
 			return null;
 

@@ -18,7 +18,7 @@ import koopa.core.trees.iterators.ChildTokenIterator;
 import koopa.core.trees.iterators.ChildTreeIterator;
 import koopa.core.trees.iterators.DepthFirstTokenIterator;
 
-public class Tree {
+public class Tree implements Data {
 
 	// TODO This should really be based on the grammar's logic...
 	private static class ProgramTextFilter implements TokenFilter {

@@ -1,6 +1,6 @@
 package koopa.core.parsers.combinators;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
@@ -23,8 +23,8 @@ public class NotEmpty extends UnaryParserDecorator {
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().indent(toString() + " ?");
 
-		final Token initialToken = stream.peek();
-		if (initialToken == null) {
+		final Data initialData = stream.peek();
+		if (initialData == null) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().dedent(toString() + " : no, at end");
 			return false;
@@ -37,11 +37,10 @@ public class NotEmpty extends UnaryParserDecorator {
 			return false;
 		}
 
-		final Token finalToken = stream.peek();
-		if (finalToken == initialToken) {
+		final Data finalData = stream.peek();
+		if (finalData == initialData) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace()
-						.dedent(toString() + " : no, no tokens consumed");
+				parse.getTrace().dedent(toString() + " : no, nothing consumed");
 			return false;
 		}
 

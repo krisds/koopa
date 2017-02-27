@@ -1,16 +1,11 @@
 package koopa.core.sources;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.sources.NarrowingSource.narrowing;
-import static koopa.core.sources.WideningSource.widening;
 
 import java.io.Reader;
 
-import koopa.core.data.Data;
-import koopa.core.data.Token;
-
 public class BasicTokens {
-	public static Source<Token> getNewSource(String resourceName,
+	public static Source getNewSource(String resourceName,
 			Reader reader) {
 
 		// Split lines...
@@ -24,8 +19,8 @@ public class BasicTokens {
 		// Separate the tokens...
 		final TokenSeparator tokenSeparator //
 				= new TokenSeparator(
-						widening(tagAllAsProgramText, Token.class, Data.class));
+						tagAllAsProgramText);
 
-		return narrowing(tokenSeparator, Token.class);
+		return tokenSeparator;
 	}
 }

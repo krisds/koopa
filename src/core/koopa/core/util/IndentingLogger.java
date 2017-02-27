@@ -7,11 +7,13 @@ public class IndentingLogger {
 	private static final String DENT = "  ";
 
 	private final Logger logger;
+	private final boolean enabled;
 
 	private String indent = "";
 
 	public IndentingLogger(Logger logger) {
 		this.logger = logger;
+		this.enabled = logger.isTraceEnabled();
 	}
 
 	private boolean quiet = false;
@@ -26,11 +28,12 @@ public class IndentingLogger {
 	}
 
 	public boolean isEnabled() {
-		return !quiet && silence <= 0 && logger.isTraceEnabled();
+		return enabled && !quiet && silence <= 0;
 	}
 
 	public void add(final String message) {
-		logger.trace(indent + message);
+		if (isEnabled())
+			logger.trace(indent + message);
 	}
 
 	public void indent() {

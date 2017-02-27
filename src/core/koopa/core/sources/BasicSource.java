@@ -8,9 +8,9 @@ import koopa.core.data.Data;
  * Base for implementing a {@linkplain Source}. It takes care of the undo
  * behaviour, allowing subclasses to focus on the generation.
  */
-public abstract class BasicSource<T extends Data> implements Source<T> {
+public abstract class BasicSource implements Source {
 
-	private final LinkedList<T> unseen = new LinkedList<T>();
+	private final LinkedList<Data> unseen = new LinkedList<Data>();
 
 	/**
 	 * Returns the next piece of data, or <code>null</code> if there is no more.
@@ -18,22 +18,22 @@ public abstract class BasicSource<T extends Data> implements Source<T> {
 	 * <b>Subclasses should implement this.</b>
 	 */
 	// TODO -> better name
-	protected abstract T nxt1();
+	protected abstract Data nxt1();
 
-	public T next() {
+	public Data next() {
 		if (unseen.isEmpty())
 			return nxt1();
 		else
 			return unseen.removeFirst();
 	}
 
-	public void unshift(T packet) {
+	public void unshift(Data packet) {
 		if (packet != null)
 			this.unseen.addFirst(packet);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S extends Source<? extends Data>> S getSource(Class<S> clazz) {
+	public <S extends Source> S getSource(Class<S> clazz) {
 		if (clazz.isAssignableFrom(this.getClass()))
 			return (S) this;
 		else

@@ -5,7 +5,6 @@ import java.io.StringReader;
 
 import koopa.cobol.grammar.directives.DirectivesGrammar;
 import koopa.cobol.sources.SourceFormat;
-import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.sources.BasicTokens;
 import koopa.core.sources.Source;
@@ -18,12 +17,12 @@ public abstract class DirectivesTests extends GrammarTestSuite {
 		return new DirectivesGrammar();
 	}
 
-	public Source<Token> getSourceForSample(String sample, Grammar grammar) {
+	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 
-		final Source<Token> basicTokens = BasicTokens.getNewSource(null,
+		final Source basicTokens = BasicTokens.getNewSource(null,
 				reader);
-		final Source<Token> freeTokens = new TagAll(basicTokens,
+		final Source freeTokens = new TagAll(basicTokens,
 				getSourceFormat());
 		return freeTokens;
 	}

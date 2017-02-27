@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Range;
 import koopa.core.data.Token;
@@ -90,17 +91,19 @@ public final class Util {
 	 * representing them. All tokens will also be tagged as
 	 * {@linkplain AreaTag#PROGRAM_TEXT_AREA}.
 	 */
-	public static List<Token> asTokens(Object... tagsAndTokens) {
+	// TODO Rename
+	public static List<Data> asTokens(Object... tagsAndTokens) {
 		final HardcodedSource source = HardcodedSource.from(tagsAndTokens);
 		final TagAll tag = new TagAll(source, PROGRAM_TEXT_AREA);
-		final List<Token> tokens = getAllTokens(tag);
+		final List<Data> tokens = getAllTokens(tag);
 		return tokens;
 	}
 
-	public static List<Token> getAllTokens(Source<Token> source) {
-		final List<Token> tokens = new LinkedList<Token>();
+	// TODO Rename
+	public static List<Data> getAllTokens(Source source) {
+		final List<Data> tokens = new LinkedList<Data>();
 
-		Token token = null;
+		Data token = null;
 		while ((token = source.next()) != null)
 			tokens.add(token);
 

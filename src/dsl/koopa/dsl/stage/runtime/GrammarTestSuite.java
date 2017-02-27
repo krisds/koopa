@@ -40,7 +40,7 @@ public abstract class GrammarTestSuite {
 
 	public abstract Grammar getGrammar();
 
-	public abstract Source<Token> getSourceForSample(String sample,
+	public abstract Source getSourceForSample(String sample,
 			Grammar grammar);
 
 	public void setTest(GrammarTest test) {
@@ -82,7 +82,7 @@ public abstract class GrammarTestSuite {
 				assertTrue(
 						targetName + " should accept [" + test.getSample()
 								+ "] up to the expected point. Got to "
-								+ parse.getFinalFrame().toTrace() + ".", //
+								/*+ parse.getFinalFrame().toTrace()*/ + ".", //
 						source.isWhereExpected());
 
 			} catch (Exception e) {

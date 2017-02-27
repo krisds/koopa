@@ -1,13 +1,9 @@
 package koopa.dsl.kg.source;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static koopa.core.sources.NarrowingSource.narrowing;
-import static koopa.core.sources.WideningSource.widening;
 
 import java.io.Reader;
 
-import koopa.core.data.Data;
-import koopa.core.data.Token;
 import koopa.core.sources.BashStyleComments;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
@@ -15,7 +11,7 @@ import koopa.core.sources.TagAll;
 import koopa.core.sources.TokenSeparator;
 
 public class KGTokens {
-	public static Source<Token> getNewSource(String resourceName,
+	public static Source getNewSource(String resourceName,
 			Reader reader) {
 
 		// Split lines...
@@ -29,9 +25,9 @@ public class KGTokens {
 		// Separate the tokens...
 		final TokenSeparator tokenSeparator //
 				= new TokenSeparator(
-						widening(tagAllAsProgramText, Token.class, Data.class));
+						tagAllAsProgramText);
 
 		// And mark comments...
-		return new BashStyleComments(narrowing(tokenSeparator, Token.class));
+		return new BashStyleComments(tokenSeparator);
 	}
 }

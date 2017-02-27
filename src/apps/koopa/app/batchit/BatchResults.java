@@ -114,9 +114,9 @@ public class BatchResults extends AbstractTableModel {
 			final ParseResults results = parseResults.get(rowIndex);
 			final Parse parse = results.getParse();
 
-			if (!results.isValidInput() || parse.hasErrors())
+			if (!results.isValidInput() || parse.getMessages().hasErrors())
 				return Status.ERROR;
-			else if (parse.hasWarnings())
+			else if (parse.getMessages().hasWarnings())
 				return Status.WARNING;
 			else
 				return Status.OK;
@@ -129,10 +129,12 @@ public class BatchResults extends AbstractTableModel {
 			return files.get(rowIndex).getParent();
 
 		case WARNINGS_COLUMN:
-			return parseResults.get(rowIndex).getParse().getWarningCount();
+			return parseResults.get(rowIndex).getParse().getMessages()
+					.getWarningCount();
 
 		case ERRORS_COLUMN:
-			return parseResults.get(rowIndex).getParse().getErrorCount();
+			return parseResults.get(rowIndex).getParse().getMessages()
+					.getErrorCount();
 
 		case COVERAGE_COLUMN:
 			return coverage.get(rowIndex);
@@ -165,8 +167,8 @@ public class BatchResults extends AbstractTableModel {
 	}
 
 	private void add(ParseResults results, String customColumnKey, int index) {
-		String customXPathQuery = ApplicationSupport.getCustomColumnProperty(
-				customColumnKey, "xpath", null);
+		String customXPathQuery = ApplicationSupport
+				.getCustomColumnProperty(customColumnKey, "xpath", null);
 
 		Object value = null;
 

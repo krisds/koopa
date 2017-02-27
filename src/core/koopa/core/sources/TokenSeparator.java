@@ -19,12 +19,12 @@ import koopa.core.data.tags.AreaTag;
  * {@linkplain AreaTag#PROGRAM_TEXT_AREA}, which are not
  * {@linkplain AreaTag#COMMENT}s or {@linkplain AreaTag#COMPILER_DIRECTIVE}s.
  */
-public class TokenSeparator extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class TokenSeparator extends ChainingSource
+		implements Source {
 
 	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
 
-	public TokenSeparator(Source<Data> source) {
+	public TokenSeparator(Source source) {
 		super(source);
 	}
 

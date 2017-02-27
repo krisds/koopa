@@ -6,30 +6,28 @@ import koopa.core.data.Data;
 import koopa.core.sources.BasicSource;
 import koopa.core.sources.Source;
 
-public class Pipe<T extends Data> extends BasicSource<T> implements Target<T>, Source<T> {
+// TODO Synchronization primitives still needed ? (No more threading sources.)
+public class Pipe extends BasicSource implements Target, Source {
 
-	private LinkedList<T> tokens = null;
+	private LinkedList<Data> tokens = null;
 
 	public Pipe() {
-		this.tokens = new LinkedList<T>();
+		this.tokens = new LinkedList<Data>();
 	}
 
-	public void push(T data) {
-		synchronized (this.tokens) {
-			this.tokens.add(data);
+	public void push(Data data) {
+		synchronized (tokens) {
+			tokens.add(data);
 		}
 	}
 
 	@Override
-	protected T nxt1() {
-		synchronized (this.tokens) {
-			if (this.tokens.isEmpty()) {
+	protected Data nxt1() {
+		synchronized (tokens) {
+			if (tokens.isEmpty()) 
 				return null;
-
-			} else {
-				T head = this.tokens.removeFirst();
-				return head;
-			}
+			else 
+				return tokens.removeFirst();
 		}
 	}
 

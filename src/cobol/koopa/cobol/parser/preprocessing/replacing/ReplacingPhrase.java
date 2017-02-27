@@ -51,16 +51,16 @@ public abstract class ReplacingPhrase {
 		return by;
 	}
 
-	public abstract boolean appliedTo(Source<Data> source,
-			LinkedList<Token> newTokens);
+	public abstract boolean appliedTo(Source source,
+			LinkedList<Data> newTokens);
 
-	protected List<Token> nextTextWord(Source<Data> library,
+	protected List<Token> nextTextWord(Source library,
 			Stack<Token> seen) {
 		skipToNonBlankProgramText(library, seen);
 		return nonBlankProgramText(library, seen);
 	}
 
-	private List<Token> nonBlankProgramText(Source<Data> library,
+	private List<Token> nonBlankProgramText(Source library,
 			Stack<Token> seen) {
 
 		List<Token> textWord = null;
@@ -119,7 +119,7 @@ public abstract class ReplacingPhrase {
 		}
 	}
 
-	private void skipToNonBlankProgramText(Source<Data> library,
+	private void skipToNonBlankProgramText(Source library,
 			Stack<Token> seen) {
 		while (true) {
 			final Data d = library.next();
@@ -151,12 +151,17 @@ public abstract class ReplacingPhrase {
 				&& t.hasAnyTag(COMMENT, END_OF_LINE, WHITESPACE);
 	}
 
-	protected void unshiftStack(Source<Data> library, Stack<Token> seen) {
+	protected void unshiftStack(Source library, Stack<Token> seen) {
 		while (!seen.isEmpty())
 			library.unshift(seen.pop());
 	}
 
-	public static boolean isConsideredSingleSpace(Token textWord) {
+	public static boolean isConsideredSingleSpace(Data tw) {
+		if (!(tw instanceof Token))
+			return false;
+		
+		final Token textWord = (Token) tw;
+		
 		// "Comments, if any, are treated as a single space."
 		if (textWord.hasTag(AreaTag.COMMENT))
 			return true;

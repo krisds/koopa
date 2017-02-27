@@ -18,6 +18,7 @@ import koopa.app.components.textual.TextPanel;
 import koopa.app.listeners.TokenSelectionListener;
 import koopa.cobol.parser.ParseResults;
 import koopa.core.data.Token;
+import koopa.core.parsers.Messages;
 import koopa.core.parsers.Parse;
 import koopa.core.targets.TokenTracker;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -81,8 +82,8 @@ public class SourceView extends TextPanel {
 			final HighlightPainter errorPainter = new SquiggleUnderlineHighlightPainter(
 					Color.RED);
 
-			final Parse parse = results.getParse();
-			for (Tuple<Token, String> warning : parse.getWarnings()) {
+			final Messages messages = results.getParse().getMessages();
+			for (Tuple<Token, String> warning : messages.getWarnings()) {
 				final Token token = warning.getFirst();
 				if (token == null)
 					continue;
@@ -100,7 +101,7 @@ public class SourceView extends TextPanel {
 						warningPainter);
 			}
 
-			for (Tuple<Token, String> error : parse.getErrors()) {
+			for (Tuple<Token, String> error : messages.getErrors()) {
 				final Token token = error.getFirst();
 				if (token == null)
 					continue;

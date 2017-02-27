@@ -1,18 +1,18 @@
 package koopa.core.grammars.fluent.test;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.grammars.fluent.FluentGrammar;
 import koopa.core.parsers.Parse;
 
 class FluentTestGrammar extends FluentGrammar {
 
 	@Override
-	public boolean canBeSkipped(Token token, Parse parse) {
+	public boolean canBeSkipped(Data d, Parse parse) {
 		return false;
 	}
 
 	@Override
-	public boolean isProgramText(Token token) {
+	public boolean isProgramText(Data d) {
 		return false;
 	}
 

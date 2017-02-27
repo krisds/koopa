@@ -15,8 +15,8 @@ import koopa.core.sources.Source;
  * A {@linkplain Source} which applies replacement instructions it gets from its
  * source by means of {@linkplain ReplacementData}.
  */
-public class Replacing extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class Replacing extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER //
 			= Logger.getLogger("source.cobol.replacing");
@@ -31,9 +31,9 @@ public class Replacing extends ChainingSource<Data, Data>
 	 * This is a list of {@link Token}s which have been substituted in for a
 	 * match.
 	 */
-	private LinkedList<Token> replacementTokens = new LinkedList<Token>();
+	private LinkedList<Data> replacementTokens = new LinkedList<Data>();
 
-	public Replacing(Source<Data> source) {
+	public Replacing(Source source) {
 		super(source);
 	}
 

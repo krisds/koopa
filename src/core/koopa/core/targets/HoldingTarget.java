@@ -17,10 +17,10 @@ import koopa.core.util.Iterators;
  * In addition to the delay, you can also retract the data which was pushed up
  * to the point of the last {@link #shiftAllToNextTarget()}.
  */
-public class HoldingTarget implements Target<Data> {
+public class HoldingTarget implements Target {
 
 	/** The recipient of our {@linkplain Data}. */
-	private final Target<Data> target;
+	private final Target target;
 
 	/** The {@linkplain Data} we're holding on to. */
 	private final LinkedList<Data> queue;
@@ -32,7 +32,7 @@ public class HoldingTarget implements Target<Data> {
 
 	private boolean notificationsInProgress = false;
 
-	public HoldingTarget(Target<Data> target) {
+	public HoldingTarget(Target target) {
 		assert (target != null);
 		this.target = target;
 		this.queue = new LinkedList<Data>();
@@ -104,12 +104,12 @@ public class HoldingTarget implements Target<Data> {
 			if (!token.isSkipped()) {
 				notificationsInProgress = true;
 
-				final Token data = peekAtLastToken();
+				// final Token data = peekAtLastToken();
 
 				for (Observer observer : observers)
 					observer.popping(this, token);
 
-				assert (peekAtLastToken() == data);
+				// assert (peekAtLastToken() == data);
 
 				notificationsInProgress = false;
 			}
@@ -199,5 +199,10 @@ public class HoldingTarget implements Target<Data> {
 
 	public void removeObserver(Observer observer) {
 		observers.remove(observer);
+	}
+	
+	@Override
+	public String toString() {
+		return queue.toString();
 	}
 }

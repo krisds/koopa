@@ -16,6 +16,7 @@ import java.util.List;
 import koopa.cics.grammar.CICSGrammar;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.sources.SourceFormat;
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.parsers.FutureParser;
@@ -50,32 +51,35 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 					List<Token> picture = new ArrayList<Token>();
 
 					while (true) {
-						final Token token = stream.forward();
+						final Data d = stream.forward();
 
-						if (token == null)
+						if (d == null || !(d instanceof Token))
 							break;
 
-						if (token.hasTag(SKIPPED)) {
+						final Token t = (Token) d;
+						
+						// TODO Grammar.canBeSkipped ?
+						if (t.hasTag(SKIPPED)) {
 							// Skipped by continuation. So not part of the
 							// picture string, but not a definite end to it
 							// either.
 							continue;
 						}
 
-						if (!isProgramText(token)) {
-							stream.rewind(token);
+						if (!isProgramText(t)) {
+							stream.rewind(t);
 							break;
 						}
 
-						String text = token.getText();
+						String text = t.getText();
 						// Semicolons are not legal picture characters.
 						// Neither is whitespace.
 						if (";".equals(text) || text.trim().length() == 0) {
-							stream.rewind(token);
+							stream.rewind(t);
 							break;
 						}
 
-						picture.add(token);
+						picture.add(t);
 						numberOfTokens += 1;
 					}
 
@@ -111,17 +115,15 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
 					skipAll(parse);
 
-					Token token = stream.forward();
+					final Data d = stream.forward();
+					if (d == null || !(d instanceof Token))
+						return false;
+					
+					final Token t = (Token) d;
 
 					// TODO @NUMBER _, but with extra semantic check ? Or list
 					// all possibilities ?
-					if (token != null && token.hasTag(NUMBER)
-							&& isLevelNumber(token.getText())) {
-
-						return true;
-
-					} else
-						return false;
+					return t.hasTag(NUMBER) && isLevelNumber(t.getText());
 				}
 
 				private boolean isLevelNumber(String text) {
@@ -215,13 +217,15 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 					Stream stream = parse.getStream();
 
 					// First thing we need to know is the format being used.
-					Token peek = stream.peek();
+					Data d = stream.peek();
 
 					// Of course, if we're at the end of the stream, there's not
 					// much point.
-					if (peek == null)
+					if (d == null || !(d instanceof Token))
 						return false;
 
+					final Token peek = (Token) d;
+					
 					// So, what is it ?
 					final SourceFormat format = SourceFormat.forToken(peek);
 
@@ -230,11 +234,13 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 					boolean sawSomething = false;
 
 					while (true) {
-						final Token token = stream.forward();
+						final Data d2 = stream.forward();
 
-						if (token == null)
+						if (d2 == null || !(d2 instanceof Token))
 							return sawSomething;
 
+						final Token token = (Token) d2;
+						
 						// "If the Compiler directive SOURCEFORMAT is
 						// specified as FREE, the comment-entry cannot be
 						// continued; the next line will begin the next

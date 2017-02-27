@@ -1,5 +1,6 @@
 package koopa.core.grammars.combinators;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
@@ -21,35 +22,38 @@ public class TestRange extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
-		final Token peek = parse.getStream().peek();
+		final Data d = parse.getStream().peek();
 
-		if (peek == null) {
+		if (d == null || !(d instanceof Token)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : no, null");
 
 			return false;
+
 		}
 
-		final int startOfToken = peek.getStart().getPositionInLine();
+		final Token t = (Token) d;
+
+		final int startOfToken = t.getStart().getPositionInLine();
 		if (begin >= 0 && startOfToken < begin) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : no, begins at "
-						+ startOfToken + ": " + peek);
+						+ startOfToken + ": " + t);
 
 			return false;
 		}
 
-		final int endOfToken = peek.getEnd().getPositionInLine();
+		final int endOfToken = t.getEnd().getPositionInLine();
 		if (end >= 0 && endOfToken > end) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : no, ends at " + endOfToken
-						+ ": " + peek);
+						+ ": " + t);
 
 			return false;
 		}
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace().add(toString() + " : yes, " + peek);
+			parse.getTrace().add(toString() + " : yes, " + t);
 
 		return true;
 	}

@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
-import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.sources.Source;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -24,7 +23,7 @@ public final class StageUtil {
 	}
 
 	public static Tree getAST(File input, boolean quiet) throws IOException {
-		final Source<Token> source = StageTokens.getNewSource(//
+		final Source source = StageTokens.getNewSource(//
 				input.getName(), new FileReader(input));
 
 		final StageGrammar kg = new StageGrammar();

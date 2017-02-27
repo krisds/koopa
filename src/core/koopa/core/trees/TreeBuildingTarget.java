@@ -8,7 +8,7 @@ import koopa.core.data.markers.OnLand;
 import koopa.core.data.markers.Start;
 import koopa.core.targets.Target;
 
-public abstract class TreeBuildingTarget implements Target<Data> {
+public abstract class TreeBuildingTarget implements Target {
 
 	private final boolean hideWater;
 

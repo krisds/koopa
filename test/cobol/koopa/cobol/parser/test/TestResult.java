@@ -57,11 +57,11 @@ public class TestResult {
 		result.valid = parseResults.isValidInput();
 		result.tokenCount = Metrics.getSignificantTokenCount(parseResults);
 		result.coverage = Metrics.getCoverage(parseResults);
-		result.errorCount = parse.getErrorCount();
-		result.warningCount = parse.getWarningCount();
+		result.errorCount = parse.getMessages().getErrorCount();
+		result.warningCount = parse.getMessages().getWarningCount();
 
-		result.errors = parse.getErrors();
-		result.warnings = parse.getWarnings();
+		result.errors = parse.getMessages().getErrors();
+		result.warnings = parse.getMessages().getWarnings();
 
 		final CopyInclude copyInclude = parse.getSource(CopyInclude.class);
 		if (copyInclude != null) {

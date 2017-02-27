@@ -70,7 +70,7 @@ public class Code extends DefaultStyledDocument {
 			final int end = position;
 
 			// Grab any pending tokens and add them to the document as unparsed.
-			Token token = null;
+			Data token = null;
 			while ((token = parse.getStream().forward()) != null)
 				insertUnparsed(token);
 
@@ -149,9 +149,13 @@ public class Code extends DefaultStyledDocument {
 		}
 	}
 
-	private void insertUnparsed(Token token) {
+	private void insertUnparsed(Data d) {
+		if (!(d instanceof Token))
+			return;
+		
 		try {
-			final String text = token.getText();
+			final Token t = (Token) d;
+			final String text = t.getText();
 
 			final int start = position;
 			final int length = text.length();

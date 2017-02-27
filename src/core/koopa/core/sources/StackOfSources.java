@@ -9,17 +9,17 @@ import koopa.core.data.Data;
  * source gets depleted it will get popped of the stack, and the next one in
  * line will be used.
  */
-public class StackOfSources<T extends Data, S extends Source<T>> extends BasicSource<T> implements Source<T> {
+public class StackOfSources extends BasicSource implements Source {
 
-	private Stack<S> sources = new Stack<S>();
+	private Stack<Source> sources = new Stack<Source>();
 
 	@Override
-	protected T nxt1() {
+	protected Data nxt1() {
 		while (!sources.isEmpty()) {
-			final T data = sources.peek().next();
+			final Data d = sources.peek().next();
 
-			if (data != null)
-				return data;
+			if (d != null)
+				return d;
 
 			sources.peek().close();
 			sources.pop();
@@ -28,7 +28,7 @@ public class StackOfSources<T extends Data, S extends Source<T>> extends BasicSo
 		return null;
 	}
 
-	public void push(S source) {
+	public void push(Source source) {
 		sources.push(source);
 	}
 
@@ -37,7 +37,7 @@ public class StackOfSources<T extends Data, S extends Source<T>> extends BasicSo
 		sources.pop();
 	}
 
-	public S peek() {
+	public Source peek() {
 		return sources.peek();
 	}
 
@@ -52,10 +52,10 @@ public class StackOfSources<T extends Data, S extends Source<T>> extends BasicSo
 		}
 	}
 
-	public <U extends Source<? extends Data>> U getSource(Class<U> clazz) {
+	public <S extends Source> S getSource(Class<S> clazz) {
 		// TODO Should reverse order ?
-		for (S source : sources) {
-			U instance = source.getSource(clazz);
+		for (Source source : sources) {
+			S instance = source.getSource(clazz);
 			if (instance != null)
 				return instance;
 		}

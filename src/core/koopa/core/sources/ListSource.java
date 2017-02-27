@@ -8,32 +8,32 @@ import koopa.core.data.Data;
 /**
  * This is a {@linkplain Source} which is backed by a {@linkplain List}.
  */
-public class ListSource<T extends Data> implements Source<T> {
+public class ListSource implements Source {
 
-	private LinkedList<T> data = new LinkedList<T>();
+	private LinkedList<Data> data = new LinkedList<Data>();
 
 	public ListSource() {
 	}
 
-	public ListSource(List<T> data) {
+	public ListSource(List<Data> data) {
 		this.data.addAll(data);
 	}
 
 	/**
 	 * Convenience constructor when the list has but a single element.
 	 */
-	public ListSource(T d) {
+	public ListSource(Data d) {
 		this.data.add(d);
 	}
 
-	public T next() {
+	public Data next() {
 		if (data.isEmpty())
 			return null;
 		else
 			return data.removeFirst();
 	}
 
-	public void unshift(T d) {
+	public void unshift(Data d) {
 		if (d != null)
 			data.addFirst(d);
 	}
@@ -42,14 +42,14 @@ public class ListSource<T extends Data> implements Source<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S extends Source<? extends Data>> S getSource(Class<S> clazz) {
+	public <S extends Source> S getSource(Class<S> clazz) {
 		if (clazz.isInstance(this))
 			return (S) this;
 		else
 			return null;
 	}
 
-	public boolean addAll(List<T> c) {
+	public boolean addAll(List<Data> c) {
 		return data.addAll(c);
 	}
 

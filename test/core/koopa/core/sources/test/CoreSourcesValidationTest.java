@@ -18,7 +18,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.samples.Sample;
@@ -40,23 +39,32 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 	@Before
 	public void initialize() {
 		final Object[] programText = new Object[] { PROGRAM_TEXT_AREA };
-		addCategory("TEXT", programText);
-		addCategory("T", programText);
+		final Object[] notProgramText = new Object[] { //
+				COMMENT, SKIPPED, COMPILER_DIRECTIVE };
+		addCategory("TEXT", programText, notProgramText);
+		addCategory("T", programText, notProgramText);
 
 		final Object[] comment = new Object[] { COMMENT };
-		addCategory("COMMENT", comment);
-		addCategory("C", comment);
+		final Object[] notComment = new Object[] { //
+				PROGRAM_TEXT_AREA, SKIPPED, COMPILER_DIRECTIVE };
+		addCategory("COMMENT", comment, notComment);
+		addCategory("C", comment, notComment);
 
 		final Object[] skipped = new Object[] { SKIPPED };
-		addCategory("SKIPPED", skipped, programText);
-		addCategory("SKIP", skipped, programText);
-		addCategory("SKP", skipped, programText);
+		final Object[] notSkipped = new Object[] { //
+				PROGRAM_TEXT_AREA, COMMENT, COMPILER_DIRECTIVE };
+		addCategory("SKIPPED", skipped, notSkipped);
+		addCategory("SKIP", skipped, notSkipped);
+		addCategory("SKP", skipped, notSkipped);
 
 		final Object[] compilerDirective = new Object[] { COMPILER_DIRECTIVE };
-		addCategory("COMPILER_DIRECTIVE", compilerDirective);
-		addCategory("DIRECTIVE", compilerDirective);
-		addCategory("DIR", compilerDirective);
-		addCategory("D", compilerDirective);
+		final Object[] notCompilerDirective = new Object[] { //
+				PROGRAM_TEXT_AREA, COMMENT, SKIPPED };
+		addCategory("COMPILER_DIRECTIVE", compilerDirective,
+				notCompilerDirective);
+		addCategory("DIRECTIVE", compilerDirective, notCompilerDirective);
+		addCategory("DIR", compilerDirective, notCompilerDirective);
+		addCategory("D", compilerDirective, notCompilerDirective);
 
 		final Object[] separator = new Object[] { SEPARATOR };
 		addCategory(":", separator);
@@ -88,7 +96,7 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 	}
 
 	@Override
-	protected Source<Token> getSource(String resourceName, Sample sample) {
+	protected Source getSource(String resourceName, Sample sample) {
 		final LineSplitter lineSplitter //
 				= new LineSplitter(resourceName, sample.getReader());
 		if (file.getName().startsWith("LineSplitter"))

@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import koopa.core.data.Token;
+import koopa.core.data.Data;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stream;
@@ -66,11 +66,11 @@ public class LimitedStream extends StreamDecorator implements Stream {
 	}
 
 	/** {@inheritDoc} */
-	public Token forward() {
+	public Data forward() {
 		return forward(false);
 	}
 
-	public Token forward(boolean skip) {
+	public Data forward(boolean skip) {
 		if (limiters.isEmpty())
 			return skip ? stream.skip() : stream.forward();
 
@@ -134,11 +134,11 @@ public class LimitedStream extends StreamDecorator implements Stream {
 	}
 
 	/** {@inheritDoc} */
-	public Token peek() {
+	public Data peek() {
 		bookmark();
-		final Token t = forward(true);
+		final Data d = forward(true);
 		rewind();
-		return t;
+		return d;
 	}
 
 	/** {@inheritDoc} */

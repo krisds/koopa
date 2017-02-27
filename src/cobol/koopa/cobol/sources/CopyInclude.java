@@ -26,24 +26,22 @@ import koopa.core.sources.AsReplacing;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.ListSource;
-import koopa.core.sources.NarrowingSource;
 import koopa.core.sources.Source;
 import koopa.core.sources.Sources;
 import koopa.core.sources.StackOfSources;
-import koopa.core.sources.WideningSource;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 import koopa.core.util.LineEndings;
 
-public class CopyInclude extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class CopyInclude extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER //
 			= Logger.getLogger("source.cobol.copy_include");
 
 	private final CobolPreprocessingGrammar grammar;
 	private final Copybooks copybooks;
-	private StackOfSources<Data, Source<Data>> inputStack;
+	private StackOfSources inputStack;
 
 	private final LinkedList<Data> pending = new LinkedList<Data>();
 
@@ -53,8 +51,8 @@ public class CopyInclude extends ChainingSource<Data, Data>
 	 */
 	private List<Tree> handledCopyStatements = new LinkedList<Tree>();
 
-	public CopyInclude(Source<Data> source, CobolPreprocessingGrammar grammar,
-			Copybooks copybooks, StackOfSources<Data, Source<Data>> stack) {
+	public CopyInclude(Source source, CobolPreprocessingGrammar grammar,
+			Copybooks copybooks, StackOfSources stack) {
 		super(source);
 
 		this.copybooks = copybooks;
@@ -285,20 +283,17 @@ public class CopyInclude extends ChainingSource<Data, Data>
 	}
 
 	private Tree parseCopyStatement(LinkedList<Data> copyStatement) {
-		final ListSource<Data> copyStatementSource //
-				= new ListSource<Data>(copyStatement);
+		final ListSource copyStatementSource //
+				= new ListSource(copyStatement);
 
 		// There may be continuations which need to be resolved before we can
 		// parse it.
 		final ContinuationOfLines continuationOfLines //
 				= new ContinuationOfLines(copyStatementSource);
 
-		final Source<Token> source = new NarrowingSource<Data, Token>(
-				continuationOfLines, Token.class);
-
 		final KoopaTreeBuilder treeBuilder = new KoopaTreeBuilder(grammar);
 
-		final Parse parse = Parse.of(source).to(treeBuilder);
+		final Parse parse = Parse.of(continuationOfLines).to(treeBuilder);
 		final boolean accepts = grammar.copyStatement().accepts(parse);
 
 		return accepts ? treeBuilder.getTree() : null;
@@ -377,13 +372,13 @@ public class CopyInclude extends ChainingSource<Data, Data>
 
 		// This sets up the remainder of the line.
 		if (!line.isEmpty()) {
-			final ListSource<Data> remainderOfLine = new ListSource<Data>(line);
+			final ListSource remainderOfLine = new ListSource(line);
 			inputStack.push(remainderOfLine);
 		}
 
 		// Mark the end of any REPLACING instructions.
 		if (replacements != null) {
-			final ListSource<Data> turnOffReplacements = new ListSource<Data>(
+			final ListSource turnOffReplacements = new ListSource(
 					new ReplacementData(false, false, replacements));
 			inputStack.push(turnOffReplacements);
 		}
@@ -396,12 +391,11 @@ public class CopyInclude extends ChainingSource<Data, Data>
 		// for the COPY statement.
 		final AsReplacing asReplacing //
 				= new AsReplacing(lineSplitter, replaced(copy));
-		inputStack.push(
-				new WideningSource<Data, Token>(asReplacing, Token.class));
+		inputStack.push(asReplacing);
 
 		// Mark the start of any REPLACING instructions.
 		if (replacements != null) {
-			final ListSource<Data> turnOnReplacements = new ListSource<Data>(
+			final ListSource turnOnReplacements = new ListSource(
 					new ReplacementData(true, false, replacements));
 			inputStack.push(turnOnReplacements);
 		}

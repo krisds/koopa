@@ -25,10 +25,7 @@ import koopa.cobol.sources.ContinuationOfLines;
 import koopa.cobol.sources.InlineComments;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.SourceFormat;
-import koopa.core.data.Data;
-import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
-import koopa.core.sources.NarrowingSource;
 import koopa.core.sources.Source;
 import koopa.core.sources.TokenSeparator;
 import koopa.core.sources.test.CoreSourcesValidationTest;
@@ -43,8 +40,8 @@ import koopa.core.util.test.Files;
 @RunWith(Files.class)
 public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
-	private static final HashMap<String, Class<? extends Source<? extends Data>>> CLASSES //
-			= new HashMap<String, Class<? extends Source<? extends Data>>>();
+	private static final HashMap<String, Class<? extends Source>> CLASSES //
+			= new HashMap<String, Class<? extends Source>>();
 	static {
 		CLASSES.put("LineSplitter", LineSplitter.class);
 		CLASSES.put("SourceFormatDirectives", CompilerDirectives.class);
@@ -62,11 +59,11 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 	}
 
 	@Override
-	protected Source<Token> getSource(String resourceName, Sample sample) {
+	protected Source getSource(String resourceName, Sample sample) {
 		final String fileName = file.getName();
 		final String className = fileName.substring(0, fileName.indexOf('.'));
 
-		final Class<? extends Source<? extends Data>> clazz;
+		final Class<? extends Source> clazz;
 		if ("All".equals(className))
 			clazz = null;
 		else {
@@ -80,10 +77,10 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		// the stages to be present.
 		final Copybooks copybooks = new Copybooks();
 
-		final Source<Token> source = CobolTokens.getNewSource(file,
+		final Source source = CobolTokens.getNewSource(file,
 				sample.getReader(), grammar, format, copybooks);
 
-		final Source<? extends Data> selectedSource;
+		final Source selectedSource;
 		if (clazz == null)
 			selectedSource = source;
 		else
@@ -91,10 +88,7 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
 		Assert.assertNotNull("No such source: " + clazz, selectedSource);
 
-		@SuppressWarnings("unchecked")
-		final Source<Data> narrowed = (Source<Data>) selectedSource;
-
-		return new NarrowingSource<Data, Token>(narrowed, Token.class);
+		return selectedSource;
 	}
 
 	@Before

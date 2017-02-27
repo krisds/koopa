@@ -6,6 +6,7 @@ import java.util.List;
 
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
+import koopa.core.parsers.Messages;
 import koopa.core.parsers.Parse;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
@@ -15,8 +16,8 @@ public class JaxenSample {
 
 	public static void main(String[] args) throws IOException {
 		final ParsingCoordinator coordinator = new ParsingCoordinator();
-		final ParseResults result = coordinator.parse(new File(
-				"testsuite/cobol85/CM101M.CBL"));
+		final ParseResults result = coordinator
+				.parse(new File("testsuite/cobol85/CM101M.CBL"));
 
 		if (result.isValidInput())
 			System.out.println("Input is valid.");
@@ -24,11 +25,11 @@ public class JaxenSample {
 			System.out.println("Input is faulty.");
 
 		final Parse parse = result.getParse();
-		System.out.println("  " + parse.getErrorCount() + " error(s).");
-		System.out.println("  " + parse.getWarningCount() + " warning(s).");
+		final Messages messages = parse.getMessages();
+		System.out.println("  " + messages.getErrorCount() + " error(s).");
+		System.out.println("  " + messages.getWarningCount() + " warning(s).");
 
-		Tree tree = result.getParse().getTarget(KoopaTreeBuilder.class)
-				.getTree();
+		Tree tree = parse.getTarget(KoopaTreeBuilder.class).getTree();
 
 		jax(tree, "/compilationUnit");
 		jax(tree, "//compilationUnit");

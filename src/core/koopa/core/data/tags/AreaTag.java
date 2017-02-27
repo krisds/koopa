@@ -3,7 +3,7 @@ package koopa.core.data.tags;
 import koopa.core.data.Token;
 
 /**
- * Every token which goes into the parser should have one (and only one ?) of
+ * Every token which goes into the parser should have one (and only one) of
  * these tags.
  */
 public enum AreaTag {
@@ -15,9 +15,6 @@ public enum AreaTag {
 
 	/**
 	 * This token holds a comment (possibly an inline comment).
-	 * <p>
-	 * Right now comments may overlap with {@linkplain #PROGRAM_TEXT_AREA}. This
-	 * may change in the long run.
 	 */
 	COMMENT,
 

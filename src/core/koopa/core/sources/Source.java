@@ -9,19 +9,20 @@ import koopa.core.targets.Target;
  * from a {@linkplain Source}, transforming it, and passing it to a
  * {@linkplain Target}.
  */
-public interface Source<T extends Data> {
+public interface Source {
 
 	/**
 	 * Get the next data item. Or <code>null</code> if there are no more.
 	 */
 	// TODO -> shift ?
-	T next();
+	Data next();
 
 	/**
 	 * Return a piece of data to this source, so that it becomes available again
 	 * to be read. This is basically an "undo" option for {@linkplain #next()}.
 	 */
-	void unshift(T packet);
+	// TODO Deprecate this ? Can we get rid of it ?
+	void unshift(Data packet);
 
 	/**
 	 * Close this source, giving it a chance to clean up any resources. Any
@@ -32,7 +33,7 @@ public interface Source<T extends Data> {
 
 	/**
 	 * If this is a source of a matching class type, return <code>this</code>.
-	 * If not, look for it elsewhere.
+	 * If not, look for it upstream.
 	 */
-	<S extends Source<? extends Data>> S getSource(Class<S> clazz);
+	<S extends Source> S getSource(Class<S> clazz);
 }

@@ -5,14 +5,15 @@ import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.AreaTag.SKIPPED;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class LOCCount extends ChainingSource<Token, Token>
-		implements Source<Token> {
+public class LOCCount extends ChainingSource
+		implements Source {
 
-	private final Source<? extends Token> source;
+	private final Source source;
 
 	private int lines;
 	private int code;
@@ -22,7 +23,7 @@ public class LOCCount extends ChainingSource<Token, Token>
 	private boolean sawCode = false;
 	private boolean sawComment = false;
 
-	public LOCCount(Source<Token> source) {
+	public LOCCount(Source source) {
 		super(source);
 
 		assert (source != null);
@@ -35,13 +36,18 @@ public class LOCCount extends ChainingSource<Token, Token>
 	}
 
 	@Override
-	public Token nxt1() {
+	public Data nxt1() {
 		if (done)
 			return null;
 
-		Token token = source.next();
+		Data d = source.next();
 
-		if (token == null || token.hasTag(END_OF_LINE)) {
+		if (d != null && !(d instanceof Token))
+			return d;
+			
+		final Token t = (Token) d;
+		
+		if (t == null || t.hasTag(END_OF_LINE)) {
 			lines += 1;
 
 			if (sawCode)
@@ -53,18 +59,18 @@ public class LOCCount extends ChainingSource<Token, Token>
 			sawCode = false;
 			sawComment = false;
 
-			done = (token == null);
+			done = (t == null);
 
-		} else if (token.hasTag(SKIPPED)) {
+		} else if (t.hasTag(SKIPPED)) {
 
-		} else if (token.hasTag(COMMENT)) {
+		} else if (t.hasTag(COMMENT)) {
 			sawComment = true;
 
-		} else if (token.hasTag(PROGRAM_TEXT_AREA)) {
+		} else if (t.hasTag(PROGRAM_TEXT_AREA)) {
 			sawCode = true;
 		}
 
-		return token;
+		return t;
 	}
 
 	public void close() {

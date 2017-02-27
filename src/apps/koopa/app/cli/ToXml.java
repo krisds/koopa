@@ -9,7 +9,7 @@ import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Token;
-import koopa.core.parsers.Parse;
+import koopa.core.parsers.Messages;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 import koopa.core.trees.XMLSerializer;
@@ -103,15 +103,15 @@ public class ToXml {
 			System.exit(IOEXCEPTION);
 		}
 
-		Parse parse = results.getParse();
+		final Messages messages = results.getParse().getMessages();
 
-		if (parse.hasErrors())
-			for (Tuple<Token, String> error : parse.getErrors())
-				System.out.println("Error: " + error.getFirst() + " "
-						+ error.getSecond());
+		if (messages.hasErrors())
+			for (Tuple<Token, String> error : messages.getErrors())
+				System.out.println(
+						"Error: " + error.getFirst() + " " + error.getSecond());
 
-		if (parse.hasWarnings())
-			for (Tuple<Token, String> warning : parse.getWarnings())
+		if (messages.hasWarnings())
+			for (Tuple<Token, String> warning : messages.getWarnings())
 				System.out.println("Warning: " + warning.getFirst() + " "
 						+ warning.getSecond());
 

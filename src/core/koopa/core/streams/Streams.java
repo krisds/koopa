@@ -20,13 +20,10 @@ public final class Streams {
 		while (it.hasNext()) {
 			final Data d = it.next();
 
-			if (!(d instanceof Token))
+			if (!(d instanceof Token) || !grammar.isProgramText(d))
 				continue;
 
-			final Token t = (Token) d;
-
-			if (grammar.isProgramText(t))
-				programText.append(t.getText());
+			programText.append(((Token) d).getText());
 		}
 
 		return programText.toString();

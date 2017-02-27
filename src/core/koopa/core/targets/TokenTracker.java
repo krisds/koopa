@@ -7,7 +7,7 @@ import java.util.List;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 
-public class TokenTracker implements Target<Data> {
+public class TokenTracker implements Target {
 
 	private final List<Token> tokens = new ArrayList<Token>();
 

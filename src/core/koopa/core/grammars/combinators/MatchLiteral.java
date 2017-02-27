@@ -1,5 +1,6 @@
 package koopa.core.grammars.combinators;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
@@ -22,25 +23,28 @@ public class MatchLiteral extends GrammaticalCombinator {
 	protected boolean matchesAfterSkipped(Parse parse) {
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().indent(toString() + " ?");
-		
-		final Token token = parse.getStream().forward();
 
-		if (token == null) {
+		final Data d = parse.getStream().forward();
+
+		if (d == null || !(d instanceof Token)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().dedent(toString() + " : no, null");
 
 			return false;
 
-		} else if (grammar.comparableText(token.getText()).equals(
-				comparableText)) {
+		}
+
+		final Token t = (Token) d;
+
+		if (grammar.comparableText(t.getText()).equals(comparableText)) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().dedent(toString() + " : yes, " + token);
+				parse.getTrace().dedent(toString() + " : yes, " + t);
 
 			return true;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().dedent(toString() + " : no, " + token);
+				parse.getTrace().dedent(toString() + " : no, " + t);
 
 			return false;
 		}

@@ -46,8 +46,8 @@ public class ReplaceTrailing extends ReplacingPhrase {
 		}
 	}
 
-	public boolean appliedTo(Source<Data> library,
-			LinkedList<Token> newTokens) {
+	public boolean appliedTo(Source library,
+			LinkedList<Data> newTokens) {
 
 		final Stack<Token> seen = new Stack<Token>();
 		final List<Token> next = nextTextWord(library, seen);

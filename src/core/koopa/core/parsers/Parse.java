@@ -1,27 +1,21 @@
 package koopa.core.parsers;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
-import koopa.core.data.Data;
 import koopa.core.data.Position;
-import koopa.core.data.Token;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.combinators.Opt;
 import koopa.core.sources.Source;
 import koopa.core.streams.Flow;
 import koopa.core.targets.Target;
-import koopa.core.util.Tuple;
 
-// TODO Take another look at this class, and split things up where useful.
 public class Parse {
 
 	private final Stack stack;
-	private final Flow flow;
 	private final Trace trace;
+	private final Messages messages;
+	private final Flow flow;
 
 	// TODO Move these to Stack ?
 	private Position finalPosition = Position.ZERO;
@@ -29,32 +23,29 @@ public class Parse {
 
 	private Set<Opt> options = new HashSet<Opt>();
 
-	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
-	private List<Tuple<Token, String>> errors = new LinkedList<Tuple<Token, String>>();
-
-
 	private Parse() {
 		this.stack = new Stack();
 		this.trace = new Trace();
+		this.messages = new Messages();
 		this.flow = new Flow(this);
 	}
 
-	public static Parse of(Source<Token> source) {
+	public static Parse of(Source source) {
 		Parse parse = new Parse();
 		parse.getFlow().setSource(source);
 		return parse;
 	}
 
-	public Parse to(Target<Data> target) {
+	public Parse to(Target target) {
 		flow.addTarget(target);
 		return this;
 	}
 
-	public <T extends Source<? extends Data>> T getSource(Class<T> clazz) {
+	public <T extends Source> T getSource(Class<T> clazz) {
 		return flow.getSource(clazz);
 	}
 
-	public <T extends Target<Data>> T getTarget(Class<T> clazz) {
+	public <T extends Target> T getTarget(Class<T> clazz) {
 		return flow.getTarget(clazz);
 	}
 
@@ -75,11 +66,15 @@ public class Parse {
 	public Flow getFlow() {
 		return flow;
 	}
-	
+
 	public Stream getStream() {
 		return flow.getStream();
 	}
-	
+
+	public Messages getMessages() {
+		return messages;
+	}
+
 	public boolean getOption(Opt noskip) {
 		throw new UnsupportedOperationException();
 	}
@@ -93,48 +88,6 @@ public class Parse {
 			options.add(opt);
 		else
 			options.remove(opt);
-	}
-
-	public void warn(Token t, String msg) {
-		if (msg != null)
-			warnings.add(new Tuple<Token, String>(t, msg));
-	}
-
-	public boolean hasWarnings() {
-		return !warnings.isEmpty();
-	}
-
-	public List<Tuple<Token, String>> getWarnings() {
-		return Collections.unmodifiableList(warnings);
-	}
-
-	public int getWarningCount() {
-		return warnings.size();
-	}
-
-	public Tuple<Token, String> getWarning(int index) {
-		return warnings.get(index);
-	}
-
-	public void error(Token t, String msg) {
-		if (msg != null)
-			errors.add(new Tuple<Token, String>(t, msg));
-	}
-
-	public boolean hasErrors() {
-		return !errors.isEmpty();
-	}
-
-	public List<Tuple<Token, String>> getErrors() {
-		return Collections.unmodifiableList(errors);
-	}
-
-	public int getErrorCount() {
-		return errors.size();
-	}
-
-	public Tuple<Token, String> getError(int index) {
-		return errors.get(index);
 	}
 
 	public Position getFinalPosition() {

@@ -25,19 +25,19 @@ import koopa.core.targets.Target;
 public interface Stream {
 
 	/**
-	 * Get the next token in the stream.
+	 * Get the next data in the stream.
 	 * <p>
 	 * This will force any delayed markers. Cfr. {@linkplain #insert(Marker)}.
 	 */
-	Token forward();
+	Data forward();
 
 	/**
-	 * Get the next token in the stream.
+	 * Get the next data in the stream.
 	 * <p>
 	 * This will <b>not</b> force any delayed markers. Cfr.
 	 * {@linkplain #insert(Marker)}.
 	 */
-	Token skip();
+	Data skip();
 
 	/**
 	 * This inserts a given marker at the current position. When the stream gets
@@ -57,15 +57,15 @@ public interface Stream {
 	/**
 	 * Move the stream back towards where we're just about to see this token.
 	 * <p>
-	 * We expect tokens to be rewound in the order in which they were given.
+	 * We expect data to be rewound in the order in which they were given.
 	 */
-	void rewind(Token token);
+	void rewind(Data d);
 
 	/**
-	 * Get a look at the next upcoming {@linkplain Token} without it actually
+	 * Get a look at the next upcoming {@linkplain Data} without it actually
 	 * getting consumed.
 	 */
-	Token peek();
+	Data peek();
 
 	/**
 	 * This is for tracing purposes. Gives a textual representation of up to

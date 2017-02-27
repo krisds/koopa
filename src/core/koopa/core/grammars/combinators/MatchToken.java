@@ -2,6 +2,7 @@ package koopa.core.grammars.combinators;
 
 import java.util.Set;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Parse;
@@ -20,24 +21,27 @@ public class MatchToken extends GrammaticalCombinator {
 
 	@Override
 	protected boolean matchesAfterSkipped(Parse parse) {
-		final Token token = parse.getStream().forward();
+		final Data d = parse.getStream().forward();
 
-		if (token == null) {
+		if (d == null || !(d instanceof Token)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " : no, null");
 
 			return false;
 
-		} else if (!comparableText.equals(grammar.comparableText(token
-				.getText()))) {
+		}
+
+		final Token t = (Token) d;
+
+		if (!comparableText.equals(grammar.comparableText(t.getText()))) {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : no, " + token);
+				parse.getTrace().add(toString() + " : no, " + t);
 
 			return false;
 
 		} else {
 			if (parse.getTrace().isEnabled())
-				parse.getTrace().add(toString() + " : yes, " + token);
+				parse.getTrace().add(toString() + " : yes, " + t);
 
 			return true;
 		}
@@ -52,7 +56,7 @@ public class MatchToken extends GrammaticalCombinator {
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		keywords.add(comparableText);
 	}
-	
+
 	@Override
 	public boolean allowsLookahead() {
 		return true;

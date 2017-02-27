@@ -27,8 +27,8 @@ import koopa.core.sources.Sources;
 import koopa.core.sources.TokenSeparationLogic;
 import koopa.core.util.Iterators;
 
-public class ContinuationOfLines extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class ContinuationOfLines extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER //
 			= Logger.getLogger("source.cobol.continuations");
@@ -48,7 +48,7 @@ public class ContinuationOfLines extends ChainingSource<Data, Data>
 
 	private final LinkedList<LinkedList<Data>> pendingLines = new LinkedList<LinkedList<Data>>();
 
-	public ContinuationOfLines(Source<Data> source) {
+	public ContinuationOfLines(Source source) {
 		super(source);
 	}
 

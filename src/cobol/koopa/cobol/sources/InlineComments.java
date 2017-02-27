@@ -12,15 +12,15 @@ import koopa.core.data.Token;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
 
-public class InlineComments extends ChainingSource<Data, Data>
-		implements Source<Data> {
+public class InlineComments extends ChainingSource
+		implements Source {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.inline_comments");
 
 	private boolean inComment = false;
 
-	public InlineComments(Source<Data> source) {
+	public InlineComments(Source source) {
 		super(source);
 	}
 
@@ -45,7 +45,7 @@ public class InlineComments extends ChainingSource<Data, Data>
 		}
 
 		if (inComment)
-			return token.withTags(COMMENT);
+			return token.withTags(COMMENT).withoutTags(PROGRAM_TEXT_AREA);
 
 		// Inline comments start with "*>".
 		if (token.hasTag(SEPARATOR) && "*".equals(token.getText())) {
@@ -63,7 +63,7 @@ public class InlineComments extends ChainingSource<Data, Data>
 		if (inComment) {
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Inline comment starts with " + token);
-			return token.withTags(COMMENT);
+			return token.withTags(COMMENT).withoutTags(PROGRAM_TEXT_AREA);
 		} else
 			return token;
 	}

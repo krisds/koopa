@@ -20,8 +20,8 @@ public class ReplaceMatching extends ReplacingPhrase {
 		super(replacing, by);
 	}
 
-	public boolean appliedTo(Source<Data> library,
-			LinkedList<Token> newTokens) {
+	public boolean appliedTo(Source library,
+			LinkedList<Data> newTokens) {
 		boolean matchOccurred = true;
 		Stack<Token> seenWhileMatching = new Stack<Token>();
 

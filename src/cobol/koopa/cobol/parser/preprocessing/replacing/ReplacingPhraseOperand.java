@@ -8,6 +8,7 @@ import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import java.util.LinkedList;
 import java.util.List;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
 import koopa.core.trees.Tree;
@@ -38,14 +39,17 @@ public class ReplacingPhraseOperand {
 
 	public static ReplacingPhraseOperand from(Tree operand) {
 		final Type type = Type.from(operand);
-		final LinkedList<Token> tokens //
-				= new LinkedList<Token>(operand.getTokens());
+		final LinkedList<Data> tokens //
+				= new LinkedList<Data>(operand.getTokens());
 		return new ReplacingPhraseOperand(type, tokens);
 	}
 
-	public ReplacingPhraseOperand(Type type, List<Token> tokens) {
+	public ReplacingPhraseOperand(Type type, List<Data> data) {
 		this.type = type;
-		this.tokens = new LinkedList<Token>(tokens);
+		this.tokens = new LinkedList<Token>();
+		for (Data d : data) 
+			if (d instanceof Token)
+				this.tokens.add((Token) d);
 
 		// Discard the pseudo text markers.
 		if (type == Type.PSEUDO) {
@@ -71,8 +75,14 @@ public class ReplacingPhraseOperand {
 
 	private void prepareForMatching() {
 		boolean atSpace = true;
-		for (Token token : tokens) {
+		for (Data d : tokens) {
 			// Discard anything that's not program text.
+			// TODO Ask grammar ?
+			if (!(d instanceof Token))
+				continue;
+			
+			final Token token = (Token) d;
+			
 			if (!token.hasTag(PROGRAM_TEXT_AREA) || token.hasTag(COMMENT))
 				continue;
 

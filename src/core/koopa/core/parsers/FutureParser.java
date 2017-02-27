@@ -71,7 +71,7 @@ public class FutureParser extends ParserCombinator {
 	@Override
 	public String toString() {
 		if (parser == null)
-			return "&" + parser;
+			return "&?";
 		else
 			return "&" + parser.toString();
 	}

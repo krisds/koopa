@@ -2,6 +2,7 @@ package koopa.core.streams.test;
 
 import org.junit.Test;
 
+import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -33,8 +34,8 @@ public class LimitedStreamTest extends ParseStreamTest {
 
 		@Override
 		public boolean matches(Parse parse) {
-			final Token t = parse.getStream().forward();
-			return t != null && WORDS[n].equals(t.getText());
+			final Data d = parse.getStream().forward();
+			return d != null && d instanceof Token && WORDS[n].equals(((Token) d).getText());
 		}
 	}
 

@@ -18,6 +18,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.HighlighterFactory;
+
 import koopa.app.Application;
 import koopa.app.ApplicationSupport;
 import koopa.app.actions.ParsingProvider;
@@ -32,12 +35,9 @@ import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
-import koopa.core.parsers.Parse;
+import koopa.core.parsers.Messages;
 import koopa.core.targets.TokenTracker;
 import koopa.core.util.Tuple;
-
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 @SuppressWarnings("serial")
 public class Overview extends JPanel implements ParsingProvider, Coordinated {
@@ -198,12 +198,12 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 			int withError = 0;
 
 			for (File target : targets) {
-				ParseResults results = parse(target);
-				Parse parse = results.getParse();
+				final ParseResults results = parse(target);
+				final Messages messages = results.getParse().getMessages();
 
-				if (parse.hasErrors())
+				if (messages.hasErrors())
 					withError += 1;
-				else if (parse.hasWarnings())
+				else if (messages.hasWarnings())
 					withWarning += 1;
 				else
 					ok += 1;
@@ -261,7 +261,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 		} catch (IOException e) {
 			ParseResults failed = new ParseResults(file);
 			failed.setValidInput(false);
-			failed.getParse().error(null, e.getMessage());
+			failed.getParse().getMessages().error(null, e.getMessage());
 			results.add(failed);
 			e.printStackTrace();
 			return failed;

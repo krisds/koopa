@@ -8,21 +8,21 @@ import koopa.core.data.Data;
 /**
  * This target forwards each data item to a collection of other targets.
  */
-public class CompositeTarget<T extends Data> implements Target<T> {
+public class CompositeTarget implements Target {
 
-	private final List<Target<T>> targets = new LinkedList<Target<T>>();
+	private final List<Target> targets = new LinkedList<Target>();
 
-	public void push(T data) {
-		for (Target<T> target : targets)
+	public void push(Data data) {
+		for (Target target : targets)
 			target.push(data);
 	}
 
 	public void done() {
-		for (Target<T> target : targets)
+		for (Target target : targets)
 			target.done();
 	}
 
-	public void addTarget(Target<T> target) {
+	public void addTarget(Target target) {
 		assert (target != null);
 		targets.add(target);
 	}

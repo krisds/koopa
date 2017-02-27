@@ -2,11 +2,9 @@ package koopa.core.streams;
 
 import static koopa.core.util.Iterators.emptyIterator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Stack;
-
-import org.apache.log4j.Logger;
+import java.util.List;
 
 import koopa.core.data.Data;
 import koopa.core.data.Marker;
@@ -32,14 +30,10 @@ import koopa.core.targets.Target;
  */
 public class BaseStream implements Stream {
 
-	private static final Logger LOGGER = Logger.getLogger("parse.stream");
-	private static final Logger DELAYED_LOGGER = Logger
-			.getLogger("parse.stream.delayed");
-
 	/**
 	 * The stream fetches {@linkplain Token}s from this {@linkplain Source}.
 	 */
-	private final Source<Token> source;
+	private final Source source;
 
 	/**
 	 * Everything the parser has processed, but which has not been committed yet
@@ -52,85 +46,93 @@ public class BaseStream implements Stream {
 	private final HoldingTarget pendingData;
 
 	/**
-	 * Markers which have been inserted, but not yet pushed to the
+	 * A list of {@linkplain Marker}s which are yet to be passed to the
 	 * {@link #pendingData}.
-	 * <p>
-	 * See {@link #weShouldDelay(Marker)} for more.
 	 */
-	private LinkedList<Marker> delayedMarkers;
+	private final List<Marker> delayed;
 
 	/**
-	 * Bookmarks in the {@link #pendingData} list for easy {@link #commit()}-ing
-	 * and {@link #rewind()}-ing.
+	 * A list of all {@linkplain Bookmark} ever made for this
+	 * {@linkplain BaseStream}. We want to recycle these as a lot of bookmarks
+	 * will get set and rewound, causing the cost of instantiation to quickly
+	 * add up.
 	 */
-	private final Stack<Bookmark> bookmarks;
+	private final List<Bookmark> allBookmarks;
+
+	/**
+	 * This points into the {@link #allBookmarks} list, identifying the next
+	 * {@linkplain Bookmark} to be used, or where to insert a new one.
+	 */
+	private int nextActiveBookmark;
 
 	/**
 	 * The {@linkplain Parse} this stream is part of.
 	 */
 	private Parse parse = null;
 
-	public BaseStream(Source<Token> source, Target<Data> target) {
+	public BaseStream(Source source, Target target) {
 		assert (source != null);
 		assert (target != null);
 
 		this.source = source;
 
 		this.pendingData = new HoldingTarget(target);
-		this.delayedMarkers = new LinkedList<Marker>();
 
-		this.bookmarks = new Stack<Bookmark>();
+		this.delayed = new ArrayList<Marker>();
+
+		this.allBookmarks = new ArrayList<Bookmark>();
+		this.nextActiveBookmark = 0;
 	}
 
 	/** {@inheritDoc} */
-	public Token forward() {
-		return forwardOne(false);
-	}
-
-	/** {@inheritDoc} */
-	public Token skip() {
-		return forwardOne(true);
-	}
-
-	private Token forwardOne(boolean skipped) {
-		if (!skipped)
-			insertDelayedMarkers();
+	public Data forward() {
+		insertDelayedMarkers();
 
 		while (true) {
-			Data packet = source.next();
+			final Data d = source.next();
 
-			if (packet == null)
+			if (d == null)
 				return null;
 
-			if (packet instanceof Marker)
-				insert((Marker) packet);
-			else if (skipped && packet instanceof Token) {
-				Token token = (Token) packet;
-				token.setSkipped(true);
-				pendingData.push(token);
-			} else
-				pendingData.push(packet);
-
-			if (packet instanceof Token) {
-				if (LOGGER.isTraceEnabled())
-					LOGGER.trace(">> " + packet);
-
-				return (Token) packet;
+			if (d instanceof Marker) {
+				insert((Marker) d);
+				continue;
 			}
+
+			pendingData.push(d);
+			return d;
+		}
+	}
+
+	/** {@inheritDoc} */
+	public Data skip() {
+		while (true) {
+			final Data d = source.next();
+
+			if (d == null)
+				return null;
+
+			if (d instanceof Marker) {
+				insert((Marker) d);
+				continue;
+			}
+
+			if (d instanceof Token)
+				((Token) d).setSkipped(true);
+
+			pendingData.push(d);
+			return d;
 		}
 	}
 
 	/** {@inheritDoc} */
 	public void insert(Marker marker) {
-		if (weShouldDelay(marker)) {
+		if (weShouldDelay(marker))
 			delay(marker);
 
-		} else {
+		else {
 			insertDelayedMarkers();
 			pendingData.push(marker);
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("+> " + marker);
 		}
 	}
 
@@ -155,62 +157,56 @@ public class BaseStream implements Stream {
 	 * {@linkplain #weShouldDelay(Marker)}.
 	 */
 	private void delay(Marker marker) {
-		delayedMarkers.addLast(marker);
-
-		if (DELAYED_LOGGER.isTraceEnabled())
-			DELAYED_LOGGER.trace("Delaying " + marker + ". Now "
-					+ delayedMarkers.size() + " in total.");
+		delayed.add(marker);
 	}
 
 	/**
 	 * Add all delayed markers to the {@linkplain #pendingData} list.
 	 */
 	private void insertDelayedMarkers() {
-		while (!delayedMarkers.isEmpty()) {
-			Marker delayedMarker = delayedMarkers.removeFirst();
-			pendingData.push(delayedMarker);
+		for (Marker marker : delayed)
+			pendingData.push(marker);
 
-			if (DELAYED_LOGGER.isTraceEnabled())
-				DELAYED_LOGGER.trace("Inserting delayed " + delayedMarker + ". "
-						+ delayedMarkers.size() + " remaining.");
-		}
+		delayed.clear();
 	}
 
 	/** {@inheritDoc} */
-	public void rewind(Token token) {
+	public void rewind(Data data) {
 		while (true) {
-			Data packet = pendingData.pop();
+			final Data d = pendingData.pop();
 
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("<< " + packet);
+			if (d == null)
+				return;
 
-			if (!(packet instanceof Token))
+			assert (!(d instanceof Marker));
+
+			// TODO We're dropping everything up to the mentioned item. Ok ?
+			if (d != data)
 				continue;
 
-			assert (packet == token);
+			if (d instanceof Token)
+				((Token) d).setSkipped(false);
 
-			Token rewound = (Token) packet;
-			rewound.setSkipped(false);
-			source.unshift(rewound);
+			if (!(d instanceof Marker))
+				source.unshift(d);
 
 			break;
 		}
 	}
 
 	/** {@inheritDoc} */
-	public Token peek() {
-		Token peeked = source.next();
+	public Data peek() {
+		final Data peeked = source.next();
 
-		if (peeked == null)
-			return null;
+		if (peeked != null)
+			source.unshift(peeked);
 
-		source.unshift(peeked);
 		return peeked;
 	}
 
 	/** {@inheritDoc} */
 	public String peekMore() {
-		Token[] peeked = new Token[5];
+		final Data[] peeked = new Data[5];
 		int p = 0;
 
 		while (p < peeked.length) {
@@ -225,18 +221,18 @@ public class BaseStream implements Stream {
 		if (p == 0)
 			return "[EOF]";
 
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < p; i++) {
-			if (i == 0)
-				builder.append("[" + peeked[i].getStart() + "|");
-			builder.append(//
-					peeked[i].getText() //
-							.replaceAll("\n", "\\\\n")//
-							.replaceAll("\r", "\\\\r"));
-		}
+			final Data d = peeked[i];
 
-		builder.append("]");
+			if (d instanceof Token)
+				builder.append(((Token) d).getText() //
+						.replaceAll("\n", "\\\\n") //
+						.replaceAll("\r", "\\\\r"));
+			else
+				builder.append(d.toString());
+		}
 
 		for (int i = p - 1; i >= 0; i--)
 			source.unshift(peeked[i]);
@@ -246,69 +242,46 @@ public class BaseStream implements Stream {
 
 	/** {@inheritDoc} */
 	public void bookmark() {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("!+ " + pendingData.size());
-
-		bookmarks.push(new Bookmark(this));
+		pushBookmark();
 	}
 
 	/** {@inheritDoc} */
 	public void rewind() {
-		final int position;
-
-		if (bookmarks.empty()) {
-			position = 0;
-			delayedMarkers.clear();
-
-			if (DELAYED_LOGGER.isTraceEnabled())
-				DELAYED_LOGGER
-						.trace("Rewound delayed markers, without bookmarks.");
+		if (hasActiveBookmarks()) {
+			final Bookmark rewound = popBookmark();
+			delayed.clear();
+			delayed.addAll(rewound.markers);
+			rewindTo(rewound.position);
 
 		} else {
-			Bookmark bookmark = bookmarks.pop();
-			position = bookmark.position;
-
-			if (bookmark.delayedMarkers == null)
-				delayedMarkers.clear();
-			else
-				delayedMarkers = bookmark.delayedMarkers;
-
-			if (DELAYED_LOGGER.isTraceEnabled()) {
-				DELAYED_LOGGER
-						.trace("Rewound delayed markers, through bookmarks:");
-				for (Marker marker : delayedMarkers)
-					DELAYED_LOGGER.trace(" * " + marker);
-			}
+			delayed.clear();
+			rewindTo(0);
 		}
+	}
 
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("!- " + position);
-
+	private void rewindTo(int position) {
 		while (pendingData.size() > position) {
-			Data packet = pendingData.pop();
+			final Data d = pendingData.pop();
 
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("<< " + packet);
-
-			if (!(packet instanceof Token))
+			// Dropping all markers.
+			if (d instanceof Marker)
 				continue;
 
-			Token rewound = (Token) packet;
-			rewound.setSkipped(false);
-			source.unshift(rewound);
+			if (d instanceof Token)
+				((Token) d).setSkipped(false);
+
+			source.unshift(d);
 		}
 	}
 
 	/** {@inheritDoc} */
 	public void commit() {
-		if (bookmarks.isEmpty()) {
+		if (hasActiveBookmarks())
+			popBookmark();
+
+		else {
+			assert (delayed.isEmpty());
 			pendingData.shiftAllToNextTarget();
-
-		} else {
-			Bookmark bookmark = bookmarks.pop();
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("!! " + bookmark.position);
 		}
 	}
 
@@ -328,12 +301,12 @@ public class BaseStream implements Stream {
 
 	/** {@inheritDoc} */
 	public Iterator<Data> backToBookmarkIterator() {
-		if (bookmarks.isEmpty())
+		if (!hasActiveBookmarks())
 			return emptyIterator();
 
-		final Bookmark bookmark = bookmarks.peek();
-		final int numberOfDelayedMarkers = bookmark.delayedMarkers == null ? 0
-				: bookmark.delayedMarkers.size();
+		final Bookmark bookmark = peekBookmark();
+		final int numberOfDelayedMarkers = bookmark.markers == null ? 0
+				: bookmark.markers.size();
 		final int positionOfBookmark = bookmark.position
 				+ numberOfDelayedMarkers;
 
@@ -362,12 +335,12 @@ public class BaseStream implements Stream {
 
 	/** {@inheritDoc} */
 	public Iterator<Data> fromBookmarkIterator() {
-		if (bookmarks.isEmpty())
+		if (!hasActiveBookmarks())
 			return emptyIterator();
 
-		final Bookmark bookmark = bookmarks.peek();
-		final int numberOfDelayedMarkers = bookmark.delayedMarkers == null ? 0
-				: bookmark.delayedMarkers.size();
+		final Bookmark bookmark = peekBookmark();
+		final int numberOfDelayedMarkers = bookmark.markers == null ? 0
+				: bookmark.markers.size();
 		final int positionOfBookmark = bookmark.position
 				+ numberOfDelayedMarkers;
 
@@ -378,17 +351,50 @@ public class BaseStream implements Stream {
 		return this;
 	}
 
+	// ========================================================================
+
+	private boolean hasActiveBookmarks() {
+		return nextActiveBookmark > 0;
+	}
+
+	private void pushBookmark() {
+		final Bookmark bookmark;
+
+		if (nextActiveBookmark < allBookmarks.size())
+			bookmark = allBookmarks.get(nextActiveBookmark);
+
+		else {
+			bookmark = new Bookmark();
+			allBookmarks.add(bookmark);
+		}
+
+		nextActiveBookmark += 1;
+
+		bookmark.latchCurrentState();
+	}
+
+	private Bookmark popBookmark() {
+		nextActiveBookmark -= 1;
+		return allBookmarks.get(nextActiveBookmark);
+	}
+
+	private Bookmark peekBookmark() {
+		return allBookmarks.get(nextActiveBookmark - 1);
+	}
+
 	private final class Bookmark {
-		private final int position;
-		private final LinkedList<Marker> delayedMarkers;
+		private int position = 0;
+		private List<Marker> markers = new ArrayList<Marker>();
 
-		public Bookmark(BaseStream stream) {
-			position = stream.pendingData.size();
+		public void latchCurrentState() {
+			position = pendingData.size();
+			markers.clear();
+			markers.addAll(delayed);
+		}
 
-			if (stream.delayedMarkers.isEmpty())
-				delayedMarkers = null;
-			else
-				delayedMarkers = new LinkedList<Marker>(stream.delayedMarkers);
+		@Override
+		public String toString() {
+			return "{ pos: " + position + " | markers: " + markers + "}";
 		}
 	}
 }

@@ -8,9 +8,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import koopa.core.data.Token;
-
 import org.junit.Test;
+
+import koopa.core.data.Data;
+import koopa.core.data.Token;
 
 public class TestTokenizerTest {
 
@@ -60,8 +61,10 @@ public class TestTokenizerTest {
 		TestTokenizer tokenizer = new TestTokenizer(source);
 
 		for (int i = 0; i <= count; i++) {
-			Token token = tokenizer.next();
-			assertEquals(token.toString(), expected[i], token.getText());
+			final Data d = tokenizer.next();
+			assertTrue(expected[i], d instanceof Token);
+			final Token t = (Token) d;
+			assertEquals(t.toString(), expected[i], t.getText());
 		}
 
 		if (atMark)

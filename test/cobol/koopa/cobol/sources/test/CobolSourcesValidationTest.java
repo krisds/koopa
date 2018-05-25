@@ -24,6 +24,7 @@ import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationOfLines;
 import koopa.cobol.sources.InlineComments;
 import koopa.cobol.sources.ProgramArea;
+import koopa.cobol.sources.Replace;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
@@ -51,6 +52,7 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		CLASSES.put("TokenSeparator", TokenSeparator.class);
 		CLASSES.put("InlineComments", InlineComments.class);
 		CLASSES.put("ContinuationOfLines", ContinuationOfLines.class);
+		CLASSES.put("Replace", Replace.class);
 	}
 
 	@Override
@@ -77,8 +79,8 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		// the stages to be present.
 		final Copybooks copybooks = new Copybooks();
 
-		final Source source = CobolTokens.getNewSource(file,
-				sample.getReader(), grammar, format, copybooks);
+		final Source source = CobolTokens.getNewSource(file, sample.getReader(),
+				grammar, format, copybooks);
 
 		final Source selectedSource;
 		if (clazz == null)
@@ -96,39 +98,42 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		super.initialize();
 
 		final Object[] fixed = new Object[] { FIXED };
-		addCategory("FIXED", fixed);
-		addCategory("FXD", fixed);
-		addCategory("F", fixed);
+		addTokenCategory("FIXED", fixed);
+		addTokenCategory("FXD", fixed);
+		addTokenCategory("F", fixed);
 
 		final Object[] free = new Object[] { FREE };
-		addCategory("FREE", free);
-		addCategory("f", free);
+		addTokenCategory("FREE", free);
+		addTokenCategory("f", free);
 
 		final Object[] variable = new Object[] { VARIABLE };
-		addCategory("VARIABLE", variable);
-		addCategory("VAR", variable);
-		addCategory("V", variable);
+		addTokenCategory("VARIABLE", variable);
+		addTokenCategory("VAR", variable);
+		addTokenCategory("V", variable);
 
 		final Object[] seqnr = new Object[] { SEQUENCE_NUMBER_AREA };
-		addCategory("SEQNR", seqnr);
+		addTokenCategory("SEQNR", seqnr);
 
 		final Object[] indicator = new Object[] { INDICATOR_AREA };
-		addCategory("INDIC", indicator);
-		addCategory("I", indicator);
+		addTokenCategory("INDIC", indicator);
+		addTokenCategory("I", indicator);
 
 		final Object[] identification = new Object[] { IDENTIFICATION_AREA };
-		addCategory("IDENT", identification);
+		addTokenCategory("IDENT", identification);
 
 		final Object[] sourceListingDirective = new Object[] {
 				SOURCE_LISTING_DIRECTIVE, COMPILER_DIRECTIVE };
-		addCategory("SOURCE_LISTING_DIRECTIVE", sourceListingDirective);
-		addCategory("SOURCE_LISTING", sourceListingDirective);
-		addCategory("LISTING", sourceListingDirective);
+		addTokenCategory("SOURCE_LISTING_DIRECTIVE", sourceListingDirective);
+		addTokenCategory("SOURCE_LISTING", sourceListingDirective);
+		addTokenCategory("LISTING", sourceListingDirective);
 
 		final Object[] sourceFormatDirective = new Object[] {
 				SOURCE_FORMAT_DIRECTIVE, COMPILER_DIRECTIVE };
-		addCategory("SOURCE_FORMAT_DIRECTIVE", sourceFormatDirective);
-		addCategory("SOURCE_FORMAT", sourceFormatDirective);
-		addCategory("FORMAT", sourceFormatDirective);
+		addTokenCategory("SOURCE_FORMAT_DIRECTIVE", sourceFormatDirective);
+		addTokenCategory("SOURCE_FORMAT", sourceFormatDirective);
+		addTokenCategory("FORMAT", sourceFormatDirective);
+
+		addNodeCategory("copy", "cobol", "copyStatement");
+		addNodeCategory("replace", "cobol", "replaceStatement");
 	}
 }

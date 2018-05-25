@@ -54,7 +54,7 @@ public final class CobolTokens {
 				= new TokenSeparator(programArea);
 
 		// * Inline comments.
-		final InlineComments inlineComments //
+		final InlineComments inlineComments 
 				= new InlineComments(tokenSeparator);
 
 		final Source optionalCopybookExpansion;
@@ -70,13 +70,11 @@ public final class CobolTokens {
 			// koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest2
 
 			// * Handle COPY includes.
-			final CopyInclude copyInclude //
-					= new CopyInclude( //
-							inlineComments, grammar, copybooks, inputStack);
+			final CopyInclude copyInclude = new CopyInclude( //
+					inlineComments, grammar, copybooks, inputStack);
 
 			// * Handle COPY REPLACING.
-			final Replacing copyReplacing //
-					= new Replacing(copyInclude);
+			final Replacing copyReplacing = new Replacing(copyInclude);
 			optionalCopybookExpansion = copyReplacing;
 		}
 
@@ -99,14 +97,12 @@ public final class CobolTokens {
 			// REPLACE statements will be expanded and applied.
 
 			// This stage is tested in
-			// koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest2
+			// koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest
 
 			// * Handle REPLACE statements.
-			final Replace replace //
-					= new Replace(continuationOfLines, grammar);
+			final Replace replace = new Replace(continuationOfLines, grammar);
 			// * Handle actual replacements.
-			final Replacing replacing //
-					= new Replacing(replace);
+			final Replacing replacing = new Replacing(replace);
 
 			optionalReplaceStatements = replacing;
 		}

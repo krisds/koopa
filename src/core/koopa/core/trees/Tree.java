@@ -23,13 +23,7 @@ public class Tree implements Data {
 	// TODO This should really be based on the grammar's logic...
 	private static class ProgramTextFilter implements TokenFilter {
 		public boolean include(Token token) {
-			if (!token.hasTag(PROGRAM_TEXT_AREA))
-				return false;
-
-			if (token.hasTag(COMMENT))
-				return false;
-
-			return true;
+			return token.hasTag(PROGRAM_TEXT_AREA);
 		}
 	}
 
@@ -55,6 +49,13 @@ public class Tree implements Data {
 	public String getName() {
 		if (data instanceof Start)
 			return ((Start) data).getName();
+		else
+			return null;
+	}
+
+	public String getNamespace() {
+		if (data instanceof Start)
+			return ((Start) data).getNamespace();
 		else
 			return null;
 	}

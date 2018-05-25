@@ -72,6 +72,7 @@ private def atom =
     | balanced
     | unbalanced
     | notempty
+    | tree
     | rvalue
     )
 end
@@ -184,6 +185,14 @@ end
 
 def closure =
     '{' sequence '}'
+end
+
+def tree =
+    ( '<' ++([namespace ':'] word '/' '>')
+    | '<' ++([namespace ':'] word '>') part* '<' ++('/' '>')
+    )
+
+  where def namespace = word end
 end
 
 def todo =

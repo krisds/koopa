@@ -117,7 +117,8 @@ public class CopyInclude extends ChainingSource
 					pending.addAll(copyStatement);
 					pending.addAll(line);
 					return pending.removeFirst();
-				}
+				} else
+					pending.add(copy);
 			}
 		}
 	}

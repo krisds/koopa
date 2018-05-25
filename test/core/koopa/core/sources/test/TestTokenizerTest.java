@@ -17,7 +17,7 @@ public class TestTokenizerTest {
 
 	private final String input = "A B C ^ X Y Z";
 
-	private final List<Object> tagsAndTokens = Arrays.asList(new Object[] {
+	private final List<Object> objects = Arrays.asList(new Object[] {
 			PROGRAM_TEXT_AREA, "A", //
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "B", //
@@ -57,7 +57,7 @@ public class TestTokenizerTest {
 	}
 
 	private void assertState(String message, int count, boolean atMark) {
-		HardcodedSource source = new HardcodedSource(tagsAndTokens);
+		HardcodedSource source = HardcodedSource.from(objects);
 		TestTokenizer tokenizer = new TestTokenizer(source);
 
 		for (int i = 0; i <= count; i++) {

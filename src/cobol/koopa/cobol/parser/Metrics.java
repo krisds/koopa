@@ -25,12 +25,7 @@ public class Metrics {
 		int water = 0;
 
 		for (Token token : tokenTracker.getTokens()) {
-			// Ignoring everything that's not program text.
-			if (!token.hasTag(PROGRAM_TEXT_AREA))
-				continue;
-
-			// Ignoring whitespace.
-			if (token.hasTag(SEPARATOR) && token.getText().trim().length() == 0)
+			if (!isSignificantToken(token))
 				continue;
 
 			if (token.hasTag(LAND))
@@ -55,22 +50,26 @@ public class Metrics {
 
 		int count = 0;
 
-		for (Token token : tokenTracker.getTokens()) {
-			// Ignoring everything that's not program text.
-			if (!token.hasTag(PROGRAM_TEXT_AREA))
-				continue;
-
-			// Ignore all comments within the program text.
-			if (token.hasTag(COMMENT))
-				continue;
-
-			// Ignoring whitespace.
-			if (token.hasTag(SEPARATOR) && token.getText().trim().length() == 0)
-				continue;
-
-			count += 1;
-		}
+		for (Token token : tokenTracker.getTokens())
+			if (isSignificantToken(token))
+				count += 1;
 
 		return count;
+	}
+	
+	private static boolean isSignificantToken(Token token) {
+		// Ignoring everything that's not program text.
+		if (!token.hasTag(PROGRAM_TEXT_AREA))
+			return false;
+
+		// Ignore all comments within the program text.
+		if (token.hasTag(COMMENT))
+			return false;
+
+		// Ignoring whitespace.
+		if (token.hasTag(SEPARATOR) && token.getText().trim().length() == 0)
+			return false;
+		
+		return true;
 	}
 }

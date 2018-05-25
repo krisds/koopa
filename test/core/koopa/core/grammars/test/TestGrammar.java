@@ -193,4 +193,25 @@ public class TestGrammar extends KoopaGrammar {
 	public ParserCombinator ranged(int begin, int end) {
 		return super.ranged(begin, end);
 	}
+
+	@Override
+	protected ParserCombinator tree(String name) {
+		return super.tree(name);
+	}
+
+	@Override
+	protected ParserCombinator tree(String namespace, String name) {
+		return super.tree(namespace, name);
+	}
+
+	@Override
+	protected ParserCombinator tree(String name, ParserCombinator parser) {
+		return super.tree(name, parser);
+	}
+
+	@Override
+	protected ParserCombinator tree(String namespace, String name,
+			ParserCombinator parser) {
+		return super.tree(namespace, name, parser);
+	}
 }

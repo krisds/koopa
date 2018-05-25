@@ -31,8 +31,21 @@ public final class Util {
 		return ranges;
 	}
 
-	public static Tree tree(String name, Object... parts) {
-		Start start = Start.on("test", name);
+	public static Tree tree(String tag, Object... parts) {
+		final String namespace;
+		final String name;
+
+		final int colon = tag.indexOf(':');
+		if (colon < 0) {
+			namespace = "test";
+			name = tag;
+
+		} else {
+			namespace = tag.substring(0, colon);
+			name = tag.substring(colon + 1);
+		}
+
+		Start start = Start.on(namespace, name);
 
 		Tree tree = new Tree(start);
 

@@ -100,6 +100,7 @@ public class KGGrammar extends FluentGrammar {
 				"unbalanced", //
 				"notempty", //
 				"todo", //
+				"tree", //
 				"rvalue" //
 		));
 
@@ -240,6 +241,21 @@ public class KGGrammar extends FluentGrammar {
 		// '%notempty' atom
 		define("notempty").as("==%==", noskip("==notempty=="), "atom");
 
+		// ( '<' ++([namespace ':'] word '/' '>')
+		// | '<' ++([namespace ':'] word '>') part* '<' ++('/' '>')
+		// )
+		defineHelper("namespace").as("word");
+		define("tree")
+				.as(oneOf( //
+						all("==<==",
+								noskip(optional("namespace", "==:=="), "word",
+										"==/==", "==>==")), //
+						all("==<==",
+								noskip(optional("namespace", "==:=="), "word",
+										"==>=="), //
+								many("part"), //
+								"==<==", noskip("==/==", "==>=="))));
+
 		// '...'
 		define("todo").as("==.==", noskip("==.==", "==.=="));
 	}
@@ -272,5 +288,9 @@ public class KGGrammar extends FluentGrammar {
 
 	public ParserCombinator word() {
 		return definitionOf("word").asParser();
+	}
+
+	public ParserCombinator tree() {
+		return definitionOf("tree").asParser();
 	}
 }

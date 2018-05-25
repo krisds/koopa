@@ -14,7 +14,8 @@ import org.junit.runner.RunWith;
 
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
-import koopa.core.sources.test.TokenValidator;
+import koopa.core.sources.test.DataValidator;
+import koopa.core.trees.Tree;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
@@ -24,7 +25,7 @@ import koopa.core.util.test.Files;
  */
 @RunWith(Files.class)
 public abstract class SourcesValidationTest
-		implements FileBasedTest, TokenValidator {
+		implements FileBasedTest, DataValidator {
 
 	protected abstract File getFolder();
 
@@ -52,19 +53,25 @@ public abstract class SourcesValidationTest
 		sample.assertOutputIsAsExpected(source, this);
 	}
 
-	protected abstract Source getSource(String resourceName,
-			Sample sample);
+	protected abstract Source getSource(String resourceName, Sample sample);
 
-	private Map<String, Tags> CATEGORIES = new HashMap<String, Tags>();
+	private Map<String, Tags> TOKEN_CATEGORIES = new HashMap<String, Tags>();
+	private Map<String, NodeType> NODE_CATEGORIES = new HashMap<String, NodeType>();
 
-	protected void addCategory(String category, Object[] required) {
-		addCategory(category, required, null);
+	protected void addTokenCategory(String category, Object[] required) {
+		addTokenCategory(category, required, null);
 	}
 
-	protected void addCategory(String category, Object[] required,
+	protected void addTokenCategory(String category, Object[] required,
 			Object[] forbidden) {
-		assert (!CATEGORIES.containsKey(category));
-		CATEGORIES.put(category, new Tags(required, forbidden));
+		assert (!TOKEN_CATEGORIES.containsKey(category));
+		TOKEN_CATEGORIES.put(category, new Tags(required, forbidden));
+	}
+
+	protected void addNodeCategory(String category, String namespace,
+			String name) {
+		assert (!NODE_CATEGORIES.containsKey(category));
+		NODE_CATEGORIES.put(category, new NodeType(namespace, name));
 	}
 
 	public void validate(Token token, String category, boolean required) {
@@ -79,8 +86,8 @@ public abstract class SourcesValidationTest
 			return;
 		}
 
-		if (CATEGORIES.containsKey(category)) {
-			final Tags tags = CATEGORIES.get(category);
+		if (TOKEN_CATEGORIES.containsKey(category)) {
+			final Tags tags = TOKEN_CATEGORIES.get(category);
 
 			if (required)
 				assertRequiredCategory(token, category, tags);
@@ -90,6 +97,40 @@ public abstract class SourcesValidationTest
 		} else {
 			System.out.println(
 					"Warning! Unknown category '" + category + "' on " + token);
+		}
+	}
+
+	public void validate(Tree tree, String category, boolean required) {
+		if ("-".equalsIgnoreCase(category)) {
+			// A "don't care". For when you don't care.
+			return;
+		}
+
+		if ("?".equalsIgnoreCase(category)) {
+			// This one is used for debugging.
+			System.out.println(tree);
+			return;
+		}
+
+		if (NODE_CATEGORIES.containsKey(category)) {
+			final NodeType type = NODE_CATEGORIES.get(category);
+
+			final String msg;
+			if (required)
+				msg = "Category " + category + ": requires " + type + ". Got: "
+						+ tree;
+			else
+				msg = "Category " + category + ": forbids" + type + ". Got: "
+						+ tree;
+
+			assertTrue(msg, type.name.equals(tree.getName()) == required);
+			if (type.namespace != null)
+				assertTrue(msg,
+						type.namespace.equals(tree.getNamespace()) == required);
+
+		} else {
+			System.out.println(
+					"Warning! Unknown category '" + category + "' on " + tree);
 		}
 	}
 
@@ -124,6 +165,25 @@ public abstract class SourcesValidationTest
 		public Tags(Object[] required, Object[] forbidden) {
 			this.required = required;
 			this.forbidden = forbidden;
+		}
+	}
+
+	private final class NodeType {
+		final String namespace;
+		final String name;
+
+		public NodeType(String namespace, String name) {
+			super();
+			this.namespace = namespace;
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			if (namespace == null)
+				return "<" + name + ">";
+			else
+				return "<" + namespace + ":" + name + ">";
 		}
 	}
 }

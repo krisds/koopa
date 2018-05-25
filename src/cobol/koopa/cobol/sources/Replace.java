@@ -297,6 +297,7 @@ public class Replace extends ChainingSource
 			final ReplacementData data = new ReplacementData(false, !last,
 					null);
 
+			pending.add(replace);
 			pending.add(data);
 			if (!line.isEmpty())
 				pending.addAll(line);
@@ -319,6 +320,7 @@ public class Replace extends ChainingSource
 			final ReplacementData data = new ReplacementData(true, !also,
 					replacements);
 
+			pending.add(replace);
 			pending.add(data);
 			if (!line.isEmpty())
 				pending.addAll(line);

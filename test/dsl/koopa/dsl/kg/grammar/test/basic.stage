@@ -58,3 +58,31 @@ target scopedIdentifier;
 +[ sql::statement ]
 +[ sql::`where ]
 -identifier
+
+
+target tree;
+
++[ <statement/> ]
++[ <where/> ]
++[ <sql:statement/> ]
++[ <def:where/> ]
+
+-[ <statement /> ]
+-[ <where /> ]
+
++[ <statement></> ]
++[ <statement> </> ]
+
++[ <sql:statement></> ]
++[ <sql:statement> </> ]
+
++[ <statement> ROLLBACK </> ]
++[ <statement> select </> ]
++[ <statement> SELECT --> eof </> ]
+
++[ <sql:statement> ROLLBACK </> ]
++[ <sql:statement> select </> ]
++[ <sql:statement> SELECT --> eof </> ]
+
+-[ <foo> ]
+-[ <foo></foo> ]

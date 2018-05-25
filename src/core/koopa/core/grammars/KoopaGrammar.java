@@ -28,6 +28,7 @@ import koopa.core.parsers.combinators.Balancing;
 import koopa.core.parsers.combinators.Choice;
 import koopa.core.parsers.combinators.FailMatch;
 import koopa.core.parsers.combinators.LimitedTo;
+import koopa.core.parsers.combinators.MatchTree;
 import koopa.core.parsers.combinators.Nested;
 import koopa.core.parsers.combinators.Not;
 import koopa.core.parsers.combinators.NotEmpty;
@@ -223,6 +224,23 @@ public abstract class KoopaGrammar extends Grammar {
 
 	protected ParserCombinator ranged(int begin, int end) {
 		return new TestRange(this, begin, end);
+	}
+
+	protected ParserCombinator tree(final String name) {
+		return tree(null, name, null);
+	}
+
+	protected ParserCombinator tree(final String namespace, final String name) {
+		return tree(namespace, name, null);
+	}
+
+	protected ParserCombinator tree(String name, ParserCombinator parser) {
+		return new MatchTree(null, name, parser);
+	}
+
+	protected ParserCombinator tree(String namespace, String name,
+			ParserCombinator parser) {
+		return new MatchTree(namespace, name, parser);
 	}
 
 	// ========================================================================

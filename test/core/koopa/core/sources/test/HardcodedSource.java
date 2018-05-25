@@ -1,5 +1,6 @@
 package koopa.core.sources.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,55 +20,54 @@ import koopa.core.sources.Source;
 public class HardcodedSource extends BasicSource
 		implements Source {
 
-	private final List<Object> tagsAndTokens;
+	private final List<Data> data;
 	private int index;
-	private Position position;
 
-	public HardcodedSource(List<Object> tagsAndTokens) {
-		this.tagsAndTokens = tagsAndTokens;
+	public HardcodedSource(List<Data> tagsAndTokens) {
+		this.data = tagsAndTokens;
 		this.index = 0;
-		this.position = new Position(0, 0, 0);
 	}
 
 	@Override
 	public Data nxt1() {
-		if (index >= tagsAndTokens.size())
+		if (index >= data.size())
 			return null;
-
-		position = position.offsetBy(1);
-
-		int from = index;
-
-		String text = null;
-		while (index < tagsAndTokens.size()) {
-			if (tagsAndTokens.get(index) instanceof String) {
-				text = (String) tagsAndTokens.get(index);
-				break;
-			}
-
-			index += 1;
-		}
-
-		if (text == null)
-			return null;
-
-		final Position end = position.offsetBy(text.length() - 1);
-		Token token = new Token(text, position, end);
-
-		for (; from < index; from++)
-			token = token.withTags(tagsAndTokens.get(from));
-
-		index += 1;
-
-		position = end;
-
-		return token;
+		else
+			return data.get(index++);
 	}
 
 	public void close() {
 	}
 
-	public static HardcodedSource from(Object... tagsAndTokens) {
-		return new HardcodedSource(Arrays.asList(tagsAndTokens));
+	public static HardcodedSource from(Object... objects) {
+		return from(Arrays.asList(objects));
+	}
+	
+	public static HardcodedSource from(List<Object> objects) {
+		final List<Data> data = new ArrayList<Data>();
+		
+		Position p = new Position(0, 0, 0);
+		final List<Object> tags = new ArrayList<Object>();
+		for (Object o : objects) {
+			if (o instanceof Data) {
+				data.add((Data) o);
+				tags.clear();
+				continue;
+			}
+			
+			if (o instanceof String) {
+				final String s = (String) o;
+				final Position start = p.offsetBy(1);
+				final Position end = start.offsetBy(s.length() - 1);
+				data.add(new Token(s, start, end).withTags(tags.toArray()));
+				tags.clear();
+				p = end;
+				continue;
+			}
+			
+			tags.add(o);
+		}
+		
+		return new HardcodedSource(data);
 	}
 }

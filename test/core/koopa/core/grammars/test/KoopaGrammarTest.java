@@ -2,6 +2,8 @@ package koopa.core.grammars.test;
 
 import static koopa.core.data.tags.IslandTag.LAND;
 import static koopa.core.grammars.test.TestTag.CHARACTER_STRING;
+import static koopa.core.util.test.Util.token;
+import static koopa.core.util.test.Util.tree;
 
 import java.util.List;
 
@@ -378,4 +380,107 @@ public class KoopaGrammarTest extends GrammarTest {
 		shouldReject(G.sequence(any, any, any, G.ranged(24, 30), any), cobol);
 		shouldReject(G.sequence(any, any, any, G.ranged(23, 29), any), cobol);
 	}
+
+	@Test
+	public void testCanMatchTree() {
+		ParserCombinator parser = G.tree("person");
+
+		shouldAccept(parser, input(tree("person")));
+		shouldAccept(parser, input(tree("any other namespace:person")));
+		shouldAccept(parser, input(tree("person", //
+				token("Grace"), token("Murray"), token("Hopper"))));
+
+		shouldReject(parser, input(tree("object")));
+	}
+
+	@Test
+	public void testCanMatchTreeInNamespace() {
+		ParserCombinator parser = G.tree("model", "person");
+
+		shouldAccept(parser, input(tree("model:person")));
+		shouldAccept(parser, input(tree("model:person", //
+				token("Grace"), token("Murray"), token("Hopper"))));
+
+		shouldReject(parser, input(tree("model:object")));
+		shouldReject(parser, input(tree("any other namespace:person")));
+	}
+
+	@Test
+	public void testCanMatchTreeContents() {
+		ParserCombinator parser = G.tree("language",
+				G.sequence(G.token("COBOL")));
+
+		shouldAccept(parser, input(tree("language", token("COBOL"))));
+
+		// TODO Test with skipping.
+		shouldReject(parser,
+				input(tree("language", token("COBOL"), token("PL/I"))));
+
+		shouldReject(parser, input(tree("language", token("PL/I"))));
+	}
+
+	@Test
+	public void testCanMatchPartialTreeContents() {
+		ParserCombinator parser = G.tree("language",
+				G.sequence(G.token("COBOL"), G.skipto(G.eof())));
+
+		shouldAccept(parser, input(tree("language", token("COBOL"))));
+
+		shouldAccept(parser,
+				input(tree("language", token("COBOL"), token("PL/I"))));
+
+		shouldReject(parser, input(tree("language", token("PL/I"))));
+	}
+
+	@Test
+	public void testCanMatchTreeContentsInNamespace() {
+		ParserCombinator parser = G.tree("model", "language",
+				G.sequence(G.token("COBOL")));
+
+		shouldAccept(parser, input(tree("model:language", token("COBOL"))));
+
+		shouldReject(parser,
+				input(tree("model:language", token("COBOL"), token("PL/I"))));
+
+		shouldReject(parser,
+				input(tree("any other namespace:language", token("COBOL"))));
+		shouldReject(parser, input(tree("model:language", token("PL/I"))));
+	}
+
+	@Test
+	public void testCanMatchPartialTreeContentsInNamespace() {
+		ParserCombinator parser = G.tree("model", "language",
+				G.sequence(G.token("COBOL"), G.skipto(G.eof())));
+
+		shouldAccept(parser, input(tree("model:language", token("COBOL"))));
+
+		shouldAccept(parser,
+				input(tree("model:language", token("COBOL"), token("PL/I"))));
+
+		shouldReject(parser,
+				input(tree("any other namespace:language", token("COBOL"))));
+		shouldReject(parser, input(tree("model:language", token("PL/I"))));
+	}
+
+	@Test
+	public void testCanMatchComplexTree() {
+		ParserCombinator parser = G.tree("person",
+				G.sequence(G.tree("first_name"), G.tree("last_name")));
+
+		shouldAccept(parser, input(tree("person", tree("first_name", "Grace"),
+				tree("last_name", "Hopper"))));
+
+		shouldReject(parser, input(tree("human", tree("first_name", "Grace"),
+				tree("last_name", "Hopper"))));
+
+		shouldReject(parser,
+				input(tree("person", tree("first_name", "Grace"))));
+		shouldReject(parser,
+				input(tree("person", tree("last_name", "Hopper"))));
+		shouldReject(parser, input(tree("person", tree("last_name", "Hopper"),
+				tree("first_name", "Grace"))));
+	}
+
+	// TODO Nested trees.
+	// TODO Recursive tree rule.
 }

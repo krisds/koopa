@@ -30,6 +30,20 @@ public class Parse {
 		this.flow = new Flow(this);
 	}
 
+	private Parse(Trace trace, Messages messages) {
+		this.stack = new Stack();
+		this.trace = trace;
+		this.messages = messages;
+		this.flow = new Flow(this);
+	}
+
+	public Parse ofNested(Source source) {
+		// TODO Shared stack ?
+		final Parse parse = new Parse(trace, messages);
+		parse.getFlow().setSource(source);
+		return parse;
+	}
+
 	public static Parse of(Source source) {
 		Parse parse = new Parse();
 		parse.getFlow().setSource(source);

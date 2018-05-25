@@ -40,12 +40,11 @@ public abstract class GrammarTest {
 		return r;
 	}
 
-	protected void shouldReject(ParserCombinator parser,
-			List<Object> taggedWords) {
+	protected void shouldReject(ParserCombinator parser, List<Object> input) {
 		Scoped rule = (Scoped) G.scoped("rule");
 		rule.setParser(parser);
 
-		HardcodedSource source = new HardcodedSource(taggedWords);
+		HardcodedSource source = HardcodedSource.from(input);
 		ListTarget target = new ListTarget();
 
 		Assert.assertFalse(rule.accepts(Parse.of(source).to(target))
@@ -53,11 +52,11 @@ public abstract class GrammarTest {
 	}
 
 	protected void shouldAccept(ParserCombinator parser,
-			List<Object> taggedWords) {
+			List<Object> input) {
 		Scoped rule = (Scoped) G.scoped("rule");
 		rule.setParser(parser);
 
-		HardcodedSource source = new HardcodedSource(taggedWords);
+		HardcodedSource source = HardcodedSource.from(input);
 		ListTarget target = new ListTarget();
 
 		Assert.assertTrue(rule.accepts(Parse.of(source).to(target)));
@@ -70,7 +69,7 @@ public abstract class GrammarTest {
 		Scoped rule = (Scoped) G.scoped("rule");
 		rule.setParser(parser);
 
-		HardcodedSource source = new HardcodedSource(sample.getTaggedWords());
+		HardcodedSource source = HardcodedSource.from(sample.getTaggedWords());
 		KoopaTreeBuilder target = new KoopaTreeBuilder(G);
 
 		Assert.assertTrue(rule.accepts(Parse.of(source).to(target)));

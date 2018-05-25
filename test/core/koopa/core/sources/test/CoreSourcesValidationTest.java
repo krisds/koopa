@@ -41,58 +41,58 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 		final Object[] programText = new Object[] { PROGRAM_TEXT_AREA };
 		final Object[] notProgramText = new Object[] { //
 				COMMENT, SKIPPED, COMPILER_DIRECTIVE };
-		addCategory("TEXT", programText, notProgramText);
-		addCategory("T", programText, notProgramText);
+		addTokenCategory("TEXT", programText, notProgramText);
+		addTokenCategory("T", programText, notProgramText);
 
 		final Object[] comment = new Object[] { COMMENT };
 		final Object[] notComment = new Object[] { //
 				PROGRAM_TEXT_AREA, SKIPPED, COMPILER_DIRECTIVE };
-		addCategory("COMMENT", comment, notComment);
-		addCategory("C", comment, notComment);
+		addTokenCategory("COMMENT", comment, notComment);
+		addTokenCategory("C", comment, notComment);
 
 		final Object[] skipped = new Object[] { SKIPPED };
 		final Object[] notSkipped = new Object[] { //
 				PROGRAM_TEXT_AREA, COMMENT, COMPILER_DIRECTIVE };
-		addCategory("SKIPPED", skipped, notSkipped);
-		addCategory("SKIP", skipped, notSkipped);
-		addCategory("SKP", skipped, notSkipped);
+		addTokenCategory("SKIPPED", skipped, notSkipped);
+		addTokenCategory("SKIP", skipped, notSkipped);
+		addTokenCategory("SKP", skipped, notSkipped);
 
 		final Object[] compilerDirective = new Object[] { COMPILER_DIRECTIVE };
 		final Object[] notCompilerDirective = new Object[] { //
 				PROGRAM_TEXT_AREA, COMMENT, SKIPPED };
-		addCategory("COMPILER_DIRECTIVE", compilerDirective,
+		addTokenCategory("COMPILER_DIRECTIVE", compilerDirective,
 				notCompilerDirective);
-		addCategory("DIRECTIVE", compilerDirective, notCompilerDirective);
-		addCategory("DIR", compilerDirective, notCompilerDirective);
-		addCategory("D", compilerDirective, notCompilerDirective);
+		addTokenCategory("DIRECTIVE", compilerDirective, notCompilerDirective);
+		addTokenCategory("DIR", compilerDirective, notCompilerDirective);
+		addTokenCategory("D", compilerDirective, notCompilerDirective);
 
 		final Object[] separator = new Object[] { SEPARATOR };
-		addCategory(":", separator);
-		addCategory("SEP", separator);
+		addTokenCategory(":", separator);
+		addTokenCategory("SEP", separator);
 
 		final Object[] eoln = new Object[] { END_OF_LINE };
-		addCategory("EOLN", eoln);
+		addTokenCategory("EOLN", eoln);
 
 		final Object[] whitespace = new Object[] { SEPARATOR, WHITESPACE };
-		addCategory(".", whitespace);
-		addCategory("WS", whitespace);
+		addTokenCategory(".", whitespace);
+		addTokenCategory("WS", whitespace);
 
 		final Object[] string = new Object[] { STRING };
-		addCategory("STRING", string);
-		addCategory("STR", string);
-		addCategory("S", string);
+		addTokenCategory("STRING", string);
+		addTokenCategory("STR", string);
+		addTokenCategory("S", string);
 
 		final Object[] number = new Object[] { NUMBER };
-		addCategory("NUMBER", number);
-		addCategory("NUM", number);
-		addCategory("N", number);
+		addTokenCategory("NUMBER", number);
+		addTokenCategory("NUM", number);
+		addTokenCategory("N", number);
 
 		final Object[] word = new Object[] { WORD };
-		addCategory("WORD", word);
-		addCategory("W", word);
+		addTokenCategory("WORD", word);
+		addTokenCategory("W", word);
 
 		final Object[] incomplete = new Object[] { INCOMPLETE };
-		addCategory("INCOMPLETE", incomplete);
+		addTokenCategory("INCOMPLETE", incomplete);
 	}
 
 	@Override

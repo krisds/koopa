@@ -14,15 +14,15 @@ SEQNR I -                                                               IDENT EO
 # the format to become FREE.
 # Everything on this line will still be FIXED, as format gets applied on a
 # line-by-line basis.
-# The COPY statement itself will disappear, so we don't have any annotations
-# for it (as indicated by the '%' markers).
+# The COPY statement itself will be replaced by a tree which holds the parsed
+# directive.
 # The contents of the copybook itself won't get tested, so we don't provide
 # annotations for that either.
 
        COPY "FREE".
-<---->^            ^
-!TEXT =     %      TEXT
-SEQNR I     %      EOLN
+<---->^<---------->^
+!TEXT = copy       TEXT
+SEQNR I -          EOLN
 
 
 # At this point we should be in FREE format. Which means we expect to see

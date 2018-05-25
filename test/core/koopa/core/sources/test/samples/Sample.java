@@ -1,9 +1,8 @@
 package koopa.core.sources.test.samples;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileReader;
@@ -20,7 +19,8 @@ import koopa.core.data.Range;
 import koopa.core.data.Token;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
-import koopa.core.sources.test.TokenValidator;
+import koopa.core.sources.test.DataValidator;
+import koopa.core.trees.Tree;
 import koopa.core.util.FilenameFilters;
 
 public class Sample {
@@ -156,7 +156,7 @@ public class Sample {
 	 * expected output as defined in the sample.
 	 */
 	public void assertOutputIsAsExpected(Source source,
-			TokenValidator validator) {
+			DataValidator validator) {
 
 		int i = 0;
 		while (true) {
@@ -165,49 +165,99 @@ public class Sample {
 				break;
 			}
 
+			final Annotation annotation = annotations.get(i);
 			final Range range = ranges.get(i);
 
-			String message = "Expected a token at line "
-					+ range.getStart().getPositionInFile() + ", positions "
-					+ range.getStart().getPositionInLine() + "--"
-					+ range.getEnd().getPositionInLine();
-
 			final Data d = source.next();
-			assertNotNull(message, d);
-			assertTrue(d instanceof Token);
-			
-			final Token token = (Token) d;
-			if (token.isReplacement())
+
+			if (d == null) {
+				fail("Expected data at line "
+						+ range.getStart().getPositionInFile() + ", positions "
+						+ range.getStart().getPositionInLine() + "--"
+						+ range.getEnd().getPositionInLine());
+
+			} else if (d instanceof Token) {
+				final Token token = (Token) d;
+				if (token.isReplacement())
+					continue;
+
+				validate(range, annotation, token, validator);
+
+			} else if (d instanceof Tree) {
+				validate(range, annotation, (Tree) d, validator);
+
+			} else {
+				// Don't care.
 				continue;
-
-			message += ". Found " + token + " instead.";
-
-			assertEquals(message, range.getStart().getLinenumber(),
-					token.getStart().getLinenumber());
-			assertEquals(message, range.getStart().getPositionInLine(),
-					token.getStart().getPositionInLine());
-
-			assertEquals(message, range.getEnd().getLinenumber(),
-					token.getEnd().getLinenumber());
-			assertEquals(message, range.getEnd().getPositionInLine(),
-					token.getEnd().getPositionInLine());
-
-			final Annotation annotation = annotations.get(i);
-			if (annotation != null) {
-				final Set<String> required //
-						= annotation.getRequired();
-				if (required != null && !required.isEmpty())
-					for (String category : required)
-						validator.validate(token, category, true);
-
-				final Set<String> forbidden //
-						= annotation.getForbidden();
-				if (forbidden != null && !forbidden.isEmpty())
-					for (String category : forbidden)
-						validator.validate(token, category, false);
 			}
 
 			i += 1;
+		}
+	}
+
+	private void validate(Range range, Annotation annotation, Token token,
+			DataValidator validator) {
+		final String message = "Expected a token at line "
+				+ range.getStart().getPositionInFile() + ", positions "
+				+ range.getStart().getPositionInLine() + "--"
+				+ range.getEnd().getPositionInLine() + ". Found " + token
+				+ " instead.";
+
+		assertEquals(message, range.getStart().getLinenumber(),
+				token.getStart().getLinenumber());
+		assertEquals(message, range.getStart().getPositionInLine(),
+				token.getStart().getPositionInLine());
+
+		assertEquals(message, range.getEnd().getLinenumber(),
+				token.getEnd().getLinenumber());
+		assertEquals(message, range.getEnd().getPositionInLine(),
+				token.getEnd().getPositionInLine());
+
+		if (annotation != null) {
+			final Set<String> required //
+					= annotation.getRequired();
+			if (required != null && !required.isEmpty())
+				for (String category : required)
+					validator.validate(token, category, true);
+
+			final Set<String> forbidden //
+					= annotation.getForbidden();
+			if (forbidden != null && !forbidden.isEmpty())
+				for (String category : forbidden)
+					validator.validate(token, category, false);
+		}
+	}
+
+	private void validate(Range range, Annotation annotation, Tree tree,
+			DataValidator validator) {
+		final String message = "Expected a tree at line "
+				+ range.getStart().getPositionInFile() + ", positions "
+				+ range.getStart().getPositionInLine() + "--"
+				+ range.getEnd().getPositionInLine() + ". Found " + tree
+				+ " instead.";
+
+		assertEquals(message, range.getStart().getLinenumber(),
+				tree.getStartPosition().getLinenumber());
+		assertEquals(message, range.getStart().getPositionInLine(),
+				tree.getStartPosition().getPositionInLine());
+
+		assertEquals(message, range.getEnd().getLinenumber(),
+				tree.getEndPosition().getLinenumber());
+		assertEquals(message, range.getEnd().getPositionInLine(),
+				tree.getEndPosition().getPositionInLine());
+
+		if (annotation != null) {
+			final Set<String> required //
+					= annotation.getRequired();
+			if (required != null && !required.isEmpty())
+				for (String category : required)
+					validator.validate(tree, category, true);
+
+			final Set<String> forbidden //
+					= annotation.getForbidden();
+			if (forbidden != null && !forbidden.isEmpty())
+				for (String category : forbidden)
+					validator.validate(tree, category, false);
 		}
 	}
 }

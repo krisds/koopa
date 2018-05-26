@@ -1,0 +1,31 @@
+# This is a test of switching the source format in a copybook.
+
+# The file starts of in FIXED format. So we expect to see a sequence number, 
+# fixed indicator, program text (areas A and B) and an identifier.
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =    =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
+
+
+# The REPLACE statements will be replaced by trees which hold the parsed directive.
+
+       REPLACE ==XXX== BY ==FOO==.
+<---->^<------------------------->^
+!TEXT = replace                   TEXT
+SEQNR I -                         EOLN
+
+
+       REPLACE OFF.
+<---->^<---------->^
+!TEXT = replace    TEXT
+SEQNR I -          EOLN
+
+
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =    =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN

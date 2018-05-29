@@ -203,7 +203,7 @@ def mf =
     
     where def parameter =
       ( @STRING _
-      | '(' (%not ')')+ ')'
+      | '(' ( (%not ')') _ )+ ')'
       )
     end
   end

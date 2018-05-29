@@ -1216,8 +1216,11 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
             sequence(
               literal("("),
               plus(
-                not(
-                  literal(")")
+                sequence(
+                  not(
+                    literal(")")
+                  ),
+                  any()
                 )
               ),
               literal(")")

@@ -47,12 +47,33 @@ public class Stack {
 	 * <p>
 	 * We assume that the given word has been passed through
 	 * {@linkplain Grammar#comparableText(String)} already.
-	 * <p>
-	 * By default this forwards the question to the {@link #head} frame. (via
-	 * {@linkplain Frame#isKeyword(String)}).
 	 */
 	public boolean isKeyword(String word) {
-		return head.isKeyword(word);
+		Frame f = head;
+
+		while (f != null) {
+			ParserCombinator p = f.parser;
+
+			if (p == null)
+				return false;
+
+			while (true) {
+				if (!p.allowsKeywords())
+					return false;
+
+				if (p.isKeywordInScope(word))
+					return true;
+
+				if (p instanceof FutureParser)
+					p = ((FutureParser) p).parser;
+				else
+					break;
+			}
+
+			f = f.up();
+		}
+
+		return false;
 	}
 
 	/**
@@ -113,22 +134,6 @@ public class Stack {
 
 		private Frame push(ParserCombinator p) {
 			return new Frame(this, p);
-		}
-
-		/**
-		 * Whether or not this frame can say that the given word is a keyword.
-		 * <p>
-		 * We assume that the given word has been passed through
-		 * {@linkplain Grammar#comparableText(String)} already.
-		 * <p>
-		 * By default this forwards the question to the parser linked to this
-		 * frame (via {@linkplain ParserCombinator#isKeyword(String, Frame)}).
-		 */
-		public boolean isKeyword(String word) {
-			if (parser == null)
-				return false;
-			else
-				return parser.isKeyword(word, this);
 		}
 
 		public Frame pop() {

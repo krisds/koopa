@@ -82,16 +82,26 @@ public abstract class ParserCombinator {
 	}
 
 	/**
+	 * Whether or not this parser allows keywords to be passed through its
+	 * scope.
+	 * <p>
+	 * By default this returns <code>true</code>.
+	 */
+	public boolean allowsKeywords() {
+		return true;
+	}
+
+	/**
 	 * Whether or not this parser can say that the given word is a keyword in
-	 * the given stack context.
+	 * its own scope.
 	 * <p>
 	 * We assume that the given word has been passed through
 	 * {@linkplain Grammar#comparableText(String)} already.
 	 * <p>
-	 * By default this forwards the question to the parent frame in the stack.
+	 * By default this returns <code>false</code>.
 	 */
-	public boolean isKeyword(String word, Stack.Frame frame) {
-		return frame.up().isKeyword(word);
+	public boolean isKeywordInScope(String word) {
+		return false;
 	}
 
 	/**

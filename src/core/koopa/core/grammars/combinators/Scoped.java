@@ -12,7 +12,6 @@ import koopa.core.data.markers.Start;
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.Stream;
 import koopa.core.streams.BaseStream;
 import koopa.core.targets.HoldingTarget;
@@ -67,10 +66,9 @@ public class Scoped extends FutureParser {
 			final HoldingTarget target = baseStream.getTarget();
 			final Token t = target.peekAtLastToken();
 			if (t != null) {
-				final Position currentPosition = t.getStart();
-				if (parse.getFinalPosition().compareTo(currentPosition) < 0)
-					parse.setFinalMatch(currentPosition,
-							parse.getStack().getHead());
+				final Position start = t.getStart();
+				if (parse.getFinalPosition().compareTo(start) < 0)
+					parse.setFinalMatch(start, parse.getStack().getHead());
 			}
 		}
 
@@ -82,8 +80,8 @@ public class Scoped extends FutureParser {
 		final Stream stream = parse.getStream();
 
 		if (parse.getTrace().isEnabled())
-			parse.getTrace()
-					.indent(toString() + " ? " + stream.peekMore() + "...");
+			parse.getTrace().indent(
+					toString() + " ? " + stream.peekMore() + "...");
 
 		stream.bookmark();
 		if (visibility.addsMarkers())
@@ -107,9 +105,10 @@ public class Scoped extends FutureParser {
 
 		if (parse.getTrace().isEnabled())
 			parse.getTrace()
-					.dedent(toString() + " : " + (accepts
-							? ("yes, up to " + stream.peekMore() + "...")
-							: "no"));
+					.dedent(toString()
+							+ " : "
+							+ (accepts ? ("yes, up to " + stream.peekMore() + "...")
+									: "no"));
 
 		return accepts;
 	}
@@ -182,11 +181,8 @@ public class Scoped extends FutureParser {
 	}
 
 	@Override
-	public boolean isKeyword(String word, Frame frame) {
-		if (!allowKeywords)
-			return false;
-		else
-			return super.isKeyword(word, frame);
+	public boolean allowsKeywords() {
+		return allowKeywords;
 	}
 
 	@Override

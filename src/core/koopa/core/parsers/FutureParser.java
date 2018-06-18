@@ -34,24 +34,17 @@ public class FutureParser extends ParserCombinator {
 
 	@Override
 	public boolean allowsLookahead() {
-		if (parser == null) {
-			System.out.println("Too Soon !");
-			return false;
-		}else
-			return parser.allowsLookahead();
+		return parser.allowsLookahead();
 	}
-	
+
 	@Override
 	public boolean canMatchEmptyInputs() {
 		return parser.canMatchEmptyInputs();
 	}
 
 	@Override
-	public boolean isKeyword(String word, Stack.Frame frame) {
-		if (getAllKeywordsInScope().contains(word))
-			return true;
-
-		return parser.isKeyword(word, frame);
+	public boolean isKeywordInScope(String word) {
+		return getAllKeywordsInScope().contains(word);
 	}
 
 	private Set<String> getAllKeywordsInScope() {

@@ -6,8 +6,6 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import koopa.app.components.overview.Overview;
-import koopa.cobol.parser.Coordinated;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
@@ -16,9 +14,9 @@ public interface Application {
 
 	void openFile(File file);
 
-	void openFile(File file, ParsingCoordinator parsingCoordinator);
+	void openFile(File file, CobolParserFactory factory);
 
-	void openFile(File file, ParsingCoordinator parsingCoordinator,
+	void openFile(File file, CobolParserFactory factory,
 			Tuple<Token, String> detail);
 
 	void reloadFile();
@@ -40,7 +38,7 @@ public interface Application {
 	// TODO Set up a View type.
 	Component getView();
 
-	Coordinated getCoordinatedView();
+	CobolParserFactory getCobolParserFactory();
 
 	void closeView(Component component);
 

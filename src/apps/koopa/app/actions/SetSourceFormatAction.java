@@ -6,7 +6,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import koopa.app.Application;
-import koopa.cobol.parser.Coordinated;
 import koopa.cobol.sources.SourceFormat;
 
 public class SetSourceFormatAction extends AbstractAction implements Action {
@@ -24,7 +23,6 @@ public class SetSourceFormatAction extends AbstractAction implements Action {
 	}
 
 	public void actionPerformed(ActionEvent ae) {
-		final Coordinated view = application.getCoordinatedView();
-		view.getParsingCoordinator().setFormat(format);
+		application.getCobolParserFactory().getProject().setDefaultFormat(format);
 	}
 }

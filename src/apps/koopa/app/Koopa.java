@@ -30,11 +30,11 @@ import koopa.app.menus.LoggingMenu;
 import koopa.app.menus.NavigationMenu;
 import koopa.app.menus.ParserSettingsMenu;
 import koopa.app.menus.SyntaxTreeMenu;
-import koopa.cobol.parser.Coordinated;
+import koopa.cobol.CobolProject;
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
+import koopa.cobol.util.CopybookPaths;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
@@ -204,15 +204,14 @@ public class Koopa extends JFrame implements Application {
 	}
 
 	public void openFile(File file) {
-		final Coordinated view = getCoordinatedView();
-		openFile(file, view.getParsingCoordinator(), null);
+		openFile(file, getCobolParserFactory(), null);
 	}
 
-	public void openFile(File file, ParsingCoordinator parsingCoordinator) {
-		openFile(file, parsingCoordinator, null);
+	public void openFile(File file, CobolParserFactory factory) {
+		openFile(file, factory, null);
 	}
 
-	public void openFile(File file, ParsingCoordinator parsingCoordinator,
+	public void openFile(File file, CobolParserFactory factory,
 			Tuple<Token, String> selectedToken) {
 
 		if (file.isDirectory()) {
@@ -228,7 +227,7 @@ public class Koopa extends JFrame implements Application {
 		progress.setMessage("Parsing...");
 		progress.setVisible(true);
 
-		final Detail detail = new Detail(this, file, parsingCoordinator);
+		final Detail detail = new Detail(this, file, factory);
 		overview.addParseResults(detail.getParseResults());
 
 		String title = getTitleForDetail(detail);
@@ -333,8 +332,12 @@ public class Koopa extends JFrame implements Application {
 		return tabbedPane.getSelectedComponent();
 	}
 
-	public Coordinated getCoordinatedView() {
-		return (Coordinated) tabbedPane.getSelectedComponent();
+	public CobolParserFactory getCobolParserFactory() {
+		final Component view = getView();
+		if (view instanceof HoldingCobolParserFactory)
+			return ((HoldingCobolParserFactory) view).getCobolParserFactory();
+		else
+			return null;
 	}
 
 	public void closeView(Component component) {
@@ -395,18 +398,24 @@ public class Koopa extends JFrame implements Application {
 	}
 
 	public void setCopybookPaths(List<String> copybookPaths) {
-		for (String path : copybookPaths)
-			overview.getParsingCoordinator().addCopybookPath(new File(path));
+		final CobolProject project = overview.getCobolParserFactory()
+				.getProject();
+
+		if (project instanceof CopybookPaths)
+			for (String path : copybookPaths)
+				((CopybookPaths) project).addCopybookPath(new File(path));
+
 		updateMenus();
 	}
 
 	public void setPreprocessing(boolean preprocessing) {
-		overview.getParsingCoordinator().setPreprocessing(preprocessing);
+		overview.getCobolParserFactory().getProject()
+				.setDefaultPreprocessing(preprocessing);
 		updateMenus();
 	}
 
 	public void setSourceFormat(SourceFormat format) {
-		overview.getParsingCoordinator().setFormat(format);
+		overview.getCobolParserFactory().getProject().setDefaultFormat(format);
 		updateMenus();
 	}
 

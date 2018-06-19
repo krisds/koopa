@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import koopa.cobol.CobolFiles;
+import koopa.cobol.CobolProject;
+import koopa.cobol.projects.StandardCobolProject;
 
 public class Cobol85RegressionTest extends CobolParsingRegressionTest {
 
@@ -11,6 +13,11 @@ public class Cobol85RegressionTest extends CobolParsingRegressionTest {
 		super();
 	}
 
+	@Override
+	protected CobolProject getConfiguredProject() {
+		return new StandardCobolProject();
+	}
+	
 	@Override
 	public File[] getFiles() {
 		File folder = new File("testsuite/cobol85/");

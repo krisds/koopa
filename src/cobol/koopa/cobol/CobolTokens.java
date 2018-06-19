@@ -24,9 +24,11 @@ public final class CobolTokens {
 	private CobolTokens() {
 	}
 
+	// TODO Expect project to be non-null ?
 	public static Source getNewSource(File file, Reader reader,
-			CobolPreprocessingGrammar grammar, SourceFormat format,
-			Copybooks copybooks) {
+			CobolProject project) {
+
+		final CobolPreprocessingGrammar grammar = project.getGrammar();
 
 		// Note: The logical unit is a source line, I think.
 		// You should never ask for the next line if you haven't resolved the
@@ -42,24 +44,27 @@ public final class CobolTokens {
 
 		// * Detect compiler directives, source format and source listing
 		// statements. Apply source format switches.
+		final SourceFormat format = project.getDefaultFormat();
 		final CompilerDirectives compilerDirectives //
 				= new CompilerDirectives(inputStack, format);
 
 		// * Split lines according to the source format.
-		final ProgramArea programArea //
-				= new ProgramArea(compilerDirectives);
+		final int tabLength = project.getTabLength(file);
+		final ProgramArea programArea = new ProgramArea( //
+				compilerDirectives, tabLength);
 
 		// * Split program text into tokens.
 		final TokenSeparator tokenSeparator //
 				= new TokenSeparator(programArea);
 
 		// * Inline comments.
-		final InlineComments inlineComments 
-				= new InlineComments(tokenSeparator);
+		final InlineComments inlineComments = new InlineComments(
+				tokenSeparator);
 
 		final Source optionalCopybookExpansion;
 
-		if (copybooks == null) {
+		final boolean preprocessing = project.isPreprocessing(file);
+		if (!preprocessing) {
 			// COPY statements will be left alone.
 			optionalCopybookExpansion = inlineComments;
 
@@ -71,7 +76,7 @@ public final class CobolTokens {
 
 			// * Handle COPY includes.
 			final CopyInclude copyInclude = new CopyInclude( //
-					inlineComments, grammar, copybooks, inputStack);
+					inlineComments, grammar, project, inputStack);
 
 			// * Handle COPY REPLACING.
 			final Replacing copyReplacing = new Replacing(copyInclude);
@@ -89,7 +94,7 @@ public final class CobolTokens {
 		// We don't need actual copybook paths to implement REPLACE statements.
 		// But we do use it as a marker to see whether we should actually be
 		// expanding them.
-		if (copybooks == null) {
+		if (!preprocessing) {
 			// REPLACE statements will be left alone.
 			optionalReplaceStatements = continuationOfLines;
 
@@ -110,8 +115,7 @@ public final class CobolTokens {
 		return optionalReplaceStatements;
 	}
 
-	public static Source getNewSource(Reader reader,
-			CobolPreprocessingGrammar grammar, SourceFormat format) {
-		return getNewSource(null, reader, grammar, format, null);
+	public static Source getNewSource(Reader reader, CobolProject project) {
+		return getNewSource(null, reader, project);
 	}
 }

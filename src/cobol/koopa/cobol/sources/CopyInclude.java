@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import koopa.cobol.Copybooks;
+import koopa.cobol.CobolProject;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.parser.preprocessing.replacing.Replacing;
 import koopa.cobol.parser.preprocessing.replacing.ReplacingPhrase;
@@ -40,7 +40,7 @@ public class CopyInclude extends ChainingSource
 			= Logger.getLogger("source.cobol.copy_include");
 
 	private final CobolPreprocessingGrammar grammar;
-	private final Copybooks copybooks;
+	private final CobolProject project;
 	private StackOfSources inputStack;
 
 	private final LinkedList<Data> pending = new LinkedList<Data>();
@@ -52,10 +52,10 @@ public class CopyInclude extends ChainingSource
 	private List<Tree> handledCopyStatements = new LinkedList<Tree>();
 
 	public CopyInclude(Source source, CobolPreprocessingGrammar grammar,
-			Copybooks copybooks, StackOfSources stack) {
+			CobolProject project, StackOfSources stack) {
 		super(source);
 
-		this.copybooks = copybooks;
+		this.project = project;
 		this.inputStack = stack;
 		this.grammar = grammar;
 	}
@@ -336,7 +336,7 @@ public class CopyInclude extends ChainingSource
 			}
 		}
 
-		final File copybook = copybooks.locate(textName, libraryName, file);
+		final File copybook = project.locateCopybook(textName, libraryName, file);
 		if (copybook == null) {
 			LOGGER.error("Missing copybook " + textName + " in " + libraryName);
 			return false;

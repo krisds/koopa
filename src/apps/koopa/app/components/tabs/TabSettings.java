@@ -17,18 +17,22 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import koopa.app.Application;
-import koopa.cobol.sources.ProgramArea;
+import koopa.app.CobolParserFactory;
 
 public class TabSettings extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private static final String NAME = "Tabs";
 
+	private final CobolParserFactory factory;
+
 	private JButton ok;
 	private JTextField tabLength;
 
-	public TabSettings(Frame owner) {
+	public TabSettings(Frame owner, CobolParserFactory factory) {
 		super(owner, NAME, false);
+
+		this.factory = factory;
 
 		setupComponents();
 
@@ -56,7 +60,7 @@ public class TabSettings extends JDialog {
 		panel.add(new JLabel("Tab length: "));
 
 		tabLength = new JTextField(3);
-		tabLength.setText("" + ProgramArea.getTabLength());
+		tabLength.setText("" + factory.getProject().getDefaultTabLength());
 		tabLength.getDocument().addDocumentListener(new DocumentListener() {
 
 			public void removeUpdate(DocumentEvent e) {
@@ -123,7 +127,7 @@ public class TabSettings extends JDialog {
 	private void applyInputs() {
 		int tabLengthValue = Integer.parseInt(tabLength.getText());
 
-		ProgramArea.setTabLength(tabLengthValue);
+		factory.getProject().setDefaultTabLength(tabLengthValue);
 	}
 
 	public static Action actionToShow(final Application application) {
@@ -131,7 +135,8 @@ public class TabSettings extends JDialog {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				new TabSettings(application.getFrame()).setVisible(true);
+				new TabSettings(application.getFrame(),
+						application.getCobolParserFactory()).setVisible(true);
 			}
 		};
 	}

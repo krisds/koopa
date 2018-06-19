@@ -9,20 +9,20 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 
 import koopa.app.Application;
+import koopa.app.HoldingCobolParserFactory;
+import koopa.app.CobolParserFactory;
 import koopa.app.Textual;
 import koopa.app.components.progress.ProgressDialog;
 import koopa.app.debug.log.ParseLog;
 import koopa.app.debug.log.ParseLogAppender;
 import koopa.app.debug.log.ParseLogTable;
 import koopa.app.debug.log.ParseLogWindow;
-import koopa.cobol.parser.Coordinated;
-import koopa.cobol.parser.ParsingCoordinator;
 
-public class Debug extends JPanel implements Coordinated, Textual {
+public class Debug extends JPanel implements HoldingCobolParserFactory, Textual {
 	private static final long serialVersionUID = 1L;
 
 	private final Application application;
-	private final ParsingCoordinator coordinator;
+	private final CobolParserFactory factory;
 
 	private Code code = null;
 	private CodeView view = null;
@@ -31,10 +31,10 @@ public class Debug extends JPanel implements Coordinated, Textual {
 	private ParseLogWindow parseLogWindow = null;
 
 	public Debug(Application application, File file,
-			ParsingCoordinator parsingCoordinator) {
+			CobolParserFactory factory) {
 		this.application = application;
-		this.coordinator = new ParsingCoordinator(parsingCoordinator);
-		this.coordinator.setKeepingTrackOfTokens(true);
+		this.factory = new CobolParserFactory(factory);
+		this.factory.setKeepingTrackOfTokens(true);
 
 		setLayout(new BorderLayout());
 		setupComponents();
@@ -47,8 +47,8 @@ public class Debug extends JPanel implements Coordinated, Textual {
 		add(view);
 	}
 
-	public ParsingCoordinator getParsingCoordinator() {
-		return coordinator;
+	public CobolParserFactory getCobolParserFactory() {
+		return factory;
 	}
 
 	private void open(File file) {
@@ -82,7 +82,7 @@ public class Debug extends JPanel implements Coordinated, Textual {
 		}).start();
 
 		Logger.getRootLogger().addAppender(appender);
-		code.parse(coordinator, log);
+		code.parse(factory, log);
 		Logger.getRootLogger().removeAppender(appender);
 
 		if (parseLogWindow == null) {

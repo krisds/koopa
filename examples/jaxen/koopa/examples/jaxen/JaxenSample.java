@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
+import koopa.cobol.projects.StandardCobolProject;
 import koopa.core.parsers.Messages;
 import koopa.core.parsers.Parse;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -15,8 +16,10 @@ import koopa.core.trees.jaxen.Jaxen;
 public class JaxenSample {
 
 	public static void main(String[] args) throws IOException {
-		final ParsingCoordinator coordinator = new ParsingCoordinator();
-		final ParseResults result = coordinator
+		final CobolParser parser = new CobolParser();
+		parser.setProject(new StandardCobolProject());
+
+		final ParseResults result = parser
 				.parse(new File("testsuite/cobol85/CM101M.CBL"));
 
 		if (result.isValidInput())

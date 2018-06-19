@@ -13,6 +13,8 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.app.Application;
+import koopa.app.HoldingCobolParserFactory;
+import koopa.app.CobolParserFactory;
 import koopa.app.Textual;
 import koopa.app.batchit.ParseDetails;
 import koopa.app.components.detail.source.SourceDetails;
@@ -24,21 +26,19 @@ import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
 import koopa.app.components.sourceview.SourceView;
 import koopa.app.listeners.TokenSelectionListener;
-import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.trees.Tree;
 import koopa.core.util.Tuple;
 
-public class Detail extends JPanel implements Coordinated, Textual {
+public class Detail extends JPanel implements HoldingCobolParserFactory, Textual {
 	private static final long serialVersionUID = 1L;
 
 	private Application application = null;
 	private File cobolFile = null;
 	private ParseResults results = null;
-	private ParsingCoordinator coordinator = null;
+	private CobolParserFactory factory = null;
 	private ParseDetails parseDetails = new ParseDetails();
 	private SourceView sourceView = null;
 	private CobolOutline outline = null;
@@ -50,10 +50,11 @@ public class Detail extends JPanel implements Coordinated, Textual {
 	private Tree tree = null;
 
 	public Detail(Application application, File file,
-			ParsingCoordinator parsingCoordinator) {
+			CobolParserFactory factory) {
 		this.application = application;
-		this.coordinator = new ParsingCoordinator(parsingCoordinator);
-		this.coordinator.setKeepingTrackOfTokens(true);
+		this.factory = new CobolParserFactory(factory);
+		this.factory.setKeepingTrackOfTokens(true);
+		this.factory.setBuildTrees(true);
 
 		setLayout(new BorderLayout());
 		setupComponents();
@@ -129,7 +130,7 @@ public class Detail extends JPanel implements Coordinated, Textual {
 		try {
 			this.cobolFile = file;
 
-			results = this.coordinator.parse(this.cobolFile);
+			results = this.factory.getParser().parse(this.cobolFile);
 
 			tree = results.getParse().getTarget(KoopaTreeBuilder.class)
 					.getTree();
@@ -191,8 +192,8 @@ public class Detail extends JPanel implements Coordinated, Textual {
 		return sourceView.find(search);
 	}
 
-	public ParsingCoordinator getParsingCoordinator() {
-		return coordinator;
+	public CobolParserFactory getCobolParserFactory() {
+		return factory;
 	}
 
 	public Highlights getNewHighlights() {
@@ -218,7 +219,7 @@ public class Detail extends JPanel implements Coordinated, Textual {
 		tokenDetails.close();
 		sourceDetails.close();
 
-		coordinator = null;
+		factory = null;
 		parseDetails = null;
 		tree = null;
 	}

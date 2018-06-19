@@ -12,8 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import koopa.cobol.CobolTokens;
-import koopa.cobol.Copybooks;
 import koopa.cobol.grammar.CobolGrammar;
+import koopa.cobol.projects.StandardCobolProject;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -51,12 +51,14 @@ public class PreprocessingSourceTest implements FileBasedTest {
 	public void testSampleValidates() throws IOException {
 		Sample sample = new Sample(file);
 
+		final StandardCobolProject project = new StandardCobolProject();
+		project.setDefaultFormat(SourceFormat.FREE);
+		project.setDefaultPreprocessing(true);
+
 		Source source = CobolTokens.getNewSource( //
 				file, //
 				new StringReader(sample.input.toString()), //
-				new CobolGrammar(), //
-				SourceFormat.FREE, //
-				new Copybooks());
+				project);
 
 		StringBuilder actual = new StringBuilder();
 		Data d = null;

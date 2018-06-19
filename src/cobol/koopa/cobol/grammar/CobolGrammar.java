@@ -28,7 +28,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         compilationGroupParser = future;
         future.setParser(
           sequence(
-            star(
+            plus(
               choice(
                 compilerDirective(),
                 sourceUnit()

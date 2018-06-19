@@ -18,14 +18,12 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import koopa.cobol.CobolTokens;
-import koopa.cobol.Copybooks;
-import koopa.cobol.grammar.CobolGrammar;
+import koopa.cobol.projects.StandardCobolProject;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationOfLines;
 import koopa.cobol.sources.InlineComments;
 import koopa.cobol.sources.ProgramArea;
 import koopa.cobol.sources.Replace;
-import koopa.cobol.sources.SourceFormat;
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.sources.TokenSeparator;
@@ -73,14 +71,12 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 			Assert.assertNotNull("Missing key: " + className, clazz);
 		}
 
-		final SourceFormat format = SourceFormat.FIXED;
-		final CobolGrammar grammar = new CobolGrammar();
-		// We set up a Copybooks instance (though empty) so that we force all
-		// the stages to be present.
-		final Copybooks copybooks = new Copybooks();
+		final StandardCobolProject project = new StandardCobolProject();
+		project.setDefaultFormat(FIXED);
+		project.setDefaultPreprocessing(true);
 
 		final Source source = CobolTokens.getNewSource(file, sample.getReader(),
-				grammar, format, copybooks);
+				project);
 
 		final Source selectedSource;
 		if (clazz == null)

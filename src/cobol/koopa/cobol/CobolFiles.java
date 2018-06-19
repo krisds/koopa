@@ -32,20 +32,18 @@ import org.apache.log4j.Logger;
  * These defaults can be modified by passing a comma separated list of
  * extensions to one of the following system properties:
  * <ul>
- * <li>koopa.sources; for identifying source files</li>
- * <li>koopa.copybooks; for identifying copybooks</li>
- * <li>koopa.cobolFileExtensions; synonym for koopa.sources, and here for
- * backwards compatibility</li>
+ * <li>koopa.cobol.sources; for identifying source files</li>
+ * <li>koopa.cobol.copybooks; for identifying copybooks</li>
  * </ul>
  * So, for example,
- * <code>-Dkoopa.sources=cbl,cob -Dkoopa.copybooks=cpy,copy</code> is equivalent
- * to the default.
+ * <code>-Dkoopa.cobol.sources=cbl,cob -Dkoopa.cobol.copybooks=cpy,copy</code>
+ * is equivalent to the default.
  * <p>
  * By setting your own extensions for any category, the defaults for that
  * category will not be set. So setting
- * <code>-Dkoopa.sources=cbl -Dkoopa.copybooks=cob</code> means that <b>only</b>
- * files with extension 'cbl' will be seen as source files, and <b>only</b>
- * files with extension 'cob' will be seen as copybooks.
+ * <code>-Dkoopa.cobol.sources=cbl -Dkoopa.cobol.copybooks=cob</code> means that
+ * <b>only</b> files with extension 'cbl' will be seen as source files, and
+ * <b>only</b> files with extension 'cob' will be seen as copybooks.
  */
 public class CobolFiles {
 	private static final Logger LOGGER = Logger.getLogger("cobol.files");
@@ -65,26 +63,24 @@ public class CobolFiles {
 		SOURCE_EXTENSIONS.clear();
 		COPYBOOK_EXTENSIONS.clear();
 
-		if (System.getProperty("koopa.cobolFileExtensions") != null)
-			LOGGER.warn("You are using 'koopa.cobolFileExtensions' to define "
-					+ "custom file extensions. This option has been deprecated. "
-					+ "Please use `koopa.sources' instead.");
-
-		if (System.getProperty("koopa.cobolFileExtensions") == null
-				&& System.getProperty("koopa.sources") == null) {
+		if (System.getProperty("koopa.sources") == null
+				&& System.getProperty("koopa.cobol.sources") == null) {
 			SOURCE_EXTENSIONS.add("CBL");
 			SOURCE_EXTENSIONS.add("COB");
 
 		} else {
-			addSourceExtensions(System.getProperty("koopa.cobolFileExtensions"));
 			addSourceExtensions(System.getProperty("koopa.sources"));
+			addSourceExtensions(System.getProperty("koopa.cobol.sources"));
 		}
 
-		if (System.getProperty("koopa.copybooks") == null) {
+		if (System.getProperty("koopa.copybooks") == null
+				&& System.getProperty("koopa.cobol.copybooks") == null) {
 			COPYBOOK_EXTENSIONS.add("CPY");
 			COPYBOOK_EXTENSIONS.add("COPY");
-		} else
+		} else {
 			addCopybookExtensions(System.getProperty("koopa.copybooks"));
+			addCopybookExtensions(System.getProperty("koopa.cobol.copybooks"));
+		}
 
 		if (LOGGER.isTraceEnabled()) {
 			LOGGER.trace("Cobol source extensions: " + SOURCE_EXTENSIONS);

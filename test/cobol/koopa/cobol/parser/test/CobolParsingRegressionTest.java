@@ -12,8 +12,9 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import koopa.cobol.CobolProject;
+import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
@@ -44,8 +45,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		return null;
 	}
 
-	protected void configure(ParsingCoordinator coordinator) {
-	}
+	protected abstract CobolProject getConfiguredProject();
 
 	public void setFile(File file) {
 		this.file = file;
@@ -53,14 +53,16 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 	@Test
 	public void testParsing() throws IOException {
-		ParsingCoordinator coordinator = new ParsingCoordinator();
-		configure(coordinator);
-		coordinator.setKeepingTrackOfTokens(true);
+		final CobolProject project = getConfiguredProject();
+		
+		final CobolParser parser = new CobolParser();
+		parser.setProject(project);
+		parser.setKeepingTrackOfTokens(true);
 
 		final TestResult target = getTargetResult(file);
 
 		// Parse the file...
-		final ParseResults result = coordinator.parse(file);
+		final ParseResults result = parser.parse(file);
 		final TestResult actual = TestResult.from(result);
 		addActualResult(actual);
 
@@ -82,7 +84,8 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 				}
 			}
 
-			assertFalse(info.toString(), messages != null && messages.size() > 0);
+			assertFalse(info.toString(),
+					messages != null && messages.size() > 0);
 		}
 	}
 

@@ -6,7 +6,7 @@ grammar Cobol extends CobolBase.
 
 # Compilation group.
 def compilationGroup =
-    (compilerDirective | sourceUnit)*
+    (compilerDirective | sourceUnit)+
     
     [eof]
 end

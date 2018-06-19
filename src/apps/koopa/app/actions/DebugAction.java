@@ -39,7 +39,7 @@ public class DebugAction extends AbstractAction implements Action {
 					Detail detail = (Detail) view;
 					File file = detail.getFile();
 					Debug debug = new Debug(application, file,
-							detail.getParsingCoordinator());
+							detail.getCobolParserFactory());
 					application.swapView(detail, debug);
 				}
 			}

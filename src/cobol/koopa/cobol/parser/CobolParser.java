@@ -3,29 +3,23 @@ package koopa.cobol.parser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import koopa.cobol.CobolFiles;
+import koopa.cobol.CobolProject;
 import koopa.cobol.CobolTokens;
-import koopa.cobol.Copybooks;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.LOCCount;
-import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.parsers.Messages;
 import koopa.core.parsers.Parse;
-import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stack.Frame;
 import koopa.core.parsers.Stream;
 import koopa.core.sources.Source;
 import koopa.core.streams.BaseStream;
 import koopa.core.targets.NullTarget;
-import koopa.core.targets.Target;
 import koopa.core.targets.TokenTracker;
 import koopa.core.trees.KoopaTreeBuilder;
 import koopa.core.util.Files;
@@ -35,19 +29,11 @@ public class CobolParser {
 
 	private static final Logger LOGGER = Logger.getLogger("parser");
 
-	private static final CobolGrammar grammar = new CobolGrammar();
-
-	private List<Target> targets = new LinkedList<Target>();
-
 	private boolean keepingTrackOfTokens = false;
 
 	private boolean buildTrees = false;
 
-	private SourceFormat format = SourceFormat.FIXED;
-	private Copybooks copybooks = new Copybooks();
-
-	// TODO Extend ParserConfiguration to allow changing these from there.
-	private boolean preprocessing = false;
+	private CobolProject project = null;
 
 	public ParseResults parse(File file) throws IOException {
 		if (LOGGER.isInfoEnabled())
@@ -70,17 +56,7 @@ public class CobolParser {
 	}
 
 	public ParseResults parse(File file, Parse parse) throws IOException {
-		final boolean isCopybook = CobolFiles.isCopybook(file);
-
-		// Depending on the type of file we ask the grammar for the right
-		// parser.
-		final ParserCombinator parser;
-		if (isCopybook)
-			parser = grammar.copybook();
-		else
-			parser = grammar.compilationGroup();
-
-		boolean accepts = parser.accepts(parse);
+		boolean accepts = project.parserFor(file).accepts(parse);
 
 		final ParseResults results = new ParseResults(file);
 		results.setValidInput(accepts);
@@ -106,8 +82,9 @@ public class CobolParser {
 				new NullTarget());
 		tail.bookmark();
 
-		final boolean sawMoreProgramText = grabRemainingProgramText(grammar,
-				tail, parse.getTarget(TokenTracker.class));
+		final boolean sawMoreProgramText = grabRemainingProgramText(
+				project.getGrammar(), tail,
+				parse.getTarget(TokenTracker.class));
 
 		// Here we check if the parser really consumed all input. If it didn't
 		// we try to flag the point of failure as best we can.
@@ -155,14 +132,11 @@ public class CobolParser {
 	}
 
 	public Parse getParseSetup(File file, Reader reader) throws IOException {
-		Parse parse;
 		// Build the tokenisation stage.
-		Source source = CobolTokens.getNewSource(file, reader, grammar, format,
-				preprocessing ? copybooks : null);
-		LOCCount loc = new LOCCount(source);
-		source = loc;
+		final Source source = new LOCCount(
+				CobolTokens.getNewSource(file, reader, project));
 
-		parse = Parse.of(source);
+		final Parse parse = Parse.of(source);
 
 		// Keep track of all tokens passing through here, if so requested.
 		TokenTracker tokenTracker = null;
@@ -172,16 +146,9 @@ public class CobolParser {
 		}
 
 		if (buildTrees)
-			parse.to(new KoopaTreeBuilder(grammar, false));
+			parse.to(new KoopaTreeBuilder(project.getGrammar(), false));
 
-		if (!targets.isEmpty())
-			for (Target next : targets)
-				parse.to(next);
 		return parse;
-	}
-
-	public void addTarget(Target target) {
-		this.targets.add(target);
 	}
 
 	public void setKeepingTrackOfTokens(boolean keepingTrackOfTokens) {
@@ -196,25 +163,8 @@ public class CobolParser {
 		this.buildTrees = buildTrees;
 	}
 
-	public void setFormat(SourceFormat format) {
-		this.format = format;
-	}
-
-	public SourceFormat getFormat() {
-		return this.format;
-	}
-
-	public boolean isPreprocessing() {
-		return preprocessing;
-	}
-
-	/** EXPERIMENTAL ! */
-	public void setPreprocessing(boolean preprocessing) {
-		this.preprocessing = preprocessing;
-	}
-
-	public void setCopybooks(Copybooks copybooks) {
-		this.copybooks = copybooks;
+	public void setProject(CobolProject project) {
+		this.project = project;
 	}
 
 	private boolean grabRemainingProgramText(CobolGrammar grammar,

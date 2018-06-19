@@ -23,6 +23,9 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 import koopa.app.Application;
 import koopa.app.ApplicationSupport;
+import koopa.app.HoldingCobolParserFactory;
+import koopa.app.CobolParserFactory;
+import koopa.app.ApplicationConfig;
 import koopa.app.actions.ParsingProvider;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ParseDetails;
@@ -31,16 +34,14 @@ import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
 import koopa.cobol.CobolFiles;
-import koopa.cobol.parser.Coordinated;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Token;
 import koopa.core.parsers.Messages;
 import koopa.core.targets.TokenTracker;
 import koopa.core.util.Tuple;
 
 @SuppressWarnings("serial")
-public class Overview extends JPanel implements ParsingProvider, Coordinated {
+public class Overview extends JPanel implements ParsingProvider, HoldingCobolParserFactory {
 
 	private Application application = null;
 
@@ -50,7 +51,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 
 	private ParseDetails parseDetails = new ParseDetails();
 
-	private ParsingCoordinator coordinator = null;
+	private CobolParserFactory factory = null;
 
 	private boolean parsing = false;
 
@@ -58,9 +59,9 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 
 	public Overview(Application application) {
 		this.application = application;
-		coordinator = new ParsingCoordinator();
-		coordinator.setKeepingTrackOfTokens(true);
-		coordinator.setBuildTrees(ApplicationSupport
+		factory = new CobolParserFactory(ApplicationConfig.getANewProject());
+		factory.setKeepingTrackOfTokens(true);
+		factory.setBuildTrees(ApplicationSupport
 				.getCustomColumnsNeedXPath());
 
 		setLayout(new BorderLayout());
@@ -123,7 +124,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 				final int selected = overviewTable
 						.convertRowIndexToModel(overviewTable.getSelectedRow());
 				final File file = results.getResults(selected).getFile();
-				application.openFile(file, coordinator, detail);
+				application.openFile(file, factory, detail);
 			}
 		});
 
@@ -162,7 +163,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 								.convertRowIndexToModel(row);
 						final File file = results.getResults(selected)
 								.getFile();
-						application.openFile(file, coordinator);
+						application.openFile(file, factory);
 					}
 				}
 			}
@@ -253,7 +254,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 
 	private ParseResults parse(File file) {
 		try {
-			final ParseResults parseResults = coordinator.parse(file);
+			final ParseResults parseResults = factory.getParser().parse(file);
 			results.add(parseResults);
 			parseResults.getParse().getFlow().removeTarget(TokenTracker.class);
 			return parseResults;
@@ -290,7 +291,7 @@ public class Overview extends JPanel implements ParsingProvider, Coordinated {
 		quitParsing = true;
 	}
 
-	public ParsingCoordinator getParsingCoordinator() {
-		return coordinator;
+	public CobolParserFactory getCobolParserFactory() {
+		return factory;
 	}
 }

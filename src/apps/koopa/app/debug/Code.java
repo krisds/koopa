@@ -6,11 +6,11 @@ import java.io.IOException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
+import koopa.app.CobolParserFactory;
 import koopa.app.debug.log.DataEvent;
 import koopa.app.debug.log.DataEvent.Type;
 import koopa.app.debug.log.ParseLog;
 import koopa.cobol.parser.CobolParser;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.parsers.Parse;
@@ -45,8 +45,8 @@ public class Code extends DefaultStyledDocument {
 		return file;
 	}
 
-	public void parse(ParsingCoordinator coordinator, ParseLog log) {
-		parse(coordinator.getParser(), log);
+	public void parse(CobolParserFactory factory, ParseLog log) {
+		parse(factory.getParser(), log);
 	}
 
 	private void parse(CobolParser parser, ParseLog log) {

@@ -3,8 +3,9 @@ package koopa.examples.basic;
 import java.io.StringReader;
 import java.util.List;
 
+import koopa.cobol.CobolProject;
 import koopa.cobol.CobolTokens;
-import koopa.cobol.grammar.CobolGrammar;
+import koopa.cobol.projects.BasicCobolProject;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -18,30 +19,31 @@ public class ParseString {
 	public static void main(String[] args) {
 		String text = "ONE OF NINE";
 
-		CobolGrammar grammar = new CobolGrammar();
-		ParserCombinator identifier = grammar.identifier();
-
-		List<Tree> asts = getCobolAST(text, SourceFormat.FREE, grammar,
-				identifier);
+		List<Tree> asts = getCobolAST(text);
 		for (Tree ast : asts)
 			new TreeFrame(text, ast).setVisible(true);
 	}
 
-	private static List<Tree> getCobolAST(String text, SourceFormat format,
-			CobolGrammar grammar, ParserCombinator identifier) {
+	private static List<Tree> getCobolAST(String text) {
 
-		StringReader reader = new StringReader(text);
+		final StringReader reader = new StringReader(text);
 
-		Source source = CobolTokens
-				.getNewSource(reader, grammar, format);
+		final CobolProject project = new BasicCobolProject();
+		project.setDefaultFormat(SourceFormat.FREE);
 
-		Parse parse = Parse.of(source).to(new KoopaTreeBuilder(grammar));
-		boolean accepts = identifier.accepts(parse);
+		final ParserCombinator identifier = project.getGrammar().identifier();
+
+		final Source source = CobolTokens.getNewSource(reader, project);
+
+		final Parse parse = Parse.of(source)
+				.to(new KoopaTreeBuilder(project.getGrammar()));
+		final boolean accepts = identifier.accepts(parse);
 
 		if (!accepts)
 			return null;
 
-		KoopaTreeBuilder builder = parse.getTarget(KoopaTreeBuilder.class);
+		final KoopaTreeBuilder builder = parse
+				.getTarget(KoopaTreeBuilder.class);
 		return builder.getTrees();
 	}
 }

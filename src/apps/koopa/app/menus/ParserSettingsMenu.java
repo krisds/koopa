@@ -4,7 +4,6 @@ import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -14,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 
 import koopa.app.Application;
+import koopa.app.CobolParserFactory;
 import koopa.app.actions.SetSourceFormatAction;
 import koopa.app.components.cobolwords.CobolWordSettings;
 import koopa.app.components.copybookpaths.CopybookPathsSelector;
@@ -21,7 +21,7 @@ import koopa.app.components.fileextensions.FileExtensions;
 import koopa.app.components.lineendings.LineEndingSettings;
 import koopa.app.components.overview.Overview;
 import koopa.app.components.tabs.TabSettings;
-import koopa.cobol.parser.Coordinated;
+import koopa.cobol.CobolProject;
 
 public class ParserSettingsMenu extends JMenu {
 
@@ -86,8 +86,8 @@ public class ParserSettingsMenu extends JMenu {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = application.getCoordinatedView();
-				view.getParsingCoordinator().setPreprocessing(true);
+				application.getCobolParserFactory().getProject()
+						.setDefaultPreprocessing(true);
 			}
 		};
 
@@ -95,8 +95,8 @@ public class ParserSettingsMenu extends JMenu {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
-				final Coordinated view = application.getCoordinatedView();
-				view.getParsingCoordinator().setPreprocessing(false);
+				application.getCobolParserFactory().getProject()
+						.setDefaultPreprocessing(false);
 			}
 		};
 
@@ -133,14 +133,14 @@ public class ParserSettingsMenu extends JMenu {
 	}
 
 	public void update() {
-		Overview overview = application.getOverview();
+		final Overview overview = application.getOverview();
 		setEnabled(!overview.isParsing());
 
-		Component view = application.getView();
-		if (view instanceof Coordinated) {
-			Coordinated detail = (Coordinated) view;
+		final CobolParserFactory factory = application.getCobolParserFactory();
+		if (factory != null) {
+			final CobolProject project = factory.getProject();
 
-			switch (detail.getParsingCoordinator().getFormat()) {
+			switch (project.getDefaultFormat()) {
 			case FIXED:
 				fixedFormat.setSelected(true);
 				break;
@@ -152,10 +152,7 @@ public class ParserSettingsMenu extends JMenu {
 				break;
 			}
 
-			if (detail.getParsingCoordinator().isPreprocessing())
-				preprocessingEnabled.setSelected(true);
-			else
-				preprocessingEnabled.setSelected(false);
+			preprocessingEnabled.setSelected(project.isDefaultPreprocessing());
 		}
 	}
 }

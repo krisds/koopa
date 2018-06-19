@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import koopa.app.ApplicationConfig;
 import koopa.cobol.CobolFiles;
+import koopa.cobol.CobolProject;
+import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
-import koopa.cobol.parser.ParsingCoordinator;
 import koopa.cobol.sources.SourceFormat;
+import koopa.cobol.util.CopybookPaths;
 import koopa.core.data.Token;
 import koopa.core.parsers.Messages;
 import koopa.core.trees.KoopaTreeBuilder;
@@ -39,7 +42,7 @@ public class ToXml {
 		List<String> other = options.getOther();
 		if (other.size() != 2) {
 			System.err.println("Usage: [--free-format] "
-					+ "[--preprocess -I <copyboopath>] <source> <target>");
+					+ "[--preprocess -I <copybookpath>] <source> <target>");
 			System.exit(BAD_USAGE);
 			return;
 		}
@@ -49,16 +52,28 @@ public class ToXml {
 		toXml.process(source, target);
 	}
 
-	private final ParsingCoordinator coordinator;
+	private final CobolParser parser;
 
 	public ToXml(SourceFormat format, boolean preprocessing,
 			List<String> copybookPaths) {
-		this.coordinator = new ParsingCoordinator();
-		coordinator.setFormat(format);
-		coordinator.setPreprocessing(preprocessing);
+
+		final CobolProject project = ApplicationConfig.getANewProject();
+
+		project.setDefaultFormat(format);
+		project.setDefaultPreprocessing(preprocessing);
+
+		if (!(project instanceof CopybookPaths)) {
+			System.err.println(
+					"Defined copybook paths, but this project doesn't accept them: "
+							+ project.getClass());
+			System.exit(BAD_USAGE);
+		}
 
 		for (String path : copybookPaths)
-			coordinator.addCopybookPath(new File(path));
+			((CopybookPaths) project).addCopybookPath(new File(path));
+
+		this.parser = new CobolParser();
+		this.parser.setProject(project);
 	}
 
 	private void process(File source, File target) {
@@ -96,7 +111,7 @@ public class ToXml {
 		ParseResults results = null;
 
 		try {
-			results = coordinator.parse(source);
+			results = parser.parse(source);
 
 		} catch (IOException e) {
 			System.out.println("IOException while reading " + source);

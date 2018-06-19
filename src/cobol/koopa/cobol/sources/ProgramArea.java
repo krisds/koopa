@@ -27,35 +27,18 @@ import koopa.core.sources.Source;
  * different program areas (cfr. {@linkplain AreaTag} and
  * {@linkplain CobolAreaTag}) as defined by the {@linkplain SourceFormat}.
  */
-public class ProgramArea extends ChainingSource
-		implements Source {
+public class ProgramArea extends ChainingSource implements Source {
 
 	private static final Logger LOGGER = Logger
 			.getLogger("source.cobol.program_area");
 
-	private static final String TAB_SIZE_KEY = "koopa.tabLength";
-	private static final int DEFAULT_TAB_LENGTH = 1;
-	private static int tabLength = DEFAULT_TAB_LENGTH;
-
-	static {
-		final String definition = System.getProperty(TAB_SIZE_KEY);
-		if (definition != null) {
-			try {
-				setTabLength(Integer.parseInt(definition));
-
-			} catch (NumberFormatException e) {
-				tabLength = DEFAULT_TAB_LENGTH;
-				System.err.println("Warning: value for " + TAB_SIZE_KEY
-						+ " was not an unsigned integer: '" + definition
-						+ "'. Using " + DEFAULT_TAB_LENGTH + " instead.");
-			}
-		}
-	}
+	private final int tabLength;
 
 	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
 
-	public ProgramArea(Source source) {
+	public ProgramArea(Source source, int tabLength) {
 		super(source);
+		this.tabLength = tabLength;
 	}
 
 	@Override
@@ -230,25 +213,5 @@ public class ProgramArea extends ChainingSource
 		}
 
 		return text.length();
-	}
-
-	public static int getTabLength() {
-		return tabLength;
-	}
-
-	public static void setTabLength(int length) {
-		if (tabLength == 0) {
-			System.err.println("Warning: value for " + TAB_SIZE_KEY
-					+ " is zero. Using " + DEFAULT_TAB_LENGTH + " instead.");
-			tabLength = DEFAULT_TAB_LENGTH;
-
-		} else if (tabLength < 0) {
-			System.err.println("Warning: value for " + TAB_SIZE_KEY
-					+ " is negative (" + length + "). Using "
-					+ DEFAULT_TAB_LENGTH + " instead.");
-			tabLength = DEFAULT_TAB_LENGTH;
-
-		} else
-			tabLength = length;
 	}
 }

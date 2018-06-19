@@ -29,10 +29,9 @@ Some runtime customisation of Koopa is possible by the user.
 Following options can be set on the command line by passing them as  "-D<option>=<value>" to the JVM.
 
 * `koopa.maxCobolWordLength`: defaults to 31. Use a value greater than zero to override this. Setting it to 0 makes it use the default value. Setting it to a negative value disables the length check all together. (Cfr. the `koopa.cobol.CobolWords` class.)
-* `koopa.sources`: a comma-separated list of file extensions use to identify Cobol source files. This defaults to "cbl,cob". (Cfr. the `koopa.cobol.CobolFiles` class.)
-* `koopa.copybooks`: a comma-separated list of file extensions use to identify Cobol copybook files. This defaults to "cpy,copy". (Cfr. the `koopa.cobol.CobolFiles` class.)
-* `koopa.copybooks.locator`: use a specific `koopa.cobol.copybooks.CopybookLocator` subclass when searching for copybooks on the file system. This defaults to `koopa.cobol.copybooks.DefaultCopybookLocator`.
-* `koopa.tabLength`: an integer defining the length of a tab. This defaults to four. (Cfr. the `koopa.cobol.sources.ProgramArea` class.)
+* `koopa.cobol.sources`: a comma-separated list of file extensions use to identify Cobol source files. This defaults to "cbl,cob". (Cfr. the `koopa.cobol.CobolFiles` class.)
+* `koopa.cobol.copybooks`: a comma-separated list of file extensions use to identify Cobol copybook files. This defaults to "cpy,copy". (Cfr. the `koopa.cobol.CobolFiles` class.)
+* `koopa.cobol.project_class`: use a specific `koopa.cobol.CobolProject` subclass when searching for copybooks on the file system. This defaults to `koopa.cobol.projects.StandardCobolProject`.
 * `koopa.optimize`: set to `false` to switch off optimization of choices and permutations.
 
 ### GUI

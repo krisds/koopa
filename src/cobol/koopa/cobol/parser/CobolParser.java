@@ -106,13 +106,22 @@ public class CobolParser {
 			final Position finalPosition = parse.getFinalPosition();
 			final Token token = findTokenAt(tail, finalPosition);
 
-			if (token != null)
-				messages.error(token, msg);
+			messages.error(token, msg);
 		}
 
 		tail.rewind();
 		parse.done();
 
+		if (!accepts && messages.getErrorCount() == 0) {
+			String msg = "Failed to parse.";
+
+			final Frame finalFrame = parse.getFinalFrame();
+			if (finalFrame != null)
+				msg += " Last successful match: " + finalFrame.toTrace() + ".";
+
+			messages.error(null, msg);
+		}
+		
 		// It is now safe to quit the method if we want/need to.
 		if (!accepts)
 			return results;

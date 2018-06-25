@@ -77,6 +77,7 @@ public class ParseDetails extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		final Token token = getDetails(rowIndex).getFirst();
 		switch (columnIndex) {
 		case STATUS_COLUMN: {
 			if (rowIndex < parseResults.getParse().getMessages()
@@ -90,12 +91,12 @@ public class ParseDetails extends AbstractTableModel {
 			return getDetails(rowIndex).getSecond();
 
 		case TOKEN_COLUMN:
-			return getDetails(rowIndex).getFirst().getText();
+			return token != null ? token.getText() : "";
 
 		case LINE_COLUMN:
 			try {
-				return getDetails(rowIndex).getFirst().getStart()
-						.getLinenumber();
+				return token != null ? token.getStart()
+						.getLinenumber() : "-";
 
 			} catch (NullPointerException e) {
 				return "-";
@@ -103,8 +104,8 @@ public class ParseDetails extends AbstractTableModel {
 
 		case CHAR_COLUMN:
 			try {
-				return getDetails(rowIndex).getFirst().getStart()
-						.getPositionInLine();
+				return token != null ? token.getStart()
+						.getPositionInLine() : "-";
 
 			} catch (NullPointerException e) {
 				return "-";
@@ -112,8 +113,8 @@ public class ParseDetails extends AbstractTableModel {
 
 		case RESOURCE_COLUMN:
 			try {
-				return Files.getFilename(getDetails(rowIndex).getFirst()
-						.getStart().getResourceName());
+				return token != null ? Files.getFilename(token
+						.getStart().getResourceName()) : "-";
 
 			} catch (NullPointerException e) {
 				return "-";

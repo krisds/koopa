@@ -34,6 +34,9 @@ public class TreeBasedDocument extends DefaultStyledDocument
 	public void setContents(Tree tree, List<Token> additionalTokens) {
 		try {
 			clear();
+			
+			if (tree == null)
+				return;
 
 			int offset = 0;
 			offsetsForLines.add(0);

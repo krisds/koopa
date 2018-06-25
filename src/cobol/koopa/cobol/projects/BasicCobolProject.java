@@ -16,7 +16,7 @@ import koopa.core.parsers.ParserCombinator;
  */
 public class BasicCobolProject implements CobolProject {
 
-	private static final CobolGrammar grammar = new CobolGrammar();
+	protected static final CobolGrammar grammar = new CobolGrammar();
 
 	private SourceFormat defaultFormat = SourceFormat.FIXED;
 	private int defaultTabLength = 1;

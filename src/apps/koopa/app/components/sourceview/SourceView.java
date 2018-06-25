@@ -126,29 +126,37 @@ public class SourceView extends TextPanel {
 	}
 
 	public void setParseResults(ParseResults results) {
+		final JTextPane pane = getTextPane();
+		pane.getHighlighter().removeAllHighlights();
+
 		final Parse parse = results.getParse();
 
 		// This is the syntax tree which got built.
 		final Tree tree = parse.getTarget(KoopaTreeBuilder.class).getTree();
 
-		// The syntax tree may not be capturing the full source file. There may
-		// be more whitespace, for instance. Or the parse may have been
-		// incomplete. So we check the token tracker for any tokens after the
-		// last one in the tree.
-		final Token last = tree.getRawEndToken();
-		final List<Token> additionalTokens = parse.getTarget(TokenTracker.class)
-				.getTokensAfter(last);
+		if (tree == null) {
+			document = new TreeBasedDocument();
+			document.setContents(null);
 
-		// Based on the syntax tree and the additional tokens we can now build
-		// up the final document. This should be the same as the original file,
-		// unless there was some preprocessing going on.
-		document = new TreeBasedDocument();
-		document.setContents(tree, additionalTokens);
+		} else {
+			// The syntax tree may not be capturing the full source file. There
+			// may be more whitespace, for instance. Or the parse may have been
+			// incomplete. So we check the token tracker for any tokens after
+			// the last one in the tree.
+			final Token last = tree.getRawEndToken();
+			final List<Token> additionalTokens = parse
+					.getTarget(TokenTracker.class).getTokensAfter(last);
 
-		final JTextPane pane = getTextPane();
-		pane.getHighlighter().removeAllHighlights();
-		pane.setDocument(document);
-		addHighlights(results);
+			// Based on the syntax tree and the additional tokens we can now
+			// build up the final document. This should be the same as the original
+			// file, unless there was some preprocessing going on.
+			document = new TreeBasedDocument();
+			document.setContents(tree, additionalTokens);
+
+			pane.setDocument(document);
+			addHighlights(results);
+		}
+		
 		pane.setCaretPosition(0);
 	}
 

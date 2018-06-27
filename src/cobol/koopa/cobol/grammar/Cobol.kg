@@ -2564,7 +2564,7 @@ def acceptFromOther =
     | STANDARD OBJECT identifier
     | THREAD HANDLE
     | WINDOW HANDLE
-    | ENVIRONMENT ( name | alphanumericLiteral )
+    | ENVIRONMENT ( identifier | alphanumericLiteral )
     )
 end
 

@@ -340,3 +340,10 @@ target acceptStatement;
 
 # Sample from Cobol Unit Test
 +[ accept args from command-line end-accept ]
+
+
+# Sample from https://github.com/now-examples/cobol-hello-world.git
++[ accept value-string from environment
+       name-string(name-index)
+   end-accept ]
+

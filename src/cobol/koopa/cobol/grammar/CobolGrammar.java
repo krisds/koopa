@@ -10,6 +10,11 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.PRIVATE;
 import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 
+/**
+ * <b>This is generated code.<b>
+ * <p>
+ * @see <code>src/cobol/koopa/cobol/grammar/Cobol.kg</code>
+ */
 public class CobolGrammar extends CobolBaseGrammar {
     public CobolGrammar() {
     }
@@ -10723,7 +10728,7 @@ public class CobolGrammar extends CobolBaseGrammar {
               sequence(
                 keyword("ENVIRONMENT"),
                 choice(
-                  name(),
+                  identifier(),
                   alphanumericLiteral()
                 )
               )

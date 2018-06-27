@@ -19,6 +19,11 @@ import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.data.tags.SyntacticTag.WORD;
 
+/**
+ * <b>This is generated code.<b>
+ * <p>
+ * @see <code>src/cobol/koopa/cobol/grammar/directives/Directives.kg</code>
+ */
 public class DirectivesGrammar extends DirectivesBaseGrammar {
     public DirectivesGrammar() {
     }

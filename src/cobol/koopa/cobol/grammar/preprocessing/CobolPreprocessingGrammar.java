@@ -13,6 +13,11 @@ import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 
+/**
+ * <b>This is generated code.<b>
+ * <p>
+ * @see <code>src/cobol/koopa/cobol/grammar/preprocessing/CobolPreprocessing.kg</code>
+ */
 public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
     public CobolPreprocessingGrammar() {
     }

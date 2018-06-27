@@ -14,6 +14,11 @@ def grammar
     
 >   user_imports
     
+    /**
+     * <b>This is generated code.<b>
+     * <p>
+     * @see <code>#grammar_file#</code>
+     */
     public class #name#Grammar extends #extending#Grammar {
         public #name#Grammar() {
         }

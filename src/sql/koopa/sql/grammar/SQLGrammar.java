@@ -14,6 +14,11 @@ import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WORD;
 
+/**
+ * <b>This is generated code.<b>
+ * <p>
+ * @see <code>src/sql/koopa/sql/grammar/SQL.kg</code>
+ */
 public class SQLGrammar extends SQLBaseGrammar {
     public SQLGrammar() {
     }

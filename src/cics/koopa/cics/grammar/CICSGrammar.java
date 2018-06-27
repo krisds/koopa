@@ -11,6 +11,11 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 
 import koopa.cics.grammar.CICSBaseGrammar;
 
+/**
+ * <b>This is generated code.<b>
+ * <p>
+ * @see <code>src/cics/koopa/cics/grammar/CICS.kg</code>
+ */
 public class CICSGrammar extends CICSBaseGrammar {
     public CICSGrammar() {
     }

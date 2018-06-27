@@ -84,10 +84,10 @@ public class Generation {
 				LOGGER.add("* " + ai);
 		}
 
-		return toCode(ast, meta, additionalImports);
+		return toCode(grammarFile, ast, meta, additionalImports);
 	}
 
-	private String toCode(Tree ast, final Properties meta,
+	private String toCode(File grammarFile, Tree ast, final Properties meta,
 			List<String> additionalImports) {
 
 		StringBuilder code = new StringBuilder();
@@ -100,7 +100,7 @@ public class Generation {
 			LOGGER.indent("+ grammar");
 
 		TEMPLATE.apply("grammar", code, "",
-				grammarLogic(ast, meta, additionalImports));
+				grammarLogic(grammarFile, ast, meta, additionalImports));
 
 		if (LOGGER.isEnabled())
 			LOGGER.dedent();
@@ -108,10 +108,12 @@ public class Generation {
 		return code.toString();
 	}
 
-	private TemplateLogic grammarLogic(final Tree ast, final Properties meta,
-			final List<String> additionalImports) {
+	private TemplateLogic grammarLogic(final File grammarFile, final Tree ast,
+			final Properties meta, final List<String> additionalImports) {
 		return new TemplateLogic() {
 			{
+				setValue("grammar_file", grammarFile.toString());
+
 				setValue("name",
 						ast.getDescendant("header", "grammar_name", "name")
 								.getAllText());

@@ -78,3 +78,6 @@ target entryStatement;
          REPEATED 1 TO 100
          GIVING FIELD-B ]
 
+# Seen in https://github.com/xpmatteo/unit-testing-cobol.git
++[ entry "htmlgen-start-element" using by content tagName ]
+

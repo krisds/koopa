@@ -3180,9 +3180,24 @@ end
 
 def entryStatement =
     ENTRY literal [mnemonicName]
-        [ USING ( [[BY] (REFERENCE | VALUE)] (ANY | dataName [DELIMITED [BY SIZE]]) )+
-            [REPEATED [integer TO integer]] ]
+        [ USING
+          ( [ byReference
+            | byValue
+            | byContent
+            ]
+            ( ANY
+            | dataName [DELIMITED [BY SIZE]]
+            )
+          )+
+          [REPEATED [integer TO integer]]
+        ]
         [ (GIVING | RETURNING) dataName ]
+
+  where def byReference =  [BY] REFERENCE  end
+  where def byValue     =  [BY] VALUE      end
+  
+  # [OpenCOBOL 1.1, GNU Cobol 2.0]
+  where def byContent   =  [BY] CONTENT    end
 end
 
 ## #############################################################################
@@ -5562,3 +5577,5 @@ end
 # [GNU Cobol 2.0]
 #   "GNU COBOL 2.0 Programmers Guide"
 #
+# [OpenCOBOL 1.1]
+#   "OpenCOBOL 1.1 Programmer’s Guide"

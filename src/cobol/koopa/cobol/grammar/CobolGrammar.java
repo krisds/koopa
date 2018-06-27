@@ -13609,14 +13609,10 @@ public class CobolGrammar extends CobolBaseGrammar {
                 plus(
                   sequence(
                     optional(
-                      sequence(
-                        optional(
-                          keyword("BY")
-                        ),
-                        choice(
-                          keyword("REFERENCE"),
-                          keyword("VALUE")
-                        )
+                      choice(
+                        entryStatement$byReference(),
+                        entryStatement$byValue(),
+                        entryStatement$byContent()
                       )
                     ),
                     choice(
@@ -13666,6 +13662,81 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return entryStatementParser;
+    }
+    
+    // ========================================================
+    // byReference
+    // ........................................................
+    
+    private ParserCombinator entryStatement$byReferenceParser = null;
+    
+    public final Start entryStatement$byReference = Start.on(getNamespace(), "byReference");
+    
+    public ParserCombinator entryStatement$byReference() {
+      if (entryStatement$byReferenceParser == null) {
+        FutureParser future = scoped("byReference", PUBLIC, true);
+        entryStatement$byReferenceParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("BY")
+            ),
+            keyword("REFERENCE")
+          )
+        );
+      }
+    
+      return entryStatement$byReferenceParser;
+    }
+    
+    // ========================================================
+    // byValue
+    // ........................................................
+    
+    private ParserCombinator entryStatement$byValueParser = null;
+    
+    public final Start entryStatement$byValue = Start.on(getNamespace(), "byValue");
+    
+    public ParserCombinator entryStatement$byValue() {
+      if (entryStatement$byValueParser == null) {
+        FutureParser future = scoped("byValue", PUBLIC, true);
+        entryStatement$byValueParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("BY")
+            ),
+            keyword("VALUE")
+          )
+        );
+      }
+    
+      return entryStatement$byValueParser;
+    }
+    
+    // ========================================================
+    // byContent
+    // ........................................................
+    
+    private ParserCombinator entryStatement$byContentParser = null;
+    
+    public final Start entryStatement$byContent = Start.on(getNamespace(), "byContent");
+    
+    public ParserCombinator entryStatement$byContent() {
+      if (entryStatement$byContentParser == null) {
+        FutureParser future = scoped("byContent", PUBLIC, true);
+        entryStatement$byContentParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("BY")
+            ),
+            keyword("CONTENT")
+          )
+        );
+      }
+    
+      return entryStatement$byContentParser;
     }
     
     // ========================================================

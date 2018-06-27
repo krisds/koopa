@@ -1,0 +1,13 @@
+If we can find the matching copybook then its contents should be included.
+Without a replacement defined, the contents of the copybook will appear
+unchanged.
+
+< DISPLAY "Start".
+< COPY "MOVES".
+< GO TO END.
+
+> DISPLAY "Start".
+> MOVE 11 TO XXX.
+>MOVE 22 TO YYY.
+>MOVE 33 TO ZZZ.
+> GO TO END.

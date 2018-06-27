@@ -1,0 +1,50 @@
+123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =    =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
+
+      * I predict that the last mainframe will be unplugged
+<---->^<-------------------------------------------------->^
+FIXED = =                                                  =
+!TEXT = !TEXT/COMMENT                                      TEXT
+SEQNR I -                                                  EOLN
+
+      * on 15 March, 1996. - Stewart Alsop Jr
+<---->^<------------------------------------>^
+FIXED = =                                    =
+!TEXT = !TEXT/COMMENT                        TEXT
+SEQNR I -                                    EOLN
+
+      * COPY "MOVES" REPLACING ==XXX== BY ==FOO==.
+<---->^<----------------------------------------->^
+FIXED = =                                         =
+!TEXT = !TEXT/COMMENT                             TEXT
+SEQNR I -                                         EOLN
+
+
+
+       >> source format is free
+<----------------------------->^
+FIXED                          FREE
+DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
+!TEXT                          EOLN
+
+
+*23456789A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
+^<-------------------------------------------------------------------------->^
+FREE   =                                                                     =
+!TEXT  COMMENT                                                               TEXT
+I      -                                                                     EOLN
+
+* The mainframe (still) isn’t dead and isn’t even heading in that direction. - Gabe Goldberg
+^<----------------------------------------------------------------------------------------->^
+FREE   =                                                                                    =
+!TEXT  COMMENT                                                                              TEXT
+I      -                                                                                    EOLN
+
+* COPY "MOVES" REPLACING ==XXX== BY ==FOO==.
+^<----------------------------------------->^
+FREE   =                                    =
+!TEXT  COMMENT                              TEXT
+I      -                                    EOLN

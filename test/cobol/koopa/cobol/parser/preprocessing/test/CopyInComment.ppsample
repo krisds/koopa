@@ -1,0 +1,9 @@
+COPY statements in comments should never be expanded.
+
+< DISPLAY "Start".
+< *> COPY "MOVES" REPLACING ==XXX== BY ==FOO==.
+< GO TO END.
+
+> DISPLAY "Start".
+> *> COPY "MOVES" REPLACING ==XXX== BY ==FOO==.
+> GO TO END.

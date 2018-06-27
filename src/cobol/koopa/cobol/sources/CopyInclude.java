@@ -20,6 +20,7 @@ import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Replaced;
 import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.parsers.Parse;
 import koopa.core.sources.AsReplacing;
@@ -137,14 +138,17 @@ public class CopyInclude extends ChainingSource
 			if (d instanceof Token) {
 				final Token t = (Token) d;
 
-				// Are we at a COPY ?
-				if (canStartCopyHere && "copy".equalsIgnoreCase(t.getText())) {
-					// Are we really ? E.g. no COPY100, or COPY-FOO ?
+				// Did we find a COPY in the program text area, which is not
+				// part of a bigger word ?
+				if (canStartCopyHere && t.hasTag(AreaTag.PROGRAM_TEXT_AREA)
+						&& "copy".equalsIgnoreCase(t.getText())) {
+					// Did we really ? E.g. no COPY100, or COPY-FOO ?
 					if (isSpace(line, 1)) {
 						if (LOGGER.isTraceEnabled())
 							LOGGER.trace(
 									"Possible start of a COPY statement: " + t);
 
+						// OK then !
 						return;
 					}
 				}

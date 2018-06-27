@@ -100,8 +100,7 @@ public class Files extends Suite {
 
 		@Override
 		protected String getName() {
-			return String.format("%s [%s]", super.getName(),
-					this.file.getName());
+			return String.format("%s", this.file.getName());
 		}
 
 		@Override

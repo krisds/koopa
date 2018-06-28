@@ -10778,7 +10778,9 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             optional(
               sequence(
-                keyword("WITH"),
+                optional(
+                  keyword("WITH")
+                ),
                 plus(
                   screenEntryPhrase()
                 )

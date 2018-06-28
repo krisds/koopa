@@ -226,7 +226,9 @@ target acceptStatement;
 +[ ACCEPT foo WITH AUTO-SKIP ]
 
 +[ ACCEPT foo WITH BELL ]
++[ ACCEPT foo WITH NO BELL ]
 +[ ACCEPT foo WITH BEEP ]
++[ ACCEPT foo WITH NO BEEP ]
 
 +[ ACCEPT foo WITH BLINK ]
 
@@ -347,3 +349,8 @@ target acceptStatement;
        name-string(name-index)
    end-accept ]
 
+# Seen in https://github.com/vivianamarquez/COBOL.git
++[ ACCEPT CODIGO LINE 10 POSITION 30 PROMPT NO BEEP ]
+
+# Seen in https://github.com/jesuscuesta/Cobol.git
++[ ACCEPT OPCION    LINE 23 POSITION 70 OFF NO BEEP ]

@@ -2574,7 +2574,7 @@ def acceptScreenFormat =
     [ dtLineColPositioning | dtAtPositioning ]
     [ FROM CRT ]
     [ modeIsBlockPhrase ]
-    [ WITH (screenEntryPhrase)+ ]
+    [ [WITH] (screenEntryPhrase)+ ]
     
     ![onException | notOnException | onEscape | notOnEscape]
 end

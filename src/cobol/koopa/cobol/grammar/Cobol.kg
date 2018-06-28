@@ -2887,16 +2887,6 @@ def displayStatement =
     [END-DISPLAY]
 end
 
-def displayStatement__ =
-    DISPLAY 
-    ( displayTerminalFormat
-    | displayDeviceFormat
-
-    | unknown: --> somethingFollowingAStatement
-    )
-    [END-DISPLAY]
-end
-
 def displayDeviceFormat =
     (identifier | literal)+
     [uponClause]
@@ -3008,8 +2998,13 @@ def beepPhrase =
     [NO] (BEEP | BELL)
 end
 
+# Based on https://supportline.microfocus.com/documentation/acucorpproducts/docs/v6_online_doc/gtman3/gt3692.htm
 def blankPhrase =
-    BLANK (SCREEN | LINE)
+    BLANK
+    [ LINE | SCREEN
+    | EOL  | EOS
+    | [TO] END [OF] (LINE | SCREEN)
+    ]
 end
 
 def blinkPhrase =
@@ -3040,8 +3035,13 @@ def echoPhrase =
     ECHO
 end
 
+# Based on https://supportline.microfocus.com/documentation/acucorpproducts/docs/v6_online_doc/gtman3/gt3692.htm
 def erasePhrase =
-    ERASE [EOL | EOS]
+    ERASE
+    [ LINE | SCREEN
+    | EOL  | EOS
+    | [TO] END [OF] (LINE | SCREEN)
+    ]
 end
 
 def foregroundPhrase =

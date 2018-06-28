@@ -12141,40 +12141,6 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // displayStatement__
-    // ........................................................
-    
-    private ParserCombinator displayStatement__Parser = null;
-    
-    public final Start displayStatement__ = Start.on(getNamespace(), "displayStatement__");
-    
-    public ParserCombinator displayStatement__() {
-      if (displayStatement__Parser == null) {
-        FutureParser future = scoped("displayStatement__", PUBLIC, true);
-        displayStatement__Parser = future;
-        future.setParser(
-          sequence(
-            keyword("DISPLAY"),
-            choice(
-              displayTerminalFormat(),
-              displayDeviceFormat(),
-              as("unknown",
-                skipto(
-                  somethingFollowingAStatement()
-                )
-              )
-            ),
-            optional(
-              keyword("END-DISPLAY")
-            )
-          )
-        );
-      }
-    
-      return displayStatement__Parser;
-    }
-    
-    // ========================================================
     // displayDeviceFormat
     // ........................................................
     
@@ -12628,9 +12594,26 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             keyword("BLANK"),
-            choice(
-              keyword("SCREEN"),
-              keyword("LINE")
+            optional(
+              choice(
+                keyword("LINE"),
+                keyword("SCREEN"),
+                keyword("EOL"),
+                keyword("EOS"),
+                sequence(
+                  optional(
+                    keyword("TO")
+                  ),
+                  keyword("END"),
+                  optional(
+                    keyword("OF")
+                  ),
+                  choice(
+                    keyword("LINE"),
+                    keyword("SCREEN")
+                  )
+                )
+              )
             )
           )
         );
@@ -12820,8 +12803,23 @@ public class CobolGrammar extends CobolBaseGrammar {
             keyword("ERASE"),
             optional(
               choice(
+                keyword("LINE"),
+                keyword("SCREEN"),
                 keyword("EOL"),
-                keyword("EOS")
+                keyword("EOS"),
+                sequence(
+                  optional(
+                    keyword("TO")
+                  ),
+                  keyword("END"),
+                  optional(
+                    keyword("OF")
+                  ),
+                  choice(
+                    keyword("LINE"),
+                    keyword("SCREEN")
+                  )
+                )
               )
             )
           )

@@ -859,7 +859,7 @@ end
 
 def functionSpecifier =
     FUNCTION
-    ( (ALL | functionName) INTRINSIC
+    ( (ALL | functionName+) INTRINSIC
     | functionName [AS literal]
     )
 end

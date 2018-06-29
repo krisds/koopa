@@ -6,9 +6,8 @@ target repositoryParagraph;
 +[ REPOSITORY .
      FUNCTION foo INTRINSIC . ]
 
-# TODO Add support for this.
-# +[ REPOSITORY .
-#     FUNCTION foo bar INTRINSIC . ]
++[ REPOSITORY .
+     FUNCTION foo bar INTRINSIC . ]
 
 +[ REPOSITORY .
      FUNCTION foo . ]

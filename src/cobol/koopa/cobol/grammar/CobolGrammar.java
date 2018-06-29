@@ -3570,7 +3570,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               sequence(
                 choice(
                   keyword("ALL"),
-                  functionName()
+                  plus(
+                    functionName()
+                  )
                 ),
                 keyword("INTRINSIC")
               ),

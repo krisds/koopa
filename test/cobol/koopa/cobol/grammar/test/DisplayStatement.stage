@@ -129,3 +129,13 @@ target displayStatement;
 
 # Seen in https://github.com/Mithrilhall/COBOL.git
 +[ DISPLAY " " ERASE SCREEN ]
+
+# Seen in https://github.com/MateusAndrade/cobol.git
+# This is a DISPLAY with a "position-spec".
+# As far as I can tell, a position-spec is a feature which predates Cobol 85,
+# and is no longer available. It could be used in DISPLAY and ACCEPT statements.
+# I'm not sure if I want to support this in the Cobol grammar here. The cut-off
+# point to what goes in (or what I try to put in) has, so far, been the 85
+# standard. So, for now, I will disallow it, and state that it should fail to
+# parse.
+-[ DISPLAY (23, 13) LIMPA ]

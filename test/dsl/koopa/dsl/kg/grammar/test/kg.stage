@@ -172,15 +172,15 @@ def pair =
 end
 
 def balanced =
-    '%% ++('nested') atom
+    '%' ++('nested') atom
 end
 
 def unbalanced =
-    '%% ++('notnested') atom
+    '%' ++('notnested') atom
 end
 
 def notempty =
-    '%% ++('notempty') atom
+    '%' ++('notempty') atom
 end
 
 def closure =

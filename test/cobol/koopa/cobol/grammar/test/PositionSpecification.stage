@@ -1,0 +1,31 @@
+target positionSpecification;
+
++[ (23, 13) ]
++[ (11, ) ]
++[ (, 42) ]
+
++[ (LIN, COL) ]
++[ (LIN, ) ]
++[ (, COL) ]
+
++[ (LIN + 9, COL + 5) ]
++[ (LIN + 9, ) ]
++[ (, COL + 5) ]
+
++[ (LIN - 9, COL - 5) ]
++[ (LIN - 9, ) ]
++[ (, COL - 5) ]
+
++[ (] Identifier:identifier [, ] Identifier:identifier [) ]
++[ (] Identifier:identifier [, ) ]
++[ (, ] Identifier:identifier [) ]
+
++[ (] Identifier:identifier [ + 8, ] Identifier:identifier [ + 4) ]
++[ (] Identifier:identifier [ + 8, ) ]
++[ (, ] Identifier:identifier [ + 4) ]
+
++[ (] Identifier:identifier [ - 7, ] Identifier:identifier [ - 3) ]
++[ (] Identifier:identifier [ - 7, ) ]
++[ (, ] Identifier:identifier [ - 3) ]
+
++[ (, ) ]

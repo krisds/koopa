@@ -2569,7 +2569,10 @@ def acceptFromOther =
 end
 
 def acceptScreenFormat =
-    ( OMITTED | identifier )
+    ( OMITTED                                                  # [ACUCOBOL-GT]
+    | [positionSpecification]                                  # [MF - MS COBOL]
+      identifier
+    )
     [ unitPhrase ]
     [ dtLineColPositioning | dtAtPositioning ]
     [ FROM CRT ]
@@ -2872,7 +2875,13 @@ end
 
 def displayStatement =
     DISPLAY
-    ( OMITTED | identifier | literal )+
+    ( [positionSpecification]                                  # [MF - MS COBOL]
+      ( ERASE                                                  # [MF - MS COBOL]
+      | OMITTED                                                # [ACUCOBOL-GT]
+      | identifier
+      | literal
+      )
+    )+
     
     ( uponClause
     | withNoAdvancing
@@ -4468,6 +4477,27 @@ def attributeClause =
     )+
 end
 
+# [MF - MS COBOL]
+def positionSpecification =
+    '(' [lin] ',' [col] ')'
+    
+  where def lin =
+      # This is a guard to make sure we try to match the first element of the
+      # position specification. We need to do this because commas are skipped
+      # by default, so a "(, 7)" could match 'lin' against the "7" otherwise.
+      (%not ',')
+      
+      ( integerLiteral
+      | ( LIN | identifier ) [ ('+' | '-') integerLiteral ]
+      )
+  end
+  
+  where def col =
+      ( integerLiteral
+      | ( COL | identifier ) [ ('+' | '-') integerLiteral ]
+      )
+  end
+end
 
 ## #############################################################################
 ## Exception clauses.
@@ -5573,9 +5603,15 @@ end
 #   https://supportline.microfocus.com/documentation/books/nx60/lhpdf301.htm
 # [MF - CALL Statement]
 #   https://supportline.microfocus.com/documentation/books/nx60/lhpdf804.htm
+# [MF - MS COBOL]
+#   https://supportline.microfocus.com/documentation/books/nx60/lhdmso01.htm
 #
 # [GNU Cobol 2.0]
 #   "GNU COBOL 2.0 Programmers Guide"
 #
 # [OpenCOBOL 1.1]
 #   "OpenCOBOL 1.1 Programmer’s Guide"
+#
+# [ACUCOBOL-GT]
+#   "ACUCOBOL-GT Reference Manual"
+#   https://supportline.microfocus.com/documentation/acucorpproducts/docs/v6_online_doc/gtman3/gtman3.htm

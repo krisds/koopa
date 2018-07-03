@@ -10758,7 +10758,12 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             choice(
               keyword("OMITTED"),
-              identifier()
+              sequence(
+                optional(
+                  positionSpecification()
+                ),
+                identifier()
+              )
             ),
             optional(
               unitPhrase()
@@ -12098,10 +12103,16 @@ public class CobolGrammar extends CobolBaseGrammar {
           sequence(
             keyword("DISPLAY"),
             plus(
-              choice(
-                keyword("OMITTED"),
-                identifier(),
-                literal()
+              sequence(
+                optional(
+                  positionSpecification()
+                ),
+                choice(
+                  keyword("ERASE"),
+                  keyword("OMITTED"),
+                  identifier(),
+                  literal()
+                )
               )
             ),
             star(
@@ -18504,6 +18515,115 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return attributeClauseParser;
+    }
+    
+    // ========================================================
+    // positionSpecification
+    // ........................................................
+    
+    private ParserCombinator positionSpecificationParser = null;
+    
+    public final Start positionSpecification = Start.on(getNamespace(), "positionSpecification");
+    
+    public ParserCombinator positionSpecification() {
+      if (positionSpecificationParser == null) {
+        FutureParser future = scoped("positionSpecification", PUBLIC, true);
+        positionSpecificationParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            optional(
+              positionSpecification$lin()
+            ),
+            literal(","),
+            optional(
+              positionSpecification$col()
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return positionSpecificationParser;
+    }
+    
+    // ========================================================
+    // lin
+    // ........................................................
+    
+    private ParserCombinator positionSpecification$linParser = null;
+    
+    public final Start positionSpecification$lin = Start.on(getNamespace(), "lin");
+    
+    public ParserCombinator positionSpecification$lin() {
+      if (positionSpecification$linParser == null) {
+        FutureParser future = scoped("lin", PUBLIC, true);
+        positionSpecification$linParser = future;
+        future.setParser(
+          sequence(
+            not(
+              literal(",")
+            ),
+            choice(
+              integerLiteral(),
+              sequence(
+                choice(
+                  keyword("LIN"),
+                  identifier()
+                ),
+                optional(
+                  sequence(
+                    choice(
+                      literal("+"),
+                      literal("-")
+                    ),
+                    integerLiteral()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return positionSpecification$linParser;
+    }
+    
+    // ========================================================
+    // col
+    // ........................................................
+    
+    private ParserCombinator positionSpecification$colParser = null;
+    
+    public final Start positionSpecification$col = Start.on(getNamespace(), "col");
+    
+    public ParserCombinator positionSpecification$col() {
+      if (positionSpecification$colParser == null) {
+        FutureParser future = scoped("col", PUBLIC, true);
+        positionSpecification$colParser = future;
+        future.setParser(
+          choice(
+            integerLiteral(),
+            sequence(
+              choice(
+                keyword("COL"),
+                identifier()
+              ),
+              optional(
+                sequence(
+                  choice(
+                    literal("+"),
+                    literal("-")
+                  ),
+                  integerLiteral()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return positionSpecification$colParser;
     }
     
     // ========================================================

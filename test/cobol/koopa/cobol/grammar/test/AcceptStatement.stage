@@ -354,3 +354,8 @@ target acceptStatement;
 
 # Seen in https://github.com/jesuscuesta/Cobol.git
 +[ ACCEPT OPCION    LINE 23 POSITION 70 OFF NO BEEP ]
+
+# Seen in https://github.com/MateusAndrade/cobol.git
+# This is an ACCEPT with a "position-spec".
++[ ACCEPT (23, 38) W-OPCAO WITH UPDATE ]
+

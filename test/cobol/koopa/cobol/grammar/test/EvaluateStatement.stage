@@ -63,6 +63,29 @@ target when;
    WHEN TRUE ALSO ANY ALSO 42
         DISPLAY "Good." ]
 
++[ when equals "HELLO WORLD"  DISPLAY "achievement unlocked" ]
+
++[ when equals 0   DISPLAY "ZERO" ]
++[ when      < 0   DISPLAY "NEGATIVE" ]
++[ when      > 0   DISPLAY "POSITIVE" ]
+
++[ WHEN IS POSITIVE  DISPLAY "> 0" ]
++[ WHEN IS NEGATIVE  DISPLAY "< 0" ]
++[ WHEN IS ZERO      DISPLAY "= 0" ]
+
++[ WHEN    POSITIVE  DISPLAY "> 0" ]
++[ WHEN    NEGATIVE  DISPLAY "< 0" ]
++[ WHEN    ZERO      DISPLAY "= 0" ]
+
++[ WHEN IS NOT POSITIVE  DISPLAY "<= 0" ]
++[ WHEN IS NOT NEGATIVE  DISPLAY ">= 0" ]
++[ WHEN IS NOT ZERO      DISPLAY "<> 0" ]
+
++[ WHEN    NOT POSITIVE  DISPLAY "<= 0" ]
++[ WHEN    NOT NEGATIVE  DISPLAY ">= 0" ]
++[ WHEN    NOT ZERO      DISPLAY "<> 0" ]
+
+
 
 target evaluateStatement;
 

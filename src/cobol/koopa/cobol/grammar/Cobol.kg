@@ -3261,6 +3261,17 @@ def object =
 
     | TRUE
     | FALSE
+    
+    # "A selection object is a partial-expression if the leftmost portion of
+    # the selection object is a relational operator, a class condition without
+    # the identifier, a sign condition without the identifier, or a sign
+    # condition without the arithmetic expression."
+    #
+    # TODO abbreviatedDisjunction is hiding. Apply a fixed name here ? Which one ?
+    | (%at relop) abbreviatedDisjunction
+    | abbreviatedSignCondition
+    # TODO Ignoring class condition for now. It's very ambiguous.
+    
     | condition
     
     | [NOT]
@@ -3270,20 +3281,21 @@ def object =
       )
     | '(' object ')'
     )
+
+  where def rangeExpression =
+    [NOT] 
+    ( literal    (%not moreArithmeticOp)
+    | identifier (%not moreArithmeticOp)
+    | arithmeticExpression
+    )
+    ( THROUGH | THRU )
+    ( literal    (%not moreArithmeticOp)
+    | identifier (%not moreArithmeticOp)
+    | arithmeticExpression
+    )
+  end
 end
 
-def rangeExpression =
-  [NOT] 
-  ( literal    (%not moreArithmeticOp)
-  | identifier (%not moreArithmeticOp)
-  | arithmeticExpression
-  )
-  ( THROUGH | THRU )
-  ( literal    (%not moreArithmeticOp)
-  | identifier (%not moreArithmeticOp)
-  | arithmeticExpression
-  )
-end
 
 ## #############################################################################
 ## EXAMINE statement.
@@ -5078,15 +5090,21 @@ end
 #  arithmetic expression is less than, greater than, or equal to zero."
 # - [SPEC-XX] 8.8.4.1.6 Sign condition
 def signCondition =
-    arithmeticExpression [IS] [not: NOT] signType
+    arithmeticExpression test
+
+  where private def test =
+      [IS] [not: NOT] signType 
+  end
+
+  where def signType =
+      ( POSITIVE
+      | NEGATIVE
+      | zero
+      )
+  end
 end
 
-def signType =
-    ( POSITIVE
-    | NEGATIVE
-    | zero
-    )
-end
+def abbreviatedSignCondition =  signCondition$test  end
 
 
 # "The omitted-argument condition determines whether an argument was provided
@@ -5165,7 +5183,7 @@ def relationObject =
           | OMITTED    #< We're in an omitted argument condition.
           | relop      #< We're in a full (non-abbreviated) relation condition.
           | classType  #< We're in a class condition.
-          | signType   #< We're in sign condition.
+          | signCondition$signType   #< We're in sign condition.
           ))
 end
 

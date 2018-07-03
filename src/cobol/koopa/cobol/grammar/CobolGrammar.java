@@ -13909,9 +13909,16 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           choice(
             keyword("ANY"),
-            rangeExpression(),
+            object$rangeExpression(),
             keyword("TRUE"),
             keyword("FALSE"),
+            sequence(
+              at(
+                relop()
+              ),
+              abbreviatedDisjunction()
+            ),
+            abbreviatedSignCondition(),
             condition(),
             sequence(
               optional(
@@ -13949,14 +13956,14 @@ public class CobolGrammar extends CobolBaseGrammar {
     // rangeExpression
     // ........................................................
     
-    private ParserCombinator rangeExpressionParser = null;
+    private ParserCombinator object$rangeExpressionParser = null;
     
-    public final Start rangeExpression = Start.on(getNamespace(), "rangeExpression");
+    public final Start object$rangeExpression = Start.on(getNamespace(), "rangeExpression");
     
-    public ParserCombinator rangeExpression() {
-      if (rangeExpressionParser == null) {
+    public ParserCombinator object$rangeExpression() {
+      if (object$rangeExpressionParser == null) {
         FutureParser future = scoped("rangeExpression", PUBLIC, true);
-        rangeExpressionParser = future;
+        object$rangeExpressionParser = future;
         future.setParser(
           sequence(
             optional(
@@ -14000,7 +14007,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return rangeExpressionParser;
+      return object$rangeExpressionParser;
     }
     
     // ========================================================
@@ -20288,15 +20295,7 @@ public class CobolGrammar extends CobolBaseGrammar {
         future.setParser(
           sequence(
             arithmeticExpression(),
-            optional(
-              keyword("IS")
-            ),
-            optional(
-              as("not",
-                keyword("NOT")
-              )
-            ),
-            signType()
+            signCondition$test()
           )
         );
       }
@@ -20305,17 +20304,47 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
+    // test
+    // ........................................................
+    
+    private ParserCombinator signCondition$testParser = null;
+    
+    protected final Start signCondition$test = Start.on(getNamespace(), "test");
+    
+    protected ParserCombinator signCondition$test() {
+      if (signCondition$testParser == null) {
+        FutureParser future = scoped("test", PRIVATE, true);
+        signCondition$testParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("IS")
+            ),
+            optional(
+              as("not",
+                keyword("NOT")
+              )
+            ),
+            signCondition$signType()
+          )
+        );
+      }
+    
+      return signCondition$testParser;
+    }
+    
+    // ========================================================
     // signType
     // ........................................................
     
-    private ParserCombinator signTypeParser = null;
+    private ParserCombinator signCondition$signTypeParser = null;
     
-    public final Start signType = Start.on(getNamespace(), "signType");
+    public final Start signCondition$signType = Start.on(getNamespace(), "signType");
     
-    public ParserCombinator signType() {
-      if (signTypeParser == null) {
+    public ParserCombinator signCondition$signType() {
+      if (signCondition$signTypeParser == null) {
         FutureParser future = scoped("signType", PUBLIC, true);
-        signTypeParser = future;
+        signCondition$signTypeParser = future;
         future.setParser(
           choice(
             keyword("POSITIVE"),
@@ -20325,7 +20354,27 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return signTypeParser;
+      return signCondition$signTypeParser;
+    }
+    
+    // ========================================================
+    // abbreviatedSignCondition
+    // ........................................................
+    
+    private ParserCombinator abbreviatedSignConditionParser = null;
+    
+    public final Start abbreviatedSignCondition = Start.on(getNamespace(), "abbreviatedSignCondition");
+    
+    public ParserCombinator abbreviatedSignCondition() {
+      if (abbreviatedSignConditionParser == null) {
+        FutureParser future = scoped("abbreviatedSignCondition", PUBLIC, true);
+        abbreviatedSignConditionParser = future;
+        future.setParser(
+          signCondition$test()
+        );
+      }
+    
+      return abbreviatedSignConditionParser;
     }
     
     // ========================================================
@@ -20526,7 +20575,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 keyword("OMITTED"),
                 relop(),
                 classType(),
-                signType()
+                signCondition$signType()
               )
             )
           )

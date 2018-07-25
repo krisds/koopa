@@ -17,7 +17,16 @@ import koopa.cics.grammar.CICSBaseGrammar;
  * @see <code>src/cics/koopa/cics/grammar/CICS.kg</code>
  */
 public class CICSGrammar extends CICSBaseGrammar {
-    public CICSGrammar() {
+    private static CICSGrammar INSTANCE = null;
+
+    protected CICSGrammar() {
+    }
+    
+    public static CICSGrammar instance() {
+      if (INSTANCE == null)
+        INSTANCE = new CICSGrammar();
+        
+      return INSTANCE;
     }
     
     // ========================================================

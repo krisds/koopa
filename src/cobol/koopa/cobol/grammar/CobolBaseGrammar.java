@@ -166,22 +166,12 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	// Embedded grammars
 	// ............................................................................
 
-	private SQLGrammar sqlGrammar = null;
-
 	protected SQLGrammar sqlGrammar() {
-		if (sqlGrammar == null)
-			sqlGrammar = new SQLGrammar();
-
-		return sqlGrammar;
+		return SQLGrammar.instance();
 	}
 
-	private CICSGrammar cicsGrammar = null;
-
 	public CICSGrammar cicsGrammar() {
-		if (cicsGrammar == null)
-			cicsGrammar = new CICSGrammar();
-
-		return cicsGrammar;
+		return CICSGrammar.instance();
 	}
 
 	// ============================================================================

@@ -20,7 +20,16 @@ def grammar
      * @see <code>#grammar_file#</code>
      */
     public class #name#Grammar extends #extending#Grammar {
-        public #name#Grammar() {
+        private static #name#Grammar INSTANCE = null;
+    
+        protected #name#Grammar() {
+        }
+        
+        public static #name#Grammar instance() {
+          if (INSTANCE == null)
+            INSTANCE = new #name#Grammar();
+            
+          return INSTANCE;
         }
         
 >       rules

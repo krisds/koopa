@@ -43,7 +43,7 @@ public class CompilerDirectives extends ChainingSource
 		super(source);
 
 		this.format = initialFormat;
-		this.grammar = new DirectivesGrammar();
+		this.grammar = DirectivesGrammar.instance();
 	}
 
 	@Override

@@ -108,6 +108,8 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 				.setPreferredWidth(150);
 		overviewTable.getColumnModel().getColumn(BatchResults.PATH_COLUMN)
 				.setPreferredWidth(600);
+		overviewTable.getColumnModel().getColumn(BatchResults.TIME_COLUMN)
+				.setPreferredWidth(70);
 
 		overviewTable.getColumnModel().getColumn(BatchResults.STATUS_COLUMN)
 				.setCellRenderer(new StatusRenderer());

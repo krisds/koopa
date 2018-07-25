@@ -20,7 +20,16 @@ import static koopa.core.data.tags.SyntacticTag.WORD;
  * @see <code>src/sql/koopa/sql/grammar/SQL.kg</code>
  */
 public class SQLGrammar extends SQLBaseGrammar {
-    public SQLGrammar() {
+    private static SQLGrammar INSTANCE = null;
+
+    protected SQLGrammar() {
+    }
+    
+    public static SQLGrammar instance() {
+      if (INSTANCE == null)
+        INSTANCE = new SQLGrammar();
+        
+      return INSTANCE;
     }
     
     // ========================================================

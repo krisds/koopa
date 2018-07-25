@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import koopa.core.grammars.Grammar;
+import koopa.core.grammars.combinators.Dispatched;
 import koopa.core.parsers.combinators.Choice;
 
 public class Optimizer {
@@ -30,11 +31,19 @@ public class Optimizer {
 	 * of the given parsers to trigger ?
 	 */
 	public static boolean canUseLookaheadInChoice(ParserCombinator... parsers) {
-		for (ParserCombinator p : parsers)
-			if (!p.allowsLookahead())
-				return false;
+		return countLeadingLookaheadInChoice(parsers) == parsers.length;
+	}
 
-		return true;
+	public static int countLeadingLookaheadInChoice(
+			ParserCombinator... parsers) {
+		int count = 0;
+		for (ParserCombinator p : parsers)
+			if (p.allowsLookahead())
+				count += 1;
+			else
+				return count;
+
+		return count;
 	}
 
 	/**
@@ -74,5 +83,18 @@ public class Optimizer {
 		}
 
 		return dispatchTable;
+	}
+
+	public static Dispatched dispatched(Grammar grammar,
+			ParserCombinator[] parsers) {
+		return new Dispatched(grammar, dispatchTable(parsers));
+	}
+
+	public static Dispatched dispatched(Grammar grammar,
+			ParserCombinator[] parsers, int start, int length) {
+		final ParserCombinator[] selected = new ParserCombinator[length];
+		for (int i = 0; i < length; i++)
+			selected[i] = parsers[start + i];
+		return new Dispatched(grammar, dispatchTable(selected));
 	}
 }

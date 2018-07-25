@@ -21,7 +21,7 @@ public class EmbeddedCICSGrammarTests extends GrammarTestSuite {
 	}
 
 	public Grammar getGrammar() {
-		return new CICSGrammar();
+		return CICSGrammar.instance();
 	}
 
 	public Source getSourceForSample(String sample, Grammar grammar) {

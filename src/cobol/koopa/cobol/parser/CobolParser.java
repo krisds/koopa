@@ -56,6 +56,15 @@ public class CobolParser {
 	}
 
 	public ParseResults parse(File file, Parse parse) throws IOException {
+		final long start = System.currentTimeMillis();
+		final ParseResults results = doParse(file, parse);
+		final long end = System.currentTimeMillis();
+		LOGGER.trace("Parse took: " + (end-start) + " ms");
+		results.setTime(end-start);
+		return results;
+	}
+	
+	private ParseResults doParse(File file, Parse parse) throws IOException {
 		boolean accepts = project.parserFor(file).accepts(parse);
 
 		final ParseResults results = new ParseResults(file);

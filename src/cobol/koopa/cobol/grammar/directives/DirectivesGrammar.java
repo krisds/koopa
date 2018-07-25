@@ -25,7 +25,16 @@ import static koopa.core.data.tags.SyntacticTag.WORD;
  * @see <code>src/cobol/koopa/cobol/grammar/directives/Directives.kg</code>
  */
 public class DirectivesGrammar extends DirectivesBaseGrammar {
-    public DirectivesGrammar() {
+    private static DirectivesGrammar INSTANCE = null;
+
+    protected DirectivesGrammar() {
+    }
+    
+    public static DirectivesGrammar instance() {
+      if (INSTANCE == null)
+        INSTANCE = new DirectivesGrammar();
+        
+      return INSTANCE;
     }
     
     // ========================================================

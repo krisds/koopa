@@ -16,7 +16,16 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
  * @see <code>src/cobol/koopa/cobol/grammar/Cobol.kg</code>
  */
 public class CobolGrammar extends CobolBaseGrammar {
-    public CobolGrammar() {
+    private static CobolGrammar INSTANCE = null;
+
+    protected CobolGrammar() {
+    }
+    
+    public static CobolGrammar instance() {
+      if (INSTANCE == null)
+        INSTANCE = new CobolGrammar();
+        
+      return INSTANCE;
     }
     
     // ========================================================

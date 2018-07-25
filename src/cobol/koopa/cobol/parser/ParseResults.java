@@ -14,6 +14,7 @@ public class ParseResults {
 	private int numberOfLines = -1;
 	private int numberOfLinesWithCode = -1;
 	private int numberOfLinesWithComments = -1;
+	private long time = -1;
 
 	public ParseResults(File file) {
 		this.file = file;
@@ -39,6 +40,7 @@ public class ParseResults {
 		copy.numberOfLines = numberOfLines;
 		copy.numberOfLinesWithCode = numberOfLinesWithCode;
 		copy.numberOfLinesWithComments = numberOfLinesWithComments;
+		copy.time = time;
 		return copy;
 	}
 
@@ -64,6 +66,14 @@ public class ParseResults {
 
 	public int getNumberOfLinesWithComments() {
 		return numberOfLinesWithComments;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
+	}
+	
+	public long getTime() {
+		return time;
 	}
 
 	public void setParse(Parse parse) {

@@ -19,7 +19,16 @@ import static koopa.core.data.tags.SyntacticTag.STRING;
  * @see <code>src/cobol/koopa/cobol/grammar/preprocessing/CobolPreprocessing.kg</code>
  */
 public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
-    public CobolPreprocessingGrammar() {
+    private static CobolPreprocessingGrammar INSTANCE = null;
+
+    protected CobolPreprocessingGrammar() {
+    }
+    
+    public static CobolPreprocessingGrammar instance() {
+      if (INSTANCE == null)
+        INSTANCE = new CobolPreprocessingGrammar();
+        
+      return INSTANCE;
     }
     
     // ========================================================

@@ -31,7 +31,8 @@ public class BatchResults extends AbstractTableModel {
 
 	public static final int FILE_COLUMN = 8;
 	public static final int PATH_COLUMN = 9;
-	public static final int CUSTOM_COLUMNS = 10;
+	public static final int TIME_COLUMN = 10;
+	public static final int CUSTOM_COLUMNS = 11;
 
 	private static List<String> customKeys;
 
@@ -90,6 +91,9 @@ public class BatchResults extends AbstractTableModel {
 
 		case COMMENTS_COLUMN:
 			return "CLOC";
+
+		case TIME_COLUMN:
+			return "Time (ms)";
 
 		default:
 			// Return titles for custom columns:
@@ -150,6 +154,9 @@ public class BatchResults extends AbstractTableModel {
 
 		case COMMENTS_COLUMN:
 			return parseResults.get(rowIndex).getNumberOfLinesWithComments();
+		
+		case TIME_COLUMN:
+			return parseResults.get(rowIndex).getTime();
 
 		default:
 			// Get values from each custom report column key:

@@ -24,7 +24,7 @@ public class EmbeddedSQLGrammarTests extends GrammarTestSuite {
 	}
 
 	public Grammar getGrammar() {
-		return new SQLGrammar();
+		return SQLGrammar.instance();
 	}
 
 	public Source getSourceForSample(String sample, Grammar grammar) {

@@ -1,7 +1,5 @@
 package koopa.core.grammars.combinators;
 
-import java.util.Map;
-
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Optimizer;
 import koopa.core.parsers.Parse;
@@ -37,10 +35,8 @@ public class OptimizingPermuted extends Permuted {
 				for (int i = 0; i < parsers.length; i++)
 					onces[i] = new Once(parsers[i]);
 
-				final Map<String, ParserCombinator> dispatchTable //
-						= Optimizer.dispatchTable(onces);
-				final Dispatched dispatched = new Dispatched(grammar,
-						dispatchTable);
+				final Dispatched dispatched = Optimizer.dispatched(grammar,
+						onces);
 				final Plus star = new Plus(dispatched);
 				counting = new Counting(star);
 			}

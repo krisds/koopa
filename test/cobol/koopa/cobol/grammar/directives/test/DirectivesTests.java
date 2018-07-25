@@ -14,7 +14,7 @@ import koopa.dsl.stage.runtime.GrammarTestSuite;
 public abstract class DirectivesTests extends GrammarTestSuite {
 
 	public Grammar getGrammar() {
-		return new DirectivesGrammar();
+		return DirectivesGrammar.instance();
 	}
 
 	public Source getSourceForSample(String sample, Grammar grammar) {

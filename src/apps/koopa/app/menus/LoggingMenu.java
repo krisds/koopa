@@ -37,6 +37,7 @@ public class LoggingMenu extends JMenu {
 		addMenuFor("Line Continuations", "source.cobol.continuations");
 		addMenuFor("Inline Comments", "source.cobol.inline_comments");
 		addMenuFor("Token Separation", "token_separation");
+		addMenuFor("Optimization", "optimization");
 	}
 
 	private void addMenuFor(String name, String category) {

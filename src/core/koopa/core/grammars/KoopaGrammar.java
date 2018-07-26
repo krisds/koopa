@@ -103,6 +103,8 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected ParserCombinator choice(final ParserCombinator... parsers) {
+		// TODO Set a minimum length requirement on parsers ? Is it worth doing
+		// this for small numbers ?
 		if (Optimizer.shouldRun())
 			return new OptimizingChoice(this, parsers);
 		else
@@ -110,6 +112,8 @@ public abstract class KoopaGrammar extends Grammar {
 	}
 
 	protected ParserCombinator permuted(final ParserCombinator... parsers) {
+		// TODO Set a minimum length requirement on parsers ? Is it worth doing
+		// this for small numbers ?
 		if (Optimizer.shouldRun())
 			return new OptimizingPermuted(this, parsers);
 		else

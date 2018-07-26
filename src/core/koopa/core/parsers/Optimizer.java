@@ -7,19 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import koopa.core.grammars.Grammar;
 import koopa.core.grammars.combinators.Dispatched;
 import koopa.core.parsers.combinators.Choice;
 
 public class Optimizer {
 
+	private static final Logger LOGGER = Logger.getLogger("optimization");
+
 	private static final boolean SHOULD_RUN;
 	static {
 		SHOULD_RUN = !"false".equalsIgnoreCase( //
 				System.getProperty("koopa.optimize", "true"));
 
-		if (!SHOULD_RUN)
-			System.out.println("Optimizer has been turned off.");
+		if (!SHOULD_RUN && LOGGER.isInfoEnabled())
+			LOGGER.info("Optimizer has been turned off.");
 	}
 
 	public static boolean shouldRun() {
@@ -27,15 +31,13 @@ public class Optimizer {
 	}
 
 	/**
-	 * Can we use lookahead (at {@linkplain Grammar#keyword()}) to decide which
-	 * of the given parsers to trigger ?
+	 * Starting with the first parser, count the number of parsers which we
+	 * could use lookahead (with {@linkplain Grammar#keyword()}) for. Start
+	 * counting as soon as we see one which does not support lookahead.
 	 */
-	public static boolean canUseLookaheadInChoice(ParserCombinator... parsers) {
-		return countLeadingLookaheadInChoice(parsers) == parsers.length;
-	}
-
-	public static int countLeadingLookaheadInChoice(
+	public static int countLeadingParsersAllowingLookahead(
 			ParserCombinator... parsers) {
+
 		int count = 0;
 		for (ParserCombinator p : parsers)
 			if (p.allowsLookahead())
@@ -55,7 +57,7 @@ public class Optimizer {
 	 * an essential feature as Koopa grammars rely on manual ordering to resolve
 	 * conflicts.
 	 */
-	public static Map<String, ParserCombinator> dispatchTable(
+	private static Map<String, ParserCombinator> dispatchTable(
 			ParserCombinator... parsers) {
 
 		final Map<String, List<ParserCombinator>> mapping //
@@ -85,11 +87,19 @@ public class Optimizer {
 		return dispatchTable;
 	}
 
+	/**
+	 * Build a dispatch table for all parsers, and return a
+	 * {@linkplain Dispatched} parser based on it.
+	 */
 	public static Dispatched dispatched(Grammar grammar,
 			ParserCombinator[] parsers) {
 		return new Dispatched(grammar, dispatchTable(parsers));
 	}
 
+	/**
+	 * Build a dispatch table for the selected parsers, and return a
+	 * {@linkplain Dispatched} parser based on it.
+	 */
 	public static Dispatched dispatched(Grammar grammar,
 			ParserCombinator[] parsers, int start, int length) {
 		final ParserCombinator[] selected = new ParserCombinator[length];

@@ -42,6 +42,17 @@ public class Stack {
 		return p;
 	}
 
+	public Scoped getScope() {
+		Frame h = head;
+		while (h.parser != null)
+			if (h.parser instanceof Scoped)
+				return (Scoped) h.parser;
+			else
+				h = h.up;
+		
+		return null;
+	}
+	
 	/**
 	 * Whether or not this stack can say that the given word is a keyword.
 	 * <p>

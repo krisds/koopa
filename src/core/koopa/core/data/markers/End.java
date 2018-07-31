@@ -47,17 +47,12 @@ public final class End extends Marker {
 
 	@Override
 	public int hashCode() {
-		return (namespace + ":" + name).hashCode();
+		return name.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof End) {
-			End end = (End) obj;
-			return name.equals(end.name) && namespace.equals(end.namespace);
-		}
-
-		return false;
+		return this == obj;
 	}
 
 	public String toString() {

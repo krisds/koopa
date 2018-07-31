@@ -28,7 +28,7 @@ public final class Start extends Marker {
 	}
 
 	public static Start on(String namespace, String name) {
-		String key = namespace + ":" + name;
+		final String key = namespace + ":" + name;
 
 		if (!markers.containsKey(key))
 			markers.put(key, new Start(namespace, name));
@@ -47,17 +47,12 @@ public final class Start extends Marker {
 
 	@Override
 	public int hashCode() {
-		return (namespace + ":" + name).hashCode();
+		return name.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Start) {
-			Start start = (Start) obj;
-			return name.equals(start.name) && namespace.equals(start.namespace);
-		}
-
-		return false;
+		return this == obj;
 	}
 
 	public String toString() {

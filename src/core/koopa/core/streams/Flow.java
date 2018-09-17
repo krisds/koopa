@@ -83,11 +83,14 @@ public class Flow {
 
 		// While there are no threaded targets at the time of writing, we do
 		// want to give them a chance to clean up on completion of the parse.
-		for (Target target : targets)
-			target.done();
-
+		//
+		// If there's a WaterTagger, it will call done on all targets.
 		if (waterTagger != null)
 			waterTagger.done();
+		else
+			for (Target target : targets)
+				target.done();
+
 	}
 
 	public void setSource(Source source) {

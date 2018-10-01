@@ -10642,7 +10642,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-ACCEPT")
+              as("end",
+                keyword("END-ACCEPT")
+              )
             )
           )
         );
@@ -11027,7 +11029,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-ADD")
+              as("end",
+                keyword("END-ADD")
+              )
             )
           )
         );
@@ -11334,7 +11338,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-CALL")
+              as("end",
+                keyword("END-CALL")
+              )
             )
           )
         );
@@ -11692,7 +11698,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               chainUsing()
             ),
             optional(
-              keyword("END-CHAIN")
+              as("end",
+                keyword("END-CHAIN")
+              )
             )
           )
         );
@@ -11906,7 +11914,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-COMPUTE")
+              as("end",
+                keyword("END-COMPUTE")
+              )
             )
           )
         );
@@ -11964,7 +11974,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-DELETE")
+              as("end",
+                keyword("END-DELETE")
+              )
             )
           )
         );
@@ -12155,7 +12167,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-DISPLAY")
+              as("end",
+                keyword("END-DISPLAY")
+              )
             )
           )
         );
@@ -13409,7 +13423,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-DIVIDE")
+              as("end",
+                keyword("END-DIVIDE")
+              )
             )
           )
         );
@@ -13790,7 +13806,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               whenOther()
             ),
             optional(
-              keyword("END-EVALUATE")
+              as("end",
+                keyword("END-EVALUATE")
+              )
             )
           )
         );
@@ -14137,7 +14155,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            keyword("END-EXEC")
+            as("end",
+              keyword("END-EXEC")
+            )
           )
         );
       }
@@ -14178,7 +14198,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            keyword("END-EXEC")
+            as("end",
+              keyword("END-EXEC")
+            )
           )
         );
       }
@@ -14212,7 +14234,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            keyword("END-EXEC")
+            as("end",
+              keyword("END-EXEC")
+            )
           )
         );
       }
@@ -14246,7 +14270,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            keyword("END-EXEC")
+            as("end",
+              keyword("END-EXEC")
+            )
           )
         );
       }
@@ -14280,7 +14306,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               )
             ),
-            keyword("END-EXEC")
+            as("end",
+              keyword("END-EXEC")
+            )
           )
         );
       }
@@ -14534,7 +14562,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               elseBranch()
             ),
             optional(
-              keyword("END-IF")
+              as("end",
+                keyword("END-IF")
+              )
             )
           )
         );
@@ -15413,7 +15443,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-MULTIPLY")
+              as("end",
+                keyword("END-MULTIPLY")
+              )
             )
           )
         );
@@ -15704,7 +15736,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 choice(
                   sequence(
                     nestedStatements(),
-                    keyword("END-PERFORM")
+                    as("end",
+                      keyword("END-PERFORM")
+                    )
                   ),
                   as("nestedStatements",
                     sequence(
@@ -15717,7 +15751,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                       )
                     )
                   ),
-                  keyword("END-PERFORM")
+                  as("end",
+                    keyword("END-PERFORM")
+                  )
                 )
               ),
               sequence(
@@ -16053,7 +16089,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              keyword("END-READ")
+              as("end",
+                keyword("END-READ")
+              )
             )
           )
         );
@@ -16248,7 +16286,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-RECEIVE")
+              as("end",
+                keyword("END-RECEIVE")
+              )
             )
           )
         );
@@ -16392,7 +16432,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               notAtEnd()
             ),
             optional(
-              keyword("END-RETURN")
+              as("end",
+                keyword("END-RETURN")
+              )
             )
           )
         );
@@ -16453,7 +16495,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              keyword("END-REWRITE")
+              as("end",
+                keyword("END-REWRITE")
+              )
             )
           )
         );
@@ -16534,7 +16578,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-SEARCH")
+              as("end",
+                keyword("END-SEARCH")
+              )
             )
           )
         );
@@ -17171,7 +17217,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              keyword("END-START")
+              as("end",
+                keyword("END-START")
+              )
             )
           )
         );
@@ -17420,7 +17468,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-STRING")
+              as("end",
+                keyword("END-STRING")
+              )
             )
           )
         );
@@ -17456,7 +17506,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-SUBTRACT")
+              as("end",
+                keyword("END-SUBTRACT")
+              )
             )
           )
         );
@@ -17804,7 +17856,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-UNSTRING")
+              as("end",
+                keyword("END-UNSTRING")
+              )
             )
           )
         );
@@ -18074,7 +18128,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                 )
               ),
               optional(
-                keyword("END-WAIT")
+                as("end",
+                  keyword("END-WAIT")
+                )
               )
             ),
             sequence(
@@ -18182,7 +18238,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               notInvalidKey()
             ),
             optional(
-              keyword("END-WRITE")
+              as("end",
+                keyword("END-WRITE")
+              )
             )
           )
         );
@@ -18334,7 +18392,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-XML")
+              as("end",
+                keyword("END-XML")
+              )
             )
           )
         );
@@ -18435,7 +18495,9 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              keyword("END-XML")
+              as("end",
+                keyword("END-XML")
+              )
             )
           )
         );

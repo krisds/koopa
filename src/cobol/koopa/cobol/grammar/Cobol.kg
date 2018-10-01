@@ -2541,7 +2541,7 @@ def acceptStatement =
     | unknown: --> somethingFollowingAStatement
     )
         
-    [END-ACCEPT]
+    [`end : END-ACCEPT]
 end
 
 def acceptFromMnemonic =
@@ -2625,7 +2625,7 @@ end
 def addStatement =
     ADD ( format1 | format2 | format3 )
     ![onSizeError | notOnSizeError]
-    [END-ADD]
+    [`end : END-ADD]
 
 
   where private def format1 =
@@ -2703,7 +2703,7 @@ def callStatement =
     | !(onException | notOnException)                             # Format 2, 3
     ]
 
-    [END-CALL]
+    [`end : END-CALL]
 
 
   where def programName          =  ( alphanumericLiteral | identifier )  end
@@ -2768,7 +2768,7 @@ end
 def chainStatement =
     CHAIN (identifier | literal)
     [ chainUsing ]
-    [END-CHAIN]
+    [`end : END-CHAIN]
 end
 
 def chainUsing =
@@ -2813,7 +2813,7 @@ def computeStatement =
     ('=' | EQUAL)
     arithmeticExpression
     ![onSizeError | notOnSizeError]
-    [END-COMPUTE]
+    [`end : END-COMPUTE]
 end
 
 ## #############################################################################
@@ -2838,7 +2838,7 @@ def deleteStatement =
       | notInvalidKey
     )]
     
-    [END-DELETE]
+    [`end : END-DELETE]
 end
 
 def invalidKey =
@@ -2893,7 +2893,7 @@ def displayStatement =
     )*
     
     ![onException | notOnException]
-    [END-DISPLAY]
+    [`end : END-DISPLAY]
 end
 
 def displayDeviceFormat =
@@ -3148,7 +3148,7 @@ end
 def divideStatement =
     DIVIDE ( format1 | format2 | format3 )
     ![onSizeError | notOnSizeError]
-    [END-DIVIDE]
+    [`end : END-DIVIDE]
 
 
   where private def format1 =
@@ -3217,7 +3217,7 @@ def evaluateStatement =
     EVALUATE subject (ALSO subject)* 
     (when)+ 
     [whenOther]
-    [END-EVALUATE]
+    [`end : END-EVALUATE]
 end
 
 def subject =
@@ -3331,7 +3331,7 @@ def execSQLStatement =
     (EXEC | EXECUTE) SQL 
       [sql::sqlStatement %before { END-EXEC }] 
       [unknown: --> END-EXEC]
-    END-EXEC
+    (`end : END-EXEC)
 end
 
 # EXEC CICS support. -----------------------------------------------------------
@@ -3341,7 +3341,7 @@ def execCICSStatement =
     (EXEC | EXECUTE) CICS
       [cics::cicsStatement %before { END-EXEC }] 
       [unknown: --> END-EXEC]
-    END-EXEC
+    (`end : END-EXEC)
 end
 
 # EXEC DLI support. -----------------------------------------------------------
@@ -3349,7 +3349,7 @@ end
 def execDLIStatement =
     (EXEC | EXECUTE) DLI
     [unknown: --> END-EXEC]
-    END-EXEC
+    (`end : END-EXEC)
 end
 
 # EXEC HTML support. ----------------------------------------------------------
@@ -3357,7 +3357,7 @@ end
 def execHTMLStatement =
     (EXEC | EXECUTE) HTML
     [unknown: --> END-EXEC]
-    END-EXEC
+    (`end : END-EXEC)
 end
 
 # EXEC text-data support. -----------------------------------------------------
@@ -3365,7 +3365,7 @@ end
 def execTextDataStatement =
     (EXEC | EXECUTE) textName
     [unknown: --> END-EXEC]
-    END-EXEC
+    (`end : END-EXEC)
 end
 
 ## #############################################################################
@@ -3444,7 +3444,7 @@ def ifStatement =
     IF condition
       thenBranch
       [elseBranch]
-    [END-IF]
+    [`end : END-IF]
 end
 
 def thenBranch =
@@ -3676,7 +3676,7 @@ end
 def multiplyStatement =
     MULTIPLY ( format1 | format2 )
     ![onSizeError | notOnSizeError]
-    [END-MULTIPLY]
+    [`end : END-MULTIPLY]
 
   # The order of these is important!
 
@@ -3757,9 +3757,9 @@ def performStatement =
         | until
         | varying
         ]
-        ( nestedStatements END-PERFORM
+        ( nestedStatements (`end : END-PERFORM)
         | nestedStatements : statement (%not THRU) (%not THROUGH)
-        | END-PERFORM 
+        | `end : END-PERFORM 
         )
         
     | # Perform procedureName
@@ -3851,7 +3851,7 @@ def readStatement =
     [invalidKey]
     [notInvalidKey]
     
-    [END-READ]
+    [`end : END-READ]
 end
 
 def readWithClause =
@@ -3890,7 +3890,7 @@ def receiveStatement =
        [noData]
        [withData]
     )
-    [END-RECEIVE]
+    [`end : END-RECEIVE]
 end
 
 def noData =
@@ -3927,7 +3927,7 @@ def returnStatement =
     [into: INTO identifier] 
     atEnd 
     [notAtEnd]
-    [END-RETURN]
+    [`end : END-RETURN]
 end
 
 ## #############################################################################
@@ -3950,7 +3950,7 @@ def rewriteStatement =
     [invalidKey]
     [notInvalidKey]
 
-    [END-REWRITE]
+    [`end : END-REWRITE]
 end
 
 ## #############################################################################
@@ -3985,7 +3985,7 @@ def searchStatement =
         )
     )+ 
    
-    [END-SEARCH]
+    [`end : END-SEARCH]
 end
 
 def atEnd =
@@ -4168,7 +4168,7 @@ def startStatement =
     [invalidKey]
     [notInvalidKey]
     
-    [END-START]
+    [`end : END-START]
 end
 
 # - [????] TODO
@@ -4230,7 +4230,7 @@ def stringStatement =
     ( ( identifier | literal ) [DELIMITED [BY] (SIZE | identifier | literal)] )+
     INTO identifier [[WITH] POINTER identifier]
     ![onOverflow | notOnOverflow]
-    [END-STRING]
+    [`end : END-STRING]
 end
 
 ## #############################################################################
@@ -4240,7 +4240,7 @@ end
 def subtractStatement =
     SUBTRACT ( format1 | format2 | format3 )
     ![onSizeError | notOnSizeError]
-    [END-SUBTRACT]
+    [`end : END-SUBTRACT]
 
   where private def format1 =
       ( corresponding : (CORRESPONDING | CORR) identifier )
@@ -4321,7 +4321,7 @@ def unstringStatement =
     [TALLYING [IN] identifier]
     
     ![onOverflow | notOnOverflow]
-    [END-UNSTRING]
+    [`end : END-UNSTRING]
 end
 
 ## #############################################################################
@@ -4384,7 +4384,7 @@ def waitStatement =
         [RETURNING [INTO] identifier]
         [STATUS [IS] identifier]
         ![onException | notOnException]
-        [END-WAIT]
+        [`end : END-WAIT]
     | WAIT [FOR] eventPointer
     )
 end
@@ -4422,7 +4422,7 @@ def writeStatement =
     [invalidKey]
     [notInvalidKey]
 
-    [END-WRITE]
+    [`end : END-WRITE]
 end
 
 def atEndOfPage =
@@ -4449,7 +4449,7 @@ def xmlGenerateStatement =
        [NAMESPACE-PREFIX [IS] (identifier | literal)]
     ]
     ![onException | notOnException]
-    [END-XML]
+    [`end : END-XML]
 
   where def codepage      =  (integer | justAName)  end
 end
@@ -4467,7 +4467,7 @@ def xmlParseStatement =
     [VALIDATING [WITH] (FILE xmlSchemaName | identifier)]
     PROCESSING PROCEDURE [IS] procedureName [(THROUGH | THRU) procedureName]
     ![onException | notOnException]
-    [END-XML]
+    [`end : END-XML]
   
   where def codepage      =  (integer | justAName)  end
   where def xmlSchemaName =  justAName              end

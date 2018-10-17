@@ -3259,8 +3259,8 @@ def object =
 
     | rangeExpression
 
-    | TRUE
-    | FALSE
+    | true: TRUE
+    | false: FALSE
     
     # "A selection object is a partial-expression if the leftmost portion of
     # the selection object is a relational operator, a class condition without
@@ -5497,8 +5497,8 @@ def literalValue =
     | figurativeConstant
     
     # TODO Correct ?
-    | TRUE
-    | FALSE
+    | true: TRUE
+    | false: FALSE
     )
 end
 

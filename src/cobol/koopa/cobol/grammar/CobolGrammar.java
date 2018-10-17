@@ -13937,8 +13937,12 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             keyword("ANY"),
             object$rangeExpression(),
-            keyword("TRUE"),
-            keyword("FALSE"),
+            as("true",
+              keyword("TRUE")
+            ),
+            as("false",
+              keyword("FALSE")
+            ),
             sequence(
               at(
                 relop()
@@ -21943,8 +21947,12 @@ public class CobolGrammar extends CobolBaseGrammar {
             numericLiteral(),
             alphanumericLiteral(),
             figurativeConstant(),
-            keyword("TRUE"),
-            keyword("FALSE")
+            as("true",
+              keyword("TRUE")
+            ),
+            as("false",
+              keyword("FALSE")
+            )
           )
         );
       }

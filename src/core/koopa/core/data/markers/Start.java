@@ -45,6 +45,10 @@ public final class Start extends Marker {
 		return this.name;
 	}
 
+	public End matchingEnd() {
+		return End.on(namespace, name);
+	}
+
 	@Override
 	public int hashCode() {
 		return name.hashCode();

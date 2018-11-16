@@ -182,13 +182,63 @@ public class CICSGrammar extends CICSBaseGrammar {
         FutureParser future = scoped("option", PUBLIC, true);
         optionParser = future;
         future.setParser(
-          sequence(
-            name(),
-            optional(
+          choice(
+            as("map",
               sequence(
-                literal("("),
-                value(),
-                literal(")")
+                keyword("MAP"),
+                optional(
+                  sequence(
+                    literal("("),
+                    value(),
+                    literal(")")
+                  )
+                )
+              )
+            ),
+            as("queue",
+              sequence(
+                keyword("QUEUE"),
+                optional(
+                  sequence(
+                    literal("("),
+                    value(),
+                    literal(")")
+                  )
+                )
+              )
+            ),
+            as("file",
+              sequence(
+                keyword("FILE"),
+                optional(
+                  sequence(
+                    literal("("),
+                    value(),
+                    literal(")")
+                  )
+                )
+              )
+            ),
+            as("resp",
+              sequence(
+                keyword("RESP"),
+                optional(
+                  sequence(
+                    literal("("),
+                    value(),
+                    literal(")")
+                  )
+                )
+              )
+            ),
+            sequence(
+              name(),
+              optional(
+                sequence(
+                  literal("("),
+                  value(),
+                  literal(")")
+                )
               )
             )
           )

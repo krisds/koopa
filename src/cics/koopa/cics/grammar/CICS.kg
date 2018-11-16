@@ -107,7 +107,12 @@ def command =
 end
 
 def option = 
-    name ['(' value ')']
+    ( map   : MAP    ['(' value ')']
+    | queue : QUEUE  ['(' value ')']
+    | file  : FILE   ['(' value ')']
+    | resp  : RESP   ['(' value ')']
+    | name ['(' value ')']
+    )
 end
 
 # TODO I could try listing all possible option names as well...

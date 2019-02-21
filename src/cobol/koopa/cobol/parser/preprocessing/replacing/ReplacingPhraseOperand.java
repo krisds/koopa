@@ -93,7 +93,7 @@ public class ReplacingPhraseOperand {
 				continue;
 			}
 
-			if (token.hasTag(SEPARATOR)) {
+			if (token.hasTag(SEPARATOR) && !isDummyOperand()) {
 				textWords.add(token.getText());
 				atSpace = true;
 			} else if (atSpace)
@@ -103,6 +103,15 @@ public class ReplacingPhraseOperand {
 
 			atSpace = false;
 		}
+	}
+	
+	private boolean isDummyOperand() {
+		if (tokens.size() >= 3) {
+			if (":".equals(tokens.getFirst().getText()) && ":".equals(tokens.getLast().getText())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isNewline(Token token) {

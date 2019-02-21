@@ -6,6 +6,8 @@ target replaceStatement;
 +[ REPLACE               ==foo bar== BY ==baz== . ]
 +[ REPLACE               ==foo bar== BY ====    . ]
 
++[ REPLACE               ==:foo:== BY ==bar==    . ]
+
 +[ REPLACE               ==foo bar== BY ==baz==
                          ==foo bar== BY ====    . ]
 

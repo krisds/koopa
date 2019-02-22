@@ -64,7 +64,7 @@ public abstract class ReplacingPhrase {
 			Stack<Token> seen) {
 
 		List<Token> textWord = null;
-		boolean waitForClosingColon = false;
+		boolean buildingDummyOperand = false;
 
 		while (true) {
 			final Data data = library.next();
@@ -92,17 +92,17 @@ public abstract class ReplacingPhrase {
 			}
 
 			if (t.hasTag(SEPARATOR)) {
-				if (textWord == null || waitForClosingColon) {
+				if (textWord == null || buildingDummyOperand) {
 
 					seen.add(t);
 					if (textWord == null) {
 						textWord = new LinkedList<Token>();
 					}
 
-					//look ahead to the closing :
+					//Check if we are looking at a dummy operand
 					if (":".equals(t.getText())) {
-						if (!waitForClosingColon) {
-							waitForClosingColon = true;
+						if (!buildingDummyOperand) {
+							buildingDummyOperand = true;
 							textWord.add(t);
 							continue;
 						}

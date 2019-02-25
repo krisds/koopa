@@ -468,7 +468,7 @@
 	<!-- PACKAGE -->
 
 	<target name="dist" depends="revision-number">
-		<jar destfile="koopa-r${revision}.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="koopa-${revision}.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="koopa.app.Koopa" />
 				<attribute name="Class-Path" value="." />
@@ -481,7 +481,7 @@
 	</target>
 
 	<target name="dist-lite" depends="revision-number">
-		<jar destfile="koopa-r${revision}-lite.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="koopa-${revision}-lite.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="koopa.app.cli.ToXml" />
 				<attribute name="Class-Path" value="." />
@@ -514,8 +514,12 @@
 	<!-- SVN -->
 
 	<target name="revision-number" depends="core-build">
-		<!-- Find out revision number of HEAD. Needs svn installed on local machine. -->
-		<exec executable="svnversion" outputproperty="revision" failonerror="false" failifexecutionfails="false">
+		<!-- Find out revision number of HEAD. Needs git installed on local machine. -->
+		<exec executable="git" outputproperty="revision" failonerror="false" failifexecutionfails="false">
+			<arg value="rev-parse"/>
+			<arg value="--verify"/>
+			<arg value="--short"/>
+			<arg value="HEAD"/>
 		</exec>
 
 		<property name="revision" value="unknown" />

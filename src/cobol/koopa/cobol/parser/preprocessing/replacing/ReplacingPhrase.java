@@ -64,6 +64,7 @@ public abstract class ReplacingPhrase {
 			Stack<Token> seen) {
 
 		List<Token> textWord = null;
+		boolean buildingDummyOperand = false;
 
 		while (true) {
 			final Data data = library.next();
@@ -91,13 +92,24 @@ public abstract class ReplacingPhrase {
 			}
 
 			if (t.hasTag(SEPARATOR)) {
-				if (textWord == null) {
+				if (textWord == null || buildingDummyOperand) {
+
+					seen.add(t);
+					if (textWord == null) {
+						textWord = new LinkedList<Token>();
+					}
+
+					//Check if we are looking at a dummy operand
+					if (":".equals(t.getText())) {
+						if (!buildingDummyOperand) {
+							buildingDummyOperand = true;
+							textWord.add(t);
+							continue;
+						}
+					}
 					// SEP while building a word => complete word and ignore
 					// SEP.
-					seen.add(t);
 
-					assert (textWord == null);
-					textWord = new LinkedList<Token>();
 					textWord.add(t);
 
 					return textWord;

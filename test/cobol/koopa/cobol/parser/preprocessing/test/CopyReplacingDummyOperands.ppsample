@@ -1,0 +1,11 @@
+Same as the CopyReplacing test, but specifically for dummy operands.
+
+< DISPLAY "Start".
+< COPY "DUMMY" REPLACING ==:TAG:== BY ==FOO==.
+< GO TO END.
+
+> DISPLAY "Start".
+> MOVE 11 TO FOO-POST.
+>MOVE 22 TO PRE-FOO-POST.
+>MOVE 33 TO PRE-FOO.
+> GO TO END.

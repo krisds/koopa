@@ -27,3 +27,7 @@ target copyStatement;
    REPLACING ==PUT THIS SOMEWHERE ELSE== BY MOVE
              ==GET RID OF== BY DELETE.
 ]
+
+# Testing dummy operands
+# Cfr https://www.ibm.com/support/knowledgecenter/en/SS6SG3_4.2.0/com.ibm.entcobol.doc_4.2/PGandLR/ref/rlcdscop.htm
++[ COPY FOO REPLACING ==:FEE:== BY ==FUM==. ]

@@ -49,7 +49,14 @@ public class Generation {
 
 		File propertiesFile = new File(path,
 				grammarFile.getName().replace(".kg", ".properties"));
-		meta.load(new FileInputStream(propertiesFile));
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(propertiesFile);
+			meta.load(fis);
+		} finally {
+			if (fis != null)
+				fis.close();
+		}
 
 		if (LOGGER.isEnabled())
 			LOGGER.add("Loaded an additional " + meta.size() + " properties.");

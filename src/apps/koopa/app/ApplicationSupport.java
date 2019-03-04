@@ -227,6 +227,7 @@ public class ApplicationSupport {
 	}
 
 	public static String getRevision() {
+		InputStreamReader r = null;
 		BufferedReader b = null;
 		try {
 			InputStream in = ApplicationSupport.class
@@ -235,7 +236,7 @@ public class ApplicationSupport {
 			if (in == null)
 				return "unknown";
 
-			InputStreamReader r = new InputStreamReader(in);
+			r = new InputStreamReader(in);
 			b = new BufferedReader(r);
 
 			String revision = b.readLine();
@@ -257,6 +258,8 @@ public class ApplicationSupport {
 			try {
 				if (b != null)
 					b.close();
+				if (r != null)
+					r.close();
 			} catch (IOException e) {
 			}
 		}

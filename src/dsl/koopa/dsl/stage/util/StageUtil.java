@@ -19,31 +19,38 @@ public final class StageUtil {
 
 	public static Tree getAST(File input) throws IOException {
 		return getAST(input, false);
-
 	}
 
 	public static Tree getAST(File input, boolean quiet) throws IOException {
-		final Source source = StageTokens.getNewSource(//
-				input.getName(), new FileReader(input));
+		FileReader reader = null;
+		try {
+			reader = new FileReader(input);
+			final Source source = StageTokens.getNewSource(//
+					input.getName(), reader);
 
-		final StageGrammar kg = new StageGrammar();
+			final StageGrammar kg = new StageGrammar();
 
-		final Parse parse = Parse.of(source).to(new KoopaTreeBuilder(kg));
-		parse.getTrace().quiet(quiet);
+			final Parse parse = Parse.of(source).to(new KoopaTreeBuilder(kg));
+			parse.getTrace().quiet(quiet);
 
-		boolean accepts = kg.stage().accepts(parse);
+			boolean accepts = kg.stage().accepts(parse);
 
-		if (!accepts) {
-			System.out.println("Parse failed. Got up to: "
-					+ parse.getFinalPosition());
-			return null;
+			if (!accepts) {
+				System.out.println(
+						"Parse failed. Got up to: " + parse.getFinalPosition());
+				return null;
+			}
+
+			final KoopaTreeBuilder builder = parse
+					.getTarget(KoopaTreeBuilder.class);
+			Tree ast = builder.getTree();
+
+			return ast;
+			
+		} finally {
+			if (reader != null)
+				reader.close();
 		}
-
-		final KoopaTreeBuilder builder = parse
-				.getTarget(KoopaTreeBuilder.class);
-		Tree ast = builder.getTree();
-
-		return ast;
 	}
 
 	public static FilenameFilter getFilenameFilter() {

@@ -175,8 +175,6 @@ public class LineNumberView extends JComponent {
 	 * 
 	 * @param index
 	 *            the line number
-	 * @param the
-	 *            height, in pixels
 	 */
 	private int getLineHeight(int index) {
 		int lastPos = sizes.getPosition(index) + textTopInset;

@@ -39,9 +39,22 @@ public class XMLSerializer {
 		// (if UTF-8 isn't used)
 		// Usually ISO-8859-1, Windows-1252, and ASCII is also recognized
 		// FileWriter uses default encoding, which might not be appropriate
-		Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8"));
-		serialize(tree, writer);
+		FileOutputStream fos = null;
+		OutputStreamWriter osw = null;
+		Writer writer = null;
+		try {
+			fos = new FileOutputStream(file);
+			osw = new OutputStreamWriter(fos, "UTF-8");
+			writer = new BufferedWriter(osw);
+			serialize(tree, writer);
+		} finally {
+			if (writer != null)
+				writer.close();
+			if (osw != null)
+				osw.close();
+			if (fos != null)
+				fos.close();
+		}
 	}
 
 	public static String serialize(Tree tree) throws IOException {
@@ -60,7 +73,6 @@ public class XMLSerializer {
 		writer.append("</koopa>\n");
 
 		writer.flush();
-		writer.close();
 	}
 
 	private static void walk(Writer writer, Tree tree, String dent)

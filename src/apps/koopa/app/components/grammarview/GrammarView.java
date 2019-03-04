@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -252,11 +253,13 @@ public class GrammarView extends JPanel {
 		// TODO I should really parse the input and query the tree for coloring
 		// things. Pure tokens will no longer be enough.
 
+		InputStream resourceStream = null;
+		InputStreamReader reader = null;
 		try {
-			final InputStream resourceStream = GrammarView.class
+			resourceStream = GrammarView.class
 					.getResourceAsStream(pathToGrammarResource);
 
-			final InputStreamReader reader = new InputStreamReader(
+			reader = new InputStreamReader(
 					resourceStream);
 
 			final Source source = KGTokens.getNewSource(pathToGrammarResource,
@@ -320,6 +323,14 @@ public class GrammarView extends JPanel {
 			}
 		} catch (BadLocationException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (reader != null)
+					reader.close();
+				if (resourceStream != null)
+					resourceStream.close();
+			} catch (IOException e) {
+			}
 		}
 	}
 

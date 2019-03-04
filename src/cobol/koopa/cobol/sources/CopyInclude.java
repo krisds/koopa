@@ -351,7 +351,7 @@ public class CopyInclude extends ChainingSource
 
 		final FileReader copybookReader;
 		try {
-			copybookReader = new FileReader(copybook);
+			copybookReader = new FileReader(copybook); // lgtm[java/input-resource-leak]
 
 		} catch (IOException e) {
 			LOGGER.error("IOException while opening copybook " + copy);

@@ -4,6 +4,8 @@ Koopa is a parser generator designed for COBOL. The COBOL parser can handle sour
 
 Check out the [guide](doc/guide/guide.pdf) for details on the original design decisions.
 
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/krisds/koopa.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/krisds/koopa/alerts/) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/krisds/koopa.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/krisds/koopa/context:java)
+
 ## Features
 
 * Island parser generator

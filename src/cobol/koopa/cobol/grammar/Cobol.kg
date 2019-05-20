@@ -24,6 +24,12 @@ end
 # would fail when part of a copybook, even though it is gladly accepted by
 # "sourceUnit" on its own...
 def %nokeywords copybook =
+    # COPY statements can appear in any of the choices, but if they're the
+    # first element in the text we still don't really know what we're dealing
+    # with. To make sure we don't force an early (and possibly incorrect
+    # choice) we grab all leading COPY statements before we try anything else.
+    (copyStatement)*
+    
     ( (sourceUnit)+
     | copybookHoldingData
     | copybookHoldingBehaviour

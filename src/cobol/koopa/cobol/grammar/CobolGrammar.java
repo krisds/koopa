@@ -72,6 +72,9 @@ public class CobolGrammar extends CobolBaseGrammar {
         copybookParser = future;
         future.setParser(
           sequence(
+            star(
+              copyStatement()
+            ),
             choice(
               plus(
                 sourceUnit()

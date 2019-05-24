@@ -58,9 +58,10 @@ target when;
 +[ WHEN TRUE ALSO ANY ALSO 42
         DISPLAY "Good." ]
 
-+[ WHEN ANY
-   WHEN TRUE ALSO ANY
-   WHEN TRUE ALSO ANY ALSO 42
+# WHEN clauses need not have any statements themselves.
++[ WHEN ANY ]
++[ WHEN TRUE ALSO ANY ]
++[ WHEN TRUE ALSO ANY ALSO 42
         DISPLAY "Good." ]
 
 +[ when equals "HELLO WORLD"  DISPLAY "achievement unlocked" ]
@@ -120,3 +121,11 @@ target evaluateStatement;
 +[ EVALUATE WRK-XN-00001-1 NUMERIC
    WHEN TRUE
         DISPLAY "OK" ]
+
++[ EVALUATE CODE
+   WHEN 1
+   WHEN 2
+        DISPLAY "OK"
+   WHEN -1
+   WHEN OTHER
+        DISPLAY "NOT OK" ]

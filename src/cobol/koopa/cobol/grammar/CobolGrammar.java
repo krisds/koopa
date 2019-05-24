@@ -13877,22 +13877,20 @@ public class CobolGrammar extends CobolBaseGrammar {
         whenParser = future;
         future.setParser(
           sequence(
-            plus(
+            keyword("WHEN"),
+            not(
+              keyword("OTHER")
+            ),
+            object(),
+            star(
               sequence(
-                keyword("WHEN"),
-                not(
-                  keyword("OTHER")
-                ),
-                object(),
-                star(
-                  sequence(
-                    keyword("ALSO"),
-                    object()
-                  )
-                )
+                keyword("ALSO"),
+                object()
               )
             ),
-            nestedStatements()
+            optional(
+              nestedStatements()
+            )
           )
         );
       }

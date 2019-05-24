@@ -3248,10 +3248,7 @@ end
 
 
 def when =
-    ( WHEN (%not OTHER) object
-      (ALSO object)*
-    )+ 
-    nestedStatements
+    WHEN (%not OTHER) object (ALSO object)* [nestedStatements]
 end
 
 def whenOther =

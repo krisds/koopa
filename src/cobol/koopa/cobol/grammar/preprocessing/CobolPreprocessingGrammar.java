@@ -12,6 +12,7 @@ import static koopa.core.grammars.combinators.Scoped.Visibility.HIDING;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingBaseGrammar;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
+import static koopa.core.data.tags.SyntacticTag.WORD;
 
 /**
  * <b>This is generated code.<b>
@@ -468,7 +469,26 @@ public class CobolPreprocessingGrammar extends CobolPreprocessingBaseGrammar {
                 uintgr()
               )
             ),
-            uintgr()
+            sequence(
+              uintgr(),
+              opt(NOSKIP,
+                choice(
+                  at(
+                    not(
+                      choice(
+                        literal("-"),
+                        literal("_"),
+                        sequence(
+                          tagged(WORD),
+                          any()
+                        )
+                      )
+                    )
+                  ),
+                  eof()
+                )
+              )
+            )
           )
         );
       }

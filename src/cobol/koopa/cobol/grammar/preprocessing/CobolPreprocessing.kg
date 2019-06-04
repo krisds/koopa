@@ -90,7 +90,14 @@ end
 def integerLiteral =
     ( '+' ++ uintgr
     | '-' ++ uintgr
+    
     | uintgr
+      # We want to be sure this is not the start of a cobolWord.
+      # E.g. 404-NOT-FOUND
+      (++ ( %at %not ( '-' | '_' | (@WORD _)) 
+          | eof 
+          )
+      )
     )
 end
 

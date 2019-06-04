@@ -39,6 +39,7 @@ target cobolWord;
 
 # But I'm disallowing numbers as legal cobol words for now.
 -[ 00 ]
+-integerLiteral
 
 
 # Names which start with a verb, followed by a number.
@@ -54,6 +55,10 @@ target integerLiteral;
 
 +[ 0 ]
 +[ 1 ]
+
++[ 404 ]
+-[ 404-NOT-FOUND ]
+-[ 404NOTFOUND ]
 
 -decimal
 -alphanumericLiteral

@@ -74,6 +74,8 @@ public class ToXml {
 
 		this.parser = new CobolParser();
 		this.parser.setProject(project);
+		// We need the tree to dump it.
+		this.parser.setBuildTrees(true);
 	}
 
 	private void process(File source, File target) {

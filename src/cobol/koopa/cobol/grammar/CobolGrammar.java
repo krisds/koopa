@@ -14893,14 +14893,16 @@ public class CobolGrammar extends CobolBaseGrammar {
               identifier()
             ),
             optional(
-              replacingInitClause()
+              initializeStatement$withFiller()
             ),
             optional(
-              as("unknown",
-                skipto(
-                  somethingFollowingAStatement()
-                )
-              )
+              initializeStatement$toValue()
+            ),
+            optional(
+              initializeStatement$replacing()
+            ),
+            optional(
+              initializeStatement$toDefault()
             )
           )
         );
@@ -14910,64 +14912,162 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // replacingInitClause
+    // withFiller
     // ........................................................
     
-    private ParserCombinator replacingInitClauseParser = null;
+    private ParserCombinator initializeStatement$withFillerParser = null;
     
-    public final Start replacingInitClause = Start.on(getNamespace(), "replacingInitClause");
+    public final Start initializeStatement$withFiller = Start.on(getNamespace(), "withFiller");
     
-    public ParserCombinator replacingInitClause() {
-      if (replacingInitClauseParser == null) {
-        FutureParser future = scoped("replacingInitClause", PUBLIC, true);
-        replacingInitClauseParser = future;
+    public ParserCombinator initializeStatement$withFiller() {
+      if (initializeStatement$withFillerParser == null) {
+        FutureParser future = scoped("withFiller", PUBLIC, true);
+        initializeStatement$withFillerParser = future;
         future.setParser(
           sequence(
-            keyword("REPLACING"),
-            replacementTarget(),
             optional(
-              keyword("DATA")
+              keyword("WITH")
             ),
-            keyword("BY"),
+            keyword("FILLER")
+          )
+        );
+      }
+    
+      return initializeStatement$withFillerParser;
+    }
+    
+    // ========================================================
+    // toValue
+    // ........................................................
+    
+    private ParserCombinator initializeStatement$toValueParser = null;
+    
+    public final Start initializeStatement$toValue = Start.on(getNamespace(), "toValue");
+    
+    public ParserCombinator initializeStatement$toValue() {
+      if (initializeStatement$toValueParser == null) {
+        FutureParser future = scoped("toValue", PUBLIC, true);
+        initializeStatement$toValueParser = future;
+        future.setParser(
+          sequence(
             choice(
-              identifier(),
-              literal()
+              as("categoryName",
+                keyword("ALL")
+              ),
+              initializeStatement$categoryName()
+            ),
+            optional(
+              keyword("TO")
+            ),
+            keyword("VALUE")
+          )
+        );
+      }
+    
+      return initializeStatement$toValueParser;
+    }
+    
+    // ========================================================
+    // replacing
+    // ........................................................
+    
+    private ParserCombinator initializeStatement$replacingParser = null;
+    
+    public final Start initializeStatement$replacing = Start.on(getNamespace(), "replacing");
+    
+    public ParserCombinator initializeStatement$replacing() {
+      if (initializeStatement$replacingParser == null) {
+        FutureParser future = scoped("replacing", PUBLIC, true);
+        initializeStatement$replacingParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("THEN")
+            ),
+            keyword("REPLACING"),
+            plus(
+              as("entry",
+                sequence(
+                  initializeStatement$categoryName(),
+                  optional(
+                    keyword("DATA")
+                  ),
+                  keyword("BY"),
+                  choice(
+                    identifier(),
+                    literal()
+                  )
+                )
+              )
             )
           )
         );
       }
     
-      return replacingInitClauseParser;
+      return initializeStatement$replacingParser;
     }
     
     // ========================================================
-    // replacementTarget
+    // toDefault
     // ........................................................
     
-    private ParserCombinator replacementTargetParser = null;
+    private ParserCombinator initializeStatement$toDefaultParser = null;
     
-    public final Start replacementTarget = Start.on(getNamespace(), "replacementTarget");
+    public final Start initializeStatement$toDefault = Start.on(getNamespace(), "toDefault");
     
-    public ParserCombinator replacementTarget() {
-      if (replacementTargetParser == null) {
-        FutureParser future = scoped("replacementTarget", PUBLIC, true);
-        replacementTargetParser = future;
+    public ParserCombinator initializeStatement$toDefault() {
+      if (initializeStatement$toDefaultParser == null) {
+        FutureParser future = scoped("toDefault", PUBLIC, true);
+        initializeStatement$toDefaultParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("THEN")
+            ),
+            optional(
+              keyword("TO")
+            ),
+            keyword("DEFAULT")
+          )
+        );
+      }
+    
+      return initializeStatement$toDefaultParser;
+    }
+    
+    // ========================================================
+    // categoryName
+    // ........................................................
+    
+    private ParserCombinator initializeStatement$categoryNameParser = null;
+    
+    public final Start initializeStatement$categoryName = Start.on(getNamespace(), "categoryName");
+    
+    public ParserCombinator initializeStatement$categoryName() {
+      if (initializeStatement$categoryNameParser == null) {
+        FutureParser future = scoped("categoryName", PUBLIC, true);
+        initializeStatement$categoryNameParser = future;
         future.setParser(
           choice(
             keyword("ALPHABETIC"),
             keyword("ALPHANUMERIC"),
             keyword("ALPHANUMERIC-EDITED"),
+            keyword("BOOLEAN"),
+            keyword("DATA-POINTER"),
+            keyword("FUNCTION-POINTER"),
             keyword("NATIONAL"),
             keyword("NATIONAL-EDITED"),
             keyword("NUMERIC"),
             keyword("NUMERIC-EDITED"),
+            keyword("OBJECT-REFERENCE"),
+            keyword("PROGRAM-POINTER"),
             keyword("DBCS"),
             keyword("EGCS")
           )
         );
       }
     
-      return replacementTargetParser;
+      return initializeStatement$categoryNameParser;
     }
     
     // ========================================================

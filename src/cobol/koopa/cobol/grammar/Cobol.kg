@@ -3531,32 +3531,43 @@ end
 ## -----------------------------------------------------------------------------
 
 def initializeStatement =
-    INITIALIZE
-    (identifier)+
-    [replacingInitClause]
+    INITIALIZE (identifier)+ [withFiller] [toValue] [replacing] [toDefault]
 
-    [unknown: --> somethingFollowingAStatement]
+  where def withFiller =  [WITH] FILLER  end
+
+  where def toValue =
+      ( categoryName : ALL
+      | categoryName
+      )
+      [TO] VALUE
+  end
+
+  where def replacing =
+      [THEN] REPLACING
+      ( entry: categoryName [DATA] BY (identifier | literal) )+
+  end
+
+  where def toDefault =  [THEN] [TO] DEFAULT  end
+
+  where def categoryName =
+      ( ALPHABETIC 
+      | ALPHANUMERIC
+      | ALPHANUMERIC-EDITED
+      | BOOLEAN
+      | DATA-POINTER
+      | FUNCTION-POINTER
+      | NATIONAL
+      | NATIONAL-EDITED
+      | NUMERIC
+      | NUMERIC-EDITED
+      | OBJECT-REFERENCE
+      | PROGRAM-POINTER
+      | DBCS                  # [IBM Cobol zOS 4.2]
+      | EGCS                  # [IBM Cobol zOS 4.2]
+      )
+  end
 end
 
-def replacingInitClause =
-    REPLACING
-    replacementTarget
-    [DATA] BY
-    (identifier | literal)
-end
-
-def replacementTarget =
-    ( ALPHABETIC 
-    | ALPHANUMERIC
-    | ALPHANUMERIC-EDITED
-    | NATIONAL
-    | NATIONAL-EDITED
-    | NUMERIC
-    | NUMERIC-EDITED
-    | DBCS
-    | EGCS
-    )
-end
 
 ## #############################################################################
 ## INSPECT statement.

@@ -17284,13 +17284,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             keyword("START"),
             fileName(),
             optional(
-              sequence(
-                optional(
-                  keyword("WITH")
-                ),
-                keyword("NO"),
-                keyword("LOCK")
-              )
+              startStatement$noLock()
             ),
             optional(
               choice(
@@ -17313,16 +17307,16 @@ public class CobolGrammar extends CobolBaseGrammar {
               )
             ),
             optional(
-              sizeModifier()
+              startStatement$size()
             ),
             optional(
-              whileKeyModifier()
+              startStatement$whileKey()
             ),
             optional(
-              invalidKey()
-            ),
-            optional(
-              notInvalidKey()
+              permuted(
+                invalidKey(),
+                notInvalidKey()
+              )
             ),
             optional(
               as("end",
@@ -17337,17 +17331,43 @@ public class CobolGrammar extends CobolBaseGrammar {
     }
     
     // ========================================================
-    // sizeModifier
+    // noLock
     // ........................................................
     
-    private ParserCombinator sizeModifierParser = null;
+    private ParserCombinator startStatement$noLockParser = null;
     
-    public final Start sizeModifier = Start.on(getNamespace(), "sizeModifier");
+    public final Start startStatement$noLock = Start.on(getNamespace(), "noLock");
     
-    public ParserCombinator sizeModifier() {
-      if (sizeModifierParser == null) {
-        FutureParser future = scoped("sizeModifier", PUBLIC, true);
-        sizeModifierParser = future;
+    public ParserCombinator startStatement$noLock() {
+      if (startStatement$noLockParser == null) {
+        FutureParser future = scoped("noLock", PUBLIC, true);
+        startStatement$noLockParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              keyword("WITH")
+            ),
+            keyword("NO"),
+            keyword("LOCK")
+          )
+        );
+      }
+    
+      return startStatement$noLockParser;
+    }
+    
+    // ========================================================
+    // size
+    // ........................................................
+    
+    private ParserCombinator startStatement$sizeParser = null;
+    
+    public final Start startStatement$size = Start.on(getNamespace(), "size");
+    
+    public ParserCombinator startStatement$size() {
+      if (startStatement$sizeParser == null) {
+        FutureParser future = scoped("size", PUBLIC, true);
+        startStatement$sizeParser = future;
         future.setParser(
           sequence(
             optional(
@@ -17362,38 +17382,36 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return sizeModifierParser;
+      return startStatement$sizeParser;
     }
     
     // ========================================================
-    // whileKeyModifier
+    // whileKey
     // ........................................................
     
-    private ParserCombinator whileKeyModifierParser = null;
+    private ParserCombinator startStatement$whileKeyParser = null;
     
-    public final Start whileKeyModifier = Start.on(getNamespace(), "whileKeyModifier");
+    public final Start startStatement$whileKey = Start.on(getNamespace(), "whileKey");
     
-    public ParserCombinator whileKeyModifier() {
-      if (whileKeyModifierParser == null) {
-        FutureParser future = scoped("whileKeyModifier", PUBLIC, true);
-        whileKeyModifierParser = future;
+    public ParserCombinator startStatement$whileKey() {
+      if (startStatement$whileKeyParser == null) {
+        FutureParser future = scoped("whileKey", PUBLIC, true);
+        startStatement$whileKeyParser = future;
         future.setParser(
           sequence(
             keyword("WHILE"),
             optional(
-              sequence(
-                keyword("KEY"),
-                optional(
-                  keyword("IS")
-                )
-              )
+              keyword("KEY")
+            ),
+            optional(
+              keyword("IS")
             ),
             optional(
               keyword("NOT")
             ),
             keyword("LIKE"),
-            star(
-              likeMods()
+            optional(
+              startStatement$whileKey$mods()
             ),
             choice(
               identifier(),
@@ -17403,46 +17421,41 @@ public class CobolGrammar extends CobolBaseGrammar {
         );
       }
     
-      return whileKeyModifierParser;
+      return startStatement$whileKeyParser;
     }
     
     // ========================================================
-    // likeMods
+    // mods
     // ........................................................
     
-    private ParserCombinator likeModsParser = null;
+    private ParserCombinator startStatement$whileKey$modsParser = null;
     
-    public final Start likeMods = Start.on(getNamespace(), "likeMods");
+    public final Start startStatement$whileKey$mods = Start.on(getNamespace(), "mods");
     
-    public ParserCombinator likeMods() {
-      if (likeModsParser == null) {
-        FutureParser future = scoped("likeMods", PUBLIC, true);
-        likeModsParser = future;
+    public ParserCombinator startStatement$whileKey$mods() {
+      if (startStatement$whileKey$modsParser == null) {
+        FutureParser future = scoped("mods", PUBLIC, true);
+        startStatement$whileKey$modsParser = future;
         future.setParser(
-          choice(
-            as("trimmedRight",
-              sequence(
-                keyword("TRIMMED"),
-                keyword("RIGHT")
+          permuted(
+            sequence(
+              keyword("TRIMMED"),
+              optional(
+                choice(
+                  keyword("LEFT"),
+                  keyword("RIGHT")
+                )
               )
             ),
-            as("trimmedLeft",
-              sequence(
-                keyword("TRIMMED"),
-                keyword("LEFT")
-              )
-            ),
-            as("caseSensitive",
-              keyword("CASE-SENSITIVE")
-            ),
-            as("caseInsensitive",
+            choice(
+              keyword("CASE-SENSITIVE"),
               keyword("CASE-INSENSITIVE")
             )
           )
         );
       }
     
-      return likeModsParser;
+      return startStatement$whileKey$modsParser;
     }
     
     // ========================================================

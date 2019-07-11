@@ -2319,6 +2319,7 @@ def statement =
       | TRANSFORM  => transformStatement    # *MF
       | UNLOCK     => unlockStatement       # *MF
       | UNSTRING   => unstringStatement
+      | VALIDATE   => validateStatement
       | WAIT       => waitStatement         # *MF
       | WRITE      => writeStatement
       | XML        => 
@@ -2499,6 +2500,7 @@ def verb =
     | TERMINATE
     | TITLE
     | UNSTRING
+    | VALIDATE
     | WAIT
     | WRITE
     | XML GENERATE  # *MF
@@ -4388,6 +4390,16 @@ end
 def beforeReportingDeclarative =
     [GLOBAL] BEFORE REPORTING identifier
 end
+
+
+## #############################################################################
+## VALIDATE statement.
+## -----------------------------------------------------------------------------
+
+def validateStatement =
+    VALIDATE (identifier)+
+end
+
 
 ## #############################################################################
 ## WAIT statement. Micro Focus COBOL.

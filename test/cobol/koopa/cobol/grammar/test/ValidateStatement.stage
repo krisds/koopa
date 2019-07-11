@@ -1,0 +1,12 @@
+target validateStatement;
+
++[ VALIDATE NAME ]
++[ VALIDATE NAME ADDRESSING ]
+
+-[ VALIDATE ]
+-[ VALIDATE "The Ultimate Answer to Life, The Universe and Everything" ]
+-[ VALIDATE 42 ]
+
++[ VALIDATE ] Identifier:identifier
++[ VALIDATE ] Identifier:identifier Identifier:identifier
++[ VALIDATE ] Identifier:identifier Identifier:identifier Identifier:identifier

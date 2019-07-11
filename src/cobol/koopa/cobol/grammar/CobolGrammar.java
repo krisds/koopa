@@ -10095,6 +10095,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 "TRANSFORM",
                 "UNLOCK",
                 "UNSTRING",
+                "VALIDATE",
                 "WAIT",
                 "WRITE",
                 "XML",
@@ -10167,6 +10168,7 @@ public class CobolGrammar extends CobolBaseGrammar {
                 transformStatement(),
                 unlockStatement(),
                 unstringStatement(),
+                validateStatement(),
                 waitStatement(),
                 writeStatement(),
                 choice(
@@ -10582,6 +10584,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             keyword("TERMINATE"),
             keyword("TITLE"),
             keyword("UNSTRING"),
+            keyword("VALIDATE"),
             keyword("WAIT"),
             keyword("WRITE"),
             sequence(
@@ -18186,6 +18189,31 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return beforeReportingDeclarativeParser;
+    }
+    
+    // ========================================================
+    // validateStatement
+    // ........................................................
+    
+    private ParserCombinator validateStatementParser = null;
+    
+    public final Start validateStatement = Start.on(getNamespace(), "validateStatement");
+    
+    public ParserCombinator validateStatement() {
+      if (validateStatementParser == null) {
+        FutureParser future = scoped("validateStatement", PUBLIC, true);
+        validateStatementParser = future;
+        future.setParser(
+          sequence(
+            keyword("VALIDATE"),
+            plus(
+              identifier()
+            )
+          )
+        );
+      }
+    
+      return validateStatementParser;
     }
     
     // ========================================================

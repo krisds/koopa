@@ -4155,54 +4155,42 @@ end
 # Refs:
 # MF: http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.enterprisedeveloper.vs%2FHRLHLHPDFC03.html
 
+
 ## #############################################################################
 ## START statement.
 ## -----------------------------------------------------------------------------
 
-# TODO So far a skeletal implementation only.
 def startStatement =
     START fileName
     
-    # - [COB2_BS] Procedure Division, START statement
-    [[WITH] NO LOCK]
+    [noLock]              # [FJ COBOL2000]
     
-    [ # - [SPEC-XX] 14.9.37.1 START statement, General format
-      FIRST
-    
-    | # - [SPEC-XX] 14.9.37.1 START statement, General format
-      LAST
-    
+    [ FIRST
+    | LAST
     | KEY relop identifier 
-    
-      # - [SPEC-XX] 14.9.37.1 START statement, General format
       [[WITH] LENGTH arithmeticExpression]
     ]
     
-    [sizeModifier]
-    [whileKeyModifier]
+    [size]                # [RM/COBOL], [MF]
+    [whileKey]            # [RM/COBOL]
     
-    [invalidKey]
-    [notInvalidKey]
+    ![invalidKey | notInvalidKey]
     
     [`end : END-START]
-end
 
-# - [????] TODO
-def sizeModifier =
-    [WITH] SIZE (identifier | integer)
-end
+  where def noLock =  [WITH] NO LOCK  end
 
-# - [????] TODO
-def whileKeyModifier =
-    WHILE [KEY [IS]] [NOT] LIKE (likeMods)* (identifier | literal)
-end
+  where def size =  [WITH] SIZE (identifier | integer)  end
+  
+  where def whileKey =
+      WHILE [KEY] [IS] [NOT] LIKE [mods] (identifier | literal)
 
-def likeMods =
-    ( trimmedRight    : TRIMMED RIGHT
-    | trimmedLeft     : TRIMMED LEFT
-    | caseSensitive   : CASE-SENSITIVE
-    | caseInsensitive : CASE-INSENSITIVE
-    )
+    where def mods =
+       !( TRIMMED [LEFT | RIGHT]
+        | ( CASE-SENSITIVE | CASE-INSENSITIVE )
+        )
+    end
+  end
 end
 
 
@@ -5627,6 +5615,9 @@ end
 # [IBM ILE CALL Statement]
 #   http://www.ibm.com/support/knowledgecenter/SSAE4W_9.0.0/com.ibm.etools.iseries.langref.doc/c0925395349.htm#HDRCALLST
 #
+# [MF]
+#   "Micro Focus Online Documentation"
+#   https://documentation.microfocus.com/help/index.jsp
 # [MF - Relation Conditions]
 #   http://documentation.microfocus.com/help/index.jsp?topic=%2Fcom.microfocus.eclipse.infocenter.studee60ux%2FHRLHLHPDF60A.html
 # [MF - Procedure Division Header]
@@ -5659,3 +5650,10 @@ end
 # [ACUCOBOL-GT]
 #   "ACUCOBOL-GT Reference Manual"
 #   https://supportline.microfocus.com/documentation/acucorpproducts/docs/v6_online_doc/gtman3/gtman3.htm
+#
+# [FJ COBOL2000]
+#   "Fujitsu Siemens COBOL2000 V1.4"
+#
+# [RM/COBOL]
+#   "Liant Software Corporation RM/COBOL Language Reference Manual Second Edition"
+#   "Micro Focus RM/COBOL Syntax Summary"

@@ -18,10 +18,10 @@ import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.sources.CopyInclude;
 import koopa.cobol.sources.Replace;
-import koopa.core.data.Token;
+import koopa.core.data.Position;
 import koopa.core.parsers.Parse;
 import koopa.core.trees.Tree;
-import koopa.core.util.Tuple;
+import koopa.core.util.Files;
 
 public class TestResult {
 
@@ -35,173 +35,210 @@ public class TestResult {
 	 */
 	private static final boolean TEST_COVERAGE = true;
 
-	private String name = null;
-	private boolean valid = false;
-	private int tokenCount = 0;
-	private float coverage = 0;
+	/**
+	 * The data we track in the CSV for regression testing.
+	 */
+	private static final Entry<?>[] ENTRIES = new Entry<?>[] { //
+			// NOTE Element 0 acts as the key for comparing across runs.
+			new Entry<String>("File", StringValue.class) {
+				@Override
+				public StringValue fromResults(ParseResults results) {
+					return new StringValue(results.getFile().getName());
+				}
 
-	private int errorCount = 0;
-	private List<Tuple<Token, String>> errors = null;
+				@Override
+				public String diff(String previous, String current) {
+					throw new UnsupportedOperationException(
+							"Mismatching keys ?");
+				}
+			}, //
+			new Entry<Boolean>("Valid", BooleanValue.class) {
+				@Override
+				public BooleanValue fromResults(ParseResults results) {
+					return new BooleanValue(results.isValidInput());
+				}
 
-	private int warningCount = 0;
-	private List<Tuple<Token, String>> warnings = null;
+				@Override
+				public String diff(Boolean previous, Boolean actual) {
+					if (previous)
+						return "- This file used to parse. It no longer does.";
+					else
+						return "+ This file used to fail parsing. It is now valid.";
+				}
+			}, //
+			new Entry<Integer>("Number of tokens", IntValue.class) {
+				@Override
+				public IntValue fromResults(ParseResults results) {
+					return new IntValue(
+							Metrics.getSignificantTokenCount(results));
+				}
 
-	private int preprocessedDirectivesCount = 0;
+				@Override
+				public String diff(Integer previous, Integer current) {
+					if (!TEST_TOKEN_COUNT)
+						return null;
 
-	public static TestResult from(ParseResults parseResults) {
-		TestResult result = new TestResult();
+					if (current < previous)
+						return "- Number of tokens went down from " + previous
+								+ " to " + current + ".";
+					else
+						return "- Number of tokens went up from " + previous
+								+ " to " + current + ".";
+				}
+			}, //
+			new Entry<Float>("Coverage", FloatValue.class) {
+				@Override
+				public FloatValue fromResults(ParseResults results) {
+					return new FloatValue(Metrics.getCoverage(results));
+				}
 
-		final Parse parse = parseResults.getParse();
+				@Override
+				public String diff(Float previous, Float current) {
+					if (!TEST_COVERAGE)
+						return null;
 
-		result.name = parseResults.getFile().getName();
-		result.valid = parseResults.isValidInput();
-		result.tokenCount = Metrics.getSignificantTokenCount(parseResults);
-		result.coverage = Metrics.getCoverage(parseResults);
-		result.errorCount = parse.getMessages().getErrorCount();
-		result.warningCount = parse.getMessages().getWarningCount();
+					if (current < previous)
+						return "- Coverage went down from " + previous + " to "
+								+ current + ".";
+					else
+						return "+ Coverage went up from " + previous + " to "
+								+ current + ".";
+				}
+			}, //
+			new Entry<Integer>("Number of errors", IntValue.class) {
+				@Override
+				public IntValue fromResults(ParseResults results) {
+					return new IntValue(
+							results.getParse().getMessages().getErrorCount());
+				}
 
-		result.errors = parse.getMessages().getErrors();
-		result.warnings = parse.getMessages().getWarnings();
+				@Override
+				public String diff(Integer previous, Integer current) {
+					if (current < previous)
+						return "+ Error count went down from " + previous
+								+ " to " + current + ".";
+					else
+						return "- Error count went up from " + previous + " to "
+								+ current + ".";
+				}
+			}, //
+			new Entry<Integer>("Number of warnings", IntValue.class) {
+				@Override
+				public IntValue fromResults(ParseResults results) {
+					return new IntValue(
+							results.getParse().getMessages().getWarningCount());
+				}
 
-		final CopyInclude copyInclude = parse.getSource(CopyInclude.class);
-		if (copyInclude != null) {
-			final List<Tree> handledDirectives = copyInclude
-					.getHandledDirectives();
-			result.preprocessedDirectivesCount += handledDirectives.size();
-		}
+				@Override
+				public String diff(Integer previous, Integer current) {
+					if (current < previous)
+						return "+ Warning count went down from " + previous
+								+ " to " + current + ".";
 
-		final Replace replace = parse.getSource(Replace.class);
-		if (replace != null) {
-			final List<Tree> handledDirectives = replace.getHandledDirectives();
-			result.preprocessedDirectivesCount += handledDirectives.size();
-		}
+					else
+						return "- Warning count went up from " + previous
+								+ " to " + current + ".";
+				}
+			}, //
+			new Entry<Integer>("Number of preprocessed directives",
+					IntValue.class) {
+				@Override
+				public IntValue fromResults(ParseResults results) {
+					int count = 0;
+					final Parse parse = results.getParse();
+					final CopyInclude copyInclude = parse
+							.getSource(CopyInclude.class);
+					if (copyInclude != null) {
+						final List<Tree> handledDirectives = copyInclude
+								.getHandledDirectives();
+						count += handledDirectives.size();
+					}
 
-		return result;
+					final Replace replace = parse.getSource(Replace.class);
+					if (replace != null) {
+						final List<Tree> handledDirectives = replace
+								.getHandledDirectives();
+						count += handledDirectives.size();
+					}
+
+					return new IntValue(count);
+				}
+
+				@Override
+				public String diff(Integer previous, Integer current) {
+					if (current < previous)
+						return "+ Preprocessed directives count went down from "
+								+ previous + " to " + current + ".";
+					else
+						return "- Preprocessed directives count went up from "
+								+ previous + " to " + current + ".";
+				}
+			}, //
+			new Entry<Position>("Final position", PositionValue.class) {
+				@Override
+				public PositionValue fromResults(ParseResults results) {
+					return new PositionValue(
+							results.getParse().getFinalPosition());
+				}
+
+				@Override
+				public String diff(Position previous, Position current) {
+					if (current.getLinenumber() < previous.getLinenumber())
+						return "- End of parse went down from line "
+								+ previous.getLinenumber() + " to "
+								+ current.getLinenumber();
+					else if (current.getLinenumber() > previous.getLinenumber())
+						return "+ End of parse went up from line "
+								+ previous.getLinenumber() + " to "
+								+ current.getLinenumber();
+					else if (current.getPositionInLine() < previous
+							.getPositionInLine())
+						return "- End of parse went down from column "
+								+ previous.getLinenumber() + " to "
+								+ current.getLinenumber();
+					else if (current.getPositionInLine() > previous
+							.getPositionInLine())
+						return "+ End of parse went up from column "
+								+ previous.getLinenumber() + " to "
+								+ current.getLinenumber();
+					else
+						return null;
+				}
+			} //
+	};
+
+	private static final String[] HEADER;
+
+	static {
+		HEADER = new String[ENTRIES.length];
+		for (int i = 0; i < HEADER.length; i++)
+			HEADER[i] = ENTRIES[i].name;
 	}
 
-	public String getName() {
-		return name;
+	@SuppressWarnings("rawtypes")
+	private final Value[] values = new Value[ENTRIES.length];
+
+	public String getKey() {
+		return values[0].toString();
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	public static TestResult from(ParseResults results) {
+		final TestResult r = new TestResult();
 
-	public boolean isValid() {
-		return valid;
-	}
+		for (int i = 0; i < ENTRIES.length; i++)
+			r.values[i] = ENTRIES[i].fromResults(results);
 
-	public void setValid(boolean valid) {
-		this.valid = valid;
-	}
-
-	public int getTokenCount() {
-		return tokenCount;
-	}
-
-	public void setTokenCount(int tokenCount) {
-		this.tokenCount = tokenCount;
-	}
-
-	public float getCoverage() {
-		return coverage;
-	}
-
-	public void setCoverage(float coverage) {
-		this.coverage = coverage;
-	}
-
-	public int getErrorCount() {
-		return errorCount;
-	}
-
-	public void setErrorCount(int errorCount) {
-		this.errorCount = errorCount;
-	}
-
-	public int getWarningCount() {
-		return warningCount;
-	}
-
-	public void setWarningCount(int warningCount) {
-		this.warningCount = warningCount;
-	}
-
-	public int getPreprocessedDirectivesCount() {
-		return preprocessedDirectivesCount;
-	}
-
-	public void setPreprocessedDirectivesCount(
-			int preprocessedDirectivesCount) {
-		this.preprocessedDirectivesCount = preprocessedDirectivesCount;
+		return r;
 	}
 
 	public List<String> getComparison(TestResult actual) {
 		final List<String> messages = new ArrayList<String>();
-		if (actual.valid != this.valid) {
-			if (this.valid)
-				messages.add("- This file used to parse. It no longer does.");
-			else
-				messages.add(
-						"+ This file used to fail parsing. It is now valid.");
-		}
 
-		if (TEST_TOKEN_COUNT && actual.tokenCount != this.tokenCount) {
-			// Positive case: when valid and count went up ?
-			if (actual.tokenCount < this.tokenCount) {
-				messages.add("  Number of tokens went down from "
-						+ this.tokenCount + " to " + actual.tokenCount + ".");
-
-			} else {
-				messages.add("  Number of tokens went up from "
-						+ this.tokenCount + " to " + actual.tokenCount + ".");
-			}
-		}
-
-		if (TEST_COVERAGE && actual.coverage != this.coverage) {
-			if (actual.coverage < this.coverage) {
-				messages.add("- Coverage went down from " + this.coverage
-						+ " to " + actual.coverage + ".");
-
-			} else {
-				messages.add("+ Coverage went up from " + this.coverage + " to "
-						+ actual.coverage + ".");
-			}
-		}
-
-		if (actual.errorCount != this.errorCount) {
-			if (actual.errorCount < this.errorCount)
-				messages.add("+ Error count went down from " + this.errorCount
-						+ " to " + actual.errorCount + ".");
-			else
-				messages.add("- Error count went up from " + this.errorCount
-						+ " to " + actual.errorCount + ".");
-		}
-
-		// TODO Errors.
-
-		if (actual.warningCount != this.warningCount) {
-			if (actual.warningCount < this.warningCount)
-				messages.add(
-						"+ Warning count went down from " + this.warningCount
-								+ " to " + actual.warningCount + ".");
-
-			else
-				messages.add("- Warning count went up from " + this.warningCount
-						+ " to " + actual.warningCount + ".");
-		}
-
-		// TODO Warnings.
-
-		if (actual.preprocessedDirectivesCount != this.preprocessedDirectivesCount) {
-			if (actual.preprocessedDirectivesCount < this.preprocessedDirectivesCount)
-				messages.add("+ Preprocessed directives count went down from "
-						+ this.preprocessedDirectivesCount + " to "
-						+ actual.preprocessedDirectivesCount + ".");
-			else
-				messages.add("- Preprocessed directives count went up from "
-						+ this.preprocessedDirectivesCount + " to "
-						+ actual.preprocessedDirectivesCount + ".");
+		for (int i = 0; i < ENTRIES.length; i++) {
+			@SuppressWarnings("unchecked")
+			final String msg = ENTRIES[i].compare(values[i], actual.values[i]);
+			if (msg != null)
+				messages.add(msg);
 		}
 
 		return messages;
@@ -212,40 +249,39 @@ public class TestResult {
 		CSVReader reader = null;
 		try {
 			reader = new CSVReader(new FileReader(expectedFile));
-			String[] entries = null;
 
-			// Header.
-			if ((entries = reader.readNext()) == null) {
+			// CSV Header.
+			String[] header = null;
+			if ((header = reader.readNext()) == null) {
 				return null;
 			}
 
+			int columnForEntry[] = new int[HEADER.length];
+			for (int i = 0; i < HEADER.length; i++) {
+				columnForEntry[i] = -1;
+				for (int col = 0; col < header.length; col++)
+					if (HEADER[i].equals(header[col])) {
+						columnForEntry[i] = col;
+						break;
+					}
+			}
+
+			String[] columns = null;
 			final Map<String, TestResult> targets = new HashMap<String, TestResult>();
 
 			// Entries.
-			while ((entries = reader.readNext()) != null) {
-				final String name = entries[0];
-				final String valid = entries[1];
-				final String tokenCount = entries[2];
-				final String coverage = entries[3];
-				final String errorCount = entries[4];
-				// final String errors = entries[5];
-				final String warningCount = entries[6];
-				// final String warnings = entries[7];
-				final String preprocessedDirectivesCount = entries[8];
+			while ((columns = reader.readNext()) != null) {
+				TestResult r = new TestResult();
 
-				TestResult results = new TestResult();
-				results.setName(name);
-				results.setValid("true".equalsIgnoreCase(valid));
-				results.setTokenCount(Integer.parseInt(tokenCount));
-				results.setCoverage(Float.parseFloat(coverage));
-				results.setErrorCount(Integer.parseInt(errorCount));
-				// TODO List of errors.
-				results.setWarningCount(Integer.parseInt(warningCount));
-				// TODO List of warnings.
-				results.setPreprocessedDirectivesCount(
-						Integer.parseInt(preprocessedDirectivesCount));
+				for (int i = 0; i < r.values.length; i++) {
+					if (columnForEntry[i] < 0)
+						r.values[i] = null;
+					else
+						r.values[i] = ENTRIES[i]
+								.fromString(columns[columnForEntry[i]]);
+				}
 
-				targets.put(name, results);
+				targets.put(r.getKey(), r);
 			}
 
 			return targets;
@@ -278,6 +314,9 @@ public class TestResult {
 			for (String key : sortedKeys)
 				writeNextResult(writer, key, results.get(key));
 
+		} catch (Exception e) {
+			e.printStackTrace();
+
 		} finally {
 			if (writer != null)
 				writer.close();
@@ -286,44 +325,182 @@ public class TestResult {
 
 	private static void writeResultsHeader(final CSVWriter writer)
 			throws IOException {
-		final String[] header = new String[] { "File", "Valid",
-				"Number of tokens", "Coverage", "Number of errors", "Errors",
-				"Number of warnings", "Warnings",
-				"Number of preprocessed directives" };
-		writer.writeNext(header);
+		writer.writeNext(HEADER);
 		writer.flush();
 	}
 
 	private static void writeNextResult(CSVWriter writer, String name,
 			TestResult results) throws IOException {
-		final String[] entries = new String[9];
 
-		String errors = "";
-		for (Tuple<Token, String> error : results.errors) {
-			if (errors.length() > 0)
-				errors += "\n";
+		final String[] stringValues = new String[results.values.length];
+		for (int i = 0; i < stringValues.length; i++)
+			stringValues[i] = results.values[i] == null ? ""
+					: results.values[i].toString();
 
-			errors += error.getFirst() + " " + error.getSecond();
-		}
-
-		String warnings = "";
-		for (Tuple<Token, String> warning : results.warnings) {
-			if (warnings.length() > 0)
-				warnings += "\n";
-
-			warnings += warning.getFirst() + " " + warning.getSecond();
-		}
-
-		entries[0] = name;
-		entries[1] = "" + results.valid;
-		entries[2] = "" + results.tokenCount;
-		entries[3] = "" + results.coverage;
-		entries[4] = "" + results.errorCount;
-		entries[5] = "" + errors;
-		entries[6] = "" + results.warningCount;
-		entries[7] = "" + warnings;
-		entries[8] = "" + results.preprocessedDirectivesCount;
-		writer.writeNext(entries);
+		writer.writeNext(stringValues);
 		writer.flush();
+	}
+
+	private static abstract class Entry<T> {
+		public final String name;
+		private final Class<? extends Value<T>> clazz;
+
+		public Entry(String name, Class<? extends Value<T>> clazz) {
+			this.name = name;
+			this.clazz = clazz;
+		}
+
+		public String compare(Value<T> previous, Value<T> current) {
+			if (previous == null)
+				return null;
+			else if (previous.value.equals(current.value))
+				return null;
+			else
+				return diff(previous.value, current.value);
+		}
+
+		public abstract String diff(T previous, T current);
+
+		public abstract Value<T> fromResults(ParseResults results);
+
+		public Value<T> fromString(String s) {
+			if (s == null || s.trim().isEmpty())
+				return null;
+			try {
+				Value<T> v = clazz.newInstance();
+				v.initializeFromString(s);
+				return v;
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+				return null;
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+	}
+
+	private static abstract class Value<T> {
+		public T value;
+
+		public Value() {
+			this.value = null;
+		}
+
+		public Value(T value) {
+			this.value = value;
+		}
+
+		public abstract void initializeFromString(String s);
+
+		@Override
+		public String toString() {
+			return value == null ? "" : value.toString();
+		}
+	}
+
+	private static class StringValue extends Value<String> {
+		@SuppressWarnings("unused")
+		public StringValue() {
+		}
+
+		public StringValue(String s) {
+			super(s);
+		}
+
+		@Override
+		public void initializeFromString(String s) {
+			this.value = s;
+		}
+	}
+
+	private static class BooleanValue extends Value<Boolean> {
+		@SuppressWarnings("unused")
+		public BooleanValue() {
+		}
+
+		public BooleanValue(boolean b) {
+			super(b);
+		}
+
+		@Override
+		public void initializeFromString(String s) {
+			if (s == null)
+				this.value = null;
+			else
+				this.value = Boolean.valueOf(s);
+		}
+	}
+
+	private static class IntValue extends Value<Integer> {
+		@SuppressWarnings("unused")
+		public IntValue() {
+		}
+
+		public IntValue(int i) {
+			super(i);
+		}
+
+		@Override
+		public void initializeFromString(String s) {
+			if (s == null)
+				this.value = null;
+			else
+				this.value = Integer.valueOf(s);
+		}
+	}
+
+	private static class FloatValue extends Value<Float> {
+		@SuppressWarnings("unused")
+		public FloatValue() {
+		}
+
+		public FloatValue(float f) {
+			super(f);
+		}
+
+		@Override
+		public void initializeFromString(String s) {
+			if (s == null)
+				this.value = null;
+			else
+				this.value = Float.valueOf(s);
+		}
+	}
+
+	private static class PositionValue extends Value<Position> {
+		@SuppressWarnings("unused")
+		public PositionValue() {
+		}
+
+		public PositionValue(Position p) {
+			super(p);
+		}
+
+		@Override
+		public void initializeFromString(String s) {
+			if (s == null)
+				this.value = null;
+			else {
+				final String[] ps = s.split(":");
+				this.value = new Position(ps[0], -1, Integer.valueOf(ps[1]),
+						Integer.valueOf(ps[2]));
+			}
+		}
+
+		@Override
+		public String toString() {
+			if (value == null)
+				return "";
+
+			String name = value.getResourceName();
+			if (name == null)
+				name = "";
+			else
+				name = Files.getFilename(value.getResourceName());
+
+			return name + ":" + value.getLinenumber() + ":"
+					+ value.getPositionInLine();
+		}
 	}
 }

@@ -98,7 +98,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 	private void addActualResult(TestResult result) {
 		if (actualResults != null)
-			actualResults.put(result.getName(), result);
+			actualResults.put(result.getKey(), result);
 	}
 
 	public static void testRunStarted() throws IOException {

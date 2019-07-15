@@ -54,6 +54,8 @@ public final class Files {
 	}
 
 	public static String getFilename(String path) {
+		if (path == null)
+			return null;
 		int sep = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
 		if (sep < 0)
 			return path;

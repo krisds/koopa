@@ -86,6 +86,6 @@ public class CommandLineOptions {
 
 	public String usage() {
 		return "Usage: [--free-format | --variable-format] "
-				+ "[--preprocess -I <copyboopath>] [source]";
+				+ "[--preprocess -I <copyboopath>] [-tab-length <number>] [source]";
 	}
 }

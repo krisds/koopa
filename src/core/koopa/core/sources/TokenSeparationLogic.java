@@ -94,9 +94,9 @@ public class TokenSeparationLogic {
 				return position + 1;
 			}
 
-			final char d = text.charAt(position + 1);
+			final char charAfterQuotation = text.charAt(position + 1);
 
-			if (d == quotationMark) {
+			if (charAfterQuotation == quotationMark) {
 				// Escaped quotation mark.
 				position += 2;
 				continue;
@@ -104,18 +104,37 @@ public class TokenSeparationLogic {
 
 			// Completed string literal.
 
-			// Check for floating continuation marker.
-			final boolean hasFloatingContinuationIndicator = (d == '-');
-			if (hasFloatingContinuationIndicator)
-				position += 1;
+			// Check for floating continuation marker !
 
-			if (hasFloatingContinuationIndicator)
-				tokens.add(Tokens.subtoken(token, start, position + 1)
-						.withTags(STRING, INCOMPLETE));
-			else
+			if (charAfterQuotation != '-') {
+				// Not a floating continuation marker.
 				tokens.add(Tokens.subtoken(token, start, position + 1)
 						.withTags(STRING));
-
+				return position + 1;
+			}
+			
+			// '-<eoln> or "-<eoln> ?
+			if (position + 2 == length) {
+				// Nothing after the floating continuation marker.
+				tokens.add(Tokens.subtoken(token, start, position + 2)
+						.withTags(STRING, INCOMPLETE));
+				return position + 2;
+			}
+			
+			final char charAfterFloatingContinuationMarker = text
+					.charAt(position + 2);
+			
+			// '-<ws> or "-<ws> ?
+			if (isWhitespace(charAfterFloatingContinuationMarker)) {
+				// Whitespace after the floating continuation marker.
+				tokens.add(Tokens.subtoken(token, start, position + 2)
+						.withTags(STRING, INCOMPLETE));
+				return position + 2;
+			}
+			
+			// Not a floating continuation marker.
+			tokens.add(Tokens.subtoken(token, start, position + 1)
+					.withTags(STRING));
 			return position + 1;
 		}
 

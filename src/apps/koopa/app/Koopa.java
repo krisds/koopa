@@ -68,6 +68,7 @@ public class Koopa extends JFrame implements Application {
 				koopa.setSourceFormat(options.getFormat());
 				koopa.setPreprocessing(options.isPreprocess());
 				koopa.setCopybookPaths(options.getCopybookPaths());
+				koopa.setTabLength(options.getTabLength());
 				koopa.setVisible(true);
 				if (other.size() == 1)
 					koopa.openFile(new File(other.get(0)).getAbsoluteFile());
@@ -416,6 +417,11 @@ public class Koopa extends JFrame implements Application {
 
 	public void setSourceFormat(SourceFormat format) {
 		overview.getCobolParserFactory().getProject().setDefaultFormat(format);
+		updateMenus();
+	}
+
+	public void setTabLength(int tabLength) {
+		overview.getCobolParserFactory().getProject().setDefaultTabLength(tabLength);
 		updateMenus();
 	}
 

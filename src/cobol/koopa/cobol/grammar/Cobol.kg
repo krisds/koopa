@@ -1997,7 +1997,8 @@ end
 def sourceClause =
     (SOURCE [IS] | SOURCES [ARE])
     ( identifier (%not moreArithmeticOp)
-    | arithmeticExpression
+    | expression: arithmeticExpression          # [IBM REPORT WRITER]
+    | expression: alphanumericLiteral           # [IBM REPORT WRITER]
     )+
     [roundedPhrase]
 end
@@ -5614,6 +5615,8 @@ end
 #   "IBM - Enterprise COBOL for z/OS - Language Reference - Version 4 Release 2"
 # [IBM ILE CALL Statement]
 #   http://www.ibm.com/support/knowledgecenter/SSAE4W_9.0.0/com.ibm.etools.iseries.langref.doc/c0925395349.htm#HDRCALLST
+# [IBM REPORT WRITER]
+#   "COBOL REPORT WRITER PRECOMPILER PROGRAMMER'S MANUAL"
 #
 # [MF]
 #   "Micro Focus Online Documentation"

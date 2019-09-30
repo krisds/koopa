@@ -8914,7 +8914,12 @@ public class CobolGrammar extends CobolBaseGrammar {
                     moreArithmeticOp()
                   )
                 ),
-                arithmeticExpression()
+                as("expression",
+                  arithmeticExpression()
+                ),
+                as("expression",
+                  alphanumericLiteral()
+                )
               )
             ),
             optional(

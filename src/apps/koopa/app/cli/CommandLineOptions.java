@@ -9,6 +9,7 @@ import koopa.cobol.sources.SourceFormat;
 public class CommandLineOptions {
 
 	private SourceFormat format = SourceFormat.FIXED;
+	private int tabLength = 1;
 	private boolean preprocess = false;
 	private List<String> copybookPaths = new LinkedList<String>();
 	private List<String> other = new ArrayList<String>();
@@ -29,8 +30,24 @@ public class CommandLineOptions {
 							"Unknown option: " + option);
 
 			} else if (option.startsWith("-")) {
-				if (option.equals("-I")) {
-
+				if (option.equals("-tab-length")) {
+					i+= 1;
+					if (i >= args.length)
+						throw new IllegalArgumentException(
+								"Missing tab length definition.");
+					
+					try {
+						tabLength = Integer.parseInt(args[i]);
+					} catch (NumberFormatException e) {
+						throw new IllegalArgumentException(
+								"Tab length must be a positive number.");
+					}
+					
+					if (tabLength <= 0)
+						throw new IllegalArgumentException(
+								"Tab length must be a positive number.");
+					
+				} else if (option.equals("-I")) {
 					i += 1;
 					if (i >= args.length)
 						throw new IllegalArgumentException(
@@ -49,6 +66,10 @@ public class CommandLineOptions {
 
 	public SourceFormat getFormat() {
 		return format;
+	}
+
+	public int getTabLength() {
+		return tabLength;
 	}
 
 	public boolean isPreprocess() {

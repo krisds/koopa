@@ -703,6 +703,12 @@ target communicationSection;
    CD  COMM2 FOR OUTPUT
        DESTINATION TABLE OCCURS 7 TIMES . ]
 
+target sourceClause;
+
++[ SOURCE IS SOMETHING ]
++[ SOURCE IS SOMETHING ROUNDED ]
++[ SOURCE IS "SOMETHING" ]
+
 target reportSection;
 
 +[ REPORT SECTION . ]

@@ -43,7 +43,7 @@ public class TreeBasedDocument extends DefaultStyledDocument
 			for (Token token : tree.allTokens()) {
 				final AttributeSet style = forTokenInDocument(token, this);
 
-				insertString(offset, token.getText(), style);
+				insertString(offset, getText(token), style);
 				offsetsForTokens.put(token, offset);
 				tokensForOffsets.put(offset, token);
 
@@ -56,7 +56,7 @@ public class TreeBasedDocument extends DefaultStyledDocument
 			if (additionalTokens != null && additionalTokens.size() > 0) {
 				final AttributeSet unparsed = forUnparsed(this);
 				for (Token token : additionalTokens) {
-					insertString(offset, token.getText(), unparsed);
+					insertString(offset, getText(token), unparsed);
 					offsetsForTokens.put(token, offset);
 					tokensForOffsets.put(offset, token);
 
@@ -71,6 +71,11 @@ public class TreeBasedDocument extends DefaultStyledDocument
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private String getText(Token token) {
+		// Make tab characters clearly visible.
+		return token.getText().replaceAll("\\t", "\u2192");
 	}
 
 	private void clear() {

@@ -21,6 +21,7 @@ import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
+import koopa.core.util.TabStops;
 
 /**
  * This {@linkplain Source} takes individual lines, and splits them up into the
@@ -33,12 +34,18 @@ public class ProgramArea extends ChainingSource implements Source {
 			.getLogger("source.cobol.program_area");
 
 	private final int tabLength;
+	private final TabStops tabStops;
 
 	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
 
-	public ProgramArea(Source source, int tabLength) {
+	private final boolean cheapTabs;
+
+	public ProgramArea(Source source, int tabLength, TabStops tabStops) {
 		super(source);
 		this.tabLength = tabLength;
+		this.tabStops = tabStops;
+
+		this.cheapTabs = tabLength == 1 && tabStops.undefined();
 	}
 
 	@Override
@@ -69,17 +76,17 @@ public class ProgramArea extends ChainingSource implements Source {
 		return pendingTokens.removeFirst();
 	}
 
-	protected void tokenizeLine(Token token) {
-		final String text = token.getText();
+	protected void tokenizeLine(Token line) {
+		final String text = line.getText();
 
 		final int length = text.length();
 		if (length == 0) {
 			// No text. Shouldn't really happen; but better safe than sorry.
-			pendingTokens.add(token);
+			pendingTokens.add(line);
 			return;
 		}
 
-		final SourceFormat format = SourceFormat.forToken(token);
+		final SourceFormat format = SourceFormat.forToken(line);
 
 		if (format == FREE) {
 			int c = text.charAt(0);
@@ -88,11 +95,11 @@ public class ProgramArea extends ChainingSource implements Source {
 				// This is only an indicator if it gets followed by a space.
 				// Otherwise it's program text.
 				if (text.charAt(1) == ' ') {
-					extract(token, 0, 1, INDICATOR_AREA, format);
-					extract(token, 1, -1, COMMENT, format);
+					extract(line, 0, 1, INDICATOR_AREA, format);
+					extract(line, 1, -1, COMMENT, format);
 
 				} else {
-					extract(token, PROGRAM_TEXT_AREA);
+					extract(line, PROGRAM_TEXT_AREA);
 				}
 
 			} else if (indicatesComment(c)) {
@@ -100,35 +107,33 @@ public class ProgramArea extends ChainingSource implements Source {
 				//
 				// Note: Keep this after the debug line check, as the
 				// indicatesComment method accepts 'd' and 'D' as well.
-				extract(token, 0, 1, INDICATOR_AREA, format);
-				extract(token, 1, -1, COMMENT, format);
+				extract(line, 0, 1, INDICATOR_AREA, format);
+				extract(line, 1, -1, COMMENT, format);
 
 			} else {
-				extract(token, PROGRAM_TEXT_AREA);
+				extract(line, PROGRAM_TEXT_AREA);
 			}
 
 		} else if (format == FIXED) {
-			extract(token, 0, 6, SEQUENCE_NUMBER_AREA, format);
+			extract(line, 0, 6, SEQUENCE_NUMBER_AREA, format);
 
-			final Token indicator = extract(token, 6, 7, INDICATOR_AREA,
-					format);
+			final Token indicator = extract(line, 6, 7, INDICATOR_AREA, format);
 			final boolean lineIsComment = indicator != null
 					&& indicatesComment(indicator.charAt(0));
 
-			extract(token, 7, 72, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
+			extract(line, 7, 72, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
 					format);
 
-			extract(token, 72, -1, IDENTIFICATION_AREA, format);
+			extract(line, 72, -1, IDENTIFICATION_AREA, format);
 
 		} else if (format == VARIABLE) {
-			extract(token, 0, 6, SEQUENCE_NUMBER_AREA, format);
+			extract(line, 0, 6, SEQUENCE_NUMBER_AREA, format);
 
-			final Token indicator = extract(token, 6, 7, INDICATOR_AREA,
-					format);
+			final Token indicator = extract(line, 6, 7, INDICATOR_AREA, format);
 			final boolean lineIsComment = indicator != null
 					&& indicatesComment(indicator.charAt(0));
 
-			extract(token, 7, -1, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
+			extract(line, 7, -1, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
 					format);
 
 		} else {
@@ -137,21 +142,21 @@ public class ProgramArea extends ChainingSource implements Source {
 		}
 	}
 
-	private Token extract(Token token, int start, int end, Object tag,
+	private Token extract(Token line, int start, int end, Object tag,
 			final SourceFormat format) {
-		final int columns = columns(token);
+		final int columns = columns(line);
 
 		if (start >= columns)
 			return null;
 
-		int startIndex = characterIndexForColumn(token, start);
-		int endIndex = end >= 0 ? characterIndexForColumn(token, end)
-				: token.getText().length();
+		int startIndex = characterIndexForColumn(line, start);
+		int endIndex = end >= 0 ? characterIndexForColumn(line, end)
+				: line.getText().length();
 
 		if (endIndex <= startIndex)
 			return null;
 
-		final Token extracted = tokenizeArea(token, startIndex, endIndex, tag,
+		final Token extracted = tokenizeArea(line, startIndex, endIndex, tag,
 				format);
 
 		if (LOGGER.isTraceEnabled())
@@ -161,8 +166,8 @@ public class ProgramArea extends ChainingSource implements Source {
 		return extracted;
 	}
 
-	private Token extract(Token token, Object tag) {
-		Token extracted = token.withTags(tag);
+	private Token extract(Token line, Object tag) {
+		Token extracted = line.withTags(tag);
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace(tag + ": " + extracted);
 
@@ -179,37 +184,61 @@ public class ProgramArea extends ChainingSource implements Source {
 		return Tokens.subtoken(token, begin, end).withTags(tags);
 	}
 
-	private int columns(Token token) {
-		final String text = token.getText();
+	/**
+	 * How many columns wide is the given line ?
+	 * <p>
+	 * This differs from the raw length of a token in that we want to apply tab
+	 * stops and tab length definitions to any tab characters found in the line.
+	 * <p>
+	 * Tab stops take precedence. If no tab stop can be found for a tab
+	 * character then we count using tab length instead.
+	 */
+	private int columns(Token line) {
+		final String text = line.getText();
 
-		if (tabLength == 1)
+		if (cheapTabs)
 			return text.length();
 
 		int columns = 0;
 
 		for (int i = 0; i < text.length(); i++)
-			if (text.charAt(i) == '\t')
-				columns += tabLength;
-			else
+			if (text.charAt(i) == '\t') {
+				final int stop = tabStops.tabStopAfter(columns);
+				if (stop > columns)
+					columns = stop;
+				else
+					columns += tabLength;
+			} else
 				columns += 1;
 
 		return columns;
 	}
 
-	private int characterIndexForColumn(Token token, int column) {
+	/**
+	 * See {@linkplain #columns(Token)}. This calculates the inverse. Given a
+	 * column number, what character index matches that ?
+	 */
+	private int characterIndexForColumn(Token line, int column) {
 		if (column <= 0)
 			return 0;
 
-		final String text = token.getText();
-		int columns = 0;
+		final String text = line.getText();
 
+		if (cheapTabs)
+			return column < text.length() ? column : text.length();
+
+		int columns = 0;
 		for (int i = 0; i < text.length(); i++) {
 			if (column <= columns)
 				return i;
 
-			if (text.charAt(i) == '\t')
-				columns += tabLength;
-			else
+			if (text.charAt(i) == '\t') {
+				final int stop = tabStops.tabStopAfter(columns);
+				if (stop > columns)
+					columns = stop;
+				else
+					columns += tabLength;
+			} else
 				columns += 1;
 		}
 

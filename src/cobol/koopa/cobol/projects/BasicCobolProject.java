@@ -7,6 +7,7 @@ import koopa.cobol.CobolProject;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.parsers.ParserCombinator;
+import koopa.core.util.TabStops;
 
 /**
  * A {@link CobolProject} which only tracks defaults and returns them for all
@@ -20,6 +21,7 @@ public class BasicCobolProject implements CobolProject {
 
 	private SourceFormat defaultFormat = SourceFormat.FIXED;
 	private int defaultTabLength = 1;
+	private TabStops tabStops = new TabStops();
 	private boolean defaultPreprocessing = false;
 
 	public CobolProject duplicate() {
@@ -31,6 +33,7 @@ public class BasicCobolProject implements CobolProject {
 	protected void copyBasicSettingsInto(final BasicCobolProject project) {
 		project.defaultFormat = defaultFormat;
 		project.defaultTabLength = defaultTabLength;
+		project.tabStops = tabStops.duplicate();
 		project.defaultPreprocessing = defaultPreprocessing;
 	}
 
@@ -73,6 +76,18 @@ public class BasicCobolProject implements CobolProject {
 
 	public int getTabLength(File file) {
 		return getDefaultTabLength();
+	}
+
+	public void setDefaultTabStops(TabStops tabStops) {
+		this.tabStops = tabStops;
+	}
+
+	public TabStops getDefaultTabStops() {
+		return tabStops;
+	}
+
+	public TabStops getTabStops(File file) {
+		return tabStops;
 	}
 
 	public void setDefaultPreprocessing(boolean preprocessing) {

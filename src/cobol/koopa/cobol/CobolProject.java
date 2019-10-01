@@ -5,6 +5,7 @@ import java.io.File;
 import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.parsers.ParserCombinator;
+import koopa.core.util.TabStops;
 
 /**
  * The CobolProject defines how Cobol files should be handled/parsed. What
@@ -68,6 +69,21 @@ public interface CobolProject {
 	 */
 	int getTabLength(File file);
 
+	/**
+	 * What are the default tab stops to use ?
+	 */
+	TabStops getDefaultTabStops();
+	
+	/**
+	 * Set the default tab stops to use.
+	 */
+	void setDefaultTabStops(TabStops tabStops);
+	
+	/**
+	 * What are the tab stops to use for this specific file ?
+	 */
+	TabStops getTabStops(File file);
+	
 	/**
 	 * Should we be preprocessing files by default ?
 	 */

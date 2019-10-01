@@ -89,7 +89,7 @@ public class ProgramArea extends ChainingSource implements Source {
 				// Otherwise it's program text.
 				if (text.charAt(1) == ' ') {
 					extract(token, 0, 1, INDICATOR_AREA, format);
-					extract(token, 1, length, COMMENT, format);
+					extract(token, 1, -1, COMMENT, format);
 
 				} else {
 					extract(token, PROGRAM_TEXT_AREA);
@@ -101,7 +101,7 @@ public class ProgramArea extends ChainingSource implements Source {
 				// Note: Keep this after the debug line check, as the
 				// indicatesComment method accepts 'd' and 'D' as well.
 				extract(token, 0, 1, INDICATOR_AREA, format);
-				extract(token, 1, length, COMMENT, format);
+				extract(token, 1, -1, COMMENT, format);
 
 			} else {
 				extract(token, PROGRAM_TEXT_AREA);
@@ -118,7 +118,7 @@ public class ProgramArea extends ChainingSource implements Source {
 			extract(token, 7, 72, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
 					format);
 
-			extract(token, 72, length, IDENTIFICATION_AREA, format);
+			extract(token, 72, -1, IDENTIFICATION_AREA, format);
 
 		} else if (format == VARIABLE) {
 			extract(token, 0, 6, SEQUENCE_NUMBER_AREA, format);
@@ -128,8 +128,8 @@ public class ProgramArea extends ChainingSource implements Source {
 			final boolean lineIsComment = indicator != null
 					&& indicatesComment(indicator.charAt(0));
 
-			extract(token, 7, length,
-					lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
+			extract(token, 7, -1, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
+					format);
 
 		} else {
 			throw new UnsupportedOperationException(
@@ -145,7 +145,8 @@ public class ProgramArea extends ChainingSource implements Source {
 			return null;
 
 		int startIndex = characterIndexForColumn(token, start);
-		int endIndex = characterIndexForColumn(token, end);
+		int endIndex = end >= 0 ? characterIndexForColumn(token, end)
+				: token.getText().length();
 
 		if (endIndex <= startIndex)
 			return null;

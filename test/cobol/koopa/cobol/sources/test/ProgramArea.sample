@@ -54,6 +54,14 @@ FIXED = =    =
 SEQNR I -    EOLN
 
 
+# This has some tabs, which by default count for one character each:
+123456*89	123456789	123456789	123456789	123456789	123456789	123456789	12|4567
+<---->^<---------------------------------------------------------------><--->^
+FIXED = =                                                               =    =
+!TEXT = !TEXT/COMMENT                                                   !TEXT TEXT
+SEQNR I -                                                               IDENT EOLN
+
+
 # =============================================================================
 # Switching to FREE mode.
 

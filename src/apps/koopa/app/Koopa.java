@@ -37,6 +37,7 @@ import koopa.cobol.sources.SourceFormat;
 import koopa.cobol.util.CopybookPaths;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
+import koopa.core.util.TabStops;
 import koopa.core.util.Tuple;
 
 public class Koopa extends JFrame implements Application {
@@ -69,6 +70,7 @@ public class Koopa extends JFrame implements Application {
 				koopa.setPreprocessing(options.isPreprocess());
 				koopa.setCopybookPaths(options.getCopybookPaths());
 				koopa.setTabLength(options.getTabLength());
+				koopa.setTabStops(options.getTabStops());
 				koopa.setVisible(true);
 				if (other.size() == 1)
 					koopa.openFile(new File(other.get(0)).getAbsoluteFile());
@@ -422,6 +424,11 @@ public class Koopa extends JFrame implements Application {
 
 	public void setTabLength(int tabLength) {
 		overview.getCobolParserFactory().getProject().setDefaultTabLength(tabLength);
+		updateMenus();
+	}
+	
+	public void setTabStops(TabStops tabStops) {
+		overview.getCobolParserFactory().getProject().setDefaultTabStops(tabStops);
 		updateMenus();
 	}
 

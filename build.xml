@@ -110,6 +110,8 @@
 			<test name="koopa.core.sources.test.TestTokenizerTest" />
 
 			<test name="koopa.core.trees.jaxen.test.JaxenTest" />
+
+			<test name="koopa.core.util.test.TabStopsTest" />
 		</junit>
 	</target>
 

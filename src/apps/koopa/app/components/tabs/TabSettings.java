@@ -18,6 +18,8 @@ import javax.swing.event.DocumentListener;
 
 import koopa.app.Application;
 import koopa.app.CobolParserFactory;
+import koopa.cobol.CobolProject;
+import koopa.core.util.TabStops;
 
 public class TabSettings extends JDialog {
 
@@ -28,6 +30,7 @@ public class TabSettings extends JDialog {
 
 	private JButton ok;
 	private JTextField tabLength;
+	private JTextField tabStops;
 
 	public TabSettings(Frame owner, CobolParserFactory factory) {
 		super(owner, NAME, false);
@@ -41,28 +44,7 @@ public class TabSettings extends JDialog {
 	}
 
 	private void setupComponents() {
-		setLayout(new BorderLayout(5, 5));
-
-		JPanel config = new JPanel();
-		config.setLayout(new GridLayout(1, 1));
-
-		config.add(getLengthConfiguration());
-
-		add(config, BorderLayout.CENTER);
-
-		add(getConfirmation(), BorderLayout.SOUTH);
-	}
-
-	private JPanel getLengthConfiguration() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-		panel.add(new JLabel("Tab length: "));
-
-		tabLength = new JTextField(3);
-		tabLength.setText("" + factory.getProject().getDefaultTabLength());
-		tabLength.getDocument().addDocumentListener(new DocumentListener() {
-
+		final DocumentListener listener = new DocumentListener() {
 			public void removeUpdate(DocumentEvent e) {
 				validateInputs();
 			}
@@ -74,8 +56,45 @@ public class TabSettings extends JDialog {
 			public void changedUpdate(DocumentEvent e) {
 				validateInputs();
 			}
-		});
+		};
+
+		setLayout(new BorderLayout(5, 5));
+
+		JPanel config = new JPanel();
+		config.setLayout(new GridLayout(2, 1));
+
+		config.add(getLengthConfiguration(listener));
+		config.add(getTabStopsConfiguration(listener));
+
+		add(config, BorderLayout.CENTER);
+
+		add(getConfirmation(), BorderLayout.SOUTH);
+	}
+
+	private JPanel getLengthConfiguration(DocumentListener listener) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		panel.add(new JLabel("Tab length: "));
+
+		tabLength = new JTextField(16);
+		tabLength.setText("" + factory.getProject().getDefaultTabLength());
+		tabLength.getDocument().addDocumentListener(listener);
 		panel.add(tabLength);
+
+		return panel;
+	}
+
+	private JPanel getTabStopsConfiguration(DocumentListener listener) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+		panel.add(new JLabel(" Tab stops: "));
+
+		tabStops = new JTextField(16);
+		tabStops.setText(factory.getProject().getDefaultTabStops().toString());
+		tabStops.getDocument().addDocumentListener(listener);
+		panel.add(tabStops);
 
 		return panel;
 	}
@@ -121,13 +140,25 @@ public class TabSettings extends JDialog {
 				valid = false;
 			}
 
+		if (valid) {
+			try {
+				new TabStops().fromString(tabStops.getText());
+			} catch (IllegalArgumentException e) {
+				valid = false;
+			}
+		}
+
 		ok.setEnabled(valid);
 	}
 
 	private void applyInputs() {
-		int tabLengthValue = Integer.parseInt(tabLength.getText());
+		final CobolProject project = factory.getProject();
 
-		factory.getProject().setDefaultTabLength(tabLengthValue);
+		final int tabLengthValue = Integer.parseInt(tabLength.getText());
+		project.setDefaultTabLength(tabLengthValue);
+
+		final TabStops stops = new TabStops().fromString(tabStops.getText());
+		project.setDefaultTabStops(stops);
 	}
 
 	public static Action actionToShow(final Application application) {

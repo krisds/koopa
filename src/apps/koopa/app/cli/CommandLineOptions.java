@@ -5,11 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import koopa.cobol.sources.SourceFormat;
+import koopa.core.util.TabStops;
 
 public class CommandLineOptions {
 
 	private SourceFormat format = SourceFormat.FIXED;
 	private int tabLength = 1;
+	private TabStops tabStops = new TabStops();
 	private boolean preprocess = false;
 	private List<String> copybookPaths = new LinkedList<String>();
 	private List<String> other = new ArrayList<String>();
@@ -31,22 +33,30 @@ public class CommandLineOptions {
 
 			} else if (option.startsWith("-")) {
 				if (option.equals("-tab-length")) {
-					i+= 1;
+					i += 1;
 					if (i >= args.length)
 						throw new IllegalArgumentException(
 								"Missing tab length definition.");
-					
+
 					try {
 						tabLength = Integer.parseInt(args[i]);
 					} catch (NumberFormatException e) {
 						throw new IllegalArgumentException(
 								"Tab length must be a positive number.");
 					}
-					
+
 					if (tabLength <= 0)
 						throw new IllegalArgumentException(
 								"Tab length must be a positive number.");
-					
+
+				} else if (option.equals("-tab-stops")) {
+					i += 1;
+					if (i >= args.length)
+						throw new IllegalArgumentException(
+								"Missing tab stops definition.");
+
+					tabStops = new TabStops().fromString(args[i]);
+
 				} else if (option.equals("-I")) {
 					i += 1;
 					if (i >= args.length)
@@ -72,6 +82,10 @@ public class CommandLineOptions {
 		return tabLength;
 	}
 
+	public TabStops getTabStops() {
+		return tabStops;
+	}
+
 	public boolean isPreprocess() {
 		return preprocess;
 	}
@@ -85,7 +99,9 @@ public class CommandLineOptions {
 	}
 
 	public String usage() {
-		return "Usage: [--free-format | --variable-format] "
-				+ "[--preprocess -I <copyboopath>] [-tab-length <number>] [source]";
+		return "Usage: [--free-format | --variable-format] " //
+				+ "[--preprocess -I <copyboopath>] " //
+				+ "[-tab-length <number>] [-tab-stops <csv>] " //
+				+ "[source]";
 	}
 }

@@ -18,6 +18,7 @@ import koopa.core.sources.Source;
 import koopa.core.sources.StackOfSources;
 import koopa.core.sources.TokenSeparator;
 import koopa.core.util.LineEndings;
+import koopa.core.util.TabStops;
 
 public final class CobolTokens {
 
@@ -50,8 +51,9 @@ public final class CobolTokens {
 
 		// * Split lines according to the source format.
 		final int tabLength = project.getTabLength(file);
+		final TabStops tabStops = project.getTabStops(file);
 		final ProgramArea programArea = new ProgramArea( //
-				compilerDirectives, tabLength);
+				compilerDirectives, tabLength, tabStops);
 
 		// * Split program text into tokens.
 		final TokenSeparator tokenSeparator //

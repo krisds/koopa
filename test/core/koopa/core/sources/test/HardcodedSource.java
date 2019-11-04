@@ -36,6 +36,7 @@ public class HardcodedSource extends BasicSource
 			return data.get(index++);
 	}
 
+	@Override
 	public void close() {
 	}
 
@@ -44,10 +45,10 @@ public class HardcodedSource extends BasicSource
 	}
 	
 	public static HardcodedSource from(List<Object> objects) {
-		final List<Data> data = new ArrayList<Data>();
+		final List<Data> data = new ArrayList<>();
 		
 		Position p = new Position(0, 0, 0);
-		final List<Object> tags = new ArrayList<Object>();
+		final List<Object> tags = new ArrayList<>();
 		for (Object o : objects) {
 			if (o instanceof Data) {
 				data.add((Data) o);

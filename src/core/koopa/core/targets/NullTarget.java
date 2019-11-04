@@ -7,9 +7,11 @@ import koopa.core.data.Data;
  */
 public class NullTarget implements Target {
 
+	@Override
 	public void push(Data packet) {
 	}
 
+	@Override
 	public void done() {
 	}
 }

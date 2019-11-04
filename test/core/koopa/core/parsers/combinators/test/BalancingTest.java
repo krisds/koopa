@@ -123,7 +123,7 @@ public class BalancingTest extends GrammarTest {
 	// ========================================================================
 
 	private class BalancingTracker extends UnaryParserDecorator {
-		public final List<Boolean> actual = new LinkedList<Boolean>();
+		public final List<Boolean> actual = new LinkedList<>();
 
 		public BalancingTracker(ParserCombinator parser) {
 			super(parser);

@@ -31,13 +31,13 @@ public class Replace extends ChainingSource
 
 	private final CobolPreprocessingGrammar grammar;
 
-	private final LinkedList<Data> pending = new LinkedList<Data>();
+	private final LinkedList<Data> pending = new LinkedList<>();
 
 	/**
 	 * All REPLACE statements which got handled are tracked here, in syntax tree
 	 * form.
 	 */
-	private List<Tree> handledReplaceStatements = new LinkedList<Tree>();
+	private List<Tree> handledReplaceStatements = new LinkedList<>();
 
 	public Replace(Source source, CobolPreprocessingGrammar grammar) {
 		super(source);
@@ -143,7 +143,7 @@ public class Replace extends ChainingSource
 	}
 
 	private LinkedList<Data> getReplaceStatement(LinkedList<Data> line) {
-		LinkedList<Data> replace = new LinkedList<Data>();
+		LinkedList<Data> replace = new LinkedList<>();
 
 		while (true) {
 			// Do we need to read another line ?
@@ -203,7 +203,7 @@ public class Replace extends ChainingSource
 	}
 
 	private LinkedList<Data> getPseudoLiteral(LinkedList<Data> line) {
-		LinkedList<Data> pseudoLiteral = new LinkedList<Data>();
+		LinkedList<Data> pseudoLiteral = new LinkedList<>();
 
 		pseudoLiteral.add(line.removeFirst());
 		pseudoLiteral.add(line.removeFirst());

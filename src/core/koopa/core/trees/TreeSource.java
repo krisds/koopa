@@ -32,6 +32,7 @@ public class TreeSource extends BasicSource implements Source {
 			return child;
 	}
 
+	@Override
 	public void close() {
 		next = tree.getChildCount();
 	}

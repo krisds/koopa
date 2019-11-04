@@ -86,12 +86,10 @@ public class ApplicationSupport {
 		final int[] returnVal = new int[] { -1 };
 
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				public void run() {
-					returnVal[0] = openFile ? chooser.showOpenDialog(parent)
-							: chooser.showSaveDialog(parent);
-				}
-			});
+			SwingUtilities.invokeAndWait( //
+					() -> returnVal[0] = openFile ? //
+					chooser.showOpenDialog(parent) //
+							: chooser.showSaveDialog(parent));
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -202,7 +200,7 @@ public class ApplicationSupport {
 		String customColumnKeys = properties.getProperty(
 				PROPERTY_CUSTOM_COLUMNS, "");
 		if (customColumnKeys.length() == 0)
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		return Arrays.asList(customColumnKeys.trim().split("\\s*[,;|]\\s*"));
 	}
 

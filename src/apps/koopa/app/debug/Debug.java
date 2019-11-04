@@ -15,7 +15,6 @@ import koopa.app.Textual;
 import koopa.app.components.progress.ProgressDialog;
 import koopa.app.debug.log.ParseLog;
 import koopa.app.debug.log.ParseLogAppender;
-import koopa.app.debug.log.ParseLogTable;
 import koopa.app.debug.log.ParseLogWindow;
 
 public class Debug extends JPanel implements HoldingCobolParserFactory, Textual {
@@ -47,6 +46,7 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 		add(view);
 	}
 
+	@Override
 	public CobolParserFactory getCobolParserFactory() {
 		return factory;
 	}
@@ -66,18 +66,16 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 		final ProgressDialog progress = new ProgressDialog(
 				application.getFrame(), "Recording parse...");
 		progress.setVisible(true);
-		new Thread(new Runnable() {
-			public void run() {
-				while (parsing) {
-					try {
-						progress.setMessage(
-								"Captured " + log.size() + " events sofar...");
-						Thread.sleep(250);
-					} catch (InterruptedException e) {
-					}
-					progress.setMessage("Captured " + log.size() + " events.");
-					progress.setDone();
+		new Thread(() -> {
+			while (parsing) {
+				try {
+					progress.setMessage("Captured " + log.size()
+							+ " events sofar...");
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
 				}
+				progress.setMessage("Captured " + log.size() + " events.");
+				progress.setDone();
 			}
 		}).start();
 
@@ -87,13 +85,10 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 
 		if (parseLogWindow == null) {
 			parseLogWindow = new ParseLogWindow(code.getFile().getPath());
-			parseLogWindow.getTable().addSelectionListener(
-					new ParseLogTable.SelectionListener() {
-						public void selectionChanged(int index) {
-							final ParseLog log = parseLogWindow.getParseLog();
-							code.moveToEvent(index, log);
-						}
-					});
+			parseLogWindow.getTable().addSelectionListener(index -> {
+				final ParseLog log1 = parseLogWindow.getParseLog();
+				code.moveToEvent(index, log1);
+			});
 		}
 
 		parseLogWindow.setParseLog(log);
@@ -107,14 +102,17 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 		return parsing;
 	}
 
+	@Override
 	public boolean find(String pattern) {
 		return view.find(pattern);
 	}
 
+	@Override
 	public int getAdjustedLineCount() {
 		return view.getAdjustedLineCount();
 	}
 
+	@Override
 	public void scrollToLine(int line) {
 		view.scrollToLine(line);
 	}

@@ -61,7 +61,7 @@ public class GrammarTestSuiteRunner extends Suite {
 	private static List<Runner> getRunners(Class<?> clazz)
 			throws InitializationError {
 		try {
-			final List<Runner> runners = new ArrayList<Runner>();
+			final List<Runner> runners = new ArrayList<>();
 
 			final GrammarTestSuite provider = (GrammarTestSuite) clazz
 					.newInstance();

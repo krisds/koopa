@@ -10,10 +10,12 @@ public class ParseLogAppender extends AppenderSkeleton {
 		this.log = log;
 	}
 
+	@Override
 	public boolean requiresLayout() {
 		return false;
 	}
 
+	@Override
 	public void close() {
 	}
 

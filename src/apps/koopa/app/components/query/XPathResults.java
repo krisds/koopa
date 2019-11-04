@@ -31,10 +31,12 @@ public class XPathResults extends AbstractTableModel {
 	private List<XPathResultType> types = null;
 	private List<Token> startTokens = null;
 
+	@Override
 	public int getColumnCount() {
 		return 5;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case TYPE_COLUMN:
@@ -57,10 +59,12 @@ public class XPathResults extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public int getRowCount() {
 		return results == null ? 0 : results.size();
 	}
 
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case TYPE_COLUMN:
@@ -95,8 +99,8 @@ public class XPathResults extends AbstractTableModel {
 		if (results == null)
 			results = EMPTY_LIST;
 
-		types = new ArrayList<XPathResultType>(results.size());
-		startTokens = new ArrayList<Token>(results.size());
+		types = new ArrayList<>(results.size());
+		startTokens = new ArrayList<>(results.size());
 
 		for (Object value : results) {
 			if (value instanceof Tree) {

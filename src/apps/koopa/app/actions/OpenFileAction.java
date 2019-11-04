@@ -30,15 +30,14 @@ public class OpenFileAction extends AbstractAction implements Action {
 		this.parent = parent;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				File file = ApplicationSupport.askUserForFile(true,
-						"last-folder", filter, parent);
+		new Thread(() -> {
+			File file = ApplicationSupport.askUserForFile(true, "last-folder",
+					filter, parent);
 
-				if (file != null) {
-					application.openFile(file);
-				}
+			if (file != null) {
+				application.openFile(file);
 			}
 		}).start();
 	}

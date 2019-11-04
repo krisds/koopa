@@ -32,6 +32,7 @@ public class ExportBatchResultsToCSVAction extends AbstractAction implements
 		this.parent = parent;
 
 		this.filter = new FileFilter() {
+			@Override
 			public boolean accept(File f) {
 				if (!f.isFile())
 					return false;
@@ -39,36 +40,35 @@ public class ExportBatchResultsToCSVAction extends AbstractAction implements
 				return name.endsWith(".CSV");
 			}
 
+			@Override
 			public String getDescription() {
 				return "CSV file (*.csv)";
 			}
 		};
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				final BatchResults batchResults = batchResultsGetter.getIt();
-				File file = ApplicationSupport.askUserForFile(false,
-						"last-folder", filter, parent);
+		new Thread(() -> {
+			final BatchResults batchResults = batchResultsGetter.getIt();
+			File file = ApplicationSupport.askUserForFile(false, "last-folder",
+					filter, parent);
 
-				if (file == null) {
-					return;
-				}
-
-				try {
-					exportBatchResultsToCSV(batchResults, file);
-					JOptionPane.showMessageDialog(parent,
-							"Batch results have been exported.", "Export",
-							JOptionPane.INFORMATION_MESSAGE);
-
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(parent, "Export failed.\n"
-							+ e.getMessage(), "Input/Output problem",
-							JOptionPane.ERROR_MESSAGE);
-				}
+			if (file == null) {
+				return;
 			}
 
+			try {
+				exportBatchResultsToCSV(batchResults, file);
+				JOptionPane.showMessageDialog(parent,
+						"Batch results have been exported.", "Export",
+						JOptionPane.INFORMATION_MESSAGE);
+
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(parent,
+						"Export failed.\n" + e.getMessage(),
+						"Input/Output problem", JOptionPane.ERROR_MESSAGE);
+			}
 		}).start();
 	}
 

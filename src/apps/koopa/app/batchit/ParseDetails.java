@@ -29,10 +29,12 @@ public class ParseDetails extends AbstractTableModel {
 	final static ImageIcon WARNING = Icons
 			.getIcon("/koopa/app/resources/splashy/warning_triangle.png");
 
+	@Override
 	public int getColumnCount() {
 		return 6;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN:
@@ -58,6 +60,7 @@ public class ParseDetails extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public int getRowCount() {
 		if (parseResults == null)
 			return 0;
@@ -66,6 +69,7 @@ public class ParseDetails extends AbstractTableModel {
 		return messages.getErrorCount() + messages.getWarningCount();
 	}
 
+	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN:
@@ -76,6 +80,7 @@ public class ParseDetails extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		final Token token = getDetails(rowIndex).getFirst();
 		switch (columnIndex) {

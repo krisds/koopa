@@ -56,7 +56,7 @@ public class ParseIncludedGrammarsTest {
 
 		private static List<Runner> getRunners(Class<?> clazz)
 				throws InitializationError {
-			final List<Runner> runners = new ArrayList<Runner>();
+			final List<Runner> runners = new ArrayList<>();
 
 			final List<File> sources = getKGFiles();
 

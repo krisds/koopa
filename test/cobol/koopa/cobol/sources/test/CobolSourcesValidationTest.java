@@ -39,8 +39,7 @@ import koopa.core.util.test.Files;
 @RunWith(Files.class)
 public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
-	private static final HashMap<String, Class<? extends Source>> CLASSES //
-			= new HashMap<String, Class<? extends Source>>();
+	private static final HashMap<String, Class<? extends Source>> CLASSES = new HashMap<>();
 	static {
 		CLASSES.put("LineSplitter", LineSplitter.class);
 		CLASSES.put("SourceFormatDirectives", CompilerDirectives.class);
@@ -75,8 +74,8 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		project.setDefaultFormat(FIXED);
 		project.setDefaultPreprocessing(true);
 
-		final Source source = CobolTokens.getNewSource(file, sample.getReader(),
-				project);
+		final Source source = CobolTokens.getNewSource(file,
+				sample.getReader(), project);
 
 		final Source selectedSource;
 		if (clazz == null)
@@ -89,6 +88,7 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		return selectedSource;
 	}
 
+	@Override
 	@Before
 	public void initialize() {
 		super.initialize();

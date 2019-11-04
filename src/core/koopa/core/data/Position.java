@@ -58,6 +58,7 @@ public final class Position implements Comparable<Position> {
 				positionInLine + offset);
 	}
 
+	@Override
 	public String toString() {
 		return toStringPrefix + ":" +  linenumber + ":" + positionInLine;
 	}
@@ -79,6 +80,7 @@ public final class Position implements Comparable<Position> {
 		return positionInFile == other.positionInFile;
 	}
 
+	@Override
 	public int compareTo(Position other) {
 		return positionInFile - other.positionInFile;
 	}

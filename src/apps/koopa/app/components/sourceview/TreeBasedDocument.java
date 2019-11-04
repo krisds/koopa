@@ -23,9 +23,9 @@ public class TreeBasedDocument extends DefaultStyledDocument
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Integer> offsetsForLines = new ArrayList<Integer>();
-	private Map<Token, Integer> offsetsForTokens = new HashMap<Token, Integer>();
-	private Map<Integer, Token> tokensForOffsets = new HashMap<Integer, Token>();
+	private List<Integer> offsetsForLines = new ArrayList<>();
+	private Map<Token, Integer> offsetsForTokens = new HashMap<>();
+	private Map<Integer, Token> tokensForOffsets = new HashMap<>();
 
 	public void setContents(Tree tree) {
 		setContents(tree, null);

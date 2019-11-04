@@ -96,7 +96,7 @@ public abstract class ReplacingPhrase {
 
 					seen.add(t);
 					if (textWord == null) {
-						textWord = new LinkedList<Token>();
+						textWord = new LinkedList<>();
 					}
 
 					//Check if we are looking at a dummy operand
@@ -124,7 +124,7 @@ public abstract class ReplacingPhrase {
 				seen.add(t);
 
 				if (textWord == null)
-					textWord = new LinkedList<Token>();
+					textWord = new LinkedList<>();
 
 				textWord.add(t);
 			}

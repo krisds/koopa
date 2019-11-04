@@ -31,6 +31,7 @@ public class SourceDetails extends JPanel implements TokenSelectionListener {
 		add(scroll);
 	}
 
+	@Override
 	public void selectedToken(Token token) {
 		StringBuilder msg = new StringBuilder();
 

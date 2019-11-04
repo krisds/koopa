@@ -23,14 +23,13 @@ public class FindAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				final String input = (String) JOptionPane.showInputDialog(
-						application.getFrame(), "Pattern...", lastSearch);
+		new Thread(() -> {
+			final String input = JOptionPane.showInputDialog(
+					application.getFrame(), "Pattern...", lastSearch);
 
-				search(input);
-			}
+			search(input);
 		}).start();
 	}
 
@@ -60,9 +59,12 @@ public class FindAction extends AbstractAction implements Action {
 						JOptionPane.ERROR_MESSAGE);
 
 		} catch (PatternSyntaxException e) {
-			JOptionPane.showMessageDialog(application.getFrame(),
-					"Syntax error in pattern at position " + e.getIndex() + ".",
-					"Not found", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showMessageDialog(
+							application.getFrame(),
+							"Syntax error in pattern at position "
+									+ e.getIndex() + ".", "Not found",
+							JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

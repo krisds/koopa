@@ -204,8 +204,8 @@ public class CobolParser {
 			// Have we found more program text ?
 			if (!sawMoreProgramText //
 					&& d instanceof Token //
-					&& grammar.isProgramText((Token) d) //
-					&& !grammar.canBeSkipped((Token) d, null))
+					&& grammar.isProgramText(d) //
+					&& !grammar.canBeSkipped(d, null))
 				sawMoreProgramText = true;
 
 			// Stop after we found program text, unless we're tracking all

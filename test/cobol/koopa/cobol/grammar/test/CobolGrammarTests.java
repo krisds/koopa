@@ -21,15 +21,18 @@ public class CobolGrammarTests extends GrammarTestSuite {
 		project.setDefaultFormat(SourceFormat.FREE);
 	}
 
+	@Override
 	public File[] getStageFiles() {
 		return new File("test/cobol/koopa/cobol/grammar/test/")
 				.listFiles(StageUtil.getFilenameFilter());
 	}
 
+	@Override
 	public Grammar getGrammar() {
 		return project.getGrammar();
 	}
 
+	@Override
 	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 		return CobolTokens.getNewSource(reader, project);

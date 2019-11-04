@@ -46,7 +46,7 @@ public class Balancing extends UnaryParserDecorator {
 		assert (pairs.length % 2 == 0);
 
 		// TODO Closure the pairs, if needed.
-		this.pairs = new Pair[(int) (pairs.length / 2)];
+		this.pairs = new Pair[pairs.length / 2];
 		for (int i = 0; i < this.pairs.length; i++)
 			this.pairs[i] = new Pair(pairs[2 * i], pairs[2 * i + 1]);
 	}
@@ -118,9 +118,9 @@ public class Balancing extends UnaryParserDecorator {
 		 */
 		private final Pair[] closedPairs;
 
-		private final LinkedList<Match> pushed = new LinkedList<Match>();
-		private final LinkedList<Match> popped = new LinkedList<Match>();
-		private final Stack<Pair> open = new Stack<Pair>();
+		private final LinkedList<Match> pushed = new LinkedList<>();
+		private final LinkedList<Match> popped = new LinkedList<>();
+		private final Stack<Pair> open = new Stack<>();
 
 		public Balancer(ParserCombinator parser, Parse parse) {
 			super(parser);
@@ -172,6 +172,7 @@ public class Balancing extends UnaryParserDecorator {
 			}
 		}
 
+		@Override
 		public void start(HoldingTarget holdingTarget, Token last) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace()
@@ -197,6 +198,7 @@ public class Balancing extends UnaryParserDecorator {
 				parse.getTrace().silence(false);
 		}
 
+		@Override
 		public void pushed(HoldingTarget holdingTarget, Token token) {
 			if (!locationInProgramTextChanged(token))
 				return;
@@ -231,6 +233,7 @@ public class Balancing extends UnaryParserDecorator {
 				parse.getTrace().silence(false);
 		}
 
+		@Override
 		public void popping(HoldingTarget holdingTarget, Token last) {
 			if (!locationInProgramTextChanged(last))
 				return;

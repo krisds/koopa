@@ -38,7 +38,7 @@ public class MarkdownView extends JPanel {
 
 	private JScrollPane scroll = null;
 
-	private List<Integer> lineOffsets = new ArrayList<Integer>();
+	private List<Integer> lineOffsets = new ArrayList<>();
 
 	public MarkdownView(String resourcePath) {
 		setupComponents();

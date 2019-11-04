@@ -49,7 +49,7 @@ public class FutureParser extends ParserCombinator {
 
 	private Set<String> getAllKeywordsInScope() {
 		if (allKeywords == null) {
-			allKeywords = new HashSet<String>();
+			allKeywords = new HashSet<>();
 			parser.addAllKeywordsInScopeTo(allKeywords);
 		}
 

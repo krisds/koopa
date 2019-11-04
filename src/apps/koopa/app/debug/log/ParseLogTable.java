@@ -7,8 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -19,7 +17,7 @@ public class ParseLogTable extends JXTable {
 	private static final long serialVersionUID = 1L;
 
 	private ParseLogTableModel model;
-	private Set<SelectionListener> listeners = new LinkedHashSet<SelectionListener>();
+	private Set<SelectionListener> listeners = new LinkedHashSet<>();
 
 	public ParseLogTable(ParseLogTableModel model) {
 		this.model = model;
@@ -37,18 +35,16 @@ public class ParseLogTable extends JXTable {
 		getColumnModel().getColumn(MESSAGE_COLUMN).setPreferredWidth(950);
 
 		getSelectionModel()
-				.addListSelectionListener(new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
-						if (e.getValueIsAdjusting())
-							return;
+				.addListSelectionListener(e -> {
+					if (e.getValueIsAdjusting())
+						return;
 
-						int row = getSelectedRow();
-						if (row < 0)
-							return;
+					int row = getSelectedRow();
+					if (row < 0)
+						return;
 
-						for (SelectionListener listener : listeners)
-							listener.selectionChanged(row);
-					}
+					for (SelectionListener listener : listeners)
+						listener.selectionChanged(row);
 				});
 	}
 

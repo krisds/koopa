@@ -15,6 +15,7 @@ public class ReplaceNone extends ReplacingPhrase {
 		super(null, null);
 	}
 
+	@Override
 	public boolean appliedTo(Source source, LinkedList<Data> newTokens) {
 		return false;
 	}

@@ -56,7 +56,7 @@ public class Sample {
 			fileReader = new FileReader(file);
 
 			final Source source = new LineSplitter(fileReader);
-			final List<Block> blocks = new ArrayList<Block>();
+			final List<Block> blocks = new ArrayList<>();
 
 			while (true) {
 				final Block block = Block.nextFrom(blocks.size() + 1, source);
@@ -88,7 +88,7 @@ public class Sample {
 
 	private static List<Range> getRangesFrom(List<Block> blocks) {
 
-		final List<Range> ranges = new ArrayList<Range>();
+		final List<Range> ranges = new ArrayList<>();
 		Range incompleteRange = null;
 
 		for (Block block : blocks) {
@@ -129,7 +129,7 @@ public class Sample {
 	}
 
 	private static List<Annotation> getAnnotationFrom(List<Block> blocks) {
-		final List<Annotation> annotations = new ArrayList<Annotation>();
+		final List<Annotation> annotations = new ArrayList<>();
 
 		for (Block block : blocks)
 			if (block.hasAnnotations())
@@ -141,7 +141,7 @@ public class Sample {
 	}
 
 	private static List<Annotation> emptyAnnotations(int size) {
-		List<Annotation> l = new ArrayList<Annotation>(size);
+		List<Annotation> l = new ArrayList<>(size);
 		for (int i = 0; i < size; i++)
 			l.add(null);
 		return l;

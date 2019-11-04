@@ -25,13 +25,13 @@ public class Replacing extends ChainingSource
 	 * The list of all active {@linkplain ReplacingPhrase}s. It is sorted in
 	 * order of precedence, with the highest precedence appearing first.
 	 */
-	private LinkedList<List<ReplacingPhrase>> replacements = new LinkedList<List<ReplacingPhrase>>();
+	private LinkedList<List<ReplacingPhrase>> replacements = new LinkedList<>();
 
 	/**
 	 * This is a list of {@link Token}s which have been substituted in for a
 	 * match.
 	 */
-	private LinkedList<Data> replacementTokens = new LinkedList<Data>();
+	private LinkedList<Data> replacementTokens = new LinkedList<>();
 
 	public Replacing(Source source) {
 		super(source);

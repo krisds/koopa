@@ -44,9 +44,9 @@ public class ContinuationOfLines extends ChainingSource
 		HANDLED
 	};
 
-	private final LinkedList<Data> pending = new LinkedList<Data>();
+	private final LinkedList<Data> pending = new LinkedList<>();
 
-	private final LinkedList<LinkedList<Data>> pendingLines = new LinkedList<LinkedList<Data>>();
+	private final LinkedList<LinkedList<Data>> pendingLines = new LinkedList<>();
 
 	public ContinuationOfLines(Source source) {
 		super(source);
@@ -142,7 +142,7 @@ public class ContinuationOfLines extends ChainingSource
 	private LinkedList<Data> handleIncompleteToken(
 			LinkedList<Data> continuedLine, LinkedList<Data> continuingLine) {
 
-		final LinkedList<Data> logicalLine = new LinkedList<Data>();
+		final LinkedList<Data> logicalLine = new LinkedList<>();
 
 		final Token incomplete = shiftToIncompleteToken(continuedLine,
 				logicalLine);
@@ -175,7 +175,7 @@ public class ContinuationOfLines extends ChainingSource
 		// The continuation starts with the character immediately after the
 		// quotation symbol in the continuation line."
 
-		final LinkedList<Data> skipped = new LinkedList<Data>();
+		final LinkedList<Data> skipped = new LinkedList<>();
 		final Token firstNonBlank = shiftToFirstNonBlank(continuingLine,
 				skipped);
 
@@ -266,7 +266,7 @@ public class ContinuationOfLines extends ChainingSource
 		// We know the indicator is already there, so we can cross that of
 		// the list. Next is to find the first non-blank character.
 
-		final LinkedList<Data> skipped = new LinkedList<Data>();
+		final LinkedList<Data> skipped = new LinkedList<>();
 		final Token continuation = shiftToFirstNonBlank(continuingLine,
 				skipped);
 
@@ -397,7 +397,7 @@ public class ContinuationOfLines extends ChainingSource
 	private LinkedList<Data> handleBasicNonBlankContinuation(
 			LinkedList<Data> continuedLine, LinkedList<Data> continuingLine) {
 
-		final LinkedList<Data> skipped = new LinkedList<Data>();
+		final LinkedList<Data> skipped = new LinkedList<>();
 		final Token lastNonBlank = unshiftToLastNonBlank(continuedLine,
 				skipped);
 		final Token firstNonBlank = shiftToFirstNonBlank(continuingLine,
@@ -407,7 +407,7 @@ public class ContinuationOfLines extends ChainingSource
 			LOGGER.trace(
 					"Continuing " + lastNonBlank + " with " + firstNonBlank);
 
-		final LinkedList<Data> fullLine = new LinkedList<Data>();
+		final LinkedList<Data> fullLine = new LinkedList<>();
 		fullLine.addAll(continuedLine);
 		fullLine.add(lastNonBlank);
 		shiftAllAndSkip(skipped, fullLine);
@@ -420,7 +420,7 @@ public class ContinuationOfLines extends ChainingSource
 	private LinkedList<Data> handleClosedLiteralContinuation(
 			LinkedList<Data> continuedLine, LinkedList<Data> continuingLine) {
 
-		final LinkedList<Data> endOfContinuedLine = new LinkedList<Data>();
+		final LinkedList<Data> endOfContinuedLine = new LinkedList<>();
 		final Token closedLiteral = unshiftToLastProgramTextOtherThenEOLN(
 				continuedLine, endOfContinuedLine);
 
@@ -439,7 +439,7 @@ public class ContinuationOfLines extends ChainingSource
 		// I may get back to this at some point if it proves to be causing
 		// problems.
 
-		final LinkedList<Data> startOfContinuingLine = new LinkedList<Data>();
+		final LinkedList<Data> startOfContinuingLine = new LinkedList<>();
 		final Token firstNonBlank = shiftToFirstNonBlank(continuingLine,
 				startOfContinuingLine);
 
@@ -483,7 +483,7 @@ public class ContinuationOfLines extends ChainingSource
 		final Token secondQuote = Tokens.subtoken(firstNonBlank, 1)
 				.withoutTags(PROGRAM_TEXT_AREA);
 
-		final LinkedList<Data> endOfContinuingLine = new LinkedList<Data>();
+		final LinkedList<Data> endOfContinuingLine = new LinkedList<>();
 
 		final Token lastText = unshiftToLastProgramTextOtherThenEOLN(
 				continuingLine, endOfContinuingLine);
@@ -499,7 +499,7 @@ public class ContinuationOfLines extends ChainingSource
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Retokenizing: " + continuingProgramText);
 
-		final LinkedList<Token> continuingTokens = new LinkedList<Token>();
+		final LinkedList<Token> continuingTokens = new LinkedList<>();
 		continuingTokens.addAll( //
 				TokenSeparationLogic.apply(continuingProgramText));
 
@@ -523,7 +523,7 @@ public class ContinuationOfLines extends ChainingSource
 	}
 
 	private LinkedList<Token> tokens(LinkedList<Data> data) {
-		final LinkedList<Token> tokens = new LinkedList<Token>();
+		final LinkedList<Token> tokens = new LinkedList<>();
 
 		for (Data d : data)
 			if (d instanceof Token)
@@ -747,7 +747,7 @@ public class ContinuationOfLines extends ChainingSource
 	 * {@linkplain StatusOfIndicator#HANDLED}.
 	 */
 	private void markFixedIndicatorAsHandled(LinkedList<Data> line) {
-		LinkedList<Data> tmp = new LinkedList<Data>();
+		LinkedList<Data> tmp = new LinkedList<>();
 
 		while (!line.isEmpty()) {
 			final Data d = line.removeFirst();

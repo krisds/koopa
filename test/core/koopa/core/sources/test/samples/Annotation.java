@@ -5,8 +5,8 @@ import java.util.Set;
 
 class Annotation {
 
-	private final Set<String> required = new LinkedHashSet<String>();
-	private final Set<String> forbidden = new LinkedHashSet<String>();
+	private final Set<String> required = new LinkedHashSet<>();
+	private final Set<String> forbidden = new LinkedHashSet<>();
 
 	public Annotation() {
 	}

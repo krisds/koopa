@@ -17,7 +17,7 @@ public class AttributeAxisIterator implements Iterator<TreeAttribute> {
 	private int index = 0;
 
 	public AttributeAxisIterator(Tree tree) {
-		this.attributes = new ArrayList<TreeAttribute>();
+		this.attributes = new ArrayList<>();
 
 		this.attributes
 				.add(new TreeAttribute(tree, "line", "" + tree.getLine()));
@@ -41,14 +41,17 @@ public class AttributeAxisIterator implements Iterator<TreeAttribute> {
 		}
 	}
 
+	@Override
 	public boolean hasNext() {
 		return this.index < this.attributes.size();
 	}
 
+	@Override
 	public TreeAttribute next() {
 		return this.attributes.get(this.index++);
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

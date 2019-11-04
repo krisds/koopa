@@ -77,12 +77,12 @@ public class Token implements Data {
 
 		this.text = text;
 
-		final List<Range> ranges = new ArrayList<Range>(1);
+		final List<Range> ranges = new ArrayList<>(1);
 		ranges.add(new Range(start, end));
 
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections
-				.unmodifiableSet(new HashSet<Object>(Arrays.asList(tags)));
+				.unmodifiableSet(new HashSet<>(Arrays.asList(tags)));
 
 		this.replaced = null;
 	}
@@ -98,7 +98,7 @@ public class Token implements Data {
 
 		this.text = text;
 
-		final List<Range> rangesCopy = new ArrayList<Range>();
+		final List<Range> rangesCopy = new ArrayList<>();
 		rangesCopy.addAll(ranges);
 
 		this.ranges = Collections.unmodifiableList(rangesCopy);
@@ -131,7 +131,7 @@ public class Token implements Data {
 
 		this.text = buffer.toString();
 
-		final List<Range> ranges = new ArrayList<Range>();
+		final List<Range> ranges = new ArrayList<>();
 		for (Token token : tokens)
 			ranges.addAll(token.ranges);
 
@@ -139,7 +139,7 @@ public class Token implements Data {
 
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections
-				.unmodifiableSet(new HashSet<Object>(Arrays.asList(tags)));
+				.unmodifiableSet(new HashSet<>(Arrays.asList(tags)));
 
 		this.replaced = null;
 	}
@@ -228,7 +228,7 @@ public class Token implements Data {
 		if (hasTags(additionalTags))
 			return this;
 
-		Set<Object> newTags = new HashSet<Object>(tags);
+		Set<Object> newTags = new HashSet<>(tags);
 		newTags.addAll(Arrays.asList(additionalTags));
 		return new Token(text, ranges, newTags, replaced);
 	}
@@ -245,7 +245,7 @@ public class Token implements Data {
 		if (!hasAnyTag(theseTags))
 			return this;
 
-		Set<Object> newTags = new HashSet<Object>(tags);
+		Set<Object> newTags = new HashSet<>(tags);
 		newTags.removeAll(Arrays.asList(theseTags));
 		return new Token(text, ranges, newTags, replaced);
 	}
@@ -255,7 +255,7 @@ public class Token implements Data {
 	 * present), and with the addition of the other.
 	 */
 	public Token replacingTag(Object oldTag, Object newTag) {
-		Set<Object> newTags = new HashSet<Object>(tags);
+		Set<Object> newTags = new HashSet<>(tags);
 		newTags.remove(oldTag);
 		newTags.add(newTag);
 		return new Token(text, ranges, newTags, replaced);

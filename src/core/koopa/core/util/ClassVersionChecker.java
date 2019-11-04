@@ -12,10 +12,10 @@ import java.util.Map;
  * that was causing problems...
  * <p>
  * So with this I can now double check easily what version of Java the compiled
- * result is targetted at.
+ * result is targeted at.
  */
 public class ClassVersionChecker {
-	public static final Map<String, String> JAVA_VERSIONS = new HashMap<String, String>();
+	public static final Map<String, String> JAVA_VERSIONS = new HashMap<>();
 
 	static {
 		JAVA_VERSIONS.put("45.3", "1.0");

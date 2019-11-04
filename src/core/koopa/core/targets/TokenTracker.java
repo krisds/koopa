@@ -9,13 +9,15 @@ import koopa.core.data.Token;
 
 public class TokenTracker implements Target {
 
-	private final List<Token> tokens = new ArrayList<Token>();
+	private final List<Token> tokens = new ArrayList<>();
 
+	@Override
 	public void push(Data data) {
 		if (data instanceof Token)
 			tokens.add((Token) data);
 	}
 
+	@Override
 	public void done() {
 	}
 
@@ -71,7 +73,7 @@ public class TokenTracker implements Target {
 	}
 
 	public List<Token> getTokensAfter(Token last) {
-		final List<Token> additionalTokens = new LinkedList<Token>();
+		final List<Token> additionalTokens = new LinkedList<>();
 
 		boolean foundLast = false;
 		for (Token token : tokens) {

@@ -61,6 +61,7 @@ public class TokenDetails extends JPanel implements TokenSelectionListener {
 		rules.setParseTree(tree);
 	}
 
+	@Override
 	public void selectedToken(Token token) {
 		rules.selectedToken(token);
 		tags.selectedToken(token);
@@ -72,7 +73,7 @@ public class TokenDetails extends JPanel implements TokenSelectionListener {
 		StringBuffer hex = new StringBuffer();
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
-			String hexString = Integer.toHexString((int) c);
+			String hexString = Integer.toHexString(c);
 
 			if (hex.length() > 0)
 				hex.append(' ');

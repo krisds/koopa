@@ -22,6 +22,7 @@ public class SetSourceFormatAction extends AbstractAction implements Action {
 		this.format = format;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
 		application.getCobolParserFactory().getProject().setDefaultFormat(format);
 	}

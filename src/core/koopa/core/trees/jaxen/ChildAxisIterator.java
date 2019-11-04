@@ -19,6 +19,7 @@ public class ChildAxisIterator implements Iterator<Tree> {
 		this.count = (parent != null) ? parent.getChildCount() : -1;
 	}
 
+	@Override
 	public boolean hasNext() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("ChildAxisIterator(" + parent + ").hasNext()");
@@ -31,6 +32,7 @@ public class ChildAxisIterator implements Iterator<Tree> {
 		return hasNext;
 	}
 
+	@Override
 	public Tree next() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("ChildAxisIterator(" + parent + ").next()");
@@ -43,6 +45,7 @@ public class ChildAxisIterator implements Iterator<Tree> {
 		return next;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

@@ -17,11 +17,8 @@ public class ShowGrammarAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				application.showGrammarRules();
-			}
-		}).start();
+		new Thread(() -> application.showGrammarRules()).start();
 	}
 }

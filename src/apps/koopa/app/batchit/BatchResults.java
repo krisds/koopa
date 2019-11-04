@@ -36,11 +36,11 @@ public class BatchResults extends AbstractTableModel {
 
 	private static List<String> customKeys;
 
-	private List<File> files = new ArrayList<File>();
-	private List<ParseResults> parseResults = new ArrayList<ParseResults>();
-	private List<Integer> tokenCount = new ArrayList<Integer>();
-	private List<Float> coverage = new ArrayList<Float>();
-	private HashMap<String, ArrayList<Object>> custom = new HashMap<String, ArrayList<Object>>();
+	private List<File> files = new ArrayList<>();
+	private List<ParseResults> parseResults = new ArrayList<>();
+	private List<Integer> tokenCount = new ArrayList<>();
+	private List<Float> coverage = new ArrayList<>();
+	private HashMap<String, ArrayList<Object>> custom = new HashMap<>();
 
 	public enum Status {
 		OK, WARNING, ERROR
@@ -53,13 +53,15 @@ public class BatchResults extends AbstractTableModel {
 
 		// Create value lists:
 		for (String key : customKeys)
-			custom.put(key, new ArrayList<Object>());
+			custom.put(key, new ArrayList<>());
 	}
 
+	@Override
 	public int getColumnCount() {
 		return CUSTOM_COLUMNS + customKeys.size();
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN:
@@ -108,10 +110,12 @@ public class BatchResults extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public int getRowCount() {
 		return files.size();
 	}
 
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case STATUS_COLUMN: {

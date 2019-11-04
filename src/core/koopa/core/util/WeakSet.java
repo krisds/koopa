@@ -9,7 +9,7 @@ import java.util.WeakHashMap;
  */
 public class WeakSet<T> {
 
-	private final WeakHashMap<T, WeakSet<T>> memoized = new WeakHashMap<T, WeakSet<T>>();
+	private final WeakHashMap<T, WeakSet<T>> memoized = new WeakHashMap<>();
 
 	public boolean has(T token) {
 		return memoized.containsKey(token);

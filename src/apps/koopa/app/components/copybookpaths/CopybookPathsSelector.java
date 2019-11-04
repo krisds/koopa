@@ -15,8 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import koopa.app.Application;
 import koopa.app.ApplicationSupport;
@@ -95,53 +93,53 @@ public class CopybookPathsSelector extends JDialog {
 			final JList pathsList, JButton addCopybookPathButton,
 			final JButton removeCopybookPathButton, JButton okButton) {
 
-		addCopybookPathButton
-				.setAction(new AbstractAction("Add Copybook Path...") {
-					private static final long serialVersionUID = 1L;
+		addCopybookPathButton.setAction(new AbstractAction(
+				"Add Copybook Path...") {
+			private static final long serialVersionUID = 1L;
 
-					public void actionPerformed(ActionEvent e) {
-						File path = ApplicationSupport.askUserForFolder(
-								"last-folder", CopybookPathsSelector.this);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File path = ApplicationSupport.askUserForFolder("last-folder",
+						CopybookPathsSelector.this);
 
-						if (path == null)
-							return;
+				if (path == null)
+					return;
 
-						configurablePaths.addCopybookPath(path);
-						model.addElement(path);
-					}
-				});
+				configurablePaths.addCopybookPath(path);
+				model.addElement(path);
+			}
+		});
 
-		removeCopybookPathButton
-				.setAction(new AbstractAction("Remove selected paths") {
-					private static final long serialVersionUID = 1L;
+		removeCopybookPathButton.setAction(new AbstractAction(
+				"Remove selected paths") {
+			private static final long serialVersionUID = 1L;
 
-					public void actionPerformed(ActionEvent e) {
-						int[] selectedIndices = pathsList.getSelectedIndices();
-						for (int i = selectedIndices.length - 1; i >= 0; i--) {
-							configurablePaths.removeCopybookPath(
-									(File) model.get(selectedIndices[i]));
-							model.removeElementAt(selectedIndices[i]);
-						}
-					}
-				});
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int[] selectedIndices = pathsList.getSelectedIndices();
+				for (int i = selectedIndices.length - 1; i >= 0; i--) {
+					configurablePaths.removeCopybookPath((File) model
+							.get(selectedIndices[i]));
+					model.removeElementAt(selectedIndices[i]);
+				}
+			}
+		});
 
 		okButton.setAction(new AbstractAction("Done") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				CopybookPathsSelector.this.setVisible(false);
 			}
 		});
 
 		removeCopybookPathButton.setEnabled(false);
-		pathsList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getValueIsAdjusting())
-					return;
+		pathsList.addListSelectionListener(e -> {
+			if (e.getValueIsAdjusting())
+				return;
 
-				removeCopybookPathButton
-						.setEnabled(!pathsList.isSelectionEmpty());
-			}
+			removeCopybookPathButton.setEnabled(!pathsList.isSelectionEmpty());
 		});
 	}
 
@@ -149,6 +147,7 @@ public class CopybookPathsSelector extends JDialog {
 		return new AbstractAction(NAME + " ...") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				final CobolParserFactory factory = application
 						.getCobolParserFactory();

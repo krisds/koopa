@@ -40,7 +40,7 @@ public class Jaxen {
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("Got " + result + " for xpath: " + expr);
 
-				final List<Object> singleton = new ArrayList<Object>(1);
+				final List<Object> singleton = new ArrayList<>(1);
 				singleton.add(result);
 				return singleton;
 			}

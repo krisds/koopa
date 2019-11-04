@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 public class Icons {
 	private static final Logger LOGGER = Logger.getLogger("resources");
 
-	private static Map<String, ImageIcon> icons = new HashMap<String, ImageIcon>();
+	private static Map<String, ImageIcon> icons = new HashMap<>();
 
 	public static synchronized ImageIcon getIcon(String reference) {
 		if (icons.containsKey(reference)) {

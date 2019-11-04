@@ -14,7 +14,7 @@ public final class Replacing {
 	}
 
 	public static List<ReplacingPhrase> allPhrasesFrom(List<Tree> definitions) {
-		final List<ReplacingPhrase> replacingPhrases = new ArrayList<ReplacingPhrase>(definitions.size());
+		final List<ReplacingPhrase> replacingPhrases = new ArrayList<>(definitions.size());
 
 		for (Tree replacement : definitions)
 			replacingPhrases.add(phraseFrom(replacement));

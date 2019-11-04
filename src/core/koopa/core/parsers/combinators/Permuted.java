@@ -28,7 +28,7 @@ public class Permuted extends NAryParserDecorator {
 		if (parse.getTrace().isEnabled())
 			parse.getTrace().indent(SYMBOL + " ?");
 
-		List<ParserCombinator> remaining = new ArrayList<ParserCombinator>();
+		List<ParserCombinator> remaining = new ArrayList<>();
 		for (ParserCombinator parser : parsers)
 			remaining.add(parser);
 

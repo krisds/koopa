@@ -10,10 +10,12 @@ import koopa.core.parsers.Parse;
 
 public abstract class DirectivesBaseGrammar extends KoopaGrammar {
 
+	@Override
 	public String getNamespace() {
 		return "cobol-directives";
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		return false;
 	}

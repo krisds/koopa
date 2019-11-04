@@ -31,7 +31,7 @@ public class Counting extends UnaryParserDecorator {
 	}
 
 	public class Counter extends UnaryParserDecorator {
-		private Map<ParserCombinator, Integer> counts = new HashMap<ParserCombinator, Integer>();
+		private Map<ParserCombinator, Integer> counts = new HashMap<>();
 
 		public Counter(ParserCombinator parser) {
 			super(parser);

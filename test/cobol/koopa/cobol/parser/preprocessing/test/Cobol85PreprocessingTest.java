@@ -17,12 +17,11 @@ public class Cobol85PreprocessingTest extends CobolParsingRegressionTest {
 	public File[] getFiles() {
 		final File folder = new File("testsuite/cobol85");
 
-		final File[] sources = folder.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				name = name.toUpperCase();
-				return name.endsWith(".CBL");
-			}
-		});
+		final File[] sources = folder
+				.listFiles((FilenameFilter) (dir, name) -> {
+					name = name.toUpperCase();
+					return name.endsWith(".CBL");
+				});
 
 		return sources;
 	}

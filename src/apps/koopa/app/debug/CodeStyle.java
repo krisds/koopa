@@ -21,8 +21,6 @@ public class CodeStyle {
 	public static final Color BG_UNPARSED = new Color(233, 239, 242);
 	private static final Color BG_REPLACED = new Color(248, 248, 236);
 	private static final Color FG_COMMENT = new Color(50, 116, 44);
-	private static final Color FG_COMPILER_DIRECTIVE = new Color(255, 136, 0);
-	private static final Color FG_STRING = new Color(98, 40, 110);
 	private static final Color FG_WATER = new Color(6, 71, 128);
 
 	public static AttributeSet forToken(Token token, StyledDocument document) {

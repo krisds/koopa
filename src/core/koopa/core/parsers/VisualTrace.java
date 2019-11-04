@@ -21,7 +21,7 @@ import koopa.core.util.JVM;
  */
 public class VisualTrace extends Trace {
 
-	private Stack<DefaultMutableTreeNode> nodes = new Stack<DefaultMutableTreeNode>();
+	private Stack<DefaultMutableTreeNode> nodes = new Stack<>();
 	private JFrame frame = null;
 
 	private final boolean preventShutdown;

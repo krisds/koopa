@@ -20,6 +20,7 @@ public abstract class TreeBuildingTarget implements Target {
 		this.hideWater = hideWater;
 	}
 
+	@Override
 	public void push(Data data) {
 		if (inWater && data instanceof OnLand) {
 			inWater = false;
@@ -46,6 +47,7 @@ public abstract class TreeBuildingTarget implements Target {
 		}
 	}
 
+	@Override
 	public void done() {
 	}
 

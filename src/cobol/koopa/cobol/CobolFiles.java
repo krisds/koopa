@@ -48,8 +48,8 @@ import org.apache.log4j.Logger;
 public class CobolFiles {
 	private static final Logger LOGGER = Logger.getLogger("cobol.files");
 
-	private static Set<String> SOURCE_EXTENSIONS = new LinkedHashSet<String>();
-	private static Set<String> COPYBOOK_EXTENSIONS = new LinkedHashSet<String>();
+	private static Set<String> SOURCE_EXTENSIONS = new LinkedHashSet<>();
+	private static Set<String> COPYBOOK_EXTENSIONS = new LinkedHashSet<>();
 
 	static {
 		configure();
@@ -171,6 +171,7 @@ public class CobolFiles {
 	public static FileFilter getSwingFileFilter(final boolean filesOnly) {
 
 		return new FileFilter() {
+			@Override
 			public boolean accept(File f) {
 				if (!filesOnly && f.isDirectory())
 					return true;
@@ -178,6 +179,7 @@ public class CobolFiles {
 				return isCobolFile(f);
 			}
 
+			@Override
 			public String getDescription() {
 				return "Cobol file (" + getFullDescription() + ")";
 			}
@@ -189,13 +191,11 @@ public class CobolFiles {
 	}
 
 	public static java.io.FileFilter getFileFilter(final boolean filesOnly) {
-		return new java.io.FileFilter() {
-			public boolean accept(File f) {
-				if (!filesOnly && f.isDirectory())
-					return true;
+		return f -> {
+			if (!filesOnly && f.isDirectory())
+				return true;
 
-				return isCobolFile(f);
-			}
+			return isCobolFile(f);
 		};
 	}
 
@@ -204,13 +204,11 @@ public class CobolFiles {
 	}
 
 	public static FilenameFilter getFilenameFilter(final boolean filesOnly) {
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				if (!filesOnly && dir.isDirectory())
-					return true;
+		return (dir, name) -> {
+			if (!filesOnly && dir.isDirectory())
+				return true;
 
-				return isCobolFileName(name);
-			}
+			return isCobolFileName(name);
 		};
 	}
 
@@ -220,13 +218,11 @@ public class CobolFiles {
 
 	public static FilenameFilter getCopybookFilenameFilter(
 			final boolean filesOnly) {
-		return new FilenameFilter() {
-			public boolean accept(File path, String name) {
-				if (!filesOnly && path.isDirectory())
-					return true;
+		return (path, name) -> {
+			if (!filesOnly && path.isDirectory())
+				return true;
 
-				return isCopybook(name);
-			}
+			return isCopybook(name);
 		};
 	}
 
@@ -267,10 +263,10 @@ public class CobolFiles {
 	}
 
 	public static List<String> getSourceExtensions() {
-		return new ArrayList<String>(SOURCE_EXTENSIONS);
+		return new ArrayList<>(SOURCE_EXTENSIONS);
 	}
 
 	public static List<String> getCopybookExtensions() {
-		return new ArrayList<String>(COPYBOOK_EXTENSIONS);
+		return new ArrayList<>(COPYBOOK_EXTENSIONS);
 	}
 }

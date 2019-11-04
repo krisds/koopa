@@ -35,7 +35,7 @@ public abstract class GrammarTest {
 	}
 
 	protected List<Object> input(Object... taggedWords) {
-		List<Object> r = new ArrayList<Object>(taggedWords.length);
+		List<Object> r = new ArrayList<>(taggedWords.length);
 		r.addAll(Arrays.asList(taggedWords));
 		return r;
 	}

@@ -85,6 +85,7 @@ public class ParserSettingsMenu extends JMenu {
 		AbstractAction enablePreprocessing = new AbstractAction("Enabled") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				application.getCobolParserFactory().getProject()
 						.setDefaultPreprocessing(true);
@@ -94,6 +95,7 @@ public class ParserSettingsMenu extends JMenu {
 		AbstractAction disablePreprocessing = new AbstractAction("Disabled") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				application.getCobolParserFactory().getProject()
 						.setDefaultPreprocessing(false);

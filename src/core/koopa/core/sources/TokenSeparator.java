@@ -22,7 +22,7 @@ import koopa.core.data.tags.AreaTag;
 public class TokenSeparator extends ChainingSource
 		implements Source {
 
-	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
+	private final LinkedList<Token> pendingTokens = new LinkedList<>();
 
 	public TokenSeparator(Source source) {
 		super(source);

@@ -15,12 +15,10 @@ import koopa.app.actions.ExportBatchResultsToCSVAction;
 import koopa.app.actions.OpenFileAction;
 import koopa.app.actions.QuitParsingAction;
 import koopa.app.actions.ReloadFileAction;
-import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ClearResultsAction;
 import koopa.app.components.detail.Detail;
 import koopa.app.components.overview.Overview;
 import koopa.app.debug.Debug;
-import koopa.app.util.Getter;
 import koopa.cobol.CobolFiles;
 
 public class FileMenu extends JMenu {
@@ -76,12 +74,8 @@ public class FileMenu extends JMenu {
 				new ClearResultsAction(application.getOverview()));
 		add(clearResults);
 
-		saveCSV = new JMenuItem(
-				new ExportBatchResultsToCSVAction(new Getter<BatchResults>() {
-					public BatchResults getIt() {
-						return application.getOverview().getResults();
-					}
-				}, this));
+		saveCSV = new JMenuItem(new ExportBatchResultsToCSVAction(
+				() -> application.getOverview().getResults(), this));
 
 		setAccelerators(saveCSV, MODIFIER + " E");
 		add(saveCSV);

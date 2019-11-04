@@ -108,8 +108,8 @@ public class TestResult {
 			new Entry<Integer>("Number of errors", IntValue.class) {
 				@Override
 				public IntValue fromResults(ParseResults results) {
-					return new IntValue(
-							results.getParse().getMessages().getErrorCount());
+					return new IntValue(results.getParse().getMessages()
+							.getErrorCount());
 				}
 
 				@Override
@@ -118,15 +118,15 @@ public class TestResult {
 						return "+ Error count went down from " + previous
 								+ " to " + current + ".";
 					else
-						return "- Error count went up from " + previous + " to "
-								+ current + ".";
+						return "- Error count went up from " + previous
+								+ " to " + current + ".";
 				}
 			}, //
 			new Entry<Integer>("Number of warnings", IntValue.class) {
 				@Override
 				public IntValue fromResults(ParseResults results) {
-					return new IntValue(
-							results.getParse().getMessages().getWarningCount());
+					return new IntValue(results.getParse().getMessages()
+							.getWarningCount());
 				}
 
 				@Override
@@ -177,8 +177,8 @@ public class TestResult {
 			new Entry<Position>("Final position", PositionValue.class) {
 				@Override
 				public PositionValue fromResults(ParseResults results) {
-					return new PositionValue(
-							results.getParse().getFinalPosition());
+					return new PositionValue(results.getParse()
+							.getFinalPosition());
 				}
 
 				@Override
@@ -232,7 +232,7 @@ public class TestResult {
 	}
 
 	public List<String> getComparison(TestResult actual) {
-		final List<String> messages = new ArrayList<String>();
+		final List<String> messages = new ArrayList<>();
 
 		for (int i = 0; i < ENTRIES.length; i++) {
 			@SuppressWarnings("unchecked")
@@ -267,7 +267,7 @@ public class TestResult {
 			}
 
 			String[] columns = null;
-			final Map<String, TestResult> targets = new HashMap<String, TestResult>();
+			final Map<String, TestResult> targets = new HashMap<>();
 
 			// Entries.
 			while ((columns = reader.readNext()) != null) {
@@ -299,16 +299,15 @@ public class TestResult {
 	public static void saveToFile(Map<String, TestResult> results,
 			File targetFile) throws IOException {
 
-		final FileWriter fw = new FileWriter(targetFile);
-		final BufferedWriter bw = new BufferedWriter(fw);
-		final CSVWriter writer = new CSVWriter(bw);
+		try (final FileWriter fw = new FileWriter(targetFile);
+				final BufferedWriter bw = new BufferedWriter(fw);
+				final CSVWriter writer = new CSVWriter(bw);) {
 
-		try {
 			// Write out the header for the CSV.
 			writeResultsHeader(writer);
 
 			Set<String> keys = results.keySet();
-			List<String> sortedKeys = new ArrayList<String>(keys);
+			List<String> sortedKeys = new ArrayList<>(keys);
 			Collections.sort(sortedKeys);
 
 			for (String key : sortedKeys)
@@ -316,10 +315,6 @@ public class TestResult {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
-		} finally {
-			if (writer != null)
-				writer.close();
 		}
 	}
 

@@ -13,15 +13,18 @@ import koopa.dsl.stage.util.StageUtil;
 
 public class StageGrammarTests extends GrammarTestSuite {
 
+	@Override
 	public File[] getStageFiles() {
 		return new File("test/dsl/koopa/dsl/stage/grammar/test/")
 				.listFiles(StageUtil.getFilenameFilter());
 	}
 
+	@Override
 	public Grammar getGrammar() {
 		return new StageGrammar();
 	}
 
+	@Override
 	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 

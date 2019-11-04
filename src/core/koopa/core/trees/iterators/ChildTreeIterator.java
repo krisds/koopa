@@ -20,10 +20,12 @@ public class ChildTreeIterator implements Iterator<Tree> {
 			moveToNextNode();
 	}
 
+	@Override
 	public boolean hasNext() {
 		return index < root.getChildCount();
 	}
 
+	@Override
 	public Tree next() {
 		Tree next = root.getChild(index);
 		moveToNextNode();
@@ -36,6 +38,7 @@ public class ChildTreeIterator implements Iterator<Tree> {
 			index += 1;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

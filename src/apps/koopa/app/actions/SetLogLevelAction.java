@@ -24,6 +24,7 @@ public class SetLogLevelAction extends AbstractAction implements Action {
 		this.level = level;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
 		logger.setLevel(level);
 	}

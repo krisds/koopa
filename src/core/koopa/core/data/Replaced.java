@@ -36,7 +36,7 @@ public class Replaced {
 	 */
 	@Deprecated
 	public static Set<Replaced> getAllIn(Iterator<Token> tokens) {
-		Set<Replaced> all = new LinkedHashSet<Replaced>();
+		Set<Replaced> all = new LinkedHashSet<>();
 
 		while (tokens.hasNext()) {
 			final Token token = tokens.next();

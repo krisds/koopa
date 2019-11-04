@@ -50,10 +50,12 @@ public class NotEmpty extends UnaryParserDecorator {
 		return true;
 	}
 
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "%notEmpty " + parser;
 	}

@@ -19,15 +19,14 @@ public class DefaultCopybookLocator implements CopybookLocator {
 
 	private static final Logger LOGGER = Logger.getLogger("copybooks");
 
-	private static final Select<File> FIRST = new Select<File>() {
-		public File select(File[] list) {
-			if (list != null && list.length > 0)
-				return list[0];
-			else
-				return null;
-		}
+	private static final Select<File> FIRST = list -> {
+		if (list != null && list.length > 0)
+			return list[0];
+		else
+			return null;
 	};
 
+	@Override
 	public File locate(String textName, String libraryName, File sourceFile,
 			List<File> copybookPaths) {
 		// Unquote the copybook and library names if needed.

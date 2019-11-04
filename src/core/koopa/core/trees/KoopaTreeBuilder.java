@@ -16,17 +16,17 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	 * Any leaves preceding the first tree get tracked here. They will be added
 	 * to the first tree once we get it.
 	 */
-	private LinkedList<Tree> leading = new LinkedList<Tree>();
+	private LinkedList<Tree> leading = new LinkedList<>();
 
 	/**
 	 * Tree being built.
 	 */
-	private Stack<Tree> treeparts = new Stack<Tree>();
+	private Stack<Tree> treeparts = new Stack<>();
 
 	/**
 	 * Trees which have been built.
 	 */
-	private List<Tree> trees = new LinkedList<Tree>();
+	private List<Tree> trees = new LinkedList<>();
 
 	public KoopaTreeBuilder(Grammar grammar) {
 		this(grammar, false);
@@ -48,6 +48,7 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void down(Start start) {
 		Tree tree = new Tree(start);
 
@@ -61,6 +62,7 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void leaf(Token token) {
 		Tree tree = new Tree(token);
 
@@ -71,6 +73,7 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void up(End end) {
 		assert (!this.treeparts.isEmpty());
 
@@ -81,6 +84,7 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void water(InWater water) {
 		Tree tree = new Tree(water);
 
@@ -91,6 +95,7 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void land() {
 		assert (!this.treeparts.isEmpty());
 

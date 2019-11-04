@@ -27,6 +27,7 @@ import koopa.sql.grammar.SQLGrammar;
 
 public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 
+	@Override
 	public String getNamespace() {
 		return "cobol";
 	}
@@ -42,13 +43,14 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			FutureParser future = scoped("pictureString");
 			pictureStringParser = future;
 			future.setParser(new ParserCombinator() {
+				@Override
 				public boolean matches(Parse parse) {
 					Stream stream = parse.getStream();
 
 					skipAll(parse);
 
 					int numberOfTokens = 0;
-					List<Token> picture = new ArrayList<Token>();
+					List<Token> picture = new ArrayList<>();
 
 					while (true) {
 						final Data d = stream.forward();
@@ -110,6 +112,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			FutureParser future = scoped("levelNumber");
 			levelNumberParser = future;
 			future.setParser(new ParserCombinator() {
+				@Override
 				public boolean matches(Parse parse) {
 					Stream stream = parse.getStream();
 
@@ -203,6 +206,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 			FutureParser future = scoped("commentEntry");
 			commentEntryParser = future;
 			future.setParser(new ParserCombinator() {
+				@Override
 				public boolean matches(Parse parse) {
 					Stream stream = parse.getStream();
 

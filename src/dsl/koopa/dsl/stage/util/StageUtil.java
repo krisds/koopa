@@ -54,10 +54,6 @@ public final class StageUtil {
 	}
 
 	public static FilenameFilter getFilenameFilter() {
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".stage");
-			}
-		};
+		return (dir, name) -> name.endsWith(".stage");
 	}
 }

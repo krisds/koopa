@@ -13,8 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -63,24 +61,22 @@ public class Koopa extends JFrame implements Application {
 			return;
 		}
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				Koopa koopa = new Koopa();
-				koopa.setSourceFormat(options.getFormat());
-				koopa.setPreprocessing(options.isPreprocess());
-				koopa.setCopybookPaths(options.getCopybookPaths());
-				koopa.setTabLength(options.getTabLength());
-				koopa.setTabStops(options.getTabStops());
-				koopa.setVisible(true);
-				if (other.size() == 1)
-					koopa.openFile(new File(other.get(0)).getAbsoluteFile());
-			}
+		SwingUtilities.invokeLater(() -> {
+			Koopa koopa = new Koopa();
+			koopa.setSourceFormat(options.getFormat());
+			koopa.setPreprocessing(options.isPreprocess());
+			koopa.setCopybookPaths(options.getCopybookPaths());
+			koopa.setTabLength(options.getTabLength());
+			koopa.setTabStops(options.getTabStops());
+			koopa.setVisible(true);
+			if (other.size() == 1)
+				koopa.openFile(new File(other.get(0)).getAbsoluteFile());
 		});
 	}
 
 	private static DecimalFormat coverageFormatter = new DecimalFormat("0.0");
 
-	private List<ApplicationListener> listeners = new ArrayList<ApplicationListener>();
+	private List<ApplicationListener> listeners = new ArrayList<>();
 
 	private FileMenu fileMenu = null;
 	private ParserSettingsMenu parserSettingsMenu = null;
@@ -144,59 +140,13 @@ public class Koopa extends JFrame implements Application {
 		overview = new Overview(this);
 		tabbedPane.addTab("Overview", overview);
 
-		tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				updateMenus();
-				fireSwitchedView(getView());
-			}
+		tabbedPane.addChangeListener(e -> {
+			updateMenus();
+			fireSwitchedView(getView());
 		});
 
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	}
-
-	/*
-	 * private void setupDragAndDropOfFiles() { TransferHandler handler = new
-	 * TransferHandler() {
-	 * 
-	 * private static final long serialVersionUID = 1L;
-	 * 
-	 * @Override public boolean canImport(TransferHandler.TransferSupport info)
-	 * { return info .isDataFlavorSupported(DataFlavor.javaFileListFlavor); }
-	 * 
-	 * @Override public boolean importData(TransferHandler.TransferSupport info)
-	 * { // TODO Check that Koopa isn't already doing something else...
-	 * 
-	 * if (!info.isDrop()) return false;
-	 * 
-	 * if (!info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-	 * JOptionPane.showMessageDialog(Koopa.this,
-	 * "Koopa doesn't accept this type of data.", "Sorry...",
-	 * JOptionPane.ERROR_MESSAGE); return false; }
-	 * 
-	 * try { Transferable t = info.getTransferable();
-	 * 
-	 * @SuppressWarnings("unchecked") final List<File> data = (List<File>) t
-	 * .getTransferData(DataFlavor.javaFileListFlavor);
-	 * 
-	 * if (data != null && !data.isEmpty()) { new Thread(new Runnable() { public
-	 * void run() { if (data.size() == 1) { File fileMenu = data.get(0);
-	 * 
-	 * if (fileMenu.isDirectory()) { tabbedPane .setSelectedComponent(overview);
-	 * overview.walkAndParse(fileMenu);
-	 * 
-	 * } else { openFile(fileMenu); }
-	 * 
-	 * } else { tabbedPane.setSelectedComponent(overview); for (File fileMenu :
-	 * data) overview.walkAndParse(fileMenu); } } }).start(); }
-	 * 
-	 * return true;
-	 * 
-	 * } catch (UnsupportedFlavorException e) { return false;
-	 * 
-	 * } catch (IOException e) { return false; } } };
-	 * 
-	 * this.setTransferHandler(handler); }
-	 */
 
 	private void updateMenus() {
 		fileMenu.update();
@@ -206,14 +156,17 @@ public class Koopa extends JFrame implements Application {
 		helpMenu.update();
 	}
 
+	@Override
 	public void openFile(File file) {
 		openFile(file, getCobolParserFactory(), null);
 	}
 
+	@Override
 	public void openFile(File file, CobolParserFactory factory) {
 		openFile(file, factory, null);
 	}
 
+	@Override
 	public void openFile(File file, CobolParserFactory factory,
 			Tuple<Token, String> selectedToken) {
 
@@ -256,18 +209,22 @@ public class Koopa extends JFrame implements Application {
 		return title;
 	}
 
+	@Override
 	public void resultsWereCleared() {
 		updateMenus();
 	}
 
+	@Override
 	public void walkingAndParsing() {
 		updateMenus();
 	}
 
+	@Override
 	public void doneWalkingAndParsing() {
 		updateMenus();
 	}
 
+	@Override
 	public void reloadFile() {
 		Component view = getView();
 
@@ -292,6 +249,7 @@ public class Koopa extends JFrame implements Application {
 		}
 	}
 
+	@Override
 	public void scrollTo(Token token) {
 		Component view = getView();
 
@@ -301,6 +259,7 @@ public class Koopa extends JFrame implements Application {
 		}
 	}
 
+	@Override
 	public void addApplicationListener(ApplicationListener listener) {
 		listeners.add(listener);
 	}
@@ -323,6 +282,7 @@ public class Koopa extends JFrame implements Application {
 		}
 	}
 
+	@Override
 	public Tree getSyntaxTree() {
 		final Component view = getView();
 		if (view == overview)
@@ -331,10 +291,12 @@ public class Koopa extends JFrame implements Application {
 			return ((Detail) view).getTree();
 	}
 
+	@Override
 	public Component getView() {
 		return tabbedPane.getSelectedComponent();
 	}
 
+	@Override
 	public CobolParserFactory getCobolParserFactory() {
 		final Component view = getView();
 		if (view instanceof HoldingCobolParserFactory)
@@ -343,6 +305,7 @@ public class Koopa extends JFrame implements Application {
 			return null;
 	}
 
+	@Override
 	public void closeView(Component component) {
 		if (component == overview)
 			return;
@@ -359,10 +322,12 @@ public class Koopa extends JFrame implements Application {
 			((Debug) component).close();
 	}
 
+	@Override
 	public void closeView() {
 		closeView(getView());
 	}
 
+	@Override
 	public void swapView(Component oldView, Component newView) {
 		if (oldView == overview)
 			return;
@@ -371,7 +336,7 @@ public class Koopa extends JFrame implements Application {
 		tabbedPane.setComponentAt(index, newView);
 
 		if (oldView instanceof Detail)
-			fireClosedDetail((Detail) oldView);
+			fireClosedDetail(oldView);
 
 		updateMenus();
 
@@ -381,10 +346,12 @@ public class Koopa extends JFrame implements Application {
 			((Debug) oldView).close();
 	}
 
+	@Override
 	public void showGrammarRules() {
 		showGrammarRule(null);
 	}
 
+	@Override
 	public void showGrammarRule(String name) {
 		if (grammarView == null) {
 			grammarView = new GrammarView("/koopa/cobol/grammar/Cobol.kg");
@@ -396,6 +363,7 @@ public class Koopa extends JFrame implements Application {
 		grammarView.showRule(name);
 	}
 
+	@Override
 	public void quitParsing() {
 		overview.quitParsing();
 	}
@@ -432,10 +400,12 @@ public class Koopa extends JFrame implements Application {
 		updateMenus();
 	}
 
+	@Override
 	public Overview getOverview() {
 		return overview;
 	}
 
+	@Override
 	public JFrame getFrame() {
 		return this;
 	}

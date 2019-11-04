@@ -105,6 +105,7 @@ public class Code extends DefaultStyledDocument {
 			this.log = log;
 		}
 
+		@Override
 		public void pushed(Data data) {
 			if (data == null)
 				return;
@@ -113,6 +114,7 @@ public class Code extends DefaultStyledDocument {
 			insertData(data);
 		}
 
+		@Override
 		public void popping(Data data) {
 			if (data == null)
 				return;

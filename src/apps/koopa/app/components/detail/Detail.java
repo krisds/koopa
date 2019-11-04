@@ -8,8 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import koopa.app.Application;
@@ -20,7 +18,6 @@ import koopa.app.batchit.ParseDetails;
 import koopa.app.components.detail.source.SourceDetails;
 import koopa.app.components.detail.token.TokenDetails;
 import koopa.app.components.detailstable.DetailsTable;
-import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.highlights.Highlights;
 import koopa.app.components.outline.CobolOutline;
 import koopa.app.components.outline.Reference;
@@ -66,18 +63,16 @@ public class Detail extends JPanel implements HoldingCobolParserFactory, Textual
 		sourceView = new SourceView();
 		outline = new CobolOutline();
 
-		outline.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				final DefaultMutableTreeNode node = outline.getSelected();
+		outline.addTreeSelectionListener(e -> {
+			final DefaultMutableTreeNode node = outline.getSelected();
 
-				if (node == null)
-					return;
-				else if (node.isRoot())
-					sourceView.scrollToStart();
-				else {
-					final Reference ref = (Reference) node.getUserObject();
-					sourceView.scrollToToken(ref.getTree().getStartToken());
-				}
+			if (node == null)
+				return;
+			else if (node.isRoot())
+				sourceView.scrollToStart();
+			else {
+				final Reference ref = (Reference) node.getUserObject();
+				sourceView.scrollToToken(ref.getTree().getStartToken());
 			}
 		});
 
@@ -89,11 +84,8 @@ public class Detail extends JPanel implements HoldingCobolParserFactory, Textual
 
 		detailsTable = new DetailsTable(parseDetails);
 
-		detailsTable.addListener(new DetailsTableListener() {
-			public void userSelectedDetail(Tuple<Token, String> detail) {
-				sourceView.scrollToToken(detail.getFirst());
-			}
-		});
+		detailsTable.addListener(detail -> sourceView.scrollToToken(detail
+				.getFirst()));
 
 		JScrollPane detailsScroll = new JScrollPane(detailsTable);
 		detailsScroll.setBorder(null);
@@ -158,6 +150,7 @@ public class Detail extends JPanel implements HoldingCobolParserFactory, Textual
 			sourceView.scrollToToken(token);
 	}
 
+	@Override
 	public void scrollToLine(int line) {
 		if (sourceView != null)
 			sourceView.scrollToLine(line);
@@ -184,14 +177,17 @@ public class Detail extends JPanel implements HoldingCobolParserFactory, Textual
 		return cobolFile;
 	}
 
+	@Override
 	public int getAdjustedLineCount() {
 		return sourceView.getAdjustedLineCount();
 	}
 	
+	@Override
 	public boolean find(String search) {
 		return sourceView.find(search);
 	}
 
+	@Override
 	public CobolParserFactory getCobolParserFactory() {
 		return factory;
 	}

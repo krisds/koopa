@@ -22,6 +22,7 @@ public class StatusRenderer extends DefaultTableCellRenderer implements
 	private final static ImageIcon WARNING = Icons
 			.getIcon("/koopa/app/resources/splashy/document_a4_warning.png");
 
+	@Override
 	public void setValue(Object value) {
 		if (value == null) {
 			// TODO Question mark instead.

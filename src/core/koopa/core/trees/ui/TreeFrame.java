@@ -29,6 +29,7 @@ public class TreeFrame extends JFrame {
 		content.add(scroll, BorderLayout.CENTER);
 
 		addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				Frame f = (Frame) e.getSource();
 				f.setVisible(false);

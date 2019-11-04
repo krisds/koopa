@@ -116,6 +116,7 @@ public class Stack {
 		return head.find(clazz);
 	}
 
+	@Override
 	public String toString() {
 		if (isEmpty())
 			return "___";
@@ -189,7 +190,7 @@ public class Stack {
 			if (parser == null)
 				return Collections.emptySet();
 
-			Set<String> keywords = new HashSet<String>();
+			Set<String> keywords = new HashSet<>();
 			parser.addAllKeywordsInScopeTo(keywords);
 			return keywords;
 		}

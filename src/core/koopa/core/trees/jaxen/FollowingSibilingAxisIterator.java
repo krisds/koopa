@@ -18,6 +18,7 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 		this.index = child.getChildIndex() + 1;
 	}
 
+	@Override
 	public boolean hasNext() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("FollowingSibilingAxisIterator(" + parent
@@ -31,6 +32,7 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 		return hasNext;
 	}
 
+	@Override
 	public Tree next() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("FollowingSibilingAxisIterator(" + parent + ").next()");
@@ -47,6 +49,7 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 		return next;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

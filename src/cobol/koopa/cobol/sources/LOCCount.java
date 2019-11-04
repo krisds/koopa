@@ -73,6 +73,7 @@ public class LOCCount extends ChainingSource
 		return t;
 	}
 
+	@Override
 	public void close() {
 		source.close();
 	}

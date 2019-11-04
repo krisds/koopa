@@ -35,12 +35,13 @@ public class HoldingTarget implements Target {
 	public HoldingTarget(Target target) {
 		assert (target != null);
 		this.target = target;
-		this.queue = new LinkedList<Data>();
-		this.rawObservers = new LinkedList<RawObserver>();
-		this.observers = new LinkedList<Observer>();
+		this.queue = new LinkedList<>();
+		this.rawObservers = new LinkedList<>();
+		this.observers = new LinkedList<>();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void push(Data data) {
 		queue.addLast(data);
 
@@ -82,6 +83,7 @@ public class HoldingTarget implements Target {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void done() {
 	}
 

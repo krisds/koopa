@@ -41,8 +41,8 @@ public class Target {
 
 		this.name = targetDefinition.getChild("identifier").getAllText();
 
-		this.testDefinitions = new LinkedList<GrammarTestDefinition>();
-		this.formativeDefinitions = new LinkedList<GrammarTestDefinition>();
+		this.testDefinitions = new LinkedList<>();
+		this.formativeDefinitions = new LinkedList<>();
 
 		for (Tree testDefinition : targetDefinition.getChildren("test")) {
 			GrammarTestDefinition def = new GrammarTestDefinition(this,
@@ -73,7 +73,7 @@ public class Target {
 	}
 
 	public List<GrammarTest> getTests() {
-		List<GrammarTest> tests = new LinkedList<GrammarTest>();
+		List<GrammarTest> tests = new LinkedList<>();
 
 		for (GrammarTestDefinition def : testDefinitions)
 			tests.addAll(def.getTests());

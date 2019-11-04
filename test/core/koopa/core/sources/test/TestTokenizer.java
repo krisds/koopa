@@ -18,13 +18,13 @@ import koopa.core.sources.Source;
 public class TestTokenizer extends ChainingSource
 		implements Source {
 
-	private static final boolean TRACE = false;
 	private static final Logger LOGGER = Logger.getLogger("source.test");
+	private static final boolean TRACE = LOGGER.isTraceEnabled();
 
 	public static final String MARKER_TEXT = "^";
 
 	private Token marker;
-	private LinkedList<Data> dataSinceMarker = new LinkedList<Data>();
+	private LinkedList<Data> dataSinceMarker = new LinkedList<>();
 
 	public TestTokenizer(Source source) {
 		super(source);
@@ -34,7 +34,7 @@ public class TestTokenizer extends ChainingSource
 	protected Data nxt1() {
 		Data d = source.next();
 
-		if (TRACE && LOGGER.isTraceEnabled())
+		if (TRACE)
 			LOGGER.trace("%% " + d);
 
 		return d;
@@ -50,7 +50,7 @@ public class TestTokenizer extends ChainingSource
 		if (d instanceof Token && MARKER_TEXT.equals(((Token) d).getText())) {
 			marker = (Token) d;
 
-			if (TRACE && LOGGER.isTraceEnabled())
+			if (TRACE)
 				LOGGER.trace("+> MARKER ");
 
 			d = super.next();
@@ -59,19 +59,20 @@ public class TestTokenizer extends ChainingSource
 		if (marker != null && d != null)
 			dataSinceMarker.add(d);
 
-		if (TRACE && LOGGER.isTraceEnabled())
+		if (TRACE)
 			LOGGER.trace("> " + d);
 
 		return d;
 	}
 
+	@Override
 	public void close() {
 		source.close();
 	}
 
 	@Override
 	public void unshift(Data token) {
-		if (TRACE && LOGGER.isTraceEnabled())
+		if (TRACE)
 			LOGGER.trace("<<< " + token);
 
 		super.unshift(token);
@@ -82,7 +83,7 @@ public class TestTokenizer extends ChainingSource
 			assert (token == last);
 
 			if (dataSinceMarker.isEmpty()) {
-				if (TRACE && LOGGER.isTraceEnabled())
+				if (TRACE)
 					LOGGER.trace("<- MARKER");
 
 				super.unshift(marker);
@@ -102,7 +103,7 @@ public class TestTokenizer extends ChainingSource
 		while (true) {
 			Data d = next();
 
-			if (TRACE && LOGGER.isTraceEnabled())
+			if (TRACE)
 				LOGGER.trace("@ " + (marker == null ? "" : "#") + d);
 
 			if (marker != null)
@@ -130,7 +131,7 @@ public class TestTokenizer extends ChainingSource
 
 	private boolean isAtMarker() {
 		for (Data d : dataSinceMarker) {
-			if (TRACE && LOGGER.isTraceEnabled())
+			if (TRACE)
 				LOGGER.trace("M@ " + d);
 
 			if (!(d instanceof Token))

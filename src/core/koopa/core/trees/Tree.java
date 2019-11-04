@@ -4,7 +4,6 @@ import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class Tree implements Data {
 
 	// TODO This should really be based on the grammar's logic...
 	private static class ProgramTextFilter implements TokenFilter {
+		@Override
 		public boolean include(Token token) {
 			return token.hasTag(PROGRAM_TEXT_AREA);
 		}
@@ -35,7 +35,7 @@ public class Tree implements Data {
 
 	public Tree(Data data) {
 		this.data = data;
-		this.children = new ArrayList<Tree>();
+		this.children = new ArrayList<>();
 		this.parent = null;
 	}
 
@@ -98,11 +98,7 @@ public class Tree implements Data {
 	 * depth-first order.
 	 */
 	public Iterable<Token> allTokens(final TokenFilter filter) {
-		return new Iterable<Token>() {
-			public Iterator<Token> iterator() {
-				return new DepthFirstTokenIterator(Tree.this, filter);
-			}
-		};
+		return () -> new DepthFirstTokenIterator(Tree.this, filter);
 	}
 
 	/**
@@ -119,11 +115,7 @@ public class Tree implements Data {
 	 * order.
 	 */
 	public Iterable<Token> childTokens(final TokenFilter filter) {
-		return new Iterable<Token>() {
-			public Iterator<Token> iterator() {
-				return new ChildTokenIterator(Tree.this, filter);
-			}
-		};
+		return () -> new ChildTokenIterator(Tree.this, filter);
 	}
 
 	/**
@@ -131,11 +123,7 @@ public class Tree implements Data {
 	 * this tree, in original order.
 	 */
 	public Iterable<Data> childData() {
-		return new Iterable<Data>() {
-			public Iterator<Data> iterator() {
-				return new ChildDataIterator(Tree.this);
-			}
-		};
+		return () -> new ChildDataIterator(Tree.this);
 	}
 
 	/**
@@ -143,19 +131,7 @@ public class Tree implements Data {
 	 * this tree, in original order.
 	 */
 	public Iterable<Tree> childTrees() {
-		return new Iterable<Tree>() {
-			public Iterator<Tree> iterator() {
-				return new ChildTreeIterator(Tree.this);
-			}
-		};
-	}
-
-	/**
-	 * Cfr {@linkplain #getStartPosition()}.
-	 */
-	@Deprecated
-	public Position getStart() {
-		return getStartPosition();
+		return () -> new ChildTreeIterator(Tree.this);
 	}
 
 	/**
@@ -212,14 +188,6 @@ public class Tree implements Data {
 	public Position getRawStart() {
 		Token t = getRawStartToken();
 		return t == null ? null : t.getStart();
-	}
-
-	/**
-	 * Cfr {@linkplain #getEndPosition()}.
-	 */
-	@Deprecated
-	public Position getEnd() {
-		return getEndPosition();
 	}
 
 	/**
@@ -317,7 +285,7 @@ public class Tree implements Data {
 	}
 
 	public List<Tree> getChildren() {
-		return new ArrayList<Tree>(children);
+		return new ArrayList<>(children);
 	}
 
 	public Tree getParent() {
@@ -349,7 +317,7 @@ public class Tree implements Data {
 	}
 
 	public List<Token> getTokens() {
-		final LinkedList<Token> tokens = new LinkedList<Token>();
+		final LinkedList<Token> tokens = new LinkedList<>();
 
 		for (Token token : allTokens())
 			tokens.add(token);
@@ -403,7 +371,7 @@ public class Tree implements Data {
 	 * Return a list of all child nodes with the given name.
 	 */
 	public List<Tree> getChildren(String name) {
-		List<Tree> matching = new LinkedList<Tree>();
+		List<Tree> matching = new LinkedList<>();
 
 		for (Tree child : children)
 			if (child.isNode(name))

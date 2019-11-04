@@ -9,15 +9,15 @@ import koopa.core.util.Tuple;
 
 public class Messages {
 
-	private List<Tuple<Token, String>> warnings = new LinkedList<Tuple<Token, String>>();
-	private List<Tuple<Token, String>> errors = new LinkedList<Tuple<Token, String>>();
+	private List<Tuple<Token, String>> warnings = new LinkedList<>();
+	private List<Tuple<Token, String>> errors = new LinkedList<>();
 
 	public Messages() {
 	}
 
 	public void warn(Token t, String msg) {
 		if (msg != null)
-			warnings.add(new Tuple<Token, String>(t, msg));
+			warnings.add(new Tuple<>(t, msg));
 	}
 
 	public boolean hasWarnings() {
@@ -38,7 +38,7 @@ public class Messages {
 
 	public void error(Token t, String msg) {
 		if (msg != null)
-			errors.add(new Tuple<Token, String>(t, msg));
+			errors.add(new Tuple<>(t, msg));
 	}
 
 	public boolean hasErrors() {

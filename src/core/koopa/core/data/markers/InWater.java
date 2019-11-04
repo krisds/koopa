@@ -19,6 +19,7 @@ public final class InWater extends Marker {
 		return INSTANCE;
 	}
 
+	@Override
 	public String toString() {
 		return "[WATER[";
 	}

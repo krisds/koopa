@@ -51,9 +51,9 @@ public class GrammarView extends JPanel {
 
 	private JScrollPane scroll = null;
 
-	private List<Integer> lineOffsets = new ArrayList<Integer>();
+	private List<Integer> lineOffsets = new ArrayList<>();
 
-	private Map<String, Integer> ruleNameOffsets = new HashMap<String, Integer>();
+	private Map<String, Integer> ruleNameOffsets = new HashMap<>();
 
 	public GrammarView(String pathToGrammarResource) {
 		setupComponents();
@@ -64,6 +64,7 @@ public class GrammarView extends JPanel {
 		pane = new JTextPane() {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean getScrollableTracksViewportWidth() {
 				return false;
 			}
@@ -160,23 +161,6 @@ public class GrammarView extends JPanel {
 		}
 
 		return identifierStyle;
-	}
-
-	private static Style nativeStyle = null;
-
-	private static Style getNativeStyle(StyledDocument document) {
-		if (nativeStyle == null) {
-			Style style = nativeStyle = document.addStyle("native", null);
-
-			StyleConstants.setItalic(style, false);
-			StyleConstants.setBold(style, false);
-			StyleConstants.setFontFamily(style, "Courier");
-			StyleConstants.setFontSize(style, 14);
-			// StyleConstants.setBackground(style, Color.WHITE);
-			StyleConstants.setForeground(style, Color.GRAY);
-		}
-
-		return nativeStyle;
 	}
 
 	public void scrollTo(int positionInFile) {

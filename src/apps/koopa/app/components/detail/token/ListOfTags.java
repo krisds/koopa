@@ -21,7 +21,7 @@ public class ListOfTags extends JPanel implements TokenSelectionListener {
 	private static final Font FONT = new Font("Courier", Font.PLAIN, 14);
 
 	private int index = 0;
-	private List<JLabel> labels = new ArrayList<JLabel>();
+	private List<JLabel> labels = new ArrayList<>();
 
 	private JLabel noSelection = null;
 
@@ -39,6 +39,7 @@ public class ListOfTags extends JPanel implements TokenSelectionListener {
 		add(noSelection);
 	}
 
+	@Override
 	public void selectedToken(Token token) {
 		while (index > 0)
 			remove(labels.get(--index));

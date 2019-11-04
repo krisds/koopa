@@ -22,7 +22,9 @@ public final class KGUtil {
 	 * Parse the contents of a grammar file, and return the syntax tree.
 	 */
 	public static Tree getAST(File input) throws IOException {
-		return getAST(input.getName(), new FileReader(input));
+		try (Reader reader = new FileReader(input)) {
+			return getAST(input.getName(), reader);
+		}
 	}
 
 	/**
@@ -51,10 +53,6 @@ public final class KGUtil {
 	}
 
 	public static FilenameFilter getFilenameFilter() {
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".kg");
-			}
-		};
+		return (dir, name) -> name.endsWith(".kg");
 	}
 }

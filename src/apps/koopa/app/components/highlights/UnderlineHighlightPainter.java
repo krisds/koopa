@@ -25,11 +25,13 @@ public class UnderlineHighlightPainter extends LayeredHighlighter.LayerPainter {
 		color = c;
 	}
 
+	@Override
 	public void paint(Graphics g, int offs0, int offs1, Shape bounds,
 			JTextComponent c) {
 		// Do nothing: this method will never be called
 	}
 
+	@Override
 	public Shape paintLayer(Graphics g, int offs0, int offs1, Shape bounds,
 			JTextComponent c, View view) {
 		g.setColor(color == null ? c.getSelectionColor() : color);

@@ -19,7 +19,7 @@ import koopa.core.trees.Tree;
 
 public final class Util {
 	public static List<Range> asListOfRanges(int... positions) {
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 
 		for (int i = 0; i < positions.length; i += 2) {
 			int from = positions[i];
@@ -114,7 +114,7 @@ public final class Util {
 
 	// TODO Rename
 	public static List<Data> getAllTokens(Source source) {
-		final List<Data> tokens = new LinkedList<Data>();
+		final List<Data> tokens = new LinkedList<>();
 
 		Data token = null;
 		while ((token = source.next()) != null)

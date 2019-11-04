@@ -27,7 +27,7 @@ public class Files extends Suite {
 	private static List<Runner> getRunners(Class<?> clazz)
 			throws InitializationError {
 		try {
-			List<Runner> runners = new ArrayList<Runner>();
+			List<Runner> runners = new ArrayList<>();
 
 			FileBasedTest provider = (FileBasedTest) clazz.newInstance();
 

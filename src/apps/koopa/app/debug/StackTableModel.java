@@ -17,10 +17,12 @@ public class StackTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 
+	@Override
 	public int getColumnCount() {
 		return 1;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case MESSAGE_COLUMN:
@@ -31,6 +33,7 @@ public class StackTableModel extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public int getRowCount() {
 		if (head == null)
 			return 0;
@@ -38,6 +41,7 @@ public class StackTableModel extends AbstractTableModel {
 		return head.depth();
 	}
 
+	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		default:
@@ -45,6 +49,7 @@ public class StackTableModel extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case MESSAGE_COLUMN:

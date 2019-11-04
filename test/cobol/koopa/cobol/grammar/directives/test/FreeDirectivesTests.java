@@ -7,6 +7,7 @@ import koopa.dsl.stage.util.StageUtil;
 
 public class FreeDirectivesTests extends DirectivesTests {
 
+	@Override
 	public File[] getStageFiles() {
 		return new File("test/cobol/koopa/cobol/grammar/directives/test/free/")
 				.listFiles(StageUtil.getFilenameFilter());

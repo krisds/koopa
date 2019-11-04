@@ -13,10 +13,12 @@ import koopa.dsl.stage.runtime.GrammarTestSuite;
 
 public abstract class DirectivesTests extends GrammarTestSuite {
 
+	@Override
 	public Grammar getGrammar() {
 		return DirectivesGrammar.instance();
 	}
 
+	@Override
 	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 

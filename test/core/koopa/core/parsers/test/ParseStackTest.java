@@ -19,10 +19,12 @@ public class ParseStackTest {
 			this.name = name;
 		}
 
+		@Override
 		public boolean matches(Parse parse) {
 			return false;
 		}
 
+		@Override
 		public boolean isMatching(String name) {
 			return this.name.equals(name);
 		}

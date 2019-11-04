@@ -23,8 +23,9 @@ public class StandardCobolProject extends BasicCobolProject
 
 	private static final Logger LOGGER = Logger.getLogger("copybooks");
 
-	private List<File> copybookPaths = new ArrayList<File>();
+	private List<File> copybookPaths = new ArrayList<>();
 
+	@Override
 	public CobolProject duplicate() {
 		final StandardCobolProject project = new StandardCobolProject();
 		copyBasicSettingsInto(project);
@@ -36,6 +37,7 @@ public class StandardCobolProject extends BasicCobolProject
 		project.copybookPaths.addAll(copybookPaths);
 	}
 
+	@Override
 	public void addCopybookPath(File path) {
 		if (path == null)
 			throw new NullPointerException("Null path");
@@ -44,23 +46,24 @@ public class StandardCobolProject extends BasicCobolProject
 		copybookPaths.add(path);
 	}
 
+	@Override
 	public void removeCopybookPath(File path) {
 		copybookPaths.remove(path);
 	}
 
+	@Override
 	public List<File> getCopybookPaths() {
 		return Collections.unmodifiableList(copybookPaths);
 	}
 
-	private static final Select<File> FIRST = new Select<File>() {
-		public File select(File[] list) {
-			if (list != null && list.length > 0)
-				return list[0];
-			else
-				return null;
-		}
+	private static final Select<File> FIRST = list -> {
+		if (list != null && list.length > 0)
+			return list[0];
+		else
+			return null;
 	};
 
+	@Override
 	public File locateCopybook(String textName, String libraryName,
 			File sourceFile) {
 		// Unquote the copybook and library names if needed.

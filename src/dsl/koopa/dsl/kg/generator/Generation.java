@@ -64,7 +64,7 @@ public class Generation {
 		// One of the things the properties file should define are all the
 		// required imports. We collect them here into actual valid Java import
 		// statements.
-		final List<String> additionalImports = new LinkedList<String>();
+		final List<String> additionalImports = new LinkedList<>();
 		for (String key : stringPropertyNames(meta)) {
 			if (key.startsWith("import.")) {
 				final String importName = key.substring("import.".length());
@@ -133,6 +133,7 @@ public class Generation {
 				setValue("package", meta.getProperty("package"));
 			}
 
+			@Override
 			public void call(String target, StringBuilder builder,
 					String indent) {
 
@@ -183,8 +184,8 @@ public class Generation {
 	private TemplateLogic ruleLogic(final Tree rule) {
 		return new TemplateLogic() {
 
-			private List<String> bindings = new LinkedList<String>();
-			private List<String> unbindings = new LinkedList<String>();
+			private List<String> bindings = new LinkedList<>();
+			private List<String> unbindings = new LinkedList<>();
 
 			{
 				final String name = getRuleName(rule);
@@ -228,6 +229,7 @@ public class Generation {
 				}
 			}
 
+			@Override
 			public void call(String target, StringBuilder builder,
 					String indent) {
 
@@ -284,6 +286,7 @@ public class Generation {
 	private TemplateLogic partLogic(final Tree part,
 			final List<String> bindings, final List<String> unbindings) {
 		return new TemplateLogic() {
+			@Override
 			public String getValue(String name) {
 				if (name.startsWith("unescaped:"))
 					return unescaped(
@@ -315,6 +318,7 @@ public class Generation {
 				return super.getValue(name);
 			}
 
+			@Override
 			public void call(String target, StringBuilder builder,
 					String indent) {
 				if (LOGGER.isEnabled())
@@ -451,7 +455,7 @@ public class Generation {
 		}
 	}
 
-	private final Set<String> PART_NAMES = new HashSet<String>();
+	private final Set<String> PART_NAMES = new HashSet<>();
 	{
 		PART_NAMES.add("sequence");
 		PART_NAMES.add("as");
@@ -536,7 +540,7 @@ public class Generation {
 	 * versions.
 	 */
 	private Set<String> stringPropertyNames(Properties props) {
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 
 		@SuppressWarnings("unchecked")
 		final Enumeration<String> propertyNames = (Enumeration<String>) props

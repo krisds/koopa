@@ -21,6 +21,7 @@ public class TokenHighlighter implements CaretListener {
 		this.highlights = view.getNewHighlights();
 	}
 
+	@Override
 	public void caretUpdate(CaretEvent e) {
 		highlights.removeAllHighlights();
 

@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public abstract class TestBuilder {
 
-	private Stack<String> stack = new Stack<String>();
+	private Stack<String> stack = new Stack<>();
 
 	public void push(String fragment) {
 		stack.push(fragment);

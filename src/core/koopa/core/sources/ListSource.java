@@ -10,7 +10,7 @@ import koopa.core.data.Data;
  */
 public class ListSource implements Source {
 
-	private LinkedList<Data> data = new LinkedList<Data>();
+	private LinkedList<Data> data = new LinkedList<>();
 
 	public ListSource() {
 	}
@@ -26,6 +26,7 @@ public class ListSource implements Source {
 		this.data.add(d);
 	}
 
+	@Override
 	public Data next() {
 		if (data.isEmpty())
 			return null;
@@ -33,14 +34,17 @@ public class ListSource implements Source {
 			return data.removeFirst();
 	}
 
+	@Override
 	public void unshift(Data d) {
 		if (d != null)
 			data.addFirst(d);
 	}
 
+	@Override
 	public void close() {
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <S extends Source> S getSource(Class<S> clazz) {
 		if (clazz.isInstance(this))

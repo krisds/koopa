@@ -18,15 +18,18 @@ import koopa.sql.grammar.SQLGrammar;
  * overall test suite defined here !</b>
  */
 public class EmbeddedSQLGrammarTests extends GrammarTestSuite {
+	@Override
 	public File[] getStageFiles() {
 		return new File("test/sql/koopa/sql/grammar/test/")
 				.listFiles(StageUtil.getFilenameFilter());
 	}
 
+	@Override
 	public Grammar getGrammar() {
 		return SQLGrammar.instance();
 	}
 
+	@Override
 	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 

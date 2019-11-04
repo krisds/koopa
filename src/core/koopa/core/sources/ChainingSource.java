@@ -19,6 +19,7 @@ public abstract class ChainingSource extends BasicSource implements Source {
 		this.source = source;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <S extends Source> S getSource(Class<S> clazz) {
 		if (clazz.isAssignableFrom(this.getClass()))
@@ -29,6 +30,7 @@ public abstract class ChainingSource extends BasicSource implements Source {
 			return null;
 	}
 
+	@Override
 	public void close() {
 		source.close();
 	}

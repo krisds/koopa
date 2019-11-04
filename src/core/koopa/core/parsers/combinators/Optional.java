@@ -39,10 +39,12 @@ public class Optional extends UnaryParserDecorator {
 		return true;
 	}
 
+	@Override
 	public boolean canMatchEmptyInputs() {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return SYMBOL;
 	}

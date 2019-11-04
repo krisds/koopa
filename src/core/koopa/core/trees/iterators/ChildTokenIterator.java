@@ -22,20 +22,18 @@ public class ChildTokenIterator implements Iterator<Token> {
 
 	public ChildTokenIterator(Tree root, TokenFilter filter) {
 		this.root = root;
-		this.filter = filter != null ? filter : new TokenFilter() {
-			public boolean include(Token token) {
-				return true;
-			}
-		};
+		this.filter = filter != null ? filter : token -> true;
 
 		if (index < root.getChildCount() && !root.getChild(index).isToken())
 			moveToNextMatchingToken();
 	}
 
+	@Override
 	public boolean hasNext() {
 		return index < root.getChildCount();
 	}
 
+	@Override
 	public Token next() {
 		Token next = (Token) root.getChild(index).getData();
 		moveToNextMatchingToken();
@@ -55,6 +53,7 @@ public class ChildTokenIterator implements Iterator<Token> {
 			index += 1;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

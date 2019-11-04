@@ -14,7 +14,7 @@ import koopa.core.data.Marker;
  */
 public final class Start extends Marker {
 
-	private static Map<String, Start> markers = new HashMap<String, Start>();
+	private static Map<String, Start> markers = new HashMap<>();
 
 	private final String namespace;
 	private final String name;
@@ -59,6 +59,7 @@ public final class Start extends Marker {
 		return this == obj;
 	}
 
+	@Override
 	public String toString() {
 		return "<" + namespace + ":" + name + ">";
 	}

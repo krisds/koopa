@@ -21,7 +21,7 @@ import koopa.core.data.tags.SyntacticTag;
 public class TokenSeparationLogic {
 
 	public static List<Token> apply(final Token token) {
-		final List<Token> tokens = new LinkedList<Token>();
+		final List<Token> tokens = new LinkedList<>();
 
 		final String text = token.getText();
 		final int length = text.length();

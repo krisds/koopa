@@ -18,11 +18,8 @@ public class FindAgainAction extends AbstractAction implements Action {
 		this.findAction = findAction;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				findAction.search();
-			}
-		}).start();
+		new Thread(() -> findAction.search()).start();
 	}
 }

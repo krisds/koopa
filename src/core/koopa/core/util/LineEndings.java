@@ -39,7 +39,7 @@ public class LineEndings {
 
 	private static final List<List<Character>> DEFAULT_LINE_ENDINGS;
 	static {
-		List<List<Character>> defaultEndings = new LinkedList<List<Character>>();
+		List<List<Character>> defaultEndings = new LinkedList<>();
 		defaultEndings.add(Arrays.asList('\r', '\n'));
 		defaultEndings.add(Arrays.asList('\r'));
 		defaultEndings.add(Arrays.asList('\n'));
@@ -137,8 +137,7 @@ public class LineEndings {
 
 		final String[] choices = definition.split(CHOICE_SEPARATOR);
 
-		List<List<Character>> decoded = new ArrayList<List<Character>>(
-				choices.length);
+		List<List<Character>> decoded = new ArrayList<>(choices.length);
 
 		for (String choice : choices) {
 			final String[] bytes = choice.split(BYTE_SEPARATOR);
@@ -149,7 +148,7 @@ public class LineEndings {
 
 			final char[] cs = Encoding.getChars(values);
 
-			List<Character> chars = new ArrayList<Character>();
+			List<Character> chars = new ArrayList<>();
 			for (char c : cs)
 				chars.add(c);
 

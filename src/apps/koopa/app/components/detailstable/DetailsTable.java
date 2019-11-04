@@ -20,7 +20,7 @@ public class DetailsTable extends JXTable {
 
 	private ParseDetails parseDetails;
 
-	private List<DetailsTableListener> listeners = new ArrayList<DetailsTableListener>();
+	private List<DetailsTableListener> listeners = new ArrayList<>();
 
 	public DetailsTable(ParseDetails parseDetails) {
 		this.parseDetails = parseDetails;

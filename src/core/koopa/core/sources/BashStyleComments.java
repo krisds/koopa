@@ -46,8 +46,4 @@ public class BashStyleComments extends ChainingSource implements Source {
 			return t.withTags(COMMENT).withoutTags(PROGRAM_TEXT_AREA);
 		}
 	}
-
-	public void close() {
-		source.close();
-	}
 }

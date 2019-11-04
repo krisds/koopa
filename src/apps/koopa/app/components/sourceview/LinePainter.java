@@ -61,6 +61,7 @@ public class LinePainter extends DefaultHighlighter.DefaultHighlightPainter
 	 *            View painting for
 	 * @return region drawing occured in
 	 */
+	@Override
 	public Shape paintLayer(Graphics g, int offs0, int offs1, Shape bounds,
 			JTextComponent c, View view) {
 		try {
@@ -96,19 +97,23 @@ public class LinePainter extends DefaultHighlighter.DefaultHighlightPainter
 
 	// Implement CaretListener
 
+	@Override
 	public void caretUpdate(CaretEvent e) {
 		resetHighlight();
 	}
 
 	// Implement DocumentListener
 
+	@Override
 	public void removeUpdate(DocumentEvent e) {
 		resetHighlight();
 	}
 
+	@Override
 	public void insertUpdate(DocumentEvent e) {
 	}
 
+	@Override
 	public void changedUpdate(DocumentEvent e) {
 	}
 

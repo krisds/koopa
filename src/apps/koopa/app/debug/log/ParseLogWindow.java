@@ -27,14 +27,12 @@ public class ParseLogWindow extends JFrame {
 		this.name = name;
 		setupComponents();
 
-		logTable.addSelectionListener(new ParseLogTable.SelectionListener() {
-			public void selectionChanged(int index) {
-				final ParseLog log = logModel.getParseLog();
-				if (log == null)
-					stackModel.setStack(null);
-				else
-					stackModel.setStack(log.getEvent(index).getStack());
-			}
+		logTable.addSelectionListener(index -> {
+			final ParseLog log = logModel.getParseLog();
+			if (log == null)
+				stackModel.setStack(null);
+			else
+				stackModel.setStack(log.getEvent(index).getStack());
 		});
 
 		final Rectangle screenSize = getGraphicsConfiguration().getBounds();

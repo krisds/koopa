@@ -14,7 +14,7 @@ public class ParseLog {
 
 	private Parse parse = null;
 
-	private List<Event> events = new ArrayList<Event>();
+	private List<Event> events = new ArrayList<>();
 
 	public void setParse(Parse parse) {
 		this.parse = parse;

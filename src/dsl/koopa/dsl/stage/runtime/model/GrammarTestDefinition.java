@@ -41,7 +41,7 @@ public class GrammarTestDefinition {
 
 		final Tree sample = definition.getChild("sample");
 
-		this.parts = new ArrayList<Part>();
+		this.parts = new ArrayList<>();
 
 		boolean sawMark = false;
 		boolean sawReference = false;
@@ -79,7 +79,7 @@ public class GrammarTestDefinition {
 	}
 
 	public List<GrammarTest> getTests() {
-		final List<GrammarTest> tests = new LinkedList<GrammarTest>();
+		final List<GrammarTest> tests = new LinkedList<>();
 
 		buildTests(new TestBuilder() {
 			@Override

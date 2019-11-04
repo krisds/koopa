@@ -183,7 +183,7 @@ public class ReplacingPhraseOperandTest {
 	private static void assertMatches(ReplacingPhrase phrase, Source library,
 			List<Data> expected) {
 
-		LinkedList<Data> result = new LinkedList<Data>();
+		LinkedList<Data> result = new LinkedList<>();
 		Assert.assertTrue(phrase.appliedTo(library, result));
 
 		final Data next = library.next();

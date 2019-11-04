@@ -9,7 +9,7 @@ import javax.swing.filechooser.FileFilter;
 
 public class CobolSupport {
 
-	private static List<String> EXTENSIONS = new LinkedList<String>();
+	private static List<String> EXTENSIONS = new LinkedList<>();
 
 	private static String DESCRIPTION = "";
 
@@ -40,6 +40,7 @@ public class CobolSupport {
 
 	public static FileFilter getCobolFileFilter(final boolean filesOnly) {
 		return new FileFilter() {
+			@Override
 			public boolean accept(File f) {
 				if (!filesOnly && f.isDirectory())
 					return true;
@@ -47,6 +48,7 @@ public class CobolSupport {
 				return isCobolFile(f);
 			}
 
+			@Override
 			public String getDescription() {
 				return "Cobol file (" + DESCRIPTION + ")";
 			}
@@ -54,11 +56,7 @@ public class CobolSupport {
 	}
 
 	public static FilenameFilter getFilenameFilter() {
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return isCobolFileName(name);
-			}
-		};
+		return (dir, name) -> isCobolFileName(name);
 	}
 
 	public static boolean isCobolFile(File file) {

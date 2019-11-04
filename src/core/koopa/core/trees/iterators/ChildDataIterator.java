@@ -18,16 +18,19 @@ public class ChildDataIterator implements Iterator<Data> {
 		this.root = root;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return index < root.getChildCount();
 	}
 
+	@Override
 	public Data next() {
 		Data data = root.getChild(index).getData();
 		index += 1;
 		return data;
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

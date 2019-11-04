@@ -91,7 +91,7 @@ public class TokensTest extends TestCase {
 	}
 
 	private Token tokenFromRanges(int... positions) {
-		List<Token> parts = new ArrayList<Token>(positions.length / 2);
+		List<Token> parts = new ArrayList<>(positions.length / 2);
 		for (int i = 0; i < positions.length; i += 2)
 			parts.add(Tokens.subtoken(TOKEN, positions[i], positions[i + 1]));
 		return Tokens.join(parts);

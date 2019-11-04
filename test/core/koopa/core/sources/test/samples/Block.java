@@ -70,7 +70,7 @@ class Block {
 
 		int pos = 0;
 
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 		final String line = token.getText();
 
 		while (true) {
@@ -212,7 +212,7 @@ class Block {
 		int pos = 0;
 		boolean canBeContinued = false;
 
-		final LinkedList<Annotation> annotations = new LinkedList<Annotation>();
+		final LinkedList<Annotation> annotations = new LinkedList<>();
 
 		final String line = token.getText();
 		while (true) {
@@ -333,7 +333,7 @@ class Block {
 		}
 
 		// Grab non-empty lines...
-		final List<Token> lines = new ArrayList<Token>();
+		final List<Token> lines = new ArrayList<>();
 		while (d != null //
 				&& (d instanceof Token)
 				&& !isEndOfLine((Token) d) //

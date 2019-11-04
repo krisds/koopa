@@ -36,7 +36,7 @@ public class ProgramArea extends ChainingSource implements Source {
 	private final int tabLength;
 	private final TabStops tabStops;
 
-	private final LinkedList<Token> pendingTokens = new LinkedList<Token>();
+	private final LinkedList<Token> pendingTokens = new LinkedList<>();
 
 	private final boolean cheapTabs;
 

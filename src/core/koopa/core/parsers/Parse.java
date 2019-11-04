@@ -21,7 +21,7 @@ public class Parse {
 	private Position finalPosition = Position.ZERO;
 	private Frame finalFrame = null;
 
-	private Set<Opt> options = new HashSet<Opt>();
+	private Set<Opt> options = new HashSet<>();
 
 	private Parse() {
 		this.stack = new Stack();

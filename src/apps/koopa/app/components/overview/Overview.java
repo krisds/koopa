@@ -15,8 +15,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -30,18 +28,16 @@ import koopa.app.actions.ParsingProvider;
 import koopa.app.batchit.BatchResults;
 import koopa.app.batchit.ParseDetails;
 import koopa.app.components.detailstable.DetailsTable;
-import koopa.app.components.detailstable.DetailsTableListener;
 import koopa.app.components.misc.DecimalFormattingRenderer;
 import koopa.app.components.misc.StatusRenderer;
 import koopa.cobol.CobolFiles;
 import koopa.cobol.parser.ParseResults;
-import koopa.core.data.Token;
 import koopa.core.parsers.Messages;
 import koopa.core.targets.TokenTracker;
-import koopa.core.util.Tuple;
 
 @SuppressWarnings("serial")
-public class Overview extends JPanel implements ParsingProvider, HoldingCobolParserFactory {
+public class Overview extends JPanel implements ParsingProvider,
+		HoldingCobolParserFactory {
 
 	private Application application = null;
 
@@ -61,8 +57,7 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 		this.application = application;
 		factory = new CobolParserFactory(ApplicationConfig.getANewProject());
 		factory.setKeepingTrackOfTokens(true);
-		factory.setBuildTrees(ApplicationSupport
-				.getCustomColumnsNeedXPath());
+		factory.setBuildTrees(ApplicationSupport.getCustomColumnsNeedXPath());
 
 		setLayout(new BorderLayout());
 		setupComponents();
@@ -121,13 +116,11 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 
 		final DetailsTable detailsTable = new DetailsTable(parseDetails);
 
-		detailsTable.addListener(new DetailsTableListener() {
-			public void userSelectedDetail(Tuple<Token, String> detail) {
-				final int selected = overviewTable
-						.convertRowIndexToModel(overviewTable.getSelectedRow());
-				final File file = results.getResults(selected).getFile();
-				application.openFile(file, factory, detail);
-			}
+		detailsTable.addListener(detail -> {
+			final int selected = overviewTable
+					.convertRowIndexToModel(overviewTable.getSelectedRow());
+			final File file = results.getResults(selected).getFile();
+			application.openFile(file, factory, detail);
 		});
 
 		JScrollPane detailsScroll = new JScrollPane(detailsTable);
@@ -140,21 +133,20 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 		add(split, BorderLayout.CENTER);
 
 		overviewTable.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
-						if (!e.getValueIsAdjusting()) {
-							final int selected = overviewTable
-									.convertRowIndexToModel(overviewTable
-											.getSelectedRow());
-							if (selected >= 0) {
-								parseDetails.setParseResults(results
-										.getResults(selected));
-							}
+				e -> {
+					if (!e.getValueIsAdjusting()) {
+						final int selected = overviewTable
+								.convertRowIndexToModel(overviewTable
+										.getSelectedRow());
+						if (selected >= 0) {
+							parseDetails.setParseResults(results
+									.getResults(selected));
 						}
 					}
 				});
 
 		overviewTable.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					int row = overviewTable.rowAtPoint(new Point(e.getX(), e
@@ -176,6 +168,7 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 		return parsing;
 	}
 
+	@Override
 	public void walkAndParse(File file) {
 		if (parsing)
 			return;
@@ -187,7 +180,7 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 			application.walkingAndParsing();
 			progress.setIndeterminate(true);
 
-			List<File> targets = new LinkedList<File>();
+			final List<File> targets = new LinkedList<>();
 			walk(file, targets);
 
 			progress.setValue(0);
@@ -275,10 +268,12 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 		results.add(parseResults.copy());
 	}
 
+	@Override
 	public Component getGUI() {
 		return this;
 	}
 
+	@Override
 	public void clearResults() {
 		results.clear();
 		parseDetails.setParseResults(null);
@@ -293,6 +288,7 @@ public class Overview extends JPanel implements ParsingProvider, HoldingCobolPar
 		quitParsing = true;
 	}
 
+	@Override
 	public CobolParserFactory getCobolParserFactory() {
 		return factory;
 	}

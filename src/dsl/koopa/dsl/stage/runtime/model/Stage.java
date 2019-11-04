@@ -30,7 +30,7 @@ public class Stage {
 	 * Collects all grammar tests and groups them with the grammar rules they
 	 * were defined for.
 	 */
-	private Map<String, Target> targets = new LinkedHashMap<String, Target>();
+	private Map<String, Target> targets = new LinkedHashMap<>();
 
 	public Stage(SuiteOfStages suite, File source) throws IOException {
 		this.suite = suite;

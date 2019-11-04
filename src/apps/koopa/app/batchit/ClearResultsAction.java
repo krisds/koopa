@@ -17,6 +17,7 @@ public class ClearResultsAction extends AbstractAction implements Action {
 		this.provider = provider;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
 		// TODO Run in separate thread ?
 		this.provider.clearResults();

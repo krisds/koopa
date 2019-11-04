@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Koopa" default="build" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
+	<property name="koopa.java.version" value="1.8" />
+
 	<!-- Thank you: http://stackoverflow.com/questions/7260697/set-ant-bootclasspath-jdk-1-7-has-a-new-javac-warning-for-setting-an-older-sour -->
 	<property environment="env" />
-	<property name="java5.boot.classpath" value="${env.JAVA5_BOOTCLASSES}" />
-	<echo unless:set="env.JAVA5_BOOTCLASSES">
-        Please make sure JAVA5_BOOTCLASSES is set to a valid Java 5 bootstrap classpath.
-        You may get builds which are not compatible with java 5 otherwise.
+	<property name="koopa.java.boot.classpath" value="${env.JAVA8_BOOTCLASSES}" />
+	<echo unless:set="env.JAVA8_BOOTCLASSES">
+        Please make sure JAVA8_BOOTCLASSES is set to a valid Java ${koopa.java.version} bootstrap classpath.
+        You may get builds which are not compatible with Java ${koopa.java.version} otherwise.
     </echo>
 
 	<target name="clean">
@@ -35,7 +37,7 @@
 
 	<target name="core-compile" depends="core-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
-		<javac srcdir="src/core/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/core/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -53,7 +55,7 @@
 
 	<target name="core-tests" depends="core">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/core/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/core/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -119,7 +121,7 @@
 
 	<target name="templates">
 		<echo>Compiling Koopa Templates DSL...</echo>
-		<javac srcdir="src/templates/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/templates/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -133,7 +135,7 @@
 
 	<target name="dsl" depends="core,templates">
 		<echo>Compiling Koopa Grammar DSL...</echo>
-		<javac srcdir="src/dsl/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/dsl/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -152,7 +154,7 @@
 
 	<target name="dsl-tests" depends="core,core-tests,dsl">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/dsl/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/dsl/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -194,7 +196,7 @@
 		<kgg path="src/cics/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/cics/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/cics/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -213,7 +215,7 @@
 
 	<target name="cics-tests" depends="core,core-tests,cics">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cics/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/cics/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -254,7 +256,7 @@
 		<kgg path="src/sql/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/sql/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/sql/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -273,7 +275,7 @@
 
 	<target name="sql-tests" depends="core,core-tests,sql">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/sql/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/sql/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -314,7 +316,7 @@
 		<kgg path="src/cobol/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -333,7 +335,7 @@
 
 	<target name="cobol-tests" depends="core,core-tests,cobol">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -424,7 +426,7 @@
 		<kgg path="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
-		<javac srcdir="src/apps/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="src/apps/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -445,14 +447,14 @@
 		<kgg path="examples/" />
 
 		<echo>Compiling example classes...</echo>
-		<javac srcdir="examples/basic/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="examples/basic/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="1.5" target="1.5" bootclasspath="${java5.boot.classpath}" includeantruntime="false">
+		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />

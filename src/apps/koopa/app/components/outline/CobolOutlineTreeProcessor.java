@@ -25,9 +25,9 @@ public class CobolOutlineTreeProcessor {
 	protected static final Icon PROGRAM_ICON = Icons
 			.getIcon("/koopa/app/resources/splashy/document_a4_marked.png");
 
-	private Stack<DefaultMutableTreeNode> nodes = new Stack<DefaultMutableTreeNode>();
+	private Stack<DefaultMutableTreeNode> nodes = new Stack<>();
 
-	private List<DefaultMutableTreeNode> trees = new LinkedList<DefaultMutableTreeNode>();
+	private List<DefaultMutableTreeNode> trees = new LinkedList<>();
 
 	public void process(Tree tree) {
 		walk(tree);

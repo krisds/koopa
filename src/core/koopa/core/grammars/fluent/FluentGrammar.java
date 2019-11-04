@@ -31,7 +31,7 @@ import koopa.core.parsers.combinators.WithOption;
 
 public abstract class FluentGrammar extends Grammar {
 
-	private Map<String, DelayedDefinition> definitions = new HashMap<String, DelayedDefinition>();
+	private Map<String, DelayedDefinition> definitions = new HashMap<>();
 
 	protected NamedDefinition define(String name) {
 		assert (!definitions.containsKey(name));
@@ -241,6 +241,7 @@ public abstract class FluentGrammar extends Grammar {
 
 	// ------------------------------------------------------------------------
 
+	@Override
 	public ParserCombinator keyword() {
 		return any().asParser();
 	}

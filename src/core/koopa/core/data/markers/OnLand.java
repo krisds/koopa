@@ -19,6 +19,7 @@ public final class OnLand extends Marker {
 		return INSTANCE;
 	}
 
+	@Override
 	public String toString() {
 		return "]LAND]";
 	}

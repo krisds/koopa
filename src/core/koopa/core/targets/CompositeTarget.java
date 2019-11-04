@@ -10,13 +10,15 @@ import koopa.core.data.Data;
  */
 public class CompositeTarget implements Target {
 
-	private final List<Target> targets = new LinkedList<Target>();
+	private final List<Target> targets = new LinkedList<>();
 
+	@Override
 	public void push(Data data) {
 		for (Target target : targets)
 			target.push(data);
 	}
 
+	@Override
 	public void done() {
 		for (Target target : targets)
 			target.done();

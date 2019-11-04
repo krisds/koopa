@@ -40,16 +40,17 @@ public class ReplaceLeading extends ReplacingPhrase {
 		if (byWords.size() == 0)
 			replacement = null;
 		else {
-			replacement = new LinkedList<Token>();
+			replacement = new LinkedList<>();
 			replacement.addAll(by.getTokens());
 			replacement.add(null);
 		}
 	}
 
+	@Override
 	public boolean appliedTo(Source library,
 			LinkedList<Data> newTokens) {
 
-		final Stack<Token> seen = new Stack<Token>();
+		final Stack<Token> seen = new Stack<>();
 		final List<Token> next = nextTextWord(library, seen);
 
 		if (LOGGER.isTraceEnabled()) {

@@ -79,6 +79,7 @@ public class SquiggleUnderlineHighlightPainter extends
 	 *            View painting for
 	 * @return region drawing occurred in
 	 */
+	@Override
 	public Shape paintLayer(Graphics g, int offs0, int offs1, Shape bounds,
 			JTextComponent c, View view) {
 

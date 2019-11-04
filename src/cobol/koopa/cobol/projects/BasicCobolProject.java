@@ -24,6 +24,7 @@ public class BasicCobolProject implements CobolProject {
 	private TabStops tabStops = new TabStops();
 	private boolean defaultPreprocessing = false;
 
+	@Override
 	public CobolProject duplicate() {
 		final BasicCobolProject project = new BasicCobolProject();
 		copyBasicSettingsInto(project);
@@ -37,36 +38,44 @@ public class BasicCobolProject implements CobolProject {
 		project.defaultPreprocessing = defaultPreprocessing;
 	}
 
+	@Override
 	public File locateCopybook(String textName, String libraryName,
 			File sourceFile) {
 		return null;
 	}
 
+	@Override
 	public ParserCombinator parserFor(File file) {
 		final boolean isCopybook = CobolFiles.isCopybook(file);
 		return isCopybook ? grammar.copybook() : grammar.compilationGroup();
 	}
 
+	@Override
 	public CobolGrammar getGrammar() {
 		return grammar;
 	}
 
+	@Override
 	public SourceFormat getDefaultFormat() {
 		return defaultFormat;
 	}
 
+	@Override
 	public void setDefaultFormat(SourceFormat format) {
 		this.defaultFormat = format;
 	}
 
+	@Override
 	public SourceFormat getFormat(File file) {
 		return getDefaultFormat();
 	}
 
+	@Override
 	public int getDefaultTabLength() {
 		return defaultTabLength;
 	}
 
+	@Override
 	public void setDefaultTabLength(int tabLength) {
 		if (tabLength < 1)
 			throw new IllegalArgumentException(
@@ -74,30 +83,37 @@ public class BasicCobolProject implements CobolProject {
 		this.defaultTabLength = tabLength;
 	}
 
+	@Override
 	public int getTabLength(File file) {
 		return getDefaultTabLength();
 	}
 
+	@Override
 	public void setDefaultTabStops(TabStops tabStops) {
 		this.tabStops = tabStops;
 	}
 
+	@Override
 	public TabStops getDefaultTabStops() {
 		return tabStops;
 	}
 
+	@Override
 	public TabStops getTabStops(File file) {
 		return tabStops;
 	}
 
+	@Override
 	public void setDefaultPreprocessing(boolean preprocessing) {
 		this.defaultPreprocessing = preprocessing;
 	}
 
+	@Override
 	public boolean isDefaultPreprocessing() {
 		return this.defaultPreprocessing;
 	}
 
+	@Override
 	public boolean isPreprocessing(File file) {
 		return isDefaultPreprocessing();
 	}

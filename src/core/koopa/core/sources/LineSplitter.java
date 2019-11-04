@@ -235,6 +235,7 @@ public class LineSplitter extends BasicSource implements Source {
 		return new Token(text, start, end, tags);
 	}
 
+	@Override
 	public void close() {
 		try {
 			if (reader != null)

@@ -13,8 +13,8 @@ public class CommandLineOptions {
 	private int tabLength = 1;
 	private TabStops tabStops = new TabStops();
 	private boolean preprocess = false;
-	private List<String> copybookPaths = new LinkedList<String>();
-	private List<String> other = new ArrayList<String>();
+	private List<String> copybookPaths = new LinkedList<>();
+	private List<String> other = new ArrayList<>();
 
 	public CommandLineOptions(String[] args) {
 		for (int i = 0; i < args.length; i++) {

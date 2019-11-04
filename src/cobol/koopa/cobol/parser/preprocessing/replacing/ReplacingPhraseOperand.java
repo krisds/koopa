@@ -40,13 +40,13 @@ public class ReplacingPhraseOperand {
 	public static ReplacingPhraseOperand from(Tree operand) {
 		final Type type = Type.from(operand);
 		final LinkedList<Data> tokens //
-				= new LinkedList<Data>(operand.getTokens());
+				= new LinkedList<>(operand.getTokens());
 		return new ReplacingPhraseOperand(type, tokens);
 	}
 
 	public ReplacingPhraseOperand(Type type, List<Data> data) {
 		this.type = type;
-		this.tokens = new LinkedList<Token>();
+		this.tokens = new LinkedList<>();
 		for (Data d : data) 
 			if (d instanceof Token)
 				this.tokens.add((Token) d);
@@ -69,7 +69,7 @@ public class ReplacingPhraseOperand {
 				&& isConsideredSingleSpace(this.tokens.getLast()))
 			this.tokens.removeLast();
 
-		this.textWords = new LinkedList<String>();
+		this.textWords = new LinkedList<>();
 		prepareForMatching();
 	}
 

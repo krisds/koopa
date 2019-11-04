@@ -37,7 +37,7 @@ public final class Tokens {
 
 		// Empty token ?
 		if (beginIndex == lengthOfToken) {
-			List<Range> ranges = new ArrayList<Range>(1);
+			List<Range> ranges = new ArrayList<>(1);
 			Position end = token.getEnd();
 			ranges.add(new Range(end, end));
 			return new Token("", ranges, token.getTags(), token.getReplaced());
@@ -46,7 +46,7 @@ public final class Tokens {
 		int index = beginIndex;
 		String text = token.getText().substring(index);
 
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 		for (Range range : token.getRanges()) {
 			if (index == 0) {
 				// We have already made the cut. All further ranges get added
@@ -107,7 +107,7 @@ public final class Tokens {
 
 		text = text.substring(begin, end);
 
-		List<Range> ranges = new ArrayList<Range>();
+		List<Range> ranges = new ArrayList<>();
 		for (Range range : token.getRanges()) {
 			if (end < 0) {
 				// We have gone past the end index. Which means we're done.

@@ -31,10 +31,10 @@ public class TreeSample {
 	// ========================================================================
 
 	public static TreeSample from(String... lines) {
-		List<Tree> roots = new LinkedList<Tree>();
-		Stack<Tree> trees = new Stack<Tree>();
-		Stack<Integer> depths = new Stack<Integer>();
-		List<Object> text = new LinkedList<Object>();
+		List<Tree> roots = new LinkedList<>();
+		Stack<Tree> trees = new Stack<>();
+		Stack<Integer> depths = new Stack<>();
+		List<Object> text = new LinkedList<>();
 		int len = 0;
 
 		for (final String line : lines) {
@@ -107,15 +107,6 @@ public class TreeSample {
 		return sample;
 	}
 
-	private static void dump(Tree foo, String dent) {
-		if (foo == null)
-			return;
-
-		System.out.println(dent + foo);
-		for (int i = 0; i < foo.getChildCount(); i++)
-			dump(foo.getChild(i), dent + " ");
-	}
-
 	private static int depth(String line) {
 		for (int i = 0; i < line.length(); i++)
 			if (!Character.isWhitespace(line.charAt(i)))
@@ -123,5 +114,4 @@ public class TreeSample {
 
 		return line.length();
 	}
-
 }

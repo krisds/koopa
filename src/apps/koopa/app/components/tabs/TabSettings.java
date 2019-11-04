@@ -45,14 +45,17 @@ public class TabSettings extends JDialog {
 
 	private void setupComponents() {
 		final DocumentListener listener = new DocumentListener() {
+			@Override
 			public void removeUpdate(DocumentEvent e) {
 				validateInputs();
 			}
 
+			@Override
 			public void insertUpdate(DocumentEvent e) {
 				validateInputs();
 			}
 
+			@Override
 			public void changedUpdate(DocumentEvent e) {
 				validateInputs();
 			}
@@ -107,6 +110,7 @@ public class TabSettings extends JDialog {
 		cancel.setAction(new AbstractAction("Cancel") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 			}
@@ -116,6 +120,7 @@ public class TabSettings extends JDialog {
 		ok = new JButton(new AbstractAction("OK") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				applyInputs();
 				setVisible(false);
@@ -165,6 +170,7 @@ public class TabSettings extends JDialog {
 		return new AbstractAction(NAME + " ...") {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				new TabSettings(application.getFrame(),
 						application.getCobolParserFactory()).setVisible(true);

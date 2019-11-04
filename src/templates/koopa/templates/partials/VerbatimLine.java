@@ -11,6 +11,7 @@ public class VerbatimLine implements Part {
 		this.text = text;
 	}
 
+	@Override
 	public void applyTo(StringBuilder builder, String indent,
 			TemplateLogic logic) {
 		builder.append(indent);

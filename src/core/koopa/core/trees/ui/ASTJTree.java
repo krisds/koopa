@@ -19,6 +19,7 @@ public class ASTJTree extends JTree {
 		this.tree = tree;
 	}
 
+	@Override
 	public String convertValueToText(Object value, boolean selected,
 			boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
@@ -51,7 +52,7 @@ public class ASTJTree extends JTree {
 	}
 
 	private TreePath getTreePathToNode(Tree node) {
-		final LinkedList<Tree> path = new LinkedList<Tree>();
+		final LinkedList<Tree> path = new LinkedList<>();
 		while (node != null) {
 			path.addFirst(node);
 			node = node.getParent();

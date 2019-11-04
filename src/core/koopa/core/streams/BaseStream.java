@@ -78,13 +78,14 @@ public class BaseStream implements Stream {
 
 		this.pendingData = new HoldingTarget(target);
 
-		this.delayed = new ArrayList<Marker>();
+		this.delayed = new ArrayList<>();
 
-		this.allBookmarks = new ArrayList<Bookmark>();
+		this.allBookmarks = new ArrayList<>();
 		this.nextActiveBookmark = 0;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Data forward() {
 		insertDelayedMarkers();
 
@@ -105,6 +106,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Data skip() {
 		while (true) {
 			final Data d = source.next();
@@ -126,6 +128,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void insert(Marker marker) {
 		if (weShouldDelay(marker))
 			delay(marker);
@@ -171,6 +174,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void rewind(Data data) {
 		while (true) {
 			final Data d = pendingData.pop();
@@ -195,6 +199,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Data peek() {
 		final Data peeked = source.next();
 
@@ -205,6 +210,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String peekMore() {
 		final Data[] peeked = new Data[5];
 		int p = 0;
@@ -241,11 +247,13 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void bookmark() {
 		pushBookmark();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void rewind() {
 		if (hasActiveBookmarks()) {
 			final Bookmark rewound = popBookmark();
@@ -275,6 +283,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void commit() {
 		if (hasActiveBookmarks())
 			popBookmark();
@@ -286,11 +295,13 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Parse getParse() {
 		return parse;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void setParse(Parse parse) {
 		this.parse = parse;
 	}
@@ -300,6 +311,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Iterator<Data> backToBookmarkIterator() {
 		if (!hasActiveBookmarks())
 			return emptyIterator();
@@ -314,10 +326,12 @@ public class BaseStream implements Stream {
 			int currentPosition = pendingData.size();
 			Iterator<Data> reverseIterator = null;
 
+			@Override
 			public boolean hasNext() {
 				return currentPosition > positionOfBookmark;
 			}
 
+			@Override
 			public Data next() {
 				if (reverseIterator == null)
 					reverseIterator = pendingData.descendingIterator();
@@ -326,6 +340,7 @@ public class BaseStream implements Stream {
 				return reverseIterator.next();
 			}
 
+			@Override
 			public void remove() {
 				if (reverseIterator != null)
 					reverseIterator.remove();
@@ -334,6 +349,7 @@ public class BaseStream implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Iterator<Data> fromBookmarkIterator() {
 		if (!hasActiveBookmarks())
 			return emptyIterator();
@@ -347,6 +363,7 @@ public class BaseStream implements Stream {
 		return pendingData.listIterator(positionOfBookmark);
 	}
 
+	@Override
 	public BaseStream getBaseStream() {
 		return this;
 	}
@@ -384,7 +401,7 @@ public class BaseStream implements Stream {
 
 	private final class Bookmark {
 		private int position = 0;
-		private List<Marker> markers = new ArrayList<Marker>();
+		private List<Marker> markers = new ArrayList<>();
 
 		public void latchCurrentState() {
 			position = pendingData.size();

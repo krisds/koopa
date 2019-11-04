@@ -9,6 +9,7 @@ public class NullSource extends BasicSource implements Source {
 		return null;
 	}
 
+	@Override
 	public void close() {
 	}
 }

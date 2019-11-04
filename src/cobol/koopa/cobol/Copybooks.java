@@ -70,7 +70,7 @@ public class Copybooks {
 
 	// ------------------------------------------------------------------------
 
-	private List<File> copybookPaths = new ArrayList<File>();
+	private List<File> copybookPaths = new ArrayList<>();
 
 	public File locate(String textName, String libraryName, File sourceFile) {
 		return locator.locate(textName, libraryName, sourceFile, copybookPaths);

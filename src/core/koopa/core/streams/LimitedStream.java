@@ -26,13 +26,13 @@ public class LimitedStream extends StreamDecorator implements Stream {
 	 * Limiters are additive. Whenever any limiter matches the
 	 * {@link #forward()} method should return <code>null</code>.
 	 */
-	private Map<ParserCombinator, Integer> limiters = new LinkedHashMap<ParserCombinator, Integer>();
+	private Map<ParserCombinator, Integer> limiters = new LinkedHashMap<>();
 
 	/**
 	 * This lists the limiters in the order or Most-Recently-Used. This is the
 	 * order in which they will be matched.
 	 */
-	private LinkedList<ParserCombinator> mru = new LinkedList<ParserCombinator>();
+	private LinkedList<ParserCombinator> mru = new LinkedList<>();
 
 	public LimitedStream(Stream stream) {
 		super(stream);
@@ -66,6 +66,7 @@ public class LimitedStream extends StreamDecorator implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Data forward() {
 		return forward(false);
 	}
@@ -134,6 +135,7 @@ public class LimitedStream extends StreamDecorator implements Stream {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public Data peek() {
 		bookmark();
 		final Data d = forward(true);
@@ -143,6 +145,7 @@ public class LimitedStream extends StreamDecorator implements Stream {
 
 	/** {@inheritDoc} */
 	// TODO This doesn't respect the limiter. OK or not ?
+	@Override
 	public String peekMore() {
 		return super.peekMore();
 	}

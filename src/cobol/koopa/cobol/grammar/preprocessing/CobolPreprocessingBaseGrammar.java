@@ -20,10 +20,12 @@ import koopa.core.parsers.Stream;
 
 public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 
+	@Override
 	public String getNamespace() {
 		return "cobol-pp";
 	}
 
+	@Override
 	public boolean isCaseSensitive() {
 		return false;
 	}
@@ -73,11 +75,13 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 			FutureParser future = scoped("word", PRIVATE);
 			wordParser = future;
 			future.setParser(new ParserCombinator() {
+				@Override
 				public boolean matches(Parse parse) {
 					skipAll(parse);
 					return matchesWord(parse);
 				}
 
+				@Override
 				public String toString() {
 					return "cobol-pp:word";
 				}

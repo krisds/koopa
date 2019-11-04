@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -49,7 +48,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 	private JXTable resultsTable = null;
 	private JLabel status = null;
 
-	private Map<Detail, XPathResults> resultsPerDetail = new HashMap<Detail, XPathResults>();
+	private Map<Detail, XPathResults> resultsPerDetail = new HashMap<>();
 	private XPathResults selectedResults = new XPathResults();
 
 	public static synchronized XPathQueryingDialog getDialog(Frame owner,
@@ -82,32 +81,30 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 
 		status = new JLabel("Please enter a valid XPath expression.");
 
-		final ActionListener performSearch = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				final String theQuery = xpathQuery.getText();
+		final ActionListener performSearch = e -> {
+			final String theQuery = xpathQuery.getText();
 
-				if (theQuery == null) {
-					selectedResults.setResults(null);
-					return;
-				}
+			if (theQuery == null) {
+				selectedResults.setResults(null);
+				return;
+			}
 
-				try {
-					Tree tree = application.getSyntaxTree();
+			try {
+				Tree tree = application.getSyntaxTree();
 
-					final List<?> matches = Jaxen.evaluate(tree, theQuery);
+				final List<?> matches = Jaxen.evaluate(tree, theQuery);
 
-					selectedResults.setResults(matches);
-					status.setText(matches == null ? "No" : matches.size()
-							+ " matches.");
+				selectedResults.setResults(matches);
+				status.setText(matches == null ? "No" : matches.size()
+						+ " matches.");
 
-					Component view = application.getView();
-					if (view instanceof Detail)
-						highlightAllMatches((Detail) view);
+				Component view = application.getView();
+				if (view instanceof Detail)
+					highlightAllMatches((Detail) view);
 
-				} catch (XPathException xpe) {
-					selectedResults.setResults(null);
-					status.setText(xpe.getMessage());
-				}
+			} catch (XPathException xpe) {
+				selectedResults.setResults(null);
+				status.setText(xpe.getMessage());
 			}
 		};
 
@@ -137,6 +134,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		resultsTable.setHighlighters(HighlighterFactory.createSimpleStriping());
 
 		resultsTable.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					final int row = resultsTable.rowAtPoint(e.getPoint());
@@ -182,6 +180,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		}
 	}
 
+	@Override
 	public void switchedView(Component view) {
 		if (view instanceof Overview) {
 			xpathQuery.setEnabled(false);
@@ -217,6 +216,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 
 	}
 
+	@Override
 	public void updatedView(Component view) {
 		if (view instanceof Detail) {
 			Detail detail = (Detail) view;
@@ -232,9 +232,10 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		}
 	}
 
+	@Override
 	public void closedDetail(Component view) {
 		if (view instanceof Detail)
-			resultsPerDetail.remove((Detail) view);
+			resultsPerDetail.remove(view);
 
 		xpathQuery.setEnabled(false);
 		queryButton.setEnabled(false);

@@ -22,11 +22,7 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 
 	public DepthFirstTokenIterator(Tree root, TokenFilter filter) {
 		this.root = root;
-		this.filter = filter != null ? filter : new TokenFilter() {
-			public boolean include(Token token) {
-				return true;
-			}
-		};
+		this.filter = filter != null ? filter : token -> true;
 
 		this.current = root;
 
@@ -34,10 +30,12 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 			moveToNextToken();
 	}
 
+	@Override
 	public boolean hasNext() {
 		return current != null;
 	}
 
+	@Override
 	public Token next() {
 		Token next = (Token) current.getData();
 		moveToNextMatchingToken();
@@ -95,6 +93,7 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 		}
 	}
 
+	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

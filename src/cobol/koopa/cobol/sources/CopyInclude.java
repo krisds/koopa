@@ -44,13 +44,13 @@ public class CopyInclude extends ChainingSource
 	private final CobolProject project;
 	private StackOfSources inputStack;
 
-	private final LinkedList<Data> pending = new LinkedList<Data>();
+	private final LinkedList<Data> pending = new LinkedList<>();
 
 	/**
 	 * All COPY statements which got handled are tracked here, in syntax tree
 	 * form.
 	 */
-	private List<Tree> handledCopyStatements = new LinkedList<Tree>();
+	private List<Tree> handledCopyStatements = new LinkedList<>();
 
 	public CopyInclude(Source source, CobolPreprocessingGrammar grammar,
 			CobolProject project, StackOfSources stack) {
@@ -163,7 +163,7 @@ public class CopyInclude extends ChainingSource
 	}
 
 	private LinkedList<Data> getCopyStatement(LinkedList<Data> line) {
-		LinkedList<Data> copy = new LinkedList<Data>();
+		LinkedList<Data> copy = new LinkedList<>();
 
 		while (true) {
 			// Do we need to read another line ?
@@ -223,7 +223,7 @@ public class CopyInclude extends ChainingSource
 	}
 
 	private LinkedList<Data> getPseudoLiteral(LinkedList<Data> line) {
-		LinkedList<Data> pseudoLiteral = new LinkedList<Data>();
+		LinkedList<Data> pseudoLiteral = new LinkedList<>();
 
 		pseudoLiteral.add(line.removeFirst());
 		pseudoLiteral.add(line.removeFirst());

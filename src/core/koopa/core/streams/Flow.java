@@ -18,7 +18,7 @@ public class Flow {
 	private final Parse parse;
 
 	private Source source = new NullSource();
-	private List<Target> targets = new LinkedList<Target>();
+	private List<Target> targets = new LinkedList<>();
 
 	private WaterTagger waterTagger;
 

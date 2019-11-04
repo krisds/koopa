@@ -12,9 +12,10 @@ public class Pipe extends BasicSource implements Target, Source {
 	private LinkedList<Data> tokens = null;
 
 	public Pipe() {
-		this.tokens = new LinkedList<Data>();
+		this.tokens = new LinkedList<>();
 	}
 
+	@Override
 	public void push(Data data) {
 		synchronized (tokens) {
 			tokens.add(data);
@@ -31,9 +32,11 @@ public class Pipe extends BasicSource implements Target, Source {
 		}
 	}
 
+	@Override
 	public void done() {
 	}
 
+	@Override
 	public void close() {
 	}
 }

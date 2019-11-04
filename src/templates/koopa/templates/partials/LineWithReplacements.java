@@ -11,6 +11,7 @@ public class LineWithReplacements implements Part {
 		this.parts = parts;
 	}
 
+	@Override
 	public void applyTo(StringBuilder builder, String indent,
 			TemplateLogic logic) {
 		builder.append(indent);

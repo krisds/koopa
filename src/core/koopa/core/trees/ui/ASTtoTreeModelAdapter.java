@@ -14,14 +14,17 @@ public class ASTtoTreeModelAdapter implements TreeModel {
 		this.root = t;
 	}
 
+	@Override
 	public Object getChild(Object parent, int index) {
 		return ((Tree) parent).getChild(index);
 	}
 
+	@Override
 	public int getChildCount(Object parent) {
 		return ((Tree) parent).getChildCount();
 	}
 
+	@Override
 	public int getIndexOfChild(Object parent, Object child) {
 		if (parent == null || child == null)
 			return -1;
@@ -29,22 +32,27 @@ public class ASTtoTreeModelAdapter implements TreeModel {
 		return ((Tree) child).getChildIndex();
 	}
 
+	@Override
 	public Object getRoot() {
 		return root;
 	}
 
+	@Override
 	public boolean isLeaf(Object node) {
 		return !((Tree) node).hasChildren();
 	}
 
+	@Override
 	public void addTreeModelListener(TreeModelListener l) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void removeTreeModelListener(TreeModelListener l) {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		// TODO Auto-generated method stub
 	}

@@ -16,6 +16,7 @@ public class DecimalFormattingRenderer extends DefaultTableCellRenderer
 		this.format = new DecimalFormat(pattern);
 	}
 
+	@Override
 	public void setValue(Object value) {
 		try {
 			setText((value == null) ? "" : format.format(value));

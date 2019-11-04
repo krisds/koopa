@@ -21,7 +21,7 @@ public class TestGrammar extends KoopaGrammar {
 	private final Set<String> separators;
 
 	public TestGrammar(String... separators) {
-		this.separators = new HashSet<String>(Arrays.asList(separators));
+		this.separators = new HashSet<>(Arrays.asList(separators));
 	}
 
 	// ========================================================================

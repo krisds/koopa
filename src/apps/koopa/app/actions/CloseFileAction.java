@@ -18,11 +18,8 @@ public class CloseFileAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				application.closeView();
-			}
-		}).start();
+		new Thread(() -> application.closeView()).start();
 	}
 }

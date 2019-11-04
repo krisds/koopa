@@ -11,7 +11,7 @@ import koopa.core.data.Data;
  */
 public class StackOfSources extends BasicSource implements Source {
 
-	private Stack<Source> sources = new Stack<Source>();
+	private Stack<Source> sources = new Stack<>();
 
 	@Override
 	protected Data nxt1() {
@@ -45,6 +45,7 @@ public class StackOfSources extends BasicSource implements Source {
 		return sources.isEmpty();
 	}
 
+	@Override
 	public void close() {
 		while (!sources.isEmpty()) {
 			sources.peek().close();
@@ -52,6 +53,7 @@ public class StackOfSources extends BasicSource implements Source {
 		}
 	}
 
+	@Override
 	public <S extends Source> S getSource(Class<S> clazz) {
 		// TODO Should reverse order ?
 		for (Source source : sources) {

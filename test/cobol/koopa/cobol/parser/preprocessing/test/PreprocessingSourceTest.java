@@ -7,12 +7,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import koopa.cobol.CobolTokens;
-import koopa.cobol.grammar.CobolGrammar;
 import koopa.cobol.projects.StandardCobolProject;
 import koopa.cobol.sources.SourceFormat;
 import koopa.core.data.Data;
@@ -21,21 +16,24 @@ import koopa.core.sources.Source;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 @RunWith(Files.class)
 public class PreprocessingSourceTest implements FileBasedTest {
 
 	private static final String INPUT_PREFIX = "<";
 	private static final String EXPECTED_PREFIX = ">";
 
+	@Override
 	public File[] getFiles() {
 		File folder = new File(
 				"test/cobol/koopa/cobol/parser/preprocessing/test/");
 
-		File[] sources = folder.listFiles(new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				name = name.toLowerCase();
-				return name.endsWith(".ppsample");
-			}
+		File[] sources = folder.listFiles((FilenameFilter) (dir, name) -> {
+			name = name.toLowerCase();
+			return name.endsWith(".ppsample");
 		});
 
 		return sources;
@@ -43,6 +41,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 
 	private File file;
 
+	@Override
 	public void setFile(File file) {
 		this.file = file;
 	}
@@ -83,8 +82,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 						input.append('\n');
 
 					} else if (line.startsWith(EXPECTED_PREFIX)) {
-						expected.append(
-								line.substring(EXPECTED_PREFIX.length()));
+						expected.append(line.substring(EXPECTED_PREFIX.length()));
 						expected.append('\n');
 					}
 				}

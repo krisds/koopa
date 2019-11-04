@@ -23,25 +23,24 @@ public class DebugAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				Overview overview = application.getOverview();
-				Component view = application.getView();
+		new Thread(() -> {
+			Overview overview = application.getOverview();
+			Component view = application.getView();
 
-				if (view == overview)
-					return;
+			if (view == overview)
+				return;
 
-				if (view instanceof Debug) {
-					((Debug) view).reload();
+			if (view instanceof Debug) {
+				((Debug) view).reload();
 
-				} else if (view instanceof Detail) {
-					Detail detail = (Detail) view;
-					File file = detail.getFile();
-					Debug debug = new Debug(application, file,
-							detail.getCobolParserFactory());
-					application.swapView(detail, debug);
-				}
+			} else if (view instanceof Detail) {
+				Detail detail = (Detail) view;
+				File file = detail.getFile();
+				Debug debug = new Debug(application, file,
+						detail.getCobolParserFactory());
+				application.swapView(detail, debug);
 			}
 		}).start();
 	}

@@ -10,20 +10,12 @@ public final class FilenameFilters {
 	/**
 	 * This {@linkplain FilenameFilter} accepts all files.
 	 */
-	public static final FilenameFilter ALL = new FilenameFilter() {
-		public boolean accept(File dir, String name) {
-			return true;
-		}
-	};
+	public static final FilenameFilter ALL = (dir, name) -> true;
 
 	/**
 	 * This {@linkplain FilenameFilter} rejects all files.
 	 */
-	public static final FilenameFilter NONE = new FilenameFilter() {
-		public boolean accept(File dir, String name) {
-			return false;
-		}
-	};
+	public static final FilenameFilter NONE = (dir, name) -> false;
 
 	/**
 	 * Return a {@linkplain FilenameFilter} which accepts all files except the
@@ -36,11 +28,8 @@ public final class FilenameFilters {
 		final File folder = file.getParentFile();
 		final String fileName = file.getName();
 
-		return new FilenameFilter() {
-			public boolean accept(File path, String name) {
-				return !path.equals(folder) || !name.equalsIgnoreCase(fileName);
-			}
-		};
+		return (path, name) -> !path.equals(folder)
+				|| !name.equalsIgnoreCase(fileName);
 	}
 
 	/**
@@ -51,14 +40,12 @@ public final class FilenameFilters {
 		if (filters == null || filters.length == 0)
 			return NONE;
 
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				for (FilenameFilter filter : filters)
-					if (!filter.accept(dir, name))
-						return false;
+		return (dir, name) -> {
+			for (FilenameFilter filter : filters)
+				if (!filter.accept(dir, name))
+					return false;
 
-				return true;
-			}
+			return true;
 		};
 	}
 
@@ -69,18 +56,15 @@ public final class FilenameFilters {
 	 */
 	public static FilenameFilter forExtension(final String expectedExtension,
 			final boolean ignoreCase) {
-		return new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				final String actualExtension = Files.getExtension(name);
+		return (dir, name) -> {
+			final String actualExtension = Files.getExtension(name);
 
-				if (expectedExtension == null)
-					return actualExtension == null
-							|| actualExtension.equals("");
-				else if (ignoreCase)
-					return expectedExtension.equalsIgnoreCase(actualExtension);
-				else
-					return expectedExtension.equals(actualExtension);
-			}
+			if (expectedExtension == null)
+				return actualExtension == null || actualExtension.equals("");
+			else if (ignoreCase)
+				return expectedExtension.equalsIgnoreCase(actualExtension);
+			else
+				return expectedExtension.equals(actualExtension);
 		};
 	}
 }

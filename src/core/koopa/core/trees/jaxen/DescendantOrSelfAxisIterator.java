@@ -14,10 +14,12 @@ public class DescendantOrSelfAxisIterator implements Iterator<Tree> {
 		this.next = root;
 	}
 
+	@Override
 	public boolean hasNext() {
 		return this.next != null;
 	}
 
+	@Override
 	public Tree next() {
 		final Tree tree = this.next;
 
@@ -59,6 +61,7 @@ public class DescendantOrSelfAxisIterator implements Iterator<Tree> {
 		}
 	}
 
+	@Override
 	public void remove() {
 		new UnsupportedOperationException();
 	}

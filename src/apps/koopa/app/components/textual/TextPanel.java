@@ -43,6 +43,7 @@ public class TextPanel extends JPanel implements Textual {
 		text = new JTextPane() {
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean getScrollableTracksViewportWidth() {
 				return false;
 			}
@@ -113,6 +114,7 @@ public class TextPanel extends JPanel implements Textual {
 		}
 	}
 
+	@Override
 	public boolean find(String pattern) throws PatternSyntaxException {
 		final int fromIndex = text.getCaretPosition() + 1;
 		if (searchPattern == null || !searchPattern.equals(pattern)) {
@@ -127,8 +129,8 @@ public class TextPanel extends JPanel implements Textual {
 					Pattern.CASE_INSENSITIVE);
 			final Matcher m = p.matcher(content);
 
-			matchingStartPositions = new ArrayList<Integer>();
-			matchingEndPositions = new ArrayList<Integer>();
+			matchingStartPositions = new ArrayList<>();
+			matchingEndPositions = new ArrayList<>();
 
 			while (m.find()) {
 				matchingStartPositions.add(m.start());
@@ -161,6 +163,7 @@ public class TextPanel extends JPanel implements Textual {
 		text.setStyledDocument(document);
 	}
 
+	@Override
 	public void setBackground(Color bg) {
 		if (text != null)
 			text.setBackground(bg);
@@ -173,6 +176,7 @@ public class TextPanel extends JPanel implements Textual {
 	}
 
 	/* Copied from javax.swing.text.PlainDocument */
+	@Override
 	public int getAdjustedLineCount() {
 		// There is an implicit break being modeled at the end of the
 		// document to deal with boundary conditions at the end. This
@@ -188,6 +192,7 @@ public class TextPanel extends JPanel implements Textual {
 		return n - 1;
 	}
 
+	@Override
 	public void scrollToLine(int line) {
 		Element map = text.getDocument().getDefaultRootElement();
 		Element lastLine = map.getElement(line);

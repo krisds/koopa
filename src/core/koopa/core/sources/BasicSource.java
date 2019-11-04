@@ -10,7 +10,7 @@ import koopa.core.data.Data;
  */
 public abstract class BasicSource implements Source {
 
-	private final LinkedList<Data> unseen = new LinkedList<Data>();
+	private final LinkedList<Data> unseen = new LinkedList<>();
 
 	/**
 	 * Returns the next piece of data, or <code>null</code> if there is no more.
@@ -20,6 +20,7 @@ public abstract class BasicSource implements Source {
 	// TODO -> better name
 	protected abstract Data nxt1();
 
+	@Override
 	public Data next() {
 		if (unseen.isEmpty())
 			return nxt1();
@@ -27,11 +28,13 @@ public abstract class BasicSource implements Source {
 			return unseen.removeFirst();
 	}
 
+	@Override
 	public void unshift(Data packet) {
 		if (packet != null)
 			this.unseen.addFirst(packet);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <S extends Source> S getSource(Class<S> clazz) {
 		if (clazz.isAssignableFrom(this.getClass()))

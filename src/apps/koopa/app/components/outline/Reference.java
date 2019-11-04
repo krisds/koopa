@@ -38,6 +38,7 @@ public class Reference {
 		return this.icon;
 	}
 
+	@Override
 	public String toString() {
 		return description;
 	}

@@ -29,7 +29,7 @@ public class ListOfGrammarRules extends JPanel implements
 	private Tree parseTree = null;
 
 	private int index = 0;
-	private List<JLabel> labels = new ArrayList<JLabel>();
+	private List<JLabel> labels = new ArrayList<>();
 
 	private JLabel noSelection = null;
 
@@ -56,6 +56,7 @@ public class ListOfGrammarRules extends JPanel implements
 		add(noSelection);
 	}
 
+	@Override
 	public void selectedToken(Token token) {
 		while (index > 0)
 			remove(labels.get(--index));
@@ -76,7 +77,7 @@ public class ListOfGrammarRules extends JPanel implements
 			return;
 		}
 
-		LinkedList<String> breadcrumb = new LinkedList<String>();
+		LinkedList<String> breadcrumb = new LinkedList<>();
 		while (node != null) {
 			if (node.isNode())
 				breadcrumb.add(node.getName());

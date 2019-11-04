@@ -35,9 +35,9 @@ public class CompilerDirectives extends ChainingSource
 
 	private SourceFormat format;
 
-	private final LinkedList<Data> pending = new LinkedList<Data>();
+	private final LinkedList<Data> pending = new LinkedList<>();
 
-	private List<Tree> handled = new LinkedList<Tree>();
+	private List<Tree> handled = new LinkedList<>();
 
 	public CompilerDirectives(Source source, SourceFormat initialFormat) {
 		super(source);
@@ -161,7 +161,7 @@ public class CompilerDirectives extends ChainingSource
 	private LinkedList<Data> tagged(LinkedList<Data> data,
 			SourceFormat newFormat, Object... tags) {
 
-		final LinkedList<Data> tagged = new LinkedList<Data>();
+		final LinkedList<Data> tagged = new LinkedList<>();
 
 		for (Data d : data)
 			if (d instanceof Token) {

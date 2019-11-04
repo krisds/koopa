@@ -23,13 +23,12 @@ public class ShowMarkdownAction extends AbstractAction implements Action {
 		this.title = title;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				MarkdownView view = new MarkdownView(resourcePath);
-				JFrame frame = ApplicationSupport.inFrame(title, view);
-				frame.setVisible(true);
-			}
+		new Thread(() -> {
+			MarkdownView view = new MarkdownView(resourcePath);
+			JFrame frame = ApplicationSupport.inFrame(title, view);
+			frame.setVisible(true);
 		}).start();
 	}
 }

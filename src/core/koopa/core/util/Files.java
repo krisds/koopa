@@ -138,7 +138,7 @@ public final class Files {
 		if (relativePathName == null)
 			return paths;
 
-		List<File> offset = new ArrayList<File>();
+		List<File> offset = new ArrayList<>();
 		for (File path : paths)
 			offset.add(new File(path, relativePathName));
 		return offset;
@@ -174,9 +174,9 @@ public final class Files {
 	public static List<File> listFilesRecursively(File root,
 			FilenameFilter filenameFilter) {
 
-		LinkedList<File> matchingFiles = new LinkedList<File>();
+		LinkedList<File> matchingFiles = new LinkedList<>();
 
-		LinkedList<File> queuedFolders = new LinkedList<File>();
+		LinkedList<File> queuedFolders = new LinkedList<>();
 		queuedFolders.addLast(root);
 
 		while (!queuedFolders.isEmpty()) {

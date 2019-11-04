@@ -22,7 +22,7 @@ public final class Sources {
 				return line;
 
 			if (line == null)
-				line = new LinkedList<Data>();
+				line = new LinkedList<>();
 
 			line.add(d);
 

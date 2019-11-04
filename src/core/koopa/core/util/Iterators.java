@@ -15,14 +15,17 @@ public class Iterators {
 	public static Iterator<Data> emptyIterator() {
 		return new Iterator<Data>() {
 
+			@Override
 			public boolean hasNext() {
 				return false;
 			}
 
+			@Override
 			public Data next() {
 				throw new NoSuchElementException();
 			}
 
+			@Override
 			public void remove() {
 				throw new IllegalStateException();
 			}
@@ -38,15 +41,18 @@ public class Iterators {
 			private int i = list.size() - 1;
 			private boolean removed = false;
 
+			@Override
 			public boolean hasNext() {
 				return i >= 0;
 			}
 
+			@Override
 			public T next() {
 				removed = false;
 				return list.get(i--);
 			}
 
+			@Override
 			public void remove() {
 				if (removed || i + 1 >= list.size())
 					throw new IllegalStateException();
@@ -66,14 +72,17 @@ public class Iterators {
 		return new Iterator<T>() {
 			private int i = index;
 
+			@Override
 			public boolean hasNext() {
 				return i < list.size();
 			}
 
+			@Override
 			public T next() {
 				return list.get(i++);
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
@@ -84,14 +93,17 @@ public class Iterators {
 			final Enumeration<T> enumeration) {
 		return new Iterator<T>() {
 
+			@Override
 			public boolean hasNext() {
 				return enumeration.hasMoreElements();
 			}
 
+			@Override
 			public T next() {
 				return enumeration.nextElement();
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}

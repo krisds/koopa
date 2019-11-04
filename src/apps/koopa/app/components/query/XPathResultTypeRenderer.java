@@ -20,6 +20,7 @@ public class XPathResultTypeRenderer extends DefaultTableCellRenderer implements
 	private final static ImageIcon ATTRIBUTE = Icons
 			.getIcon("/koopa/app/resources/fugue/price-tag.png");
 
+	@Override
 	public void setValue(Object value) {
 		if (value == null) {
 			// TODO Question mark instead.

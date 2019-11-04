@@ -1,7 +1,6 @@
 package koopa.core.util;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,11 +11,7 @@ public class Iterables {
 	 */
 	public static <T> Iterable<T> forEnumeration(
 			final Enumeration<T> enumeration) {
-		return new Iterable<T>() {
-			public Iterator<T> iterator() {
-				return Iterators.forEnumeration(enumeration);
-			}
-		};
+		return () -> Iterators.forEnumeration(enumeration);
 	}
 
 	/**
@@ -24,7 +19,7 @@ public class Iterables {
 	 * {@linkplain List}.
 	 */
 	public static <T> List<T> collect(Iterable<T> iterable) {
-		final List<T> list = new LinkedList<T>();
+		final List<T> list = new LinkedList<>();
 
 		for (T t : iterable)
 			list.add(t);

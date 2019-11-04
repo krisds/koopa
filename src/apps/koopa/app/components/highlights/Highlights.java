@@ -17,7 +17,7 @@ import koopa.core.data.Token;
 public class Highlights {
 
 	private final SourceView sourceView;
-	private List<Object> hls = new ArrayList<Object>();
+	private List<Object> hls = new ArrayList<>();
 
 	public Highlights(SourceView sourceView) {
 		this.sourceView = sourceView;

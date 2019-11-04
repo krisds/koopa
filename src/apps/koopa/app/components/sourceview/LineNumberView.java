@@ -224,15 +224,18 @@ public class LineNumberView extends JComponent {
 		}
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		return new Dimension(getComponentWidth(), text.getHeight());
 	}
 
+	@Override
 	public void setFont(Font font) {
 		super.setFont(font);
 		updateCachedMetrics();
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		updateSizes();
 		Rectangle clip = g.getClipBounds();
@@ -262,6 +265,7 @@ public class LineNumberView extends JComponent {
 		/**
 		 * The text component was resized.
 		 */
+		@Override
 		public void componentResized(ComponentEvent evt) {
 			viewChanged(0, true);
 		}
@@ -271,6 +275,7 @@ public class LineNumberView extends JComponent {
 		 * the font, border, and tab size affect the layout of the whole
 		 * document, so we invalidate all the line heights here.
 		 */
+		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
 			Object oldValue = evt.getOldValue();
 			Object newValue = evt.getNewValue();
@@ -291,6 +296,7 @@ public class LineNumberView extends JComponent {
 		/**
 		 * Text was inserted into the document.
 		 */
+		@Override
 		public void insertUpdate(DocumentEvent evt) {
 			update(evt);
 		}
@@ -298,6 +304,7 @@ public class LineNumberView extends JComponent {
 		/**
 		 * Text was removed from the document.
 		 */
+		@Override
 		public void removeUpdate(DocumentEvent evt) {
 			update(evt);
 		}
@@ -308,6 +315,7 @@ public class LineNumberView extends JComponent {
 		 * response to inserts and removals. Since we're already listening for
 		 * those, this method should be redundant, but YMMV.
 		 */
+		@Override
 		public void changedUpdate(DocumentEvent evt) {
 			// update(evt);
 		}
@@ -340,12 +348,10 @@ public class LineNumberView extends JComponent {
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		scrollPane.setRowHeaderView(new LineNumberView(textPane));
 		frame.setContentPane(scrollPane);
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				frame.setSize(new Dimension(400, 400));
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-			}
+		SwingUtilities.invokeLater(() -> {
+			frame.setSize(new Dimension(400, 400));
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
 		});
 	}
 }

@@ -30,6 +30,7 @@ public class WaterTagger implements Target {
 		this.target = target;
 	}
 
+	@Override
 	public void done() {
 		// We want to make sure that the water tagger is not responsible for
 		// hanging on to memory which could otherwise be freed up. For instance,
@@ -41,6 +42,7 @@ public class WaterTagger implements Target {
 		}
 	}
 
+	@Override
 	public void push(Data data) {
 		if (inWater && data instanceof OnLand) {
 			inWater = false;

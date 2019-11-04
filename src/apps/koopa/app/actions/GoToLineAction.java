@@ -20,37 +20,36 @@ public class GoToLineAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				Textual textual = (Textual) application.getView();
+		new Thread(() -> {
+			Textual textual = (Textual) application.getView();
 
-				final int numberOfLines = textual.getAdjustedLineCount();
+			final int numberOfLines = textual.getAdjustedLineCount();
 
-				String input = (String) JOptionPane.showInputDialog(
-						application.getFrame(),
-						"Enter line number (1 to " + numberOfLines + ")");
+			String input = JOptionPane.showInputDialog(
+					application.getFrame(), "Enter line number (1 to "
+							+ numberOfLines + ")");
 
-				if (input == null)
-					return;
+			if (input == null)
+				return;
 
-				try {
-					int lineNumber = Integer.parseInt(input);
+			try {
+				int lineNumber = Integer.parseInt(input);
 
-					if (lineNumber < 1 || lineNumber > numberOfLines)
-						JOptionPane.showMessageDialog(application.getFrame(),
-								"Line number should be between 1 and "
-										+ numberOfLines + ".",
-								"Line number out of range.",
-								JOptionPane.ERROR_MESSAGE);
-					else
-						textual.scrollToLine(lineNumber - 1);
-
-				} catch (NumberFormatException e) {
+				if (lineNumber < 1 || lineNumber > numberOfLines)
 					JOptionPane.showMessageDialog(application.getFrame(),
-							"Not a number: '" + input + "'", "Not a number.",
+							"Line number should be between 1 and "
+									+ numberOfLines + ".",
+							"Line number out of range.",
 							JOptionPane.ERROR_MESSAGE);
-				}
+				else
+					textual.scrollToLine(lineNumber - 1);
+
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(application.getFrame(),
+						"Not a number: '" + input + "'", "Not a number.",
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}).start();
 	}

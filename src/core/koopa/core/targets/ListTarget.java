@@ -12,12 +12,14 @@ import koopa.core.data.Data;
  */
 public class ListTarget implements Target, Iterable<Data> {
 
-	private List<Data> packets = new ArrayList<Data>();
+	private List<Data> packets = new ArrayList<>();
 
+	@Override
 	public void push(Data packet) {
 		packets.add(packet);
 	}
 
+	@Override
 	public void done() {
 	}
 
@@ -33,6 +35,7 @@ public class ListTarget implements Target, Iterable<Data> {
 		return packets.get(i);
 	}
 
+	@Override
 	public Iterator<Data> iterator() {
 		return packets.iterator();
 	}

@@ -20,10 +20,11 @@ public class ReplaceMatching extends ReplacingPhrase {
 		super(replacing, by);
 	}
 
+	@Override
 	public boolean appliedTo(Source library,
 			LinkedList<Data> newTokens) {
 		boolean matchOccurred = true;
-		Stack<Token> seenWhileMatching = new Stack<Token>();
+		Stack<Token> seenWhileMatching = new Stack<>();
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("Trying " + this);

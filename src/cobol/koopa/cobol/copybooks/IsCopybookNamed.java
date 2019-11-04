@@ -22,6 +22,7 @@ public class IsCopybookNamed implements FilenameFilter {
 		this.fileName = fileName;
 	}
 
+	@Override
 	public boolean accept(File path, String name) {
 		LOGGER.trace("<" + name + "> <" + path + ">");
 

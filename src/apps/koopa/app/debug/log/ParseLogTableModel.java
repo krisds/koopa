@@ -22,10 +22,12 @@ public class ParseLogTableModel extends AbstractTableModel {
 		return log;
 	}
 
+	@Override
 	public int getColumnCount() {
 		return 2;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case KIND_COLUMN:
@@ -39,6 +41,7 @@ public class ParseLogTableModel extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public int getRowCount() {
 		if (log == null)
 			return 0;
@@ -46,6 +49,7 @@ public class ParseLogTableModel extends AbstractTableModel {
 		return log.size();
 	}
 
+	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		default:
@@ -53,6 +57,7 @@ public class ParseLogTableModel extends AbstractTableModel {
 		}
 	}
 
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		final Object data = log.getEvent(rowIndex).getData();
 		

@@ -17,14 +17,13 @@ public class QueryUsingXPathAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				final XPathQueryingDialog dialog = XPathQueryingDialog
-						.getDialog(application.getFrame(), application);
+		new Thread(() -> {
+			final XPathQueryingDialog dialog = XPathQueryingDialog.getDialog(
+					application.getFrame(), application);
 
-				dialog.setVisible(true);
-			}
+			dialog.setVisible(true);
 		}).start();
 	}
 }

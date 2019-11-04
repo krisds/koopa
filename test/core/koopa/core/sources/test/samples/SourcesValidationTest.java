@@ -29,6 +29,7 @@ public abstract class SourcesValidationTest
 
 	protected abstract File getFolder();
 
+	@Override
 	public File[] getFiles() {
 		File folder = getFolder();
 
@@ -40,6 +41,7 @@ public abstract class SourcesValidationTest
 
 	protected File file;
 
+	@Override
 	public void setFile(File file) {
 		this.file = file;
 	}
@@ -55,8 +57,8 @@ public abstract class SourcesValidationTest
 
 	protected abstract Source getSource(String resourceName, Sample sample);
 
-	private Map<String, Tags> TOKEN_CATEGORIES = new HashMap<String, Tags>();
-	private Map<String, NodeType> NODE_CATEGORIES = new HashMap<String, NodeType>();
+	private Map<String, Tags> TOKEN_CATEGORIES = new HashMap<>();
+	private Map<String, NodeType> NODE_CATEGORIES = new HashMap<>();
 
 	protected void addTokenCategory(String category, Object[] required) {
 		addTokenCategory(category, required, null);
@@ -74,6 +76,7 @@ public abstract class SourcesValidationTest
 		NODE_CATEGORIES.put(category, new NodeType(namespace, name));
 	}
 
+	@Override
 	public void validate(Token token, String category, boolean required) {
 		if ("-".equalsIgnoreCase(category)) {
 			// A "don't care". For when you don't care.
@@ -100,6 +103,7 @@ public abstract class SourcesValidationTest
 		}
 	}
 
+	@Override
 	public void validate(Tree tree, String category, boolean required) {
 		if ("-".equalsIgnoreCase(category)) {
 			// A "don't care". For when you don't care.

@@ -60,11 +60,10 @@ public class Optimizer {
 	private static Map<String, ParserCombinator> dispatchTable(
 			ParserCombinator... parsers) {
 
-		final Map<String, List<ParserCombinator>> mapping //
-				= new LinkedHashMap<String, List<ParserCombinator>>();
+		final Map<String, List<ParserCombinator>> mapping = new LinkedHashMap<>();
 
 		for (ParserCombinator p : parsers) {
-			final Set<String> keywords = new LinkedHashSet<String>();
+			final Set<String> keywords = new LinkedHashSet<>();
 			p.addAllLeadingKeywordsTo(keywords);
 			for (String kw : keywords) {
 				if (!mapping.containsKey(kw))
@@ -73,7 +72,7 @@ public class Optimizer {
 			}
 		}
 
-		final Map<String, ParserCombinator> dispatchTable = new LinkedHashMap<String, ParserCombinator>();
+		final Map<String, ParserCombinator> dispatchTable = new LinkedHashMap<>();
 
 		for (String kw : mapping.keySet()) {
 			final List<ParserCombinator> choices = mapping.get(kw);

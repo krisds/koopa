@@ -14,7 +14,7 @@ public class SuiteOfStages {
 	private final Map<String, Stage> stages;
 
 	public SuiteOfStages(File[] sources) throws IOException {
-		stages = new LinkedHashMap<String, Stage>();
+		stages = new LinkedHashMap<>();
 
 		for (File source : sources) {
 			final Stage stage = new Stage(this, source);

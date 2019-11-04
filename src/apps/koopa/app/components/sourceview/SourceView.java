@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTextPane;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Highlighter;
@@ -32,27 +30,25 @@ public class SourceView extends TextPanel {
 
 	private Token selectedToken = null;
 
-	private List<TokenSelectionListener> tokenSelectionListeners = new ArrayList<TokenSelectionListener>();
+	private List<TokenSelectionListener> tokenSelectionListeners = new ArrayList<>();
 
 	public SourceView() {
 		setupComponents();
 	}
 
 	private void setupComponents() {
-		getTextPane().addCaretListener(new CaretListener() {
-			public void caretUpdate(CaretEvent e) {
-				final Caret caret = getTextPane().getCaret();
-				if (!caret.isVisible()
-						&& getTextPane().getDocument().getLength() > 0)
-					caret.setVisible(true);
+		getTextPane().addCaretListener(e -> {
+			final Caret caret = getTextPane().getCaret();
+			if (!caret.isVisible()
+					&& getTextPane().getDocument().getLength() > 0)
+				caret.setVisible(true);
 
-				// TODO Add support for Token selection listeners.
-				final Token token = document.getTokenAt(e.getDot());
-				if (token != selectedToken) {
-					selectedToken = token;
-					for (TokenSelectionListener listener : tokenSelectionListeners)
-						listener.selectedToken(selectedToken);
-				}
+			// TODO Add support for Token selection listeners.
+			final Token token = document.getTokenAt(e.getDot());
+			if (token != selectedToken) {
+				selectedToken = token;
+				for (TokenSelectionListener listener : tokenSelectionListeners)
+					listener.selectedToken(selectedToken);
 			}
 		});
 

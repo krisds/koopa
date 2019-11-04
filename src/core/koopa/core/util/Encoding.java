@@ -10,7 +10,6 @@ public final class Encoding {
 	private Encoding() {
 	}
 
-	private static final boolean TRACE = false;
 	private static final Logger LOGGER = Logger.getLogger("encoding");
 
 	private static final String LINE_SEPARATOR;
@@ -40,20 +39,20 @@ public final class Encoding {
 		if (encoding == null) {
 			charset = Charset.defaultCharset();
 
-			if (TRACE && LOGGER.isTraceEnabled())
+			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Using default charset: " + charset + ".");
 
 		} else if (!Charset.isSupported(encoding)) {
 			charset = Charset.defaultCharset();
 
-			if (TRACE && LOGGER.isTraceEnabled())
+			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Encoding not supported: '" + encoding
 						+ "'. Using default charset instead: " + charset + ".");
 
 		} else {
 			charset = Charset.forName(encoding);
 
-			if (TRACE && LOGGER.isTraceEnabled())
+			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Using specified charset: " + charset + ".");
 		}
 	}

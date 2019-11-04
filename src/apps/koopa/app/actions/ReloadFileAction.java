@@ -16,11 +16,8 @@ public class ReloadFileAction extends AbstractAction implements Action {
 		this.application = application;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent ae) {
-		new Thread(new Runnable() {
-			public void run() {
-				application.reloadFile();
-			}
-		}).start();
+		new Thread(() -> application.reloadFile()).start();
 	}
 }

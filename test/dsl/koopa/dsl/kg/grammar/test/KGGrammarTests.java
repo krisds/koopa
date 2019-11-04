@@ -13,23 +13,18 @@ import koopa.dsl.stage.util.StageUtil;
 
 public class KGGrammarTests extends GrammarTestSuite {
 
+	@Override
 	public File[] getStageFiles() {
-		/*try {
-			System.out.println("--waiting--");
-			Thread.sleep(10*1000);
-			System.out.println("--running--");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		return new File("test/dsl/koopa/dsl/kg/grammar/test/")
 				.listFiles(StageUtil.getFilenameFilter());
 	}
 
+	@Override
 	public Grammar getGrammar() {
 		return new KGGrammar();
 	}
 
+	@Override
 	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 

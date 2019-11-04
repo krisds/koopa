@@ -4,8 +4,8 @@ import java.util.WeakHashMap;
 
 public class Memo {
 
-	private static final WeakHashMap<String, Memo> MEMOS = new WeakHashMap<String, Memo>();
-	private final WeakHashMap<Object, Object> memos = new WeakHashMap<Object, Object>();
+	private static final WeakHashMap<String, Memo> MEMOS = new WeakHashMap<>();
+	private final WeakHashMap<Object, Object> memos = new WeakHashMap<>();
 
 	private Memo() {
 	}

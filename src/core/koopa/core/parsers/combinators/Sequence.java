@@ -17,6 +17,7 @@ public class Sequence extends ParserCombinator {
 		this.length = parsers.length;
 	}
 
+	@Override
 	public boolean matches(Parse parse) {
 		for (ParserCombinator parser : parsers)
 			if (!parser.accepts(parse))
@@ -25,11 +26,13 @@ public class Sequence extends ParserCombinator {
 		return true;
 	}
 
+	@Override
 	public void addAllKeywordsInScopeTo(Set<String> keywords) {
 		for (ParserCombinator parser : parsers)
 			parser.addAllKeywordsInScopeTo(keywords);
 	}
 
+	@Override
 	public void addAllLeadingKeywordsTo(Set<String> keywords) {
 		for (int i = 0; i < length; i++) {
 			parsers[i].addAllLeadingKeywordsTo(keywords);
@@ -50,6 +53,7 @@ public class Sequence extends ParserCombinator {
 		return true;
 	}
 
+	@Override
 	public boolean canMatchEmptyInputs() {
 		for (ParserCombinator parser : parsers)
 			if (!parser.canMatchEmptyInputs())
@@ -58,6 +62,7 @@ public class Sequence extends ParserCombinator {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 		return "(...)";
 	}

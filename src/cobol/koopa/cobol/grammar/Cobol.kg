@@ -4211,7 +4211,11 @@ def stopStatement =
         )
 
       | # STD.BK
-        [WITH] (ERROR | NORMAL) [STATUS] [identifier | literal]        
+        [WITH] (ERROR | NORMAL) [STATUS] [identifier | literal]
+      
+      # Micro Focus Visual COBOL 4.0 for Eclipse (Windows)
+      | identifier
+      | literal        
       ]
 
     | # MF .NET/JVM

@@ -49,6 +49,7 @@ target stopStatement;
 +[ STOP RUN      ERROR         666       ]
 +[ STOP RUN      ERROR                   ]
 
++[ STOP RUN RETURN-CODE ]
 
 +[ STOP "this madness" ]
 +[ STOP 42             ]

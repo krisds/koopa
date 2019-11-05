@@ -17524,7 +17524,9 @@ public class CobolGrammar extends CobolBaseGrammar {
                           literal()
                         )
                       )
-                    )
+                    ),
+                    identifier(),
+                    literal()
                   )
                 )
               ),

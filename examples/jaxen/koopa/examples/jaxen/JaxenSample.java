@@ -18,6 +18,7 @@ public class JaxenSample {
 	public static void main(String[] args) throws IOException {
 		final CobolParser parser = new CobolParser();
 		parser.setProject(new StandardCobolProject());
+		parser.setBuildTrees(true);
 
 		final ParseResults result = parser
 				.parse(new File("testsuite/cobol85/CM101M.CBL"));

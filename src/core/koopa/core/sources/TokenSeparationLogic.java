@@ -177,11 +177,11 @@ public class TokenSeparationLogic {
 	}
 
 	private static boolean isLetter(char c) {
-		return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
+		return Character.isLetter(c);
 	}
 
 	private static boolean isDigit(char c) {
-		return '0' <= c && c <= '9';
+		return Character.isDigit(c);
 	}
 
 	private static int separator(final Token token, final String text,

@@ -132,3 +132,13 @@ VARIABLE              FIXED
 FIXED = =          =
 !TEXT = TEXT       =
 SEQNR I   -        EOLN
+
+
+# Testing "double width" spaces
+# Note that the test-annotations count in character indexes, not columns.
+# And so may look off by one here.
+　    * PROGRAM
+<--->^<------>^
+FIXED = =          =
+!TEXT = !T/COMMENT TEXT
+SEQNR I -          EOLN

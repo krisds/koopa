@@ -21,6 +21,7 @@ import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
+import koopa.core.util.Strings;
 import koopa.core.util.TabStops;
 
 /**
@@ -144,7 +145,7 @@ public class ProgramArea extends ChainingSource implements Source {
 
 	private Token extract(Token line, int start, int end, Object tag,
 			final SourceFormat format) {
-		final int columns = columns(line);
+		final int columns = getWidthInColumns(line);
 
 		if (start >= columns)
 			return null;
@@ -193,11 +194,11 @@ public class ProgramArea extends ChainingSource implements Source {
 	 * Tab stops take precedence. If no tab stop can be found for a tab
 	 * character then we count using tab length instead.
 	 */
-	private int columns(Token line) {
+	private int getWidthInColumns(Token line) {
 		final String text = line.getText();
 
 		if (cheapTabs)
-			return text.length();
+			return Strings.getWidthInColumns(text);
 
 		int columns = 0;
 
@@ -209,13 +210,13 @@ public class ProgramArea extends ChainingSource implements Source {
 				else
 					columns += tabLength;
 			} else
-				columns += 1;
+				columns += Strings.getWidthInColumns(text.charAt(i));
 
 		return columns;
 	}
 
 	/**
-	 * See {@linkplain #columns(Token)}. This calculates the inverse. Given a
+	 * See {@linkplain #getWidthInColumns(Token)}. This calculates the inverse. Given a
 	 * column number, what character index matches that ?
 	 */
 	private int characterIndexForColumn(Token line, int column) {
@@ -223,9 +224,12 @@ public class ProgramArea extends ChainingSource implements Source {
 			return 0;
 
 		final String text = line.getText();
+		final int textWidth = Strings.getWidthInColumns(text);
 
 		if (cheapTabs)
-			return column < text.length() ? column : text.length();
+			return column < textWidth
+					? Strings.getCharIndexForColumn(text, column)
+					: text.length();
 
 		int columns = 0;
 		for (int i = 0; i < text.length(); i++) {
@@ -239,7 +243,7 @@ public class ProgramArea extends ChainingSource implements Source {
 				else
 					columns += tabLength;
 			} else
-				columns += 1;
+				columns += Strings.getWidthInColumns(text.charAt(i));
 		}
 
 		return text.length();

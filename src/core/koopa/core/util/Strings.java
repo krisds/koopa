@@ -71,4 +71,52 @@ public class Strings {
 
 		return builder.toString();
 	}
+	
+	/**
+	 * Not all characters take up a single column. This is only true for
+	 * "half-width" characters. "Full width" characters require two columns.
+	 * This method will tell you how many columns a single character requires.
+	 */
+	public static int getWidthInColumns(char c) {
+		if (c == 12288) {
+			// Full width space
+			return 2;
+		} else if (c > 65280 && c < 65375) {
+			// Full width character
+			return 2;
+		} else {
+			// Half width character
+			return 1;
+		}
+	}
+
+	/**
+	 * Given that some characters require two columns (cfr.
+	 * {@linkplain #getWidthInColumns(char)}) we can't just take a string's
+	 * length as-is. Instead we have to check every character. This method does
+	 * that for you.
+	 */
+	public static int getWidthInColumns(String text) {
+		int length = 0;
+		for (int i = 0; i < text.length(); i++)
+			length += getWidthInColumns(text.charAt(i));
+		return length;
+	}
+
+	/**
+	 * Given a column number, what character position in the string matches with
+	 * that ? A one-to-one match is not certain, as some characters take up two
+	 * columns (cfr. {@linkplain #getWidthInColumns(char)}).
+	 */
+	public static int getCharIndexForColumn(String text, int column) {
+		int c = 0;
+		
+		for (int i = 0; i < text.length(); i++) {
+			c += getWidthInColumns(text.charAt(i));
+			if (c >= column)
+				return i + 1;
+		}
+
+		return text.length();
+	}
 }

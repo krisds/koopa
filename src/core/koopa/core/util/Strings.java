@@ -78,16 +78,13 @@ public class Strings {
 	 * This method will tell you how many columns a single character requires.
 	 */
 	public static int getWidthInColumns(char c) {
-		if (c == 12288) {
-			// Full width space
-			return 2;
-		} else if (c > 65280 && c < 65375) {
-			// Full width character
-			return 2;
-		} else {
-			// Half width character
+		
+		// Based on an answer from StackOverflow (https://stackoverflow.com/a/13505508):
+		if ('\u0000' <= c && c <= '\u00FF' || '\uFF61' <= c && c <= '\uFFDC'
+				|| '\uFFE8' <= c && c <= '\uFFEE')
 			return 1;
-		}
+		else
+			return 2;
 	}
 
 	/**

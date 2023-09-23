@@ -40,7 +40,7 @@ public class Not extends UnaryParserDecorator {
 	 * not contribute any keywords.
 	 */
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class Not extends UnaryParserDecorator {
 	 * not contribute any keywords.
 	 */
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package koopa.core.parsers;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -64,7 +65,7 @@ public class Optimizer {
 
 		for (ParserCombinator p : parsers) {
 			final Set<String> keywords = new LinkedHashSet<>();
-			p.addAllLeadingKeywordsTo(keywords);
+			p.addAllLeadingKeywordsTo(keywords, new HashSet<>());
 			for (String kw : keywords) {
 				if (!mapping.containsKey(kw))
 					mapping.put(kw, new LinkedList<ParserCombinator>());

@@ -48,12 +48,12 @@ public class MatchToken extends GrammaticalCombinator {
 	}
 
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 		keywords.add(comparableText);
 	}
 
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 		keywords.add(comparableText);
 	}
 

@@ -107,14 +107,14 @@ public class MatchTree extends UnaryParserDecorator {
 	 * This parser ..., and so does not contribute any keywords.
 	 */
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**
 	 * This parser ..., and so does not contribute any keywords.
 	 */
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**

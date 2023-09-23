@@ -20,16 +20,16 @@ public abstract class UnaryParserDecorator extends ParserCombinator {
 	 * Will pass the message on to {@link #parser}.
 	 */
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		parser.addAllKeywordsInScopeTo(keywords);
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
+		parser.addAllKeywordsInScopeTo(keywords, scopesSeen);
 	}
 
 	/**
 	 * Will pass the message on to {@link #parser}.
 	 */
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		parser.addAllLeadingKeywordsTo(keywords);
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
+		parser.addAllLeadingKeywordsTo(keywords, scopesSeen);
 	}
 
 	/**

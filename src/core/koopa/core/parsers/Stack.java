@@ -191,7 +191,7 @@ public class Stack {
 				return Collections.emptySet();
 
 			Set<String> keywords = new HashSet<>();
-			parser.addAllKeywordsInScopeTo(keywords);
+			parser.addAllKeywordsInScopeTo(keywords, new HashSet<>());
 			return keywords;
 		}
 

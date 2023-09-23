@@ -74,13 +74,13 @@ public abstract class TestProgramText extends GrammaticalCombinator {
 			String programText);
 
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
-		parser.addAllKeywordsInScopeTo(keywords);
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
+		parser.addAllKeywordsInScopeTo(keywords, scopesSeen);
 	}
 
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
-		parser.addAllLeadingKeywordsTo(keywords);
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
+		parser.addAllLeadingKeywordsTo(keywords, scopesSeen);
 	}
 
 	@Override

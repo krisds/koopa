@@ -20,18 +20,18 @@ public abstract class NAryParserDecorator extends ParserCombinator {
 	 * Will pass the message on to all {@link #parsers}.
 	 */
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 		for (ParserCombinator parser : parsers)
-			parser.addAllKeywordsInScopeTo(keywords);
+			parser.addAllKeywordsInScopeTo(keywords, scopesSeen);
 	}
 
 	/**
 	 * Will pass the message on to all {@link #parsers}.
 	 */
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 		for (ParserCombinator parser : parsers)
-			parser.addAllLeadingKeywordsTo(keywords);
+			parser.addAllLeadingKeywordsTo(keywords, scopesSeen);
 	}
 
 	/**

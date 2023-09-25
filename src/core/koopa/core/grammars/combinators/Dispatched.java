@@ -52,13 +52,13 @@ public class Dispatched extends WithKeyword {
 	}
 
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 		for (ParserCombinator parser : lookupTable.values())
-			parser.addAllKeywordsInScopeTo(keywords);
+			parser.addAllKeywordsInScopeTo(keywords, scopesSeen);
 	}
 
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 		for (String key : lookupTable.keySet())
 			keywords.add(key);
 	}

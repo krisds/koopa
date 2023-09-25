@@ -47,7 +47,7 @@ public abstract class ParserCombinator {
 	 * <p>
 	 * By default this leaves the set untouched.
 	 */
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**
@@ -55,13 +55,13 @@ public abstract class ParserCombinator {
 	 * <p>
 	 * By default this leaves the set untouched.
 	 */
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**
 	 * Can the leading keywords be used for lookahead ? That is, must the first
 	 * thing matched by this parser be an element returned by
-	 * {@link #addAllLeadingKeywordsTo(Set)} ?
+	 * {@link #addAllLeadingKeywordsTo(Set, Set)} ?
 	 * <p>
 	 * By default this returns <code>false</code>, disabling lookahead for this
 	 * parser, thereby defaulting to the old behaviour.

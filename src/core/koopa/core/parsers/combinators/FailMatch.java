@@ -35,14 +35,14 @@ public class FailMatch extends ParserCombinator {
 	 * This parser always fails, and so does not contribute any keywords.
 	 */
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**
 	 * This parser always fails, and so does not contribute any keywords.
 	 */
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	/**

@@ -76,11 +76,11 @@ public class SkipTo extends UnaryParserDecorator {
 	}
 
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 	}
 
 	@Override

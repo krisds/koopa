@@ -169,15 +169,25 @@ public class Scoped extends FutureParser {
 	 * for the overall structure of the program, and little else.
 	 */
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
+		// No need to figure out all our keywords twice.
+		if (scopesSeen.contains(name))
+			return;
+		
+		scopesSeen.add(name);
 		if (allowKeywords)
-			parser.addAllLeadingKeywordsTo(keywords);
+			parser.addAllLeadingKeywordsTo(keywords, scopesSeen);
 	}
 
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
+		// No need to figure out all our keywords twice.
+		if (scopesSeen.contains(name))
+			return;
+		
+		scopesSeen.add(name);
 		if (allowKeywords)
-			parser.addAllLeadingKeywordsTo(keywords);
+			parser.addAllLeadingKeywordsTo(keywords, scopesSeen);		
 	}
 
 	@Override

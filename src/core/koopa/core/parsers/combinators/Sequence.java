@@ -27,15 +27,15 @@ public class Sequence extends ParserCombinator {
 	}
 
 	@Override
-	public void addAllKeywordsInScopeTo(Set<String> keywords) {
+	public void addAllKeywordsInScopeTo(Set<String> keywords, Set<String> scopesSeen) {
 		for (ParserCombinator parser : parsers)
-			parser.addAllKeywordsInScopeTo(keywords);
+			parser.addAllKeywordsInScopeTo(keywords, scopesSeen);
 	}
 
 	@Override
-	public void addAllLeadingKeywordsTo(Set<String> keywords) {
+	public void addAllLeadingKeywordsTo(Set<String> keywords, Set<String> scopesSeen) {
 		for (int i = 0; i < length; i++) {
-			parsers[i].addAllLeadingKeywordsTo(keywords);
+			parsers[i].addAllLeadingKeywordsTo(keywords, scopesSeen);
 			if (!parsers[i].canMatchEmptyInputs())
 				break;
 		}

@@ -16,4 +16,4 @@ To build the koopa.jar:
 
 To start fresh:
 
-	ant clean.
+	ant clean

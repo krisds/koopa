@@ -11,6 +11,10 @@
         You may get builds which are not compatible with Java ${koopa.java.version} otherwise.
     </echo>
 
+    <condition property="koopa.revision" value="${env.KOOPA_REVISION}" else="unknown">
+        <isset property="env.KOOPA_REVISION" />
+    </condition>
+
 	<target name="clean">
 		<delete dir="doc/javadoc/" />
 		<delete dir="build/" />
@@ -472,7 +476,7 @@
 	<!-- PACKAGE -->
 
 	<target name="dist" depends="revision-number">
-		<jar destfile="koopa-${revision}.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="koopa-${koopa.revision}.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="koopa.app.Koopa" />
 				<attribute name="Class-Path" value="." />
@@ -480,13 +484,15 @@
 			<fileset dir="build" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.24.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar" />
 		</jar>
 	</target>
 
 	<target name="dist-lite" depends="revision-number">
-		<jar destfile="koopa-${revision}-lite.jar" filesetmanifest="mergewithoutmain">
+		<jar destfile="koopa-${koopa.revision}-lite.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="koopa.app.cli.ToXml" />
 				<attribute name="Class-Path" value="." />
@@ -498,7 +504,9 @@
 				<include name="koopa/app/cli/" />
 			</fileset>
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.24.3.jar" />
 		</jar>
 	</target>
 
@@ -511,7 +519,9 @@
 			<fileset dir="build" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2.16.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.24.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar" />
 		</jar>
 	</target>
@@ -519,17 +529,7 @@
 	<!-- SVN -->
 
 	<target name="revision-number" depends="core-build">
-		<!-- Find out revision number of HEAD. Needs git installed on local machine. -->
-		<exec executable="git" outputproperty="revision" failonerror="false" failifexecutionfails="false">
-			<arg value="rev-parse"/>
-			<arg value="--verify"/>
-			<arg value="--short"/>
-			<arg value="HEAD"/>
-		</exec>
-
-		<property name="revision" value="unknown" />
-
-		<echo file="build/REVISION" message="${revision}" />
+		<echo file="build/REVISION" message="${koopa.revision}" />
 	</target>
 
 	<!-- CLASS VERSION CHECK -->

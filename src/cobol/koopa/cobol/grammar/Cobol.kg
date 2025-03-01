@@ -2890,16 +2890,19 @@ def displayStatement =
       | identifier
       | literal
       )
-    )+
     
-    ( uponClause
-    | withNoAdvancing
-    | UNIT (identifier | literal)
-    | dtAtPositioning
-    | dtLineColPositioning
-    | modeIsBlockPhrase
-    | [WITH] (screenEntryPhrase)+
-    )*
+      # [MF, ACUCOBOL] allow setting the display options after *every* literal
+      # or identifier. The effect is that you can write multiple DISPLAY
+      # statements as one (i.e. without repeating the DISPLAY verb).
+      ( uponClause
+      | withNoAdvancing
+      | UNIT (identifier | literal)
+      | dtAtPositioning
+      | dtLineColPositioning
+      | modeIsBlockPhrase
+      | [WITH] (screenEntryPhrase)+
+      )*
+    )+
     
     ![onException | notOnException]
     [`end : END-DISPLAY]

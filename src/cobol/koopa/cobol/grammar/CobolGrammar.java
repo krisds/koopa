@@ -12144,29 +12144,29 @@ public class CobolGrammar extends CobolBaseGrammar {
                   keyword("OMITTED"),
                   identifier(),
                   literal()
-                )
-              )
-            ),
-            star(
-              choice(
-                uponClause(),
-                withNoAdvancing(),
-                sequence(
-                  keyword("UNIT"),
-                  choice(
-                    identifier(),
-                    literal()
-                  )
                 ),
-                dtAtPositioning(),
-                dtLineColPositioning(),
-                modeIsBlockPhrase(),
-                sequence(
-                  optional(
-                    keyword("WITH")
-                  ),
-                  plus(
-                    screenEntryPhrase()
+                star(
+                  choice(
+                    uponClause(),
+                    withNoAdvancing(),
+                    sequence(
+                      keyword("UNIT"),
+                      choice(
+                        identifier(),
+                        literal()
+                      )
+                    ),
+                    dtAtPositioning(),
+                    dtLineColPositioning(),
+                    modeIsBlockPhrase(),
+                    sequence(
+                      optional(
+                        keyword("WITH")
+                      ),
+                      plus(
+                        screenEntryPhrase()
+                      )
+                    )
                   )
                 )
               )

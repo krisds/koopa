@@ -137,3 +137,8 @@ target displayStatement;
 # This is a DISPLAY with a "position-spec".
 +[ DISPLAY (23, 13) LIMPA ]
 
+# Some versions of MF COBOL, ACUCOBOL, allow chaining the contents of multiple
+# DISPLAY statements into one.
+# The example here comes from "numbereself" who reported it in issue #37.
++[ DISPLAY "literal" LINE 01 COL 06 LOW 
+           ident     LINE 01 COL 15 HIGH ]

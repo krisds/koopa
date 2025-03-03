@@ -2988,6 +2988,7 @@ def screenEntryPhrase =
     | highPhrase
     | lowPhrase
     | linePhrase
+    | noAdvancing  # Seen in ACU COBOL.
     | offPhrase
     | pictureClause
     | promptPhrase
@@ -3083,6 +3084,10 @@ end
 
 def linePhrase =
     (LEFTLINE | OVERLINE | UNDERLINE)
+end
+
+def noAdvancing =
+    NO ADVANCING
 end
 
 def lowPhrase =

@@ -12525,6 +12525,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             highPhrase(),
             lowPhrase(),
             linePhrase(),
+            noAdvancing(),
             offPhrase(),
             pictureClause(),
             promptPhrase(),
@@ -12995,6 +12996,29 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return linePhraseParser;
+    }
+    
+    // ========================================================
+    // noAdvancing
+    // ........................................................
+    
+    private ParserCombinator noAdvancingParser = null;
+    
+    public final Start noAdvancing = Start.on(getNamespace(), "noAdvancing");
+    
+    public ParserCombinator noAdvancing() {
+      if (noAdvancingParser == null) {
+        FutureParser future = scoped("noAdvancing", PUBLIC, true);
+        noAdvancingParser = future;
+        future.setParser(
+          sequence(
+            keyword("NO"),
+            keyword("ADVANCING")
+          )
+        );
+      }
+    
+      return noAdvancingParser;
     }
     
     // ========================================================

@@ -359,3 +359,5 @@ target acceptStatement;
 # This is an ACCEPT with a "position-spec".
 +[ ACCEPT (23, 38) W-OPCAO WITH UPDATE ]
 
+# This example comes from "numbereself" who reported it in issue #38.
++[ ACCEPT ident WITH NO ADVANCING ]

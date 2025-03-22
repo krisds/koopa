@@ -2946,17 +2946,17 @@ def dtAtPositioning =
 end
 
 def dtLineColPositioning =
-    [AT | FROM] ( dtLinePos [dtColPos]
-                | dtColPos [dtLinePos]
-                )
+    ( dtLinePos [dtColPos]
+    | dtColPos [dtLinePos]
+    )
 end
 
 def dtLinePos =
-    LINE [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
+    [AT | FROM] LINE [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
 end
 
 def dtColPos =
-    (COL | COLUMN | POSITION | POS) [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
+    [AT | FROM] (COL | COLUMN | POSITION | POS) [NUMBER] [IS] [PLUS | '+' | '-'] (identifier | literal)
 end
 
 # TODO: Split screenEntryPhrase into:

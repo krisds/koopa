@@ -12380,25 +12380,17 @@ public class CobolGrammar extends CobolBaseGrammar {
         FutureParser future = scoped("dtLineColPositioning", PUBLIC, true);
         dtLineColPositioningParser = future;
         future.setParser(
-          sequence(
-            optional(
-              choice(
-                keyword("AT"),
-                keyword("FROM")
+          choice(
+            sequence(
+              dtLinePos(),
+              optional(
+                dtColPos()
               )
             ),
-            choice(
-              sequence(
-                dtLinePos(),
-                optional(
-                  dtColPos()
-                )
-              ),
-              sequence(
-                dtColPos(),
-                optional(
-                  dtLinePos()
-                )
+            sequence(
+              dtColPos(),
+              optional(
+                dtLinePos()
               )
             )
           )
@@ -12422,6 +12414,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         dtLinePosParser = future;
         future.setParser(
           sequence(
+            optional(
+              choice(
+                keyword("AT"),
+                keyword("FROM")
+              )
+            ),
             keyword("LINE"),
             optional(
               keyword("NUMBER")
@@ -12461,6 +12459,12 @@ public class CobolGrammar extends CobolBaseGrammar {
         dtColPosParser = future;
         future.setParser(
           sequence(
+            optional(
+              choice(
+                keyword("AT"),
+                keyword("FROM")
+              )
+            ),
             choice(
               keyword("COL"),
               keyword("COLUMN"),

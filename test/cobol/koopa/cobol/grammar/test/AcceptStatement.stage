@@ -361,3 +361,6 @@ target acceptStatement;
 
 # This example comes from "numbereself" who reported it in issue #38.
 +[ ACCEPT ident WITH NO ADVANCING ]
+
+# This example comes from "numbereself" who reported it in issue #42.
++[ ACCEPT ident AT LINE 19 AT COL 24 ]

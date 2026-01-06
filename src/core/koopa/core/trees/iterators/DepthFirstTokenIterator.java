@@ -67,6 +67,12 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 			return;
 		}
 
+		// check if the current node is the root
+		if (current == root) {
+			current = null;
+			return;
+		}
+
 		// Or it's the next sibling...
 		while (current != null) {
 			final Tree parent = current.getParent();

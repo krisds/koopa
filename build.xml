@@ -484,9 +484,9 @@
 			<fileset dir="build" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.24.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.24.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.25.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.25.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.25.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar" />
 		</jar>
 	</target>
@@ -504,9 +504,9 @@
 				<include name="koopa/app/cli/" />
 			</fileset>
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.24.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.24.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.25.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.25.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.25.3.jar" />
 		</jar>
 	</target>
 
@@ -519,9 +519,9 @@
 			<fileset dir="build" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.24.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.24.3.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.24.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-1.2-api-2.25.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.25.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.25.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar" />
 		</jar>
 	</target>

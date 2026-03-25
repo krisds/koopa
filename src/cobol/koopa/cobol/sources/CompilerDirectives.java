@@ -5,14 +5,19 @@ import static koopa.cobol.data.tags.CobolTag.SOURCE_LISTING_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 
 import koopa.cobol.grammar.directives.DirectivesGrammar;
 import koopa.core.data.Data;
+import koopa.core.data.Position;
 import koopa.core.data.Token;
+import koopa.core.data.Tokens;
+import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -67,10 +72,65 @@ public class CompilerDirectives extends ChainingSource
 			// If there is one, handle it, and start returning the result.
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("Found a compiler directive in: " + line);
+			// Break the line into the part handled so far, and the
+			// as-yet-unparsed rest, and unshift the rest into the source.
+			LinkedList<Data> linePrefix = extractParsedPrefix(directive, line);
 
-			return nextFrom(handleCompilerDirective(directive, line));
+			return nextFrom(handleCompilerDirective(directive, linePrefix));
 		}
 	}
+
+	/**
+	 * Extract the parts of the line corresponding to given directive.
+	 *
+	 * Splits the line into two halves, the first half containing {@code directive}
+	 * and all that comes before it, and the second half everthing else, if anything.
+	 * The second half is unshifted into {@link #source}, and the first half returned.
+	 *
+	 * @param directive the directive to extract from the line
+	 * @param line the entire line, starting with {@code directive}
+	 * @return the part of the line corresponding to {@code directive}
+	 */
+    private LinkedList<Data> extractParsedPrefix(Tree directive, LinkedList<Data> line) {
+		// Iterate from the end; in that way, we can more easily get the unshifting order right.
+		Iterator<Data> lineIterator = line.descendingIterator();
+		Position directiveEnd = directive.getEndPosition();
+		LinkedList<Data> prefix = new LinkedList<>();
+
+		while (lineIterator.hasNext()) {
+			Data d = lineIterator.next();
+			if (!(d instanceof Token)) {
+				source.unshift(d);
+				continue;
+			}
+
+			Token t = (Token) d;
+			Position tokenStart = t.getStart();
+			Position tokenEnd = t.getEnd();
+
+			if (tokenStart.compareTo(directiveEnd) >= 0) {
+				// Since this token follows a directive, we may assume it's in the program text area
+				source.unshift(((Token) d).withTags(PROGRAM_TEXT_AREA));
+				continue;
+			}
+
+			if (tokenEnd.compareTo(directiveEnd) > 0) {
+				// Need to split the token, since it contains both directive and suffix
+				Token[] splitToken = Tokens.split(t, directiveEnd.getPositionInFile() - tokenStart.getPositionInFile() + 1);
+				// Since this token follows a directive, we may assume it's in the program text area
+				source.unshift(splitToken[1].withTags(PROGRAM_TEXT_AREA));
+				prefix.addFirst(splitToken[0]);
+				break;
+			} else {
+				prefix.addFirst(d);
+				break;
+			}
+		}
+		while (lineIterator.hasNext()) {
+			prefix.addFirst(lineIterator.next());
+		}
+        return prefix;
+    }
 
 	private Tree tryToParseCompilerDirective(LinkedList<Data> line) {
 		// TODO Speed: can we reuse the sources?

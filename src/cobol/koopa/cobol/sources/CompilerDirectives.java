@@ -48,29 +48,27 @@ public class CompilerDirectives extends ChainingSource
 
 	@Override
 	protected Data nxt1() {
-		while (true) {
-			if (!pending.isEmpty())
-				return pending.removeFirst();
+		if (!pending.isEmpty())
+			return pending.removeFirst();
 
-			// Grab line from source.
-			final LinkedList<Data> line = Sources.getLine(source);
-			if (line == null)
-				return null;
+		// Grab line from source.
+		final LinkedList<Data> line = Sources.getLine(source);
+		if (line == null)
+			return null;
 
-			// Check if it contains a compiler directive.
-			final Tree directive = tryToParseCompilerDirective(line);
-			if (directive == null) {
-				// If not, mark it all with the current active source format,
-				// and start returning that.
-				return nextFrom(tagged(line, format));
+		// Check if it contains a compiler directive.
+		final Tree directive = tryToParseCompilerDirective(line);
+		if (directive == null) {
+			// If not, mark it all with the current active source format,
+			// and start returning that.
+			return nextFrom(tagged(line, format));
 
-			} else {
-				// If there is one, handle it, and start returning the result.
-				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("Found a compiler directive in: " + line);
+		} else {
+			// If there is one, handle it, and start returning the result.
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("Found a compiler directive in: " + line);
 
-				return nextFrom(handleCompilerDirective(directive, line));
-			}
+			return nextFrom(handleCompilerDirective(directive, line));
 		}
 	}
 

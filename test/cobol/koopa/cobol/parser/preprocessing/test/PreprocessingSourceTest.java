@@ -25,6 +25,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 
 	private static final String INPUT_PREFIX = "<";
 	private static final String EXPECTED_PREFIX = ">";
+	private static final String LINE_SEPARATOR = System.lineSeparator();
 
 	@Override
 	public File[] getFiles() {
@@ -79,11 +80,11 @@ public class PreprocessingSourceTest implements FileBasedTest {
 				while ((line = br.readLine()) != null) {
 					if (line.startsWith(INPUT_PREFIX)) {
 						input.append(line.substring(INPUT_PREFIX.length()));
-						input.append('\n');
+						input.append(LINE_SEPARATOR);
 
 					} else if (line.startsWith(EXPECTED_PREFIX)) {
 						expected.append(line.substring(EXPECTED_PREFIX.length()));
-						expected.append('\n');
+						expected.append(LINE_SEPARATOR);
 					}
 				}
 

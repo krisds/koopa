@@ -1,5 +1,7 @@
 package koopa.cobol.parser.preprocessing.test;
 
+import static koopa.core.util.test.Util.getCharset;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -74,7 +76,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 		private StringBuilder expected = new StringBuilder();
 
 		public Sample(File file) throws IOException {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new FileReader(file, getCharset()));
 			try {
 				String line = null;
 				while ((line = br.readLine()) != null) {

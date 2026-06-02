@@ -1,5 +1,7 @@
 package koopa.cobol.parser.test;
 
+import static koopa.core.util.test.Util.getCharset;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -248,7 +250,7 @@ public class TestResult {
 			throws IOException {
 		CSVReader reader = null;
 		try {
-			reader = new CSVReader(new FileReader(expectedFile));
+			reader = new CSVReader(new FileReader(expectedFile, getCharset()));
 
 			// CSV Header.
 			String[] header = null;

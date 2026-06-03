@@ -1,11 +1,18 @@
 package koopa.cobol.parser.preprocessing.test;
 
+import static koopa.core.util.test.Util.testFilesCharset;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import koopa.cobol.CobolTokens;
 import koopa.cobol.projects.StandardCobolProject;
@@ -16,13 +23,11 @@ import koopa.core.sources.Source;
 import koopa.core.util.test.FileBasedTest;
 import koopa.core.util.test.Files;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 @RunWith(Files.class)
 public class PreprocessingSourceTest implements FileBasedTest {
 
+	private static final Charset TEST_FILES_CHARSET = testFilesCharset();
+	
 	private static final String INPUT_PREFIX = "<";
 	private static final String EXPECTED_PREFIX = ">";
 	private static final String LINE_SEPARATOR = System.lineSeparator();
@@ -74,7 +79,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 		private StringBuilder expected = new StringBuilder();
 
 		public Sample(File file) throws IOException {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new FileReader(file, TEST_FILES_CHARSET));
 			try {
 				String line = null;
 				while ((line = br.readLine()) != null) {

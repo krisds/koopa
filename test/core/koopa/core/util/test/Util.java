@@ -2,6 +2,8 @@ package koopa.core.util.test;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +20,13 @@ import koopa.core.sources.test.HardcodedSource;
 import koopa.core.trees.Tree;
 
 public final class Util {
+
+	private static final Charset TEST_FILES_CHARSET = StandardCharsets.UTF_8;
+
+	public static Charset testFilesCharset() {
+		return TEST_FILES_CHARSET;
+	}
+	
 	public static List<Range> asListOfRanges(int... positions) {
 		List<Range> ranges = new ArrayList<>();
 

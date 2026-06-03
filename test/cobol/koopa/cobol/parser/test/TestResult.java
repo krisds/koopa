@@ -1,12 +1,13 @@
 package koopa.cobol.parser.test;
 
-import static koopa.core.util.test.Util.getCharset;
+import static koopa.core.util.test.Util.testFilesCharset;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ import koopa.core.util.Files;
 
 public class TestResult {
 
+	private static final Charset TEST_FILES_CHARSET = testFilesCharset();
+	
 	/**
 	 * Just a quick override, useful when working on the sources.
 	 */
@@ -250,7 +253,7 @@ public class TestResult {
 			throws IOException {
 		CSVReader reader = null;
 		try {
-			reader = new CSVReader(new FileReader(expectedFile, getCharset()));
+			reader = new CSVReader(new FileReader(expectedFile, TEST_FILES_CHARSET));
 
 			// CSV Header.
 			String[] header = null;

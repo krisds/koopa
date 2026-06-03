@@ -1,10 +1,10 @@
 package koopa.core.sources.test.samples;
 
+import static koopa.core.util.test.Util.testFilesCharset;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
-
-import static koopa.core.util.test.Util.getCharset;
 
 import java.io.File;
 import java.io.FileReader;
@@ -12,6 +12,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,8 @@ import koopa.core.util.FilenameFilters;
 
 public class Sample {
 
+	private static final Charset TEST_FILES_CHARSET = testFilesCharset();
+	
 	private final String input;
 	private final List<Range> ranges;
 	private final List<Annotation> annotations;
@@ -55,7 +58,7 @@ public class Sample {
 	private static List<Block> allBlocksFrom(File file) throws IOException {
 		FileReader fileReader = null;
 		try {
-			fileReader = new FileReader(file, getCharset());
+			fileReader = new FileReader(file, TEST_FILES_CHARSET);
 
 			final Source source = new LineSplitter(fileReader);
 			final List<Block> blocks = new ArrayList<>();

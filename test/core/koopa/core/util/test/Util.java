@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Range;
@@ -23,35 +21,10 @@ import koopa.core.trees.Tree;
 
 public final class Util {
 
-	private static final Logger LOGGER = Logger.getLogger("source.test");
-	
-	private static Charset charset;
-	static {
-		final String encoding = System.getProperty("koopa.test.encoding");
+	private static final Charset TEST_FILES_CHARSET = StandardCharsets.UTF_8;
 
-		if (encoding == null) {
-			charset = StandardCharsets.UTF_8;
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("System property koopa.test.encoding not set, using default test charset: " + charset + ".");
-
-		} else if (!Charset.isSupported(encoding)) {
-			charset = StandardCharsets.UTF_8;
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Encoding not supported: '" + encoding
-						+ "'. Using default test charset instead: " + charset + ".");
-
-		} else {
-			charset = Charset.forName(encoding);
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Using specified charset: " + charset + ".");
-		}
-	}
-
-	public static Charset getCharset() {
-		return charset;
+	public static Charset testFilesCharset() {
+		return TEST_FILES_CHARSET;
 	}
 	
 	public static List<Range> asListOfRanges(int... positions) {

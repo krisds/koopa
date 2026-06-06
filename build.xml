@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Koopa" default="build" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-	<property name="koopa.java.version" value="1.8" />
+	<property name="koopa.java.version" value="11" />
 
 	<!-- Thank you: http://stackoverflow.com/questions/7260697/set-ant-bootclasspath-jdk-1-7-has-a-new-javac-warning-for-setting-an-older-sour -->
 	<property environment="env" />
-	<property name="koopa.java.boot.classpath" value="${env.JAVA8_BOOTCLASSES}" />
-	<echo unless:set="env.JAVA8_BOOTCLASSES">
-        Please make sure JAVA8_BOOTCLASSES is set to a valid Java ${koopa.java.version} bootstrap classpath.
+	<property name="koopa.java.boot.classpath" value="${env.JAVA11_BOOTCLASSES}" />
+	<echo unless:set="env.JAVA11_BOOTCLASSES">
+        Please make sure JAVA11_BOOTCLASSES is set to a valid Java ${koopa.java.version} bootstrap classpath.
         You may get builds which are not compatible with Java ${koopa.java.version} otherwise.
     </echo>
 

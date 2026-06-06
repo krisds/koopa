@@ -302,7 +302,7 @@ public class GrammarView extends JPanel {
 				if (style == null)
 					style = getDefaultStyle(document);
 
-				document.insertString(token.getStart().getPositionInFile(),
+				document.insertString(token.getStart().getPositionInFile() - 1,
 						token.getText(), style);
 			}
 		} catch (BadLocationException e) {

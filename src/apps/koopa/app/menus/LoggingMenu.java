@@ -4,8 +4,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.app.actions.SetLogLevelAction;
 
@@ -41,7 +42,7 @@ public class LoggingMenu extends JMenu {
 	}
 
 	private void addMenuFor(String name, String category) {
-		final Logger logger = Logger.getLogger(category);
+		final Logger logger = LogManager.getLogger(category);
 
 		final JMenu menu = new JMenu(name);
 		final ButtonGroup group = new ButtonGroup();

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import koopa.core.data.Token;
 import koopa.core.data.markers.Start;
@@ -27,7 +27,7 @@ import koopa.templates.TemplateLogic;
 public class Generation {
 
 	private static final IndentingLogger LOGGER = new IndentingLogger(
-			Logger.getLogger("kg.generation"));
+			LogManager.getLogger("kg.generation"));
 
 	private final Template TEMPLATE;
 

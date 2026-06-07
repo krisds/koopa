@@ -6,7 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -16,15 +17,13 @@ import koopa.core.sources.Source;
 
 public class ReplaceTrailing extends ReplacingPhrase {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.replacing.trailing");
+	private static final Logger LOGGER = LogManager.getLogger("source.cobol.replacing.trailing");
 
 	private final String pattern;
 	private final int patternLength;
 	private final LinkedList<Token> replacement;
 
-	public ReplaceTrailing(ReplacingPhraseOperand replacing,
-			ReplacingPhraseOperand by) {
+	public ReplaceTrailing(ReplacingPhraseOperand replacing, ReplacingPhraseOperand by) {
 		super(replacing, by);
 
 		final List<String> replacingWords = replacing.getTextWords();
@@ -47,8 +46,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 	}
 
 	@Override
-	public boolean appliedTo(Source library,
-			LinkedList<Data> newTokens) {
+	public boolean appliedTo(Source library, LinkedList<Data> newTokens) {
 
 		final Stack<Token> seen = new Stack<>();
 		final List<Token> next = nextTextWord(library, seen);
@@ -64,8 +62,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("  We have a match.");
 
-				final Token head = Tokens.subtoken(Tokens.join(next), 0,
-						text.length() - patternLength);
+				final Token head = Tokens.subtoken(Tokens.join(next), 0, text.length() - patternLength);
 
 				if (replacement == null) {
 					if (LOGGER.isTraceEnabled())
@@ -77,8 +74,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 				} else {
 					replacement.removeFirst();
 					replacement.addFirst(head);
-					final Token newToken = Tokens.join(replacement,
-							AreaTag.PROGRAM_TEXT_AREA);
+					final Token newToken = Tokens.join(replacement, AreaTag.PROGRAM_TEXT_AREA);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("  Replacing with: " + newToken);

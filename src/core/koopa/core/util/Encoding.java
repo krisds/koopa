@@ -3,14 +3,15 @@ package koopa.core.util;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class Encoding {
 
 	private Encoding() {
 	}
 
-	private static final Logger LOGGER = Logger.getLogger("encoding");
+	private static final Logger LOGGER = LogManager.getLogger("encoding");
 
 	private static final String LINE_SEPARATOR;
 

@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import koopa.core.util.FilenameFilters;
 import koopa.core.util.Files;
 import koopa.core.util.Select;
-
-import org.apache.log4j.Logger;
 
 /**
  * The default locator looks for copybooks by name. It searches for these first
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
  */
 public class DefaultCopybookLocator implements CopybookLocator {
 
-	private static final Logger LOGGER = Logger.getLogger("copybooks");
+	private static final Logger LOGGER = LogManager.getLogger("copybooks");
 
 	private static final Select<File> FIRST = list -> {
 		if (list != null && list.length > 0)

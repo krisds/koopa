@@ -6,10 +6,11 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Icons {
-	private static final Logger LOGGER = Logger.getLogger("resources");
+	private static final Logger LOGGER = LogManager.getLogger("resources");
 
 	private static Map<String, ImageIcon> icons = new HashMap<>();
 

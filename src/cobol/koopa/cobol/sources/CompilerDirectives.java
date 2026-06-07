@@ -8,16 +8,15 @@ import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.grammar.directives.DirectivesGrammar;
 import koopa.core.data.Data;
 import koopa.core.data.Position;
 import koopa.core.data.Token;
 import koopa.core.data.Tokens;
-import koopa.core.data.tags.AreaTag;
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -34,7 +33,7 @@ public class CompilerDirectives extends ChainingSource
 		implements Source {
 
 	private static final Logger LOGGER //
-			= Logger.getLogger("source.cobol.compiler_directives");
+			= LogManager.getLogger("source.cobol.compiler_directives");
 
 	private final DirectivesGrammar grammar;
 

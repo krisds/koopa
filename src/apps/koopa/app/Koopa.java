@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Rectangle;
 import java.io.File;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-
-import org.apache.log4j.PropertyConfigurator;
 
 import koopa.app.cli.CommandLineOptions;
 import koopa.app.components.detail.Detail;
@@ -43,9 +40,6 @@ public class Koopa extends JFrame implements Application {
 	private static final long serialVersionUID = 1L;
 
 	public static void main(final String[] args) {
-		final URL resource = Detail.class.getResource("/log4j.properties");
-		PropertyConfigurator.configure(resource);
-
 		final CommandLineOptions options;
 		try {
 			options = new CommandLineOptions(args);

@@ -9,10 +9,11 @@ import java.util.Set;
 
 import javax.swing.filechooser.FileFilter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import koopa.core.util.Files;
 import koopa.core.util.Strings;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class offers a number of utility functions which help in selecting Cobol
@@ -46,7 +47,7 @@ import org.apache.log4j.Logger;
  * <b>only</b> files with extension 'cob' will be seen as copybooks.
  */
 public class CobolFiles {
-	private static final Logger LOGGER = Logger.getLogger("cobol.files");
+	private static final Logger LOGGER = LogManager.getLogger("cobol.files");
 
 	private static Set<String> SOURCE_EXTENSIONS = new LinkedHashSet<>();
 	private static Set<String> COPYBOOK_EXTENSIONS = new LinkedHashSet<>();

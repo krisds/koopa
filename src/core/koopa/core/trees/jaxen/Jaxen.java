@@ -3,14 +3,15 @@ package koopa.core.trees.jaxen;
 import java.util.ArrayList;
 import java.util.List;
 
-import koopa.core.trees.Tree;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jaxen.JaxenException;
+
+import koopa.core.trees.Tree;
 
 public class Jaxen {
 
-	private static final Logger LOGGER = Logger.getLogger("xpath");
+	private static final Logger LOGGER = LogManager.getLogger("xpath");
 
 	public static List<?> evaluate(Tree tree, String expr) {
 		try {

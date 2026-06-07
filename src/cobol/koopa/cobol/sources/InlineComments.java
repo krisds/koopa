@@ -5,7 +5,8 @@ import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -15,7 +16,7 @@ import koopa.core.sources.Source;
 public class InlineComments extends ChainingSource
 		implements Source {
 
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LogManager
 			.getLogger("source.cobol.inline_comments");
 
 	private boolean inComment = false;

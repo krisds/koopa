@@ -5,12 +5,14 @@ import java.io.File;
 
 import javax.swing.JPanel;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import koopa.app.Application;
-import koopa.app.HoldingCobolParserFactory;
 import koopa.app.CobolParserFactory;
+import koopa.app.HoldingCobolParserFactory;
 import koopa.app.Textual;
 import koopa.app.components.progress.ProgressDialog;
 import koopa.app.debug.log.ParseLog;
@@ -19,6 +21,13 @@ import koopa.app.debug.log.ParseLogWindow;
 
 public class Debug extends JPanel implements HoldingCobolParserFactory, Textual {
 	private static final long serialVersionUID = 1L;
+	
+	private static final LoggerConfig ROOT_LOGGER_CONFIG;
+	static {
+		final LoggerContext context = (LoggerContext) LogManager.getContext(false);
+		final Configuration config = context.getConfiguration();
+		ROOT_LOGGER_CONFIG = config.getRootLogger();
+	}
 
 	private final Application application;
 	private final CobolParserFactory factory;
@@ -29,8 +38,7 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 	private boolean parsing = false;
 	private ParseLogWindow parseLogWindow = null;
 
-	public Debug(Application application, File file,
-			CobolParserFactory factory) {
+	public Debug(Application application, File file, CobolParserFactory factory) {
 		this.application = application;
 		this.factory = new CobolParserFactory(factory);
 		this.factory.setKeepingTrackOfTokens(true);
@@ -61,16 +69,14 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 		parsing = true;
 
 		final ParseLog log = new ParseLog();
-		Appender appender = new ParseLogAppender(log);
+		final ParseLogAppender appender = new ParseLogAppender(ParseLogAppender.class.getSimpleName(), log);
 
-		final ProgressDialog progress = new ProgressDialog(
-				application.getFrame(), "Recording parse...");
+		final ProgressDialog progress = new ProgressDialog(application.getFrame(), "Recording parse...");
 		progress.setVisible(true);
 		new Thread(() -> {
 			while (parsing) {
 				try {
-					progress.setMessage("Captured " + log.size()
-							+ " events sofar...");
+					progress.setMessage("Captured " + log.size() + " events sofar...");
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
 				}
@@ -79,9 +85,11 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 			}
 		}).start();
 
-		Logger.getRootLogger().addAppender(appender);
+		ROOT_LOGGER_CONFIG.addAppender(appender, null, null);
+		appender.start();
 		code.parse(factory, log);
-		Logger.getRootLogger().removeAppender(appender);
+		appender.stop();
+		ROOT_LOGGER_CONFIG.removeAppender(appender.getName());		
 
 		if (parseLogWindow == null) {
 			parseLogWindow = new ParseLogWindow(code.getFile().getPath());
@@ -97,7 +105,7 @@ public class Debug extends JPanel implements HoldingCobolParserFactory, Textual 
 
 		progress.setVisible(false);
 	}
-
+	
 	public boolean isParsing() {
 		return parsing;
 	}

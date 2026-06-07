@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.CobolProject;
 import koopa.cobol.util.CopybookPaths;
@@ -21,7 +22,7 @@ import koopa.core.util.Select;
 public class StandardCobolProject extends BasicCobolProject
 		implements CobolProject, CopybookPaths {
 
-	private static final Logger LOGGER = Logger.getLogger("copybooks");
+	private static final Logger LOGGER = LogManager.getLogger("copybooks");
 
 	private List<File> copybookPaths = new ArrayList<>();
 

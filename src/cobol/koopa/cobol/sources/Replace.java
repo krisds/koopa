@@ -6,7 +6,8 @@ import static koopa.core.trees.jaxen.Jaxen.getMatches;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
 import koopa.cobol.parser.preprocessing.replacing.Replacing;
@@ -27,7 +28,7 @@ public class Replace extends ChainingSource
 		implements Source {
 
 	private static final Logger LOGGER //
-			= Logger.getLogger("source.cobol.replace");
+			= LogManager.getLogger("source.cobol.replace");
 
 	private final CobolPreprocessingGrammar grammar;
 

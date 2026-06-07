@@ -25,10 +25,11 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ApplicationSupport {
-	private static final Logger LOGGER = Logger.getLogger("config");
+	private static final Logger LOGGER = LogManager.getLogger("config");
 
 	private static final String PROPERTIES_FILE = "koopa.properties";
 	private static final String PROPERTY_CUSTOM_COLUMNS = "koopa.customColumns";

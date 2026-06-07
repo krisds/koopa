@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.CobolProject;
 import koopa.cobol.CobolTokens;
@@ -27,7 +28,7 @@ import koopa.core.util.Tuple;
 
 public class CobolParser {
 
-	private static final Logger LOGGER = Logger.getLogger("parser");
+	private static final Logger LOGGER = LogManager.getLogger("parser");
 
 	private boolean keepingTrackOfTokens = false;
 

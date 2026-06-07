@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.grammars.Grammar;
 import koopa.core.grammars.combinators.Dispatched;
@@ -16,7 +17,7 @@ import koopa.core.parsers.combinators.Choice;
 
 public class Optimizer {
 
-	private static final Logger LOGGER = Logger.getLogger("optimization");
+	private static final Logger LOGGER = LogManager.getLogger("optimization");
 
 	private static final boolean SHOULD_RUN;
 	static {

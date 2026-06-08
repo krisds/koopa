@@ -10,7 +10,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.CobolProject;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
@@ -38,7 +39,7 @@ public class CopyInclude extends ChainingSource
 		implements Source {
 
 	private static final Logger LOGGER //
-			= Logger.getLogger("source.cobol.copy_include");
+			= LogManager.getLogger("source.cobol.copy_include");
 
 	private final CobolPreprocessingGrammar grammar;
 	private final CobolProject project;

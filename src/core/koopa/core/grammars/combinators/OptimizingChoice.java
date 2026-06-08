@@ -1,6 +1,7 @@
 package koopa.core.grammars.combinators;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.grammars.Grammar;
 import koopa.core.parsers.Optimizer;
@@ -16,7 +17,7 @@ import koopa.core.parsers.combinators.Choice;
  */
 public class OptimizingChoice extends Choice {
 
-	private static final Logger LOGGER = Logger.getLogger("optimization");
+	private static final Logger LOGGER = LogManager.getLogger("optimization");
 
 	private final Grammar grammar;
 	private boolean optimizerRan = false;

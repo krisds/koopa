@@ -9,7 +9,8 @@ import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Position;
@@ -29,8 +30,7 @@ import koopa.core.util.LineEndings;
  * {@linkplain LineEndings#getDefaults()} instead.
  */
 public class LineSplitter extends BasicSource implements Source {
-	private static final Logger LOGGER = Logger
-			.getLogger("source.linesplitter");
+	private static final Logger LOGGER = LogManager.getLogger("source.linesplitter");
 
 	private File file = null;
 	private final String resourceName;
@@ -57,8 +57,7 @@ public class LineSplitter extends BasicSource implements Source {
 		this(resourceName, reader, LineEndings.getDefaults());
 	}
 
-	public LineSplitter(File file, Reader reader,
-			List<List<Character>> lineEndings) {
+	public LineSplitter(File file, Reader reader, List<List<Character>> lineEndings) {
 		this(getResourceName(file), reader, lineEndings);
 		this.file = file;
 	}
@@ -76,8 +75,7 @@ public class LineSplitter extends BasicSource implements Source {
 		}
 	}
 
-	public LineSplitter(String resourceName, Reader reader,
-			List<List<Character>> lineEndings) {
+	public LineSplitter(String resourceName, Reader reader, List<List<Character>> lineEndings) {
 
 		assert (reader != null);
 		assert (lineEndings != null && !lineEndings.isEmpty());
@@ -120,8 +118,7 @@ public class LineSplitter extends BasicSource implements Source {
 				markEnd();
 				newLine();
 
-				final Token lineEnding = produceToken(buffer.toString(),
-						END_OF_LINE);
+				final Token lineEnding = produceToken(buffer.toString(), END_OF_LINE);
 				return lineEnding;
 
 			} else {
@@ -160,9 +157,7 @@ public class LineSplitter extends BasicSource implements Source {
 						detectedLineEnding = possibleLineEnding;
 
 						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Detected line ending: "
-									+ LineEndings.encodeLineEnding(
-											detectedLineEnding)
+							LOGGER.trace("Detected line ending: " + LineEndings.encodeLineEnding(detectedLineEnding)
 									+ ". Stickying.");
 					}
 
@@ -222,13 +217,11 @@ public class LineSplitter extends BasicSource implements Source {
 	}
 
 	private void markStart() {
-		start = new Position(resourceName, positionInFile, linenumber,
-				positionInLine);
+		start = new Position(resourceName, positionInFile, linenumber, positionInLine);
 	}
 
 	private void markEnd() {
-		end = new Position(resourceName, positionInFile - 1, linenumber,
-				positionInLine - 1);
+		end = new Position(resourceName, positionInFile - 1, linenumber, positionInLine - 1);
 	}
 
 	private Token produceToken(String text, Object... tags) {
@@ -249,8 +242,7 @@ public class LineSplitter extends BasicSource implements Source {
 		}
 	}
 
-	private static int maxLengthOfLineEnding(
-			List<List<Character>> lineEndings) {
+	private static int maxLengthOfLineEnding(List<List<Character>> lineEndings) {
 		int max = 0;
 
 		for (List<Character> list : lineEndings)

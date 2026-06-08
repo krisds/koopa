@@ -3,10 +3,11 @@ package koopa.cobol.copybooks;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import koopa.cobol.CobolFiles;
 import koopa.core.util.Files;
-
-import org.apache.log4j.Logger;
 
 /**
  * This {@linkplain FilenameFilter} accepts files which are copybooks (as
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
  * {@linkplain Files#getName(String)}) which matches the given one.
  */
 public class IsCopybookNamed implements FilenameFilter {
-	private static final Logger LOGGER = Logger.getLogger("copybooks");
+	private static final Logger LOGGER = LogManager.getLogger("copybooks");
 
 	private final String fileName;
 

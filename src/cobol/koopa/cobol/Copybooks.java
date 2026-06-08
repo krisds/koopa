@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import koopa.cobol.copybooks.CopybookLocator;
 import koopa.cobol.copybooks.DefaultCopybookLocator;
-
-import org.apache.log4j.Logger;
 
 /**
  * This class helps you look up a copybook based on its name.
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
  */
 public class Copybooks {
 
-	private static final Logger LOGGER = Logger.getLogger("copybooks");
+	private static final Logger LOGGER = LogManager.getLogger("copybooks");
 
 	private static CopybookLocator locator = new DefaultCopybookLocator();
 

@@ -12,7 +12,8 @@ import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.data.tags.CobolAreaTag;
 import koopa.core.data.Data;
@@ -31,8 +32,7 @@ import koopa.core.util.TabStops;
  */
 public class ProgramArea extends ChainingSource implements Source {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.program_area");
+	private static final Logger LOGGER = LogManager.getLogger("source.cobol.program_area");
 
 	private final int tabLength;
 	private final TabStops tabStops;
@@ -119,11 +119,9 @@ public class ProgramArea extends ChainingSource implements Source {
 			extract(line, 0, 6, SEQUENCE_NUMBER_AREA, format);
 
 			final Token indicator = extract(line, 6, 7, INDICATOR_AREA, format);
-			final boolean lineIsComment = indicator != null
-					&& indicatesComment(indicator.charAt(0));
+			final boolean lineIsComment = indicator != null && indicatesComment(indicator.charAt(0));
 
-			extract(line, 7, 72, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
-					format);
+			extract(line, 7, 72, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
 
 			extract(line, 72, -1, IDENTIFICATION_AREA, format);
 
@@ -131,34 +129,28 @@ public class ProgramArea extends ChainingSource implements Source {
 			extract(line, 0, 6, SEQUENCE_NUMBER_AREA, format);
 
 			final Token indicator = extract(line, 6, 7, INDICATOR_AREA, format);
-			final boolean lineIsComment = indicator != null
-					&& indicatesComment(indicator.charAt(0));
+			final boolean lineIsComment = indicator != null && indicatesComment(indicator.charAt(0));
 
-			extract(line, 7, -1, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA,
-					format);
+			extract(line, 7, -1, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
 
 		} else {
-			throw new UnsupportedOperationException(
-					"Unexpected referenceFormat: " + format);
+			throw new UnsupportedOperationException("Unexpected referenceFormat: " + format);
 		}
 	}
 
-	private Token extract(Token line, int start, int end, Object tag,
-			final SourceFormat format) {
+	private Token extract(Token line, int start, int end, Object tag, final SourceFormat format) {
 		final int columns = getWidthInColumns(line);
 
 		if (start >= columns)
 			return null;
 
 		int startIndex = characterIndexForColumn(line, start);
-		int endIndex = end >= 0 ? characterIndexForColumn(line, end)
-				: line.getText().length();
+		int endIndex = end >= 0 ? characterIndexForColumn(line, end) : line.getText().length();
 
 		if (endIndex <= startIndex)
 			return null;
 
-		final Token extracted = tokenizeArea(line, startIndex, endIndex, tag,
-				format);
+		final Token extracted = tokenizeArea(line, startIndex, endIndex, tag, format);
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace(tag + ": " + extracted);
@@ -180,8 +172,7 @@ public class ProgramArea extends ChainingSource implements Source {
 		return c == '*' || c == '/' || c == '$' || c == 'D' || c == 'd';
 	}
 
-	private Token tokenizeArea(Token token, int begin, int end,
-			Object... tags) {
+	private Token tokenizeArea(Token token, int begin, int end, Object... tags) {
 		return Tokens.subtoken(token, begin, end).withTags(tags);
 	}
 
@@ -191,8 +182,8 @@ public class ProgramArea extends ChainingSource implements Source {
 	 * This differs from the raw length of a token in that we want to apply tab
 	 * stops and tab length definitions to any tab characters found in the line.
 	 * <p>
-	 * Tab stops take precedence. If no tab stop can be found for a tab
-	 * character then we count using tab length instead.
+	 * Tab stops take precedence. If no tab stop can be found for a tab character
+	 * then we count using tab length instead.
 	 */
 	private int getWidthInColumns(Token line) {
 		final String text = line.getText();
@@ -216,8 +207,8 @@ public class ProgramArea extends ChainingSource implements Source {
 	}
 
 	/**
-	 * See {@linkplain #getWidthInColumns(Token)}. This calculates the inverse. Given a
-	 * column number, what character index matches that ?
+	 * See {@linkplain #getWidthInColumns(Token)}. This calculates the inverse.
+	 * Given a column number, what character index matches that ?
 	 */
 	private int characterIndexForColumn(Token line, int column) {
 		if (column <= 0)
@@ -227,9 +218,7 @@ public class ProgramArea extends ChainingSource implements Source {
 		final int textWidth = Strings.getWidthInColumns(text);
 
 		if (cheapTabs)
-			return column < textWidth
-					? Strings.getCharIndexForColumn(text, column)
-					: text.length();
+			return column < textWidth ? Strings.getCharIndexForColumn(text, column) : text.length();
 
 		int columns = 0;
 		for (int i = 0; i < text.length(); i++) {

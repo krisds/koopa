@@ -1,26 +1,21 @@
 package koopa.app.debug.log;
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
 
-public class ParseLogAppender extends AppenderSkeleton {
+public class ParseLogAppender extends AbstractAppender {
+
 	private final ParseLog log;
 
-	public ParseLogAppender(ParseLog log) {
+	public ParseLogAppender(String name, ParseLog log) {
+		super(name, null, null, true, Property.EMPTY_ARRAY);
 		this.log = log;
 	}
 
 	@Override
-	public boolean requiresLayout() {
-		return false;
-	}
-
-	@Override
-	public void close() {
-	}
-
-	@Override
-	protected void append(LoggingEvent event) {
+	public void append(LogEvent event) {
 		log.registerLogging(event);
 	}
+
 }

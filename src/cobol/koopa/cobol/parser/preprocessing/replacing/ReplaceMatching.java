@@ -4,7 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -12,17 +13,14 @@ import koopa.core.sources.Source;
 
 public class ReplaceMatching extends ReplacingPhrase {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.replacing.matching");
+	private static final Logger LOGGER = LogManager.getLogger("source.cobol.replacing.matching");
 
-	public ReplaceMatching(ReplacingPhraseOperand replacing,
-			ReplacingPhraseOperand by) {
+	public ReplaceMatching(ReplacingPhraseOperand replacing, ReplacingPhraseOperand by) {
 		super(replacing, by);
 	}
 
 	@Override
-	public boolean appliedTo(Source library,
-			LinkedList<Data> newTokens) {
+	public boolean appliedTo(Source library, LinkedList<Data> newTokens) {
 		boolean matchOccurred = true;
 		Stack<Token> seenWhileMatching = new Stack<>();
 
@@ -31,8 +29,7 @@ public class ReplaceMatching extends ReplacingPhrase {
 
 		Iterator<String> it = replacing.getTextWords().iterator();
 		while (it.hasNext()) {
-			final String libraryTextWord = text(
-					nextTextWord(library, seenWhileMatching));
+			final String libraryTextWord = text(nextTextWord(library, seenWhileMatching));
 
 			if (libraryTextWord == null) {
 				if (LOGGER.isTraceEnabled())
@@ -58,8 +55,7 @@ public class ReplaceMatching extends ReplacingPhrase {
 		}
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(
-					"  => " + (matchOccurred ? "MATCH FOUND" : "NO MATCH"));
+			LOGGER.trace("  => " + (matchOccurred ? "MATCH FOUND" : "NO MATCH"));
 
 		if (matchOccurred) {
 			// "When a match occurs between pseudo-text-1, text-1,

@@ -6,7 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -16,15 +17,13 @@ import koopa.core.sources.Source;
 
 public class ReplaceLeading extends ReplacingPhrase {
 
-	private static final Logger LOGGER = Logger
-			.getLogger("source.cobol.replacing.leading");
+	private static final Logger LOGGER = LogManager.getLogger("source.cobol.replacing.leading");
 
 	private final String pattern;
 	private final int patternLength;
 	private final LinkedList<Token> replacement;
 
-	public ReplaceLeading(ReplacingPhraseOperand replacing,
-			ReplacingPhraseOperand by) {
+	public ReplaceLeading(ReplacingPhraseOperand replacing, ReplacingPhraseOperand by) {
 		super(replacing, by);
 
 		final List<String> replacingWords = replacing.getTextWords();
@@ -47,8 +46,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 	}
 
 	@Override
-	public boolean appliedTo(Source library,
-			LinkedList<Data> newTokens) {
+	public boolean appliedTo(Source library, LinkedList<Data> newTokens) {
 
 		final Stack<Token> seen = new Stack<>();
 		final List<Token> next = nextTextWord(library, seen);
@@ -64,8 +62,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 				if (LOGGER.isTraceEnabled())
 					LOGGER.trace("  We have a match.");
 
-				final Token tail = Tokens.subtoken(Tokens.join(next),
-						patternLength);
+				final Token tail = Tokens.subtoken(Tokens.join(next), patternLength);
 
 				if (replacement == null) {
 					if (LOGGER.isTraceEnabled())
@@ -78,8 +75,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 					replacement.removeLast();
 					replacement.addLast(tail);
 
-					final Token newToken = Tokens.join(replacement,
-							AreaTag.PROGRAM_TEXT_AREA);
+					final Token newToken = Tokens.join(replacement, AreaTag.PROGRAM_TEXT_AREA);
 
 					if (LOGGER.isTraceEnabled())
 						LOGGER.trace("  Replacing with: " + newToken);

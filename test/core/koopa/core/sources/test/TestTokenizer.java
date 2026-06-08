@@ -2,7 +2,8 @@ package koopa.core.sources.test;
 
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -18,7 +19,7 @@ import koopa.core.sources.Source;
 public class TestTokenizer extends ChainingSource
 		implements Source {
 
-	private static final Logger LOGGER = Logger.getLogger("source.test");
+	private static final Logger LOGGER = LogManager.getLogger("source.test");
 	private static final boolean TRACE = LOGGER.isTraceEnabled();
 
 	public static final String MARKER_TEXT = "^";

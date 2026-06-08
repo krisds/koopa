@@ -3,7 +3,8 @@ package koopa.cobol.sources;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.parser.preprocessing.replacing.ReplacingPhrase;
 import koopa.core.data.Data;
@@ -19,7 +20,7 @@ public class Replacing extends ChainingSource
 		implements Source {
 
 	private static final Logger LOGGER //
-			= Logger.getLogger("source.cobol.replacing");
+			= LogManager.getLogger("source.cobol.replacing");
 
 	/**
 	 * The list of all active {@linkplain ReplacingPhrase}s. It is sorted in

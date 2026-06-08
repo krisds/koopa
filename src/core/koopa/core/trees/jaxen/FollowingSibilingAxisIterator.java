@@ -4,11 +4,12 @@ import java.util.Iterator;
 
 import koopa.core.trees.Tree;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 
-	private static final Logger LOGGER = Logger.getLogger("xpath");
+	private static final Logger LOGGER = LogManager.getLogger("xpath");
 
 	private final Tree parent;
 	private int index;

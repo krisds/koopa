@@ -2,13 +2,14 @@ package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.trees.Tree;
 
 public class ChildAxisIterator implements Iterator<Tree> {
 
-	private static final Logger LOGGER = Logger.getLogger("xpath");
+	private static final Logger LOGGER = LogManager.getLogger("xpath");
 
 	private final Tree parent;
 	private final int count;

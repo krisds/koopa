@@ -2,13 +2,8 @@ package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
 
-import koopa.core.data.Data;
-import koopa.core.data.Marker;
-import koopa.core.data.Token;
-import koopa.core.data.tags.AreaTag;
-import koopa.core.trees.Tree;
-
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jaxen.DefaultNavigator;
 import org.jaxen.FunctionCallException;
 import org.jaxen.Navigator;
@@ -16,10 +11,16 @@ import org.jaxen.UnsupportedAxisException;
 import org.jaxen.XPath;
 import org.jaxen.saxpath.SAXPathException;
 
+import koopa.core.data.Data;
+import koopa.core.data.Marker;
+import koopa.core.data.Token;
+import koopa.core.data.tags.AreaTag;
+import koopa.core.trees.Tree;
+
 @SuppressWarnings("serial")
 public class KoopaNavigator extends DefaultNavigator {
 
-	private static final Logger LOGGER = Logger.getLogger("xpath");
+	private static final Logger LOGGER = LogManager.getLogger("xpath");
 
 	private static final KoopaNavigator INSTANCE = new KoopaNavigator();
 

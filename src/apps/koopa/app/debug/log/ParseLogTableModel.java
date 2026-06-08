@@ -2,7 +2,7 @@ package koopa.app.debug.log;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 public class ParseLogTableModel extends AbstractTableModel {
 
@@ -63,16 +63,16 @@ public class ParseLogTableModel extends AbstractTableModel {
 		
 		switch (columnIndex) {
 		case KIND_COLUMN:
-			if (data instanceof LoggingEvent)
-				return ((LoggingEvent) data).getLevel();
+			if (data instanceof LogEvent)
+				return ((LogEvent) data).getLevel();
 			else if (data instanceof DataEvent)
 				return ((DataEvent) data).getType();
 			else
 				return "";
 
 		case MESSAGE_COLUMN:
-			if (data instanceof LoggingEvent)
-				return ((LoggingEvent) data).getRenderedMessage();
+			if (data instanceof LogEvent)
+				return ((LogEvent) data).getMessage().getFormattedMessage();
 			else if (data instanceof DataEvent)
 				return ((DataEvent) data).getData();
 			else

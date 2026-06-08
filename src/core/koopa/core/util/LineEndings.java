@@ -7,7 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Defines possible line endings to be used when parsing.
@@ -35,7 +36,7 @@ public class LineEndings {
 	private LineEndings() {
 	}
 
-	private static final Logger LOGGER = Logger.getLogger("eoln");
+	private static final Logger LOGGER = LogManager.getLogger("eoln");
 
 	private static final List<List<Character>> DEFAULT_LINE_ENDINGS;
 	static {

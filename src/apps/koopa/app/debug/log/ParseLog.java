@@ -3,7 +3,7 @@ package koopa.app.debug.log;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 import koopa.core.data.Data;
 import koopa.core.parsers.Parse;
@@ -36,7 +36,7 @@ public class ParseLog {
 		addEvent(new DataEvent(DataEvent.Type.POP, data));
 	}
 
-	public void registerLogging(LoggingEvent event) {
+	public void registerLogging(LogEvent event) {
 		addEvent(event);
 	}
 

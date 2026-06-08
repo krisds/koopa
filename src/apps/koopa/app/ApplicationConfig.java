@@ -1,6 +1,7 @@
 package koopa.app;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.cobol.CobolProject;
 import koopa.cobol.projects.StandardCobolProject;
@@ -9,7 +10,7 @@ public class ApplicationConfig {
 
 	private static final String KOOPA_COBOL_PROJECT_CLASS = "koopa.cobol.project_class";
 
-	private static final Logger LOGGER = Logger.getLogger("copybooks");
+	private static final Logger LOGGER = LogManager.getLogger("copybooks");
 
 	private static Class<? extends CobolProject> projectClass = StandardCobolProject.class;
 

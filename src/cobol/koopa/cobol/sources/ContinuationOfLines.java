@@ -6,8 +6,8 @@ import static koopa.cobol.sources.SourceFormat.VARIABLE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.AreaTag.SKIPPED;
-import static koopa.core.data.tags.SyntacticTag.INCOMPLETE;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
+import static koopa.core.data.tags.SyntacticTag.INCOMPLETE;
 import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 
@@ -16,7 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -31,7 +32,7 @@ public class ContinuationOfLines extends ChainingSource
 		implements Source {
 
 	private static final Logger LOGGER //
-			= Logger.getLogger("source.cobol.continuations");
+			= LogManager.getLogger("source.cobol.continuations");
 
 	/**
 	 * This is a tag which may be applied to fixed indicators to show that they

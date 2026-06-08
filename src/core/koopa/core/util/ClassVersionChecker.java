@@ -2,8 +2,6 @@ package koopa.core.util;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class reports its own class version, which helps me verify that things
@@ -14,41 +12,46 @@ import java.util.Map;
  * So with this I can now double check easily what version of Java the compiled
  * result is targeted at.
  */
-public class ClassVersionChecker {
-	public static final Map<String, String> JAVA_VERSIONS = new HashMap<>();
+public final class ClassVersionChecker {
 
-	static {
-		JAVA_VERSIONS.put("45.3", "1.0");
-		JAVA_VERSIONS.put("45.3", "1.1");
-		JAVA_VERSIONS.put("46.0", "1.2");
-		JAVA_VERSIONS.put("47.0", "1.3");
-		JAVA_VERSIONS.put("48.0", "1.4");
-		JAVA_VERSIONS.put("49.0", "1.5");
-		JAVA_VERSIONS.put("50.0", "1.6");
-		JAVA_VERSIONS.put("51.0", "1.7");
-		JAVA_VERSIONS.put("52.0", "1.8");
+	private ClassVersionChecker() {
 	}
+
+	// TODO: when on JDK 20+ see java.lang.reflect.ClassFileFormatVersion
+
+	// Java 1.0, has major version 45 like Java 1.1
+	private static final int FILE_VERSION_O = 45;
+
+	// Java 28, https://docs.oracle.com/en/java/javase/28/docs/specs/jvms/index.html
+	private static final int FILE_VERSION_LATEST = 72; 
+
+	public static final String[] JAVA_VERSIONS = { "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9", "10",
+			"11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27",
+			"28" };
 
 	public static void main(String[] args) throws IOException {
-		DataInputStream in = new DataInputStream(
-				ClassVersionChecker.class
-						.getResourceAsStream("ClassVersionChecker.class"));
 
-		final int magicNumber = in.readInt();
-		if (magicNumber != 0xcafebabe)
-			System.out.println("Not a valid class!");
+		try (final DataInputStream in = new DataInputStream(
+				ClassVersionChecker.class.getResourceAsStream("ClassVersionChecker.class"))){
 
-		final int minorVersion = in.readUnsignedShort();
-		final int majorVersion = in.readUnsignedShort();
-		final String version = majorVersion + "." + minorVersion;
+			final int magicNumber = in.readInt();
+			if (magicNumber != 0xcafebabe) {
+				System.out.println("Not a valid class file!");
+				System.exit(1);
+			}
 
-		if (JAVA_VERSIONS.containsKey(version))
-			System.out.println("Version " + version + " (Java "
-					+ JAVA_VERSIONS.get(version) + ")");
-		else
-			System.out
-					.println("Version " + version + " (unknown Java version)");
+			final int minorFileVersion = in.readUnsignedShort();
+			final int majorFileVersion = in.readUnsignedShort();
+			final String fileVersion = majorFileVersion + "." + minorFileVersion;
 
-		in.close();
+			if (45 <= majorFileVersion || FILE_VERSION_LATEST <= majorFileVersion) {
+				System.out.println(
+						"Generated class file version " + fileVersion + " (Java " + JAVA_VERSIONS[majorFileVersion - FILE_VERSION_O] + ")");
+			} else {
+				System.out.println("Generated class file version " + fileVersion + " (unknown Java version)");
+			}
+		}
+
 	}
+
 }

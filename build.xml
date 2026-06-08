@@ -3,13 +3,7 @@
 
 	<property name="koopa.java.version" value="11" />
 
-	<!-- Thank you: http://stackoverflow.com/questions/7260697/set-ant-bootclasspath-jdk-1-7-has-a-new-javac-warning-for-setting-an-older-sour -->
 	<property environment="env" />
-	<property name="koopa.java.boot.classpath" value="${env.JAVA11_BOOTCLASSES}" />
-	<echo unless:set="env.JAVA11_BOOTCLASSES">
-        Please make sure JAVA11_BOOTCLASSES is set to a valid Java ${koopa.java.version} bootstrap classpath.
-        You may get builds which are not compatible with Java ${koopa.java.version} otherwise.
-    </echo>
 
     <condition property="koopa.revision" value="${env.KOOPA_REVISION}" else="unknown">
         <isset property="env.KOOPA_REVISION" />
@@ -41,7 +35,8 @@
 
 	<target name="core-compile" depends="core-build,revision-number">
 		<echo>Compiling Koopa's core...</echo>
-		<javac srcdir="src/core/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/core/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -59,7 +54,8 @@
 
 	<target name="core-tests" depends="core">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/core/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="test/core/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -125,7 +121,8 @@
 
 	<target name="templates">
 		<echo>Compiling Koopa Templates DSL...</echo>
-		<javac srcdir="src/templates/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/templates/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -139,7 +136,8 @@
 
 	<target name="dsl" depends="core,templates">
 		<echo>Compiling Koopa Grammar DSL...</echo>
-		<javac srcdir="src/dsl/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/dsl/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -158,7 +156,8 @@
 
 	<target name="dsl-tests" depends="core,core-tests,dsl">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/dsl/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="test/dsl/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -200,7 +199,8 @@
 		<kgg path="src/cics/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/cics/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/cics/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -219,7 +219,8 @@
 
 	<target name="cics-tests" depends="core,core-tests,cics">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cics/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="test/cics/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -260,7 +261,8 @@
 		<kgg path="src/sql/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/sql/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/sql/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -279,7 +281,8 @@
 
 	<target name="sql-tests" depends="core,core-tests,sql">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/sql/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="test/sql/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -320,7 +323,8 @@
 		<kgg path="src/cobol/" />
 
 		<echo>Compiling parsers...</echo>
-		<javac srcdir="src/cobol/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/cobol/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -339,7 +343,8 @@
 
 	<target name="cobol-tests" depends="core,core-tests,cobol">
 		<echo>Compiling unit tests...</echo>
-		<javac srcdir="test/cobol/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="test/cobol/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="build/" />
 				<fileset dir="lib">
@@ -430,7 +435,8 @@
 		<kgg path="src/apps/" />
 
 		<echo>Compiling processing classes...</echo>
-		<javac srcdir="src/apps/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="src/apps/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -451,14 +457,15 @@
 		<kgg path="examples/" />
 
 		<echo>Compiling example classes...</echo>
-		<javac srcdir="examples/basic/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<requires-java min="${koopa.java.version}" />
+		<javac srcdir="examples/basic/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
-		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" source="${koopa.java.version}" target="${koopa.java.version}" bootclasspath="${koopa.java.boot.classpath}" includeantruntime="false">
+		<javac srcdir="examples/jaxen/" destdir="build/" debug="on" release="${koopa.java.version}" includeantruntime="false">
 			<classpath>
 				<fileset dir="lib">
 					<include name="*.jar" />
@@ -583,4 +590,16 @@
 			</java>
 		</sequential>
 	</macrodef>
+	
+	<macrodef name="requires-java">
+		<attribute name="min"/>
+		<sequential>
+			<condition property="java.version.ok">
+				<javaversion atleast="@{min}"/>
+			</condition>
+			<fail unless="java.version.ok"
+				  message="Java @{min}+ is required, but current version is ${java.version}"/>
+		</sequential>
+	</macrodef>
+
 </project>

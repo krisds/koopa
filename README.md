@@ -63,14 +63,11 @@ Complex XPath query results should be presented in serialized form.
 
 ### Java 11
 
-The minimum target runtime environment for Koopa is Java 11. To that end the build script forces everything to be compiled to Java 11 compatible bytecode. This, however, is not enough to ensure Java 11 compatibility as you may still be compiling against the library of a later Java version. For that reason you also need to specify where the Java 11 runtime library can be found, by setting the `JAVA11_BOOTCLASSES` environment variable to its location.
+The minimum target runtime environment for Koopa is Java 11. To that end the build script forces everything to be compiled to Java 11 compatible bytecode. If your JDK is not able to compile to Java 11 bytecode (class file version 55), the build will fail with the following message:
 
-You may see following message when building the project with ANT:
+    "Java 11+ is required, but current version is x.y".
 
-    Please make sure JAVA11_BOOTCLASSES is set to a valid Java 11 bootstrap classpath.
-    You may get builds which are not compatible with Java 11 otherwise.
-
-This is a reminder from the build script that you have not specified where the Java 11 runtime library may be found.
+Please launch the Ant build with a JDK 11+.
 
 ### Parser Generation
 

@@ -24,10 +24,10 @@ public class ParseDetails extends AbstractTableModel {
 	private ParseResults parseResults = null;
 
 	final static ImageIcon ERROR = Icons
-			.getIcon("/koopa/app/resources/splashy/remove.png");
+            .getIcon("/koopa/app/resources/document-error.png");
 
 	final static ImageIcon WARNING = Icons
-			.getIcon("/koopa/app/resources/splashy/warning_triangle.png");
+            .getIcon("/koopa/app/resources/document-warning.png");
 
 	@Override
 	public int getColumnCount() {

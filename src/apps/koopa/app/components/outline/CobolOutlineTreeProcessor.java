@@ -14,16 +14,16 @@ import koopa.core.trees.jaxen.Jaxen;
 
 public class CobolOutlineTreeProcessor {
 	protected static final Icon PARAGRAPH_ICON = Icons
-			.getIcon("/koopa/app/resources/splashy/view_less_text.png");
+            .getIcon("/koopa/app/resources/code-paragraph.png");
 
 	protected static final Icon SECTION_ICON = Icons
-			.getIcon("/koopa/app/resources/splashy/view_more_text.png");
+            .getIcon("/koopa/app/resources/code-section.png");
 
 	protected static final Icon DECLARATIVES_ICON = Icons
-			.getIcon("/koopa/app/resources/splashy/view_thumbnail.png");
+            .getIcon("/koopa/app/resources/code-declaratives.png");
 
 	protected static final Icon PROGRAM_ICON = Icons
-			.getIcon("/koopa/app/resources/splashy/document_a4_marked.png");
+            .getIcon("/koopa/app/resources/code-program.png");
 
 	private Stack<DefaultMutableTreeNode> nodes = new Stack<>();
 

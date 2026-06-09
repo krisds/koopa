@@ -16,16 +16,16 @@ import koopa.core.parsers.Messages;
 @SuppressWarnings("serial")
 public class OutlineTreeCellRenderer extends DefaultTreeCellRenderer {
 	final static ImageIcon PLAIN = Icons
-			.getIcon("/koopa/app/resources/splashy/document_a4_blank.png");
+            .getIcon("/koopa/app/resources/document-plain.png");
 
 	final static ImageIcon OK = Icons
-			.getIcon("/koopa/app/resources/splashy/document_a4_okay.png");
+            .getIcon("/koopa/app/resources/document-ok.png");
 
 	final static ImageIcon ERROR = Icons
-			.getIcon("/koopa/app/resources/splashy/document_a4_remove.png");
+            .getIcon("/koopa/app/resources/document-error.png");
 
 	final static ImageIcon WARNING = Icons
-			.getIcon("/koopa/app/resources/splashy/document_a4_warning.png");
+            .getIcon("/koopa/app/resources/document-warning.png");
 
 	public OutlineTreeCellRenderer() {
 	}

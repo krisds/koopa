@@ -1,10 +1,14 @@
 package koopa.core.data.test;
 
 import static koopa.core.util.test.Util.asListOfRanges;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
 import koopa.core.data.Position;
 import koopa.core.data.Replaced;
 import koopa.core.data.Token;
@@ -12,7 +16,7 @@ import koopa.core.data.Token;
 /**
  * Tests basic {@linkplain Token} functionality.
  */
-public class TokenTest extends TestCase {
+public class TokenTest {
 
 	private static final String TEXT = "One accurate measurement is worth a thousand expert opinions.";
 	private static final int LENGTH = TEXT.length();

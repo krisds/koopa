@@ -1,6 +1,7 @@
 package koopa.cobol.parser.preprocessing.test;
 
 import static koopa.core.util.test.Util.testFilesCharset;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,10 +10,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
 import koopa.cobol.CobolTokens;
 import koopa.cobol.projects.StandardCobolProject;
@@ -21,9 +23,7 @@ import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.util.test.FileBasedTest;
-import koopa.core.util.test.Files;
 
-@RunWith(Files.class)
 public class PreprocessingSourceTest implements FileBasedTest {
 
 	private static final Charset TEST_FILES_CHARSET = testFilesCharset();
@@ -52,8 +52,21 @@ public class PreprocessingSourceTest implements FileBasedTest {
 		this.file = file;
 	}
 
-	@Test
-	public void testSampleValidates() throws IOException {
+	@TestFactory
+	public Stream<DynamicTest> generateFileTests() {
+		return Arrays.stream(getFiles())
+			.map(file -> DynamicTest.dynamicTest(
+				file.getName(),
+				() -> testFile(file)
+			));
+	}
+
+	private void testFile(File file) throws IOException {
+		setFile(file);
+		testSampleValidates();
+	}
+
+	private void testSampleValidates() throws IOException {
 		Sample sample = new Sample(file);
 
 		final StandardCobolProject project = new StandardCobolProject();
@@ -71,7 +84,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 			if (d instanceof Token)
 				actual.append(((Token) d).getText());
 
-		Assert.assertEquals(sample.expected.toString(), actual.toString());
+		assertEquals(sample.expected.toString(), actual.toString());
 	}
 
 	private static class Sample {

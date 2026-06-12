@@ -5,8 +5,8 @@ import static koopa.core.util.test.Util.tree;
 import koopa.core.trees.Tree;
 import koopa.core.trees.TreeWalker;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class TreeWalkerTest {
 
@@ -24,29 +24,29 @@ public class TreeWalkerTest {
 				supportingCharacters);
 
 		TreeWalker walker = new TreeWalker(characters);
-		Assert.assertSame(characters, walker.next());
-		Assert.assertSame(characters, walker.getCurrent());
+		assertSame(characters, walker.next());
+		assertSame(characters, walker.getCurrent());
 
-		Assert.assertSame(mainCharacters, walker.next());
-		Assert.assertSame(mainCharacters, walker.getCurrent());
+		assertSame(mainCharacters, walker.next());
+		assertSame(mainCharacters, walker.getCurrent());
 
-		Assert.assertSame(calvin, walker.next());
-		Assert.assertSame(calvin, walker.getCurrent());
+		assertSame(calvin, walker.next());
+		assertSame(calvin, walker.getCurrent());
 
-		Assert.assertSame(hobbes, walker.next());
-		Assert.assertSame(hobbes, walker.getCurrent());
+		assertSame(hobbes, walker.next());
+		assertSame(hobbes, walker.getCurrent());
 
-		Assert.assertSame(supportingCharacters, walker.next());
-		Assert.assertSame(supportingCharacters, walker.getCurrent());
+		assertSame(supportingCharacters, walker.next());
+		assertSame(supportingCharacters, walker.getCurrent());
 
-		Assert.assertSame(susie, walker.next());
-		Assert.assertSame(susie, walker.getCurrent());
+		assertSame(susie, walker.next());
+		assertSame(susie, walker.getCurrent());
 
-		Assert.assertSame(rosalyn, walker.next());
-		Assert.assertSame(rosalyn, walker.getCurrent());
+		assertSame(rosalyn, walker.next());
+		assertSame(rosalyn, walker.getCurrent());
 
-		Assert.assertSame(null, walker.next());
-		Assert.assertSame(null, walker.getCurrent());
+		assertSame(null, walker.next());
+		assertSame(null, walker.getCurrent());
 	}
 
 	@Test
@@ -62,10 +62,10 @@ public class TreeWalkerTest {
 		tree("characters", mainCharacters, supportingCharacters);
 
 		TreeWalker walker = new TreeWalker(mainCharacters);
-		Assert.assertSame(mainCharacters, walker.next());
-		Assert.assertSame(calvin, walker.next());
-		Assert.assertSame(hobbes, walker.next());
-		Assert.assertSame(null, walker.next());
+		assertSame(mainCharacters, walker.next());
+		assertSame(calvin, walker.next());
+		assertSame(hobbes, walker.next());
+		assertSame(null, walker.next());
 	}
 
 	@Test
@@ -82,17 +82,17 @@ public class TreeWalkerTest {
 				supportingCharacters);
 
 		TreeWalker walker = new TreeWalker(characters);
-		Assert.assertSame(characters, walker.next());
-		Assert.assertSame(mainCharacters, walker.next());
-		Assert.assertSame(calvin, walker.next());
+		assertSame(characters, walker.next());
+		assertSame(mainCharacters, walker.next());
+		assertSame(calvin, walker.next());
 
 		walker.skipRemainderOfTree(mainCharacters);
 
-		Assert.assertSame(supportingCharacters, walker.next());
+		assertSame(supportingCharacters, walker.next());
 
 		walker.skipRemainderOfTree(supportingCharacters);
 
-		Assert.assertSame(null, walker.next());
+		assertSame(null, walker.next());
 	}
 
 	@Test
@@ -110,16 +110,16 @@ public class TreeWalkerTest {
 
 		TreeWalker walker = new TreeWalker(characters);
 
-		Assert.assertSame(characters, walker.next());
+		assertSame(characters, walker.next());
 
 		TreeWalker.State state = walker.getState();
 
-		Assert.assertSame(mainCharacters, walker.next());
-		Assert.assertSame(calvin, walker.next());
+		assertSame(mainCharacters, walker.next());
+		assertSame(calvin, walker.next());
 
 		walker.setState(state);
 
-		Assert.assertSame(mainCharacters, walker.next());
-		Assert.assertSame(calvin, walker.next());
+		assertSame(mainCharacters, walker.next());
+		assertSame(calvin, walker.next());
 	}
 }

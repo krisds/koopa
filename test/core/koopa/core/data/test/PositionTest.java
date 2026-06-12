@@ -1,11 +1,12 @@
 package koopa.core.data.test;
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 import koopa.core.data.Position;
 
-import org.junit.Test;
-
-public class PositionTest extends TestCase {
+public class PositionTest {
 
 	private final String resourceName = "koopa.core.data.test.PositionTest";
 

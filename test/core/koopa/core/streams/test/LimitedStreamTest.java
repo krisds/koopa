@@ -1,6 +1,6 @@
 package koopa.core.streams.test;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;

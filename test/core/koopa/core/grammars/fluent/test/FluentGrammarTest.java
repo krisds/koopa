@@ -1,7 +1,8 @@
 package koopa.core.grammars.fluent.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
 
 public class FluentGrammarTest {
 
@@ -15,6 +16,6 @@ public class FluentGrammarTest {
 
 		grammar.defineHelper("recursive").as("recursive");
 
-		Assert.assertNotNull(grammar.definitionOf("recursive").asParser());
+		assertNotNull(grammar.definitionOf("recursive").asParser());
 	}
 }

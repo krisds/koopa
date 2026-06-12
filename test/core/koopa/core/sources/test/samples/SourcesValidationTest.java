@@ -1,29 +1,29 @@
 package koopa.core.sources.test.samples;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
 import koopa.core.data.Token;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.DataValidator;
 import koopa.core.trees.Tree;
 import koopa.core.util.test.FileBasedTest;
-import koopa.core.util.test.Files;
 
 /**
  * This class provides the infrastructure for testing the different sources. It
  * looks for ".sample" files, and runs each one it finds through a JUnit test.
  */
-@RunWith(Files.class)
 public abstract class SourcesValidationTest
 		implements FileBasedTest, DataValidator {
 
@@ -46,8 +46,29 @@ public abstract class SourcesValidationTest
 		this.file = file;
 	}
 
-	@Test
-	public void testSampleValidates() throws IOException {
+	@TestFactory
+	public Stream<DynamicTest> generateFileTests() {
+		return Arrays.stream(getFiles())
+			.map(file -> DynamicTest.dynamicTest(
+				file.getName(),
+				() -> testFile(file)
+			));
+	}
+
+	private void testFile(File file) throws IOException {
+		setFile(file);
+		// Clear categories before setUp
+		TOKEN_CATEGORIES.clear();
+		NODE_CATEGORIES.clear();
+		setUp();  // Call setUp for each test
+		testSampleValidates();
+	}
+
+	protected void setUp() {
+		// Override in subclasses to provide per-test setup
+	}
+
+	private void testSampleValidates() throws IOException {
 		Sample sample = Sample.from(file);
 
 		Source source = getSource(file.getAbsolutePath(), sample);
@@ -127,9 +148,9 @@ public abstract class SourcesValidationTest
 				msg = "Category " + category + ": forbids" + type + ". Got: "
 						+ tree;
 
-			assertTrue(msg, type.name.equals(tree.getName()) == required);
+			assertTrue( type.name.equals(tree.getName()) == required);
 			if (type.namespace != null)
-				assertTrue(msg,
+				assertTrue(
 						type.namespace.equals(tree.getNamespace()) == required);
 
 		} else {
@@ -142,21 +163,21 @@ public abstract class SourcesValidationTest
 			final Tags tags) {
 		if (tags.required != null)
 			for (Object tag : tags.required)
-				assertTrue("Category " + category + ": requires " + tag + " on "
-						+ token + ".", token.hasTag(tag));
+				assertTrue(token.hasTag(tag),
+						"Category " + category + ": requires " + tag + " on " + token + ".");
 
 		if (tags.forbidden != null)
 			for (Object tag : tags.forbidden)
-				assertFalse("Category " + category + ": forbids " + tag + " on "
-						+ token + ".", token.hasTag(tag));
+				assertFalse(token.hasTag(tag),
+						"Category " + category + ": forbids " + tag + " on " + token + ".");
 	}
 
 	private void assertForbiddenCategory(Token token, String category,
 			final Tags tags) {
 		if (tags.required != null)
 			for (Object tag : tags.required)
-				assertFalse("Category !" + category + ": forbids " + tag
-						+ " on " + token + ".", token.hasTag(tag));
+				assertFalse(token.hasTag(tag),
+						"Category !" + category + ": forbids " + tag + " on " + token + ".");
 
 		// We don't assume that the negation of a category suddenly makes its
 		// forbidden elements required.

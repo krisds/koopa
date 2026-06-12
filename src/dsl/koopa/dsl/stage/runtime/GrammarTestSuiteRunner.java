@@ -1,27 +1,16 @@
 package koopa.dsl.stage.runtime;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-import koopa.core.util.Files;
-import koopa.dsl.stage.runtime.model.Stage;
-import koopa.dsl.stage.runtime.model.SuiteOfStages;
-import koopa.dsl.stage.runtime.model.Target;
-
-import org.junit.runner.Runner;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.Suite;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.InitializationError;
-
 /**
- * Support class for {@linkplain GrammarTestSuite}, responsible for setting up
- * the actual test runners.
+ * Utility class for grammar test configuration. Previously was a JUnit 4 runner,
+ * now only provides static configuration for randomized testing.
+ *
+ * @deprecated This class is kept only for its static randomization fields.
+ *             GrammarTestSuite now uses JUnit 5's @TestFactory instead of custom runners.
  */
-public class GrammarTestSuiteRunner extends Suite {
+@Deprecated
+public class GrammarTestSuiteRunner {
 
 	public static final boolean RANDOMIZE_TESTS;
 	public static final Random RANDOMIZER;
@@ -53,72 +42,4 @@ public class GrammarTestSuiteRunner extends Suite {
 		}
 	}
 
-	public GrammarTestSuiteRunner(Class<?> clazz) throws InitializationError {
-		super(clazz, getRunners(clazz));
-		assert (GrammarTestSuite.class.isAssignableFrom(clazz));
-	}
-
-	private static List<Runner> getRunners(Class<?> clazz)
-			throws InitializationError {
-		try {
-			final List<Runner> runners = new ArrayList<>();
-
-			final GrammarTestSuite provider = (GrammarTestSuite) clazz
-					.newInstance();
-			final File[] sources = provider.getStageFiles();
-
-			if (sources == null || sources.length == 0)
-				throw new InternalError("No stages.");
-
-			final SuiteOfStages testsuite = new SuiteOfStages(sources);
-
-			for (Stage stage : testsuite.getStages())
-				for (Target target : stage.getTargets()) {
-					int i = 0;
-					for (GrammarTest sample : target.getTests())
-						runners.add(new GrammarTestRunner(clazz, i++, sample));
-				}
-
-			return runners;
-
-		} catch (IOException e) {
-			throw new InitializationError(e);
-		} catch (InstantiationException e) {
-			throw new InitializationError(e);
-		} catch (IllegalAccessException e) {
-			throw new InitializationError(e);
-		}
-	}
-
-	public static class GrammarTestRunner extends BlockJUnit4ClassRunner {
-		private final GrammarTest test;
-		private final int index;
-
-		public GrammarTestRunner(Class<?> clazz, int index, GrammarTest test)
-				throws InitializationError {
-			super(clazz);
-
-			this.index = index;
-			this.test = test;
-		}
-
-		@Override
-		protected Object createTest() throws Exception {
-			final Object object = super.createTest();
-			if (object instanceof GrammarTestSuite)
-				((GrammarTestSuite) object).setTest(test);
-			return object;
-		}
-
-		@Override
-		protected String getName() {
-			return Files.getName(test.getStage()) + ":" + test.getTarget()
-					+ ":" + index;
-		}
-
-		@Override
-		protected String testName(final FrameworkMethod method) {
-			return getName();
-		}
-	}
 }

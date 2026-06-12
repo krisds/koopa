@@ -8,14 +8,17 @@ import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.util.test.Util.asTokens;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import koopa.cobol.parser.preprocessing.replacing.ReplaceLeading;
 import koopa.cobol.parser.preprocessing.replacing.ReplaceMatching;
@@ -184,12 +187,12 @@ public class ReplacingPhraseOperandTest {
 			List<Data> expected) {
 
 		LinkedList<Data> result = new LinkedList<>();
-		Assert.assertTrue(phrase.appliedTo(library, result));
+		assertTrue(phrase.appliedTo(library, result));
 
 		final Data next = library.next();
-		Assert.assertNull("Not null: " + next, next);
+		assertNull(next, "Not null: " + next);
 
-		Assert.assertEquals(expected.size(), result.size());
+		assertEquals(expected.size(), result.size());
 		for (int i = 0; i < expected.size(); i++) {
 			Data a = expected.get(i);
 			Data b = result.get(i);
@@ -210,8 +213,8 @@ public class ReplacingPhraseOperandTest {
 		if (firstToken != null)
 			library.unshift(firstToken);
 
-		Assert.assertFalse(phrase.appliedTo(library, new LinkedList<Data>()));
-		Assert.assertSame(firstToken, library.next());
+		assertFalse(phrase.appliedTo(library, new LinkedList<Data>()));
+		assertSame(firstToken, library.next());
 	}
 
 	private ReplacingPhraseOperand word(String word) {

@@ -10,12 +10,10 @@ import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
 import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.File;
 import java.util.HashMap;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.runner.RunWith;
 
 import koopa.cobol.CobolTokens;
 import koopa.cobol.projects.StandardCobolProject;
@@ -29,14 +27,12 @@ import koopa.core.sources.Source;
 import koopa.core.sources.TokenSeparator;
 import koopa.core.sources.test.CoreSourcesValidationTest;
 import koopa.core.sources.test.samples.Sample;
-import koopa.core.util.test.Files;
 
 /**
  * This class provides the infrastructure for testing the different Cobol
  * sources. It looks for ".sample" files, and runs each one it finds through a
  * JUnit test.
  */
-@RunWith(Files.class)
 public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
 	private static final HashMap<String, Class<? extends Source>> CLASSES = new HashMap<>();
@@ -67,7 +63,9 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 			clazz = null;
 		else {
 			clazz = CLASSES.get(className);
-			Assert.assertNotNull("Missing key: " + className, clazz);
+			if (clazz == null) {
+				fail("Missing key: " + className);
+			}
 		}
 
 		final StandardCobolProject project = new StandardCobolProject();
@@ -83,15 +81,16 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 		else
 			selectedSource = source.getSource(clazz);
 
-		Assert.assertNotNull("No such source: " + clazz, selectedSource);
+		if (selectedSource == null) {
+			fail("No such source: " + clazz);
+		}
 
 		return selectedSource;
 	}
 
 	@Override
-	@Before
-	public void initialize() {
-		super.initialize();
+	protected void setUp() {
+		super.setUp();
 
 		final Object[] fixed = new Object[] { FIXED };
 		addTokenCategory("FIXED", fixed);

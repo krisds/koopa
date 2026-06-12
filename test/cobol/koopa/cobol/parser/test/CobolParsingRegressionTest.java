@@ -1,24 +1,29 @@
 package koopa.cobol.parser.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import koopa.cobol.CobolProject;
 import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
 import koopa.core.util.test.FileBasedTest;
-import koopa.core.util.test.Files;
 
-@RunWith(Files.class)
+@TestInstance(Lifecycle.PER_CLASS)
 public abstract class CobolParsingRegressionTest implements FileBasedTest {
 
 	private File file = null;
@@ -53,8 +58,21 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		this.file = file;
 	}
 
-	@Test
-	public void testParsing() throws IOException {
+	@TestFactory
+	public Stream<DynamicTest> generateRegressionTests() {
+		return Arrays.stream(getFiles())
+			.map(file -> DynamicTest.dynamicTest(
+				file.getName(),
+				() -> testFile(file)
+			));
+	}
+
+	private void testFile(File file) throws IOException {
+		setFile(file);
+		testParsing();
+	}
+
+	private void testParsing() throws IOException {
 		final CobolProject project = getConfiguredProject();
 		
 		final CobolParser parser = new CobolParser();
@@ -86,8 +104,8 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 				}
 			}
 
-			assertFalse(info.toString(),
-					messages != null && messages.size() > 0);
+			assertFalse(messages != null && messages.size() > 0,
+					info.toString());
 		}
 	}
 
@@ -103,6 +121,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 			actualResults.put(result.getKey(), result);
 	}
 
+	@BeforeAll
 	public static void testRunStarted() throws IOException {
 		if (targetResultsFile != null && targetResultsFile.exists())
 			targetResults = TestResult.loadFromFile(targetResultsFile);
@@ -115,6 +134,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 			actualResults = null;
 	}
 
+	@AfterAll
 	public static void testRunFinished() {
 		try {
 			if (actualResultsFile != null)

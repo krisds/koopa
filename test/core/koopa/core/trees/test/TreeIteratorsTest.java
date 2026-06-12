@@ -8,8 +8,8 @@ import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class TreeIteratorsTest {
 
@@ -26,64 +26,64 @@ public class TreeIteratorsTest {
 
 	@Test
 	public void allTokens() {
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { rear, admiral, grace, m, dot, hopper }), //
 				collect(subject.allTokens()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { rear, admiral }), //
 				collect(rank.allTokens()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { m, dot }), //
 				collect(initials.allTokens()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { grace, m, dot, hopper }), //
 				collect(name.allTokens()));
 	}
 
 	@Test
 	public void childTokens() {
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] {}), //
 				collect(subject.childTokens()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { rear, admiral }), //
 				collect(rank.childTokens()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { m, dot }), //
 				collect(initials.childTokens()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Token[] { grace, hopper }), //
 				collect(name.childTokens()));
 	}
 
 	@Test
 	public void childData() {
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Data[] { rank.getData(), name.getData() }), //
 				collect(subject.childData()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Data[] { rear, admiral }), //
 				collect(rank.childData()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Data[] { m, dot }), //
 				collect(initials.childData()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Data[] { grace, initials.getData(), hopper }), //
 				collect(name.childData()));
 	}
 
 	@Test
 	public void childTrees() {
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Tree[] { rank, name }), //
 				collect(subject.childTrees()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Tree[] {}), //
 				collect(rank.childTrees()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Tree[] {}), //
 				collect(initials.childTrees()));
-		Assert.assertEquals(//
+		assertEquals(//
 				asList(new Tree[] { initials }), //
 				collect(name.childTrees()));
 	}

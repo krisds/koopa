@@ -11,24 +11,19 @@ import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.data.tags.SyntacticTag.WORD;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.runner.RunWith;
 
 import koopa.core.sources.LineSplitter;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.samples.Sample;
 import koopa.core.sources.test.samples.SourcesValidationTest;
-import koopa.core.util.test.Files;
 
 /**
  * This class provides the infrastructure for testing the different sources. It
  * looks for ".sample" files, and runs each one it finds through a JUnit test.
  */
-@RunWith(Files.class)
 public class CoreSourcesValidationTest extends SourcesValidationTest {
 
 	@Override
@@ -36,8 +31,8 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 		return new File("test/core/koopa/core/sources/test/");
 	}
 
-	@Before
-	public void initialize() {
+	@Override
+	protected void setUp() {
 		final Object[] programText = new Object[] { PROGRAM_TEXT_AREA };
 		final Object[] notProgramText = new Object[] { //
 				COMMENT, SKIPPED, COMPILER_DIRECTIVE };
@@ -102,7 +97,7 @@ public class CoreSourcesValidationTest extends SourcesValidationTest {
 		if (file.getName().startsWith("LineSplitter"))
 			return lineSplitter;
 
-		Assert.fail("Don't know how to setup source for " + file.getName());
+		fail("Don't know how to setup source for " + file.getName());
 		return null;
 	}
 }

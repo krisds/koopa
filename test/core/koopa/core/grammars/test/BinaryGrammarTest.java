@@ -1,7 +1,7 @@
 package koopa.core.grammars.test;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.parsers.ParserCombinator;
@@ -25,7 +25,7 @@ public class BinaryGrammarTest extends GrammarTest {
 	private static Scoped nested = null;
 	private static Scoped unknown = null;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setup() {
 		TestGrammar G = new TestGrammar();
 

@@ -5,9 +5,9 @@
 
 	<property environment="env" />
 
-    <condition property="koopa.revision" value="${env.KOOPA_REVISION}" else="unknown">
-        <isset property="env.KOOPA_REVISION" />
-    </condition>
+	<condition property="koopa.revision" value="${env.KOOPA_REVISION}" else="unknown">
+		<isset property="env.KOOPA_REVISION" />
+	</condition>
 
 	<!-- Reusable classpath for running tests with JUnit 5 -->
 	<path id="test.classpath">
@@ -81,7 +81,7 @@
 	<target name="run-core-tests">
 		<junitlauncher haltonfailure="yes" printsummary="yes">
 			<classpath refid="test.classpath" />
-			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 			<test name="koopa.core.data.test.PositionTest">
 				<fork>
 					<jvmarg value="-ea" />
@@ -248,7 +248,7 @@
 	<target name="run-dsl-tests">
 		<junitlauncher haltonfailure="yes" printsummary="yes">
 			<classpath refid="test.classpath" />
-			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 			<test name="koopa.dsl.stage.grammar.test.StageGrammarTests">
 				<fork>
 					<jvmarg value="-ea" />
@@ -308,7 +308,7 @@
 	<target name="run-cics-tests">
 		<junitlauncher haltonfailure="yes" printsummary="yes">
 			<classpath refid="test.classpath" />
-			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests">
 				<fork>
 					<jvmarg value="-ea" />
@@ -363,7 +363,7 @@
 	<target name="run-sql-tests">
 		<junitlauncher haltonfailure="yes" printsummary="yes">
 			<classpath refid="test.classpath" />
-			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests">
 				<fork>
 					<jvmarg value="-ea" />
@@ -418,7 +418,7 @@
 	<target name="run-cobol-tests">
 		<junitlauncher haltonfailure="yes" printsummary="yes">
 			<classpath refid="test.classpath" />
-			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 			<test name="koopa.cobol.grammar.directives.test.FixedDirectivesTests">
 				<fork>
 					<jvmarg value="-ea" />
@@ -458,33 +458,38 @@
 	</target>
 
 	<target name="random-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<sysproperty key="koopa.tests.random" value="true" />
-			<sysproperty key="koopa.tests.random.limit" value="3" />
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
-			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests" />
-			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests" />
-		</junit>
+			<test name="koopa.cobol.grammar.test.CobolGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+					<sysproperty key="koopa.tests.random" value="true"/>
+					<sysproperty key="koopa.tests.random.limit" value="3"/>
+				</fork>
+			</test>
+			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+					<sysproperty key="koopa.tests.random" value="true"/>
+					<sysproperty key="koopa.tests.random.limit" value="3"/>
+				</fork>
+			</test>
+			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+					<sysproperty key="koopa.tests.random" value="true"/>
+					<sysproperty key="koopa.tests.random.limit" value="3"/>
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<target name="run-cobol-regression-tests">
 		<junitlauncher haltonfailure="yes" printsummary="yes">
 			<classpath refid="test.classpath" />
-			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<listener type="legacy-brief" sendSysOut="true" sendSysErr="true" />
 			<test name="koopa.cobol.parser.test.Cobol85RegressionTest">
 				<fork>
 					<jvmarg value="-ea" />
@@ -660,15 +665,14 @@
 			</java>
 		</sequential>
 	</macrodef>
-	
+
 	<macrodef name="requires-java">
-		<attribute name="min"/>
+		<attribute name="min" />
 		<sequential>
 			<condition property="java.version.ok">
-				<javaversion atleast="@{min}"/>
+				<javaversion atleast="@{min}" />
 			</condition>
-			<fail unless="java.version.ok"
-				  message="Java @{min}+ is required, but current version is ${java.version}"/>
+			<fail unless="java.version.ok" message="Java @{min}+ is required, but current version is ${java.version}" />
 		</sequential>
 	</macrodef>
 

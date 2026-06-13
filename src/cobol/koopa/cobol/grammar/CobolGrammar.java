@@ -2986,7 +2986,7 @@ public class CobolGrammar extends CobolBaseGrammar {
             plus(
               sequence(
                 plus(
-                  literal()
+                  symbolicCharacter()
                 ),
                 optional(
                   choice(
@@ -3010,6 +3010,29 @@ public class CobolGrammar extends CobolBaseGrammar {
       }
     
       return symbolicCharsParser;
+    }
+    
+    // ========================================================
+    // symbolicCharacter
+    // ........................................................
+    
+    private ParserCombinator symbolicCharacterParser = null;
+    
+    public final Start symbolicCharacter = Start.on(getNamespace(), "symbolicCharacter");
+    
+    public ParserCombinator symbolicCharacter() {
+      if (symbolicCharacterParser == null) {
+        FutureParser future = scoped("symbolicCharacter", PUBLIC, true);
+        symbolicCharacterParser = future;
+        future.setParser(
+          choice(
+            literal(),
+            justAName()
+          )
+        );
+      }
+    
+      return symbolicCharacterParser;
     }
     
     // ========================================================
@@ -15253,6 +15276,13 @@ public class CobolGrammar extends CobolBaseGrammar {
             ),
             star(
               sequence(
+                not(
+                  choice(
+                    keyword("ALL"),
+                    keyword("LEADING"),
+                    keyword("TRAILING")
+                  )
+                ),
                 choice(
                   sequence(
                     identifier(),
@@ -22203,7 +22233,10 @@ public class CobolGrammar extends CobolBaseGrammar {
           choice(
             sequence(
               keyword("ALL"),
-              literal()
+              choice(
+                literal(),
+                symbolicCharacter()
+              )
             ),
             sequence(
               optional(

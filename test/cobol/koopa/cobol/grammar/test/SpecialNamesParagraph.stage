@@ -116,3 +116,8 @@ target specialNamesParagraph;
 
 +[ SPECIAL-NAMES.
      XML-SCHEMA foo IS bar ]
+
+# Issue #61.
++[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS
+        NULL-INDICATOR IS 256 ]

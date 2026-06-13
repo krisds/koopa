@@ -775,7 +775,11 @@ def literalRange =
 end
 
 def symbolicChars =
-    SYMBOLIC [CHARACTER | CHARACTERS] ( (literal)+ [IS | ARE] (integer)+ )+ [IN identifier]
+    SYMBOLIC [CHARACTER | CHARACTERS] ( (symbolicCharacter)+ [IS | ARE] (integer)+ )+ [IN identifier]
+end
+
+def symbolicCharacter =
+    ( literal | justAName )
 end
 
 def classIs =
@@ -3620,7 +3624,8 @@ end
 
 def tallyingAllLeadingOrTrailingPhrase =
     (ALL | LEADING | TRAILING)
-    ( (identifier (%not FOR) | literal)
+    ( (%not (ALL | LEADING | TRAILING)) # Guard against eager looping
+      (identifier (%not FOR) | literal)
       (locationPhrase)*
     )*
 end
@@ -5540,9 +5545,13 @@ def value =
     )
 end
 
-# TODO [ALL] symbolic-character
+# TODO [ALL] symbolicCharacter: without tracking which names are defined as
+# symbolic characters, adding this in would let the figurativeConstant rule
+# see any word as a valid figurativeConstant, which breaks parsing. Right now
+# we're doing a middle-ground where the ALL is not optional before a symbolic
+# character.
 def figurativeConstant =
-    ( ALL literal
+    ( ALL ( literal | symbolicCharacter )
     | [ALL]
       ( zero 
       | space

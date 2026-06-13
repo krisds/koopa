@@ -110,14 +110,11 @@ public class ListOfGrammarRules extends JPanel implements
 
 		} else {
 			label = new JLabel(crumb);
-			labels.add(label);
-
 			label.setFont(FONT);
+			label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			label.addMouseListener(mouseClickListener);
 
-			if (index % 2 == 0) {
-				label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-				label.addMouseListener(mouseClickListener);
-			}
+			labels.add(label);
 		}
 
 		index += 1;

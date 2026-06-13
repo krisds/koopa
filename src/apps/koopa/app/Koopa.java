@@ -178,11 +178,10 @@ public class Koopa extends JFrame implements Application {
 		progress.setVisible(true);
 
 		final Detail detail = new Detail(this, file, factory);
+
+		tabbedPane.addTab(getTitleForDetail(detail), detail);
+		
 		overview.addParseResults(detail.getParseResults());
-
-		String title = getTitleForDetail(detail);
-
-		tabbedPane.addTab(title, detail);
 
 		if (selectedToken != null)
 			detail.selectDetail(selectedToken);

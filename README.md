@@ -4,6 +4,8 @@ Koopa is a parser generator designed for COBOL. The COBOL parser can handle sour
 
 Check out the [guide](doc/guide/guide.pdf) for details on the original design decisions.
 
+If you're thinking about contributing to the project, please take a look at [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Features
 
 * Island parser generator
@@ -18,7 +20,7 @@ Check out the [guide](doc/guide/guide.pdf) for details on the original design de
 
 ## Licensing
 
-Everything in Koopa is covered by a BSD license, unless noted differently in the actual file or folder.
+Everything in Koopa is covered by a [BSD](LICENSE.md) license, unless noted differently in the actual file or folder.
 
 The files in the `testsuite/cobol85` folder are a COBOL85 test suite by the National Computing Centre, UK, found originally at [www.itl.nist.gov](http://www.itl.nist.gov/div897/ctg/cobol_form.htm). The version here differs only in that it splits up the different programs in separate files, where the original puts them all in one big file. The licensing is unclear, but the code is offered publicly at the above site.
 

@@ -6,12 +6,13 @@ import static koopa.core.util.test.Util.tree;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
+
 import koopa.core.trees.Tree;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TreePositionsTest extends TestCase {
+public class TreePositionsTest  {
 
 	@Test
 	public void testEmptyTree() throws IOException {

@@ -7,7 +7,7 @@ import static koopa.core.util.test.Util.tree;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import koopa.core.data.tags.SyntacticTag;
 import koopa.core.grammars.KoopaGrammar;

@@ -1,6 +1,7 @@
 package koopa.core.streams.test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import junit.framework.TestCase;
+
 import koopa.core.data.Data;
 import koopa.core.data.Token;
 import koopa.core.parsers.Stream;
@@ -9,7 +10,7 @@ import koopa.core.targets.ListTarget;
 /**
  * Base for testing the core operations which make up a {@linkplain Stream}.
  */
-public abstract class ParseStreamTest extends TestCase {
+public abstract class ParseStreamTest  {
 
 	protected void assertCanStream(Stream stream, Object[] words,
 			ListTarget target) {

@@ -1,12 +1,18 @@
 package koopa.dsl.stage.runtime;
 
 import static koopa.core.data.tags.IslandTag.WATER;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -18,11 +24,11 @@ import koopa.core.parsers.ParserCombinator;
 import koopa.core.sources.Source;
 import koopa.core.sources.test.TestTokenizer;
 import koopa.core.targets.ListTarget;
+import koopa.core.util.Files;
 import koopa.core.util.Reflect;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import koopa.dsl.stage.runtime.model.Stage;
+import koopa.dsl.stage.runtime.model.SuiteOfStages;
+import koopa.dsl.stage.runtime.model.Target;
 
 /**
  * Base for a test suite which wants to exercise the different rules of a
@@ -31,10 +37,7 @@ import org.junit.runner.RunWith;
  * {@linkplain #getGrammar()}, and tell it how an input is to be tokenized (via
  * {@link #getSourceForSample(String, Grammar)}).
  */
-@RunWith(GrammarTestSuiteRunner.class)
 public abstract class GrammarTestSuite {
-
-	private GrammarTest test;
 
 	public abstract File[] getStageFiles();
 
@@ -43,13 +46,43 @@ public abstract class GrammarTestSuite {
 	public abstract Source getSourceForSample(String sample,
 			Grammar grammar);
 
-	public void setTest(GrammarTest test) {
-		this.test = test;
+	/**
+	 * Generates dynamic tests for all grammar rules defined in the stage files.
+	 * Each test exercises a specific grammar rule with sample input that should
+	 * either be accepted or rejected.
+	 */
+	@TestFactory
+	public Stream<DynamicTest> generateGrammarTests() throws IOException {
+		final File[] sources = getStageFiles();
+		if (sources == null || sources.length == 0) {
+			throw new IllegalStateException("No stage files provided");
+		}
+
+		final SuiteOfStages testsuite = new SuiteOfStages(sources);
+
+		return testsuite.getStages().stream()
+			.flatMap(stage -> stage.getTargets().stream()
+				.flatMap(target -> {
+					AtomicInteger index = new AtomicInteger(0);
+					return target.getTests().stream()
+						.map(test -> DynamicTest.dynamicTest(
+							formatTestName(test, index.getAndIncrement()),
+							() -> executeTest(test)
+						));
+				}));
 	}
 
 	/**
-	 * The actual test, based on the data from the {@linkplain GrammarTest}
-	 * which will have been set.
+	 * Formats a test name for display in test results.
+	 */
+	private String formatTestName(GrammarTest test, int index) {
+		return Files.getName(test.getStage()) + ":" + test.getTarget() + ":" + index
+				+ " " + (test.shouldAccept() ? "accept" : "reject")
+				+ " [" + test.getSample() + "]";
+	}
+
+	/**
+	 * Executes a single grammar test.
 	 * <p>
 	 * If the test should accept ({@linkplain GrammarTest#shouldAccept()} then
 	 * we check that the parse was successful and reached the expected point. We
@@ -59,13 +92,12 @@ public abstract class GrammarTestSuite {
 	 * If the test should reject then we check that the parse failed, or that it
 	 * did not reach the expected point in the input.
 	 */
-	@Test
-	public void testParsing() throws IOException {
+	private void executeTest(GrammarTest test) throws IOException {
 		final Grammar grammar = getGrammar();
 		final String targetName = test.getTarget();
 
 		final ParserCombinator target = Reflect.getParser(grammar, targetName);
-		assertNotNull(target);
+		assertNotNull(target, "Parser for target '" + targetName + "' should not be null");
 
 		final TestTokenizer source = new TestTokenizer(
 				getSourceForSample(test.getSample(), grammar));
@@ -77,17 +109,16 @@ public abstract class GrammarTestSuite {
 			try {
 				final boolean accepts = target.accepts(parse);
 
-				assertTrue(targetName + " should accept [" + test.getSample()
-						+ "]", accepts);
-				assertTrue(
+				assertTrue(accepts,
+						targetName + " should accept [" + test.getSample() + "]");
+				assertTrue(source.isWhereExpected(),
 						targetName + " should accept [" + test.getSample()
 								+ "] up to the expected point. Got to "
-								/*+ parse.getFinalFrame().toTrace()*/ + ".", //
-						source.isWhereExpected());
+								/*+ parse.getFinalFrame().toTrace()*/ + ".");
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Assert.fail(targetName + " should accept [" + test.getSample()
+				fail(targetName + " should accept [" + test.getSample()
 						+ "], but threw " + e);
 			}
 
@@ -105,18 +136,16 @@ public abstract class GrammarTestSuite {
 
 				} else if (inUnknown == 0 && data instanceof Token) {
 					Token token = (Token) data;
-					assertFalse(
+					assertFalse(token.hasTag(WATER),
 							targetName + " should find no water in ["
-									+ test.getSample() + "]",
-							token.hasTag(WATER));
+									+ test.getSample() + "]");
 				}
 			}
 
 		} else {
 			Parse parse = Parse.of(source);
-			assertFalse(
-					targetName + " should reject [" + test.getSample() + "]",
-					target.accepts(parse) && source.isWhereExpected());
+			assertFalse(target.accepts(parse) && source.isWhereExpected(),
+					targetName + " should reject [" + test.getSample() + "]");
 		}
 	}
 }

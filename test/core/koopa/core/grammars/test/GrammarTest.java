@@ -1,12 +1,16 @@
 package koopa.core.grammars.test;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
 import koopa.core.grammars.combinators.Scoped;
 import koopa.core.parsers.Parse;
 import koopa.core.parsers.ParserCombinator;
@@ -47,7 +51,7 @@ public abstract class GrammarTest {
 		HardcodedSource source = HardcodedSource.from(input);
 		ListTarget target = new ListTarget();
 
-		Assert.assertFalse(rule.accepts(Parse.of(source).to(target))
+		assertFalse(rule.accepts(Parse.of(source).to(target))
 				&& source.next() == null);
 	}
 
@@ -59,10 +63,10 @@ public abstract class GrammarTest {
 		HardcodedSource source = HardcodedSource.from(input);
 		ListTarget target = new ListTarget();
 
-		Assert.assertTrue(rule.accepts(Parse.of(source).to(target)));
-		Assert.assertTrue(target.size() > 0);
+		assertTrue(rule.accepts(Parse.of(source).to(target)));
+		assertTrue(target.size() > 0);
 
-		Assert.assertNull(source.next());
+		assertNull(source.next());
 	}
 
 	protected void shouldAccept(ParserCombinator parser, TreeSample sample) {
@@ -72,17 +76,17 @@ public abstract class GrammarTest {
 		HardcodedSource source = HardcodedSource.from(sample.getTaggedWords());
 		KoopaTreeBuilder target = new KoopaTreeBuilder(G);
 
-		Assert.assertTrue(rule.accepts(Parse.of(source).to(target)));
-		Assert.assertNull(source.next());
+		assertTrue(rule.accepts(Parse.of(source).to(target)));
+		assertNull(source.next());
 
 		final Tree treeForRule = target.getTree();
-		Assert.assertNotNull(treeForRule);
+		assertNotNull(treeForRule);
 
-		Assert.assertEquals(sample.getTrees().size(),
+		assertEquals(sample.getTrees().size(),
 				treeForRule.getChildCount());
 		for (Tree e : sample.getTrees()) {
 			final Tree actual = treeForRule.getChild(0);
-			Assert.assertNotNull(treeForRule);
+			assertNotNull(treeForRule);
 
 			treeForRule.removeChild(0);
 			shouldBeEqual(e, actual);
@@ -94,23 +98,23 @@ public abstract class GrammarTest {
 		final String actualPath = getPath(actual);
 
 		if (expected.isNode()) {
-			Assert.assertTrue(expectedPath + " == " + actualPath, //
-					actual.isNode());
+			assertTrue(actual.isNode(),
+					expectedPath + " == " + actualPath);
 
-			Assert.assertEquals(expectedPath + " == " + actualPath, //
-					expected.getName(), actual.getName());
+			assertEquals(expected.getName(), actual.getName(),
+					expectedPath + " == " + actualPath);
 
 			for (int i = 0; i < expected.getChildCount(); i++)
 				shouldBeEqual(expected.getChild(i), actual.getChild(i));
 
-			Assert.assertEquals(expectedPath + ": child count", //
-					expected.getChildCount(), actual.getChildCount());
+			assertEquals(expected.getChildCount(), actual.getChildCount(),
+					expectedPath + ": child count");
 
 		} else {
-			Assert.assertTrue(expectedPath + " == " + actualPath, //
-					actual.isToken());
+			assertTrue(actual.isToken(),
+					expectedPath + " == " + actualPath);
 
-			Assert.assertEquals(expected.getText(), actual.getText());
+			assertEquals(expected.getText(), actual.getText());
 		}
 	}
 

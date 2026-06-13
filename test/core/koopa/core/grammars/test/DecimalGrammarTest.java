@@ -9,7 +9,7 @@ import java.util.List;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.combinators.Opt;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This class tests a possible fix for issue #48

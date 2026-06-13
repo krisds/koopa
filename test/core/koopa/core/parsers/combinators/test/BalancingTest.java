@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import koopa.core.grammars.test.GrammarTest;
 import koopa.core.parsers.Parse;
@@ -38,8 +38,8 @@ public class BalancingTest extends GrammarTest {
 
 		final List<Boolean> expected = Arrays.asList(new Boolean[] { //
 				true, false, false, false, false, true });
-		Assert.assertEquals(expected.size(), state.actual.size());
-		Assert.assertEquals(expected, state.actual);
+		assertEquals(expected.size(), state.actual.size());
+		assertEquals(expected, state.actual);
 	}
 
 	@Test
@@ -53,8 +53,8 @@ public class BalancingTest extends GrammarTest {
 
 		final List<Boolean> expected = Arrays.asList(new Boolean[] { //
 				false, false, false, false, false, true });
-		Assert.assertEquals(expected.size(), state.actual.size());
-		Assert.assertEquals(expected, state.actual);
+		assertEquals(expected.size(), state.actual.size());
+		assertEquals(expected, state.actual);
 	}
 
 	@Test

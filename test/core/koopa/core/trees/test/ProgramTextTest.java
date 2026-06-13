@@ -3,15 +3,15 @@ package koopa.core.trees.test;
 import static koopa.core.util.test.Util.comment;
 import static koopa.core.util.test.Util.text;
 import static koopa.core.util.test.Util.tree;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import koopa.core.trees.Tree;
 
-import org.junit.Test;
-
-public class ProgramTextTest extends TestCase {
+public class ProgramTextTest {
 
 	@Test
 	public void testEmptyProgramText() throws IOException {

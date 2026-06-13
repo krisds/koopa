@@ -2,16 +2,15 @@ package koopa.core.trees.test;
 
 import static koopa.core.util.test.Util.token;
 import static koopa.core.util.test.Util.tree;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import koopa.core.trees.XMLSerializer;
 
-import org.junit.Test;
-
-public class XMLSerializerTest extends TestCase {
+public class XMLSerializerTest  {
 
 	@Test
 	public void testSerializeNull() throws IOException {
@@ -20,7 +19,7 @@ public class XMLSerializerTest extends TestCase {
 		String expected = "<?xml version='1.0' encoding='UTF-8'?>\n"
 				+ "<koopa>\n" + "</koopa>\n";
 
-		Assert.assertEquals(expected, actual);
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -30,7 +29,7 @@ public class XMLSerializerTest extends TestCase {
 		String expected = "<?xml version='1.0' encoding='UTF-8'?>\n"
 				+ "<koopa>\n" + "  <t><![CDATA[COBOL]]></t>\n" + "</koopa>\n";
 
-		Assert.assertEquals(expected, actual);
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -44,7 +43,7 @@ public class XMLSerializerTest extends TestCase {
 				+ "    <t><![CDATA[Cobol]]></t>\n" + "  </quote>\n"
 				+ "</koopa>\n";
 
-		Assert.assertEquals(expected, actual);
+		assertEquals(expected, actual);
 	}
 
 	@Test
@@ -58,6 +57,6 @@ public class XMLSerializerTest extends TestCase {
 				+ "    <t><![CDATA[']]]]><![CDATA[>']]></t>\n"
 				+ "  </escaped>\n" + "</koopa>\n";
 
-		Assert.assertEquals(expected, actual);
+		assertEquals(expected, actual);
 	}
 }

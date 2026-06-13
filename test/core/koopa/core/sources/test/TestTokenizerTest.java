@@ -1,14 +1,14 @@
 package koopa.core.sources.test;
 
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import koopa.core.data.Data;
 import koopa.core.data.Token;
@@ -62,14 +62,14 @@ public class TestTokenizerTest {
 
 		for (int i = 0; i <= count; i++) {
 			final Data d = tokenizer.next();
-			assertTrue(expected[i], d instanceof Token);
+			assertTrue(d instanceof Token, expected[i]);
 			final Token t = (Token) d;
-			assertEquals(t.toString(), expected[i], t.getText());
+			assertEquals(expected[i], t.getText(), t.toString());
 		}
 
 		if (atMark)
-			assertTrue(message, tokenizer.isWhereExpected());
+			assertTrue(tokenizer.isWhereExpected(), message);
 		else
-			assertFalse(message, tokenizer.isWhereExpected());
+			assertFalse(tokenizer.isWhereExpected(), message);
 	}
 }

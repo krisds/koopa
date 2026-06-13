@@ -1,10 +1,9 @@
 package koopa.core.sources.test.samples;
 
 import static koopa.core.util.test.Util.testFilesCharset;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileReader;
@@ -166,7 +165,7 @@ public class Sample {
 		int i = 0;
 		while (true) {
 			if (i >= ranges.size()) {
-				assertNull("Was not expecting any more tokens.", source.next());
+				assertNull(source.next(), "Was not expecting any more tokens.");
 				break;
 			}
 
@@ -208,15 +207,15 @@ public class Sample {
 				+ range.getEnd().getPositionInLine() + ". Found " + token
 				+ " instead.";
 
-		assertEquals(message, range.getStart().getLinenumber(),
-				token.getStart().getLinenumber());
-		assertEquals(message, range.getStart().getPositionInLine(),
-				token.getStart().getPositionInLine());
+		assertEquals(range.getStart().getLinenumber(),
+				token.getStart().getLinenumber(), message);
+		assertEquals(range.getStart().getPositionInLine(),
+				token.getStart().getPositionInLine(), message);
 
-		assertEquals(message, range.getEnd().getLinenumber(),
-				token.getEnd().getLinenumber());
-		assertEquals(message, range.getEnd().getPositionInLine(),
-				token.getEnd().getPositionInLine());
+		assertEquals(range.getEnd().getLinenumber(),
+				token.getEnd().getLinenumber(), message);
+		assertEquals(range.getEnd().getPositionInLine(),
+				token.getEnd().getPositionInLine(), message);
 
 		if (annotation != null) {
 			final Set<String> required //
@@ -241,15 +240,15 @@ public class Sample {
 				+ range.getEnd().getPositionInLine() + ". Found " + tree
 				+ " instead.";
 
-		assertEquals(message, range.getStart().getLinenumber(),
-				tree.getStartPosition().getLinenumber());
-		assertEquals(message, range.getStart().getPositionInLine(),
-				tree.getStartPosition().getPositionInLine());
+		assertEquals(range.getStart().getLinenumber(),
+				tree.getStartPosition().getLinenumber(), message);
+		assertEquals(range.getStart().getPositionInLine(),
+				tree.getStartPosition().getPositionInLine(), message);
 
-		assertEquals(message, range.getEnd().getLinenumber(),
-				tree.getEndPosition().getLinenumber());
-		assertEquals(message, range.getEnd().getPositionInLine(),
-				tree.getEndPosition().getPositionInLine());
+		assertEquals(range.getEnd().getLinenumber(),
+				tree.getEndPosition().getLinenumber(), message);
+		assertEquals(range.getEnd().getPositionInLine(),
+				tree.getEndPosition().getPositionInLine(), message);
 
 		if (annotation != null) {
 			final Set<String> required //

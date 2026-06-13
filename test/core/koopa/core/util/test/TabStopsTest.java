@@ -1,11 +1,14 @@
 package koopa.core.util.test;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import koopa.core.util.TabStops;
 
-public class TabStopsTest extends TestCase {
+public class TabStopsTest {
 
 	@Test
 	public void testNoTabStops() {

@@ -1,13 +1,13 @@
 package koopa.core.grammars.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import koopa.core.parsers.FutureParser;
 import koopa.core.parsers.ParserCombinator;
 import koopa.core.parsers.Stack;
 import koopa.core.parsers.combinators.Opt;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Koopa grammars support automatic and context-sensitive detection of keywords.
@@ -210,16 +210,16 @@ public class AutomaticKeywordsTest extends GrammarTest {
 
 		public StackAssertions keywordsInclude(String... words) {
 			for (String word : words)
-				assertTrue("'" + word + "' should be a keyword",
-						stack.isKeyword(G.comparableText(word)));
+				assertTrue(stack.isKeyword(G.comparableText(word)),
+						"'" + word + "' should be a keyword");
 
 			return this;
 		}
 
 		public StackAssertions keywordsExclude(String... words) {
 			for (String word : words)
-				assertFalse("'" + word + "' should not be a keyword",
-						stack.isKeyword(G.comparableText(word)));
+				assertFalse(stack.isKeyword(G.comparableText(word)),
+						"'" + word + "' should not be a keyword");
 
 			return this;
 		}

@@ -9,6 +9,14 @@
         <isset property="env.KOOPA_REVISION" />
     </condition>
 
+	<!-- Reusable classpath for running tests with JUnit 5 -->
+	<path id="test.classpath">
+		<pathelement location="build/" />
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
 	<target name="clean">
 		<delete dir="doc/javadoc/" />
 		<delete dir="build/" />
@@ -71,50 +79,115 @@
 	</target>
 
 	<target name="run-core-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.core.data.test.PositionTest" />
-			<test name="koopa.core.data.test.TokenTest" />
-			<test name="koopa.core.data.test.TokensTest" />
-
-			<test name="koopa.core.parsers.test.ParseStackTest" />
-			<test name="koopa.core.streams.test.BaseStreamTest" />
-			<test name="koopa.core.streams.test.LimitedStreamTest" />
-
-			<test name="koopa.core.grammars.test.KoopaGrammarTest" />
-			<test name="koopa.core.grammars.test.AutomaticKeywordsTest" />
-			<test name="koopa.core.grammars.test.DecimalGrammarTest" />
-			<test name="koopa.core.grammars.test.BinaryGrammarTest" />
-
-			<test name="koopa.core.parsers.combinators.test.BalancingTest" />
-
-			<test name="koopa.core.grammars.fluent.test.FluentGrammarTest" />
-
-			<test name="koopa.core.trees.test.ProgramTextTest" />
-			<test name="koopa.core.trees.test.TreeIteratorsTest" />
-			<test name="koopa.core.trees.test.TreePositionsTest" />
-			<test name="koopa.core.trees.test.TreeWalkerTest" />
-			<test name="koopa.core.trees.test.XMLSerializerTest" />
-
-			<test name="koopa.core.sources.test.CoreSourcesValidationTest" />
-			<test name="koopa.core.sources.test.TestTokenizerTest" />
-
-			<test name="koopa.core.trees.jaxen.test.JaxenTest" />
-
-			<test name="koopa.core.util.test.TabStopsTest" />
-		</junit>
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<test name="koopa.core.data.test.PositionTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.data.test.TokenTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.data.test.TokensTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.parsers.test.ParseStackTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.streams.test.BaseStreamTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.streams.test.LimitedStreamTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.grammars.test.KoopaGrammarTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.grammars.test.AutomaticKeywordsTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.grammars.test.DecimalGrammarTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.grammars.test.BinaryGrammarTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.parsers.combinators.test.BalancingTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.grammars.fluent.test.FluentGrammarTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.trees.test.ProgramTextTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.trees.test.TreeIteratorsTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.trees.test.TreePositionsTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.trees.test.TreeWalkerTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.trees.test.XMLSerializerTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.sources.test.CoreSourcesValidationTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.sources.test.TestTokenizerTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.trees.jaxen.test.JaxenTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.core.util.test.TabStopsTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<!-- Koopa Templates DSL -->
@@ -173,23 +246,20 @@
 	</target>
 
 	<target name="run-dsl-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.dsl.stage.grammar.test.StageGrammarTests" />
-			<test name="koopa.dsl.kg.grammar.test.KGGrammarTests" />
-		</junit>
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<test name="koopa.dsl.stage.grammar.test.StageGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.dsl.kg.grammar.test.KGGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<!-- CICS -->
@@ -236,22 +306,15 @@
 	</target>
 
 	<target name="run-cics-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests" />
-		</junit>
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<test name="koopa.cics.grammar.test.EmbeddedCICSGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<!-- SQL -->
@@ -298,22 +361,15 @@
 	</target>
 
 	<target name="run-sql-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests" />
-		</junit>
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<test name="koopa.sql.grammar.test.EmbeddedSQLGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<!-- COBOL PARSER -->
@@ -360,28 +416,45 @@
 	</target>
 
 	<target name="run-cobol-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.cobol.grammar.directives.test.FixedDirectivesTests" />
-			<test name="koopa.cobol.grammar.directives.test.FreeDirectivesTests" />
-			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest" />
-			<test name="koopa.cobol.grammar.preprocessing.test.CobolPreprocessingGrammarTests" />
-			<test name="koopa.cobol.grammar.test.CobolGrammarTests" />
-			<test name="koopa.cobol.parser.preprocessing.replacing.test.ReplacingPhraseOperandTest" />
-			<test name="koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest" />
-		</junit>
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<test name="koopa.cobol.grammar.directives.test.FixedDirectivesTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.grammar.directives.test.FreeDirectivesTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.grammar.preprocessing.test.CobolPreprocessingGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.grammar.test.CobolGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.parser.preprocessing.replacing.test.ReplacingPhraseOperandTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.parser.preprocessing.test.PreprocessingSourceTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<target name="random-tests">
@@ -409,23 +482,20 @@
 	</target>
 
 	<target name="run-cobol-regression-tests">
-		<junit fork="yes" printsummary="yes" haltonfailure="yes" showoutput="yes">
-			<classpath>
-				<pathelement location="build/" />
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-
-			<assertions>
-				<enable />
-			</assertions>
-
-			<formatter type="brief" usefile="no" />
-
-			<test name="koopa.cobol.parser.test.Cobol85RegressionTest" />
-			<test name="koopa.cobol.parser.preprocessing.test.Cobol85PreprocessingTest" />
-		</junit>
+		<junitlauncher haltonfailure="yes" printsummary="yes">
+			<classpath refid="test.classpath" />
+			<!-- <listener type="legacy-brief" sendSysOut="true" sendSysErr="true" /> -->
+			<test name="koopa.cobol.parser.test.Cobol85RegressionTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.parser.preprocessing.test.Cobol85PreprocessingTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+		</junitlauncher>
 	</target>
 
 	<!-- APPLICATIONS -->

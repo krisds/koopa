@@ -46,7 +46,7 @@ public class CobolOutlineTreeProcessor {
 
 			} else if (tree.isNode("sourceUnit")) {
 				w.skipRemainderOfTree(tree);
-				final String name = Jaxen.getAllText(tree, ".//programName");
+				final String name = Jaxen.getAllText(tree, ".//programIdParagraph/programName");
 				push(new Reference(tree, name, PROGRAM_ICON));
 				walk(tree);
 				pop();

@@ -775,11 +775,11 @@ def literalRange =
 end
 
 def symbolicChars =
-    SYMBOLIC [CHARACTER | CHARACTERS] ( (symbolicCharacter)+ [IS | ARE] (integer)+ )+ [IN identifier]
+    SYMBOLIC [CHARACTER | CHARACTERS] ( (symbolicCharacter)+ [IS | ARE] (integerLiteral)+ )+ [IN identifier]
 end
 
 def symbolicCharacter =
-    ( literal | justAName )
+    justAName
 end
 
 def classIs =

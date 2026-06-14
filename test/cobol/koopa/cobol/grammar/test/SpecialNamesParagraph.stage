@@ -99,11 +99,17 @@ target specialNamesParagraph;
 +[ SPECIAL-NAMES.
      EVENT STATUS IS foo ]
 
-+[ SPECIAL-NAMES.
+-[ SPECIAL-NAMES.
      SYMBOLIC CHARACTERS "a" IS 1 IN foo ]
 
 +[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS a IS 1 IN foo ]
+
+-[ SPECIAL-NAMES.
      SYMBOLIC CHARACTERS "a" "b" ARE 1 2 IN foo ]
+
++[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS a b ARE 1 2 IN foo ]
 
 +[ SPECIAL-NAMES.
      NUMERIC SIGN IS TRAILING SEPARATE ]
@@ -121,3 +127,16 @@ target specialNamesParagraph;
 +[ SPECIAL-NAMES.
      SYMBOLIC CHARACTERS
         NULL-INDICATOR IS 256 ]
+
+# Issue #61.
++[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS
+        NULL-IND         IS 256
+        NO-UPDATE-SC     IS 176
+        NO-UPDATE        IS 171 ]
+
+# Issue #61.
++[ SPECIAL-NAMES.
+     SYMBOLIC CHARACTERS
+        NULL-IND         		IS 256
+        NO-UPDATE-SC NO-UPDATE  ARE 176 171 ]

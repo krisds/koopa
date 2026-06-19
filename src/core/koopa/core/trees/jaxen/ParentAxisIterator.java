@@ -1,6 +1,7 @@
 package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,9 @@ public class ParentAxisIterator implements Iterator<Tree> {
 	public Tree next() {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("ParentAxisIterator(" + tree + ").next()");
+
+		if (!hasNext())
+			throw new NoSuchElementException("Called next on an iterator with no more elements");
 
 		final Tree next = tree.getParent();
 		seen = true;

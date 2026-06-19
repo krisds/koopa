@@ -1,6 +1,7 @@
 package koopa.core.trees.jaxen;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import koopa.core.trees.Tree;
 
@@ -21,6 +22,9 @@ public class DescendantOrSelfAxisIterator implements Iterator<Tree> {
 
 	@Override
 	public Tree next() {
+		if (!hasNext())
+			throw new NoSuchElementException("Called next on an iterator with no more elements");
+
 		final Tree tree = this.next;
 
 		moveOn();

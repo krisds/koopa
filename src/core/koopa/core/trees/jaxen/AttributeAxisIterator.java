@@ -51,8 +51,4 @@ public class AttributeAxisIterator implements Iterator<TreeAttribute> {
 		return this.attributes.get(this.index++);
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

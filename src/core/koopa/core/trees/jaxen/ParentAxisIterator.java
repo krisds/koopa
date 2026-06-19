@@ -45,8 +45,4 @@ public class ParentAxisIterator implements Iterator<Tree> {
 		return next;
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

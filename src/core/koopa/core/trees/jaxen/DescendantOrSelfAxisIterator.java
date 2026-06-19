@@ -61,8 +61,4 @@ public class DescendantOrSelfAxisIterator implements Iterator<Tree> {
 		}
 	}
 
-	@Override
-	public void remove() {
-		new UnsupportedOperationException();
-	}
 }

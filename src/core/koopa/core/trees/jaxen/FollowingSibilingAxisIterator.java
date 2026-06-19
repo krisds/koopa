@@ -50,8 +50,4 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 		return next;
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

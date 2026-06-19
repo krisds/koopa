@@ -99,8 +99,4 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 		}
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

@@ -30,8 +30,4 @@ public class ChildDataIterator implements Iterator<Data> {
 		return data;
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

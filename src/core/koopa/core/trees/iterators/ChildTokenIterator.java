@@ -53,8 +53,4 @@ public class ChildTokenIterator implements Iterator<Token> {
 			index += 1;
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

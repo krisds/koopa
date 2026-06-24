@@ -3,6 +3,7 @@ package koopa.core.trees.jaxen;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import koopa.core.data.Data;
@@ -48,11 +49,10 @@ public class AttributeAxisIterator implements Iterator<TreeAttribute> {
 
 	@Override
 	public TreeAttribute next() {
+		if (!hasNext())
+			throw new NoSuchElementException("Called next on an iterator with no more elements");
+
 		return this.attributes.get(this.index++);
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

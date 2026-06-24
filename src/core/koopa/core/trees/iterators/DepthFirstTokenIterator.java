@@ -1,6 +1,7 @@
 package koopa.core.trees.iterators;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import koopa.core.data.Token;
 import koopa.core.trees.TokenFilter;
@@ -37,6 +38,9 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 
 	@Override
 	public Token next() {
+		if (!hasNext())
+			throw new NoSuchElementException("Called next on an iterator with no more elements");
+
 		Token next = (Token) current.getData();
 		moveToNextMatchingToken();
 		return next;
@@ -99,8 +103,4 @@ public class DepthFirstTokenIterator implements Iterator<Token> {
 		}
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

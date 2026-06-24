@@ -1,6 +1,7 @@
 package koopa.core.trees.iterators;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import koopa.core.trees.Tree;
 
@@ -27,6 +28,9 @@ public class ChildTreeIterator implements Iterator<Tree> {
 
 	@Override
 	public Tree next() {
+		if (!hasNext())
+			throw new NoSuchElementException("Called next on an iterator with no more elements");
+
 		Tree next = root.getChild(index);
 		moveToNextNode();
 		return next;
@@ -38,8 +42,4 @@ public class ChildTreeIterator implements Iterator<Tree> {
 			index += 1;
 	}
 
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
 }

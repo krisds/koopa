@@ -187,6 +187,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.core.trees.jaxen.test.KoopaNavigatorTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 		</junitlauncher>
 	</target>
 

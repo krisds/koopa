@@ -101,11 +101,9 @@ public class StandardCobolProject extends BasicCobolProject
 
 		if (LOGGER.isTraceEnabled())
 			if (match != null)
-				LOGGER.trace("Lookup of copybook " + textName + " in "
-						+ libraryName + " succeeded; found " + match);
+				LOGGER.trace("Lookup of copybook {} in {} succeeded; found {}", textName, libraryName, match);
 			else
-				LOGGER.trace("Lookup of copybook " + textName + " in "
-						+ libraryName + " failed: not found.");
+				LOGGER.trace("Lookup of copybook {} in {}", textName, libraryName);
 
 		return match;
 	}

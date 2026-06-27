@@ -55,10 +55,7 @@ public class Sample {
 	}
 
 	private static List<Block> allBlocksFrom(File file) throws IOException {
-		FileReader fileReader = null;
-		try {
-			fileReader = new FileReader(file, TEST_FILES_CHARSET);
-
+		try (final FileReader fileReader = new FileReader(file, TEST_FILES_CHARSET)) {
 			final Source source = new LineSplitter(fileReader);
 			final List<Block> blocks = new ArrayList<>();
 
@@ -72,12 +69,6 @@ public class Sample {
 
 			return blocks;
 
-		} finally {
-			try {
-				if (fileReader != null)
-					fileReader.close();
-			} catch (IOException e) {
-			}
 		}
 	}
 

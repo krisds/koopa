@@ -23,13 +23,12 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 	@Override
 	public boolean hasNext() {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("FollowingSibilingAxisIterator(" + parent
-					+ ").hasNext()");
+			LOGGER.trace("FollowingSibilingAxisIterator({}).hasNext()", parent);
 
 		final boolean hasNext = index < parent.getChildCount();
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + hasNext);
+			LOGGER.trace(" => {}", hasNext);
 
 		return hasNext;
 	}
@@ -37,7 +36,7 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 	@Override
 	public Tree next() {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("FollowingSibilingAxisIterator(" + parent + ").next()");
+			LOGGER.trace("FollowingSibilingAxisIterator({}).next()", parent);
 
 		if (!hasNext())
 			throw new NoSuchElementException("Called next on an iterator with no more elements");
@@ -49,7 +48,7 @@ public class FollowingSibilingAxisIterator implements Iterator<Tree> {
 			next = null;
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + next);
+			LOGGER.trace(" => {}", next);
 
 		return next;
 	}

@@ -197,10 +197,7 @@ public class BatchResults extends AbstractTableModel {
 				else if (matches.size() == 1)
 					value = matches.get(0).toString();
 
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-				value = e.getMessage();
-			} catch (XPathException e) {
+			} catch (NullPointerException | XPathException e) {
 				e.printStackTrace();
 				value = e.getMessage();
 			}

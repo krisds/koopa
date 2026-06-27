@@ -36,7 +36,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 		pattern = leading.toUpperCase();
 		patternLength = pattern.length();
 
-		if (byWords.size() == 0)
+		if (byWords.isEmpty())
 			replacement = null;
 		else {
 			replacement = new LinkedList<>();
@@ -52,8 +52,8 @@ public class ReplaceTrailing extends ReplacingPhrase {
 		final List<Token> next = nextTextWord(library, seen);
 
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Trying " + this);
-			LOGGER.trace("  On " + next);
+			LOGGER.trace("Trying {}", this);
+			LOGGER.trace("  On {}", next);
 		}
 
 		if (next != null) {
@@ -66,7 +66,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 
 				if (replacement == null) {
 					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("  Replacing with: " + head);
+						LOGGER.trace("  Replacing with: {}", head);
 
 					newTokens.add(head);
 					return true;
@@ -77,7 +77,7 @@ public class ReplaceTrailing extends ReplacingPhrase {
 					final Token newToken = Tokens.join(replacement, AreaTag.PROGRAM_TEXT_AREA);
 
 					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("  Replacing with: " + newToken);
+						LOGGER.trace("  Replacing with: {}", newToken);
 
 					newTokens.add(newToken);
 					return true;

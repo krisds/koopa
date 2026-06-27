@@ -45,7 +45,7 @@ public class FindAction extends AbstractAction implements Action {
 
 			lastSearch = input;
 
-			if (input.length() == 0) {
+			if (input.isEmpty()) {
 				JOptionPane.showMessageDialog(application.getFrame(),
 						"Can not match empty search pattern.", "Not found",
 						JOptionPane.ERROR_MESSAGE);

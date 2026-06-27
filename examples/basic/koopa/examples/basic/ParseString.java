@@ -1,6 +1,7 @@
 package koopa.examples.basic;
 
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.List;
 
 import koopa.cobol.CobolProject;
@@ -40,7 +41,7 @@ public class ParseString {
 		final boolean accepts = identifier.accepts(parse);
 
 		if (!accepts)
-			return null;
+			return Collections.emptyList();
 
 		final KoopaTreeBuilder builder = parse
 				.getTarget(KoopaTreeBuilder.class);

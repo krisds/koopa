@@ -17,7 +17,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -27,6 +29,7 @@ import javax.swing.JTextPane;
 import javax.swing.SizeSequence;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -335,13 +338,14 @@ public class LineNumberView extends JComponent {
 	public static void main(String[] args) {
 
 		final JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JTextPane textPane = new JTextPane();
 
-		Date date = new Date();
+		final String timestamp = LocalDateTime.now(ZoneId.systemDefault())
+				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		String user = System.getProperty("user.name");
 
-		textPane.setText("/**\n * Created On : " + date + "\n * Author : "
+		textPane.setText("/**\n * Created On : " + timestamp + "\n * Author : "
 				+ user + "\n */\n" + "\npublic class " + "Sample" + " {\n"
 				+ "\n\tpublic " + "Sample" + "() {\n\n\n" + "\t}" + "\n}");
 

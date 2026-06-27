@@ -135,7 +135,7 @@ public class TabSettings extends JDialog {
 		boolean valid = true;
 
 		final String tabLengthInput = tabLength.getText();
-		if (tabLengthInput.length() == 0)
+		if (tabLengthInput.isEmpty())
 			valid = false;
 
 		if (valid)

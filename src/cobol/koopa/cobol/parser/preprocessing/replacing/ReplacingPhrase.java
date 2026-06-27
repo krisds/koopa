@@ -8,6 +8,7 @@ import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.trees.jaxen.Jaxen.getMatch;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -205,11 +206,11 @@ public abstract class ReplacingPhrase {
 		if (words == null || words.isEmpty())
 			return null;
 
-		String text = "";
+		final StringBuilder text = new StringBuilder();
 		for (Token token : words)
-			text += token.getText();
+			text.append(token.getText());
 
-		return text;
+		return text.toString();
 	}
 
 	@Override

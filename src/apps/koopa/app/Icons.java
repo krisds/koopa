@@ -21,7 +21,7 @@ public class Icons {
 
 		URL resource = Icons.class.getResource(reference);
 		if (resource == null) {
-			LOGGER.warn("Warning: could not find resource for " + reference);
+			LOGGER.warn("Warning: could not find resource for {}", reference);
 			return null;
 		}
 

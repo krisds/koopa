@@ -70,7 +70,7 @@ public class CompilerDirectives extends ChainingSource
 		} else {
 			// If there is one, handle it, and start returning the result.
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Found a compiler directive in: " + line);
+				LOGGER.trace("Found a compiler directive in: {}", line);
 			// Break the line into the part handled so far, and the
 			// as-yet-unparsed rest, and unshift the rest into the source.
 			LinkedList<Data> linePrefix = extractParsedPrefix(directive, line);
@@ -164,7 +164,7 @@ public class CompilerDirectives extends ChainingSource
 			final String value = isoSourceFormat.getAllText().toUpperCase();
 			final SourceFormat declaredFormat = SourceFormat.fromName(value);
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("ISO SOURCE FORMAT " + declaredFormat);
+				LOGGER.trace("ISO SOURCE FORMAT {}", declaredFormat);
 			if (declaredFormat != null)
 				return sourceformatDirective(line, declaredFormat);
 			else
@@ -186,7 +186,7 @@ public class CompilerDirectives extends ChainingSource
 			}
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("MF SET SOURCEFORMAT " + newFormat);
+				LOGGER.trace("MF SET SOURCEFORMAT {}", newFormat);
 
 			if (newFormat != null)
 				return sourceformatDirective(line, newFormat);

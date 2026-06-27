@@ -148,10 +148,10 @@ public abstract class SourcesValidationTest
 				msg = "Category " + category + ": forbids" + type + ". Got: "
 						+ tree;
 
-			assertTrue( type.name.equals(tree.getName()) == required);
+			assertTrue(type.name.equals(tree.getName()) == required, msg);
 			if (type.namespace != null)
 				assertTrue(
-						type.namespace.equals(tree.getNamespace()) == required);
+						type.namespace.equals(tree.getNamespace()) == required, msg);
 
 		} else {
 			System.out.println(

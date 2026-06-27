@@ -146,8 +146,7 @@ public class CopyInclude extends ChainingSource
 					// Did we really ? E.g. no COPY100, or COPY-FOO ?
 					if (isSpace(line, 1)) {
 						if (LOGGER.isTraceEnabled())
-							LOGGER.trace(
-									"Possible start of a COPY statement: " + t);
+							LOGGER.trace("Possible start of a COPY statement: {}", t);
 
 						// OK then !
 						return;
@@ -155,7 +154,7 @@ public class CopyInclude extends ChainingSource
 				}
 
 				// Are we at a space ?
-				canStartCopyHere = (t.getText().trim().length() == 0);
+				canStartCopyHere = (t.getText().trim().isEmpty());
 			}
 
 			line.removeFirst();
@@ -326,36 +325,32 @@ public class CopyInclude extends ChainingSource
 		if (LOGGER.isDebugEnabled()) {
 			if (libraryName == null) {
 				if (file == null)
-					LOGGER.debug("Looking for copybook " + textName);
+					LOGGER.debug("Looking for copybook {}", textName);
 				else
-					LOGGER.debug("Looking for copybook " + textName
-							+ " relative to " + file);
+					LOGGER.debug("Looking for copybook {} relative to {}", textName, file);
 			} else {
 				if (file == null)
-					LOGGER.debug("Looking for copybook " + textName
-							+ " in library " + libraryName);
+					LOGGER.debug("Looking for copybook {} in library {}", textName, libraryName);
 				else
-					LOGGER.debug(
-							"Looking for copybook " + textName + " in library "
-									+ libraryName + " relative to " + file);
+					LOGGER.debug("Looking for copybook {} in library {} relative to {}", textName, libraryName, file);
 			}
 		}
 
 		final File copybook = project.locateCopybook(textName, libraryName, file);
 		if (copybook == null) {
-			LOGGER.error("Missing copybook " + textName + " in " + libraryName);
+			LOGGER.error("Missing copybook {} in {}", textName, libraryName);
 			return false;
 		}
 
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug("Found copybook at " + copybook);
+			LOGGER.debug("Found copybook at {}", copybook);
 
 		final FileReader copybookReader;
 		try {
 			copybookReader = new FileReader(copybook); // lgtm[java/input-resource-leak]
 
 		} catch (IOException e) {
-			LOGGER.error("IOException while opening copybook " + copy);
+			LOGGER.error("IOException while opening copybook {}", copy);
 			return false;
 		}
 
@@ -409,7 +404,7 @@ public class CopyInclude extends ChainingSource
 		handledCopyStatements.add(copy);
 
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug("Set up expansion of " + copybook);
+			LOGGER.debug("Set up expansion of {}", copybook);
 
 		return true;
 	}
@@ -439,7 +434,7 @@ public class CopyInclude extends ChainingSource
 				= Replacing.allPhrasesFrom(instructions);
 
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug("Copy defines replacements: " + phrases);
+			LOGGER.debug("Copy defines replacements: {}", phrases);
 
 		return phrases;
 	}

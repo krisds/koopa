@@ -157,8 +157,7 @@ public class LineSplitter extends BasicSource implements Source {
 						detectedLineEnding = possibleLineEnding;
 
 						if (LOGGER.isTraceEnabled())
-							LOGGER.trace("Detected line ending: " + LineEndings.encodeLineEnding(detectedLineEnding)
-									+ ". Stickying.");
+							LOGGER.trace("Detected line ending: {}. Stickying.", LineEndings.encodeLineEnding(detectedLineEnding));
 					}
 
 					return possibleLineEnding.size();

@@ -45,10 +45,8 @@ public class OptimizingPermuted extends Permuted {
 
 				if (LOGGER.isTraceEnabled()) {
 					final Scoped scope = parse.getStack().getScope();
-					LOGGER.trace("permutation in "
-							+ (scope == null ? "??" : scope.getName())
-							+ " : full dispatch of " + parsers.length
-							+ " alternatives.");
+					LOGGER.trace("permutation in {}:  full dispatch of {} alternatives.",
+							scope == null ? "??" : scope.getName(), parsers.length);
 				}
 
 				final ParserCombinator[] onces = new ParserCombinator[parsers.length];
@@ -67,10 +65,8 @@ public class OptimizingPermuted extends Permuted {
 
 				if (LOGGER.isTraceEnabled()) {
 					final Scoped scope = parse.getStack().getScope();
-					LOGGER.trace("permutation in "
-							+ (scope == null ? "??" : scope.getName())
-							+ " : dispatching first " + count + " of "
-							+ parsers.length + " alternatives.");
+					LOGGER.trace("choice in {}: dispatching first {} of {} alternatives.",
+							scope == null ? "??" : scope.getName(), count, parsers.length);
 				}
 
 				// We'll replace the leading parsers with a single dispatch.

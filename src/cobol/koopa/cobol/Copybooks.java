@@ -1,6 +1,7 @@
 package koopa.cobol;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,27 +32,19 @@ public class Copybooks {
 		try {
 			if (className != null) {
 				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Attempting to instantiate copybook locator: "
-							+ className + " ...");
+					LOGGER.debug("Attempting to instantiate copybook locator: {} ...", className);
 
 				Class<?> locatorClass = Class.forName(className);
 				// This cast may fail if the class we loaded is not a
 				// CopybookLocator. In that case we just want the thing to break
 				// with a ClassCastException, I think.
-				setLocator((CopybookLocator) locatorClass.newInstance());
+				setLocator((CopybookLocator) locatorClass.getDeclaredConstructor().newInstance());
 			}
 
-		} catch (ClassNotFoundException e) {
-			LOGGER.error("Failed to set copybook locator: " + className
-					+ ". Using default instead.", e);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+			LOGGER.error("Failed to set copybook locator: {}. Using default instead.", className, e);
 
-		} catch (InstantiationException e) {
-			LOGGER.error("Failed to set copybook locator: " + className
-					+ ". Using default instead.", e);
-
-		} catch (IllegalAccessException e) {
-			LOGGER.error("Failed to set copybook locator: " + className
-					+ ". Using default instead.", e);
 		}
 	}
 

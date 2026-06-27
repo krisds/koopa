@@ -37,7 +37,7 @@ public class TabStops {
 	public TabStops fromString(String csv) {
 		csv = csv.trim();
 
-		if (csv.length() == 0) {
+		if (csv.isEmpty()) {
 			stops = new int[0];
 			return this;
 		}

@@ -53,8 +53,8 @@ public class CopybookPathsSelector extends JDialog {
 	private void setupComponents() {
 		setLayout(new BorderLayout());
 
-		final DefaultListModel model = new DefaultListModel();
-		final JList pathsList = new JList(model);
+		final DefaultListModel<File> model = new DefaultListModel<>();
+		final JList<File> pathsList = new JList<>(model);
 
 		for (File path : configurablePaths.getCopybookPaths())
 			model.addElement(path);
@@ -89,8 +89,8 @@ public class CopybookPathsSelector extends JDialog {
 				BorderLayout.CENTER);
 	}
 
-	private void setupInteractions(final DefaultListModel model,
-			final JList pathsList, JButton addCopybookPathButton,
+	private void setupInteractions(final DefaultListModel<File> model,
+			final JList<File> pathsList, JButton addCopybookPathButton,
 			final JButton removeCopybookPathButton, JButton okButton) {
 
 		addCopybookPathButton.setAction(new AbstractAction(

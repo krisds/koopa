@@ -42,9 +42,6 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 		actualResultsFile = getActualResultsFile();
 	}
 
-	@Override
-	public abstract File[] getFiles();
-
 	protected File getTargetResultsFile() {
 		return null;
 	}
@@ -99,14 +96,14 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 			final List<String> messages = target.getComparison(actual);
 
 			StringBuilder info = new StringBuilder();
-			if (messages != null && messages.size() > 0) {
+			if (messages != null && !messages.isEmpty()) {
 				for (String message : messages) {
 					info.append(message);
 					info.append("  ");
 				}
 			}
 
-			assertFalse(messages != null && messages.size() > 0,
+			assertFalse(messages != null && !messages.isEmpty(),
 					info.toString());
 		}
 	}

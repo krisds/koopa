@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -253,10 +254,7 @@ public class TestResult {
 
 	public static Map<String, TestResult> loadFromFile(File expectedFile)
 			throws IOException, CsvValidationException {
-		CSVReader reader = null;
-		try {
-			reader = new CSVReader(new FileReader(expectedFile, TEST_FILES_CHARSET));
-
+		try (final CSVReader reader = new CSVReader(new FileReader(expectedFile, TEST_FILES_CHARSET))) {
 			// CSV Header.
 			String[] header = null;
 			if ((header = reader.readNext()) == null) {
@@ -293,13 +291,6 @@ public class TestResult {
 
 			return targets;
 
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-				}
-			}
 		}
 	}
 
@@ -369,13 +360,12 @@ public class TestResult {
 			if (s == null || s.trim().isEmpty())
 				return null;
 			try {
-				Value<T> v = clazz.newInstance();
+				Value<T> v;
+				v = clazz.getDeclaredConstructor().newInstance();
 				v.initializeFromString(s);
 				return v;
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IllegalAccessException e) {
+			} catch (IllegalAccessException | IllegalArgumentException | InstantiationException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 				return null;
 			}

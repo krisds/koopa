@@ -16,7 +16,7 @@ public class Jaxen {
 	public static List<?> evaluate(Tree tree, String expr) {
 		try {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("evaluating: " + expr);
+				LOGGER.trace("evaluating: {}", expr);
 
 			Object result = new KoopaXPath(expr).evaluate(tree);
 
@@ -27,19 +27,18 @@ public class Jaxen {
 				final List<?> list = (List<?>) result;
 
 				if (LOGGER.isTraceEnabled()) {
-					LOGGER.trace("Got " + list.size()
-							+ " answer(s) for xpath: " + expr);
+					LOGGER.trace("Got {} answer(s) for xpath: {}", list.size(), expr);
 
 					int i = 1;
 					for (Object object : list)
-						LOGGER.trace("# " + i++ + ": " + object);
+						LOGGER.trace("# {}: {}", i++, object);
 				}
 
 				return list;
 
 			} else {
 				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("Got " + result + " for xpath: " + expr);
+					LOGGER.trace("Got {} for xpath: {}", result,  expr);
 
 				final List<Object> singleton = new ArrayList<>(1);
 				singleton.add(result);

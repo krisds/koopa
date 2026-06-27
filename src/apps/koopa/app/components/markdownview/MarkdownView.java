@@ -164,7 +164,7 @@ public class MarkdownView extends JPanel {
 
 		final TabStop[] tabStops = new TabStop[60];
 		for (int i = 0; i < tabStops.length; i++)
-			tabStops[i] = new TabStop((i + 1) * cw);
+			tabStops[i] = new TabStop((i + 1) * (float) cw);
 
 		TabSet tabs = new TabSet(tabStops);
 		AttributeSet paraSet = sc.addAttribute(SimpleAttributeSet.EMPTY,
@@ -175,18 +175,12 @@ public class MarkdownView extends JPanel {
 
 	private void colorize(StyledDocument document, String resourcePath) {
 
-		InputStream resourceStream = null;
-		InputStreamReader reader = null;
-		BufferedReader buffer = null;
-
-		try {
-			resourceStream = MarkdownView.class
+		try (
+			final InputStream resourceStream = MarkdownView.class
 					.getResourceAsStream(resourcePath);
-
-			reader = new InputStreamReader(resourceStream);
-
-			buffer = new BufferedReader(reader);
-
+			final InputStreamReader reader = new InputStreamReader(resourceStream);
+			final BufferedReader buffer = new BufferedReader(reader);
+		) {
 			String line = null;
 			while ((line = buffer.readLine()) != null) {
 				int heading = 0;
@@ -205,33 +199,9 @@ public class MarkdownView extends JPanel {
 							getDefaultStyle(document));
 			}
 
-		} catch (BadLocationException e) {
+		} catch (BadLocationException | IOException e) {
 			e.printStackTrace();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-
-		} finally {
-			if (buffer != null)
-				try {
-					buffer.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			if (reader != null)
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			if (resourceStream != null)
-				try {
-					resourceStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 		}
 	}
 }

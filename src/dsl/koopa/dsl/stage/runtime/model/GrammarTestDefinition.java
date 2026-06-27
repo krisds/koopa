@@ -6,12 +6,12 @@ import java.util.List;
 
 import koopa.core.trees.Tree;
 import koopa.dsl.stage.runtime.GrammarTest;
-import koopa.dsl.stage.runtime.GrammarTestSuiteRunner;
 import koopa.dsl.stage.runtime.generation.Fragment;
 import koopa.dsl.stage.runtime.generation.Mark;
 import koopa.dsl.stage.runtime.generation.Part;
 import koopa.dsl.stage.runtime.generation.Reference;
 import koopa.dsl.stage.runtime.generation.TestBuilder;
+import koopa.dsl.stage.util.StageUtil;
 
 /**
  * This defines a single grammar test encoded in a {@linkplain Stage} for a
@@ -113,8 +113,8 @@ public class GrammarTestDefinition {
 	public void buildTests(TestBuilder builder) {
 		parts.get(0).buildTests(builder);
 
-		if (GrammarTestSuiteRunner.RANDOMIZE_TESTS && hasReference) {
-			for (int i = 1; i < GrammarTestSuiteRunner.RANDOMIZER_LIMIT; i++)
+		if (StageUtil.RANDOMIZE_TESTS && hasReference) {
+			for (int i = 1; i < StageUtil.RANDOMIZER_LIMIT; i++)
 				parts.get(0).buildTests(builder);
 		}
 	}

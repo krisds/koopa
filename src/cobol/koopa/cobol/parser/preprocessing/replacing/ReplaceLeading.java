@@ -36,7 +36,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 		pattern = leading.toUpperCase();
 		patternLength = pattern.length();
 
-		if (byWords.size() == 0)
+		if (byWords.isEmpty())
 			replacement = null;
 		else {
 			replacement = new LinkedList<>();
@@ -52,8 +52,8 @@ public class ReplaceLeading extends ReplacingPhrase {
 		final List<Token> next = nextTextWord(library, seen);
 
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Trying " + this);
-			LOGGER.trace("  On " + next);
+			LOGGER.trace("Trying {}", this);
+			LOGGER.trace("  On {}", next);
 		}
 
 		if (next != null) {
@@ -66,7 +66,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 
 				if (replacement == null) {
 					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("  Replacing with: " + tail);
+						LOGGER.trace("  Replacing with: {}", tail);
 
 					newTokens.add(tail);
 					return true;
@@ -78,7 +78,7 @@ public class ReplaceLeading extends ReplacingPhrase {
 					final Token newToken = Tokens.join(replacement, AreaTag.PROGRAM_TEXT_AREA);
 
 					if (LOGGER.isTraceEnabled())
-						LOGGER.trace("  Replacing with: " + newToken);
+						LOGGER.trace("  Replacing with: {}", newToken);
 
 					newTokens.add(newToken);
 					return true;
@@ -94,6 +94,6 @@ public class ReplaceLeading extends ReplacingPhrase {
 
 	@Override
 	public String toString() {
-		return "REPLACING LEADING " + replacing + " BY " + by;
+		return "REPLACING LEADING {}" + replacing + " BY " + by;
 	}
 }

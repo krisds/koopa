@@ -67,7 +67,7 @@ public class Metrics {
 			return false;
 
 		// Ignoring whitespace.
-		if (token.hasTag(SEPARATOR) && token.getText().trim().length() == 0)
+		if (token.hasTag(SEPARATOR) && token.getText().trim().isEmpty())
 			return false;
 		
 		return true;

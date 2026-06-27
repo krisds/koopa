@@ -28,7 +28,7 @@ public abstract class WithKeyword extends GrammaticalCombinator {
 	protected boolean matchesAfterSkipped(Parse parse) {
 		final String keyword = getKeyword(parse);
 
-		if (keyword == NO_KEYWORD) {
+		if (NO_KEYWORD.equals(keyword)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " ? no, no keyword");
 

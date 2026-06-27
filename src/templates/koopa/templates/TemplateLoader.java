@@ -9,23 +9,14 @@ import java.util.regex.Pattern;
 public class TemplateLoader {
 
 	public static Template fromResource(Class<?> clazz, String resourceName) {
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(
-					clazz.getResourceAsStream(resourceName)));
+		try (final BufferedReader reader = new BufferedReader(new InputStreamReader(
+				clazz.getResourceAsStream(resourceName)))) {
 			return from(reader);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 
-		} finally {
-			try {
-				if (reader != null)
-					reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -64,7 +55,7 @@ public class TemplateLoader {
 			switch (state) {
 			case SCANNING:
 				// Empty lines ? Ignored.
-				if (line.trim().length() == 0)
+				if (line.trim().isEmpty())
 					continue;
 
 				// Start of a new definition ?

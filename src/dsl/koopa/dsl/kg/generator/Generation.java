@@ -47,15 +47,10 @@ public class Generation {
 		// native stuff out of there.
 		Properties meta = new Properties();
 
-		File propertiesFile = new File(path,
+		final File propertiesFile = new File(path,
 				grammarFile.getName().replace(".kg", ".properties"));
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(propertiesFile);
+		try (final FileInputStream fis = new FileInputStream(propertiesFile);) {
 			meta.load(fis);
-		} finally {
-			if (fis != null)
-				fis.close();
 		}
 
 		if (LOGGER.isEnabled())

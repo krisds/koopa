@@ -24,9 +24,9 @@ public class KGGenerator {
 
 			System.out.println("Generating " + java);
 
-			FileWriter writer = new FileWriter(java);
-			writer.append(code);
-			writer.close();
+			try (FileWriter writer = new FileWriter(java)) {
+				writer.append(code);
+			}
 
 			System.out.println("Generation complete.");
 

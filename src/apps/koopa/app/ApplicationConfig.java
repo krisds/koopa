@@ -1,5 +1,7 @@
 package koopa.app;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,19 +22,17 @@ public class ApplicationConfig {
 		try {
 			if (className != null) {
 				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("Attempting to instantiate project class: "
-							+ className + " ...");
+					LOGGER.debug("Attempting to instantiate project class: {} ...", className);
 
 				final Class<?> givenClass = Class.forName(className);
 				// This cast may fail if the class we loaded is not a
 				// CobolProject. In that case we just want the thing to break
 				// with a ClassCastException, I think.
-				projectClass = (Class<? extends CobolProject>) givenClass;
+				projectClass = givenClass.asSubclass(CobolProject.class);
 			}
 
 		} catch (ClassNotFoundException e) {
-			LOGGER.error("Failed to set project class: " + className
-					+ ". Using default instead.", e);
+			LOGGER.error("Failed to set project class: {}. Using default instead.", className, e);
 		}
 	}
 
@@ -42,22 +42,16 @@ public class ApplicationConfig {
 
 	// TODO @Deprecated ? Kill this ?
 	public static CobolProject getANewProject() {
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug("Attempting to instantiate project class: {} ...", projectClass);
+
 		try {
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug("Attempting to instantiate project class: "
-						+ projectClass + " ...");
-
-			return projectClass.newInstance();
-
-		} catch (InstantiationException e) {
-			LOGGER.error("Failed to set project class: " + projectClass
-					+ ". Using default instead.", e);
-			return new StandardCobolProject();
-
-		} catch (IllegalAccessException e) {
-			LOGGER.error("Failed to set project class: " + projectClass
-					+ ". Using default instead.", e);
+			return projectClass.getDeclaredConstructor().newInstance();
+		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException
+				| InstantiationException | IllegalAccessException e) {
+			LOGGER.error("Failed to set project class: {}. Using default instead.", projectClass, e);
 			return new StandardCobolProject();
 		}
+
 	}
 }

@@ -41,20 +41,19 @@ public final class Encoding {
 			charset = Charset.defaultCharset();
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Using default charset: " + charset + ".");
+				LOGGER.trace("Using default charset: {}.", charset);
 
 		} else if (!Charset.isSupported(encoding)) {
 			charset = Charset.defaultCharset();
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Encoding not supported: '" + encoding
-						+ "'. Using default charset instead: " + charset + ".");
+				LOGGER.trace("Encoding not supported: '{}'. Using default charset instead: {}.", encoding, charset);
 
 		} else {
 			charset = Charset.forName(encoding);
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Using specified charset: " + charset + ".");
+				LOGGER.trace("Using specified charset: {}.",  charset);
 		}
 	}
 

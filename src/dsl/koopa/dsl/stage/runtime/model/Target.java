@@ -5,9 +5,9 @@ import java.util.List;
 
 import koopa.core.trees.Tree;
 import koopa.dsl.stage.runtime.GrammarTest;
-import koopa.dsl.stage.runtime.GrammarTestSuiteRunner;
 import koopa.dsl.stage.runtime.generation.Part;
 import koopa.dsl.stage.runtime.generation.TestBuilder;
+import koopa.dsl.stage.util.StageUtil;
 
 /**
  * A collection of tests (through {@linkplain GrammarTestDefinition}s) for a
@@ -85,7 +85,7 @@ public class Target {
 		if (formativeDefinitions.isEmpty()) {
 			return;
 
-		} else if (!GrammarTestSuiteRunner.RANDOMIZE_TESTS) {
+		} else if (!StageUtil.RANDOMIZE_TESTS) {
 			// When not in random mode we cycle through the formative
 			// definitions when asked for a sample to be included in the tests.
 			final int index = nextDefinitionToBeUsedWhenReferenced;
@@ -97,7 +97,7 @@ public class Target {
 		} else {
 			// In random mode we just pick a random formative definition to
 			// provide the sample to be included in the tests.
-			int random = GrammarTestSuiteRunner.RANDOMIZER
+			int random = StageUtil.RANDOMIZER
 					.nextInt(formativeDefinitions.size());
 			formativeDefinitions.get(random).includeInTests(builder, next);
 			return;

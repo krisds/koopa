@@ -63,7 +63,7 @@ public class InlineComments extends ChainingSource
 
 		if (inComment) {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("Inline comment starts with " + token);
+				LOGGER.trace("Inline comment starts with {}", token);
 			return token.withTags(COMMENT).withoutTags(PROGRAM_TEXT_AREA);
 		} else
 			return token;

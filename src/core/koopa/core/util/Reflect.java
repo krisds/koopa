@@ -14,13 +14,9 @@ public class Reflect {
 		try {
 			Class<?> clazz = Class.forName(className);
 			if (baseClass.isAssignableFrom(clazz))
-				return (T) clazz.newInstance();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+				return (T) clazz.getDeclaredConstructor().newInstance();
+		} catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException
+				| InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
@@ -34,15 +30,8 @@ public class Reflect {
 			if (ParserCombinator.class.isAssignableFrom(method.getReturnType()))
 				return (ParserCombinator) method.invoke(grammar);
 
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+				IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();
 		}
 

@@ -75,14 +75,9 @@ public class ReplacingPhraseOperand {
 
 	private void prepareForMatching() {
 		boolean atSpace = true;
-		for (Data d : tokens) {
+		for (Token token : tokens) {
 			// Discard anything that's not program text.
 			// TODO Ask grammar ?
-			if (!(d instanceof Token))
-				continue;
-			
-			final Token token = (Token) d;
-			
 			if (!token.hasTag(PROGRAM_TEXT_AREA) || token.hasTag(COMMENT))
 				continue;
 

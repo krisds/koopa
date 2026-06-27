@@ -137,7 +137,7 @@ public class CobolWordSettings extends JDialog {
 		boolean valid = true;
 
 		final String maxLengthInput = maxLength.getText();
-		if (maxLengthInput.length() == 0)
+		if (maxLengthInput.isEmpty())
 			valid = false;
 
 		if (valid)
@@ -148,7 +148,7 @@ public class CobolWordSettings extends JDialog {
 			}
 
 		if (valid)
-			valid = extendedCharacters.getText().length() > 0;
+			valid = !extendedCharacters.getText().isEmpty();
 
 		ok.setEnabled(valid);
 	}

@@ -26,9 +26,7 @@ import koopa.core.sources.test.TestTokenizer;
 import koopa.core.targets.ListTarget;
 import koopa.core.util.Files;
 import koopa.core.util.Reflect;
-import koopa.dsl.stage.runtime.model.Stage;
 import koopa.dsl.stage.runtime.model.SuiteOfStages;
-import koopa.dsl.stage.runtime.model.Target;
 
 /**
  * Base for a test suite which wants to exercise the different rules of a

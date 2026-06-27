@@ -91,9 +91,7 @@ public class ApplicationSupport {
 					() -> returnVal[0] = openFile ? //
 					chooser.showOpenDialog(parent) //
 							: chooser.showSaveDialog(parent));
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}
 
@@ -171,10 +169,8 @@ public class ApplicationSupport {
 	private static synchronized Properties getProperties() {
 		if (properties == null) {
 
-			FileInputStream stream = null;
 			properties = new Properties();
-			try {
-				stream = new FileInputStream(PROPERTIES_FILE);
+			try (final FileInputStream stream = new FileInputStream(PROPERTIES_FILE)) {
 				properties.load(stream);
 
 			} catch (FileNotFoundException e) {
@@ -183,14 +179,6 @@ public class ApplicationSupport {
 			} catch (IOException e) {
 				LOGGER.error("IOException while reading default properties.", e);
 
-			} finally {
-				try {
-					if (stream != null)
-						stream.close();
-				} catch (IOException e) {
-					LOGGER.error(
-							"IOException while closing default properties.", e);
-				}
 			}
 		}
 
@@ -200,7 +188,7 @@ public class ApplicationSupport {
 	public static List<String> getCustomColumnKeys() {
 		String customColumnKeys = properties.getProperty(
 				PROPERTY_CUSTOM_COLUMNS, "");
-		if (customColumnKeys.length() == 0)
+		if (customColumnKeys.isEmpty())
 			return new ArrayList<>();
 		return Arrays.asList(customColumnKeys.trim().split("\\s*[,;|]\\s*"));
 	}
@@ -226,25 +214,23 @@ public class ApplicationSupport {
 	}
 
 	public static String getRevision() {
-		InputStreamReader r = null;
-		BufferedReader b = null;
-		try {
-			InputStream in = ApplicationSupport.class
-					.getResourceAsStream("/REVISION");
+		final InputStream in = ApplicationSupport.class
+				.getResourceAsStream("/REVISION");
 
-			if (in == null)
-				return "unknown";
+		if (in == null)
+			return "unknown";
 
-			r = new InputStreamReader(in);
-			b = new BufferedReader(r);
-
+		try (
+			final InputStreamReader r = new InputStreamReader(in);
+			final BufferedReader b = new BufferedReader(r);
+		) {
 			String revision = b.readLine();
 
 			if (revision == null)
 				return "unknown";
 
 			revision = revision.trim();
-			if (revision.length() == 0)
+			if (revision.isEmpty())
 				return "unknown";
 			else
 				return revision;
@@ -253,14 +239,6 @@ public class ApplicationSupport {
 			e.printStackTrace();
 			return "unknown";
 
-		} finally {
-			try {
-				if (b != null)
-					b.close();
-				if (r != null)
-					r.close();
-			} catch (IOException e) {
-			}
 		}
 	}
 

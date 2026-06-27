@@ -223,7 +223,7 @@ public class GrammarView extends JPanel {
 
 		final TabStop[] tabStops = new TabStop[60];
 		for (int i = 0; i < tabStops.length; i++)
-			tabStops[i] = new TabStop((i + 1) * cw);
+			tabStops[i] = new TabStop((i + 1) * (float) cw);
 
 		TabSet tabs = new TabSet(tabStops);
 		AttributeSet paraSet = sc.addAttribute(SimpleAttributeSet.EMPTY,
@@ -237,15 +237,12 @@ public class GrammarView extends JPanel {
 		// TODO I should really parse the input and query the tree for coloring
 		// things. Pure tokens will no longer be enough.
 
-		InputStream resourceStream = null;
-		InputStreamReader reader = null;
-		try {
-			resourceStream = GrammarView.class
+		try (
+			final InputStream resourceStream = GrammarView.class
 					.getResourceAsStream(pathToGrammarResource);
-
-			reader = new InputStreamReader(
+			final InputStreamReader reader = new InputStreamReader(
 					resourceStream);
-
+		) {
 			final Source source = KGTokens.getNewSource(pathToGrammarResource,
 					reader);
 
@@ -305,16 +302,8 @@ public class GrammarView extends JPanel {
 				document.insertString(token.getStart().getPositionInFile() - 1,
 						token.getText(), style);
 			}
-		} catch (BadLocationException e) {
+		} catch (BadLocationException | IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (reader != null)
-					reader.close();
-				if (resourceStream != null)
-					resourceStream.close();
-			} catch (IOException e) {
-			}
 		}
 	}
 

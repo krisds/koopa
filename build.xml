@@ -565,10 +565,14 @@
 			</manifest>
 			<fileset dir="build" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-2.0.6.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.26.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.26.0.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-5.12.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-beanutils-1.11.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-collections4-4.5.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-lang3-3.18.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-text-1.13.1.jar" />
 		</jar>
 	</target>
 
@@ -584,7 +588,7 @@
 			<fileset dir="build">
 				<include name="koopa/app/cli/" />
 			</fileset>
-			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-2.0.6.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.26.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.26.0.jar" />
 		</jar>
@@ -598,10 +602,14 @@
 			</manifest>
 			<fileset dir="build" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/swingx-1.0.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-1.1.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/jaxen-2.0.6.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-api-2.26.0.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="lib/log4j-core-2.26.0.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-2.3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/opencsv-5.12.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-beanutils-1.11.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-collections4-4.5.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-lang3-3.18.0.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/commons-text-1.13.1.jar" />
 		</jar>
 	</target>
 

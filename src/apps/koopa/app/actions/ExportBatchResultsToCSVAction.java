@@ -15,7 +15,7 @@ import javax.swing.filechooser.FileFilter;
 import koopa.app.ApplicationSupport;
 import koopa.app.batchit.BatchResults;
 import koopa.app.util.Getter;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVWriter;
 
 @SuppressWarnings("serial")
 public class ExportBatchResultsToCSVAction extends AbstractAction implements

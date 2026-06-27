@@ -18,6 +18,8 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+import com.opencsv.exceptions.CsvValidationException;
+
 import koopa.cobol.CobolProject;
 import koopa.cobol.parser.CobolParser;
 import koopa.cobol.parser.ParseResults;
@@ -122,7 +124,7 @@ public abstract class CobolParsingRegressionTest implements FileBasedTest {
 	}
 
 	@BeforeAll
-	public static void testRunStarted() throws IOException {
+	public static void testRunStarted() throws IOException, CsvValidationException {
 		if (targetResultsFile != null && targetResultsFile.exists())
 			targetResults = TestResult.loadFromFile(targetResultsFile);
 		else

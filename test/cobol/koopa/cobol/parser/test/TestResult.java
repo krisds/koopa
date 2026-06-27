@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
 import koopa.cobol.parser.Metrics;
 import koopa.cobol.parser.ParseResults;
 import koopa.cobol.sources.CopyInclude;
@@ -250,7 +252,7 @@ public class TestResult {
 	}
 
 	public static Map<String, TestResult> loadFromFile(File expectedFile)
-			throws IOException {
+			throws IOException, CsvValidationException {
 		CSVReader reader = null;
 		try {
 			reader = new CSVReader(new FileReader(expectedFile, TEST_FILES_CHARSET));

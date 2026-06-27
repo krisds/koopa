@@ -32,232 +32,184 @@ public class KoopaNavigator extends DefaultNavigator {
 		return INSTANCE;
 	}
 
-	@Override
-	public Iterator<?> getChildAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getChildAxisIterator(" + foo + ")");
+	// ----------------------------------------------------------------------
+	//     Node type testers
+	// ----------------------------------------------------------------------
 
-		return new ChildAxisIterator((Tree) foo);
+	@Override
+	public boolean isAttribute(Object foo) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.isAttribute(" + foo + ")");
+
+		return foo instanceof TreeAttribute;
 	}
 
 	@Override
-	public Iterator<?> getDescendantOrSelfAxisIterator(Object foo)
-			throws UnsupportedAxisException {
+	public boolean isComment(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getDescendantOrSelfAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isComment(" + foo + ")");
 
-		return new DescendantOrSelfAxisIterator((Tree) foo);
+		if (!(foo instanceof Tree))
+			return false;
+
+		final Tree tree = (Tree) foo;
+		final Data data = tree.getData();
+
+		if (!(data instanceof Token))
+			return false;
+
+		final Token token = (Token) data;
+		final boolean isComment = token.hasTag(AreaTag.COMMENT);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + isComment);
+
+		return isComment;
 	}
 
 	@Override
-	public Iterator<?> getAncestorAxisIterator(Object foo)
-			throws UnsupportedAxisException {
+	public boolean isDocument(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getAncestorAxisIterator(" + foo + ")");
-
-		return super.getAncestorAxisIterator(foo);
-	}
-
-	@Override
-	public Iterator<?> getAncestorOrSelfAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getAncestorOrSelfAxisIterator(" + foo + ")");
-
-		return super.getAncestorOrSelfAxisIterator(foo);
-	}
-
-	@Override
-	public Iterator<?> getAttributeAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getAttributeAxisIterator(" + foo + ")");
-
-		return new AttributeAxisIterator((Tree) foo);
-	}
-
-	@Override
-	public Iterator<?> getDescendantAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getDescendantAxisIterator(" + foo + ")");
-
-		return super.getDescendantAxisIterator(foo);
-	}
-
-	@Override
-	public Object getDocument(String url) throws FunctionCallException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getDocument(" + url + ")");
-
-		return super.getDocument(url);
-	}
-
-	@Override
-	public Object getDocumentNode(Object foo) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getDocumentNode(" + foo + ")");
-
-		Tree tree = (Tree) foo;
-		Tree root = tree.getRoot();
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + root);
-
-		return root;
-	}
-
-	@Override
-	public Object getElementById(Object foo, String elementId) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementById(" + foo + ", "
-					+ elementId + ")");
-
-		return super.getElementById(foo, elementId);
-	}
-
-	@Override
-	public Iterator<?> getFollowingAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getFollowingAxisIterator(" + foo + ")");
-
-		return super.getFollowingAxisIterator(foo);
-	}
-
-	@Override
-	public Iterator<?> getFollowingSiblingAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getFollowingSiblingAxisIterator(" + foo + ")");
-
-		return new FollowingSibilingAxisIterator((Tree) foo);
-	}
-
-	@Override
-	public Iterator<?> getNamespaceAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getNamespaceAxisIterator(" + foo + ")");
-
-		return super.getNamespaceAxisIterator(foo);
-	}
-
-	@Override
-	public short getNodeType(Object node) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getNodeType(" + node + ")");
-
-		return super.getNodeType(node);
-	}
-
-	@Override
-	public Iterator<?> getParentAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getParentAxisIterator(" + foo + ")");
-
-		return new ParentAxisIterator((Tree) foo);
-	}
-
-	@Override
-	public Object getParentNode(Object foo) throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getParentNode(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isDocument(" + foo + ")");
 
 		if (foo instanceof Tree) {
-			final Tree tree = (Tree) foo;
-			return tree.getParent();
 
-		} else if (foo instanceof TreeAttribute) {
-			final TreeAttribute attribute = (TreeAttribute) foo;
-			return attribute.getTree();
+			final Tree tree = (Tree) foo;
+			final Data data = tree.getData();
+
+			final boolean isElement = (data instanceof Marker) && (tree.getParent() == null) && "koopa".equals(((Marker) data).getName());
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(" => " + isElement);
+
+			return isElement;
 
 		} else {
-			return null;
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(" => " + false);
+
+			return false;
 		}
 	}
 
 	@Override
-	public Iterator<?> getPrecedingAxisIterator(Object foo)
-			throws UnsupportedAxisException {
+	public boolean isElement(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getPrecedingAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isElement(" + foo + ")");
 
-		return super.getPrecedingAxisIterator(foo);
+		if (foo instanceof Tree) {
+
+			final Tree tree = (Tree) foo;
+			final Data data = tree.getData();
+
+			final boolean isElement = (data instanceof Marker) && (tree.getParent() != null || !"koopa".equals(((Marker) data).getName()));
+
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(" => " + isElement);
+
+			return isElement;
+
+		} else {
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace(" => " + false);
+
+			return false;
+		}
 	}
 
 	@Override
-	public Iterator<?> getPrecedingSiblingAxisIterator(Object foo)
-			throws UnsupportedAxisException {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getPrecedingSiblingAxisIterator(" + foo + ")");
-
-		return super.getPrecedingSiblingAxisIterator(foo);
+	public boolean isNamespace(Object foo) {
+		return false;
 	}
 
 	@Override
-	public String getProcessingInstructionData(Object obj) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getProcessingInstructionData(" + obj + ")");
-
-		return super.getProcessingInstructionData(obj);
+	public boolean isProcessingInstruction(Object foo) {
+		return false;
 	}
 
 	@Override
-	public String getProcessingInstructionTarget(Object obj) {
+	public boolean isText(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getProcessingInstructionTarget(" + obj + ")");
+			LOGGER.trace("KoopaNavigator.isText(" + foo + ")");
 
-		return super.getProcessingInstructionTarget(obj);
+		if (!(foo instanceof Tree))
+			return false;
+
+		final Tree tree = (Tree) foo;
+		final Data data = tree.getData();
+
+		if (!(data instanceof Token))
+			return false;
+
+		final Token token = (Token) data;
+		final boolean isText = !token.hasTag(AreaTag.COMMENT);
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + isText);
+
+		return isText;
+	}
+
+	// ----------------------------------------------------------------------
+	//     String-Value extractors
+	// ----------------------------------------------------------------------
+
+	@Override
+	public String getAttributeStringValue(Object foo) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getAttributeStringValue(" + foo + ")");
+
+		return isAttribute(foo) ? ((TreeAttribute) foo).getValue() : "";
 	}
 
 	@Override
-	public Iterator<?> getSelfAxisIterator(Object foo)
-			throws UnsupportedAxisException {
+	public String getCommentStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getSelfAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getCommentStringValue(" + foo + ")");
 
-		return super.getSelfAxisIterator(foo);
+		return isComment(foo) ? ((Token) ((Tree) foo).getData()).getText() : "";
 	}
 
 	@Override
-	public String translateNamespacePrefixToUri(String prefix, Object element) {
+	public String getElementStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".translateNamespacePrefixToUri(" + prefix + ", "
-					+ element + ")");
+			LOGGER.trace("KoopaNavigator.getElementStringValue(" + foo + ")");
 
-		return super.translateNamespacePrefixToUri(prefix, element);
+		return isElement(foo) ? ((Marker) ((Tree) foo).getData()).getName() : "";
 	}
+
+	@Override
+	public String getNamespaceStringValue(Object foo) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getNamespaceStringValue(" + foo + ")");
+
+		return "";
+	}
+
+	@Override
+	public String getTextStringValue(Object foo) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getTextStringValue(" + foo + ")");
+
+		return isText(foo) ? ((Token) ((Tree) foo).getData()).getText() : "";
+	}
+
+	// ----------------------------------------------------------------------
+	//     Attribute property extractors
+	// ----------------------------------------------------------------------
 
 	@Override
 	public String getAttributeName(Object foo) {
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace("KoopaNavigator.getAttributeName(" + foo + ")");
 
-		final TreeAttribute attribute = (TreeAttribute) foo;
-		return attribute.getName();
+		return ((TreeAttribute) foo).getName();
 	}
 
 	@Override
 	public String getAttributeNamespaceUri(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getAttributeNamespaceUri(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAttributeNamespaceUri(" + foo + ")");
 
 		return "";
 	}
@@ -271,24 +223,9 @@ public class KoopaNavigator extends DefaultNavigator {
 		return null;
 	}
 
-	@Override
-	public String getAttributeStringValue(Object foo) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getAttributeStringValue(" + foo + ")");
-
-		final TreeAttribute attribute = (TreeAttribute) foo;
-		return attribute.getValue();
-	}
-
-	@Override
-	public String getCommentStringValue(Object foo) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getCommentStringValue(" + foo + ")");
-
-		// TODO Auto-generated method stub
-		return null;
-	}
+	// ----------------------------------------------------------------------
+	//     Element property extractors
+	// ----------------------------------------------------------------------
 
 	@Override
 	public String getElementName(Object foo) {
@@ -330,14 +267,9 @@ public class KoopaNavigator extends DefaultNavigator {
 		return null;
 	}
 
-	@Override
-	public String getElementStringValue(Object foo) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementStringValue(" + foo + ")");
-
-		// TODO Auto-generated method stub
-		return null;
-	}
+	// ----------------------------------------------------------------------
+	//     Namespace property extractors
+	// ----------------------------------------------------------------------
 
 	@Override
 	public String getNamespacePrefix(Object foo) {
@@ -348,122 +280,224 @@ public class KoopaNavigator extends DefaultNavigator {
 		return null;
 	}
 
-	@Override
-	public String getNamespaceStringValue(Object foo) {
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(this.getClass().getName()
-					+ ".getNamespaceStringValue(" + foo + ")");
+	// ----------------------------------------------------------------------
+	//     Processing instruction property extractors
+	// ----------------------------------------------------------------------
 
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public String getProcessingInstructionData(Object obj) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getProcessingInstructionData(" + obj + ")");
+
+		return super.getProcessingInstructionData(obj);
 	}
 
 	@Override
-	public String getTextStringValue(Object foo) {
+	public String getProcessingInstructionTarget(Object obj) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getTextStringValue(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getProcessingInstructionTarget(" + obj + ")");
 
-		final Tree tree = (Tree) foo;
-		final Data koopa = tree.getData();
+		return super.getProcessingInstructionTarget(obj);
+	}
 
-		if (koopa instanceof Token)
-			return ((Token) koopa).getText();
+	// ----------------------------------------------------------------------
+	//     Axis Iterators
+	// ----------------------------------------------------------------------
 
-		return null;
+	@Override
+	public Iterator<?> getAttributeAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getAttributeAxisIterator(" + foo + ")");
+
+		return new AttributeAxisIterator((Tree) foo);
 	}
 
 	@Override
-	public boolean isAttribute(Object foo) {
+	public Iterator<?> getAncestorAxisIterator(Object foo)
+			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isAttribute(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAncestorAxisIterator(" + foo + ")");
 
-		return foo instanceof TreeAttribute;
+		return super.getAncestorAxisIterator(foo);
 	}
 
 	@Override
-	public boolean isComment(Object foo) {
+	public Iterator<?> getAncestorOrSelfAxisIterator(Object foo)
+			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isComment(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAncestorOrSelfAxisIterator(" + foo + ")");
 
-		if (!(foo instanceof Tree))
-			return false;
-
-		final Tree tree = (Tree) foo;
-
-		Data data = tree.getData();
-		if (!(data instanceof Token))
-			return false;
-
-		Token token = (Token) data;
-		final boolean isComment = token.hasTag(AreaTag.COMMENT);
-
-		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + isComment);
-
-		return isComment;
+		return super.getAncestorOrSelfAxisIterator(foo);
 	}
 
 	@Override
-	public boolean isDocument(Object foo) {
+	public Iterator<?> getChildAxisIterator(Object foo)
+			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isDocument(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getChildAxisIterator(" + foo + ")");
 
-		return false;
+		return new ChildAxisIterator((Tree) foo);
 	}
 
 	@Override
-	public boolean isElement(Object foo) {
+	public Iterator<?> getDescendantAxisIterator(Object foo)
+			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isElement(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getDescendantAxisIterator(" + foo + ")");
+
+		return super.getDescendantAxisIterator(foo);
+	}
+
+	@Override
+	public Iterator<?> getDescendantOrSelfAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getDescendantOrSelfAxisIterator(" + foo + ")");
+
+		return new DescendantOrSelfAxisIterator((Tree) foo);
+	}
+
+	@Override
+	public Iterator<?> getFollowingAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getFollowingAxisIterator(" + foo + ")");
+
+		return super.getFollowingAxisIterator(foo);
+	}
+
+	@Override
+	public Iterator<?> getFollowingSiblingAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getFollowingSiblingAxisIterator(" + foo + ")");
+
+		return new FollowingSibilingAxisIterator((Tree) foo);
+	}
+
+	@Override
+	public Iterator<?> getNamespaceAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getNamespaceAxisIterator(" + foo + ")");
+
+		return super.getNamespaceAxisIterator(foo);
+	}
+
+	@Override
+	public Iterator<?> getParentAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getParentAxisIterator(" + foo + ")");
+
+		return new ParentAxisIterator((Tree) foo);
+	}
+
+	@Override
+	public Iterator<?> getPrecedingAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getPrecedingAxisIterator(" + foo + ")");
+
+		return super.getPrecedingAxisIterator(foo);
+	}
+
+	@Override
+	public Iterator<?> getPrecedingSiblingAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getPrecedingSiblingAxisIterator(" + foo + ")");
+
+		return super.getPrecedingSiblingAxisIterator(foo);
+	}
+
+	@Override
+	public Iterator<?> getSelfAxisIterator(Object foo)
+			throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getSelfAxisIterator(" + foo + ")");
+
+		return super.getSelfAxisIterator(foo);
+	}
+
+	// ----------------------------------------------------------------------
+	//     Tree navigation
+	// ----------------------------------------------------------------------
+
+	@Override
+	public Object getDocumentNode(Object foo) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getDocumentNode(" + foo + ")");
+
+		Tree tree = (Tree) foo;
+		Tree root = tree.getRoot();
+
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace(" => " + root);
+
+		return root;
+	}
+
+	@Override
+	public Object getElementById(Object foo, String elementId) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getElementById(" + foo + ", "
+					+ elementId + ")");
+
+		return super.getElementById(foo, elementId);
+	}
+
+	@Override
+	public Object getParentNode(Object foo) throws UnsupportedAxisException {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getParentNode(" + foo + ")");
 
 		if (foo instanceof Tree) {
 			final Tree tree = (Tree) foo;
-			final Data koopa = tree.getData();
+			return tree.getParent();
 
-			final boolean isElement = koopa instanceof Marker;
-
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(" => " + isElement);
-
-			return isElement;
+		} else if (foo instanceof TreeAttribute) {
+			final TreeAttribute attribute = (TreeAttribute) foo;
+			return attribute.getTree();
 
 		} else {
-			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(" => " + false);
-
-			return false;
+			return null;
 		}
 	}
 
-	@Override
-	public boolean isNamespace(Object foo) {
-		return false;
-	}
+	// ----------------------------------------------------------------------
+	//     General utilities
+	// ----------------------------------------------------------------------
 
 	@Override
-	public boolean isProcessingInstruction(Object foo) {
-		return false;
-	}
-
-	@Override
-	public boolean isText(Object foo) {
+	public Object getDocument(String url) throws FunctionCallException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isText(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getDocument(" + url + ")");
 
-		if (isComment(foo))
-			return false;
+		return super.getDocument(url);
+	}
 
-		if (!(foo instanceof Tree))
-			return false;
+	@Override
+	public short getNodeType(Object node) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.getNodeType(" + node + ")");
 
-		final Tree tree = (Tree) foo;
-		final Data koopa = tree.getData();
-
-		return koopa instanceof Token;
+		return super.getNodeType(node);
 	}
 
 	@Override
 	public XPath parseXPath(String foo) throws SAXPathException {
 		return new KoopaXPath(foo);
 	}
+
+	@Override
+	public String translateNamespacePrefixToUri(String prefix, Object element) {
+		if (LOGGER.isTraceEnabled())
+			LOGGER.trace("KoopaNavigator.translateNamespacePrefixToUri(" + prefix + ", "
+					+ element + ")");
+
+		return super.translateNamespacePrefixToUri(prefix, element);
+	}
+
 }

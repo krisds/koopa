@@ -87,7 +87,7 @@ public class LineEndings {
 			lineEndings = Collections.unmodifiableList(choices);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Line endings: " + encodeChoices(lineEndings));
+			LOGGER.trace("Line endings: {}", encodeChoices(lineEndings));
 	}
 
 	/**

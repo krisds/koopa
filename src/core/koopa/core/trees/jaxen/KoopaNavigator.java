@@ -39,7 +39,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public boolean isAttribute(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isAttribute(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isAttribute({})", foo);
 
 		return foo instanceof TreeAttribute;
 	}
@@ -47,7 +47,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public boolean isComment(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isComment(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isComment({})", foo);
 
 		if (!(foo instanceof Tree))
 			return false;
@@ -62,7 +62,7 @@ public class KoopaNavigator extends DefaultNavigator {
 		final boolean isComment = token.hasTag(AreaTag.COMMENT);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + isComment);
+			LOGGER.trace(" => {}", isComment);
 
 		return isComment;
 	}
@@ -70,7 +70,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public boolean isDocument(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isDocument(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isDocument({})", foo);
 
 		if (foo instanceof Tree) {
 
@@ -80,13 +80,13 @@ public class KoopaNavigator extends DefaultNavigator {
 			final boolean isElement = (data instanceof Marker) && (tree.getParent() == null) && "koopa".equals(((Marker) data).getName());
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(" => " + isElement);
+				LOGGER.trace(" => {}", isElement);
 
 			return isElement;
 
 		} else {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(" => " + false);
+				LOGGER.trace(" => {}", false);
 
 			return false;
 		}
@@ -95,7 +95,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public boolean isElement(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isElement(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isElement({})", foo);
 
 		if (foo instanceof Tree) {
 
@@ -105,13 +105,13 @@ public class KoopaNavigator extends DefaultNavigator {
 			final boolean isElement = (data instanceof Marker) && (tree.getParent() != null || !"koopa".equals(((Marker) data).getName()));
 
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(" => " + isElement);
+				LOGGER.trace(" => {}", isElement);
 
 			return isElement;
 
 		} else {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace(" => " + false);
+				LOGGER.trace(" => {}", false);
 
 			return false;
 		}
@@ -130,7 +130,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public boolean isText(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.isText(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.isText({})", foo);
 
 		if (!(foo instanceof Tree))
 			return false;
@@ -145,7 +145,7 @@ public class KoopaNavigator extends DefaultNavigator {
 		final boolean isText = !token.hasTag(AreaTag.COMMENT);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + isText);
+			LOGGER.trace(" => {}", isText);
 
 		return isText;
 	}
@@ -157,7 +157,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getAttributeStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAttributeStringValue(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAttributeStringValue({})", foo);
 
 		return isAttribute(foo) ? ((TreeAttribute) foo).getValue() : "";
 	}
@@ -165,7 +165,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getCommentStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getCommentStringValue(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getCommentStringValue{})", foo);
 
 		return isComment(foo) ? ((Token) ((Tree) foo).getData()).getText() : "";
 	}
@@ -173,7 +173,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getElementStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementStringValue(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getElementStringValue({})", foo);
 
 		return isElement(foo) ? ((Marker) ((Tree) foo).getData()).getName() : "";
 	}
@@ -181,7 +181,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getNamespaceStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getNamespaceStringValue(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getNamespaceStringValue({})", foo);
 
 		return "";
 	}
@@ -189,7 +189,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getTextStringValue(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getTextStringValue(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getTextStringValue({})", foo);
 
 		return isText(foo) ? ((Token) ((Tree) foo).getData()).getText() : "";
 	}
@@ -201,7 +201,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getAttributeName(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAttributeName(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAttributeName({})", foo);
 
 		return ((TreeAttribute) foo).getName();
 	}
@@ -209,7 +209,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getAttributeNamespaceUri(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAttributeNamespaceUri(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAttributeNamespaceUri({})", foo);
 
 		return "";
 	}
@@ -217,7 +217,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getAttributeQName(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAttributeQName(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAttributeQName({})", foo);
 
 		// TODO Auto-generated method stub
 		return null;
@@ -230,7 +230,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getElementName(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementName(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getElementName({})", foo);
 
 		final Tree tree = (Tree) foo;
 		String name = null;
@@ -240,7 +240,7 @@ public class KoopaNavigator extends DefaultNavigator {
 			name = ((Marker) data).getName();
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + name);
+			LOGGER.trace(" => {}", name);
 
 		return name;
 	}
@@ -248,12 +248,12 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getElementNamespaceUri(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementNamespaceUri(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getElementNamespaceUri({})", foo);
 
 		String namespace = "";
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + namespace);
+			LOGGER.trace(" => {}", namespace);
 
 		return namespace;
 	}
@@ -261,7 +261,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getElementQName(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementQName(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getElementQName({})", foo);
 
 		// TODO Auto-generated method stub
 		return null;
@@ -274,7 +274,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getNamespacePrefix(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getNamespacePrefix(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getNamespacePrefix({})", foo);
 
 		// TODO Auto-generated method stub
 		return null;
@@ -287,7 +287,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getProcessingInstructionData(Object obj) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getProcessingInstructionData(" + obj + ")");
+			LOGGER.trace("KoopaNavigator.getProcessingInstructionData({})", obj);
 
 		return super.getProcessingInstructionData(obj);
 	}
@@ -295,7 +295,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String getProcessingInstructionTarget(Object obj) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getProcessingInstructionTarget(" + obj + ")");
+			LOGGER.trace("KoopaNavigator.getProcessingInstructionTarget({})", obj);
 
 		return super.getProcessingInstructionTarget(obj);
 	}
@@ -308,7 +308,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getAttributeAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAttributeAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAttributeAxisIterator({})", foo);
 
 		return new AttributeAxisIterator((Tree) foo);
 	}
@@ -317,7 +317,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getAncestorAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAncestorAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAncestorAxisIterator({})", foo);
 
 		return super.getAncestorAxisIterator(foo);
 	}
@@ -326,7 +326,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getAncestorOrSelfAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getAncestorOrSelfAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getAncestorOrSelfAxisIterator({})", foo);
 
 		return super.getAncestorOrSelfAxisIterator(foo);
 	}
@@ -335,7 +335,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getChildAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getChildAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getChildAxisIterator({})", foo);
 
 		return new ChildAxisIterator((Tree) foo);
 	}
@@ -344,7 +344,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getDescendantAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getDescendantAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getDescendantAxisIterator({})", foo);
 
 		return super.getDescendantAxisIterator(foo);
 	}
@@ -353,7 +353,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getDescendantOrSelfAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getDescendantOrSelfAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getDescendantOrSelfAxisIterator({})", foo);
 
 		return new DescendantOrSelfAxisIterator((Tree) foo);
 	}
@@ -362,7 +362,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getFollowingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getFollowingAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getFollowingAxisIterator({})", foo);
 
 		return super.getFollowingAxisIterator(foo);
 	}
@@ -371,7 +371,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getFollowingSiblingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getFollowingSiblingAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getFollowingSiblingAxisIterator({})", foo);
 
 		return new FollowingSibilingAxisIterator((Tree) foo);
 	}
@@ -380,7 +380,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getNamespaceAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getNamespaceAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getNamespaceAxisIterator({})", foo);
 
 		return super.getNamespaceAxisIterator(foo);
 	}
@@ -389,7 +389,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getParentAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getParentAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getParentAxisIterator({})", foo);
 
 		return new ParentAxisIterator((Tree) foo);
 	}
@@ -398,7 +398,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getPrecedingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getPrecedingAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getPrecedingAxisIterator({})", foo);
 
 		return super.getPrecedingAxisIterator(foo);
 	}
@@ -407,7 +407,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getPrecedingSiblingAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getPrecedingSiblingAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getPrecedingSiblingAxisIterator({})", foo);
 
 		return super.getPrecedingSiblingAxisIterator(foo);
 	}
@@ -416,7 +416,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	public Iterator<?> getSelfAxisIterator(Object foo)
 			throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getSelfAxisIterator(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getSelfAxisIterator({})", foo);
 
 		return super.getSelfAxisIterator(foo);
 	}
@@ -428,13 +428,13 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public Object getDocumentNode(Object foo) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getDocumentNode(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getDocumentNode({})", foo);
 
 		Tree tree = (Tree) foo;
 		Tree root = tree.getRoot();
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + root);
+			LOGGER.trace(" => {}", root);
 
 		return root;
 	}
@@ -442,8 +442,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public Object getElementById(Object foo, String elementId) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getElementById(" + foo + ", "
-					+ elementId + ")");
+			LOGGER.trace("KoopaNavigator.getElementById({}, {})", foo, elementId);
 
 		return super.getElementById(foo, elementId);
 	}
@@ -451,7 +450,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public Object getParentNode(Object foo) throws UnsupportedAxisException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getParentNode(" + foo + ")");
+			LOGGER.trace("KoopaNavigator.getParentNode({})", foo);
 
 		if (foo instanceof Tree) {
 			final Tree tree = (Tree) foo;
@@ -473,7 +472,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public Object getDocument(String url) throws FunctionCallException {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getDocument(" + url + ")");
+			LOGGER.trace("KoopaNavigator.getDocument({})", url);
 
 		return super.getDocument(url);
 	}
@@ -481,7 +480,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public short getNodeType(Object node) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.getNodeType(" + node + ")");
+			LOGGER.trace("KoopaNavigator.getNodeType({})", node);
 
 		return super.getNodeType(node);
 	}
@@ -494,8 +493,7 @@ public class KoopaNavigator extends DefaultNavigator {
 	@Override
 	public String translateNamespacePrefixToUri(String prefix, Object element) {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("KoopaNavigator.translateNamespacePrefixToUri(" + prefix + ", "
-					+ element + ")");
+			LOGGER.trace("KoopaNavigator.translateNamespacePrefixToUri({}, {})", prefix, element);
 
 		return super.translateNamespacePrefixToUri(prefix, element);
 	}

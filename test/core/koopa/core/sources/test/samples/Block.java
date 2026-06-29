@@ -38,7 +38,7 @@ class Block {
 	private final List<Annotation> annotations;
 
 	public Block(int index, List<Token> lines) {
-		assert (lines.size() >= 1);
+		assert (!lines.isEmpty());
 
 		this.index = index;
 		this.input = lines.get(0);
@@ -362,7 +362,7 @@ class Block {
 	 * A line is blank when it has nothing but whitespace characters.
 	 */
 	private static boolean isBlank(Token t) {
-		return t.getText().trim().length() == 0;
+		return t.getText().trim().isEmpty();
 	}
 
 	/**

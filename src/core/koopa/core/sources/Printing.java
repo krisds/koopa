@@ -2,7 +2,7 @@ package koopa.core.sources;
 
 import koopa.core.data.Data;
 
-public class Printing<T extends Data> extends ChainingSource
+public class Printing extends ChainingSource
 		implements Source {
 
 	private final String prefix;

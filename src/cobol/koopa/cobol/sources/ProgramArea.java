@@ -153,7 +153,7 @@ public class ProgramArea extends ChainingSource implements Source {
 		final Token extracted = tokenizeArea(line, startIndex, endIndex, tag, format);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(tag + ": " + extracted);
+			LOGGER.trace("{}: {}", tag, extracted);
 
 		pendingTokens.add(extracted);
 		return extracted;
@@ -162,7 +162,7 @@ public class ProgramArea extends ChainingSource implements Source {
 	private Token extract(Token line, Object tag) {
 		Token extracted = line.withTags(tag);
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(tag + ": " + extracted);
+			LOGGER.trace("{}: {}", tag, extracted);
 
 		pendingTokens.add(extracted);
 		return extracted;

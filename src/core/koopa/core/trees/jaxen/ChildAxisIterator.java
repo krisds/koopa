@@ -24,12 +24,12 @@ public class ChildAxisIterator implements Iterator<Tree> {
 	@Override
 	public boolean hasNext() {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("ChildAxisIterator(" + parent + ").hasNext()");
+			LOGGER.trace("ChildAxisIterator({}).hasNext()", parent);
 
 		final boolean hasNext = this.index < this.count;
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + hasNext);
+			LOGGER.trace(" => {}", hasNext);
 
 		return hasNext;
 	}
@@ -37,7 +37,7 @@ public class ChildAxisIterator implements Iterator<Tree> {
 	@Override
 	public Tree next() {
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("ChildAxisIterator(" + parent + ").next()");
+			LOGGER.trace("ChildAxisIterator({}).next()", parent);
 
 		if (!hasNext())
 			throw new NoSuchElementException("Called next on an iterator with no more elements");
@@ -45,7 +45,7 @@ public class ChildAxisIterator implements Iterator<Tree> {
 		final Tree next = this.parent.getChild(this.index++);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace(" => " + next);
+			LOGGER.trace(" => {}", next);
 
 		return next;
 	}

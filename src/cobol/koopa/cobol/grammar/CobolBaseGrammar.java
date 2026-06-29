@@ -76,7 +76,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 						String text = t.getText();
 						// Semicolons are not legal picture characters.
 						// Neither is whitespace.
-						if (";".equals(text) || text.trim().length() == 0) {
+						if (";".equals(text) || text.trim().isEmpty()) {
 							stream.rewind(t);
 							break;
 						}
@@ -251,7 +251,7 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 							continue;
 
 						final String text = token.getText().toUpperCase();
-						if (text.trim().length() == 0)
+						if (text.trim().isEmpty())
 							continue;
 
 						// "If the Compiler directive SOURCEFORMAT is specified

@@ -56,16 +56,14 @@ public class Replacing extends ChainingSource
 				if (r.activates()) {
 					if (r.isGlobal()) {
 						if (LOGGER.isDebugEnabled())
-							LOGGER.debug(
-									"Activating only " + r.getReplacements());
+							LOGGER.debug("Activating only {}", r.getReplacements());
 
 						clearReplacements();
 						pushReplacements(r.getReplacements());
 
 					} else {
 						if (LOGGER.isDebugEnabled())
-							LOGGER.debug("Additionally activating "
-									+ r.getReplacements());
+							LOGGER.debug("Additionally activating {}", r.getReplacements());
 
 						pushReplacements(r.getReplacements());
 					}
@@ -79,8 +77,7 @@ public class Replacing extends ChainingSource
 
 					} else {
 						if (LOGGER.isDebugEnabled())
-							LOGGER.debug(
-									"Deactivating " + replacements.getFirst());
+							LOGGER.debug("Deactivating {}", replacements.getFirst());
 
 						popReplacements();
 					}

@@ -97,7 +97,7 @@ public class ContinuationOfLines extends ChainingSource
 			if (hasIncompleteToken(line)) {
 				// It does.
 				if (LOGGER.isTraceEnabled())
-					LOGGER.trace("Needs continuation: " + line);
+					LOGGER.trace("Needs continuation: {}", line);
 
 				// We need the next (non-empty, non-comment) source line to
 				// build the continuation.
@@ -105,8 +105,7 @@ public class ContinuationOfLines extends ChainingSource
 
 				if (continuation == null) {
 					// There isn't one ? That's bad, so we just bail out.
-					LOGGER.error("No next source line, so can not continue "
-							+ "(wrong source format ?): " + line);
+					LOGGER.error("No next source line, so can not continue (wrong source format ?): {}", line);
 					return line;
 				}
 
@@ -150,7 +149,7 @@ public class ContinuationOfLines extends ChainingSource
 		assert (incomplete != null);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Incomplete token: " + incomplete);
+			LOGGER.trace("Incomplete token: {}", incomplete);
 
 		if (isLiteralWithFloatingContinuationIndicator(incomplete)) {
 			// Floating continuation indicator.
@@ -198,8 +197,7 @@ public class ContinuationOfLines extends ChainingSource
 		}
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Continuing floating literal " + incomplete + " with "
-					+ firstNonBlank);
+			LOGGER.trace("Continuing floating literal {} with {}", incomplete, firstNonBlank);
 
 		final int positionOfFloatingIndicator = incomplete.getLength() - 2;
 		final Token startOfLiteral //
@@ -235,7 +233,7 @@ public class ContinuationOfLines extends ChainingSource
 		final SourceFormat format = SourceFormat.forToken(incomplete);
 
 		assert (format == FIXED || format == VARIABLE) //
-		: "Unexpected source format on incomplete string literal: "
+		: "Unexpected source format on incomplete string literal: {}"
 				+ incomplete;
 
 		// The continuation line should have a fixed continuation indicator.
@@ -250,8 +248,7 @@ public class ContinuationOfLines extends ChainingSource
 			// TODO No warning level ?
 			if (LOGGER.isInfoEnabled())
 				LOGGER.info(
-						"Did not find a continuation for incomplete literal: "
-								+ incomplete);
+						"Did not find a continuation for incomplete literal: {}", incomplete);
 
 			handleMissingContinuation(logicalLine, incomplete, continuedLine,
 					continuingLine);
@@ -278,8 +275,7 @@ public class ContinuationOfLines extends ChainingSource
 			// TODO No warning level ?
 			if (LOGGER.isInfoEnabled())
 				LOGGER.info(
-						"Did not find a string continuation for incomplete literal: "
-								+ incomplete);
+						"Did not find a string continuation for incomplete literal: {}", incomplete);
 
 			// First restore the continuing line, then handle the problem.
 
@@ -376,8 +372,7 @@ public class ContinuationOfLines extends ChainingSource
 			// I guess we'll ignore the issue and the continuation then.
 
 			if (LOGGER.isInfoEnabled())
-				LOGGER.info("Unexpected continuation of an empty line: "
-						+ fixedIndicator);
+				LOGGER.info("Unexpected continuation of an empty line: {}", fixedIndicator);
 
 			pendingLines.add(continuingLine);
 			return continuedLine;
@@ -406,7 +401,7 @@ public class ContinuationOfLines extends ChainingSource
 
 		if (LOGGER.isTraceEnabled())
 			LOGGER.trace(
-					"Continuing " + lastNonBlank + " with " + firstNonBlank);
+					"Continuing {} with {}", lastNonBlank, firstNonBlank);
 
 		final LinkedList<Data> fullLine = new LinkedList<>();
 		fullLine.addAll(continuedLine);
@@ -455,8 +450,7 @@ public class ContinuationOfLines extends ChainingSource
 			// TODO No warning level ?
 			if (LOGGER.isInfoEnabled())
 				LOGGER.info(
-						"Did not find a string continuation for closed literal: "
-								+ closedLiteral);
+						"Did not find a string continuation for closed literal: {}", closedLiteral);
 
 			continuedLine.add(closedLiteral);
 			continuedLine.addAll(endOfContinuedLine);
@@ -498,7 +492,7 @@ public class ContinuationOfLines extends ChainingSource
 				format, PROGRAM_TEXT_AREA);
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Retokenizing: " + continuingProgramText);
+			LOGGER.trace("Retokenizing: {}", continuingProgramText);
 
 		final LinkedList<Token> continuingTokens = new LinkedList<>();
 		continuingTokens.addAll( //
@@ -575,7 +569,7 @@ public class ContinuationOfLines extends ChainingSource
 				// TODO Add a Grammar.isBlank(Token) ?
 				// TODO Use WHITESPACE text instead of trim ?
 				if (t.hasTag(PROGRAM_TEXT_AREA) && !t.hasTag(COMMENT)
-						&& t.getText().trim().length() > 0)
+						&& !t.getText().trim().isEmpty())
 					return t;
 			}
 
@@ -597,7 +591,7 @@ public class ContinuationOfLines extends ChainingSource
 				// TODO Add a Grammar.isBlank(Token) ?
 				// TODO Use WHITESPACE text instead of trim ?
 				if (t.hasTag(PROGRAM_TEXT_AREA) && !t.hasTag(COMMENT)
-						&& t.getText().trim().length() > 0)
+						&& !t.getText().trim().isEmpty())
 					return t;
 			}
 
@@ -701,7 +695,7 @@ public class ContinuationOfLines extends ChainingSource
 				// TODO Refer to Grammar methods for this.
 				// TODO Add a Grammar.isBlank(Token) ?
 				if (t.hasTag(PROGRAM_TEXT_AREA) && !t.hasTag(COMMENT)
-						&& t.getText().trim().length() > 0)
+						&& !t.getText().trim().isEmpty())
 					return false;
 			}
 

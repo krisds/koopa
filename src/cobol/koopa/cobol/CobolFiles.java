@@ -84,8 +84,8 @@ public class CobolFiles {
 		}
 
 		if (LOGGER.isTraceEnabled()) {
-			LOGGER.trace("Cobol source extensions: " + SOURCE_EXTENSIONS);
-			LOGGER.trace("Cobol copybook extensions: " + COPYBOOK_EXTENSIONS);
+			LOGGER.trace("Cobol source extensions: {}", SOURCE_EXTENSIONS);
+			LOGGER.trace("Cobol copybook extensions: {}", COPYBOOK_EXTENSIONS);
 		}
 	}
 

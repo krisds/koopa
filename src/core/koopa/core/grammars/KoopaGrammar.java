@@ -211,8 +211,7 @@ public abstract class KoopaGrammar extends Grammar {
 		final ParserCombinator target = parsers[length - 1];
 		final ParserCombinator[] pairs = new ParserCombinator[length - 1];
 
-		for (int i = 0; i < length - 1; i++)
-			pairs[i] = parsers[i];
+		System.arraycopy(parsers, 0, pairs, 0, length - 1);
 
 		return new Balancing(this, target, pairs);
 	}

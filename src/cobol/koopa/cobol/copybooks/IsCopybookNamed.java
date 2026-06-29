@@ -25,13 +25,13 @@ public class IsCopybookNamed implements FilenameFilter {
 
 	@Override
 	public boolean accept(File path, String name) {
-		LOGGER.trace("<" + name + "> <" + path + ">");
+		LOGGER.trace("<{}> <{}>", name, path);
 
 		// If the names match exactly then we'll assume we have got the
 		// right file.
 		if (fileName.equalsIgnoreCase(name)) {
 			if (LOGGER.isTraceEnabled())
-				LOGGER.trace("- " + name + " ? Yes, exact match.");
+				LOGGER.trace("- {} ? Yes, exact match.", name);
 
 			return true;
 		}
@@ -42,11 +42,7 @@ public class IsCopybookNamed implements FilenameFilter {
 		final boolean isMatch = isCopybook && namesMatch;
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("- "
-					+ name
-					+ " ? "
-					+ (isMatch ? "Yes." : "No. Names match: " + namesMatch
-							+ "; is copybook: " + isCopybook));
+			LOGGER.trace("- {} ? {}", name, (isMatch ? "Yes." : "No. Names match: " + namesMatch + "; is copybook: " + isCopybook));
 
 		return isMatch;
 	}

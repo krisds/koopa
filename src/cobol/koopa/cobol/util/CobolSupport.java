@@ -9,9 +9,9 @@ import javax.swing.filechooser.FileFilter;
 
 public class CobolSupport {
 
-	private static List<String> EXTENSIONS = new LinkedList<>();
+	private static final List<String> EXTENSIONS = new LinkedList<>();
 
-	private static String DESCRIPTION = "";
+	private static final String DESCRIPTION;
 
 	static {
 		EXTENSIONS.add(".CPY");
@@ -26,12 +26,7 @@ public class CobolSupport {
 			for (String extraExtension : extraExtensions.split(","))
 				EXTENSIONS.add("." + extraExtension.trim().toUpperCase());
 
-		for (String extension : EXTENSIONS) {
-			if (DESCRIPTION.length() > 0)
-				DESCRIPTION += ", ";
-
-			DESCRIPTION += extension;
-		}
+		DESCRIPTION = String.join(", ", EXTENSIONS);
 	}
 
 	public static FileFilter getCobolFileFilter() {

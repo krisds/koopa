@@ -53,7 +53,7 @@ public class TreeBasedDocument extends DefaultStyledDocument
 					offsetsForLines.add(offset);
 			}
 
-			if (additionalTokens != null && additionalTokens.size() > 0) {
+			if (additionalTokens != null && !additionalTokens.isEmpty()) {
 				final AttributeSet unparsed = forUnparsed(this);
 				for (Token token : additionalTokens) {
 					insertString(offset, getText(token), unparsed);

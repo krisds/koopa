@@ -92,8 +92,7 @@ public class PreprocessingSourceTest implements FileBasedTest {
 		private StringBuilder expected = new StringBuilder();
 
 		public Sample(File file) throws IOException {
-			BufferedReader br = new BufferedReader(new FileReader(file, TEST_FILES_CHARSET));
-			try {
+			try(final BufferedReader br = new BufferedReader(new FileReader(file, TEST_FILES_CHARSET))) {
 				String line = null;
 				while ((line = br.readLine()) != null) {
 					if (line.startsWith(INPUT_PREFIX)) {
@@ -106,9 +105,6 @@ public class PreprocessingSourceTest implements FileBasedTest {
 					}
 				}
 
-			} finally {
-				if (br != null)
-					br.close();
 			}
 		}
 	}

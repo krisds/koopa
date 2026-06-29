@@ -17,7 +17,7 @@ public class TestTokenizerTest {
 
 	private final String input = "A B C ^ X Y Z";
 
-	private final List<Object> objects = Arrays.asList(new Object[] {
+	private final List<Object> objects = Arrays.asList(
 			PROGRAM_TEXT_AREA, "A", //
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "B", //
@@ -30,7 +30,7 @@ public class TestTokenizerTest {
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "Y", //
 			PROGRAM_TEXT_AREA, " ", //
-			PROGRAM_TEXT_AREA, "Z" });
+			PROGRAM_TEXT_AREA, "Z");
 
 	private final static String[] expected = new String[] { //
 	"A", " ", "B", " ", "C", " ", " ", "X", " ", "Y", " ", "Z" };

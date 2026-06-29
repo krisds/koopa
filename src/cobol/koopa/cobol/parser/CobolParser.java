@@ -38,7 +38,7 @@ public class CobolParser {
 
 	public ParseResults parse(File file) throws IOException {
 		if (LOGGER.isInfoEnabled())
-			LOGGER.info("Parsing " + file);
+			LOGGER.info("Parsing {}", file);
 
 		Reader reader = null;
 		try {
@@ -60,7 +60,7 @@ public class CobolParser {
 		final long start = System.currentTimeMillis();
 		final ParseResults results = doParse(file, parse);
 		final long end = System.currentTimeMillis();
-		LOGGER.trace("Parse took: " + (end-start) + " ms");
+		LOGGER.trace("Parse took: {} ms", end-start);
 		results.setTime(end-start);
 		return results;
 	}
@@ -74,14 +74,13 @@ public class CobolParser {
 
 		final Messages messages = parse.getMessages();
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info((accepts ? "Valid file: " : "Invalid file: ") + file);
+			LOGGER.info("{} file: {}", accepts ? "Valid" : "Invalid", file);
 
 			if (messages.hasWarnings()) {
 				LOGGER.info("There were warnings from the grammar:");
 
 				for (Tuple<Token, String> warning : messages.getWarnings())
-					LOGGER.info("  " + warning.getFirst() + ": "
-							+ warning.getSecond());
+					LOGGER.info("  {}: {}", warning.getFirst(), warning.getSecond());
 			}
 		}
 

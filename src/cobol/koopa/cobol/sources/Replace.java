@@ -126,16 +126,14 @@ public class Replace extends ChainingSource
 					// Are we really ? E.g. no REPLACE100, or REPLACE-FOO ?
 					if (isSpace(line, 1)) {
 						if (LOGGER.isTraceEnabled())
-							LOGGER.trace(
-									"Possible start of a REPLACE statement: "
-											+ t);
+							LOGGER.trace("Possible start of a REPLACE statement: {}", t);
 
 						return;
 					}
 				}
 
 				// Are we at a space ?
-				canStartReplaceHere = (t.getText().trim().length() == 0);
+				canStartReplaceHere = (t.getText().trim().isEmpty());
 			}
 
 			line.removeFirst();
@@ -292,8 +290,7 @@ public class Replace extends ChainingSource
 					= (replace.getDescendant("off", "last") != null);
 
 			if (LOGGER.isDebugEnabled())
-				LOGGER.debug("Processing a REPLACE "
-						+ (last ? "LAST OFF" : "OFF") + " statement ...");
+				LOGGER.debug("Processing a REPLACE {} statement ...", last ? "LAST OFF" : "OFF");
 
 			final ReplacementData data = new ReplacementData(false, !last,
 					null);
@@ -312,8 +309,7 @@ public class Replace extends ChainingSource
 					= (replace.getDescendant("replacing", "also") != null);
 
 			if (LOGGER.isDebugEnabled())
-				LOGGER.debug("Processing a REPLACE " + (also ? "ALSO " : "")
-						+ "statement ...");
+				LOGGER.debug("Processing a REPLACE {}statement ...", also ? "ALSO " : "");
 
 			// Look for any REPLACING instructions which need to be activated.
 			final List<ReplacingPhrase> replacements = getReplacements(replace);
@@ -334,8 +330,7 @@ public class Replace extends ChainingSource
 			// Something strange is afoot. Like someone messing with the
 			// grammar...
 
-			LOGGER.error("Processing an unkown REPLACE statement: "
-					+ replace.getAllText());
+			LOGGER.error("Processing an unkown REPLACE statement: {}", replace.getAllText());
 
 			return false;
 		}
@@ -354,7 +349,7 @@ public class Replace extends ChainingSource
 				= Replacing.allPhrasesFrom(instructions);
 
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug("Replace defines replacements: " + phrases);
+			LOGGER.debug("Replace defines replacements: {}", phrases);
 
 		return phrases;
 	}

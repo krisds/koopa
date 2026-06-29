@@ -33,7 +33,7 @@ public class IndentingLogger {
 
 	public void add(final String message) {
 		if (isEnabled())
-			logger.trace(indent + message);
+			logger.trace("{}{}", indent, message);
 	}
 
 	public void indent() {

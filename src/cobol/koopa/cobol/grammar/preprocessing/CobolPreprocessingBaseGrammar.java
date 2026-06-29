@@ -61,7 +61,7 @@ public abstract class CobolPreprocessingBaseGrammar extends KoopaGrammar {
 			return false;
 
 		return text.equals(",") || text.equals(";")
-				|| text.trim().length() == 0;
+				|| text.trim().isEmpty();
 	}
 
 	// ============================================================================

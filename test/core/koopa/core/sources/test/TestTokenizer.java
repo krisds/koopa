@@ -36,7 +36,7 @@ public class TestTokenizer extends ChainingSource
 		Data d = source.next();
 
 		if (TRACE)
-			LOGGER.trace("%% " + d);
+			LOGGER.trace("%% {}", d);
 
 		return d;
 	}
@@ -61,7 +61,7 @@ public class TestTokenizer extends ChainingSource
 			dataSinceMarker.add(d);
 
 		if (TRACE)
-			LOGGER.trace("> " + d);
+			LOGGER.trace("> {}", d);
 
 		return d;
 	}
@@ -74,7 +74,7 @@ public class TestTokenizer extends ChainingSource
 	@Override
 	public void unshift(Data token) {
 		if (TRACE)
-			LOGGER.trace("<<< " + token);
+			LOGGER.trace("<<< {}", token);
 
 		super.unshift(token);
 
@@ -105,7 +105,7 @@ public class TestTokenizer extends ChainingSource
 			Data d = next();
 
 			if (TRACE)
-				LOGGER.trace("@ " + (marker == null ? "" : "#") + d);
+				LOGGER.trace("@ {}{}", marker == null ? "" : "#", d);
 
 			if (marker != null)
 				return true;
@@ -124,7 +124,7 @@ public class TestTokenizer extends ChainingSource
 				
 				final String text = t.getText();
 				
-				if (text.trim().length() > 0)
+				if (!text.trim().isEmpty())
 					return false;
 			}
 		}
@@ -133,7 +133,7 @@ public class TestTokenizer extends ChainingSource
 	private boolean isAtMarker() {
 		for (Data d : dataSinceMarker) {
 			if (TRACE)
-				LOGGER.trace("M@ " + d);
+				LOGGER.trace("M@ {}", d);
 
 			if (!(d instanceof Token))
 				continue;
@@ -146,7 +146,7 @@ public class TestTokenizer extends ChainingSource
 			if (!t.hasTag(AreaTag.PROGRAM_TEXT_AREA))
 				continue;
 
-			if (t.getText().trim().length() > 0)
+			if (!t.getText().trim().isEmpty())
 				return false;
 		}
 

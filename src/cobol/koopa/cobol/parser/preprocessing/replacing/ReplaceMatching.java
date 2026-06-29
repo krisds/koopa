@@ -25,7 +25,7 @@ public class ReplaceMatching extends ReplacingPhrase {
 		Stack<Token> seenWhileMatching = new Stack<>();
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("Trying " + this);
+			LOGGER.trace("Trying {}", this);
 
 		Iterator<String> it = replacing.getTextWords().iterator();
 		while (it.hasNext()) {
@@ -41,8 +41,8 @@ public class ReplaceMatching extends ReplacingPhrase {
 
 			final String textWord = it.next();
 			if (LOGGER.isTraceEnabled()) {
-				LOGGER.trace("  TESTING " + textWord);
-				LOGGER.trace("    AGAINST " + libraryTextWord);
+				LOGGER.trace("  TESTING {}", textWord);
+				LOGGER.trace("    AGAINST {}", libraryTextWord);
 			}
 
 			final String text = textWord;
@@ -55,7 +55,7 @@ public class ReplaceMatching extends ReplacingPhrase {
 		}
 
 		if (LOGGER.isTraceEnabled())
-			LOGGER.trace("  => " + (matchOccurred ? "MATCH FOUND" : "NO MATCH"));
+			LOGGER.trace("  => {}", matchOccurred ? "MATCH FOUND" : "NO MATCH");
 
 		if (matchOccurred) {
 			// "When a match occurs between pseudo-text-1, text-1,
@@ -64,8 +64,8 @@ public class ReplaceMatching extends ReplacingPhrase {
 			// literal-4 is placed into the resultant text."
 
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Matched " + replacing);
-				LOGGER.debug("  Replaced with " + by);
+				LOGGER.debug("Matched {}", replacing);
+				LOGGER.debug("  Replaced with {}", by);
 			}
 
 			// The output should include any whitespace we skipped while

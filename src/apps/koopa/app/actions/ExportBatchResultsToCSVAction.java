@@ -75,15 +75,12 @@ public class ExportBatchResultsToCSVAction extends AbstractAction implements
 	private void exportBatchResultsToCSV(BatchResults batchResults, File file)
 			throws IOException {
 
-		FileWriter fw = null;
-		BufferedWriter bw = null;
-		CSVWriter writer = null;
 
-		try {
-			fw = new FileWriter(file);
-			bw = new BufferedWriter(fw);
-			writer = new CSVWriter(bw);
-
+		try (
+			final FileWriter fw = new FileWriter(file);
+			final BufferedWriter bw = new BufferedWriter(fw);
+			final CSVWriter writer = new CSVWriter(bw);
+		) {
 			final int columnCount = batchResults.getColumnCount();
 			final String[] entries = new String[columnCount];
 
@@ -102,13 +99,6 @@ public class ExportBatchResultsToCSVAction extends AbstractAction implements
 				writer.writeNext(entries);
 			}
 
-		} finally {
-			if (writer != null)
-				writer.close();
-			if (bw != null)
-				bw.close();
-			if (fw != null)
-				fw.close();
 		}
 	}
 }

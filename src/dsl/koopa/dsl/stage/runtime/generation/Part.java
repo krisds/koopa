@@ -34,7 +34,7 @@ public abstract class Part {
 		if (nextPart != null) {
 			nextPart.includeInTests(builder, furtherParts);
 
-		} else if (furtherParts.size() > 0) {
+		} else if (!furtherParts.isEmpty()) {
 			Part n = furtherParts.removeFirst();
 			n.includeInTests(builder, furtherParts);
 			furtherParts.addFirst(n);

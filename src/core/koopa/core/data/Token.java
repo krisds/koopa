@@ -94,7 +94,7 @@ public class Token implements Data {
 	Token(String text, List<Range> ranges, Set<Object> tags,
 			Replaced replacing) {
 		assert (ranges != null);
-		assert (ranges.size() > 0);
+		assert (!ranges.isEmpty());
 
 		this.text = text;
 
@@ -135,7 +135,7 @@ public class Token implements Data {
 		for (Token token : tokens)
 			ranges.addAll(token.ranges);
 
-		assert (ranges.size() > 0);
+		assert (!ranges.isEmpty());
 
 		this.ranges = Collections.unmodifiableList(ranges);
 		this.tags = Collections
@@ -282,17 +282,19 @@ public class Token implements Data {
 
 	@Override
 	public String toString() {
-		String s = null;
-		if (replaced == null)
-			s = "[" + getStart() + "|" + text + "|" + getEnd() + "]";
-		else
-			s = "{" + getStart() + "|" + text + "|" + getEnd() + "}";
+		final StringBuilder sb = new StringBuilder();
 
-		if (!tags.isEmpty())
-			for (Object tag : tags)
-				s += " @" + tag;
+		// formatter: off
+		sb.append(replaced == null ? "[" : "{")
+		  .append(getStart())
+		  .append("|")
+		  .append(text)
+		  .append("|")
+		  .append(getEnd())
+		  .append(replaced == null ? "]" : "}");
+		// formatter: on
 
-		return s;
+		return sb.toString();
 	}
 
 	public boolean isSkipped() {

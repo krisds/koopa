@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -23,10 +22,10 @@ public final class Files {
 		if (file == null)
 			return null;
 
-		FileReader fileReader = null;
-		try {
-			fileReader = new FileReader(file);
+		try (
+			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
+		) {
 
 			StringBuffer buffer = new StringBuffer();
 			String line;
@@ -42,14 +41,6 @@ public final class Files {
 			e.printStackTrace();
 			return null;
 
-		} finally {
-			try {
-				if (fileReader != null)
-					fileReader.close();
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -132,7 +123,7 @@ public final class Files {
 	 * were given.
 	 */
 	public static List<File> offset(String relativePathName, List<File> paths) {
-		if (paths == null || paths.size() == 0)
+		if (paths == null || paths.isEmpty())
 			return Collections.emptyList();
 
 		if (relativePathName == null)
@@ -152,7 +143,7 @@ public final class Files {
 	public static File find(List<File> pathsInOrder, FilenameFilter filter,
 			Select<File> selector) {
 
-		if (pathsInOrder == null || pathsInOrder.size() == 0)
+		if (pathsInOrder == null || pathsInOrder.isEmpty())
 			return null;
 		if (selector == null)
 			return null;

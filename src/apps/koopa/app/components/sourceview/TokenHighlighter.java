@@ -43,7 +43,7 @@ public class TokenHighlighter implements CaretListener {
 			return Color.YELLOW;
 
 		if (token.hasTag(SyntacticTag.SEPARATOR)
-				&& token.getText().trim().length() == 0)
+				&& token.getText().trim().isEmpty())
 			return Color.YELLOW;
 
 		return Color.ORANGE;

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import koopa.core.data.Data;
 import koopa.core.data.Position;
@@ -41,7 +42,7 @@ public class XMLSerializer {
 		// FileWriter uses default encoding, which might not be appropriate
 		try (
 			final FileOutputStream fos = new FileOutputStream(file);
-			final OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+			final OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
 			final Writer writer = new BufferedWriter(osw);
 		) {
 			serialize(tree, writer);
@@ -100,17 +101,15 @@ public class XMLSerializer {
 				// compliant XML parsers. For convenience '--' is replaced by
 				// '-_'. Otherwise, we'd have to throw an error.
 				writer.append(dent + "<!-- "
-						+ tree.getText().replaceAll("--", "-_") + " -->\n");
-				return;
+						+ tree.getText().replace("--", "-_") + " -->\n");
 
 			} else {
 				// TODO Should escape stuff where necessary.
 				// A command like DISPLAY ']]>' would generate invalid XML
 				// without substitution
 				writer.append(dent + "<t><![CDATA["
-						+ tree.getText().replaceAll("]]>", "]]]]><![CDATA[>")
+						+ tree.getText().replace("]]>", "]]]]><![CDATA[>")
 						+ "]]></t>\n");
-				return;
 			}
 		}
 	}

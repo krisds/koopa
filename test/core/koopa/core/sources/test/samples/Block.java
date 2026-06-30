@@ -334,8 +334,7 @@ class Block {
 
 		// Grab non-empty lines...
 		final List<Token> lines = new ArrayList<>();
-		while (d != null //
-				&& (d instanceof Token)
+		while ((d instanceof Token) //
 				&& !isEndOfLine((Token) d) //
 				&& !isComment((Token) d) //
 				&& !isBlank((Token) d)) {
@@ -344,7 +343,7 @@ class Block {
 			d = source.next();
 
 			// Skip end-of-lines...
-			if (d != null && d instanceof Token && isEndOfLine((Token) d))
+			if (d instanceof Token && isEndOfLine((Token) d))
 				d = source.next();
 		}
 

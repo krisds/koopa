@@ -16,11 +16,7 @@ public class BasicTokens {
 		final TagAll tagAllAsProgramText //
 				= new TagAll(lineSplitter, PROGRAM_TEXT_AREA);
 
-		// Separate the tokens...
-		final TokenSeparator tokenSeparator //
-				= new TokenSeparator(
-						tagAllAsProgramText);
-
-		return tokenSeparator;
+		// Return the separated tokens...
+		return new TokenSeparator(tagAllAsProgramText);
 	}
 }

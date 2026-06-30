@@ -192,11 +192,7 @@ public class XPathQueryingDialog extends JDialog implements ApplicationListener 
 		} else {
 			Detail detail = (Detail) view;
 
-			selectedResults = resultsPerDetail.get(detail);
-			if (selectedResults == null) {
-				selectedResults = new XPathResults();
-				resultsPerDetail.put(detail, selectedResults);
-			}
+			selectedResults = resultsPerDetail.computeIfAbsent(detail, d -> new XPathResults());
 
 			resultsTable.setModel(selectedResults);
 			resultsTable.updateUI();

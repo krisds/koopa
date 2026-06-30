@@ -101,12 +101,7 @@ public class ReplacingPhraseOperand {
 	}
 	
 	private boolean isDummyOperand() {
-		if (tokens.size() >= 3) {
-			if (":".equals(tokens.getFirst().getText()) && ":".equals(tokens.getLast().getText())) {
-				return true;
-			}
-		}
-		return false;
+		return tokens.size() >= 3 && ":".equals(tokens.getFirst().getText()) && ":".equals(tokens.getLast().getText());
 	}
 
 	private boolean isNewline(Token token) {

@@ -32,7 +32,7 @@ public class MatchTree extends UnaryParserDecorator {
 
 		final Data d = stream.forward();
 
-		if (d == null || !(d instanceof Tree)) {
+		if (!(d instanceof Tree)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().add(toString() + " ? no; not a Tree: " + d);
 

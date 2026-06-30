@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -68,21 +69,19 @@ public class Optimizer {
 			final Set<String> keywords = new LinkedHashSet<>();
 			p.addAllLeadingKeywordsTo(keywords, new HashSet<>());
 			for (String kw : keywords) {
-				if (!mapping.containsKey(kw))
-					mapping.put(kw, new LinkedList<ParserCombinator>());
-				mapping.get(kw).add(p);
+				mapping.computeIfAbsent(kw, k -> new LinkedList<ParserCombinator>()).add(p);
 			}
 		}
 
 		final Map<String, ParserCombinator> dispatchTable = new LinkedHashMap<>();
 
-		for (String kw : mapping.keySet()) {
-			final List<ParserCombinator> choices = mapping.get(kw);
+		for (Entry<String, List<ParserCombinator>> e : mapping.entrySet()) {
+			final String kw = e.getKey();
+			final List<ParserCombinator> choices = e.getValue();
 			if (choices.size() == 1)
 				dispatchTable.put(kw, choices.get(0));
 			else
-				dispatchTable.put(kw, new Choice(
-						choices.toArray(new ParserCombinator[choices.size()])));
+				dispatchTable.put(kw, new Choice(choices.toArray(new ParserCombinator[choices.size()])));
 		}
 
 		return dispatchTable;

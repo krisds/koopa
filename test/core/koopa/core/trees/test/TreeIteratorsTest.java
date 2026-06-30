@@ -1,15 +1,16 @@
 package koopa.core.trees.test;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static koopa.core.util.Iterables.collect;
 import static koopa.core.util.test.Util.t;
 import static koopa.core.util.test.Util.tree;
-import koopa.core.data.Data;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
 import koopa.core.data.Token;
 import koopa.core.trees.Tree;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
 
 public class TreeIteratorsTest {
 
@@ -27,64 +28,64 @@ public class TreeIteratorsTest {
 	@Test
 	public void allTokens() {
 		assertEquals(//
-				asList(new Token[] { rear, admiral, grace, m, dot, hopper }), //
+				asList(rear, admiral, grace, m, dot, hopper), //
 				collect(subject.allTokens()));
 		assertEquals(//
-				asList(new Token[] { rear, admiral }), //
+				asList(rear, admiral), //
 				collect(rank.allTokens()));
 		assertEquals(//
-				asList(new Token[] { m, dot }), //
+				asList(m, dot), //
 				collect(initials.allTokens()));
 		assertEquals(//
-				asList(new Token[] { grace, m, dot, hopper }), //
+				asList(grace, m, dot, hopper), //
 				collect(name.allTokens()));
 	}
 
 	@Test
 	public void childTokens() {
 		assertEquals(//
-				asList(new Token[] {}), //
+				emptyList(), //
 				collect(subject.childTokens()));
 		assertEquals(//
-				asList(new Token[] { rear, admiral }), //
+				asList(rear, admiral), //
 				collect(rank.childTokens()));
 		assertEquals(//
-				asList(new Token[] { m, dot }), //
+				asList(m, dot), //
 				collect(initials.childTokens()));
 		assertEquals(//
-				asList(new Token[] { grace, hopper }), //
+				asList(grace, hopper), //
 				collect(name.childTokens()));
 	}
 
 	@Test
 	public void childData() {
 		assertEquals(//
-				asList(new Data[] { rank.getData(), name.getData() }), //
+				asList(rank.getData(), name.getData()), //
 				collect(subject.childData()));
 		assertEquals(//
-				asList(new Data[] { rear, admiral }), //
+				asList(rear, admiral), //
 				collect(rank.childData()));
 		assertEquals(//
-				asList(new Data[] { m, dot }), //
+				asList(m, dot), //
 				collect(initials.childData()));
 		assertEquals(//
-				asList(new Data[] { grace, initials.getData(), hopper }), //
+				asList(grace, initials.getData(), hopper), //
 				collect(name.childData()));
 	}
 
 	@Test
 	public void childTrees() {
 		assertEquals(//
-				asList(new Tree[] { rank, name }), //
+				asList(rank, name), //
 				collect(subject.childTrees()));
 		assertEquals(//
-				asList(new Tree[] {}), //
+				emptyList(), //
 				collect(rank.childTrees()));
 		assertEquals(//
-				asList(new Tree[] {}), //
+				emptyList(), //
 				collect(initials.childTrees()));
 		assertEquals(//
-				asList(new Tree[] { initials }), //
+				asList(initials), //
 				collect(name.childTrees()));
 	}
 }

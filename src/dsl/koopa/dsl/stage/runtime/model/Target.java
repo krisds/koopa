@@ -83,7 +83,7 @@ public class Target {
 
 	public void includeInTests(TestBuilder builder, LinkedList<Part> next) {
 		if (formativeDefinitions.isEmpty()) {
-			return;
+			/* Nothing to do */;
 
 		} else if (!StageUtil.RANDOMIZE_TESTS) {
 			// When not in random mode we cycle through the formative
@@ -92,7 +92,6 @@ public class Target {
 			nextDefinitionToBeUsedWhenReferenced = (nextDefinitionToBeUsedWhenReferenced + 1)
 					% formativeDefinitions.size();
 			formativeDefinitions.get(index).includeInTests(builder, next);
-			return;
 
 		} else {
 			// In random mode we just pick a random formative definition to
@@ -100,7 +99,7 @@ public class Target {
 			int random = StageUtil.RANDOMIZER
 					.nextInt(formativeDefinitions.size());
 			formativeDefinitions.get(random).includeInTests(builder, next);
-			return;
+
 		}
 	}
 }

@@ -28,12 +28,9 @@ public final class End extends Marker {
 	}
 
 	public static End on(String namespace, String name) {
-		String key = namespace + ":" + name;
+		final String key = namespace + ":" + name;
 
-		if (!markers.containsKey(key))
-			markers.put(key, new End(namespace, name));
-
-		return markers.get(key);
+		return markers.computeIfAbsent(key, k -> new End(namespace, name));
 	}
 
 	public String getNamespace() {

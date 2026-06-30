@@ -74,8 +74,7 @@ public class HoldingTarget implements Target {
 		while (it.hasPrevious()) {
 			final Data d = it.previous();
 			if (d instanceof Token) {
-				final Token t = (Token) d;
-				return t;
+				return (Token) d;
 			}
 		}
 

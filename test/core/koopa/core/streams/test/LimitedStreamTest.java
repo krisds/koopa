@@ -35,7 +35,7 @@ public class LimitedStreamTest extends ParseStreamTest {
 		@Override
 		public boolean matches(Parse parse) {
 			final Data d = parse.getStream().forward();
-			return d != null && d instanceof Token && WORDS[n].equals(((Token) d).getText());
+			return d instanceof Token && WORDS[n].equals(((Token) d).getText());
 		}
 	}
 

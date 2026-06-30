@@ -21,8 +21,7 @@ public class Cobol85RegressionTest extends CobolParsingRegressionTest {
 	@Override
 	public File[] getFiles() {
 		File folder = new File("testsuite/cobol85/");
-		File[] sources = folder.listFiles(CobolFiles.getFilenameFilter());
-		return sources;
+		return folder.listFiles(CobolFiles.getFilenameFilter());
 	}
 
 	@Override

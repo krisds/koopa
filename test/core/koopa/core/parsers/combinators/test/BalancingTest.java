@@ -36,8 +36,7 @@ public class BalancingTest extends GrammarTest {
 
 		shouldAccept(balancing, spaced("one ( two three ) four"));
 
-		final List<Boolean> expected = Arrays.asList(new Boolean[] { //
-				true, false, false, false, false, true });
+		final List<Boolean> expected = Arrays.asList(true, false, false, false, false, true);
 		assertEquals(expected.size(), state.actual.size());
 		assertEquals(expected, state.actual);
 	}
@@ -51,8 +50,7 @@ public class BalancingTest extends GrammarTest {
 
 		shouldAccept(balancing, spaced("( one two three ) four"));
 
-		final List<Boolean> expected = Arrays.asList(new Boolean[] { //
-				false, false, false, false, false, true });
+		final List<Boolean> expected = Arrays.asList(false, false, false, false, false, true);
 		assertEquals(expected.size(), state.actual.size());
 		assertEquals(expected, state.actual);
 	}

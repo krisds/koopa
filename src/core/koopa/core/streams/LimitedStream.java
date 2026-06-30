@@ -20,7 +20,7 @@ public class LimitedStream extends StreamDecorator implements Stream {
 	 * The matching of limiters can introduce a lot of noise in the logging, so
 	 * I disable it by default. Toggle this to get the output.
 	 */
-	private final static boolean SILENCE = true;
+	private static final boolean SILENCE = true;
 
 	/**
 	 * Limiters are additive. Whenever any limiter matches the

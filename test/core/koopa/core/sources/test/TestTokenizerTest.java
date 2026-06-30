@@ -15,9 +15,9 @@ import koopa.core.data.Token;
 
 public class TestTokenizerTest {
 
-	private final String input = "A B C ^ X Y Z";
+	private static final String INPUT = "A B C ^ X Y Z";
 
-	private final List<Object> objects = Arrays.asList(
+	private static final List<Object> OBJECTS = Arrays.asList(
 			PROGRAM_TEXT_AREA, "A", //
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "B", //
@@ -32,11 +32,11 @@ public class TestTokenizerTest {
 			PROGRAM_TEXT_AREA, " ", //
 			PROGRAM_TEXT_AREA, "Z");
 
-	private final static String[] expected = new String[] { //
+	private static final String[] expected = new String[] { //
 	"A", " ", "B", " ", "C", " ", " ", "X", " ", "Y", " ", "Z" };
 
-	private final int C = input.indexOf('C');
-	private final int X = input.indexOf('X') - 1;
+	private final int C = INPUT.indexOf('C');
+	private final int X = INPUT.indexOf('X') - 1;
 
 	@Test
 	public void beforeC() {
@@ -52,12 +52,12 @@ public class TestTokenizerTest {
 
 	@Test
 	public void xAndBeyond() {
-		for (int i = X; i < input.length() - 1; i++)
+		for (int i = X; i < INPUT.length() - 1; i++)
 			assertState("" + i, i, false);
 	}
 
 	private void assertState(String message, int count, boolean atMark) {
-		HardcodedSource source = HardcodedSource.from(objects);
+		HardcodedSource source = HardcodedSource.from(OBJECTS);
 		TestTokenizer tokenizer = new TestTokenizer(source);
 
 		for (int i = 0; i <= count; i++) {

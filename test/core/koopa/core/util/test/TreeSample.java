@@ -102,9 +102,7 @@ public class TreeSample {
 		// }
 		// System.out.println();
 
-		TreeSample sample = new TreeSample(text, roots);
-
-		return sample;
+		return new TreeSample(text, roots);
 	}
 
 	private static int depth(String line) {

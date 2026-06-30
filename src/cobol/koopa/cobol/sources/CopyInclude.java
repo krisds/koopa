@@ -269,9 +269,7 @@ public class CopyInclude extends ChainingSource
 			return false;
 
 		final Data a = line.get(index);
-		return a != null && a instanceof Token //
-				&& !((Token) a).hasTag(COMMENT)
-				&& ((Token) a).getText().equals("=");
+		return a instanceof Token && !((Token) a).hasTag(COMMENT) && "=".equals(((Token) a).getText());
 	}
 
 	private boolean isSpace(LinkedList<Data> line, int index) {

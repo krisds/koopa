@@ -3,19 +3,16 @@ package koopa.core.trees.test;
 import static koopa.core.util.test.Util.comment;
 import static koopa.core.util.test.Util.text;
 import static koopa.core.util.test.Util.tree;
-
-import java.io.IOException;
-
-
-import koopa.core.trees.Tree;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import koopa.core.trees.Tree;
 
 public class TreePositionsTest  {
 
 	@Test
-	public void testEmptyTree() throws IOException {
+	public void testEmptyTree()  {
 		Tree tree = tree("test");
 
 		assertEquals(null, tree.getStartPosition());
@@ -23,7 +20,7 @@ public class TreePositionsTest  {
 	}
 
 	@Test
-	public void testSingleToken() throws IOException {
+	public void testSingleToken()  {
 		Tree tree = tree("test", text("Cobol", 1, 5));
 
 		assertEquals(1, tree.getStartPosition().getPositionInFile());
@@ -31,7 +28,7 @@ public class TreePositionsTest  {
 	}
 
 	@Test
-	public void testSequenceOfTokens() throws IOException {
+	public void testSequenceOfTokens() {
 		Tree tree = tree("test", text("Stop", 1, 4), text("bashing", 6, 12),
 				text("Cobol", 14, 18));
 
@@ -40,7 +37,7 @@ public class TreePositionsTest  {
 	}
 
 	@Test
-	public void testSequenceOfTokensWithComments() throws IOException {
+	public void testSequenceOfTokensWithComments() {
 		Tree tree = tree("test", comment("-please-"), text("Stop", 1, 4),
 				comment("-don't do it any more-"), text("bashing", 6, 16),
 				comment("-or making jokes about-"), text("Cobol", 14, 18),

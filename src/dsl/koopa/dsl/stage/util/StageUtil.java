@@ -70,11 +70,8 @@ public final class StageUtil {
 				return null;
 			}
 
-			final KoopaTreeBuilder builder = parse
-					.getTarget(KoopaTreeBuilder.class);
-			Tree ast = builder.getTree();
-
-			return ast;
+			// Resturn ast
+			return parse.getTarget(KoopaTreeBuilder.class).getTree();
 			
 		}
 	}

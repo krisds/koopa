@@ -22,10 +22,9 @@ public abstract class DirectivesTests extends GrammarTestSuite {
 	public Source getSourceForSample(String sample, Grammar grammar) {
 		final Reader reader = new StringReader(sample);
 
-		final Source basicTokens = BasicTokens.getNewSource(null,
-				reader);
-		final Source freeTokens = new TagAll(basicTokens,
-				getSourceFormat());
+		final Source basicTokens = BasicTokens.getNewSource(null, reader);
+		final Source freeTokens = new TagAll(basicTokens, getSourceFormat());
+
 		return freeTokens;
 	}
 

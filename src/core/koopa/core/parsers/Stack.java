@@ -165,7 +165,7 @@ public class Stack {
 
 			Frame frame = this;
 			do {
-				if (frame.parser == null || !(frame.parser instanceof Scoped))
+				if (!(frame.parser instanceof Scoped))
 					continue;
 
 				if (sb.length() > 0)

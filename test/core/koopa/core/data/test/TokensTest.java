@@ -180,7 +180,7 @@ public class TokensTest {
 		Position end = start.offsetBy(length - 1);
 		final Token t2 = new Token(text, start, end, "Cobol");
 
-		final Token t = Tokens.join(Arrays.asList(new Token[] { t1, t2 }));
+		final Token t = Tokens.join(Arrays.asList(t1, t2));
 
 		final String expected = TEXT + text;
 		assertEquals(expected, t.getText());

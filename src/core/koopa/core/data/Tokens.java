@@ -73,10 +73,7 @@ public final class Tokens {
 
 		assert (!ranges.isEmpty());
 
-		final Token sub = new Token(text, ranges,
-				token.getTags(), token.getReplaced());
-
-		return sub;
+		return new Token(text, ranges, token.getTags(), token.getReplaced());
 	}
 
 	/**
@@ -149,10 +146,7 @@ public final class Tokens {
 
 		assert (!ranges.isEmpty());
 
-		final Token sub = new Token(text, ranges,
-				token.getTags(), token.getReplaced());
-
-		return sub;
+		return new Token(text, ranges, token.getTags(), token.getReplaced());
 	}
 
 	/**

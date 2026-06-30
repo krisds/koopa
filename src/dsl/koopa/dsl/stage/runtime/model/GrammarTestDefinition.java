@@ -49,7 +49,7 @@ public class GrammarTestDefinition {
 			final Tree part = sample.getChild(i);
 
 			if (part.isToken())
-				continue;
+				/* Nothing to do */;
 
 			else if (part.isNode("fragment"))
 				parts.add(new Fragment(part));

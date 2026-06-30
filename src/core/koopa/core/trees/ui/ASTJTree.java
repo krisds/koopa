@@ -58,8 +58,6 @@ public class ASTJTree extends JTree {
 			node = node.getParent();
 		}
 
-		final TreePath treePath = new TreePath(path.toArray(new Object[path
-				.size()]));
-		return treePath;
+		return new TreePath(path.toArray(new Object[path.size()]));
 	}
 }

@@ -234,8 +234,8 @@ public class BaseStream implements Stream {
 
 			if (d instanceof Token)
 				builder.append(((Token) d).getText() //
-						.replaceAll("\n", "\\\\n") //
-						.replaceAll("\r", "\\\\r"));
+						.replace("\n", "\\n") //
+						.replace("\r", "\\r"));
 			else
 				builder.append(d.toString());
 		}

@@ -28,6 +28,8 @@ public class FileExtensions extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static final String NAME = "File Extensions";
 
+	private static final Pattern COMMA = Pattern.compile("^[^,\\s]*(?:,[^,\\s]*)*$");
+
 	private JButton ok;
 	private JTextField forSources;
 	private JTextField forCopybooks;
@@ -122,18 +124,11 @@ public class FileExtensions extends JDialog {
 	}
 
 	private void validateInputs() {
-		boolean valid = true;
-
-		valid = valid && isValidInput(forSources.getText());
-		valid = valid && isValidInput(forCopybooks.getText());
-
-		ok.setEnabled(valid);
+		ok.setEnabled(isValidInput(forSources.getText()) && isValidInput(forCopybooks.getText()));
 	}
 
 	private boolean isValidInput(String text) {
-		Pattern p = Pattern.compile("^\\S*(,\\S*)*$");
-		Matcher m = p.matcher(text);
-		return m.matches();
+		return COMMA.matcher(text).matches();
 	}
 
 	private void applyInputs() {

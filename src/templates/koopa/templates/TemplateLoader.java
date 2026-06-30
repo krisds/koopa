@@ -28,8 +28,7 @@ public class TemplateLoader {
 	private static final String COMMENT_CHARACTER = "#";
 	private static final String MARKER_CHARACTER = "#";
 	private static final Pattern DEF = Pattern.compile("^def\\s+(\\w+)\\s*$");
-	private static final Pattern CALL = Pattern
-			.compile("^>   (\\s*)(\\w+)\\s*$");
+	private static final Pattern CALL = Pattern.compile("^> {3}(\\s*)(\\w+)\\s*$");
 	private static final Pattern END = Pattern.compile("^end\\s*$");
 
 	public static Template from(BufferedReader reader) throws IOException {

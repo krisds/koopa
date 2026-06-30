@@ -43,7 +43,7 @@ public class TabStops {
 		}
 
 		final String[] values = csv.split(",");
-		final int newStops[] = new int[values.length];
+		final int[] newStops = new int[values.length];
 
 		for (int i = 0; i < values.length; i++) {
 			try {

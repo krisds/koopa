@@ -56,7 +56,7 @@ public class CobolParser {
 		return parse(file, parse);
 	}
 
-	public ParseResults parse(File file, Parse parse) throws IOException {
+	public ParseResults parse(File file, Parse parse) {
 		final long start = System.currentTimeMillis();
 		final ParseResults results = doParse(file, parse);
 		final long end = System.currentTimeMillis();
@@ -65,7 +65,7 @@ public class CobolParser {
 		return results;
 	}
 	
-	private ParseResults doParse(File file, Parse parse) throws IOException {
+	private ParseResults doParse(File file, Parse parse) {
 		boolean accepts = project.parserFor(file).accepts(parse);
 
 		final ParseResults results = new ParseResults(file);
@@ -149,7 +149,7 @@ public class CobolParser {
 		return getParseSetup(file, Files.getReader(file));
 	}
 
-	public Parse getParseSetup(File file, Reader reader) throws IOException {
+	public Parse getParseSetup(File file, Reader reader) {
 		// Build the tokenisation stage.
 		final Source source = new LOCCount(
 				CobolTokens.getNewSource(file, reader, project));

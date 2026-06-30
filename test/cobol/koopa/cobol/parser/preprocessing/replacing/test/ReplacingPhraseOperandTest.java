@@ -134,9 +134,8 @@ public class ReplacingPhraseOperandTest {
 				pseudo("=", "=", "COBOL", "=", "="));
 
 		assertMatches(phrase, input("LANG-NAME"),
-				Arrays.asList(new Data[] {
-						new Token("COBOL-NAME", new Position(3, 0, 3),
-								new Position(9, 0, 9), PROGRAM_TEXT_AREA) }));
+				Arrays.asList(
+						new Token("COBOL-NAME", new Position(3, 0, 3), new Position(9, 0, 9), PROGRAM_TEXT_AREA)));
 		assertRejects(phrase, input("LING-NAME"));
 	}
 
@@ -146,9 +145,7 @@ public class ReplacingPhraseOperandTest {
 				pseudo("=", "=", "=", "="));
 
 		assertMatches(phrase, input("LANG-NAME"),
-				Arrays.asList(
-						new Data[] { new Token("-NAME", new Position(5, 0, 5),
-								new Position(9, 0, 9), PROGRAM_TEXT_AREA) }));
+				Arrays.asList(new Token("-NAME", new Position(5, 0, 5), new Position(9, 0, 9), PROGRAM_TEXT_AREA)));
 		assertRejects(phrase, input("LING-NAME"));
 	}
 
@@ -158,9 +155,8 @@ public class ReplacingPhraseOperandTest {
 				pseudo("=", "=", "COBOL", "=", "="));
 
 		assertMatches(phrase, input("NAME-LANG"),
-				Arrays.asList(new Data[] {
-						new Token("NAME-COBOL", new Position(1, 0, 1),
-								new Position(7, 0, 7), PROGRAM_TEXT_AREA) }));
+				Arrays.asList(
+						new Token("NAME-COBOL", new Position(1, 0, 1), new Position(7, 0, 7), PROGRAM_TEXT_AREA)));
 		assertRejects(phrase, input("NAME-LING"));
 	}
 
@@ -170,9 +166,7 @@ public class ReplacingPhraseOperandTest {
 				pseudo("=", "=", "=", "="));
 
 		assertMatches(phrase, input("NAME-LANG"),
-				Arrays.asList(
-						new Data[] { new Token("NAME-", new Position(1, 0, 1),
-								new Position(5, 0, 5), PROGRAM_TEXT_AREA) }));
+				Arrays.asList(new Token("NAME-", new Position(1, 0, 1), new Position(5, 0, 5), PROGRAM_TEXT_AREA)));
 		assertRejects(phrase, input("NAME-LING"));
 	}
 

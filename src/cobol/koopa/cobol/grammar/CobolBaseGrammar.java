@@ -10,8 +10,9 @@ import static koopa.core.data.tags.SyntacticTag.NUMBER;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import koopa.cics.grammar.CICSGrammar;
 import koopa.cobol.grammar.preprocessing.CobolPreprocessingGrammar;
@@ -185,11 +186,17 @@ public class CobolBaseGrammar extends CobolPreprocessingGrammar {
 	 * OSVS allows a comment entry to have words in area A, except for ones in
 	 * this list.
 	 */
-	private static final List<String> END_OF_COMMENT_ENTRY_MARKERS //
-			= Collections.unmodifiableList(Arrays.asList(new String[] { //
-					"PROGRAM-ID", "AUTHOR", "INSTALLATION", "DATE-WRITTEN",
-					"DATE-COMPILED", "SECURITY", "ENVIRONMENT", "DATA",
-					"PROCEDURE" }));
+	private static final Set<String> END_OF_COMMENT_ENTRY_MARKERS = new HashSet<>(Arrays.asList(
+			"PROGRAM-ID", //
+			"AUTHOR", //
+			"INSTALLATION", //
+			"DATE-WRITTEN", //
+			"DATE-COMPILED", //
+			"SECURITY", //
+			"ENVIRONMENT", //
+			"DATA", //
+			"PROCEDURE" //
+	));
 
 	private ParserCombinator commentEntryParser = null;
 

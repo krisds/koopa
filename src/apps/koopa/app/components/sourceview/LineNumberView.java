@@ -284,10 +284,10 @@ public class LineNumberView extends JComponent {
 			Object newValue = evt.getNewValue();
 			String propertyName = evt.getPropertyName();
 			if ("document".equals(propertyName)) {
-				if (oldValue != null && oldValue instanceof Document) {
+				if (oldValue instanceof Document) {
 					((Document) oldValue).removeDocumentListener(this);
 				}
-				if (newValue != null && newValue instanceof Document) {
+				if (newValue instanceof Document) {
 					((Document) newValue).addDocumentListener(this);
 				}
 			}

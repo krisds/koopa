@@ -62,6 +62,7 @@ public class LOCCount extends ChainingSource
 			done = (t == null);
 
 		} else if (t.hasTag(SKIPPED)) {
+			/* Nothing to do */;
 
 		} else if (t.hasTag(COMMENT)) {
 			sawComment = true;

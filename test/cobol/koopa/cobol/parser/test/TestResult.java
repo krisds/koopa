@@ -261,7 +261,7 @@ public class TestResult {
 				return null;
 			}
 
-			int columnForEntry[] = new int[HEADER.length];
+			int[] columnForEntry = new int[HEADER.length];
 			for (int i = 0; i < HEADER.length; i++) {
 				columnForEntry[i] = -1;
 				for (int col = 0; col < header.length; col++)
@@ -334,7 +334,7 @@ public class TestResult {
 		writer.flush();
 	}
 
-	private static abstract class Entry<T> {
+	private abstract static class Entry<T> {
 		public final String name;
 		private final Class<? extends Value<T>> clazz;
 
@@ -372,7 +372,7 @@ public class TestResult {
 		}
 	}
 
-	private static abstract class Value<T> {
+	private abstract static class Value<T> {
 		public T value;
 
 		public Value() {

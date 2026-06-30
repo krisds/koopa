@@ -5,8 +5,6 @@ import static koopa.core.util.test.Util.text;
 import static koopa.core.util.test.Util.tree;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 
 import koopa.core.trees.Tree;
@@ -14,7 +12,7 @@ import koopa.core.trees.Tree;
 public class ProgramTextTest {
 
 	@Test
-	public void testEmptyProgramText() throws IOException {
+	public void testEmptyProgramText() {
 		Tree tree = tree("");
 
 		String expected = "";
@@ -23,7 +21,7 @@ public class ProgramTextTest {
 	}
 
 	@Test
-	public void testSingleToken() throws IOException {
+	public void testSingleToken() {
 		Tree tree = text("COBOL");
 
 		String expected = "COBOL";
@@ -32,7 +30,7 @@ public class ProgramTextTest {
 	}
 
 	@Test
-	public void testTreeOfTokens() throws IOException {
+	public void testTreeOfTokens() {
 		Tree tree = tree("test", text("Stop", 0, 3), text("bashing", 5, 11),
 				text("Cobol", 13, 17));
 
@@ -42,7 +40,7 @@ public class ProgramTextTest {
 	}
 
 	@Test
-	public void testTreeOfTokensWithComments() throws IOException {
+	public void testTreeOfTokensWithComments() {
 		Tree tree = tree("test", text("Stop", 0, 3),
 				comment("-don't do it any more-"), text("bashing", 5, 11),
 				comment("-or making jokes about-"), text("Cobol", 13, 17),
@@ -54,7 +52,7 @@ public class ProgramTextTest {
 	}
 
 	@Test
-	public void testTreeOfConsecutiveTokens() throws IOException {
+	public void testTreeOfConsecutiveTokens() {
 		Tree tree = tree("test", text("Stop", 0, 3), text("bashing", 4, 10),
 				text("Cobol", 11, 15));
 

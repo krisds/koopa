@@ -412,5 +412,5 @@ public class Balancing extends UnaryParserDecorator {
 
 	private enum Kind {
 		OPEN, CLOSE
-	};
+	}
 }

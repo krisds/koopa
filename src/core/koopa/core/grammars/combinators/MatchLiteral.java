@@ -26,7 +26,7 @@ public class MatchLiteral extends GrammaticalCombinator {
 
 		final Data d = parse.getStream().forward();
 
-		if (d == null || !(d instanceof Token)) {
+		if (!(d instanceof Token)) {
 			if (parse.getTrace().isEnabled())
 				parse.getTrace().dedent(toString() + " : no, null");
 

@@ -8,7 +8,6 @@ import static koopa.core.data.tags.SyntacticTag.SEPARATOR;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.trees.jaxen.Jaxen.getMatch;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -18,7 +17,6 @@ import koopa.core.data.Token;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.Source;
 import koopa.core.trees.Tree;
-import koopa.core.util.Strings;
 
 public abstract class ReplacingPhrase {
 
@@ -38,7 +36,7 @@ public abstract class ReplacingPhrase {
 	protected final ReplacingPhraseOperand replacing;
 	protected final ReplacingPhraseOperand by;
 
-	public ReplacingPhrase(ReplacingPhraseOperand replacing,
+	protected ReplacingPhrase(ReplacingPhraseOperand replacing,
 			ReplacingPhraseOperand by) {
 		this.replacing = replacing;
 		this.by = by;
@@ -101,12 +99,10 @@ public abstract class ReplacingPhrase {
 					}
 
 					//Check if we are looking at a dummy operand
-					if (":".equals(t.getText())) {
-						if (!buildingDummyOperand) {
-							buildingDummyOperand = true;
-							textWord.add(t);
-							continue;
-						}
+					if (":".equals(t.getText()) && !buildingDummyOperand) {
+						buildingDummyOperand = true;
+						textWord.add(t);
+						continue;
 					}
 					// SEP while building a word => complete word and ignore
 					// SEP.
@@ -185,16 +181,7 @@ public abstract class ReplacingPhrase {
 
 		final String text = textWord.getText();
 
-		if (",".equals(text))
-			return true;
-
-		if (";".equals(text))
-			return true;
-
-		if (Strings.isEmpty(text.trim()))
-			return true;
-
-		return false;
+		return ",".equals(text) || ";".equals(text) || text.trim().isEmpty();
 	}
 
 	protected boolean isNewline(Token token) {

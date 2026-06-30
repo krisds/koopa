@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -38,6 +39,8 @@ public class ApplicationSupport {
 
 	private static final String PREFERENCES_ROOT = "net.sourceforge.koopa.app.preferences";
 	private static Preferences preferences = getPreferences();
+
+	private static final Pattern DELIMITER = Pattern.compile("\\s*+[,;|]\\s*+");
 
 	private static JFileChooser chooser = null;
 
@@ -161,9 +164,7 @@ public class ApplicationSupport {
 	}
 
 	private static synchronized Preferences getPreferences() {
-		Preferences preferencesRoot = Preferences.userRoot();
-		Preferences appPreferences = preferencesRoot.node(PREFERENCES_ROOT);
-		return appPreferences;
+		return Preferences.userRoot().node(PREFERENCES_ROOT);
 	}
 
 	private static synchronized Properties getProperties() {
@@ -190,7 +191,7 @@ public class ApplicationSupport {
 				PROPERTY_CUSTOM_COLUMNS, "");
 		if (customColumnKeys.isEmpty())
 			return new ArrayList<>();
-		return Arrays.asList(customColumnKeys.trim().split("\\s*[,;|]\\s*"));
+		return Arrays.asList(DELIMITER.split(customColumnKeys.trim()));
 	}
 
 	public static String getCustomColumnProperty(String key, String property) {
@@ -255,7 +256,7 @@ public class ApplicationSupport {
 			String... alternateKeyStrokesDefinitions) {
 
 		KeyStroke keystroke = KeyStroke.getKeyStroke(keyStrokeDefinition
-				.replaceAll(MODIFIER, MODIFIER_KEY));
+				.replace(MODIFIER, MODIFIER_KEY));
 		item.setAccelerator(keystroke);
 
 		if (alternateKeyStrokesDefinitions != null
@@ -265,7 +266,7 @@ public class ApplicationSupport {
 
 			for (String alternateKeyStrokeDefinition : alternateKeyStrokesDefinitions) {
 				KeyStroke alternateKeystroke = KeyStroke
-						.getKeyStroke(alternateKeyStrokeDefinition.replaceAll(
+						.getKeyStroke(alternateKeyStrokeDefinition.replace(
 								MODIFIER, MODIFIER_KEY));
 				im.put(alternateKeystroke, actionMapKey);
 			}

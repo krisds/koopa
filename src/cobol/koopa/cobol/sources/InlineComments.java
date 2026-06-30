@@ -30,7 +30,7 @@ public class InlineComments extends ChainingSource
 
 		final Data data = source.next();
 
-		if (data == null || !(data instanceof Token))
+		if (!(data instanceof Token))
 			return data;
 
 		final Token token = (Token) data;
@@ -52,7 +52,7 @@ public class InlineComments extends ChainingSource
 		if (token.hasTag(SEPARATOR) && "*".equals(token.getText())) {
 			// Found "*"; checking for ">".
 			final Data b = source.next();
-			if (b != null && b instanceof Token) {
+			if (b instanceof Token) {
 				final Token t = (Token) b;
 				inComment = (t.hasTags(PROGRAM_TEXT_AREA, SEPARATOR)
 						&& ">".equals(t.getText()));

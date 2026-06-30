@@ -2,9 +2,11 @@ package koopa.core.trees.jaxen.test;
 
 import static koopa.core.util.test.Util.token;
 import static koopa.core.util.test.Util.tree;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,7 @@ import koopa.core.trees.jaxen.Jaxen;
 public class JaxenTest  {
 
 	@Test
-	public void testMatchesRootName() throws IOException {
+	public void testMatchesRootName() {
 		Tree leaf = token("leaf");
 		Tree branch = tree("branch", leaf);
 		Tree root = tree("root", branch);
@@ -31,7 +33,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testMatchesRoot() throws IOException {
+	public void testMatchesRoot() {
 		Tree leaf = token("leaf");
 		Tree branch = tree("branch", leaf);
 		Tree root = tree("root", branch);
@@ -45,7 +47,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testMatchesNodes() throws IOException {
+	public void testMatchesNodes() {
 		Tree leaf = token("leaf");
 		Tree branch = tree("branch", leaf);
 		Tree root = tree("branch", branch);
@@ -59,7 +61,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testMatchesNodesWithConditions() throws IOException {
+	public void testMatchesNodesWithConditions() {
 		Tree leaf = token("leaf");
 		Tree branch = tree("branch", leaf);
 		Tree root = tree("branch", branch);
@@ -73,7 +75,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testSelectAllNodes() throws IOException {
+	public void testSelectAllNodes() {
 		Tree branch = tree("branch", "Grace", "Murray", "Hopper");
 		Tree root = tree("branch", branch);
 		Tree document = tree("koopa", root);
@@ -84,7 +86,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testSelectAllText() throws IOException {
+	public void testSelectAllText() {
 		Tree branch = tree("branch", "Grace", "Murray", "Hopper");
 		Tree root = tree("branch", branch);
 		Tree document = tree("koopa", root);
@@ -98,7 +100,7 @@ public class JaxenTest  {
 	 * Support for this case is required by the Cobol Preprocessor.
 	 */
 	@Test
-	public void testCanSelectText() throws IOException {
+	public void testCanSelectText() {
 		Tree comment = token("Rear Admiral", AreaTag.COMMENT);
 		Tree text = token("Hopper");
 		Tree pp = tree("preprocessingStatement",
@@ -111,7 +113,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testCanSelectComments() throws IOException {
+	public void testCanSelectComments() {
 		Tree comment = token("Rear Admiral", AreaTag.COMMENT);
 		Tree text = token("Hopper");
 		Tree pp = tree("preprocessingStatement",
@@ -124,7 +126,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testCanSelectByTag() throws IOException {
+	public void testCanSelectByTag() {
 		Tree title = token("Rear Admiral", "TITLE");
 		Tree name = token("Hopper", "NAME");
 		Tree pp = tree("preprocessingStatement",
@@ -142,7 +144,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testCanSelectByPosition() throws IOException {
+	public void testCanSelectByPosition() {
 		Tree[] branches = new Tree[] { tree("branch", "0"),
 				tree("branch", "1"), tree("branch", "2"), tree("branch", "3") };
 
@@ -175,7 +177,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testCanSelectFollowingSibling() throws IOException {
+	public void testCanSelectFollowingSibling() {
 		Tree[] branches = new Tree[] { tree("branch", "0"),
 				tree("branch", "1"), tree("branch", "2"),
 				tree("bird", "woodpecker"), tree("branch", "3") };
@@ -202,7 +204,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testCanSelectParent() throws IOException {
+	public void testCanSelectParent() {
 		Tree[] leaves = new Tree[] { tree("leaf"), tree("leaf") };
 
 		Tree[] branches = new Tree[] { tree("branch", "0"),
@@ -228,7 +230,7 @@ public class JaxenTest  {
 	}
 
 	@Test
-	public void testMatchesNSAttribute() throws IOException {
+	public void testMatchesNSAttribute() {
 		Tree leaf = token("leaf");
 		Tree branch = tree("branch", leaf);
 		Tree root = tree("root", branch);

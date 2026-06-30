@@ -43,7 +43,7 @@ public class ContinuationOfLines extends ChainingSource
 	 */
 	private static enum StatusOfIndicator {
 		HANDLED
-	};
+	}
 
 	private final LinkedList<Data> pending = new LinkedList<>();
 

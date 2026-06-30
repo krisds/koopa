@@ -90,7 +90,7 @@ public abstract class GrammarTestSuite {
 	 * If the test should reject then we check that the parse failed, or that it
 	 * did not reach the expected point in the input.
 	 */
-	private void executeTest(GrammarTest test) throws IOException {
+	private void executeTest(GrammarTest test) {
 		final Grammar grammar = getGrammar();
 		final String targetName = test.getTarget();
 

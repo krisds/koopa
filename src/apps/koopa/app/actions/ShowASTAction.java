@@ -35,8 +35,7 @@ public class ShowASTAction extends AbstractAction implements Action {
 					final TreeFrame treeFrame = new TreeFrame(filename
 							+ " - AST", tree);
 
-					final TokenSelectionListener tokenSelectionListener = token -> treeFrame
-							.select(token);
+					final TokenSelectionListener tokenSelectionListener = treeFrame::select;
 
 					detail.addTokenSelectionListener(tokenSelectionListener);
 

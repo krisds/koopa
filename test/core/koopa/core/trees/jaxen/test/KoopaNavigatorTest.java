@@ -3,9 +3,6 @@ package koopa.core.trees.jaxen.test;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import java.io.IOException;
-
-import org.jaxen.JaxenException;
 import org.jaxen.Navigator;
 import org.jaxen.pattern.Pattern;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +32,7 @@ class KoopaNavigatorTest {
 	@DisplayName("isXXX node type testers")
 	@MethodSource(value = "createAllNodeTypes")
 	@ParameterizedTest(name = "node type: {1}")
-	void isNodeType(final Object node, final NodeTypes nodeType) throws IOException, JaxenException {
+	void isNodeType(final Object node, final NodeTypes nodeType) {
 		final Navigator nav = getNavigator();
 		// @formatter:off
 		assertAll(

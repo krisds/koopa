@@ -11,14 +11,7 @@ public class Memo {
 	}
 
 	public static Memo forSubject(String subject) {
-		Memo memo = MEMOS.get(subject);
-
-		if (memo == null) {
-			memo = new Memo();
-			MEMOS.put(subject, memo);
-		}
-
-		return memo;
+		return MEMOS.computeIfAbsent(subject, s -> new Memo());
 	}
 
 	public void put(Object key, Object value) {

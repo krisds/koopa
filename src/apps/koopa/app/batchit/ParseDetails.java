@@ -23,10 +23,10 @@ public class ParseDetails extends AbstractTableModel {
 
 	private ParseResults parseResults = null;
 
-	final static ImageIcon ERROR = Icons
+	static final ImageIcon ERROR = Icons
             .getIcon("/koopa/app/resources/document-error.png");
 
-	final static ImageIcon WARNING = Icons
+	static final ImageIcon WARNING = Icons
             .getIcon("/koopa/app/resources/document-warning.png");
 
 	@Override

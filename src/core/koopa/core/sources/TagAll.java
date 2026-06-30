@@ -20,7 +20,7 @@ public class TagAll extends ChainingSource implements
 	protected Data nxt1() {
 		final Data d = source.next();
 
-		if (d == null || !(d instanceof Token))
+		if (!(d instanceof Token))
 			return d;
 
 		final Token t = (Token) d;

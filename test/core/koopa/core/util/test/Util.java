@@ -80,9 +80,7 @@ public final class Util {
 		if (tags != null)
 			token = token.withTags(tags);
 
-		Tree tree = new Tree(token);
-
-		return tree;
+		return new Tree(token);
 	}
 
 	public static Token t(String text, Object... tags) {
@@ -117,8 +115,7 @@ public final class Util {
 	public static List<Data> asTokens(Object... tagsAndTokens) {
 		final HardcodedSource source = HardcodedSource.from(tagsAndTokens);
 		final TagAll tag = new TagAll(source, PROGRAM_TEXT_AREA);
-		final List<Data> tokens = getAllTokens(tag);
-		return tokens;
+		return getAllTokens(tag);
 	}
 
 	// TODO Rename

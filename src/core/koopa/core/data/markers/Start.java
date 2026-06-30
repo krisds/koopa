@@ -30,10 +30,7 @@ public final class Start extends Marker {
 	public static Start on(String namespace, String name) {
 		final String key = namespace + ":" + name;
 
-		if (!markers.containsKey(key))
-			markers.put(key, new Start(namespace, name));
-
-		return markers.get(key);
+		return markers.computeIfAbsent(key, k -> new Start(namespace, name));
 	}
 
 	public String getNamespace() {

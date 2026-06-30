@@ -75,7 +75,7 @@ public class TreeBasedDocument extends DefaultStyledDocument
 
 	private String getText(Token token) {
 		// Make tab characters clearly visible.
-		return token.getText().replaceAll("\\t", "\u2192");
+		return token.getText().replace("\t", "\u2192");
 	}
 
 	private void clear() {

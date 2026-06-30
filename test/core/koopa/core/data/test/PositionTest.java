@@ -8,12 +8,12 @@ import koopa.core.data.Position;
 
 public class PositionTest {
 
-	private final String resourceName = "koopa.core.data.test.PositionTest";
+	private static final String RESOURCE_NAME = "koopa.core.data.test.PositionTest";
 
 	@Test
 	public void testPositionWithResourceName() {
-		Position p = new Position(resourceName, 11, 2, 7);
-		assertEquals(resourceName, p.getResourceName());
+		Position p = new Position(RESOURCE_NAME, 11, 2, 7);
+		assertEquals(RESOURCE_NAME, p.getResourceName());
 		assertEquals(11, p.getPositionInFile());
 		assertEquals(2, p.getLinenumber());
 		assertEquals(7, p.getPositionInLine());
@@ -30,9 +30,9 @@ public class PositionTest {
 
 	@Test
 	public void testOffsetPositionWithResourceName() {
-		Position p = new Position(resourceName, 11, 2, 7).offsetBy(17);
+		Position p = new Position(RESOURCE_NAME, 11, 2, 7).offsetBy(17);
 
-		assertEquals(resourceName, p.getResourceName());
+		assertEquals(RESOURCE_NAME, p.getResourceName());
 		assertEquals(28, p.getPositionInFile());
 		assertEquals(2, p.getLinenumber());
 		assertEquals(24, p.getPositionInLine());

@@ -44,7 +44,7 @@ public class Range {
 	 */
 	public int getLength() {
 		return end.getPositionInFile() - start.getPositionInFile() + 1;
-	};
+	}
 
 	@Override
 	public int hashCode() {

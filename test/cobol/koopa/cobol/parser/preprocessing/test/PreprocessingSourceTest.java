@@ -27,22 +27,19 @@ import koopa.core.util.test.FileBasedTest;
 public class PreprocessingSourceTest implements FileBasedTest {
 
 	private static final Charset TEST_FILES_CHARSET = testFilesCharset();
-	
+
 	private static final String INPUT_PREFIX = "<";
 	private static final String EXPECTED_PREFIX = ">";
 	private static final String LINE_SEPARATOR = System.lineSeparator();
+
+	private static final FilenameFilter FILTER = (dir, name) -> name.toLowerCase().endsWith(".ppsample");
 
 	@Override
 	public File[] getFiles() {
 		File folder = new File(
 				"test/cobol/koopa/cobol/parser/preprocessing/test/");
 
-		File[] sources = folder.listFiles((FilenameFilter) (dir, name) -> {
-			name = name.toLowerCase();
-			return name.endsWith(".ppsample");
-		});
-
-		return sources;
+		return folder.listFiles(FILTER);
 	}
 
 	private File file;

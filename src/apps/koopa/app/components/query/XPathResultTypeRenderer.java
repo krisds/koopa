@@ -11,13 +11,13 @@ public class XPathResultTypeRenderer extends DefaultTableCellRenderer implements
 
 	private static final long serialVersionUID = -4744958969024365852L;
 
-	private final static ImageIcon NODE = Icons
+	private static final ImageIcon NODE = Icons
             .getIcon("/koopa/app/resources/xpath-node.png");
 
-	private final static ImageIcon TOKEN = Icons
+	private static final ImageIcon TOKEN = Icons
             .getIcon("/koopa/app/resources/xpath-token.png");
 
-	private final static ImageIcon ATTRIBUTE = Icons
+	private static final ImageIcon ATTRIBUTE = Icons
             .getIcon("/koopa/app/resources/xpath-attribute.png");
 
 	@Override

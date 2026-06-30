@@ -118,8 +118,7 @@ public class CopybookPathsSelector extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				int[] selectedIndices = pathsList.getSelectedIndices();
 				for (int i = selectedIndices.length - 1; i >= 0; i--) {
-					configurablePaths.removeCopybookPath((File) model
-							.get(selectedIndices[i]));
+					configurablePaths.removeCopybookPath(model.get(selectedIndices[i]));
 					model.removeElementAt(selectedIndices[i]);
 				}
 			}

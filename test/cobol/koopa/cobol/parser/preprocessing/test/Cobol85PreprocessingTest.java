@@ -10,6 +10,8 @@ import koopa.cobol.projects.StandardCobolProject;
 
 public class Cobol85PreprocessingTest extends CobolParsingRegressionTest {
 
+	private static final FilenameFilter FILTER = (dir, name) -> name.toUpperCase().endsWith(".CBL");
+
 	public Cobol85PreprocessingTest() throws IOException {
 	}
 
@@ -17,13 +19,7 @@ public class Cobol85PreprocessingTest extends CobolParsingRegressionTest {
 	public File[] getFiles() {
 		final File folder = new File("testsuite/cobol85");
 
-		final File[] sources = folder
-				.listFiles((FilenameFilter) (dir, name) -> {
-					name = name.toUpperCase();
-					return name.endsWith(".CBL");
-				});
-
-		return sources;
+		return folder.listFiles(FILTER);
 	}
 
 	@Override

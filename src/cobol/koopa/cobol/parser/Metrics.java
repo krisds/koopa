@@ -59,17 +59,9 @@ public class Metrics {
 	
 	private static boolean isSignificantToken(Token token) {
 		// Ignoring everything that's not program text.
-		if (!token.hasTag(PROGRAM_TEXT_AREA))
-			return false;
-
 		// Ignore all comments within the program text.
-		if (token.hasTag(COMMENT))
-			return false;
-
 		// Ignoring whitespace.
-		if (token.hasTag(SEPARATOR) && token.getText().trim().isEmpty())
-			return false;
-		
-		return true;
+		return token.hasTag(PROGRAM_TEXT_AREA) && !token.hasTag(COMMENT) &&
+				!(token.hasTag(SEPARATOR) && token.getText().trim().isEmpty());
 	}
 }

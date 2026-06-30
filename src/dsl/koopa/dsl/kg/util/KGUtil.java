@@ -32,7 +32,7 @@ public final class KGUtil {
 	 * The name you pass along will be used as a reference name for its
 	 * contents.
 	 */
-	public static Tree getAST(String name, Reader reader) throws IOException {
+	public static Tree getAST(String name, Reader reader) {
 		final Source source = KGTokens.getNewSource(name, reader);
 
 		final KGGrammar kg = new KGGrammar();

@@ -34,7 +34,7 @@ public class TokenSeparator extends ChainingSource
 			return pendingTokens.removeFirst();
 
 		final Data d = source.next();
-		if (d == null || !(d instanceof Token))
+		if (!(d instanceof Token))
 			return d;
 
 		final Token t = (Token) d;

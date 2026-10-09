@@ -161,12 +161,23 @@ def selectStatement =
   end
 
   where def orderBy =
-      ORDER BY (unknown: --> nextBlockOrEnd)
+      ORDER BY
+      [ sortKey (',' sortKey)* ]
+      [ unknown: --> nextBlockOrEnd ]
+
+    # A sort key is a column or a select-list position, optionally with
+    # a direction; anything fancier ends the list and stays water.
+    where def sortKey =
+        ( columnReference | numericLiteral )
+        [ ascending: ASC | descending: DESC ]
+    end
   end
 
   where def fetchFirst =
-      FETCH FIRST (unknown: --> (ROW | ROWS | eof))
+      FETCH FIRST [rowCount] [unknown: --> (ROW | ROWS | eof)]
       (ROW | ROWS) ONLY
+
+    where def rowCount =  numericLiteral  end
   end
 
   where def updatability =

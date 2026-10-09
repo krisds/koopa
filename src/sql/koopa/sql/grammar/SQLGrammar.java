@@ -886,9 +886,22 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("ORDER"),
             keyword("BY"),
-            as("unknown",
-              skipto(
-                selectStatement$nextBlockOrEnd()
+            optional(
+              sequence(
+                selectStatement$orderBy$sortKey(),
+                star(
+                  sequence(
+                    literal(","),
+                    selectStatement$orderBy$sortKey()
+                  )
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  selectStatement$nextBlockOrEnd()
+                )
               )
             )
           )
@@ -896,6 +909,41 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$orderByParser;
+    }
+    
+    // ========================================================
+    // sortKey
+    // ........................................................
+    
+    private ParserCombinator selectStatement$orderBy$sortKeyParser = null;
+    
+    public final Start selectStatement$orderBy$sortKey = Start.on(getNamespace(), "sortKey");
+    
+    public ParserCombinator selectStatement$orderBy$sortKey() {
+      if (selectStatement$orderBy$sortKeyParser == null) {
+        FutureParser future = scoped("sortKey", PUBLIC, true);
+        selectStatement$orderBy$sortKeyParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              columnReference(),
+              numericLiteral()
+            ),
+            optional(
+              choice(
+                as("ascending",
+                  keyword("ASC")
+                ),
+                as("descending",
+                  keyword("DESC")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return selectStatement$orderBy$sortKeyParser;
     }
     
     // ========================================================
@@ -914,12 +962,17 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("FETCH"),
             keyword("FIRST"),
-            as("unknown",
-              skipto(
-                choice(
-                  keyword("ROW"),
-                  keyword("ROWS"),
-                  eof()
+            optional(
+              selectStatement$fetchFirst$rowCount()
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  choice(
+                    keyword("ROW"),
+                    keyword("ROWS"),
+                    eof()
+                  )
                 )
               )
             ),
@@ -933,6 +986,26 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$fetchFirstParser;
+    }
+    
+    // ========================================================
+    // rowCount
+    // ........................................................
+    
+    private ParserCombinator selectStatement$fetchFirst$rowCountParser = null;
+    
+    public final Start selectStatement$fetchFirst$rowCount = Start.on(getNamespace(), "rowCount");
+    
+    public ParserCombinator selectStatement$fetchFirst$rowCount() {
+      if (selectStatement$fetchFirst$rowCountParser == null) {
+        FutureParser future = scoped("rowCount", PUBLIC, true);
+        selectStatement$fetchFirst$rowCountParser = future;
+        future.setParser(
+          numericLiteral()
+        );
+      }
+    
+      return selectStatement$fetchFirst$rowCountParser;
     }
     
     // ========================================================

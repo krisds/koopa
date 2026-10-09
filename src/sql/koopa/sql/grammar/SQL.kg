@@ -127,9 +127,9 @@ def selectStatement =
       
     where private def sublist =
       # SELECT COUNT(MSS_MESSAGE_TYPE) AS NR_OF_RECORDS
-      ( aggregateFunction [unknown: _+]
-      | specialRegister   [unknown: _+]
-      | columnReference   [unknown: _+]
+      ( aggregateFunction    [unknown: _+]
+      | allColumns: '*'
+      | comparand            [unknown: _+]
       | unknown: _+
       ) %upto { ',' }
     end

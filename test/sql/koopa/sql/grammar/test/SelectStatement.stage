@@ -147,6 +147,15 @@ target selectStatement;
    WHERE MSS_MESSAGE_TYPE = 'NACK'
    WITH UR ]
 
+# Literals and host variables in the select list
++[ SELECT 'Y', 1, NAD_KEY_ID, :WS-DEFAULT-ID
+   FROM T305_NAME_ADDRESS
+   WHERE NAD_TABLE_NUMBER = 305 ]
+
+# Literal with a column alias
++[ SELECT 'FE' AS SRC_SYSTEM, ACCT_ID
+   FROM T100_ACCOUNT ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

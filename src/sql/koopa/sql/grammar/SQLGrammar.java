@@ -664,18 +664,11 @@ public class SQLGrammar extends SQLBaseGrammar {
                   )
                 )
               ),
-              sequence(
-                specialRegister(),
-                optional(
-                  as("unknown",
-                    plus(
-                      any()
-                    )
-                  )
-                )
+              as("allColumns",
+                literal("*")
               ),
               sequence(
-                columnReference(),
+                comparand(),
                 optional(
                   as("unknown",
                     plus(

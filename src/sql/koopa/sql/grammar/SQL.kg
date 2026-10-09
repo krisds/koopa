@@ -575,6 +575,9 @@ hiding def term =
       ) 
       ')'
 
+    | existsPredicate
+    | inPredicate
+    | nullPredicate
     | likePredicate
     | comparison
     | unknown: _*
@@ -593,7 +596,7 @@ def likePredicate =
   where def rowValuePredicand =
       (unknown: _*) %upto { [NOT] LIKE }
   end
-  
+
   where def pattern =
       ( stringLiteral
       | unknown: _*
@@ -605,6 +608,42 @@ def likePredicate =
   where def escape =
       ESCAPE (unknown: _*)
   end
+end
+
+
+## ############################################################################
+# IN / IS NULL / EXISTS predicates (top down)
+#
+# Note: BETWEEN is not modelled. Its AND collides with the conjunction
+# splitter (%notnested AND), which cuts the term before a BETWEEN
+# production could see it; both halves stay water.
+#
+# Note: for IN and EXISTS the parenthesised argument is kept as water, and
+# because that water is not itself balanced, a clause following the predicate at
+# the same AND / OR level is absorbed into it. The predicate keyword and (for IN)
+# the left comparand are still named.
+# This only sacrifices the split of a trailing clause
+## ############################################################################
+#
+# The argument is consumed as water rather than matched as an explicit
+# '(' ... ')', for the same reason comparison keeps its operands as water:
+# the enclosing search condition already balances parentheses, and the
+# trailing (unknown: _+) is bounded by the AND / OR split around the term.
+# Explicitly matching the parentheses here, or opening a nested balancing
+# region, disturbs that balancer and breaks the split that follows. So the
+# predicate keyword and its left comparand are named; the list or subquery
+# stays water.
+def inPredicate =
+    comparand [NOT] IN (unknown: _+)
+end
+
+def nullPredicate =
+    comparand IS [NOT] NULL
+end
+
+# The NOT of NOT EXISTS is taken by the enclosing negation.
+def existsPredicate =
+    EXISTS (unknown: _+)
 end
 
 

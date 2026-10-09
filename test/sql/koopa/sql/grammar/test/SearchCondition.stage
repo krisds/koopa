@@ -60,3 +60,39 @@ target searchCondition;
 
 +[ ( A OR B ) AND C ]
 +[ ( ( A ) ) ]
+
+# Predicates combined with comparisons across AND/OR. A trailing EXISTS or
+# IN parses; its parenthesised argument (and, as a known limitation, any
+# clause following it at the same level) stays water.
++[ PTY_AC_OPN_CLO_IN = 'O'
+   AND NOT EXISTS (SELECT 1 FROM T602_REL_FACILITY
+                     WHERE RFG_FAC_ID = RSG_FAC_ID
+                       AND RFG_EXP_DT < :WS-GMT-DATE) ]
+
++[ NAD_KEY_ID IN ('A', 'B') OR NAD_END_DT IS NULL ]
+
+# IS NULL (no parentheses) splits cleanly across OR.
++[ NAD_END_DT IS NULL OR NAD_KEY_ID = :WS-KEY-ID ]
+
+
+target inPredicate;
+
+# The predicate keyword and left comparand are named; the argument is water.
+# These assert the keyword is reached (comparand then IN consumed).
++[ NAD_KEY_ID IN ('A', 'B', 'C') ]
++[ A.REL_LEVEL NOT IN (:WS-LVL-1, :WS-LVL-2) ]
++[ PTY_ID IN (SELECT REL_OBJECT FROM T310_RELATION) ]
+
+
+target nullPredicate;
+
++[ NAD_END_DT IS NULL ]
++[ A.NAD_END_DT IS NOT NULL ]
+
+-[ NAD_END_DT IS DISTINCT ]
+
+
+target existsPredicate;
+
++[ EXISTS (SELECT 1 FROM T605_REL_DROPPED
+             WHERE RDF_FE = RSG_FE AND RDF_FAC_ID = RSG_FAC_ID) ]

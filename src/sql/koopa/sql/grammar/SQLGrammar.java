@@ -2878,6 +2878,9 @@ public class SQLGrammar extends SQLBaseGrammar {
               ),
               literal(")")
             ),
+            existsPredicate(),
+            inPredicate(),
+            nullPredicate(),
             likePredicate(),
             comparison(),
             as("unknown",
@@ -3024,6 +3027,91 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return likePredicate$escapeParser;
+    }
+    
+    // ========================================================
+    // inPredicate
+    // ........................................................
+    
+    private ParserCombinator inPredicateParser = null;
+    
+    public final Start inPredicate = Start.on(getNamespace(), "inPredicate");
+    
+    public ParserCombinator inPredicate() {
+      if (inPredicateParser == null) {
+        FutureParser future = scoped("inPredicate", PUBLIC, true);
+        inPredicateParser = future;
+        future.setParser(
+          sequence(
+            comparand(),
+            optional(
+              keyword("NOT")
+            ),
+            keyword("IN"),
+            as("unknown",
+              plus(
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return inPredicateParser;
+    }
+    
+    // ========================================================
+    // nullPredicate
+    // ........................................................
+    
+    private ParserCombinator nullPredicateParser = null;
+    
+    public final Start nullPredicate = Start.on(getNamespace(), "nullPredicate");
+    
+    public ParserCombinator nullPredicate() {
+      if (nullPredicateParser == null) {
+        FutureParser future = scoped("nullPredicate", PUBLIC, true);
+        nullPredicateParser = future;
+        future.setParser(
+          sequence(
+            comparand(),
+            keyword("IS"),
+            optional(
+              keyword("NOT")
+            ),
+            keyword("NULL")
+          )
+        );
+      }
+    
+      return nullPredicateParser;
+    }
+    
+    // ========================================================
+    // existsPredicate
+    // ........................................................
+    
+    private ParserCombinator existsPredicateParser = null;
+    
+    public final Start existsPredicate = Start.on(getNamespace(), "existsPredicate");
+    
+    public ParserCombinator existsPredicate() {
+      if (existsPredicateParser == null) {
+        FutureParser future = scoped("existsPredicate", PUBLIC, true);
+        existsPredicateParser = future;
+        future.setParser(
+          sequence(
+            keyword("EXISTS"),
+            as("unknown",
+              plus(
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return existsPredicateParser;
     }
     
     // ========================================================

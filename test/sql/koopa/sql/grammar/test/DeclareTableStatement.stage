@@ -6,5 +6,9 @@ target declareTableStatement;
 # Minimal
 +[ DECLARE T_REGION TABLE ]
 
+# Schema-qualified and delimited table names
++[ DECLARE GFCSSPC5.T001_TRANSACTION TABLE ( TRN_PROC_DAY SMALLINT NOT NULL ) ]
++[ DECLARE "CIF#DB51".T_CASH_TRANSFER_SYS TABLE ( CTS_FEN_ID CHAR(2) NOT NULL ) ]
+
 # Should reject: SESSION-qualified (that's declareSessionStatement)
 -[ DECLARE SESSION . FOO TABLE ]

@@ -121,3 +121,22 @@ target selectStatement;
 +[ SELECT A.NAD_KEY_ID INTO ] HostParameter:hostParameterSpecification [
    FROM T305_NAME_ADDRESS A
    WHERE A.NAD_TABLE_NUMBER = 42 ]
+
+# Host variables with digits in hyphenated names
++[ SELECT REG_DB2_QUAL, REG_DB_NAME
+   INTO :REG-DB2-QUAL, :REG-DB-NAME
+   FROM T_REGION
+   WHERE REG_SYSTEM = 'GFC' AND REG_PRIME = 'Y' ]
+
+# Qualified host variables in INTO
++[ SELECT JURIS_ID
+   INTO :JURISDICTION-DATA.JURIS-ID
+   FROM JURISDICTION
+   WHERE JURIS_TYPE_CODE = 1 ]
+
+# Aggregate with a column alias, null-indicator host variable, WITH UR
++[ SELECT COUNT(MSS_MESSAGE_TYPE) AS NR_OF_RECORDS
+   INTO :WS-NEW-NACK-ROW-CNT :WS-NEW-NACK-ROW-NULLIF
+   FROM T802_MSG_STORE
+   WHERE MSS_MESSAGE_TYPE = 'NACK'
+   WITH UR ]

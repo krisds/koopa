@@ -35,6 +35,10 @@ def sqlStatement =
     | executeImmediateStatement
     | executeStatement
     | describeStatement
+    | callStatement
+    | associateLocatorsStatement
+    | allocateCursorStatement
+    | withSelectStatement
     
     | alterStatement
     | createStatement
@@ -59,9 +63,14 @@ def declareGlobalTempTableStatement =
 end
 
 # The DECLARE TABLE statement (DCLGEN documentation) is Db2 embedded SQL.
+# The table name may be schema-qualified and/or delimited
+# e.g. DECLARE "SCHEMA".T_NAME TABLE.
 def declareTableStatement =                          # [IBM DB2 SQL Statements]
-    DECLARE identifier TABLE
+    DECLARE (%not sessionQualifier) tableName TABLE
     [unknown: --> eof]
+
+  # SESSION-qualified declarations belong to declareSessionStatement.
+  where private def sessionQualifier =  SESSION '.'  end
 end
 
 def valuesIntoStatement =
@@ -114,7 +123,10 @@ def selectStatement =
       (sublist (',' sublist)*) %upto { (INTO | FROM) }
       
     where private def sublist =
-      ( aggregateFunction
+      # An aggregate may carry a column alias ([AS] name) or other
+      # trailing decoration; keep it as water so the list and the
+      # following INTO/FROM still engage.
+      ( aggregateFunction [unknown: _+]
       | unknown: _+
       ) %upto { ',' }
     end
@@ -291,6 +303,32 @@ def executeStatement =
   where def executeUsing =
       USING (unknown: --> eof)
   end
+end
+
+# Stored procedure call: May be named directly or through a host variable.
+def callStatement =                                  # [IBM DB2 SQL Statements]
+    CALL ( hostParameterSpecification | procedureName )
+    [unknown: --> eof]
+
+  where def procedureName =  tableName  end
+end
+
+# Db2 result-set processing Asscociate:
+# e.g. ASSOCIATE [RESULT SET] LOCATOR(S) (...) WITH PROCEDURE ...
+def associateLocatorsStatement =                     # [IBM DB2 SQL Statements]
+    ASSOCIATE [RESULT SET] (LOCATOR | LOCATORS)
+    [unknown: --> eof]
+end
+
+# Db2 result-set processing Allocate:
+# eg ALLOCATE c CURSOR FOR RESULT SET :rs
+def allocateCursorStatement =                        # [IBM DB2 SQL Statements]
+    ALLOCATE cursorName CURSOR
+    [unknown: --> eof]
+end
+
+def withSelectStatement =
+    WITH (unknown: --> eof)
 end
 
 def describeStatement =
@@ -588,7 +626,27 @@ def hostParameterSpecification =
   end
 end
 
-def hostParameterName =  ':' ++ identifier  end
+# Glue a full COBOL word back together!
+# A host parameter name may contain hyphens and digits, which arrive as separate fragments.
+# glue a full COBOL word back together. May be qualified, as in :STRUCT.FIELD.
+def hostParameterName =  ':' ++ hostIdentifier [++ (('.' ++ hostIdentifier)+)]
+
+  where hiding def hostIdentifier =
+      identifier: ( delimitedIdentifier
+                  | regularIdentifier: cobolWord
+                  )
+  end
+end
+
+private def cobolWord =
+    (@WORD _) ++ (
+      ( @NUMBER _
+      | @WORD _
+      | '_'
+      | '-'
+      )*
+    )
+end
 
 
 ## ############################################################################

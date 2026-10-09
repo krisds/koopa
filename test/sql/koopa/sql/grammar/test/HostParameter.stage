@@ -5,6 +5,16 @@ target hostParameterName;
 +[ :WS-12345 ]
 +[ :"ws count" ]
 
+# Digits inside a hyphenated name split the word
++[ :REG-DB2-QUAL ]
++[ :T200-BUS-DT ]
++[ :WS-CIFSP015 ]
++[ :CIFC015-RESP-RS1 ]
+
+# Qualified host variable (structure.field)
++[ :JURISDICTION-DATA.JURIS-ID ]
++[ :FCC904.FE-FX-CONV-DT ]
+
 -[ COBOL ]
 -[ : COBOL ]
 

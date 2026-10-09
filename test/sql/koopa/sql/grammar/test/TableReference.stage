@@ -42,3 +42,18 @@ target tableReferenceList;
 # Unaliased joins must keep working.
 +[ T305_NAME_ADDRESS JOIN T310_RELATION ON REL_OBJECT = NAD_KEY_ID ]
 +[ SYSIBM.SYSDUMMY1 CROSS JOIN ACCOUNTS ]
+
+# ON predicates parse as search conditions; a partially recognised
+# condition must never stop the next join from engaging.
++[ T305_NAME_ADDRESS A
+     JOIN T310_RELATION X
+       ON X.REL_OBJECT = A.NAD_KEY_ID
+      AND X.REL_LEVEL = 'C'
+     LEFT OUTER JOIN T320_STATUS S
+       ON S.STS_ID = X.REL_STS_ID ]
+
++[ T100_ACCOUNT A
+     JOIN T200_CUSTOMER B
+       ON SUBSTR(B.CUST_KEY, 1, 5) = A.ACCT_PFX
+     JOIN T300_BRANCH C
+       ON C.BR_ID = B.CUST_BR_ID ]

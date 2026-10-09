@@ -756,7 +756,17 @@ def tableReferenceList =
   # The ON / USING predicate of a join is skipped as water, bounded before the
   # next join, the next table-list separator, or the end of the FROM clause.
   where private def joinCondition =
-      ( ON    (unknown: --> afterJoinCondition)
+      ( ON ( %balancing
+                 <{ '(' } { ')' }>
+                 <{ '[' } { ']' }>
+                 <{ '{' } { '}' }>
+                 <{ leftBracketTrigraph } { rightBracketTrigraph }>
+               ( ( ( searchCondition
+                   | unknown: _*
+                   )
+                   [unknown: _*]
+                 ) %upto { %notnested afterJoinCondition } )
+           )
       | USING (unknown: --> afterJoinCondition)
       )
   end

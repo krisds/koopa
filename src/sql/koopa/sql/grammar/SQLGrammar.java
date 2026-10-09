@@ -3807,9 +3807,45 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             sequence(
               keyword("ON"),
-              as("unknown",
-                skipto(
-                  tableReferenceList$afterJoinCondition()
+              balancing(
+                // Closure:
+                literal("("),
+                // Closure:
+                literal(")"),
+                // Closure:
+                literal("["),
+                // Closure:
+                literal("]"),
+                // Closure:
+                literal("{"),
+                // Closure:
+                literal("}"),
+                // Closure:
+                leftBracketTrigraph(),
+                // Closure:
+                rightBracketTrigraph(),
+                upto(
+                  sequence(
+                    choice(
+                      searchCondition(),
+                      as("unknown",
+                        star(
+                          any()
+                        )
+                      )
+                    ),
+                    optional(
+                      as("unknown",
+                        star(
+                          any()
+                        )
+                      )
+                    )
+                  ),
+                  // Closure:
+                  notNested(
+                    tableReferenceList$afterJoinCondition()
+                  )
                 )
               )
             ),

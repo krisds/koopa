@@ -1214,6 +1214,12 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("INTO"),
             tableName(),
             optional(
+              insertStatement$insertColumns()
+            ),
+            optional(
+              insertStatement$insertSource()
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -1225,6 +1231,114 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return insertStatementParser;
+    }
+    
+    // ========================================================
+    // insertColumns
+    // ........................................................
+    
+    private ParserCombinator insertStatement$insertColumnsParser = null;
+    
+    public final Start insertStatement$insertColumns = Start.on(getNamespace(), "insertColumns");
+    
+    public ParserCombinator insertStatement$insertColumns() {
+      if (insertStatement$insertColumnsParser == null) {
+        FutureParser future = scoped("insertColumns", PUBLIC, true);
+        insertStatement$insertColumnsParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            columnReference(),
+            star(
+              sequence(
+                literal(","),
+                columnReference()
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return insertStatement$insertColumnsParser;
+    }
+    
+    // ========================================================
+    // insertSource
+    // ........................................................
+    
+    private ParserCombinator insertStatement$insertSourceParser = null;
+    
+    public final Start insertStatement$insertSource = Start.on(getNamespace(), "insertSource");
+    
+    public ParserCombinator insertStatement$insertSource() {
+      if (insertStatement$insertSourceParser == null) {
+        FutureParser future = scoped("insertSource", PUBLIC, true);
+        insertStatement$insertSourceParser = future;
+        future.setParser(
+          choice(
+            insertStatement$insertValues(),
+            selectStatement()
+          )
+        );
+      }
+    
+      return insertStatement$insertSourceParser;
+    }
+    
+    // ========================================================
+    // insertValues
+    // ........................................................
+    
+    private ParserCombinator insertStatement$insertValuesParser = null;
+    
+    public final Start insertStatement$insertValues = Start.on(getNamespace(), "insertValues");
+    
+    public ParserCombinator insertStatement$insertValues() {
+      if (insertStatement$insertValuesParser == null) {
+        FutureParser future = scoped("insertValues", PUBLIC, true);
+        insertStatement$insertValuesParser = future;
+        future.setParser(
+          sequence(
+            keyword("VALUES"),
+            literal("("),
+            insertStatement$insertValues$valueItem(),
+            star(
+              sequence(
+                literal(","),
+                insertStatement$insertValues$valueItem()
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return insertStatement$insertValuesParser;
+    }
+    
+    // ========================================================
+    // valueItem
+    // ........................................................
+    
+    private ParserCombinator insertStatement$insertValues$valueItemParser = null;
+    
+    public final Start insertStatement$insertValues$valueItem = Start.on(getNamespace(), "valueItem");
+    
+    public ParserCombinator insertStatement$insertValues$valueItem() {
+      if (insertStatement$insertValues$valueItemParser == null) {
+        FutureParser future = scoped("valueItem", HIDING, true);
+        insertStatement$insertValues$valueItemParser = future;
+        future.setParser(
+          choice(
+            comparand(),
+            keyword("NULL"),
+            keyword("DEFAULT")
+          )
+        );
+      }
+    
+      return insertStatement$insertValues$valueItemParser;
     }
     
     // ========================================================

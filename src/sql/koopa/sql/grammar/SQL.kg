@@ -211,7 +211,30 @@ end
 
 def insertStatement =
     INSERT INTO tableName
+    [ insertColumns ]
+    [ insertSource ]
     [unknown: --> eof]
+
+  # Both lists are all-or-nothing: they only match when every element is
+  # recognised through the closing parenthesis, so a partial match can
+  # never strand the statement - anything else stays trailing water.
+  where def insertColumns =
+      '(' columnReference (',' columnReference)* ')'
+  end
+
+  where def insertSource =
+      ( insertValues
+      | selectStatement
+      )
+  end
+
+  where def insertValues =
+      VALUES '(' valueItem (',' valueItem)* ')'
+
+    where hiding def valueItem =
+        ( comparand | NULL | DEFAULT )
+    end
+  end
 end
 
 def updateStatement =

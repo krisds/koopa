@@ -1,0 +1,20 @@
+target insertStatement;
+
++[ INSERT INTO STUDENTS ]
+
++[ INSERT INTO T055_TR_TRK_SUM
+     ( TT_MM, TT_TYP, TT_FNEN )
+   VALUES ( :WS-MM, :WS-TYP, 'FE' ) ]
+
++[ INSERT INTO PROD.T100_ACCOUNT
+     ( ACCT_ID, ACCT_STATUS, ACCT_OPEN_TS, ACCT_NOTE )
+   VALUES ( :WS-ACCT-ID :WS-ACCT-ID-IND, 'A', CURRENT TIMESTAMP, NULL ) ]
+
+# INSERT from a query
++[ INSERT INTO T056_STR_TR_SUM ( STR_SRC_ID, STR_BC )
+   SELECT TT_SRC_ID, TT_BC FROM T055_TR_TRK_SUM
+   WHERE TT_FNEN = :WS-FE ]
+
+# Complex values fall back to water but the statement still parses.
++[ INSERT INTO T100_ACCOUNT ( ACCT_ID, ACCT_HASH )
+   VALUES ( :WS-ACCT-ID, HEX(RAND()) ) ]

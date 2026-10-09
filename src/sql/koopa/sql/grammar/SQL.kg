@@ -123,10 +123,10 @@ def selectStatement =
       (sublist (',' sublist)*) %upto { (INTO | FROM) }
       
     where private def sublist =
-      # An aggregate may carry a column alias ([AS] name) or other
-      # trailing decoration; keep it as water so the list and the
-      # following INTO/FROM still engage.
+      # SELECT COUNT(MSS_MESSAGE_TYPE) AS NR_OF_RECORDS
       ( aggregateFunction [unknown: _+]
+      | specialRegister   [unknown: _+]
+      | columnReference   [unknown: _+]
       | unknown: _+
       ) %upto { ',' }
     end
@@ -725,6 +725,25 @@ def tableName =
 end
 
 def targetTable =  ( ONLY '(' tableName ')' | tableName )   end
+
+# A (possibly qualified) column reference. Guarded so that a scalar
+# function name (an identifier immediately followed by an opening
+# parenthesis) or a T.* wildcard is not mistaken for a column.
+def columnReference =
+    ( tableQualifier . identifier (%not '(')
+    | identifier (%not ('.' | '('))
+    )
+
+  where def tableQualifier =  identifier  end
+end
+
+# Db2 special registers usable wherever an expression is expected.
+def specialRegister =                                # [IBM DB2 SQL Statements]
+    ( CURRENT ( DATE | TIME | TIMESTAMP | SERVER | SQLID | SCHEMA
+              | PATH | TIMEZONE | DEGREE | MEMBER )
+    | USER
+    )
+end
 
 
 def stringLiteral =  str  end

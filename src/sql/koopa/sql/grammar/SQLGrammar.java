@@ -650,6 +650,26 @@ public class SQLGrammar extends SQLBaseGrammar {
                   )
                 )
               ),
+              sequence(
+                specialRegister(),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
+              sequence(
+                columnReference(),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
               as("unknown",
                 plus(
                   any()
@@ -3730,6 +3750,101 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return targetTableParser;
+    }
+    
+    // ========================================================
+    // columnReference
+    // ........................................................
+    
+    private ParserCombinator columnReferenceParser = null;
+    
+    public final Start columnReference = Start.on(getNamespace(), "columnReference");
+    
+    public ParserCombinator columnReference() {
+      if (columnReferenceParser == null) {
+        FutureParser future = scoped("columnReference", PUBLIC, true);
+        columnReferenceParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              columnReference$tableQualifier(),
+              literal("."),
+              identifier(),
+              not(
+                literal("(")
+              )
+            ),
+            sequence(
+              identifier(),
+              not(
+                choice(
+                  literal("."),
+                  literal("(")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return columnReferenceParser;
+    }
+    
+    // ========================================================
+    // tableQualifier
+    // ........................................................
+    
+    private ParserCombinator columnReference$tableQualifierParser = null;
+    
+    public final Start columnReference$tableQualifier = Start.on(getNamespace(), "tableQualifier");
+    
+    public ParserCombinator columnReference$tableQualifier() {
+      if (columnReference$tableQualifierParser == null) {
+        FutureParser future = scoped("tableQualifier", PUBLIC, true);
+        columnReference$tableQualifierParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return columnReference$tableQualifierParser;
+    }
+    
+    // ========================================================
+    // specialRegister
+    // ........................................................
+    
+    private ParserCombinator specialRegisterParser = null;
+    
+    public final Start specialRegister = Start.on(getNamespace(), "specialRegister");
+    
+    public ParserCombinator specialRegister() {
+      if (specialRegisterParser == null) {
+        FutureParser future = scoped("specialRegister", PUBLIC, true);
+        specialRegisterParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              keyword("CURRENT"),
+              choice(
+                keyword("DATE"),
+                keyword("TIME"),
+                keyword("TIMESTAMP"),
+                keyword("SERVER"),
+                keyword("SQLID"),
+                keyword("SCHEMA"),
+                keyword("PATH"),
+                keyword("TIMEZONE"),
+                keyword("DEGREE"),
+                keyword("MEMBER")
+              )
+            ),
+            keyword("USER")
+          )
+        );
+      }
+    
+      return specialRegisterParser;
     }
     
     // ========================================================

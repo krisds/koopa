@@ -1276,11 +1276,24 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("SET"),
-            as("unknown",
-              skipto(
-                choice(
-                  keyword("WHERE"),
-                  eof()
+            optional(
+              sequence(
+                updateStatement$set$assignment(),
+                star(
+                  sequence(
+                    literal(","),
+                    updateStatement$set$assignment()
+                  )
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  choice(
+                    keyword("WHERE"),
+                    eof()
+                  )
                 )
               )
             )
@@ -1289,6 +1302,53 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return updateStatement$setParser;
+    }
+    
+    // ========================================================
+    // assignment
+    // ........................................................
+    
+    private ParserCombinator updateStatement$set$assignmentParser = null;
+    
+    public final Start updateStatement$set$assignment = Start.on(getNamespace(), "assignment");
+    
+    public ParserCombinator updateStatement$set$assignment() {
+      if (updateStatement$set$assignmentParser == null) {
+        FutureParser future = scoped("assignment", PUBLIC, true);
+        updateStatement$set$assignmentParser = future;
+        future.setParser(
+          upto(
+            sequence(
+              columnReference(),
+              literal("="),
+              choice(
+                sequence(
+                  comparand(),
+                  optional(
+                    as("unknown",
+                      plus(
+                        any()
+                      )
+                    )
+                  )
+                ),
+                as("unknown",
+                  plus(
+                    any()
+                  )
+                )
+              )
+            ),
+            // Closure:
+            choice(
+              literal(","),
+              keyword("WHERE")
+            )
+          )
+        );
+      }
+    
+      return updateStatement$set$assignmentParser;
     }
     
     // ========================================================
@@ -2875,7 +2935,7 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             choice(
               sequence(
-                comparison$comparand(),
+                comparand(),
                 optional(
                   as("unknown",
                     skipto(
@@ -2893,7 +2953,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             comparisonOp(),
             choice(
               sequence(
-                comparison$comparand(),
+                comparand(),
                 optional(
                   as("unknown",
                     plus(
@@ -2919,14 +2979,14 @@ public class SQLGrammar extends SQLBaseGrammar {
     // comparand
     // ........................................................
     
-    private ParserCombinator comparison$comparandParser = null;
+    private ParserCombinator comparandParser = null;
     
-    public final Start comparison$comparand = Start.on(getNamespace(), "comparand");
+    public final Start comparand = Start.on(getNamespace(), "comparand");
     
-    public ParserCombinator comparison$comparand() {
-      if (comparison$comparandParser == null) {
+    public ParserCombinator comparand() {
+      if (comparandParser == null) {
         FutureParser future = scoped("comparand", HIDING, true);
-        comparison$comparandParser = future;
+        comparandParser = future;
         future.setParser(
           choice(
             specialRegister(),
@@ -2938,7 +2998,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return comparison$comparandParser;
+      return comparandParser;
     }
     
     // ========================================================

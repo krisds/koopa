@@ -7,3 +7,15 @@ target updateStatement;
 +[ UPDATE STUDENT
      SET SCORE = 'A'
      WHERE SID = 42 ]
+
++[ UPDATE T305_NAME_ADDRESS
+     SET NAD_STATUS = :WS-STATUS,
+         NAD_UPD_TS = CURRENT TIMESTAMP,
+         NAD_COUNT  = 42
+     WHERE NAD_KEY_ID = :WS-KEY-ID ]
+
+# Complex right-hand sides keep parsing with the remainder as water.
++[ UPDATE T305_NAME_ADDRESS
+     SET NAD_NAME = SUBSTR(:WS-NAME, 1, 30),
+         NAD_FLAG = 'Y'
+     WHERE NAD_KEY_ID = :WS-KEY-ID ]

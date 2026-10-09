@@ -220,7 +220,22 @@ def updateStatement =
     [`where]
     [unknown: --> eof]
 
-  where def set =  SET (unknown: --> (WHERE | eof))  end
+  where def set =
+      SET
+      [ assignment (',' assignment)* ]
+      [ unknown: --> (WHERE | eof) ]
+
+    # column = simple value; a complex right-hand side keeps its
+    # recognised prefix and falls back to water, and an unrecognised
+    # assignment ends the list with the remainder as water.
+    where def assignment =
+        ( columnReference '='
+          ( comparand [unknown: _+]
+          | unknown: _+
+          )
+        ) %upto { (',' | WHERE) }
+    end
+  end
 
   where def `where =
      WHERE
@@ -584,15 +599,17 @@ def comparison =
     ( comparand [unknown: _+]
     | unknown: _+
     )
+end
 
-  where hiding def comparand =
-      ( specialRegister
-      | hostParameterSpecification
-      | stringLiteral
-      | numericLiteral
-      | columnReference
-      )
-  end
+# The simple operands recognised inside comparisons, SET assignments and
+# VALUES lists. Hiding: only the matched child surfaces.
+hiding def comparand =
+    ( specialRegister
+    | hostParameterSpecification
+    | stringLiteral
+    | numericLiteral
+    | columnReference
+    )
 end
 
 def comparisonOp =

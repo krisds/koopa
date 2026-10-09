@@ -115,7 +115,10 @@ def selectStatement =
     [having]          [ unknown: --> nextBlockOrEnd ]
     [orderBy]         [ unknown: --> nextBlockOrEnd ]
     [fetchFirst]      [ unknown: --> nextBlockOrEnd ]
-    [updatability]    [ unknown: --> eof ]
+    ( ( updatability | isolation | optimizeFor | queryno )
+      [ unknown: --> nextBlockOrEnd ]
+    )*
+    [ unknown: --> eof ]
 
   where def setQuantifier =  ( distinct: DISTINCT | all: ALL )  end
   
@@ -187,9 +190,22 @@ def selectStatement =
           )
   end
 
+  # Db2 allows these after the fetch clause in any order.
+  where def isolation =                              # [IBM DB2 SQL Statements]
+      WITH ( ur: UR | cs: CS | rs: RS | rr: RR )
+  end
+
+  where def optimizeFor =                            # [IBM DB2 SQL Statements]
+      OPTIMIZE FOR numericLiteral ( ROW | ROWS )
+  end
+
+  where def queryno =                                # [IBM DB2 SQL Statements]
+      QUERYNO numericLiteral
+  end
+
   where private def nextBlockOrEnd =
       ( FROM | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST | WINDOW
-      | FOR | WITH | eof )
+      | FOR | WITH | OPTIMIZE | QUERYNO | eof )
   end 
 end
 
@@ -709,7 +725,7 @@ def tableReferenceList =
       ( ','
       | INNER | LEFT | RIGHT | FULL | CROSS | JOIN
       | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST | WINDOW
-      | FOR | WITH | eof )
+      | FOR | WITH | OPTIMIZE | QUERYNO | eof )
   end
 end
 

@@ -546,8 +546,22 @@ public class SQLGrammar extends SQLBaseGrammar {
                 )
               )
             ),
-            optional(
-              selectStatement$updatability()
+            star(
+              sequence(
+                choice(
+                  selectStatement$updatability(),
+                  selectStatement$isolation(),
+                  selectStatement$optimizeFor(),
+                  selectStatement$queryno()
+                ),
+                optional(
+                  as("unknown",
+                    skipto(
+                      selectStatement$nextBlockOrEnd()
+                    )
+                  )
+                )
+              )
             ),
             optional(
               as("unknown",
@@ -1054,6 +1068,93 @@ public class SQLGrammar extends SQLBaseGrammar {
     }
     
     // ========================================================
+    // isolation
+    // ........................................................
+    
+    private ParserCombinator selectStatement$isolationParser = null;
+    
+    public final Start selectStatement$isolation = Start.on(getNamespace(), "isolation");
+    
+    public ParserCombinator selectStatement$isolation() {
+      if (selectStatement$isolationParser == null) {
+        FutureParser future = scoped("isolation", PUBLIC, true);
+        selectStatement$isolationParser = future;
+        future.setParser(
+          sequence(
+            keyword("WITH"),
+            choice(
+              as("ur",
+                keyword("UR")
+              ),
+              as("cs",
+                keyword("CS")
+              ),
+              as("rs",
+                keyword("RS")
+              ),
+              as("rr",
+                keyword("RR")
+              )
+            )
+          )
+        );
+      }
+    
+      return selectStatement$isolationParser;
+    }
+    
+    // ========================================================
+    // optimizeFor
+    // ........................................................
+    
+    private ParserCombinator selectStatement$optimizeForParser = null;
+    
+    public final Start selectStatement$optimizeFor = Start.on(getNamespace(), "optimizeFor");
+    
+    public ParserCombinator selectStatement$optimizeFor() {
+      if (selectStatement$optimizeForParser == null) {
+        FutureParser future = scoped("optimizeFor", PUBLIC, true);
+        selectStatement$optimizeForParser = future;
+        future.setParser(
+          sequence(
+            keyword("OPTIMIZE"),
+            keyword("FOR"),
+            numericLiteral(),
+            choice(
+              keyword("ROW"),
+              keyword("ROWS")
+            )
+          )
+        );
+      }
+    
+      return selectStatement$optimizeForParser;
+    }
+    
+    // ========================================================
+    // queryno
+    // ........................................................
+    
+    private ParserCombinator selectStatement$querynoParser = null;
+    
+    public final Start selectStatement$queryno = Start.on(getNamespace(), "queryno");
+    
+    public ParserCombinator selectStatement$queryno() {
+      if (selectStatement$querynoParser == null) {
+        FutureParser future = scoped("queryno", PUBLIC, true);
+        selectStatement$querynoParser = future;
+        future.setParser(
+          sequence(
+            keyword("QUERYNO"),
+            numericLiteral()
+          )
+        );
+      }
+    
+      return selectStatement$querynoParser;
+    }
+    
+    // ========================================================
     // nextBlockOrEnd
     // ........................................................
     
@@ -1085,6 +1186,8 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("WINDOW"),
             keyword("FOR"),
             keyword("WITH"),
+            keyword("OPTIMIZE"),
+            keyword("QUERYNO"),
             eof()
           )
         );
@@ -3596,6 +3699,8 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("WINDOW"),
             keyword("FOR"),
             keyword("WITH"),
+            keyword("OPTIMIZE"),
+            keyword("QUERYNO"),
             eof()
           )
         );

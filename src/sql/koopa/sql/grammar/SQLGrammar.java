@@ -2697,15 +2697,39 @@ public class SQLGrammar extends SQLBaseGrammar {
         comparisonParser = future;
         future.setParser(
           sequence(
-            as("unknown",
-              skipto(
-                comparisonOp()
+            choice(
+              sequence(
+                comparison$comparand(),
+                optional(
+                  as("unknown",
+                    skipto(
+                      comparisonOp()
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                skipto(
+                  comparisonOp()
+                )
               )
             ),
             comparisonOp(),
-            as("unknown",
-              plus(
-                any()
+            choice(
+              sequence(
+                comparison$comparand(),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                plus(
+                  any()
+                )
               )
             )
           )
@@ -2713,6 +2737,32 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return comparisonParser;
+    }
+    
+    // ========================================================
+    // comparand
+    // ........................................................
+    
+    private ParserCombinator comparison$comparandParser = null;
+    
+    public final Start comparison$comparand = Start.on(getNamespace(), "comparand");
+    
+    public ParserCombinator comparison$comparand() {
+      if (comparison$comparandParser == null) {
+        FutureParser future = scoped("comparand", HIDING, true);
+        comparison$comparandParser = future;
+        future.setParser(
+          choice(
+            specialRegister(),
+            hostParameterSpecification(),
+            stringLiteral(),
+            numericLiteral(),
+            columnReference()
+          )
+        );
+      }
+    
+      return comparison$comparandParser;
     }
     
     // ========================================================
@@ -3865,6 +3915,44 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return stringLiteralParser;
+    }
+    
+    // ========================================================
+    // numericLiteral
+    // ........................................................
+    
+    private ParserCombinator numericLiteralParser = null;
+    
+    public final Start numericLiteral = Start.on(getNamespace(), "numericLiteral");
+    
+    public ParserCombinator numericLiteral() {
+      if (numericLiteralParser == null) {
+        FutureParser future = scoped("numericLiteral", PUBLIC, true);
+        numericLiteralParser = future;
+        future.setParser(
+          sequence(
+            sequence(
+              tagged(NUMBER),
+              any()
+            ),
+            optional(
+              opt(NOSKIP,
+                sequence(
+                  literal("."),
+                  opt(NOSKIP,
+                    sequence(
+                      tagged(NUMBER),
+                      any()
+                    )
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return numericLiteralParser;
     }
     
     // ========================================================

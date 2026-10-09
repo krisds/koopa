@@ -550,9 +550,22 @@ end
 # This will split the input into two parts, separated by a comparison operator.
 
 def comparison =
-    (unknown: --> comparisonOp)
+    ( comparand [unknown: --> comparisonOp]
+    | unknown: --> comparisonOp
+    )
     comparisonOp
-    (unknown: _+)
+    ( comparand [unknown: _+]
+    | unknown: _+
+    )
+
+  where hiding def comparand =
+      ( specialRegister
+      | hostParameterSpecification
+      | stringLiteral
+      | numericLiteral
+      | columnReference
+      )
+  end
 end
 
 def comparisonOp =
@@ -747,6 +760,10 @@ end
 
 
 def stringLiteral =  str  end
+
+def numericLiteral =
+    (@NUMBER _) [++ ('.' ++ (@NUMBER _))]
+end
 
 private def str =
     (@STRING _)

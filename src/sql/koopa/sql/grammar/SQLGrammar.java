@@ -3205,11 +3205,86 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("tableReference", PUBLIC, true);
         tableReferenceParser = future;
         future.setParser(
-          tableName()
+          sequence(
+            tableName(),
+            optional(
+              sequence(
+                optional(
+                  keyword("AS")
+                ),
+                not(
+                  tableReference$reservedAfterTableReference()
+                ),
+                tableReference$correlationName()
+              )
+            )
+          )
         );
       }
     
       return tableReferenceParser;
+    }
+    
+    // ========================================================
+    // correlationName
+    // ........................................................
+    
+    private ParserCombinator tableReference$correlationNameParser = null;
+    
+    public final Start tableReference$correlationName = Start.on(getNamespace(), "correlationName");
+    
+    public ParserCombinator tableReference$correlationName() {
+      if (tableReference$correlationNameParser == null) {
+        FutureParser future = scoped("correlationName", PUBLIC, true);
+        tableReference$correlationNameParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return tableReference$correlationNameParser;
+    }
+    
+    // ========================================================
+    // reservedAfterTableReference
+    // ........................................................
+    
+    private ParserCombinator tableReference$reservedAfterTableReferenceParser = null;
+    
+    protected final Start tableReference$reservedAfterTableReference = Start.on(getNamespace(), "reservedAfterTableReference");
+    
+    protected ParserCombinator tableReference$reservedAfterTableReference() {
+      if (tableReference$reservedAfterTableReferenceParser == null) {
+        FutureParser future = scoped("reservedAfterTableReference", PRIVATE, true);
+        tableReference$reservedAfterTableReferenceParser = future;
+        future.setParser(
+          choice(
+            keyword("INNER"),
+            keyword("LEFT"),
+            keyword("RIGHT"),
+            keyword("FULL"),
+            keyword("CROSS"),
+            keyword("JOIN"),
+            keyword("ON"),
+            keyword("USING"),
+            keyword("WHERE"),
+            keyword("GROUP"),
+            keyword("HAVING"),
+            keyword("ORDER"),
+            keyword("FETCH"),
+            keyword("WINDOW"),
+            keyword("FOR"),
+            keyword("WITH"),
+            keyword("UNION"),
+            keyword("EXCEPT"),
+            keyword("INTERSECT"),
+            keyword("OPTIMIZE"),
+            keyword("QUERYNO")
+          )
+        );
+      }
+    
+      return tableReference$reservedAfterTableReferenceParser;
     }
     
     // ========================================================

@@ -94,3 +94,30 @@ target selectStatement;
 # Bare JOIN chained with a comma reference
 +[ SELECT COL1
    FROM T1 JOIN T2 ON COL3 = COL4, T3 ]
+
+# Aliased INNER JOIN, filter carried by ON
++[ SELECT A.NAD_KEY_ID, X.REL_OBJECT
+   FROM T305_NAME_ADDRESS A
+   JOIN T310_RELATION X
+     ON X.REL_TABLE_NUMBER = A.NAD_TABLE_NUMBER
+    AND X.REL_OBJECT = A.NAD_KEY_ID ]
+
+# Aliased LEFT OUTER JOIN, no WHERE
++[ SELECT A.ACCT_ID, B.CUST_NAME
+   FROM T100_ACCOUNT A
+   LEFT OUTER JOIN T200_CUSTOMER B
+     ON B.CUST_ID = A.ACCT_CUST_ID ]
+
+# Aliases via AS
++[ SELECT A.COL1
+   FROM T1 AS A INNER JOIN T2 AS B ON B.COL3 = A.COL4 ]
+
+# Aliased comma join with WHERE
++[ SELECT T.NAME, C.NAME
+   FROM TEACHERS T, COURSES C
+   WHERE C.TEACHER_ID = T.ID ]
+
+# Alias on a single table followed by WHERE
++[ SELECT A.NAD_KEY_ID INTO ] HostParameter:hostParameterSpecification [
+   FROM T305_NAME_ADDRESS A
+   WHERE A.NAD_TABLE_NUMBER = 42 ]

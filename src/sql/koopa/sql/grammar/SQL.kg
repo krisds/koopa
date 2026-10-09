@@ -631,8 +631,22 @@ def tableReferenceList =
   end
 end
 
-# Note: this one is a huge oversimplification...
-def tableReference =  tableName  end
+def tableReference =
+    tableName [ [AS] (%not reservedAfterTableReference) correlationName ]
+
+  where def correlationName =  identifier  end
+
+  # These keywords following a table reference legitimately aren't correlations;
+  where private def reservedAfterTableReference =
+      ( INNER | LEFT | RIGHT | FULL | CROSS | JOIN
+      | ON | USING
+      | WHERE | GROUP | HAVING | ORDER | FETCH | WINDOW
+      | FOR | WITH
+      | UNION | EXCEPT | INTERSECT
+      | OPTIMIZE | QUERYNO                            # [IBM DB2 SQL Statements]
+      )
+  end
+end
 
 
 def cursorName =

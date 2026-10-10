@@ -210,6 +210,12 @@ target selectStatement;
            AND RDF_FE = RSG_FE)
    WITH UR ]
 
+# Aggregate arguments parse structurally, including columns, arithmetic
+# and DISTINCT.
++[ SELECT MAX(INP_MSG_TIMESTAMP_GMT), SUM(TT_TR_CT + 1),
+          COUNT(DISTINCT ACCT_ID)
+   FROM T899_INP_MESSAGES ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

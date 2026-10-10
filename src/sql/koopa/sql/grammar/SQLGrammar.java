@@ -3814,11 +3814,11 @@ public class SQLGrammar extends SQLBaseGrammar {
             literal("("),
             optional(
               sequence(
-                scalarFunctionCall$functionArgument(),
+                functionArgument(),
                 star(
                   sequence(
                     literal(","),
-                    scalarFunctionCall$functionArgument()
+                    functionArgument()
                   )
                 )
               )
@@ -3855,22 +3855,21 @@ public class SQLGrammar extends SQLBaseGrammar {
     // functionArgument
     // ........................................................
     
-    private ParserCombinator scalarFunctionCall$functionArgumentParser = null;
+    private ParserCombinator functionArgumentParser = null;
     
-    public final Start scalarFunctionCall$functionArgument = Start.on(getNamespace(), "functionArgument");
+    public final Start functionArgument = Start.on(getNamespace(), "functionArgument");
     
-    public ParserCombinator scalarFunctionCall$functionArgument() {
-      if (scalarFunctionCall$functionArgumentParser == null) {
+    public ParserCombinator functionArgument() {
+      if (functionArgumentParser == null) {
         FutureParser future = scoped("functionArgument", PUBLIC, true);
-        scalarFunctionCall$functionArgumentParser = future;
+        functionArgumentParser = future;
         future.setParser(
           sequence(
             choice(
               as("allColumns",
                 literal("*")
               ),
-              scalarFunctionCall(),
-              comparand(),
+              valueExpression(),
               as("unknown",
                 skipto(
                   choice(
@@ -3896,7 +3895,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return scalarFunctionCall$functionArgumentParser;
+      return functionArgumentParser;
     }
     
     // ========================================================
@@ -3943,10 +3942,8 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               countColumn$setQuantifier()
             ),
-            as("unknown",
-              skipto(
-                literal(")")
-              )
+            optional(
+              functionArgument()
             ),
             literal(")")
           )
@@ -4002,9 +3999,15 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               generalAggregate$setQuantifier()
             ),
-            as("unknown",
-              skipto(
-                literal(")")
+            optional(
+              sequence(
+                functionArgument(),
+                star(
+                  sequence(
+                    literal(","),
+                    functionArgument()
+                  )
+                )
               )
             ),
             literal(")")

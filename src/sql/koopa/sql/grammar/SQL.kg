@@ -815,15 +815,15 @@ def scalarFunctionCall =
     functionName '(' [ functionArgument (',' functionArgument)* ] ')'
 
   where def functionName =  identifier  end
+end
 
-  where def functionArgument =
-      ( allColumns: '*'
-      | scalarFunctionCall
-      | comparand
-      | unknown: --> (',' | ')' | eof)
-      )
-      [ unknown: --> (',' | ')' | eof) ]
-  end
+# An argument of a scalar function or an aggregate.
+def functionArgument =
+    ( allColumns: '*'
+    | valueExpression
+    | unknown: --> (',' | ')' | eof)
+    )
+    [ unknown: --> (',' | ')' | eof) ]
 end
 
 def countAll =
@@ -831,13 +831,15 @@ def countAll =
 end
 
 def countColumn =
-    COUNT '(' [setQuantifier] (unknown: --> ')') ')'
+    COUNT '(' [setQuantifier] [ functionArgument ] ')'
 
   where def setQuantifier =  ( distinct: DISTINCT | all: ALL )  end
 end
 
 def generalAggregate =
-    aggregateName '(' [setQuantifier] (unknown: --> ')') ')'
+    aggregateName '(' [setQuantifier]
+    [ functionArgument (',' functionArgument)* ]
+    ')'
 
   where def aggregateName =
       ( SUM | AVG | MIN | MAX | MEDIAN

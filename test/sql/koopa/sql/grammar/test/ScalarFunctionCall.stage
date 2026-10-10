@@ -13,3 +13,7 @@ target scalarFunctionCall;
 
 # A subquery as a function argument.
 +[ COALESCE((SELECT D FROM T3), 'X') ]
+
+
+# Arithmetic inside arguments parses as a value expression.
++[ SUBSTR(NAME, POS + 1, LEN - 2) ]

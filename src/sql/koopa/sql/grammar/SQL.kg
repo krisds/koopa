@@ -158,11 +158,20 @@ def selectStatement =
 
   where def from =  FROM  tableReferenceList  [unknown: --> nextBlockOrEnd]  end
 
+  # The boundary is balanced: a clause keyword inside parentheses - for
+  # example the FROM of a subquery used as a comparison operand - must
+  # not end the where clause.
   where def `where =
       WHERE
-      ( searchCondition
-      | unknown : _*
-      ) %upto { nextBlockOrEnd }
+      ( %balancing
+            <{ '(' } { ')' }>
+            <{ '[' } { ']' }>
+            <{ '{' } { '}' }>
+            <{ leftBracketTrigraph } { rightBracketTrigraph }>
+          ( ( searchCondition
+            | unknown : _*
+            ) %upto { %notnested nextBlockOrEnd } )
+      )
   end
 
   where def groupBy =
@@ -258,15 +267,23 @@ def updateStatement =
       [ assignment (',' assignment)* ]
       [ unknown: --> (WHERE | eof) ]
 
-    # column = simple value; a complex right-hand side keeps its
+    # column = value expression; a complex right-hand side keeps its
     # recognised prefix and falls back to water, and an unrecognised
-    # assignment ends the list with the remainder as water.
+    # assignment ends the list with the remainder as water. The
+    # boundary is balanced so a comma or WHERE inside a subquery or
+    # function call does not end the assignment.
     where def assignment =
-        ( columnReference '='
-          ( comparand [unknown: _+]
-          | unknown: _+
-          )
-        ) %upto { (',' | WHERE) }
+        ( %balancing
+              <{ '(' } { ')' }>
+              <{ '[' } { ']' }>
+              <{ '{' } { '}' }>
+              <{ leftBracketTrigraph } { rightBracketTrigraph }>
+            ( ( columnReference '='
+                ( valueExpression [unknown: _+]
+                | unknown: _+
+                )
+              ) %upto { %notnested (',' | WHERE) } )
+        )
     end
   end
 
@@ -679,13 +696,31 @@ end
 # This will split the input into two parts, separated by a comparison operator.
 
 def comparison =
-    ( comparand [unknown: --> comparisonOp]
+    ( valueExpression [unknown: --> comparisonOp]
     | unknown: --> comparisonOp
     )
     comparisonOp
-    ( comparand [unknown: _+]
+    ( valueExpression [unknown: _+]
     | unknown: _+
     )
+end
+
+# A comparand, optionally continued with arithmetic whose terms are
+# further comparands or Db2 durations (CURRENT DATE - 15 DAYS).
+# Stops at the first thing it does not recognise, then falls to uniknown water.
+hiding def valueExpression =
+    comparand
+    ( arithmeticOperator ( duration | comparand ) )*
+end
+
+def duration =                                       # [IBM DB2 SQL Statements]
+    numericLiteral
+    ( MICROSECOND | MICROSECONDS | SECOND | SECONDS | MINUTE | MINUTES
+    | HOUR | HOURS | DAY | DAYS | MONTH | MONTHS | YEAR | YEARS )
+end
+
+private def arithmeticOperator =
+    ( '+' | '-' | '*' | '/' )
 end
 
 # The simple operands recognised inside comparisons, SET assignments and
@@ -696,16 +731,20 @@ hiding def comparand =
     | stringLiteral
     | numericLiteral
     | subquery
+    | scalarFunctionCall
     | columnReference
     )
 end
 
+# Two-character operators must be tried before their one-character
+# prefixes: with greaterThanOp first, X >= Y matched '>' alone and the
+# '= Y' tail fell to water.
 def comparisonOp =
-    ( greaterThanOp
-    | lessThanOrEqualsOp
+    ( notEqualsOp
     | greaterThanOrEqualsOp
+    | lessThanOrEqualsOp
     | equalsOp
-    | notEqualsOp
+    | greaterThanOp
     | lessThanOp
     )
 end

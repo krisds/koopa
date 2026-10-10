@@ -794,17 +794,37 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("WHERE"),
-            upto(
-              choice(
-                searchCondition(),
-                as("unknown",
-                  star(
-                    any()
-                  )
-                )
-              ),
+            balancing(
               // Closure:
-              selectStatement$nextBlockOrEnd()
+              literal("("),
+              // Closure:
+              literal(")"),
+              // Closure:
+              literal("["),
+              // Closure:
+              literal("]"),
+              // Closure:
+              literal("{"),
+              // Closure:
+              literal("}"),
+              // Closure:
+              leftBracketTrigraph(),
+              // Closure:
+              rightBracketTrigraph(),
+              upto(
+                choice(
+                  searchCondition(),
+                  as("unknown",
+                    star(
+                      any()
+                    )
+                  )
+                ),
+                // Closure:
+                notNested(
+                  selectStatement$nextBlockOrEnd()
+                )
+              )
             )
           )
         );
@@ -1415,32 +1435,52 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("assignment", PUBLIC, true);
         updateStatement$set$assignmentParser = future;
         future.setParser(
-          upto(
-            sequence(
-              columnReference(),
-              literal("="),
-              choice(
-                sequence(
-                  comparand(),
-                  optional(
-                    as("unknown",
-                      plus(
-                        any()
+          balancing(
+            // Closure:
+            literal("("),
+            // Closure:
+            literal(")"),
+            // Closure:
+            literal("["),
+            // Closure:
+            literal("]"),
+            // Closure:
+            literal("{"),
+            // Closure:
+            literal("}"),
+            // Closure:
+            leftBracketTrigraph(),
+            // Closure:
+            rightBracketTrigraph(),
+            upto(
+              sequence(
+                columnReference(),
+                literal("="),
+                choice(
+                  sequence(
+                    valueExpression(),
+                    optional(
+                      as("unknown",
+                        plus(
+                          any()
+                        )
                       )
                     )
-                  )
-                ),
-                as("unknown",
-                  plus(
-                    any()
+                  ),
+                  as("unknown",
+                    plus(
+                      any()
+                    )
                   )
                 )
+              ),
+              // Closure:
+              notNested(
+                choice(
+                  literal(","),
+                  keyword("WHERE")
+                )
               )
-            ),
-            // Closure:
-            choice(
-              literal(","),
-              keyword("WHERE")
             )
           )
         );
@@ -3159,7 +3199,7 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             choice(
               sequence(
-                comparand(),
+                valueExpression(),
                 optional(
                   as("unknown",
                     skipto(
@@ -3177,7 +3217,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             comparisonOp(),
             choice(
               sequence(
-                comparand(),
+                valueExpression(),
                 optional(
                   as("unknown",
                     plus(
@@ -3200,6 +3240,100 @@ public class SQLGrammar extends SQLBaseGrammar {
     }
     
     // ========================================================
+    // valueExpression
+    // ........................................................
+    
+    private ParserCombinator valueExpressionParser = null;
+    
+    public final Start valueExpression = Start.on(getNamespace(), "valueExpression");
+    
+    public ParserCombinator valueExpression() {
+      if (valueExpressionParser == null) {
+        FutureParser future = scoped("valueExpression", HIDING, true);
+        valueExpressionParser = future;
+        future.setParser(
+          sequence(
+            comparand(),
+            star(
+              sequence(
+                arithmeticOperator(),
+                choice(
+                  duration(),
+                  comparand()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return valueExpressionParser;
+    }
+    
+    // ========================================================
+    // duration
+    // ........................................................
+    
+    private ParserCombinator durationParser = null;
+    
+    public final Start duration = Start.on(getNamespace(), "duration");
+    
+    public ParserCombinator duration() {
+      if (durationParser == null) {
+        FutureParser future = scoped("duration", PUBLIC, true);
+        durationParser = future;
+        future.setParser(
+          sequence(
+            numericLiteral(),
+            choice(
+              keyword("MICROSECOND"),
+              keyword("MICROSECONDS"),
+              keyword("SECOND"),
+              keyword("SECONDS"),
+              keyword("MINUTE"),
+              keyword("MINUTES"),
+              keyword("HOUR"),
+              keyword("HOURS"),
+              keyword("DAY"),
+              keyword("DAYS"),
+              keyword("MONTH"),
+              keyword("MONTHS"),
+              keyword("YEAR"),
+              keyword("YEARS")
+            )
+          )
+        );
+      }
+    
+      return durationParser;
+    }
+    
+    // ========================================================
+    // arithmeticOperator
+    // ........................................................
+    
+    private ParserCombinator arithmeticOperatorParser = null;
+    
+    protected final Start arithmeticOperator = Start.on(getNamespace(), "arithmeticOperator");
+    
+    protected ParserCombinator arithmeticOperator() {
+      if (arithmeticOperatorParser == null) {
+        FutureParser future = scoped("arithmeticOperator", PRIVATE, true);
+        arithmeticOperatorParser = future;
+        future.setParser(
+          choice(
+            literal("+"),
+            literal("-"),
+            literal("*"),
+            literal("/")
+          )
+        );
+      }
+    
+      return arithmeticOperatorParser;
+    }
+    
+    // ========================================================
     // comparand
     // ........................................................
     
@@ -3218,6 +3352,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             stringLiteral(),
             numericLiteral(),
             subquery(),
+            scalarFunctionCall(),
             columnReference()
           )
         );
@@ -3240,11 +3375,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         comparisonOpParser = future;
         future.setParser(
           choice(
-            greaterThanOp(),
-            lessThanOrEqualsOp(),
-            greaterThanOrEqualsOp(),
-            equalsOp(),
             notEqualsOp(),
+            greaterThanOrEqualsOp(),
+            lessThanOrEqualsOp(),
+            equalsOp(),
+            greaterThanOp(),
             lessThanOp()
           )
         );

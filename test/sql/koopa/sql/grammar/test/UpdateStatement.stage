@@ -25,3 +25,9 @@ target updateStatement;
      SET C1 = (SELECT MAX(TS) FROM T2 WHERE T2.K = T1.K),
          C2 = :WS-A
      WHERE K = 1 ]
+
+# Arithmetic on the right-hand side; the assignment boundary is balanced.
++[ UPDATE T1
+     SET CNT = CNT + 1,
+         TS  = CURRENT TIMESTAMP - 1 DAY
+     WHERE K = 1 ]

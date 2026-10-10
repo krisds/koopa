@@ -171,6 +171,28 @@ target selectStatement;
 +[ SELECT COALESCE(A, B, 0) AS AA, C
    FROM T1 ]
 
+# Subqueries as comparison operands inside a statement-level WHERE: the
+# where boundary must not cut at the subquery's internal FROM / WHERE.
++[ SELECT INP_MSG_RRN INTO ] HostParameter:hostParameterSpecification [
+   FROM T899_INP_MESSAGES
+   WHERE INP_MSG_PART_NBR = :INP-MSG-PART-NBR
+     AND INP_MSG_TIMESTAMP_GMT =
+         (SELECT MAX(INP_MSG_TIMESTAMP_GMT)
+            FROM T899_INP_MESSAGES
+           WHERE INP_MSG_SYSTEM = :INP-MSG-SYSTEM) ]
+
++[ SELECT C1 INTO ] HostParameter:hostParameterSpecification [
+   FROM T1
+   WHERE K IN (SELECT X FROM T2 WHERE Y = 1)
+     AND Z = 1 ]
+
+# Function calls, arithmetic and durations as comparison operands.
++[ SELECT C1 INTO ] HostParameter:hostParameterSpecification [
+   FROM T1
+   WHERE SUBSTR(NAME, 1, 3) = :WS-A
+     AND BAL + FEE > :WS-LIMIT
+     AND TS < CURRENT TIMESTAMP - 15 DAYS ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

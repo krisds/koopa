@@ -216,6 +216,12 @@ target selectStatement;
           COUNT(DISTINCT ACCT_ID)
    FROM T899_INP_MESSAGES ]
 
+# GROUP BY columns parse like ORDER BY sort keys.
++[ SELECT CLASS, AVG(SCORE)
+   FROM STUDENTS
+   GROUP BY CLASS, SCHOOL_ID
+   ORDER BY 2 ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

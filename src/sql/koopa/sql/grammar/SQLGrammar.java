@@ -1080,9 +1080,22 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("GROUP"),
             keyword("BY"),
-            as("unknown",
-              skipto(
-                selectStatement$nextBlockOrEnd()
+            optional(
+              sequence(
+                selectStatement$groupBy$groupingColumn(),
+                star(
+                  sequence(
+                    literal(","),
+                    selectStatement$groupBy$groupingColumn()
+                  )
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  selectStatement$nextBlockOrEnd()
+                )
               )
             )
           )
@@ -1090,6 +1103,29 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$groupByParser;
+    }
+    
+    // ========================================================
+    // groupingColumn
+    // ........................................................
+    
+    private ParserCombinator selectStatement$groupBy$groupingColumnParser = null;
+    
+    public final Start selectStatement$groupBy$groupingColumn = Start.on(getNamespace(), "groupingColumn");
+    
+    public ParserCombinator selectStatement$groupBy$groupingColumn() {
+      if (selectStatement$groupBy$groupingColumnParser == null) {
+        FutureParser future = scoped("groupingColumn", PUBLIC, true);
+        selectStatement$groupBy$groupingColumnParser = future;
+        future.setParser(
+          choice(
+            columnReference(),
+            numericLiteral()
+          )
+        );
+      }
+    
+      return selectStatement$groupBy$groupingColumnParser;
     }
     
     // ========================================================
@@ -3383,9 +3419,21 @@ public class SQLGrammar extends SQLBaseGrammar {
         likePredicate$rowValuePredicandParser = future;
         future.setParser(
           upto(
-            as("unknown",
-              star(
-                any()
+            choice(
+              sequence(
+                comparand(),
+                optional(
+                  as("unknown",
+                    star(
+                      any()
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                star(
+                  any()
+                )
               )
             ),
             // Closure:
@@ -3419,6 +3467,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             limited(
               choice(
                 stringLiteral(),
+                hostParameterSpecification(),
                 as("unknown",
                   star(
                     any()

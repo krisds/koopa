@@ -219,7 +219,13 @@ def selectStatement =
   end
 
   where def groupBy =
-      GROUP BY (unknown: --> nextBlockOrEnd)
+      GROUP BY
+      [ groupingColumn (',' groupingColumn)* ]
+      [ unknown: --> nextBlockOrEnd ]
+
+    where def groupingColumn =
+        ( columnReference | numericLiteral )
+    end
   end
 
   where def having =
@@ -693,11 +699,14 @@ def likePredicate =
     [escape]
     
   where def rowValuePredicand =
-      (unknown: _*) %upto { [NOT] LIKE }
+      ( comparand [unknown: _*]
+      | unknown: _*
+      ) %upto { [NOT] LIKE }
   end
 
   where def pattern =
       ( stringLiteral
+      | hostParameterSpecification
       | unknown: _*
       ) %before { (ESCAPE | eof) }
       

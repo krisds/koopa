@@ -3022,25 +3022,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         conjunctionParser = future;
         future.setParser(
           sequence(
-            upto(
-              negation(),
-              // Closure:
-              choice(
-                conjunction$and(),
-                eof()
-              )
-            ),
+            conjunction$conjunct(),
             star(
               sequence(
                 conjunction$and(),
-                upto(
-                  negation(),
-                  // Closure:
-                  choice(
-                    conjunction$and(),
-                    eof()
-                  )
-                )
+                conjunction$conjunct()
               )
             )
           )
@@ -3070,6 +3056,52 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return conjunction$andParser;
+    }
+    
+    // ========================================================
+    // conjunct
+    // ........................................................
+    
+    private ParserCombinator conjunction$conjunctParser = null;
+    
+    public final Start conjunction$conjunct = Start.on(getNamespace(), "conjunct");
+    
+    public ParserCombinator conjunction$conjunct() {
+      if (conjunction$conjunctParser == null) {
+        FutureParser future = scoped("conjunct", HIDING, true);
+        conjunction$conjunctParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              betweenPredicate(),
+              optional(
+                upto(
+                  as("unknown",
+                    star(
+                      any()
+                    )
+                  ),
+                  // Closure:
+                  choice(
+                    conjunction$and(),
+                    eof()
+                  )
+                )
+              )
+            ),
+            upto(
+              negation(),
+              // Closure:
+              choice(
+                conjunction$and(),
+                eof()
+              )
+            )
+          )
+        );
+      }
+    
+      return conjunction$conjunctParser;
     }
     
     // ========================================================
@@ -3382,6 +3414,35 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return nullPredicateParser;
+    }
+    
+    // ========================================================
+    // betweenPredicate
+    // ........................................................
+    
+    private ParserCombinator betweenPredicateParser = null;
+    
+    public final Start betweenPredicate = Start.on(getNamespace(), "betweenPredicate");
+    
+    public ParserCombinator betweenPredicate() {
+      if (betweenPredicateParser == null) {
+        FutureParser future = scoped("betweenPredicate", PUBLIC, true);
+        betweenPredicateParser = future;
+        future.setParser(
+          sequence(
+            comparand(),
+            optional(
+              keyword("NOT")
+            ),
+            keyword("BETWEEN"),
+            valueExpression(),
+            keyword("AND"),
+            valueExpression()
+          )
+        );
+      }
+    
+      return betweenPredicateParser;
     }
     
     // ========================================================

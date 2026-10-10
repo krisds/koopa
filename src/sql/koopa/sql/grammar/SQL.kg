@@ -622,12 +622,18 @@ hiding def disjunction =
 end
 
 hiding def conjunction =
-    negation %upto { (and | eof) }
-    (and
-     negation %upto { (and | eof) }
-    )*
-    
+    conjunct
+    (and conjunct)*
+
   where private def and =  %notnested AND  end
+
+  # A BETWEEN owns the AND between its bounds, which the conjunct limit would otherwise
+  # treat as a conjunction split.
+  where hiding def conjunct =
+      ( betweenPredicate [ (unknown: _*) %upto { (and | eof) } ]
+      | negation %upto { (and | eof) }
+      )
+  end
 end
 
 hiding def negation =
@@ -685,9 +691,6 @@ end
 ## ############################################################################
 # IN / IS NULL / EXISTS predicates (top down)
 #
-# Note: BETWEEN is not modelled. Its AND collides with the conjunction
-# splitter (%notnested AND), which cuts the term before a BETWEEN
-# production could see it; both halves stay water.
 #
 # Note: for IN and EXISTS the parenthesised argument is kept as water, and
 # because that water is not itself balanced, a clause following the predicate at
@@ -723,7 +726,10 @@ def nullPredicate =
     comparand IS [NOT] NULL
 end
 
-# The NOT of NOT EXISTS is taken by the enclosing negation.
+def betweenPredicate =
+    comparand [NOT] BETWEEN valueExpression AND valueExpression
+end
+
 def existsPredicate =
     # The NOT of NOT EXISTS is taken by the enclosing negation.
     EXISTS

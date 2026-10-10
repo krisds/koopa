@@ -79,6 +79,12 @@ target searchCondition;
 +[ K NOT IN ('A') OR X = 1 ]
 +[ K IN (:WS-A, :WS-B) AND Y IS NULL ]
 
+# BETWEEN owns its AND; conjunction splits still work around it.
++[ RLT_TABLE_NUMBER BETWEEN 1 AND 15 ]
++[ X BETWEEN 1 AND 15 AND Y = 2 ]
++[ A = 1 AND X BETWEEN :WS-LO AND :WS-HI OR Z IS NULL ]
++[ TS NOT BETWEEN CURRENT DATE - 7 DAYS AND CURRENT DATE ]
+
 # Subqueries inside a search condition.
 +[ X = (SELECT MAX(Y) FROM T3) OR Z = 1 ]
 +[ EXISTS (SELECT 1 FROM T WHERE A = B) AND C = 2 ]

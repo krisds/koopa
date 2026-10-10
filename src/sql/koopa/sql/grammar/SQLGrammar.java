@@ -3985,11 +3985,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("WHEN"),
-            as("unknown",
-              skipto(
-                keyword("THEN")
-              )
-            ),
+            caseExpression$whenClause$whenCondition(),
             keyword("THEN"),
             choice(
               sequence(
@@ -4021,6 +4017,44 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return caseExpression$whenClauseParser;
+    }
+    
+    // ========================================================
+    // whenCondition
+    // ........................................................
+    
+    private ParserCombinator caseExpression$whenClause$whenConditionParser = null;
+    
+    public final Start caseExpression$whenClause$whenCondition = Start.on(getNamespace(), "whenCondition");
+    
+    public ParserCombinator caseExpression$whenClause$whenCondition() {
+      if (caseExpression$whenClause$whenConditionParser == null) {
+        FutureParser future = scoped("whenCondition", HIDING, true);
+        caseExpression$whenClause$whenConditionParser = future;
+        future.setParser(
+          choice(
+            upto(
+              valueExpression(),
+              // Closure:
+              keyword("THEN")
+            ),
+            upto(
+              choice(
+                searchCondition(),
+                as("unknown",
+                  star(
+                    any()
+                  )
+                )
+              ),
+              // Closure:
+              keyword("THEN")
+            )
+          )
+        );
+      }
+    
+      return caseExpression$whenClause$whenConditionParser;
     }
     
     // ========================================================

@@ -846,10 +846,21 @@ def caseExpression =
   end
 
   where def whenClause =
-      WHEN (unknown: --> THEN) THEN
+      WHEN
+      whenCondition
+      THEN
       ( valueExpression [unknown: --> (WHEN | ELSE | END)]
       | unknown: --> (WHEN | ELSE | END)
       )
+
+    # Ends at THEN, a keyword which cannot occur inside the condition (a nested CASE degrades).
+    where hiding def whenCondition =
+        ( valueExpression %upto { THEN }
+        | ( searchCondition
+          | unknown: _*
+          ) %upto { THEN }
+        )
+    end
   end
 
   where def elseClause =

@@ -11,6 +11,11 @@ target caseExpression;
         WHEN A = 2 THEN Y - 2
         ELSE 0 END ]
 
+# Searched arms parse as conditions (comparisons visible), compound too.
++[ CASE WHEN A = 1 AND B > 2 THEN 'X'
+        WHEN C IN ('P', 'Q') THEN 'Y'
+        ELSE 'Z' END ]
+
 -[ CASE NO_WHEN_HERE END ]
 
 

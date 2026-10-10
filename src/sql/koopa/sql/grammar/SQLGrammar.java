@@ -833,6 +833,12 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("*")
               ),
               scalarFunctionCall(),
+              caseExpression(),
+              sequence(
+                literal("("),
+                caseExpression(),
+                literal(")")
+              ),
               comparand(),
               as("unknown",
                 skipto(
@@ -3869,6 +3875,7 @@ public class SQLGrammar extends SQLBaseGrammar {
               as("allColumns",
                 literal("*")
               ),
+              caseExpression(),
               valueExpression(),
               as("unknown",
                 skipto(
@@ -3896,6 +3903,163 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return functionArgumentParser;
+    }
+    
+    // ========================================================
+    // caseExpression
+    // ........................................................
+    
+    private ParserCombinator caseExpressionParser = null;
+    
+    public final Start caseExpression = Start.on(getNamespace(), "caseExpression");
+    
+    public ParserCombinator caseExpression() {
+      if (caseExpressionParser == null) {
+        FutureParser future = scoped("caseExpression", PUBLIC, true);
+        caseExpressionParser = future;
+        future.setParser(
+          sequence(
+            keyword("CASE"),
+            optional(
+              caseExpression$caseOperand()
+            ),
+            caseExpression$whenClause(),
+            star(
+              caseExpression$whenClause()
+            ),
+            optional(
+              caseExpression$elseClause()
+            ),
+            keyword("END")
+          )
+        );
+      }
+    
+      return caseExpressionParser;
+    }
+    
+    // ========================================================
+    // caseOperand
+    // ........................................................
+    
+    private ParserCombinator caseExpression$caseOperandParser = null;
+    
+    public final Start caseExpression$caseOperand = Start.on(getNamespace(), "caseOperand");
+    
+    public ParserCombinator caseExpression$caseOperand() {
+      if (caseExpression$caseOperandParser == null) {
+        FutureParser future = scoped("caseOperand", PUBLIC, true);
+        caseExpression$caseOperandParser = future;
+        future.setParser(
+          sequence(
+            not(
+              keyword("WHEN")
+            ),
+            choice(
+              valueExpression(),
+              as("unknown",
+                skipto(
+                  keyword("WHEN")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return caseExpression$caseOperandParser;
+    }
+    
+    // ========================================================
+    // whenClause
+    // ........................................................
+    
+    private ParserCombinator caseExpression$whenClauseParser = null;
+    
+    public final Start caseExpression$whenClause = Start.on(getNamespace(), "whenClause");
+    
+    public ParserCombinator caseExpression$whenClause() {
+      if (caseExpression$whenClauseParser == null) {
+        FutureParser future = scoped("whenClause", PUBLIC, true);
+        caseExpression$whenClauseParser = future;
+        future.setParser(
+          sequence(
+            keyword("WHEN"),
+            as("unknown",
+              skipto(
+                keyword("THEN")
+              )
+            ),
+            keyword("THEN"),
+            choice(
+              sequence(
+                valueExpression(),
+                optional(
+                  as("unknown",
+                    skipto(
+                      choice(
+                        keyword("WHEN"),
+                        keyword("ELSE"),
+                        keyword("END")
+                      )
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                skipto(
+                  choice(
+                    keyword("WHEN"),
+                    keyword("ELSE"),
+                    keyword("END")
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return caseExpression$whenClauseParser;
+    }
+    
+    // ========================================================
+    // elseClause
+    // ........................................................
+    
+    private ParserCombinator caseExpression$elseClauseParser = null;
+    
+    public final Start caseExpression$elseClause = Start.on(getNamespace(), "elseClause");
+    
+    public ParserCombinator caseExpression$elseClause() {
+      if (caseExpression$elseClauseParser == null) {
+        FutureParser future = scoped("elseClause", PUBLIC, true);
+        caseExpression$elseClauseParser = future;
+        future.setParser(
+          sequence(
+            keyword("ELSE"),
+            choice(
+              sequence(
+                valueExpression(),
+                optional(
+                  as("unknown",
+                    skipto(
+                      keyword("END")
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                skipto(
+                  keyword("END")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return caseExpression$elseClauseParser;
     }
     
     // ========================================================

@@ -167,6 +167,8 @@ def selectStatement =
       ( aggregateFunction
       | allColumns: '*'
       | scalarFunctionCall
+      | caseExpression
+      | '(' caseExpression ')'
       | comparand
       | unknown: --> (',' | INTO | FROM | eof)
       )
@@ -820,10 +822,42 @@ end
 # An argument of a scalar function or an aggregate.
 def functionArgument =
     ( allColumns: '*'
+    | caseExpression
     | valueExpression
     | unknown: --> (',' | ')' | eof)
     )
     [ unknown: --> (',' | ')' | eof) ]
+end
+
+# A CASE expression is delimited by its own keywords, so its pieces are
+# bounded by plain skips to the next keyword - no parenthesis tracking
+# involved. Conditions and unrecognised results stay water inside their
+# clause. Used where an expression is expected outside search
+# conditions; a nested CASE inside a result degrades to water.
+def caseExpression =
+    CASE [ caseOperand ] whenClause (whenClause)* [ elseClause ] END
+
+  # Guarded so a searched CASE's first WHEN is never taken for a simple-CASE operand column.
+  where def caseOperand =
+      (%not WHEN)
+      ( valueExpression
+      | unknown: --> WHEN
+      )
+  end
+
+  where def whenClause =
+      WHEN (unknown: --> THEN) THEN
+      ( valueExpression [unknown: --> (WHEN | ELSE | END)]
+      | unknown: --> (WHEN | ELSE | END)
+      )
+  end
+
+  where def elseClause =
+      ELSE
+      ( valueExpression [unknown: --> END]
+      | unknown: --> END
+      )
+  end
 end
 
 def countAll =

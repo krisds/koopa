@@ -652,7 +652,6 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("*")
               ),
               scalarFunctionCall(),
-              subquery(),
               comparand(),
               as("unknown",
                 skipto(
@@ -1421,16 +1420,6 @@ public class SQLGrammar extends SQLBaseGrammar {
               columnReference(),
               literal("="),
               choice(
-                sequence(
-                  subquery(),
-                  optional(
-                    as("unknown",
-                      plus(
-                        any()
-                      )
-                    )
-                  )
-                ),
                 sequence(
                   comparand(),
                   optional(
@@ -3050,9 +3039,14 @@ public class SQLGrammar extends SQLBaseGrammar {
               keyword("NOT")
             ),
             keyword("IN"),
-            as("unknown",
-              plus(
-                any()
+            choice(
+              subquery(),
+              inPredicate$inValueList(),
+              hostParameterSpecification(),
+              as("unknown",
+                plus(
+                  any()
+                )
               )
             )
           )
@@ -3060,6 +3054,36 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return inPredicateParser;
+    }
+    
+    // ========================================================
+    // inValueList
+    // ........................................................
+    
+    private ParserCombinator inPredicate$inValueListParser = null;
+    
+    public final Start inPredicate$inValueList = Start.on(getNamespace(), "inValueList");
+    
+    public ParserCombinator inPredicate$inValueList() {
+      if (inPredicate$inValueListParser == null) {
+        FutureParser future = scoped("inValueList", PUBLIC, true);
+        inPredicate$inValueListParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            comparand(),
+            star(
+              sequence(
+                literal(","),
+                comparand()
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return inPredicate$inValueListParser;
     }
     
     // ========================================================
@@ -3104,9 +3128,12 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("EXISTS"),
-            as("unknown",
-              plus(
-                any()
+            choice(
+              subquery(),
+              as("unknown",
+                plus(
+                  any()
+                )
               )
             )
           )
@@ -3190,6 +3217,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             hostParameterSpecification(),
             stringLiteral(),
             numericLiteral(),
+            subquery(),
             columnReference()
           )
         );
@@ -3482,7 +3510,6 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("*")
               ),
               scalarFunctionCall(),
-              subquery(),
               comparand(),
               as("unknown",
                 skipto(

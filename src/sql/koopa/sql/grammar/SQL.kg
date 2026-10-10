@@ -135,7 +135,6 @@ def selectStatement =
       ( aggregateFunction
       | allColumns: '*'
       | scalarFunctionCall
-      | subquery
       | comparand
       | unknown: --> (',' | INTO | FROM | eof)
       )
@@ -264,8 +263,7 @@ def updateStatement =
     # assignment ends the list with the remainder as water.
     where def assignment =
         ( columnReference '='
-          ( subquery  [unknown: _+]
-          | comparand [unknown: _+]
+          ( comparand [unknown: _+]
           | unknown: _+
           )
         ) %upto { (',' | WHERE) }
@@ -642,11 +640,22 @@ end
 # the enclosing search condition already balances parentheses, and the
 # trailing (unknown: _+) is bounded by the AND / OR split around the term.
 # Explicitly matching the parentheses here, or opening a nested balancing
-# region, disturbs that balancer and breaks the split that follows. So the
-# predicate keyword and its left comparand are named; the list or subquery
-# stays water.
+# region, disturbs that balancer and breaks the split that follows.
+#
+# The argument is a subquery, a value list, or a host variable; anything
+# else (and any structural mismatch) falls back to plain water, which
+# absorbs the rest of the term but never fails.
 def inPredicate =
-    comparand [NOT] IN (unknown: _+)
+    comparand [NOT] IN
+    ( subquery
+    | inValueList
+    | hostParameterSpecification
+    | unknown: _+
+    )
+
+  where def inValueList =
+      '(' comparand (',' comparand)* ')'
+  end
 end
 
 def nullPredicate =
@@ -655,7 +664,11 @@ end
 
 # The NOT of NOT EXISTS is taken by the enclosing negation.
 def existsPredicate =
-    EXISTS (unknown: _+)
+    # The NOT of NOT EXISTS is taken by the enclosing negation.
+    EXISTS
+    ( subquery
+    | unknown: _+
+    )
 end
 
 
@@ -682,6 +695,7 @@ hiding def comparand =
     | hostParameterSpecification
     | stringLiteral
     | numericLiteral
+    | subquery
     | columnReference
     )
 end
@@ -724,7 +738,6 @@ def scalarFunctionCall =
   where def functionArgument =
       ( allColumns: '*'
       | scalarFunctionCall
-      | subquery
       | comparand
       | unknown: --> (',' | ')' | eof)
       )

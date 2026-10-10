@@ -61,9 +61,7 @@ target searchCondition;
 +[ ( A OR B ) AND C ]
 +[ ( ( A ) ) ]
 
-# Predicates combined with comparisons across AND/OR. A trailing EXISTS or
-# IN parses; its parenthesised argument (and, as a known limitation, any
-# clause following it at the same level) stays water.
+# Predicates combined with comparisons across AND/OR.
 +[ PTY_AC_OPN_CLO_IN = 'O'
    AND NOT EXISTS (SELECT 1 FROM T602_REL_FACILITY
                      WHERE RFG_FAC_ID = RSG_FAC_ID
@@ -73,6 +71,18 @@ target searchCondition;
 
 # IS NULL (no parentheses) splits cleanly across OR.
 +[ NAD_END_DT IS NULL OR NAD_KEY_ID = :WS-KEY-ID ]
+
+# A predicate ending in ')' must not break the AND / OR split that
+# follows it (regression tests for the balancer bookkeeping fix).
++[ K IN ('A') OR X = 1 ]
++[ K IN ('A', 'B') AND X = 1 ]
++[ K NOT IN ('A') OR X = 1 ]
++[ K IN (:WS-A, :WS-B) AND Y IS NULL ]
+
+# Subqueries inside a search condition.
++[ X = (SELECT MAX(Y) FROM T3) OR Z = 1 ]
++[ EXISTS (SELECT 1 FROM T WHERE A = B) AND C = 2 ]
++[ K IN (SELECT X FROM T WHERE Y = 1) OR Q = 2 ]
 
 
 target inPredicate;

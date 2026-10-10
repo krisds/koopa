@@ -10,5 +10,17 @@ target declareTableStatement;
 +[ DECLARE GFCSSPC5.T001_TRANSACTION TABLE ( TRN_PROC_DAY SMALLINT NOT NULL ) ]
 +[ DECLARE "CIF#DB51".T_CASH_TRANSFER_SYS TABLE ( CTS_FEN_ID CHAR(2) NOT NULL ) ]
 
+# Full DCLGEN column lists parse structurally.
++[ DECLARE FTRANS TABLE
+     ( BANKOWN   CHAR(005)    NOT NULL,
+       ACTNO     INTEGER      NOT NULL,
+       BATCHDT   DATE         NOT NULL,
+       AMT       DECIMAL(15, 2) NOT NULL,
+       MEMO      VARCHAR(254),
+       ADDED_TS  TIMESTAMP    NOT NULL WITH DEFAULT ) ]
+
++[ DECLARE T_X TABLE
+     ( K CHAR(7) FOR BIT DATA NOT NULL ) ]
+
 # Should reject: SESSION-qualified (that's declareSessionStatement)
 -[ DECLARE SESSION . FOO TABLE ]

@@ -194,6 +194,9 @@ public class SQLGrammar extends SQLBaseGrammar {
             tableName(),
             keyword("TABLE"),
             optional(
+              declareTableStatement$columnDefinitions()
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -228,6 +231,184 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return declareTableStatement$sessionQualifierParser;
+    }
+    
+    // ========================================================
+    // columnDefinitions
+    // ........................................................
+    
+    private ParserCombinator declareTableStatement$columnDefinitionsParser = null;
+    
+    public final Start declareTableStatement$columnDefinitions = Start.on(getNamespace(), "columnDefinitions");
+    
+    public ParserCombinator declareTableStatement$columnDefinitions() {
+      if (declareTableStatement$columnDefinitionsParser == null) {
+        FutureParser future = scoped("columnDefinitions", PUBLIC, true);
+        declareTableStatement$columnDefinitionsParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            declareTableStatement$columnDefinition(),
+            star(
+              sequence(
+                literal(","),
+                declareTableStatement$columnDefinition()
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return declareTableStatement$columnDefinitionsParser;
+    }
+    
+    // ========================================================
+    // columnDefinition
+    // ........................................................
+    
+    private ParserCombinator declareTableStatement$columnDefinitionParser = null;
+    
+    public final Start declareTableStatement$columnDefinition = Start.on(getNamespace(), "columnDefinition");
+    
+    public ParserCombinator declareTableStatement$columnDefinition() {
+      if (declareTableStatement$columnDefinitionParser == null) {
+        FutureParser future = scoped("columnDefinition", PUBLIC, true);
+        declareTableStatement$columnDefinitionParser = future;
+        future.setParser(
+          sequence(
+            declareTableStatement$columnName(),
+            declareTableStatement$dataType(),
+            optional(
+              sequence(
+                keyword("FOR"),
+                choice(
+                  keyword("BIT"),
+                  keyword("SBCS"),
+                  keyword("MIXED")
+                ),
+                keyword("DATA")
+              )
+            ),
+            optional(
+              as("notNull",
+                sequence(
+                  keyword("NOT"),
+                  keyword("NULL")
+                )
+              )
+            ),
+            optional(
+              as("withDefault",
+                sequence(
+                  keyword("WITH"),
+                  keyword("DEFAULT")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return declareTableStatement$columnDefinitionParser;
+    }
+    
+    // ========================================================
+    // columnName
+    // ........................................................
+    
+    private ParserCombinator declareTableStatement$columnNameParser = null;
+    
+    public final Start declareTableStatement$columnName = Start.on(getNamespace(), "columnName");
+    
+    public ParserCombinator declareTableStatement$columnName() {
+      if (declareTableStatement$columnNameParser == null) {
+        FutureParser future = scoped("columnName", PUBLIC, true);
+        declareTableStatement$columnNameParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return declareTableStatement$columnNameParser;
+    }
+    
+    // ========================================================
+    // dataType
+    // ........................................................
+    
+    private ParserCombinator declareTableStatement$dataTypeParser = null;
+    
+    public final Start declareTableStatement$dataType = Start.on(getNamespace(), "dataType");
+    
+    public ParserCombinator declareTableStatement$dataType() {
+      if (declareTableStatement$dataTypeParser == null) {
+        FutureParser future = scoped("dataType", PUBLIC, true);
+        declareTableStatement$dataTypeParser = future;
+        future.setParser(
+          sequence(
+            declareTableStatement$dataType$typeName(),
+            optional(
+              sequence(
+                literal("("),
+                numericLiteral(),
+                optional(
+                  sequence(
+                    literal(","),
+                    numericLiteral()
+                  )
+                ),
+                literal(")")
+              )
+            )
+          )
+        );
+      }
+    
+      return declareTableStatement$dataTypeParser;
+    }
+    
+    // ========================================================
+    // typeName
+    // ........................................................
+    
+    private ParserCombinator declareTableStatement$dataType$typeNameParser = null;
+    
+    public final Start declareTableStatement$dataType$typeName = Start.on(getNamespace(), "typeName");
+    
+    public ParserCombinator declareTableStatement$dataType$typeName() {
+      if (declareTableStatement$dataType$typeNameParser == null) {
+        FutureParser future = scoped("typeName", PUBLIC, true);
+        declareTableStatement$dataType$typeNameParser = future;
+        future.setParser(
+          choice(
+            keyword("CHARACTER"),
+            keyword("CHAR"),
+            keyword("VARCHAR"),
+            keyword("GRAPHIC"),
+            keyword("VARGRAPHIC"),
+            keyword("SMALLINT"),
+            keyword("INTEGER"),
+            keyword("INT"),
+            keyword("BIGINT"),
+            keyword("DECIMAL"),
+            keyword("DEC"),
+            keyword("NUMERIC"),
+            keyword("FLOAT"),
+            keyword("REAL"),
+            keyword("DOUBLE"),
+            keyword("DATE"),
+            keyword("TIME"),
+            keyword("TIMESTAMP"),
+            keyword("CLOB"),
+            keyword("BLOB"),
+            keyword("DBCLOB"),
+            keyword("ROWID")
+          )
+        );
+      }
+    
+      return declareTableStatement$dataType$typeNameParser;
     }
     
     // ========================================================

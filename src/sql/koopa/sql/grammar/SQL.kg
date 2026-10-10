@@ -67,10 +67,42 @@ end
 # e.g. DECLARE "SCHEMA".T_NAME TABLE.
 def declareTableStatement =                          # [IBM DB2 SQL Statements]
     DECLARE (%not sessionQualifier) tableName TABLE
+    [ columnDefinitions ]
     [unknown: --> eof]
 
   # SESSION-qualified declarations belong to declareSessionStatement.
   where private def sessionQualifier =  SESSION '.'  end
+
+  # The DCLGEN column list: bracket-delimited, each definition consuming
+  # its own type parentheses, so the list splits on its own commas with
+  # no comma inside DECIMAL(p, s) mistaken for a separator. The list is
+  # all-or-nothing: any column form it does not recognise leaves the
+  # whole list as trailing water, exactly as before.
+  where def columnDefinitions =
+      '(' columnDefinition (',' columnDefinition)* ')'
+  end
+
+  where def columnDefinition =
+      columnName dataType
+      [ FOR ( BIT | SBCS | MIXED ) DATA ]
+      [ notNull: NOT NULL ]
+      [ withDefault: WITH DEFAULT ]
+  end
+
+  where def columnName =  identifier  end
+
+  where def dataType =
+      typeName [ '(' numericLiteral [',' numericLiteral] ')' ]
+
+    where def typeName =
+        ( CHARACTER | CHAR | VARCHAR | GRAPHIC | VARGRAPHIC
+        | SMALLINT | INTEGER | INT | BIGINT
+        | DECIMAL | DEC | NUMERIC | FLOAT | REAL | DOUBLE
+        | DATE | TIME | TIMESTAMP
+        | CLOB | BLOB | DBCLOB | ROWID
+        )
+    end
+  end
 end
 
 def valuesIntoStatement =

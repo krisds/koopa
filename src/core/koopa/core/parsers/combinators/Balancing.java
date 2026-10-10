@@ -210,12 +210,18 @@ public class Balancing extends UnaryParserDecorator {
 				parse.getTrace()
 						.add("# " + hashCode() + ", pushed(" + token + ") ...");
 
-			if (!popped.isEmpty()) {
-				if (popped.peek().data == token) {
-					recyclePopped(token);
-				}
+			if (!popped.isEmpty() && popped.peek().data == token) {
+				recyclePopped(token);
 
 			} else {
+				// A push which does not recycle the head of the popped
+				// list means the parse has diverged from the path those
+				// matches were popped on. They can never be recycled and
+				// their positions get re-registered as parsing proceeds;
+				// keeping them here would block that re-registration.
+				if (!popped.isEmpty())
+					clearPopped();
+
 				if (tryClosing(parse.getFlow().getStream())) {
 					final Pair closed = open.peek();
 					push(new Match(token, Kind.CLOSE, closed));
@@ -325,6 +331,14 @@ public class Balancing extends UnaryParserDecorator {
 					parse.getTrace().add(getReport());
 				}
 			}
+		}
+
+		private void clearPopped() {
+			if (parse.getTrace().isEnabled())
+				parse.getTrace().add("# " + hashCode() + ", clearing "
+						+ popped.size() + " stale popped match(es)");
+
+			popped.clear();
 		}
 
 		private void recyclePopped(Data data) {

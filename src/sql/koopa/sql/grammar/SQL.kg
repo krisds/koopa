@@ -122,16 +122,26 @@ def selectStatement =
 
   where def setQuantifier =  ( distinct: DISTINCT | all: ALL )  end
   
+  # The list is split on commas structurally, item by item, with no comma
+  # limiter: a %upto { ',' } would make the LimitedStream treat every comma
+  # as a hard boundary, including those inside a function's argument list.
+  # Instead each item consumes its own brackets (a function call or a
+  # parenthesised subquery), so the only commas the split sees are the ones
+  # separating items. Items end at the INTO / FROM boundary.
   where def selectList =
-      (sublist (',' sublist)*) %upto { (INTO | FROM) }
-      
+      sublist ((',') sublist)*
+
     where private def sublist =
-      # SELECT COUNT(MSS_MESSAGE_TYPE) AS NR_OF_RECORDS
-      ( aggregateFunction    [unknown: _+]
+      ( aggregateFunction
       | allColumns: '*'
-      | comparand            [unknown: _+]
-      | unknown: _+
-      ) %upto { ',' }
+      | scalarFunctionCall
+      | comparand
+      | unknown: --> (',' | INTO | FROM | eof)
+      )
+      # Alias or any other trailing decoration, up to the next item or the
+      # INTO / FROM boundary. Bracket-free, so it cannot swallow a comma
+      # that belongs to the list.
+      [ unknown: --> (',' | INTO | FROM | eof) ]
     end
   end
 
@@ -701,6 +711,22 @@ def aggregateFunction =
     | countColumn
     | generalAggregate
     )
+end
+
+# A generic scalar function call: a name and a bracket braced argument list.
+def scalarFunctionCall =
+    functionName '(' [ functionArgument (',' functionArgument)* ] ')'
+
+  where def functionName =  identifier  end
+
+  where def functionArgument =
+      ( allColumns: '*'
+      | scalarFunctionCall
+      | comparand
+      | unknown: --> (',' | ')' | eof)
+      )
+      [ unknown: --> (',' | ')' | eof) ]
+  end
 end
 
 def countAll =

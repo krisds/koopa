@@ -156,6 +156,13 @@ target selectStatement;
 +[ SELECT 'FE' AS SRC_SYSTEM, ACCT_ID
    FROM T100_ACCOUNT ]
 
+# Scalar function calls with internal commas are single items, not split.
++[ SELECT SUBSTR(NAME, 1, 3), ACCT_ID, DIGITS(BALANCE)
+   FROM ACCOUNTS ]
+
++[ SELECT COALESCE(A, B, 0) AS AA, C
+   FROM T1 ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

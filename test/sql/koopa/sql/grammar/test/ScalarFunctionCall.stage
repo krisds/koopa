@@ -1,0 +1,12 @@
+target scalarFunctionCall;
+
++[ SUBSTR(NAME, 1, 3) ]
++[ DIGITS(BALANCE) ]
++[ COALESCE(A, B, 0) ]
++[ VALUE(A, 'N') ]
+
+# Nested calls recurse; internal commas belong to the inner list.
++[ COALESCE(SUBSTR(NAME, 1, 3), 'X') ]
+
+# Not a call (no argument bracket).
+-[ NAD_KEY_ID ]

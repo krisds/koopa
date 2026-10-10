@@ -617,20 +617,13 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("selectList", PUBLIC, true);
         selectStatement$selectListParser = future;
         future.setParser(
-          upto(
-            sequence(
-              selectStatement$selectList$sublist(),
-              star(
-                sequence(
-                  literal(","),
-                  selectStatement$selectList$sublist()
-                )
+          sequence(
+            selectStatement$selectList$sublist(),
+            star(
+              sequence(
+                literal(","),
+                selectStatement$selectList$sublist()
               )
-            ),
-            // Closure:
-            choice(
-              keyword("INTO"),
-              keyword("FROM")
             )
           )
         );
@@ -652,39 +645,37 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("sublist", PRIVATE, true);
         selectStatement$selectList$sublistParser = future;
         future.setParser(
-          upto(
+          sequence(
             choice(
-              sequence(
-                aggregateFunction(),
-                optional(
-                  as("unknown",
-                    plus(
-                      any()
-                    )
-                  )
-                )
-              ),
+              aggregateFunction(),
               as("allColumns",
                 literal("*")
               ),
-              sequence(
-                comparand(),
-                optional(
-                  as("unknown",
-                    plus(
-                      any()
-                    )
-                  )
-                )
-              ),
+              scalarFunctionCall(),
+              comparand(),
               as("unknown",
-                plus(
-                  any()
+                skipto(
+                  choice(
+                    literal(","),
+                    keyword("INTO"),
+                    keyword("FROM"),
+                    eof()
+                  )
                 )
               )
             ),
-            // Closure:
-            literal(",")
+            optional(
+              as("unknown",
+                skipto(
+                  choice(
+                    literal(","),
+                    keyword("INTO"),
+                    keyword("FROM"),
+                    eof()
+                  )
+                )
+              )
+            )
           )
         );
       }
@@ -3404,6 +3395,109 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return aggregateFunctionParser;
+    }
+    
+    // ========================================================
+    // scalarFunctionCall
+    // ........................................................
+    
+    private ParserCombinator scalarFunctionCallParser = null;
+    
+    public final Start scalarFunctionCall = Start.on(getNamespace(), "scalarFunctionCall");
+    
+    public ParserCombinator scalarFunctionCall() {
+      if (scalarFunctionCallParser == null) {
+        FutureParser future = scoped("scalarFunctionCall", PUBLIC, true);
+        scalarFunctionCallParser = future;
+        future.setParser(
+          sequence(
+            scalarFunctionCall$functionName(),
+            literal("("),
+            optional(
+              sequence(
+                scalarFunctionCall$functionArgument(),
+                star(
+                  sequence(
+                    literal(","),
+                    scalarFunctionCall$functionArgument()
+                  )
+                )
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return scalarFunctionCallParser;
+    }
+    
+    // ========================================================
+    // functionName
+    // ........................................................
+    
+    private ParserCombinator scalarFunctionCall$functionNameParser = null;
+    
+    public final Start scalarFunctionCall$functionName = Start.on(getNamespace(), "functionName");
+    
+    public ParserCombinator scalarFunctionCall$functionName() {
+      if (scalarFunctionCall$functionNameParser == null) {
+        FutureParser future = scoped("functionName", PUBLIC, true);
+        scalarFunctionCall$functionNameParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return scalarFunctionCall$functionNameParser;
+    }
+    
+    // ========================================================
+    // functionArgument
+    // ........................................................
+    
+    private ParserCombinator scalarFunctionCall$functionArgumentParser = null;
+    
+    public final Start scalarFunctionCall$functionArgument = Start.on(getNamespace(), "functionArgument");
+    
+    public ParserCombinator scalarFunctionCall$functionArgument() {
+      if (scalarFunctionCall$functionArgumentParser == null) {
+        FutureParser future = scoped("functionArgument", PUBLIC, true);
+        scalarFunctionCall$functionArgumentParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              as("allColumns",
+                literal("*")
+              ),
+              scalarFunctionCall(),
+              comparand(),
+              as("unknown",
+                skipto(
+                  choice(
+                    literal(","),
+                    literal(")"),
+                    eof()
+                  )
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  choice(
+                    literal(","),
+                    literal(")"),
+                    eof()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return scalarFunctionCall$functionArgumentParser;
     }
     
     // ========================================================

@@ -11,3 +11,9 @@ target fetchStatement;
 
 # FETCH with USING DESCRIPTOR (dynamic SQL Method 4)
 +[ FETCH C1 USING DESCRIPTOR ] HostParameter:hostParameterSpecification
+
+# Rowset-positioned and scrollable fetches; hyphenated cursor names.
++[ FETCH NEXT ROWSET FROM T316CUR FOR :WS-ROWSET-LIMIT ROWS
+     INTO :WS-GFC-CON-ID, :TMP-CON-ID ]
++[ FETCH ABSOLUTE :K-REC T101-DDA-DEL-CSR INTO :WS-A ]
++[ FETCH T101-DDA-DEL-CSR INTO :WS-A ]

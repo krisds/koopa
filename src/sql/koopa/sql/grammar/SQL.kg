@@ -377,7 +377,8 @@ end
 ## ----------------------------------------------------------------------------
 
 def fetchStatement =
-    FETCH [fetchOrientation] cursorName
+    FETCH [fetchOrientation] [rowsetClause] [FROM] cursorName
+    [fetchFor]
     [fetchInto]
     [fetchUsingDescriptor]
     [unknown: --> eof]
@@ -386,7 +387,19 @@ def fetchStatement =
       ( NEXT | PRIOR | FIRST | LAST
       | BEFORE | AFTER
       | CURRENT
+      | absolute: ABSOLUTE ( hostParameterSpecification | numericLiteral )
+      | relative: RELATIVE ( hostParameterSpecification | numericLiteral )
       )
+  end
+
+  # Db2 rowset-positioned fetch: FETCH NEXT ROWSET FROM c FOR :n ROWS.
+  where def rowsetClause =                           # [IBM DB2 SQL Statements]
+      ROWSET [ STARTING AT ( ABSOLUTE | RELATIVE )
+               ( hostParameterSpecification | numericLiteral ) ]
+  end
+
+  where def fetchFor =                               # [IBM DB2 SQL Statements]
+      FOR ( hostParameterSpecification | numericLiteral ) ( ROW | ROWS )
   end
 
   where def fetchInto =
@@ -409,7 +422,16 @@ def commitStatement =
 end
 
 def setStatement =
-    SET [unknown: --> eof]
+    SET
+    [ hostAssignment (',' hostAssignment)* ]
+    [unknown: --> eof]
+
+  where def hostAssignment =
+      hostParameterSpecification '='
+      ( valueExpression [unknown: --> (',' | eof)]
+      | unknown: --> (',' | eof)
+      )
+  end
 end
 
 def getDiagnosticsStatement =
@@ -1015,9 +1037,16 @@ end
 
 
 def cursorName =
-   [ module . ] identifier
+   [ module . ] cursorIdentifier
 
   where def module =  MODULE  end
+
+  # glue a full COBOL word back together!
+  where hiding def cursorIdentifier =
+      identifier: ( delimitedIdentifier
+                  | regularIdentifier: cobolWord
+                  )
+  end
 end
 
 def tableName =

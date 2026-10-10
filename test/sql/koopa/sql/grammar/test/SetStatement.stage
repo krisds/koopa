@@ -11,3 +11,8 @@ target setStatement;
 
 # SET CURRENT SCHEMA
 +[ SET CURRENT SCHEMA = 'PRODUCTION' ]
+
+# Host-variable assignments.
++[ SET :WS-DB2-TS = CURRENT TIMESTAMP ]
++[ SET :WS-TS = CURRENT TIMESTAMP - CURRENT TIMEZONE,
+       :WS-TODAY = CURRENT DATE ]

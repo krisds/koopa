@@ -1968,7 +1968,16 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               fetchStatement$fetchOrientation()
             ),
+            optional(
+              fetchStatement$rowsetClause()
+            ),
+            optional(
+              keyword("FROM")
+            ),
             cursorName(),
+            optional(
+              fetchStatement$fetchFor()
+            ),
             optional(
               fetchStatement$fetchInto()
             ),
@@ -2009,12 +2018,96 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("LAST"),
             keyword("BEFORE"),
             keyword("AFTER"),
-            keyword("CURRENT")
+            keyword("CURRENT"),
+            as("absolute",
+              sequence(
+                keyword("ABSOLUTE"),
+                choice(
+                  hostParameterSpecification(),
+                  numericLiteral()
+                )
+              )
+            ),
+            as("relative",
+              sequence(
+                keyword("RELATIVE"),
+                choice(
+                  hostParameterSpecification(),
+                  numericLiteral()
+                )
+              )
+            )
           )
         );
       }
     
       return fetchStatement$fetchOrientationParser;
+    }
+    
+    // ========================================================
+    // rowsetClause
+    // ........................................................
+    
+    private ParserCombinator fetchStatement$rowsetClauseParser = null;
+    
+    public final Start fetchStatement$rowsetClause = Start.on(getNamespace(), "rowsetClause");
+    
+    public ParserCombinator fetchStatement$rowsetClause() {
+      if (fetchStatement$rowsetClauseParser == null) {
+        FutureParser future = scoped("rowsetClause", PUBLIC, true);
+        fetchStatement$rowsetClauseParser = future;
+        future.setParser(
+          sequence(
+            keyword("ROWSET"),
+            optional(
+              sequence(
+                keyword("STARTING"),
+                keyword("AT"),
+                choice(
+                  keyword("ABSOLUTE"),
+                  keyword("RELATIVE")
+                ),
+                choice(
+                  hostParameterSpecification(),
+                  numericLiteral()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return fetchStatement$rowsetClauseParser;
+    }
+    
+    // ========================================================
+    // fetchFor
+    // ........................................................
+    
+    private ParserCombinator fetchStatement$fetchForParser = null;
+    
+    public final Start fetchStatement$fetchFor = Start.on(getNamespace(), "fetchFor");
+    
+    public ParserCombinator fetchStatement$fetchFor() {
+      if (fetchStatement$fetchForParser == null) {
+        FutureParser future = scoped("fetchFor", PUBLIC, true);
+        fetchStatement$fetchForParser = future;
+        future.setParser(
+          sequence(
+            keyword("FOR"),
+            choice(
+              hostParameterSpecification(),
+              numericLiteral()
+            ),
+            choice(
+              keyword("ROW"),
+              keyword("ROWS")
+            )
+          )
+        );
+      }
+    
+      return fetchStatement$fetchForParser;
     }
     
     // ========================================================
@@ -2148,6 +2241,17 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("SET"),
             optional(
+              sequence(
+                setStatement$hostAssignment(),
+                star(
+                  sequence(
+                    literal(","),
+                    setStatement$hostAssignment()
+                  )
+                )
+              )
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -2159,6 +2263,52 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return setStatementParser;
+    }
+    
+    // ========================================================
+    // hostAssignment
+    // ........................................................
+    
+    private ParserCombinator setStatement$hostAssignmentParser = null;
+    
+    public final Start setStatement$hostAssignment = Start.on(getNamespace(), "hostAssignment");
+    
+    public ParserCombinator setStatement$hostAssignment() {
+      if (setStatement$hostAssignmentParser == null) {
+        FutureParser future = scoped("hostAssignment", PUBLIC, true);
+        setStatement$hostAssignmentParser = future;
+        future.setParser(
+          sequence(
+            hostParameterSpecification(),
+            literal("="),
+            choice(
+              sequence(
+                valueExpression(),
+                optional(
+                  as("unknown",
+                    skipto(
+                      choice(
+                        literal(","),
+                        eof()
+                      )
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                skipto(
+                  choice(
+                    literal(","),
+                    eof()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return setStatement$hostAssignmentParser;
     }
     
     // ========================================================
@@ -4872,7 +5022,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal(".")
               )
             ),
-            identifier()
+            cursorName$cursorIdentifier()
           )
         );
       }
@@ -4898,6 +5048,33 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return cursorName$moduleParser;
+    }
+    
+    // ========================================================
+    // cursorIdentifier
+    // ........................................................
+    
+    private ParserCombinator cursorName$cursorIdentifierParser = null;
+    
+    public final Start cursorName$cursorIdentifier = Start.on(getNamespace(), "cursorIdentifier");
+    
+    public ParserCombinator cursorName$cursorIdentifier() {
+      if (cursorName$cursorIdentifierParser == null) {
+        FutureParser future = scoped("cursorIdentifier", HIDING, true);
+        cursorName$cursorIdentifierParser = future;
+        future.setParser(
+          as("identifier",
+            choice(
+              delimitedIdentifier(),
+              as("regularIdentifier",
+                cobolWord()
+              )
+            )
+          )
+        );
+      }
+    
+      return cursorName$cursorIdentifierParser;
     }
     
     // ========================================================

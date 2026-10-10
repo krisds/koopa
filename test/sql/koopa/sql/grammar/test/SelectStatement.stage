@@ -156,6 +156,14 @@ target selectStatement;
 +[ SELECT 'FE' AS SRC_SYSTEM, ACCT_ID
    FROM T100_ACCOUNT ]
 
+# Scalar subqueries as select items, including internal parentheses.
++[ SELECT (SELECT MAX(B) FROM T2 WHERE T2.K = T1.K), T1.A
+   FROM T1 ]
+
++[ SELECT (SELECT COUNT(*) FROM T310_RELATION
+             WHERE REL_OBJECT = A.NAD_KEY_ID), A.NAD_KEY_ID
+   FROM T305_NAME_ADDRESS A ]
+
 # Scalar function calls with internal commas are single items, not split.
 +[ SELECT SUBSTR(NAME, 1, 3), ACCT_ID, DIGITS(BALANCE)
    FROM ACCOUNTS ]

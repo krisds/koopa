@@ -135,6 +135,7 @@ def selectStatement =
       ( aggregateFunction
       | allColumns: '*'
       | scalarFunctionCall
+      | subquery
       | comparand
       | unknown: --> (',' | INTO | FROM | eof)
       )
@@ -263,7 +264,8 @@ def updateStatement =
     # assignment ends the list with the remainder as water.
     where def assignment =
         ( columnReference '='
-          ( comparand [unknown: _+]
+          ( subquery  [unknown: _+]
+          | comparand [unknown: _+]
           | unknown: _+
           )
         ) %upto { (',' | WHERE) }
@@ -722,6 +724,7 @@ def scalarFunctionCall =
   where def functionArgument =
       ( allColumns: '*'
       | scalarFunctionCall
+      | subquery
       | comparand
       | unknown: --> (',' | ')' | eof)
       )
@@ -881,9 +884,25 @@ end
 
 def targetTable =  ( ONLY '(' tableName ')' | tableName )   end
 
-# A (possibly qualified) column reference. Guarded so that a scalar
-# function name (an identifier immediately followed by an opening
-# parenthesis) or a T.* wildcard is not mistaken for a column.
+# A parenthesised subquery.
+# - The embedded select is bounded at the closing parenthesis:
+#   - constructs that parse structurally (aggregates, function calls) consume their own parentheses,
+#     so for them the first free ')' is the subquery's closer.
+# - A subquery whose interior falls to water holding a bare ')' ends early and
+#   the enclosing alternative degrades to water.
+# NOTE: Only use outside a search condition: explicitly matching parentheses
+#       inside one disturbs its balancer.
+def subquery =
+    '(' ( %balancing
+              <{ '(' } { ')' }>
+              <{ '[' } { ']' }>
+              <{ '{' } { '}' }>
+              <{ leftBracketTrigraph } { rightBracketTrigraph }>
+            ( selectStatement %upto { %notnested ')' } )
+        )
+    ')'
+end
+
 def columnReference =
     ( tableQualifier . identifier (%not '(')
     | identifier (%not ('.' | '('))

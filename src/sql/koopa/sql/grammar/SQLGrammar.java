@@ -652,6 +652,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("*")
               ),
               scalarFunctionCall(),
+              subquery(),
               comparand(),
               as("unknown",
                 skipto(
@@ -1420,6 +1421,16 @@ public class SQLGrammar extends SQLBaseGrammar {
               columnReference(),
               literal("="),
               choice(
+                sequence(
+                  subquery(),
+                  optional(
+                    as("unknown",
+                      plus(
+                        any()
+                      )
+                    )
+                  )
+                ),
                 sequence(
                   comparand(),
                   optional(
@@ -3471,6 +3482,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("*")
               ),
               scalarFunctionCall(),
+              subquery(),
               comparand(),
               as("unknown",
                 skipto(
@@ -4363,6 +4375,54 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return targetTableParser;
+    }
+    
+    // ========================================================
+    // subquery
+    // ........................................................
+    
+    private ParserCombinator subqueryParser = null;
+    
+    public final Start subquery = Start.on(getNamespace(), "subquery");
+    
+    public ParserCombinator subquery() {
+      if (subqueryParser == null) {
+        FutureParser future = scoped("subquery", PUBLIC, true);
+        subqueryParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            balancing(
+              // Closure:
+              literal("("),
+              // Closure:
+              literal(")"),
+              // Closure:
+              literal("["),
+              // Closure:
+              literal("]"),
+              // Closure:
+              literal("{"),
+              // Closure:
+              literal("}"),
+              // Closure:
+              leftBracketTrigraph(),
+              // Closure:
+              rightBracketTrigraph(),
+              upto(
+                selectStatement(),
+                // Closure:
+                notNested(
+                  literal(")")
+                )
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return subqueryParser;
     }
     
     // ========================================================

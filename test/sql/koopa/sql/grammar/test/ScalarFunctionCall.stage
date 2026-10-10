@@ -10,3 +10,6 @@ target scalarFunctionCall;
 
 # Not a call (no argument bracket).
 -[ NAD_KEY_ID ]
+
+# A subquery as a function argument.
++[ COALESCE((SELECT D FROM T3), 'X') ]

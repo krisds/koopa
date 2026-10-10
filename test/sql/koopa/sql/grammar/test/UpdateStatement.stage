@@ -19,3 +19,9 @@ target updateStatement;
      SET NAD_NAME = SUBSTR(:WS-NAME, 1, 30),
          NAD_FLAG = 'Y'
      WHERE NAD_KEY_ID = :WS-KEY-ID ]
+
+# Scalar subquery as an assignment value.
++[ UPDATE T1
+     SET C1 = (SELECT MAX(TS) FROM T2 WHERE T2.K = T1.K),
+         C2 = :WS-A
+     WHERE K = 1 ]

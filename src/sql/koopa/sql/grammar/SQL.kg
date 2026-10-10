@@ -88,17 +88,18 @@ def columnDefinitions =
 
   where def columnName =  identifier  end
 
-  where def dataType =
-      typeName [ '(' numericLiteral [',' numericLiteral] ')' ]
+end
 
-    where def typeName =
-        ( CHARACTER | CHAR | VARCHAR | GRAPHIC | VARGRAPHIC
-        | SMALLINT | INTEGER | INT | BIGINT
-        | DECIMAL | DEC | NUMERIC | FLOAT | REAL | DOUBLE
-        | DATE | TIME | TIMESTAMP
-        | CLOB | BLOB | DBCLOB | ROWID
-        )
-    end
+def dataType =
+    typeName [ '(' numericLiteral [',' numericLiteral] ')' ]
+
+  where def typeName =
+      ( CHARACTER | CHAR | VARCHAR | GRAPHIC | VARGRAPHIC
+      | SMALLINT | INTEGER | INT | BIGINT
+      | DECIMAL | DEC | NUMERIC | FLOAT | REAL | DOUBLE
+      | DATE | TIME | TIMESTAMP
+      | CLOB | BLOB | DBCLOB | ROWID
+      )
   end
 end
 
@@ -802,7 +803,7 @@ hiding def valueExpression =
 end
 
 def duration =                                       # [IBM DB2 SQL Statements]
-    numericLiteral
+    ( numericLiteral | hostParameterSpecification )
     ( MICROSECOND | MICROSECONDS | SECOND | SECONDS | MINUTE | MINUTES
     | HOUR | HOURS | DAY | DAYS | MONTH | MONTHS | YEAR | YEARS )
 end
@@ -816,6 +817,7 @@ private def concatOperator =  '|' ++ '|'  end
 hiding def comparand =
     ( specialRegister
     | hostParameterSpecification
+    | hexLiteral
     | stringLiteral
     | numericLiteral
     | subquery
@@ -871,6 +873,7 @@ def functionArgument =
     | valueExpression
     | unknown: --> (',' | ')' | eof)
     )
+    [ AS dataType ]
     [ unknown: --> (',' | ')' | eof) ]
 end
 
@@ -1122,6 +1125,10 @@ end
 
 
 def stringLiteral =  str  end
+
+# A hexadecimal string literal, X'00'.
+# The X must be tight against the string or it is an ordinary column reference.
+def hexLiteral =  X ++ str  end
 
 def numericLiteral =
     (@NUMBER _) [++ ('.' ++ (@NUMBER _))]

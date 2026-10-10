@@ -17,3 +17,8 @@ target scalarFunctionCall;
 
 # Arithmetic inside arguments parses as a value expression.
 +[ SUBSTR(NAME, POS + 1, LEN - 2) ]
+
+# Hex literals, CAST targets and host-variable durations as arguments.
++[ REPLACE(:WS-OP-CIF-ID, X'00', ' ') ]
++[ CAST(ACCT_BAL AS DECIMAL(15, 2)) ]
++[ DATE(TS + :WS-COUNT MONTH) ]

@@ -281,7 +281,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             columnDefinitions$columnName(),
-            columnDefinitions$dataType(),
+            dataType(),
             optional(
               sequence(
                 keyword("FOR"),
@@ -340,17 +340,17 @@ public class SQLGrammar extends SQLBaseGrammar {
     // dataType
     // ........................................................
     
-    private ParserCombinator columnDefinitions$dataTypeParser = null;
+    private ParserCombinator dataTypeParser = null;
     
-    public final Start columnDefinitions$dataType = Start.on(getNamespace(), "dataType");
+    public final Start dataType = Start.on(getNamespace(), "dataType");
     
-    public ParserCombinator columnDefinitions$dataType() {
-      if (columnDefinitions$dataTypeParser == null) {
+    public ParserCombinator dataType() {
+      if (dataTypeParser == null) {
         FutureParser future = scoped("dataType", PUBLIC, true);
-        columnDefinitions$dataTypeParser = future;
+        dataTypeParser = future;
         future.setParser(
           sequence(
-            columnDefinitions$dataType$typeName(),
+            dataType$typeName(),
             optional(
               sequence(
                 literal("("),
@@ -368,21 +368,21 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return columnDefinitions$dataTypeParser;
+      return dataTypeParser;
     }
     
     // ========================================================
     // typeName
     // ........................................................
     
-    private ParserCombinator columnDefinitions$dataType$typeNameParser = null;
+    private ParserCombinator dataType$typeNameParser = null;
     
-    public final Start columnDefinitions$dataType$typeName = Start.on(getNamespace(), "typeName");
+    public final Start dataType$typeName = Start.on(getNamespace(), "typeName");
     
-    public ParserCombinator columnDefinitions$dataType$typeName() {
-      if (columnDefinitions$dataType$typeNameParser == null) {
+    public ParserCombinator dataType$typeName() {
+      if (dataType$typeNameParser == null) {
         FutureParser future = scoped("typeName", PUBLIC, true);
-        columnDefinitions$dataType$typeNameParser = future;
+        dataType$typeNameParser = future;
         future.setParser(
           choice(
             keyword("CHARACTER"),
@@ -411,7 +411,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return columnDefinitions$dataType$typeNameParser;
+      return dataType$typeNameParser;
     }
     
     // ========================================================
@@ -3843,7 +3843,10 @@ public class SQLGrammar extends SQLBaseGrammar {
         durationParser = future;
         future.setParser(
           sequence(
-            numericLiteral(),
+            choice(
+              numericLiteral(),
+              hostParameterSpecification()
+            ),
             choice(
               keyword("MICROSECOND"),
               keyword("MICROSECONDS"),
@@ -3934,6 +3937,7 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             specialRegister(),
             hostParameterSpecification(),
+            hexLiteral(),
             stringLiteral(),
             numericLiteral(),
             subquery(),
@@ -4240,6 +4244,12 @@ public class SQLGrammar extends SQLBaseGrammar {
                     eof()
                   )
                 )
+              )
+            ),
+            optional(
+              sequence(
+                keyword("AS"),
+                dataType()
               )
             ),
             optional(
@@ -5532,6 +5542,31 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return stringLiteralParser;
+    }
+    
+    // ========================================================
+    // hexLiteral
+    // ........................................................
+    
+    private ParserCombinator hexLiteralParser = null;
+    
+    public final Start hexLiteral = Start.on(getNamespace(), "hexLiteral");
+    
+    public ParserCombinator hexLiteral() {
+      if (hexLiteralParser == null) {
+        FutureParser future = scoped("hexLiteral", PUBLIC, true);
+        hexLiteralParser = future;
+        future.setParser(
+          sequence(
+            keyword("X"),
+            opt(NOSKIP,
+              str()
+            )
+          )
+        );
+      }
+    
+      return hexLiteralParser;
     }
     
     // ========================================================

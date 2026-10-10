@@ -193,6 +193,23 @@ target selectStatement;
      AND BAL + FEE > :WS-LIMIT
      AND TS < CURRENT TIMESTAMP - 15 DAYS ]
 
+# subquery predicates with multi-conjunct interiors, followed by WITH UR.
++[ SELECT RRG_UCN || RUG_UCN || RFG_FAC_ID
+   INTO ] HostParameter:hostParameterSpecification [
+   FROM T604_REL_DDA, T603_REL_SUBFACILITY
+   WHERE RDG_DDA_ACCT = :RDG-DDA-ACCT
+     AND RDG_FAC_ID = RSG_FAC_ID
+     AND RFG_EXP_DT >= CURRENT DATE
+     AND RFG_FAC_TYPE IN
+       (SELECT RFT_FAC_TYPE FROM T609_REL_FAC_TYPE
+         WHERE RFT_CLASS = 'A')
+     AND NOT EXISTS
+       (SELECT 1 FROM T605_REL_DROPPED_FACILITIES
+         WHERE RDF_FAC_ID = RSG_FAC_ID
+           AND RDF_SFAC_NO = RSG_SFAC_NO
+           AND RDF_FE = RSG_FE)
+   WITH UR ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

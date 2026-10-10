@@ -170,8 +170,18 @@ def selectStatement =
             <{ leftBracketTrigraph } { rightBracketTrigraph }>
           ( ( searchCondition
             | unknown : _*
-            ) %upto { %notnested nextBlockOrEnd } )
+            ) %upto { whereBoundary } )
       )
+
+    # The block starters can occur inside a parenthesised subquery, so
+    # they only bound the clause when not nested. The trailing clauses -
+    # FOR, the isolation WITH, OPTIMIZE, QUERYNO, WINDOW - cannot occur
+    # inside a subquery, so they bound the clause unconditionally.
+    where private def whereBoundary =
+        ( %notnested ( FROM | WHERE | GROUP BY | HAVING | ORDER BY
+                     | FETCH FIRST )
+        | WINDOW | FOR | WITH | OPTIMIZE | QUERYNO | eof )
+    end
   end
 
   where def groupBy =
@@ -885,17 +895,19 @@ def tableReferenceList =
                    | unknown: _*
                    )
                    [unknown: _*]
-                 ) %upto { %notnested afterJoinCondition } )
+                 ) %upto { afterJoinCondition } )
            )
       | USING (unknown: --> afterJoinCondition)
       )
   end
 
+  # Split like the select's whereBoundary: everything through FETCH FIRST
+  # can occur inside a parenthesised subquery and is guarded.
   where private def afterJoinCondition =
-      ( ','
-      | INNER | LEFT | RIGHT | FULL | CROSS | JOIN
-      | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST | WINDOW
-      | FOR | WITH | OPTIMIZE | QUERYNO | eof )
+      ( %notnested ( ','
+                   | INNER | LEFT | RIGHT | FULL | CROSS | JOIN
+                   | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST )
+      | WINDOW | FOR | WITH | OPTIMIZE | QUERYNO | eof )
   end
 end
 

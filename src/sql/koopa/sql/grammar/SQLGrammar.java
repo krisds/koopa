@@ -821,9 +821,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                   )
                 ),
                 // Closure:
-                notNested(
-                  selectStatement$nextBlockOrEnd()
-                )
+                selectStatement$where$whereBoundary()
               )
             )
           )
@@ -831,6 +829,52 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$whereParser;
+    }
+    
+    // ========================================================
+    // whereBoundary
+    // ........................................................
+    
+    private ParserCombinator selectStatement$where$whereBoundaryParser = null;
+    
+    protected final Start selectStatement$where$whereBoundary = Start.on(getNamespace(), "whereBoundary");
+    
+    protected ParserCombinator selectStatement$where$whereBoundary() {
+      if (selectStatement$where$whereBoundaryParser == null) {
+        FutureParser future = scoped("whereBoundary", PRIVATE, true);
+        selectStatement$where$whereBoundaryParser = future;
+        future.setParser(
+          choice(
+            notNested(
+              choice(
+                keyword("FROM"),
+                keyword("WHERE"),
+                sequence(
+                  keyword("GROUP"),
+                  keyword("BY")
+                ),
+                keyword("HAVING"),
+                sequence(
+                  keyword("ORDER"),
+                  keyword("BY")
+                ),
+                sequence(
+                  keyword("FETCH"),
+                  keyword("FIRST")
+                )
+              )
+            ),
+            keyword("WINDOW"),
+            keyword("FOR"),
+            keyword("WITH"),
+            keyword("OPTIMIZE"),
+            keyword("QUERYNO"),
+            eof()
+          )
+        );
+      }
+    
+      return selectStatement$where$whereBoundaryParser;
     }
     
     // ========================================================
@@ -4199,9 +4243,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                     )
                   ),
                   // Closure:
-                  notNested(
-                    tableReferenceList$afterJoinCondition()
-                  )
+                  tableReferenceList$afterJoinCondition()
                 )
               )
             ),
@@ -4234,26 +4276,30 @@ public class SQLGrammar extends SQLBaseGrammar {
         tableReferenceList$afterJoinConditionParser = future;
         future.setParser(
           choice(
-            literal(","),
-            keyword("INNER"),
-            keyword("LEFT"),
-            keyword("RIGHT"),
-            keyword("FULL"),
-            keyword("CROSS"),
-            keyword("JOIN"),
-            keyword("WHERE"),
-            sequence(
-              keyword("GROUP"),
-              keyword("BY")
-            ),
-            keyword("HAVING"),
-            sequence(
-              keyword("ORDER"),
-              keyword("BY")
-            ),
-            sequence(
-              keyword("FETCH"),
-              keyword("FIRST")
+            notNested(
+              choice(
+                literal(","),
+                keyword("INNER"),
+                keyword("LEFT"),
+                keyword("RIGHT"),
+                keyword("FULL"),
+                keyword("CROSS"),
+                keyword("JOIN"),
+                keyword("WHERE"),
+                sequence(
+                  keyword("GROUP"),
+                  keyword("BY")
+                ),
+                keyword("HAVING"),
+                sequence(
+                  keyword("ORDER"),
+                  keyword("BY")
+                ),
+                sequence(
+                  keyword("FETCH"),
+                  keyword("FIRST")
+                )
+              )
             ),
             keyword("WINDOW"),
             keyword("FOR"),

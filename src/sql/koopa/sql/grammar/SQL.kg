@@ -167,13 +167,21 @@ def selectStatement =
       | scalarFunctionCall
       | caseExpression
       | '(' caseExpression ')'
-      | comparand
+      | parenthesizedExpression
+      | valueExpression
       | unknown: --> (',' | INTO | FROM | eof)
       )
-      # Alias or any other trailing decoration, up to the next item or the
+      [ columnLabel ]
+      # Any remaining trailing decoration, up to the next item or the
       # INTO / FROM boundary. Bracket-free, so it cannot swallow a comma
       # that belongs to the list.
       [ unknown: --> (',' | INTO | FROM | eof) ]
+    end
+
+    where def columnLabel =
+        AS columnAlias
+
+      where def columnAlias =  identifier  end
     end
   end
 
@@ -800,11 +808,11 @@ def duration =                                       # [IBM DB2 SQL Statements]
 end
 
 private def arithmeticOperator =
-    ( '+' | '-' | '*' | '/' )
+    ( '+' | '-' | '*' | '/' | concatOperator )
 end
 
-# The simple operands recognised inside comparisons, SET assignments and
-# VALUES lists. Hiding: only the matched child surfaces.
+private def concatOperator =  '|' ++ '|'  end
+
 hiding def comparand =
     ( specialRegister
     | hostParameterSpecification
@@ -859,17 +867,22 @@ end
 def functionArgument =
     ( allColumns: '*'
     | caseExpression
+    | parenthesizedExpression
     | valueExpression
     | unknown: --> (',' | ')' | eof)
     )
     [ unknown: --> (',' | ')' | eof) ]
 end
 
-# A CASE expression is delimited by its own keywords, so its pieces are
-# bounded by plain skips to the next keyword - no parenthesis tracking
-# involved. Conditions and unrecognised results stay water inside their
-# clause. Used where an expression is expected outside search
-# conditions; a nested CASE inside a result degrades to water.
+# A parenthesised value expression, as in (B.FE_PROC_DATE - :WS-IX DAY).
+# NOTE: Use only outside search conditions!
+#       Matching explicit parentheses inside one disturbs its balancer.
+def parenthesizedExpression =
+    '(' valueExpression ')'
+end
+
+# A CASE expression is delimited by its own keywords.
+# Note: a nested CASE inside a result degrades to water.
 def caseExpression =
     CASE [ caseOperand ] whenClause (whenClause)* [ elseClause ] END
 

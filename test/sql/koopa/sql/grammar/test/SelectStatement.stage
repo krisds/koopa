@@ -222,6 +222,15 @@ target selectStatement;
    GROUP BY CLASS, SCHOOL_ID
    ORDER BY 2 ]
 
+# Items as full expressions: concatenation, date arithmetic with
+# durations, parenthesised groups, and AS aliases.
++[ SELECT RRG_UCN || RUG_UCN || RFG_FAC_ID AS RRD_KEY
+   FROM T604_REL_DDA ]
+
++[ SELECT CURRENT DATE + 1 DAY,
+          (B.FE_PROC_DATE - :WS-IX DAY) AS CUTOFF
+   FROM T200_FE_CONTROL B ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

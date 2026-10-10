@@ -843,7 +843,8 @@ public class SQLGrammar extends SQLBaseGrammar {
                 caseExpression(),
                 literal(")")
               ),
-              comparand(),
+              parenthesizedExpression(),
+              valueExpression(),
               as("unknown",
                 skipto(
                   choice(
@@ -854,6 +855,9 @@ public class SQLGrammar extends SQLBaseGrammar {
                   )
                 )
               )
+            ),
+            optional(
+              selectStatement$selectList$columnLabel()
             ),
             optional(
               as("unknown",
@@ -872,6 +876,49 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$selectList$sublistParser;
+    }
+    
+    // ========================================================
+    // columnLabel
+    // ........................................................
+    
+    private ParserCombinator selectStatement$selectList$columnLabelParser = null;
+    
+    public final Start selectStatement$selectList$columnLabel = Start.on(getNamespace(), "columnLabel");
+    
+    public ParserCombinator selectStatement$selectList$columnLabel() {
+      if (selectStatement$selectList$columnLabelParser == null) {
+        FutureParser future = scoped("columnLabel", PUBLIC, true);
+        selectStatement$selectList$columnLabelParser = future;
+        future.setParser(
+          sequence(
+            keyword("AS"),
+            selectStatement$selectList$columnLabel$columnAlias()
+          )
+        );
+      }
+    
+      return selectStatement$selectList$columnLabelParser;
+    }
+    
+    // ========================================================
+    // columnAlias
+    // ........................................................
+    
+    private ParserCombinator selectStatement$selectList$columnLabel$columnAliasParser = null;
+    
+    public final Start selectStatement$selectList$columnLabel$columnAlias = Start.on(getNamespace(), "columnAlias");
+    
+    public ParserCombinator selectStatement$selectList$columnLabel$columnAlias() {
+      if (selectStatement$selectList$columnLabel$columnAliasParser == null) {
+        FutureParser future = scoped("columnAlias", PUBLIC, true);
+        selectStatement$selectList$columnLabel$columnAliasParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return selectStatement$selectList$columnLabel$columnAliasParser;
     }
     
     // ========================================================
@@ -3837,12 +3884,38 @@ public class SQLGrammar extends SQLBaseGrammar {
             literal("+"),
             literal("-"),
             literal("*"),
-            literal("/")
+            literal("/"),
+            concatOperator()
           )
         );
       }
     
       return arithmeticOperatorParser;
+    }
+    
+    // ========================================================
+    // concatOperator
+    // ........................................................
+    
+    private ParserCombinator concatOperatorParser = null;
+    
+    protected final Start concatOperator = Start.on(getNamespace(), "concatOperator");
+    
+    protected ParserCombinator concatOperator() {
+      if (concatOperatorParser == null) {
+        FutureParser future = scoped("concatOperator", PRIVATE, true);
+        concatOperatorParser = future;
+        future.setParser(
+          sequence(
+            literal("|"),
+            opt(NOSKIP,
+              literal("|")
+            )
+          )
+        );
+      }
+    
+      return concatOperatorParser;
     }
     
     // ========================================================
@@ -4157,6 +4230,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("*")
               ),
               caseExpression(),
+              parenthesizedExpression(),
               valueExpression(),
               as("unknown",
                 skipto(
@@ -4184,6 +4258,30 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return functionArgumentParser;
+    }
+    
+    // ========================================================
+    // parenthesizedExpression
+    // ........................................................
+    
+    private ParserCombinator parenthesizedExpressionParser = null;
+    
+    public final Start parenthesizedExpression = Start.on(getNamespace(), "parenthesizedExpression");
+    
+    public ParserCombinator parenthesizedExpression() {
+      if (parenthesizedExpressionParser == null) {
+        FutureParser future = scoped("parenthesizedExpression", PUBLIC, true);
+        parenthesizedExpressionParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            valueExpression(),
+            literal(")")
+          )
+        );
+      }
+    
+      return parenthesizedExpressionParser;
     }
     
     // ========================================================

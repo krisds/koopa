@@ -160,6 +160,9 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("TABLE"),
             identifier(),
             optional(
+              columnDefinitions()
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -194,7 +197,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             tableName(),
             keyword("TABLE"),
             optional(
-              declareTableStatement$columnDefinitions()
+              columnDefinitions()
             ),
             optional(
               as("unknown",
@@ -237,22 +240,22 @@ public class SQLGrammar extends SQLBaseGrammar {
     // columnDefinitions
     // ........................................................
     
-    private ParserCombinator declareTableStatement$columnDefinitionsParser = null;
+    private ParserCombinator columnDefinitionsParser = null;
     
-    public final Start declareTableStatement$columnDefinitions = Start.on(getNamespace(), "columnDefinitions");
+    public final Start columnDefinitions = Start.on(getNamespace(), "columnDefinitions");
     
-    public ParserCombinator declareTableStatement$columnDefinitions() {
-      if (declareTableStatement$columnDefinitionsParser == null) {
+    public ParserCombinator columnDefinitions() {
+      if (columnDefinitionsParser == null) {
         FutureParser future = scoped("columnDefinitions", PUBLIC, true);
-        declareTableStatement$columnDefinitionsParser = future;
+        columnDefinitionsParser = future;
         future.setParser(
           sequence(
             literal("("),
-            declareTableStatement$columnDefinition(),
+            columnDefinitions$columnDefinition(),
             star(
               sequence(
                 literal(","),
-                declareTableStatement$columnDefinition()
+                columnDefinitions$columnDefinition()
               )
             ),
             literal(")")
@@ -260,25 +263,25 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return declareTableStatement$columnDefinitionsParser;
+      return columnDefinitionsParser;
     }
     
     // ========================================================
     // columnDefinition
     // ........................................................
     
-    private ParserCombinator declareTableStatement$columnDefinitionParser = null;
+    private ParserCombinator columnDefinitions$columnDefinitionParser = null;
     
-    public final Start declareTableStatement$columnDefinition = Start.on(getNamespace(), "columnDefinition");
+    public final Start columnDefinitions$columnDefinition = Start.on(getNamespace(), "columnDefinition");
     
-    public ParserCombinator declareTableStatement$columnDefinition() {
-      if (declareTableStatement$columnDefinitionParser == null) {
+    public ParserCombinator columnDefinitions$columnDefinition() {
+      if (columnDefinitions$columnDefinitionParser == null) {
         FutureParser future = scoped("columnDefinition", PUBLIC, true);
-        declareTableStatement$columnDefinitionParser = future;
+        columnDefinitions$columnDefinitionParser = future;
         future.setParser(
           sequence(
-            declareTableStatement$columnName(),
-            declareTableStatement$dataType(),
+            columnDefinitions$columnName(),
+            columnDefinitions$dataType(),
             optional(
               sequence(
                 keyword("FOR"),
@@ -310,44 +313,44 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return declareTableStatement$columnDefinitionParser;
+      return columnDefinitions$columnDefinitionParser;
     }
     
     // ========================================================
     // columnName
     // ........................................................
     
-    private ParserCombinator declareTableStatement$columnNameParser = null;
+    private ParserCombinator columnDefinitions$columnNameParser = null;
     
-    public final Start declareTableStatement$columnName = Start.on(getNamespace(), "columnName");
+    public final Start columnDefinitions$columnName = Start.on(getNamespace(), "columnName");
     
-    public ParserCombinator declareTableStatement$columnName() {
-      if (declareTableStatement$columnNameParser == null) {
+    public ParserCombinator columnDefinitions$columnName() {
+      if (columnDefinitions$columnNameParser == null) {
         FutureParser future = scoped("columnName", PUBLIC, true);
-        declareTableStatement$columnNameParser = future;
+        columnDefinitions$columnNameParser = future;
         future.setParser(
           identifier()
         );
       }
     
-      return declareTableStatement$columnNameParser;
+      return columnDefinitions$columnNameParser;
     }
     
     // ========================================================
     // dataType
     // ........................................................
     
-    private ParserCombinator declareTableStatement$dataTypeParser = null;
+    private ParserCombinator columnDefinitions$dataTypeParser = null;
     
-    public final Start declareTableStatement$dataType = Start.on(getNamespace(), "dataType");
+    public final Start columnDefinitions$dataType = Start.on(getNamespace(), "dataType");
     
-    public ParserCombinator declareTableStatement$dataType() {
-      if (declareTableStatement$dataTypeParser == null) {
+    public ParserCombinator columnDefinitions$dataType() {
+      if (columnDefinitions$dataTypeParser == null) {
         FutureParser future = scoped("dataType", PUBLIC, true);
-        declareTableStatement$dataTypeParser = future;
+        columnDefinitions$dataTypeParser = future;
         future.setParser(
           sequence(
-            declareTableStatement$dataType$typeName(),
+            columnDefinitions$dataType$typeName(),
             optional(
               sequence(
                 literal("("),
@@ -365,21 +368,21 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return declareTableStatement$dataTypeParser;
+      return columnDefinitions$dataTypeParser;
     }
     
     // ========================================================
     // typeName
     // ........................................................
     
-    private ParserCombinator declareTableStatement$dataType$typeNameParser = null;
+    private ParserCombinator columnDefinitions$dataType$typeNameParser = null;
     
-    public final Start declareTableStatement$dataType$typeName = Start.on(getNamespace(), "typeName");
+    public final Start columnDefinitions$dataType$typeName = Start.on(getNamespace(), "typeName");
     
-    public ParserCombinator declareTableStatement$dataType$typeName() {
-      if (declareTableStatement$dataType$typeNameParser == null) {
+    public ParserCombinator columnDefinitions$dataType$typeName() {
+      if (columnDefinitions$dataType$typeNameParser == null) {
         FutureParser future = scoped("typeName", PUBLIC, true);
-        declareTableStatement$dataType$typeNameParser = future;
+        columnDefinitions$dataType$typeNameParser = future;
         future.setParser(
           choice(
             keyword("CHARACTER"),
@@ -408,7 +411,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         );
       }
     
-      return declareTableStatement$dataType$typeNameParser;
+      return columnDefinitions$dataType$typeNameParser;
     }
     
     // ========================================================
@@ -635,6 +638,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           choice(
             selectStatement(),
+            withSelectStatement(),
             as("unknown",
               skipto(
                 eof()
@@ -2549,6 +2553,23 @@ public class SQLGrammar extends SQLBaseGrammar {
             choice(
               hostParameterSpecification(),
               callStatement$procedureName()
+            ),
+            optional(
+              sequence(
+                literal("("),
+                optional(
+                  sequence(
+                    functionArgument(),
+                    star(
+                      sequence(
+                        literal(","),
+                        functionArgument()
+                      )
+                    )
+                  )
+                ),
+                literal(")")
+              )
             ),
             optional(
               as("unknown",
@@ -4608,9 +4629,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             literal(":"),
-            opt(NOSKIP,
-              hostParameterName$hostIdentifier()
-            ),
+            hostParameterName$hostIdentifier(),
             optional(
               opt(NOSKIP,
                 plus(

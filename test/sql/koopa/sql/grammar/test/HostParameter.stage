@@ -15,8 +15,10 @@ target hostParameterName;
 +[ :JURISDICTION-DATA.JURIS-ID ]
 +[ :FCC904.FE-FX-CONV-DT ]
 
+# Whitespace after the colon is accepted (tested compilation)
++[ : COBOL ]
+
 -[ COBOL ]
--[ : COBOL ]
 
 
 target hostParameterSpecification;

@@ -59,6 +59,7 @@ end
 
 def declareGlobalTempTableStatement =
     DECLARE GLOBAL TEMPORARY TABLE identifier
+    [ columnDefinitions ]
     [unknown: --> eof]
 end
 
@@ -72,15 +73,11 @@ def declareTableStatement =                          # [IBM DB2 SQL Statements]
 
   # SESSION-qualified declarations belong to declareSessionStatement.
   where private def sessionQualifier =  SESSION '.'  end
+end
 
-  # The DCLGEN column list: bracket-delimited, each definition consuming
-  # its own type parentheses, so the list splits on its own commas with
-  # no comma inside DECIMAL(p, s) mistaken for a separator. The list is
-  # all-or-nothing: any column form it does not recognise leaves the
-  # whole list as trailing water, exactly as before.
-  where def columnDefinitions =
-      '(' columnDefinition (',' columnDefinition)* ')'
-  end
+# The list is all or nothing, any column form not recognised leaves the whole list as water.
+def columnDefinitions =
+    '(' columnDefinition (',' columnDefinition)* ')'
 
   where def columnDefinition =
       columnName dataType
@@ -131,6 +128,7 @@ def declareCursorStatement =
   # so there is nothing to handle at the cursor level after it.
   where def queryExpression =
       ( selectStatement
+      | withSelectStatement
       | unknown: --> eof
       )
   end
@@ -472,6 +470,7 @@ end
 # Stored procedure call: May be named directly or through a host variable.
 def callStatement =                                  # [IBM DB2 SQL Statements]
     CALL ( hostParameterSpecification | procedureName )
+    [ '(' [ functionArgument (',' functionArgument)* ] ')' ]
     [unknown: --> eof]
 
   where def procedureName =  tableName  end
@@ -955,7 +954,9 @@ end
 # Glue a full COBOL word back together!
 # A host parameter name may contain hyphens and digits, which arrive as separate fragments.
 # glue a full COBOL word back together. May be qualified, as in :STRUCT.FIELD.
-def hostParameterName =  ':' ++ hostIdentifier [++ (('.' ++ hostIdentifier)+)]
+# The colon may be separated from the name by whitespace; the Db2
+# precompiler accepts it and customer sources use it.
+def hostParameterName =  ':' hostIdentifier [++ (('.' ++ hostIdentifier)+)]
 
   where hiding def hostIdentifier =
       identifier: ( delimitedIdentifier

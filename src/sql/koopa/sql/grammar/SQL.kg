@@ -501,13 +501,20 @@ end
 # e.g. ASSOCIATE [RESULT SET] LOCATOR(S) (...) WITH PROCEDURE ...
 def associateLocatorsStatement =                     # [IBM DB2 SQL Statements]
     ASSOCIATE [RESULT SET] (LOCATOR | LOCATORS)
+    [ '(' hostParameterSpecification (',' hostParameterSpecification)* ')' ]
+    [ WITH PROCEDURE procedureName ]
     [unknown: --> eof]
+
+  where def procedureName =
+      ( hostParameterSpecification | tableName )
+  end
 end
 
 # Db2 result-set processing Allocate:
 # eg ALLOCATE c CURSOR FOR RESULT SET :rs
 def allocateCursorStatement =                        # [IBM DB2 SQL Statements]
     ALLOCATE cursorName CURSOR
+    [ FOR RESULT SET hostParameterSpecification ]
     [unknown: --> eof]
 end
 

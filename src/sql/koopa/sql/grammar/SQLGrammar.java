@@ -2753,6 +2753,26 @@ public class SQLGrammar extends SQLBaseGrammar {
               keyword("LOCATORS")
             ),
             optional(
+              sequence(
+                literal("("),
+                hostParameterSpecification(),
+                star(
+                  sequence(
+                    literal(","),
+                    hostParameterSpecification()
+                  )
+                ),
+                literal(")")
+              )
+            ),
+            optional(
+              sequence(
+                keyword("WITH"),
+                keyword("PROCEDURE"),
+                associateLocatorsStatement$procedureName()
+              )
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -2764,6 +2784,29 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return associateLocatorsStatementParser;
+    }
+    
+    // ========================================================
+    // procedureName
+    // ........................................................
+    
+    private ParserCombinator associateLocatorsStatement$procedureNameParser = null;
+    
+    public final Start associateLocatorsStatement$procedureName = Start.on(getNamespace(), "procedureName");
+    
+    public ParserCombinator associateLocatorsStatement$procedureName() {
+      if (associateLocatorsStatement$procedureNameParser == null) {
+        FutureParser future = scoped("procedureName", PUBLIC, true);
+        associateLocatorsStatement$procedureNameParser = future;
+        future.setParser(
+          choice(
+            hostParameterSpecification(),
+            tableName()
+          )
+        );
+      }
+    
+      return associateLocatorsStatement$procedureNameParser;
     }
     
     // ========================================================
@@ -2783,6 +2826,14 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("ALLOCATE"),
             cursorName(),
             keyword("CURSOR"),
+            optional(
+              sequence(
+                keyword("FOR"),
+                keyword("RESULT"),
+                keyword("SET"),
+                hostParameterSpecification()
+              )
+            ),
             optional(
               as("unknown",
                 skipto(

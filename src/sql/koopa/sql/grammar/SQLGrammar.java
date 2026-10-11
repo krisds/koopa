@@ -76,7 +76,9 @@ public class SQLGrammar extends SQLBaseGrammar {
             alterStatement(),
             createStatement(),
             dropStatement(),
-            renameStatement()
+            renameStatement(),
+            wheneverStatement(),
+            declareSectionStatement()
           )
         );
       }
@@ -1943,11 +1945,18 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("DELETE"),
-            keyword("FROM"),
+            optional(
+              keyword("FROM")
+            ),
             targetTable(),
             optional(
-              skipto(
-                eof()
+              deleteStatement$where()
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
               )
             )
           )
@@ -1955,6 +1964,47 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return deleteStatementParser;
+    }
+    
+    // ========================================================
+    // where
+    // ........................................................
+    
+    private ParserCombinator deleteStatement$whereParser = null;
+    
+    public final Start deleteStatement$where = Start.on(getNamespace(), "where");
+    
+    public ParserCombinator deleteStatement$where() {
+      if (deleteStatement$whereParser == null) {
+        FutureParser future = scoped("where", PUBLIC, true);
+        deleteStatement$whereParser = future;
+        future.setParser(
+          sequence(
+            keyword("WHERE"),
+            choice(
+              sequence(
+                keyword("CURRENT"),
+                keyword("OF"),
+                cursorName()
+              ),
+              upto(
+                choice(
+                  searchCondition(),
+                  as("unknown",
+                    star(
+                      any()
+                    )
+                  )
+                ),
+                // Closure:
+                eof()
+              )
+            )
+          )
+        );
+      }
+    
+      return deleteStatement$whereParser;
     }
     
     // ========================================================
@@ -2456,7 +2506,19 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("rollbackStatement", PUBLIC, true);
         rollbackStatementParser = future;
         future.setParser(
-          keyword("ROLLBACK")
+          sequence(
+            keyword("ROLLBACK"),
+            optional(
+              keyword("WORK")
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
         );
       }
     
@@ -3689,6 +3751,126 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return renameStatementParser;
+    }
+    
+    // ========================================================
+    // wheneverStatement
+    // ........................................................
+    
+    private ParserCombinator wheneverStatementParser = null;
+    
+    public final Start wheneverStatement = Start.on(getNamespace(), "wheneverStatement");
+    
+    public ParserCombinator wheneverStatement() {
+      if (wheneverStatementParser == null) {
+        FutureParser future = scoped("wheneverStatement", PUBLIC, true);
+        wheneverStatementParser = future;
+        future.setParser(
+          sequence(
+            keyword("WHENEVER"),
+            choice(
+              sequence(
+                keyword("NOT"),
+                keyword("FOUND")
+              ),
+              keyword("SQLERROR"),
+              keyword("SQLWARNING")
+            ),
+            choice(
+              keyword("CONTINUE"),
+              sequence(
+                choice(
+                  sequence(
+                    keyword("GO"),
+                    keyword("TO")
+                  ),
+                  keyword("GOTO")
+                ),
+                optional(
+                  literal(":")
+                ),
+                wheneverStatement$hostLabel()
+              )
+            )
+          )
+        );
+      }
+    
+      return wheneverStatementParser;
+    }
+    
+    // ========================================================
+    // hostLabel
+    // ........................................................
+    
+    private ParserCombinator wheneverStatement$hostLabelParser = null;
+    
+    public final Start wheneverStatement$hostLabel = Start.on(getNamespace(), "hostLabel");
+    
+    public ParserCombinator wheneverStatement$hostLabel() {
+      if (wheneverStatement$hostLabelParser == null) {
+        FutureParser future = scoped("hostLabel", PUBLIC, true);
+        wheneverStatement$hostLabelParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              sequence(
+                tagged(WORD),
+                any()
+              ),
+              sequence(
+                tagged(NUMBER),
+                any()
+              )
+            ),
+            opt(NOSKIP,
+              star(
+                choice(
+                  sequence(
+                    tagged(WORD),
+                    any()
+                  ),
+                  sequence(
+                    tagged(NUMBER),
+                    any()
+                  ),
+                  literal("_"),
+                  literal("-")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return wheneverStatement$hostLabelParser;
+    }
+    
+    // ========================================================
+    // declareSectionStatement
+    // ........................................................
+    
+    private ParserCombinator declareSectionStatementParser = null;
+    
+    public final Start declareSectionStatement = Start.on(getNamespace(), "declareSectionStatement");
+    
+    public ParserCombinator declareSectionStatement() {
+      if (declareSectionStatementParser == null) {
+        FutureParser future = scoped("declareSectionStatement", PUBLIC, true);
+        declareSectionStatementParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              keyword("BEGIN"),
+              keyword("END")
+            ),
+            keyword("DECLARE"),
+            keyword("SECTION")
+          )
+        );
+      }
+    
+      return declareSectionStatementParser;
     }
     
     // ========================================================
@@ -6267,7 +6449,10 @@ public class SQLGrammar extends SQLBaseGrammar {
                     tagged(WORD),
                     any()
                   ),
-                  literal("_")
+                  literal("_"),
+                  literal("$"),
+                  literal("#"),
+                  literal("@")
                 )
               )
             )

@@ -44,6 +44,9 @@ def sqlStatement =
     | createStatement
     | dropStatement
     | renameStatement
+
+    | wheneverStatement
+    | declareSectionStatement
     )
 end
 
@@ -369,8 +372,18 @@ def set =
 end
 
 def deleteStatement = 
-    DELETE FROM targetTable
-    [--> eof]
+    DELETE [FROM] targetTable
+    [`where]
+    [unknown: --> eof]
+
+  where def `where =
+     WHERE
+     ( CURRENT OF cursorName
+     | ( searchCondition
+       | unknown : _*
+       ) %upto { eof }
+     )
+  end
 end
 
 # MERGE is keyword-delimited throughout: USING, ON, WHEN [NOT] MATCHED, THEN.
@@ -448,7 +461,7 @@ def closeStatement =
 end
 
 def rollbackStatement =
-    ROLLBACK
+    ROLLBACK [WORK] [unknown: --> eof]
 end
 
 def lockTableStatement =
@@ -725,6 +738,21 @@ def renameStatement =
     RENAME [TABLE | INDEX]
 
     [unknown: --> eof]
+end
+
+# Embedded exception handling directive.
+def wheneverStatement =                              # [IBM DB2 SQL Statements]
+    WHENEVER ( NOT FOUND | SQLERROR | SQLWARNING )
+    ( CONTINUE
+    | ( GO TO | GOTO ) [':'] hostLabel
+    )
+
+  where def hostLabel =  (@WORD _ | @NUMBER _) ++ ((@WORD _ | @NUMBER _ | '_' | '-')*)  end
+end
+
+# Host-variable declaration section boundaries.
+def declareSectionStatement =                        # [IBM DB2 SQL Statements]
+    ( BEGIN | END ) DECLARE SECTION
 end
 
 ## ############################################################################
@@ -1249,6 +1277,7 @@ private def word =
       ( @NUMBER _
       | @WORD _
       | '_'
+      | '$' | '#' | '@'                              # [IBM DB2] national chars
       )*
     )
 end

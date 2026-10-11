@@ -16,3 +16,6 @@ target setStatement;
 +[ SET :WS-DB2-TS = CURRENT TIMESTAMP ]
 +[ SET :WS-TS = CURRENT TIMESTAMP - CURRENT TIMEZONE,
        :WS-TODAY = CURRENT DATE ]
+
+# Special register with timestamp precision in the value.
++[ SET :WS-TS = CURRENT TIMESTAMP(12) - CURRENT TIMEZONE ]

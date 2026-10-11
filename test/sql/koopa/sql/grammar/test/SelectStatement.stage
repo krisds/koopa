@@ -231,6 +231,10 @@ target selectStatement;
           (B.FE_PROC_DATE - :WS-IX DAY) AS CUTOFF
    FROM T200_FE_CONTROL B ]
 
+# FOR UPDATE OF column lists parse.
++[ SELECT CM_EXP_DTE FROM T100_COMMIT
+   FOR UPDATE OF CM_EXP_DTE, CM_STATUS ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

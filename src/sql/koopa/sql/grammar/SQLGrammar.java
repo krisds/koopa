@@ -158,9 +158,12 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("GLOBAL"),
             keyword("TEMPORARY"),
             keyword("TABLE"),
-            identifier(),
+            tableName(),
             optional(
               columnDefinitions()
+            ),
+            optional(
+              declareGlobalTempTableStatement$onCommit()
             ),
             optional(
               as("unknown",
@@ -174,6 +177,38 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return declareGlobalTempTableStatementParser;
+    }
+    
+    // ========================================================
+    // onCommit
+    // ........................................................
+    
+    private ParserCombinator declareGlobalTempTableStatement$onCommitParser = null;
+    
+    public final Start declareGlobalTempTableStatement$onCommit = Start.on(getNamespace(), "onCommit");
+    
+    public ParserCombinator declareGlobalTempTableStatement$onCommit() {
+      if (declareGlobalTempTableStatement$onCommitParser == null) {
+        FutureParser future = scoped("onCommit", PUBLIC, true);
+        declareGlobalTempTableStatement$onCommitParser = future;
+        future.setParser(
+          sequence(
+            keyword("ON"),
+            keyword("COMMIT"),
+            choice(
+              keyword("PRESERVE"),
+              keyword("DELETE"),
+              keyword("DROP")
+            ),
+            choice(
+              keyword("ROWS"),
+              keyword("TABLE")
+            )
+          )
+        );
+      }
+    
+      return declareGlobalTempTableStatement$onCommitParser;
     }
     
     // ========================================================
@@ -1373,9 +1408,11 @@ public class SQLGrammar extends SQLBaseGrammar {
                 optional(
                   sequence(
                     keyword("OF"),
-                    as("unknown",
-                      skipto(
-                        selectStatement$nextBlockOrEnd()
+                    columnReference(),
+                    star(
+                      sequence(
+                        literal(","),
+                        columnReference()
                       )
                     )
                   )
@@ -1542,6 +1579,9 @@ public class SQLGrammar extends SQLBaseGrammar {
               insertStatement$insertSource()
             ),
             optional(
+              insertStatement$insertRows()
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -1606,6 +1646,41 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return insertStatement$insertSourceParser;
+    }
+    
+    // ========================================================
+    // insertRows
+    // ........................................................
+    
+    private ParserCombinator insertStatement$insertRowsParser = null;
+    
+    public final Start insertStatement$insertRows = Start.on(getNamespace(), "insertRows");
+    
+    public ParserCombinator insertStatement$insertRows() {
+      if (insertStatement$insertRowsParser == null) {
+        FutureParser future = scoped("insertRows", PUBLIC, true);
+        insertStatement$insertRowsParser = future;
+        future.setParser(
+          sequence(
+            keyword("FOR"),
+            choice(
+              hostParameterSpecification(),
+              numericLiteral()
+            ),
+            keyword("ROWS"),
+            optional(
+              sequence(
+                optional(
+                  keyword("NOT")
+                ),
+                keyword("ATOMIC")
+              )
+            )
+          )
+        );
+      }
+    
+      return insertStatement$insertRowsParser;
     }
     
     // ========================================================
@@ -3054,6 +3129,9 @@ public class SQLGrammar extends SQLBaseGrammar {
                   keyword("VIEW")
                 )
               )
+            ),
+            optional(
+              tableName()
             ),
             optional(
               as("unknown",
@@ -5505,8 +5583,17 @@ public class SQLGrammar extends SQLBaseGrammar {
               keyword("CURRENT"),
               choice(
                 keyword("DATE"),
+                sequence(
+                  keyword("TIMESTAMP"),
+                  optional(
+                    sequence(
+                      literal("("),
+                      numericLiteral(),
+                      literal(")")
+                    )
+                  )
+                ),
                 keyword("TIME"),
-                keyword("TIMESTAMP"),
                 keyword("SERVER"),
                 keyword("SQLID"),
                 keyword("SCHEMA"),

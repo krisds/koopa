@@ -58,9 +58,14 @@ def declareSessionStatement =
 end
 
 def declareGlobalTempTableStatement =
-    DECLARE GLOBAL TEMPORARY TABLE identifier
+    DECLARE GLOBAL TEMPORARY TABLE tableName
     [ columnDefinitions ]
+    [ onCommit ]
     [unknown: --> eof]
+
+  where def onCommit =                               # [IBM DB2 SQL Statements]
+      ON COMMIT ( PRESERVE | DELETE | DROP ) ( ROWS | TABLE )
+  end
 end
 
 # The DECLARE TABLE statement (DCLGEN documentation) is Db2 embedded SQL.
@@ -262,7 +267,7 @@ def selectStatement =
   where def updatability =
       FOR ( READ ONLY
           | FETCH ONLY                               # [IBM DB2 SQL Statements]
-          | UPDATE [ OF (unknown: --> nextBlockOrEnd) ]
+          | UPDATE [ OF columnReference (',' columnReference)* ]
           )
   end
 
@@ -289,6 +294,7 @@ def insertStatement =
     INSERT INTO tableName
     [ insertColumns ]
     [ insertSource ]
+    [ insertRows ]
     [unknown: --> eof]
 
   # Both lists are all-or-nothing: they only match when every element is
@@ -302,6 +308,12 @@ def insertStatement =
       ( insertValues
       | selectStatement
       )
+  end
+
+  # Db2 multi-row insert: ... FOR :n ROWS [NOT] ATOMIC.
+  where def insertRows =                             # [IBM DB2 SQL Statements]
+      FOR ( hostParameterSpecification | numericLiteral ) ROWS
+      [ [NOT] ATOMIC ]
   end
 
   where def insertValues =
@@ -620,6 +632,7 @@ def dropStatement =
       )
     ]
 
+    [ tableName ]
     [unknown: --> eof]
 end
 
@@ -1117,7 +1130,9 @@ end
 
 # Db2 special registers usable wherever an expression is expected.
 def specialRegister =                                # [IBM DB2 SQL Statements]
-    ( CURRENT ( DATE | TIME | TIMESTAMP | SERVER | SQLID | SCHEMA
+    ( CURRENT ( DATE
+              | TIMESTAMP [ '(' numericLiteral ')' ]
+              | TIME | SERVER | SQLID | SCHEMA
               | PATH | TIMEZONE | DEGREE | MEMBER )
     | USER
     )

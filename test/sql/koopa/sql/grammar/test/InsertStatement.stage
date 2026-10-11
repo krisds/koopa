@@ -18,3 +18,7 @@ target insertStatement;
 # Complex values fall back to water but the statement still parses.
 +[ INSERT INTO T100_ACCOUNT ( ACCT_ID, ACCT_HASH )
    VALUES ( :WS-ACCT-ID, HEX(RAND()) ) ]
+
+# Multi-row insert with host-variable row count.
++[ INSERT INTO T316 (TMP_CON_ID) VALUES (:CONSUB-ARR)
+   FOR :CONSUB ROWS ATOMIC ]

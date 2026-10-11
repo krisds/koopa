@@ -11,3 +11,8 @@ target declareGlobalTempTableStatement;
 
 # Should reject: plain DECLARE without TABLE context
 -[ DECLARE FOO ]
+
+# SESSION-qualified name, column definitions and ON COMMIT.
++[ DECLARE GLOBAL TEMPORARY TABLE SESSION.TEMP_T316
+     ( TMP_CON_ID CHAR(7) NOT NULL )
+   ON COMMIT PRESERVE ROWS ]

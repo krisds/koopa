@@ -1761,6 +1761,17 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("UPDATE"),
             targetTable(),
+            optional(
+              sequence(
+                optional(
+                  keyword("AS")
+                ),
+                not(
+                  keyword("SET")
+                ),
+                updateStatement$correlationName()
+              )
+            ),
             set(),
             optional(
               updateStatement$where()
@@ -1777,6 +1788,26 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return updateStatementParser;
+    }
+    
+    // ========================================================
+    // correlationName
+    // ........................................................
+    
+    private ParserCombinator updateStatement$correlationNameParser = null;
+    
+    public final Start updateStatement$correlationName = Start.on(getNamespace(), "correlationName");
+    
+    public ParserCombinator updateStatement$correlationName() {
+      if (updateStatement$correlationNameParser == null) {
+        FutureParser future = scoped("correlationName", PUBLIC, true);
+        updateStatement$correlationNameParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return updateStatement$correlationNameParser;
     }
     
     // ========================================================
@@ -1895,11 +1926,21 @@ public class SQLGrammar extends SQLBaseGrammar {
             rightBracketTrigraph(),
             upto(
               sequence(
-                columnReference(),
+                set$assignment$assignmentTargets(),
                 literal("="),
                 choice(
                   sequence(
                     valueExpression(),
+                    optional(
+                      as("unknown",
+                        plus(
+                          any()
+                        )
+                      )
+                    )
+                  ),
+                  sequence(
+                    subquery(),
                     optional(
                       as("unknown",
                         plus(
@@ -1928,6 +1969,39 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return set$assignmentParser;
+    }
+    
+    // ========================================================
+    // assignmentTargets
+    // ........................................................
+    
+    private ParserCombinator set$assignment$assignmentTargetsParser = null;
+    
+    public final Start set$assignment$assignmentTargets = Start.on(getNamespace(), "assignmentTargets");
+    
+    public ParserCombinator set$assignment$assignmentTargets() {
+      if (set$assignment$assignmentTargetsParser == null) {
+        FutureParser future = scoped("assignmentTargets", PUBLIC, true);
+        set$assignment$assignmentTargetsParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal("("),
+              columnReference(),
+              star(
+                sequence(
+                  literal(","),
+                  columnReference()
+                )
+              ),
+              literal(")")
+            ),
+            columnReference()
+          )
+        );
+      }
+    
+      return set$assignment$assignmentTargetsParser;
     }
     
     // ========================================================

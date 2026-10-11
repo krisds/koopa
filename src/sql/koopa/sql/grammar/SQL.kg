@@ -333,9 +333,12 @@ end
 
 def updateStatement =
     UPDATE targetTable
+    [ [AS] (%not SET) correlationName ]
     set
     [`where]
     [unknown: --> eof]
+
+  where def correlationName =  identifier  end
 
   where def `where =
      WHERE
@@ -362,12 +365,21 @@ def set =
               <{ '[' } { ']' }>
               <{ '{' } { '}' }>
               <{ leftBracketTrigraph } { rightBracketTrigraph }>
-            ( ( columnReference '='
+            ( ( assignmentTargets '='
                 ( valueExpression [unknown: _+]
+                | subquery [unknown: _+]
                 | unknown: _+
                 )
               ) %upto { %notnested (',' | WHERE) } )
         )
+
+      # A single column, or a parenthesised list of columns for the Db2
+      # row form SET (a, b) = (subquery).
+      where def assignmentTargets =
+          ( '(' columnReference (',' columnReference)* ')'
+          | columnReference
+          )
+      end
     end
 end
 

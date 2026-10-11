@@ -31,3 +31,8 @@ target updateStatement;
      SET CNT = CNT + 1,
          TS  = CURRENT TIMESTAMP - 1 DAY
      WHERE K = 1 ]
+
+# Row assignment: (cols) = (subquery).
++[ UPDATE SESSION.TEMP A
+     SET (A.BR_NAME, A.BR_CD) = (SELECT FE_BR_NAME, FE_BR_CD FROM T WHERE X = 1)
+     WHERE A.KEY = :WS-KEY ]

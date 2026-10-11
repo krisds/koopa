@@ -57,3 +57,8 @@ target tableReferenceList;
        ON SUBSTR(B.CUST_KEY, 1, 5) = A.ACCT_PFX
      JOIN T300_BRANCH C
        ON C.BR_ID = B.CUST_BR_ID ]
+
+# Derived table (subquery) in the FROM list, with and without a correlation.
++[ ( SELECT ACCT_ID, ACCT_CUST_ID FROM T100_ACCOUNT WHERE ACCT_STATUS = 'A' ) D ]
++[ ( SELECT 'X' AS CHK FROM SYSIBM.SYSDUMMY1 ) ]
++[ T100 A JOIN ( SELECT K FROM T2 WHERE X = 1 ) B ON B.K = A.K ]

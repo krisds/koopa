@@ -5942,7 +5942,10 @@ public class SQLGrammar extends SQLBaseGrammar {
         tableReferenceParser = future;
         future.setParser(
           sequence(
-            tableName(),
+            choice(
+              tableReference$derivedTable(),
+              tableName()
+            ),
             optional(
               sequence(
                 optional(
@@ -5979,6 +5982,26 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return tableReference$correlationNameParser;
+    }
+    
+    // ========================================================
+    // derivedTable
+    // ........................................................
+    
+    private ParserCombinator tableReference$derivedTableParser = null;
+    
+    public final Start tableReference$derivedTable = Start.on(getNamespace(), "derivedTable");
+    
+    public ParserCombinator tableReference$derivedTable() {
+      if (tableReference$derivedTableParser == null) {
+        FutureParser future = scoped("derivedTable", PUBLIC, true);
+        tableReference$derivedTableParser = future;
+        future.setParser(
+          subquery()
+        );
+      }
+    
+      return tableReference$derivedTableParser;
     }
     
     // ========================================================

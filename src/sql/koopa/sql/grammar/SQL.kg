@@ -1183,9 +1183,13 @@ def tableReferenceList =
 end
 
 def tableReference =
-    tableName [ [AS] (%not reservedAfterTableReference) correlationName ]
+    ( derivedTable | tableName )
+    [ [AS] (%not reservedAfterTableReference) correlationName ]
 
   where def correlationName =  identifier  end
+
+  # A derived table: a parenthesised subquery in the FROM clause..
+  where def derivedTable =  subquery  end
 
   # These keywords following a table reference legitimately aren't correlations;
   where private def reservedAfterTableReference =

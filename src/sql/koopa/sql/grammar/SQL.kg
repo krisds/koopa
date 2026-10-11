@@ -319,8 +319,13 @@ def insertStatement =
   where def insertValues =
       VALUES '(' valueItem (',' valueItem)* ')'
 
+    # Old Db2 COBOL also permits host variables without the
+    # colon, whose COBOL style hyphen names need the COBOL word glue.
     where hiding def valueItem =
-        ( comparand | NULL | DEFAULT )
+        ( valueExpression
+        | NULL | DEFAULT
+        | identifier: ( regularIdentifier: cobolWord )
+        )
     end
   end
 end
@@ -518,8 +523,25 @@ def allocateCursorStatement =                        # [IBM DB2 SQL Statements]
     [unknown: --> eof]
 end
 
+# A fullselect introduced by common table expressions. Each CTE is a
+# name, an optional column list, and AS over a bounded subquery.
+# Followed finally by a select.
 def withSelectStatement =
-    WITH (unknown: --> eof)
+    WITH
+    ( commonTableExpression (',' commonTableExpression)*
+      ( selectStatement
+      | unknown: --> eof
+      )
+    | unknown: --> eof
+    )
+
+  where def commonTableExpression =
+      cteName
+      [ '(' columnReference (',' columnReference)* ')' ]
+      AS subquery
+
+    where def cteName =  identifier  end
+  end
 end
 
 def describeStatement =

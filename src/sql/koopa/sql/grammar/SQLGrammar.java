@@ -1728,9 +1728,14 @@ public class SQLGrammar extends SQLBaseGrammar {
         insertStatement$insertValues$valueItemParser = future;
         future.setParser(
           choice(
-            comparand(),
+            valueExpression(),
             keyword("NULL"),
-            keyword("DEFAULT")
+            keyword("DEFAULT"),
+            as("identifier",
+              as("regularIdentifier",
+                cobolWord()
+              )
+            )
           )
         );
       }
@@ -2863,9 +2868,28 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("WITH"),
-            as("unknown",
-              skipto(
-                eof()
+            choice(
+              sequence(
+                withSelectStatement$commonTableExpression(),
+                star(
+                  sequence(
+                    literal(","),
+                    withSelectStatement$commonTableExpression()
+                  )
+                ),
+                choice(
+                  selectStatement(),
+                  as("unknown",
+                    skipto(
+                      eof()
+                    )
+                  )
+                )
+              ),
+              as("unknown",
+                skipto(
+                  eof()
+                )
               )
             )
           )
@@ -2873,6 +2897,63 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return withSelectStatementParser;
+    }
+    
+    // ========================================================
+    // commonTableExpression
+    // ........................................................
+    
+    private ParserCombinator withSelectStatement$commonTableExpressionParser = null;
+    
+    public final Start withSelectStatement$commonTableExpression = Start.on(getNamespace(), "commonTableExpression");
+    
+    public ParserCombinator withSelectStatement$commonTableExpression() {
+      if (withSelectStatement$commonTableExpressionParser == null) {
+        FutureParser future = scoped("commonTableExpression", PUBLIC, true);
+        withSelectStatement$commonTableExpressionParser = future;
+        future.setParser(
+          sequence(
+            withSelectStatement$commonTableExpression$cteName(),
+            optional(
+              sequence(
+                literal("("),
+                columnReference(),
+                star(
+                  sequence(
+                    literal(","),
+                    columnReference()
+                  )
+                ),
+                literal(")")
+              )
+            ),
+            keyword("AS"),
+            subquery()
+          )
+        );
+      }
+    
+      return withSelectStatement$commonTableExpressionParser;
+    }
+    
+    // ========================================================
+    // cteName
+    // ........................................................
+    
+    private ParserCombinator withSelectStatement$commonTableExpression$cteNameParser = null;
+    
+    public final Start withSelectStatement$commonTableExpression$cteName = Start.on(getNamespace(), "cteName");
+    
+    public ParserCombinator withSelectStatement$commonTableExpression$cteName() {
+      if (withSelectStatement$commonTableExpression$cteNameParser == null) {
+        FutureParser future = scoped("cteName", PUBLIC, true);
+        withSelectStatement$commonTableExpression$cteNameParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return withSelectStatement$commonTableExpression$cteNameParser;
     }
     
     // ========================================================

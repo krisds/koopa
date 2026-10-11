@@ -22,3 +22,11 @@ target insertStatement;
 # Multi-row insert with host-variable row count.
 +[ INSERT INTO T316 (TMP_CON_ID) VALUES (:CONSUB-ARR)
    FOR :CONSUB ROWS ATOMIC ]
+
+# Colonless host variables (old Db2 COBOL style) as values.
++[ INSERT INTO T316 (TMP_CON_ID, TMP_TTL)
+   VALUES (CON-ID, CON-TTL-NM) ]
+
+# Arithmetic value expressions as row values.
++[ INSERT INTO T316 (TMP_CON_ID, TMP_TS)
+   VALUES (:FCC316.CON-ID, CURRENT TIMESTAMP - CURRENT TIMEZONE) ]

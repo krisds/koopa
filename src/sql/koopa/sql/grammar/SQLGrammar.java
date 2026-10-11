@@ -710,7 +710,9 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               selectStatement$into()
             ),
-            selectStatement$from(),
+            optional(
+              selectStatement$from()
+            ),
             optional(
               as("unknown",
                 skipto(

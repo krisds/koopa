@@ -235,6 +235,9 @@ target selectStatement;
 +[ SELECT CM_EXP_DTE FROM T100_COMMIT
    FOR UPDATE OF CM_EXP_DTE, CM_STATUS ]
 
+# SELECT ... INTO without a FROM (singleton select from VALUES / registers).
++[ SELECT VALUES ( DAY ( CURRENT DATE ) ) INTO ] HostParameter:hostParameterSpecification [ ]
+
 # Trailing clauses in combination
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    WHERE ACCT_STATUS = 'A'

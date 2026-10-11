@@ -148,7 +148,7 @@ def selectStatement =
     [setQuantifier]
     selectList
     [into]
-    from              [ unknown: --> nextBlockOrEnd ]
+    [from]            [ unknown: --> nextBlockOrEnd ]
     [`where]          [ unknown: --> nextBlockOrEnd ]
     [groupBy]         [ unknown: --> nextBlockOrEnd ]
     [having]          [ unknown: --> nextBlockOrEnd ]

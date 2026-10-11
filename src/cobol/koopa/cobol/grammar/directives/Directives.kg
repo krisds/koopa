@@ -161,7 +161,7 @@ def ibm =
       RESET TRACE .
   end
   
-  where def sequenceNumberField =  (@NUMBER _)  end
+  where def sequenceNumberField =  (<_..72> @NUMBER _)  end
 end
 
 

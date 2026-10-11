@@ -297,26 +297,25 @@ def insertStatement =
     [ insertRows ]
     [unknown: --> eof]
 
-  # Both lists are all-or-nothing: they only match when every element is
-  # recognised through the closing parenthesis, so a partial match can
-  # never strand the statement - anything else stays trailing water.
-  where def insertColumns =
-      '(' columnReference (',' columnReference)* ')'
-  end
-
   where def insertSource =
       ( insertValues
       | selectStatement
       )
   end
+end
 
-  # Db2 multi-row insert: ... FOR :n ROWS [NOT] ATOMIC.
-  where def insertRows =                             # [IBM DB2 SQL Statements]
-      FOR ( hostParameterSpecification | numericLiteral ) ROWS
-      [ [NOT] ATOMIC ]
-  end
+def insertColumns =
+    '(' columnReference (',' columnReference)* ')'
+end
 
-  where def insertValues =
+# Db2 multi-row form. eg:
+# ... FOR :n ROWS [NOT] ATOMIC.
+def insertRows =                                     # [IBM DB2 SQL Statements]
+    FOR ( hostParameterSpecification | numericLiteral ) ROWS
+    [ [NOT] ATOMIC ]
+end
+
+def insertValues =
       VALUES '(' valueItem (',' valueItem)* ')'
 
     # Old Db2 COBOL also permits host variables without the
@@ -327,7 +326,6 @@ def insertStatement =
         | identifier: ( regularIdentifier: cobolWord )
         )
     end
-  end
 end
 
 def updateStatement =
@@ -336,15 +334,24 @@ def updateStatement =
     [`where]
     [unknown: --> eof]
 
-  where def set =
+  where def `where =
+     WHERE
+     ( CURRENT OF cursorName
+     | ( searchCondition
+       | unknown : _*
+       ) %upto { eof }
+     )
+  end
+end
+
+def set =
       SET
       [ assignment (',' assignment)* ]
       [ unknown: --> (WHERE | eof) ]
 
     # column = value expression; a complex right-hand side keeps its
-    # recognised prefix and falls back to water, and an unrecognised
-    # assignment ends the list with the remainder as water. The
-    # boundary is balanced so a comma or WHERE inside a subquery or
+    # recognised prefix and falls back to water
+    # The boundary is balanced so a comma or WHERE inside a subquery or
     # function call does not end the assignment.
     where def assignment =
         ( %balancing
@@ -359,16 +366,6 @@ def updateStatement =
               ) %upto { %notnested (',' | WHERE) } )
         )
     end
-  end
-
-  where def `where =
-     WHERE
-     ( CURRENT OF cursorName
-     | ( searchCondition
-       | unknown : _*
-       ) %upto { eof }
-     )
-  end
 end
 
 def deleteStatement = 
@@ -376,9 +373,68 @@ def deleteStatement =
     [--> eof]
 end
 
+# MERGE is keyword-delimited throughout: USING, ON, WHEN [NOT] MATCHED, THEN.
 def mergeStatement =
-    MERGE INTO tableName
+    MERGE INTO tableName [ mergeTargetCorr ]
+    [ mergeUsing ]
+    [ mergeOn ]
+    (mergeWhen)*
+    [ ELSE IGNORE ]
+    [ mergeAtomicity ]
     [unknown: --> eof]
+
+  where def mergeTargetCorr =  [AS] (%not USING) identifier  end
+
+  # Db2 multi-row MERGE tail.
+  where def mergeAtomicity =                          # [IBM DB2 SQL Statements]
+      [NOT] ATOMIC [ CONTINUE ON (unknown: --> eof) ]
+  end
+
+  where def mergeOn =
+      ON
+      ( searchCondition
+      | unknown: _*
+      ) %upto { (WHEN | eof) }
+      [ unknown: --> (WHEN | eof) ]
+  end
+
+  where def mergeWhen =
+      WHEN [NOT] MATCHED
+      [ AND (unknown: --> THEN) ]
+      THEN
+      ( mergeUpdate
+      | mergeInsert
+      | mergeDelete: DELETE
+      | SIGNAL (unknown: --> (WHEN | eof))
+      | unknown: --> (WHEN | eof)
+      )
+
+    where def mergeUpdate =
+        UPDATE ( set ) %upto { (WHEN | eof) }
+    end
+
+    where def mergeInsert =
+        INSERT [ insertColumns ] [ insertValues ]
+        [ unknown: --> (WHEN | eof) ]
+    end
+  end
+end
+
+def mergeUsing =
+    USING
+    ( mergeSourceTable
+    | mergeSourceValues
+    )
+
+  # A parenthesised VALUES row (possibly multi-row) or subquery.
+  where def mergeSourceValues =
+      '(' ( insertValues [insertRows] | selectStatement ) ')'
+      [ correlation ]
+  end
+
+  where def mergeSourceTable =  tableName [ correlation ]  end
+
+  where def correlation =  [AS] identifier [ insertColumns ]  end
 end
 
 def openStatement =

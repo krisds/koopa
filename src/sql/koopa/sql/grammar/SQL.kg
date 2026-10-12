@@ -152,10 +152,12 @@ def declareCursorStatement =
   # A cursor is declared FOR a select-statement. selectStatement owns all of
   # its trailing clauses (ORDER BY, FETCH FIRST, FOR UPDATE / FOR READ ONLY),
   # so there is nothing to handle at the cursor level after it.
-  # A dynamic cursor is declared FOR a prepared statement name.
+  # A dynamic cursor is declared FOR a prepared statement name; the
+  # query itself may be parenthesised.
   where def queryExpression =
       ( selectStatement
       | withSelectStatement
+      | subquery
       | statementName: identifier
       | unknown: --> eof
       )
@@ -265,7 +267,7 @@ def selectStatement =
       [ unknown: --> nextBlockOrEnd ]
 
     where def groupingColumn =
-        ( columnReference | numericLiteral )
+        ( extendedValueExpression | columnReference | numericLiteral )
     end
   end
 
@@ -967,6 +969,7 @@ def likePredicate =
   where def pattern =
       ( stringLiteral
       | hostParameterSpecification
+      | '(' ( stringLiteral | hostParameterSpecification ) ')'
       | unknown: _*
       ) %before { (ESCAPE | eof) }
       
@@ -1137,8 +1140,7 @@ end
 # An argument of a scalar function or an aggregate.
 def functionArgument =
     ( allColumns: '*'
-    | caseExpression
-    | parenthesizedExpression
+    # DIGITS((A * 1000) + (B * 10) + C).
     | extendedValueExpression
     | unknown: --> (',' | ')' | eof)
     )

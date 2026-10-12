@@ -759,6 +759,7 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             selectStatement(),
             withSelectStatement(),
+            subquery(),
             as("statementName",
               identifier()
             ),
@@ -1330,6 +1331,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         selectStatement$groupBy$groupingColumnParser = future;
         future.setParser(
           choice(
+            extendedValueExpression(),
             columnReference(),
             numericLiteral()
           )
@@ -4982,6 +4984,14 @@ public class SQLGrammar extends SQLBaseGrammar {
               choice(
                 stringLiteral(),
                 hostParameterSpecification(),
+                sequence(
+                  literal("("),
+                  choice(
+                    stringLiteral(),
+                    hostParameterSpecification()
+                  ),
+                  literal(")")
+                ),
                 as("unknown",
                   star(
                     any()
@@ -5756,8 +5766,6 @@ public class SQLGrammar extends SQLBaseGrammar {
               as("allColumns",
                 literal("*")
               ),
-              caseExpression(),
-              parenthesizedExpression(),
               extendedValueExpression(),
               as("unknown",
                 skipto(

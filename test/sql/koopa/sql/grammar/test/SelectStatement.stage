@@ -287,3 +287,13 @@ target selectStatement;
 +[ SELECT ACC_FE CONCAT ACW_RBAC INTO :WS-K FROM T_ACC ]
 +[ SELECT REGION_NBR HOME_STORE_NBR INTO :D.HOME-STORE-NBR
    FROM DISTRICT ]
+
+# Function arguments continue arithmetic over parenthesised operands;
+# grouping columns are expressions; a parenthesised LIKE pattern.
++[ SELECT DIGITS((VENDOR_NBR * 1000) + (VENDOR_DEPT_NBR * 10)
+                + VENDOR_SEQ_NBR)
+   INTO :WS-V FROM ITEM ]
++[ SELECT DATE(START_TS), COUNT(*) INTO :WS-D, :WS-C FROM OMS_X
+   GROUP BY DATE(START_TS) ]
++[ SELECT 1 INTO :WS-C FROM VENDOR
+   WHERE VENDOR_NAME LIKE ( :WS-PAT ) ]

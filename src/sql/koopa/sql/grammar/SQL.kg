@@ -273,10 +273,9 @@ def selectStatement =
       [ sortKey (',' sortKey)* ]
       [ unknown: --> nextBlockOrEnd ]
 
-    # A sort key is a column or a select-list position, optionally with
-    # a direction; anything fancier ends the list and stays water.
+    # A sort key is an expression, optionally with a direction.
     where def sortKey =
-        ( columnReference | numericLiteral )
+        ( caseExpression | extendedValueExpression )
         [ ascending: ASC | descending: DESC ]
     end
   end

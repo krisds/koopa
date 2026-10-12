@@ -1384,8 +1384,8 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              columnReference(),
-              numericLiteral()
+              caseExpression(),
+              extendedValueExpression()
             ),
             optional(
               choice(

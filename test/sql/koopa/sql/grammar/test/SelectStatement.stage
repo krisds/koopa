@@ -264,3 +264,9 @@ target selectStatement;
    SELECT A, B FROM T2
    ORDER BY 1
    WITH UR ]
+
+# Expression sort keys: function call and CASE.
++[ SELECT ACC_AM FROM T_ACC
+   ORDER BY ABS(ACC_AM) DESC
+           ,CASE WHEN TMP_NOM = TMP_CHILD THEN '0' ELSE '1' END
+           ,TMP_CHILD ]

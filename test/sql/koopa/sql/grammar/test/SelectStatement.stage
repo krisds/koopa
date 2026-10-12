@@ -253,3 +253,14 @@ target selectStatement;
 +[ SELECT ACCT_ID FROM T100_ACCOUNT
    FOR FETCH ONLY
    WITH UR ]
+
+# Set operations: UNION / UNION ALL chaining full selects.
++[ SELECT A FROM T1 WHERE X = 1
+   UNION ALL
+   SELECT A FROM T2 WHERE Y = 2 ]
+
++[ SELECT A, B FROM T1
+   UNION
+   SELECT A, B FROM T2
+   ORDER BY 1
+   WITH UR ]

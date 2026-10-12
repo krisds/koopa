@@ -787,6 +787,12 @@ public class SQLGrammar extends SQLBaseGrammar {
                 )
               )
             ),
+            star(
+              sequence(
+                selectStatement$setOperator(),
+                selectStatement()
+              )
+            ),
             optional(
               as("unknown",
                 skipto(
@@ -1138,7 +1144,10 @@ public class SQLGrammar extends SQLBaseGrammar {
                 sequence(
                   keyword("FETCH"),
                   keyword("FIRST")
-                )
+                ),
+                keyword("UNION"),
+                keyword("EXCEPT"),
+                keyword("INTERSECT")
               )
             ),
             keyword("WINDOW"),
@@ -1518,6 +1527,38 @@ public class SQLGrammar extends SQLBaseGrammar {
     }
     
     // ========================================================
+    // setOperator
+    // ........................................................
+    
+    private ParserCombinator selectStatement$setOperatorParser = null;
+    
+    public final Start selectStatement$setOperator = Start.on(getNamespace(), "setOperator");
+    
+    public ParserCombinator selectStatement$setOperator() {
+      if (selectStatement$setOperatorParser == null) {
+        FutureParser future = scoped("setOperator", PUBLIC, true);
+        selectStatement$setOperatorParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              keyword("UNION"),
+              keyword("EXCEPT"),
+              keyword("INTERSECT")
+            ),
+            optional(
+              choice(
+                keyword("ALL"),
+                keyword("DISTINCT")
+              )
+            )
+          )
+        );
+      }
+    
+      return selectStatement$setOperatorParser;
+    }
+    
+    // ========================================================
     // nextBlockOrEnd
     // ........................................................
     
@@ -1551,6 +1592,9 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("WITH"),
             keyword("OPTIMIZE"),
             keyword("QUERYNO"),
+            keyword("UNION"),
+            keyword("EXCEPT"),
+            keyword("INTERSECT"),
             eof()
           )
         );
@@ -5912,7 +5956,10 @@ public class SQLGrammar extends SQLBaseGrammar {
                 sequence(
                   keyword("FETCH"),
                   keyword("FIRST")
-                )
+                ),
+                keyword("UNION"),
+                keyword("EXCEPT"),
+                keyword("INTERSECT")
               )
             ),
             keyword("WINDOW"),

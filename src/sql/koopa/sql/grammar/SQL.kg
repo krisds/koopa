@@ -157,6 +157,7 @@ def selectStatement =
     ( ( updatability | isolation | optimizeFor | queryno )
       [ unknown: --> nextBlockOrEnd ]
     )*
+    ( setOperator selectStatement )*
     [ unknown: --> eof ]
 
   where def setQuantifier =  ( distinct: DISTINCT | all: ALL )  end
@@ -228,7 +229,7 @@ def selectStatement =
     # inside a subquery, so they bound the clause unconditionally.
     where private def whereBoundary =
         ( %notnested ( FROM | WHERE | GROUP BY | HAVING | ORDER BY
-                     | FETCH FIRST )
+                     | FETCH FIRST | UNION | EXCEPT | INTERSECT )
         | WINDOW | FOR | WITH | OPTIMIZE | QUERYNO | eof )
     end
   end
@@ -287,9 +288,16 @@ def selectStatement =
       QUERYNO numericLiteral
   end
 
+  # UNION / EXCEPT / INTERSECT chain the select with another full select.
+  # Trailing clauses (ORDER BY, WITH UR, ...) belong to the last one,
+  # which MUST be a selectStatement, so they are consumed there.
+  where def setOperator =
+      ( UNION | EXCEPT | INTERSECT ) [ ALL | DISTINCT ]
+  end
+
   where private def nextBlockOrEnd =
       ( FROM | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST | WINDOW
-      | FOR | WITH | OPTIMIZE | QUERYNO | eof )
+      | FOR | WITH | OPTIMIZE | QUERYNO | UNION | EXCEPT | INTERSECT | eof )
   end 
 end
 
@@ -1177,7 +1185,8 @@ def tableReferenceList =
   where private def afterJoinCondition =
       ( %notnested ( ','
                    | INNER | LEFT | RIGHT | FULL | CROSS | JOIN
-                   | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST )
+                   | WHERE | GROUP BY | HAVING | ORDER BY | FETCH FIRST
+                   | UNION | EXCEPT | INTERSECT )
       | WINDOW | FOR | WITH | OPTIMIZE | QUERYNO | eof )
   end
 end

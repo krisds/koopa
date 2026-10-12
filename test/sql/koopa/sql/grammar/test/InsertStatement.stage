@@ -38,3 +38,11 @@ target insertStatement;
 # Multi-row insert with NOT ATOMIC CONTINUE ON SQLEXCEPTION tail.
 +[ INSERT INTO T316 (TMP_CON_ID) VALUES (:CONSUB-ARR)
    FOR :CONSUB ROWS NOT ATOMIC CONTINUE ON SQLEXCEPTION ]
+
+# Parenthesised query as the insert source.
++[ INSERT INTO ITEM_LOG_HIST
+   ( SELECT * FROM ITEM_LOG WHERE ITEM_NBR = :ITEM-LOG-DATA.ITEM-NBR ) ]
+
+# COBOL data names may start with a digit.
++[ INSERT INTO PFS_VENDOR ( "852_FILE_SENT_IND" )
+   VALUES ( :PFS-VENDOR-DATA.852-FILE-SENT-IND ) ]

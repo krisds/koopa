@@ -1658,6 +1658,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           choice(
             insertValues(),
+            subquery(),
             selectStatement()
           )
         );
@@ -1710,16 +1711,12 @@ public class SQLGrammar extends SQLBaseGrammar {
         insertRowsParser = future;
         future.setParser(
           sequence(
-            optional(
-              sequence(
-                keyword("FOR"),
-                choice(
-                  hostParameterSpecification(),
-                  numericLiteral()
-                ),
-                keyword("ROWS")
-              )
+            keyword("FOR"),
+            choice(
+              hostParameterSpecification(),
+              numericLiteral()
             ),
+            keyword("ROWS"),
             optional(
               sequence(
                 optional(
@@ -5910,9 +5907,15 @@ public class SQLGrammar extends SQLBaseGrammar {
         cobolWordParser = future;
         future.setParser(
           sequence(
-            sequence(
-              tagged(WORD),
-              any()
+            choice(
+              sequence(
+                tagged(WORD),
+                any()
+              ),
+              sequence(
+                tagged(NUMBER),
+                any()
+              )
             ),
             opt(NOSKIP,
               star(

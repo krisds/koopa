@@ -964,10 +964,9 @@ hiding def term =
           ( searchCondition %upto { %notnested ')' } )
       ) 
       ')'
-      # A closing parenthesis followed by a comparison operator means
-      # the group was an operand - (A + B + C) > 0 - so this
-      # alternative steps aside for comparison.
-      (%not comparisonOp)
+      # A closing parenthesis followed by a comparison operator or a BETWEEN means
+      # the group was an operand - (A + B + C) > 0, (SUM...) NOT BETWEEN X AND Y.
+      (%not ( comparisonOp | [NOT] BETWEEN ))
 
     | existsPredicate
     | inPredicate
@@ -1048,7 +1047,8 @@ def nullPredicate =
 end
 
 def betweenPredicate =
-    comparand [NOT] BETWEEN extendedValueExpression
+    ( comparand | parenthesizedExpression )
+    [NOT] BETWEEN extendedValueExpression
     AND extendedValueExpression
 end
 

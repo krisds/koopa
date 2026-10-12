@@ -5061,7 +5061,15 @@ public class SQLGrammar extends SQLBaseGrammar {
               ),
               literal(")"),
               not(
-                comparisonOp()
+                choice(
+                  comparisonOp(),
+                  sequence(
+                    optional(
+                      keyword("NOT")
+                    ),
+                    keyword("BETWEEN")
+                  )
+                )
               )
             ),
             existsPredicate(),
@@ -5343,7 +5351,10 @@ public class SQLGrammar extends SQLBaseGrammar {
         betweenPredicateParser = future;
         future.setParser(
           sequence(
-            comparand(),
+            choice(
+              comparand(),
+              parenthesizedExpression()
+            ),
             optional(
               keyword("NOT")
             ),

@@ -109,6 +109,10 @@ target searchCondition;
 # BETWEEN bounds are full expressions.
 +[ EFF_DT BETWEEN CURRENT DATE AND DATE(:WS-CURRENT-DATE) + 6 DAYS ]
 
+# A parenthesised sum as the BETWEEN predicand.
++[ (WEEK_01_INDEX + WEEK_02_INDEX + WEEK_03_INDEX)
+   NOT BETWEEN 46.9 AND 54.6 ]
+
 target inPredicate;
 
 # The predicate keyword and left comparand are named; the argument is water.

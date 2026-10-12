@@ -889,7 +889,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal(")")
               ),
               parenthesizedExpression(),
-              valueExpression(),
+              extendedValueExpression(),
               as("unknown",
                 skipto(
                   choice(
@@ -5344,7 +5344,7 @@ public class SQLGrammar extends SQLBaseGrammar {
               ),
               caseExpression(),
               parenthesizedExpression(),
-              valueExpression(),
+              extendedValueExpression(),
               as("unknown",
                 skipto(
                   choice(
@@ -5394,13 +5394,48 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             literal("("),
-            valueExpression(),
+            extendedValueExpression(),
             literal(")")
           )
         );
       }
     
       return parenthesizedExpressionParser;
+    }
+    
+    // ========================================================
+    // extendedValueExpression
+    // ........................................................
+    
+    private ParserCombinator extendedValueExpressionParser = null;
+    
+    public final Start extendedValueExpression = Start.on(getNamespace(), "extendedValueExpression");
+    
+    public ParserCombinator extendedValueExpression() {
+      if (extendedValueExpressionParser == null) {
+        FutureParser future = scoped("extendedValueExpression", HIDING, true);
+        extendedValueExpressionParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              parenthesizedExpression(),
+              comparand()
+            ),
+            star(
+              sequence(
+                arithmeticOperator(),
+                choice(
+                  duration(),
+                  parenthesizedExpression(),
+                  comparand()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return extendedValueExpressionParser;
     }
     
     // ========================================================

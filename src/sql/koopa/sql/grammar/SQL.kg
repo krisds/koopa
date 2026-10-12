@@ -178,7 +178,7 @@ def selectStatement =
       | caseExpression
       | '(' caseExpression ')'
       | parenthesizedExpression
-      | valueExpression
+      | extendedValueExpression
       | unknown: --> (',' | INTO | FROM | eof)
       )
       [ columnLabel ]
@@ -1058,7 +1058,7 @@ def functionArgument =
     ( allColumns: '*'
     | caseExpression
     | parenthesizedExpression
-    | valueExpression
+    | extendedValueExpression
     | unknown: --> (',' | ')' | eof)
     )
     [ AS dataType ]
@@ -1069,7 +1069,17 @@ end
 # NOTE: Use only outside search conditions!
 #       Matching explicit parentheses inside one disturbs its balancer.
 def parenthesizedExpression =
-    '(' valueExpression ')'
+    '(' extendedValueExpression ')'
+end
+
+# A value expression whose operands may themselves be parenthesised,
+# as in ((VENDOR_NBR * 1000) + DEPT_NBR). Only reachable outside search
+# conditions (select items, function arguments, and through them derived
+# tables), so the explicit parentheses cannot disturb the
+# search-condition balancer.
+hiding def extendedValueExpression =
+    ( parenthesizedExpression | comparand )
+    ( arithmeticOperator ( duration | parenthesizedExpression | comparand ) )*
 end
 
 # A CASE expression is delimited by its own keywords.

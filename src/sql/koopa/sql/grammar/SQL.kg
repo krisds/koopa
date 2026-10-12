@@ -177,10 +177,9 @@ def selectStatement =
     where private def sublist =
       ( aggregateFunction
       | allColumns: '*'
-      | scalarFunctionCall
-      | caseExpression
-      | '(' caseExpression ')'
-      | parenthesizedExpression
+      # The expression form subsumes function calls, CASE and
+      # parenthesised items, and lets each continue with arithmetic
+      # (DATE(X) + 11 DAYS, CASE ... END / 1440).
       | extendedValueExpression
       | unknown: --> (',' | INTO | FROM | eof)
       )
@@ -1110,9 +1109,14 @@ end
 # inside search-condition walls by inPredicate) instead of being
 # half-consumed by a failing parenthesised-expression attempt, whose
 # deep backtrack desyncs the enclosing balancer.
+#
+# caseExpression before comparand: CASE is a reserved word but
+# columnReference would happily take it as a column name.
 hiding def extendedValueExpression =
-    ( comparand | parenthesizedExpression )
-    ( arithmeticOperator ( duration | comparand | parenthesizedExpression ) )*
+    ( caseExpression | comparand | parenthesizedExpression )
+    ( arithmeticOperator
+      ( duration | caseExpression | comparand | parenthesizedExpression )
+    )*
 end
 
 # A CASE expression is delimited by its own keywords.

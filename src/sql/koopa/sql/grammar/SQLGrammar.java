@@ -882,14 +882,6 @@ public class SQLGrammar extends SQLBaseGrammar {
               as("allColumns",
                 literal("*")
               ),
-              scalarFunctionCall(),
-              caseExpression(),
-              sequence(
-                literal("("),
-                caseExpression(),
-                literal(")")
-              ),
-              parenthesizedExpression(),
               extendedValueExpression(),
               as("unknown",
                 skipto(
@@ -5529,6 +5521,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             choice(
+              caseExpression(),
               comparand(),
               parenthesizedExpression()
             ),
@@ -5537,6 +5530,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 arithmeticOperator(),
                 choice(
                   duration(),
+                  caseExpression(),
                   comparand(),
                   parenthesizedExpression()
                 )

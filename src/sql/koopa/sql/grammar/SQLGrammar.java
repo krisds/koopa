@@ -3764,6 +3764,9 @@ public class SQLGrammar extends SQLBaseGrammar {
               )
             ),
             optional(
+              indexDefinition()
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -3775,6 +3778,186 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return createStatementParser;
+    }
+    
+    // ========================================================
+    // indexDefinition
+    // ........................................................
+    
+    private ParserCombinator indexDefinitionParser = null;
+    
+    public final Start indexDefinition = Start.on(getNamespace(), "indexDefinition");
+    
+    public ParserCombinator indexDefinition() {
+      if (indexDefinitionParser == null) {
+        FutureParser future = scoped("indexDefinition", PUBLIC, true);
+        indexDefinitionParser = future;
+        future.setParser(
+          sequence(
+            tableName(),
+            keyword("ON"),
+            tableName(),
+            literal("("),
+            indexDefinition$indexKeyColumn(),
+            star(
+              sequence(
+                literal(","),
+                indexDefinition$indexKeyColumn()
+              )
+            ),
+            literal(")"),
+            star(
+              indexDefinition$indexOption()
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return indexDefinitionParser;
+    }
+    
+    // ========================================================
+    // indexKeyColumn
+    // ........................................................
+    
+    private ParserCombinator indexDefinition$indexKeyColumnParser = null;
+    
+    public final Start indexDefinition$indexKeyColumn = Start.on(getNamespace(), "indexKeyColumn");
+    
+    public ParserCombinator indexDefinition$indexKeyColumn() {
+      if (indexDefinition$indexKeyColumnParser == null) {
+        FutureParser future = scoped("indexKeyColumn", PUBLIC, true);
+        indexDefinition$indexKeyColumnParser = future;
+        future.setParser(
+          sequence(
+            columnReference(),
+            optional(
+              choice(
+                keyword("ASC"),
+                keyword("DESC"),
+                keyword("RANDOM")
+              )
+            )
+          )
+        );
+      }
+    
+      return indexDefinition$indexKeyColumnParser;
+    }
+    
+    // ========================================================
+    // indexOption
+    // ........................................................
+    
+    private ParserCombinator indexDefinition$indexOptionParser = null;
+    
+    public final Start indexDefinition$indexOption = Start.on(getNamespace(), "indexOption");
+    
+    public ParserCombinator indexDefinition$indexOption() {
+      if (indexDefinition$indexOptionParser == null) {
+        FutureParser future = scoped("indexOption", PUBLIC, true);
+        indexDefinition$indexOptionParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              keyword("USING"),
+              keyword("STOGROUP"),
+              identifier()
+            ),
+            sequence(
+              keyword("PRIQTY"),
+              optional(
+                literal("-")
+              ),
+              numericLiteral()
+            ),
+            sequence(
+              keyword("SECQTY"),
+              optional(
+                literal("-")
+              ),
+              numericLiteral()
+            ),
+            sequence(
+              keyword("FREEPAGE"),
+              numericLiteral()
+            ),
+            sequence(
+              keyword("PCTFREE"),
+              numericLiteral()
+            ),
+            sequence(
+              keyword("BUFFERPOOL"),
+              identifier()
+            ),
+            sequence(
+              keyword("GBPCACHE"),
+              choice(
+                keyword("CHANGED"),
+                keyword("ALL"),
+                keyword("NONE"),
+                keyword("SYSTEM")
+              )
+            ),
+            sequence(
+              keyword("ERASE"),
+              choice(
+                keyword("YES"),
+                keyword("NO")
+              )
+            ),
+            sequence(
+              keyword("CLOSE"),
+              choice(
+                keyword("YES"),
+                keyword("NO")
+              )
+            ),
+            sequence(
+              keyword("COPY"),
+              choice(
+                keyword("YES"),
+                keyword("NO")
+              )
+            ),
+            sequence(
+              keyword("COMPRESS"),
+              choice(
+                keyword("YES"),
+                keyword("NO")
+              )
+            ),
+            sequence(
+              optional(
+                keyword("NOT")
+              ),
+              keyword("PADDED")
+            ),
+            sequence(
+              optional(
+                keyword("NOT")
+              ),
+              keyword("CLUSTER")
+            ),
+            sequence(
+              keyword("DEFINE"),
+              choice(
+                keyword("YES"),
+                keyword("NO")
+              )
+            )
+          )
+        );
+      }
+    
+      return indexDefinition$indexOptionParser;
     }
     
     // ========================================================

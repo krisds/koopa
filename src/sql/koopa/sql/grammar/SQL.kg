@@ -719,7 +719,40 @@ def createStatement =
       )
     ]
 
+    [ indexDefinition ]
     [unknown: --> eof]
+end
+
+# Db2 CREATE INDEX body: name ON table (key-columns) followed by the physical storage option list.
+def indexDefinition =                                # [IBM DB2 SQL Statements]
+    tableName
+    ON tableName
+    '(' indexKeyColumn (',' indexKeyColumn)* ')'
+    ( indexOption )*
+    [unknown: --> eof]
+
+  where def indexKeyColumn =
+      columnReference [ ASC | DESC | RANDOM ]
+  end
+
+  # Common options, and unknown escape absorbs any rarer option keyword.
+  where def indexOption =
+      ( USING STOGROUP identifier
+      | PRIQTY      [ '-' ] numericLiteral
+      | SECQTY      [ '-' ] numericLiteral
+      | FREEPAGE    numericLiteral
+      | PCTFREE     numericLiteral
+      | BUFFERPOOL  identifier
+      | GBPCACHE    ( CHANGED | ALL | NONE | SYSTEM )
+      | ERASE       ( YES | NO )
+      | CLOSE       ( YES | NO )
+      | COPY        ( YES | NO )
+      | COMPRESS    ( YES | NO )
+      | [NOT] PADDED
+      | [NOT] CLUSTER
+      | DEFINE      ( YES | NO )
+      )
+  end
 end
 
 

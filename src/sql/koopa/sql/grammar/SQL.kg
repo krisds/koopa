@@ -154,7 +154,10 @@ def selectStatement =
     [having]          [ unknown: --> nextBlockOrEnd ]
     [orderBy]         [ unknown: --> nextBlockOrEnd ]
     [fetchFirst]      [ unknown: --> nextBlockOrEnd ]
-    ( ( updatability | isolation | optimizeFor | queryno )
+    # fetchFirst repeats here: Db2 allows FETCH FIRST before or after
+    # FOR READ ONLY, so a fetch clause following updatability must still
+    # be recognised.
+    ( ( updatability | isolation | optimizeFor | queryno | fetchFirst )
       [ unknown: --> nextBlockOrEnd ]
     )*
     ( setOperator selectStatement )*

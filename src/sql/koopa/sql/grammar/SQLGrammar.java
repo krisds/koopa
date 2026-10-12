@@ -776,7 +776,8 @@ public class SQLGrammar extends SQLBaseGrammar {
                   selectStatement$updatability(),
                   selectStatement$isolation(),
                   selectStatement$optimizeFor(),
-                  selectStatement$queryno()
+                  selectStatement$queryno(),
+                  selectStatement$fetchFirst()
                 ),
                 optional(
                   as("unknown",

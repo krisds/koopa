@@ -19,6 +19,15 @@ target caseExpression;
 -[ CASE NO_WHEN_HERE END ]
 
 
+# END CASE closer
++[ CASE WHEN A.FLG = 'Y' THEN B.FLG ELSE 'Y' END CASE ]
+
+# Nested CASE in a result arm, with arithmetic.
++[ CASE WHEN A = 1
+        THEN CASE WHEN B = 2 THEN C * D ELSE E END
+        ELSE F
+   END ]
+
 target selectStatement;
 
 +[ SELECT (CASE WHEN CM_EXP_DTE < FE_PROC_DATE THEN 'Y' ELSE 'N' END)

@@ -1122,21 +1122,23 @@ end
 # A CASE expression is delimited by its own keywords.
 # Note: a nested CASE inside a result degrades to water.
 def caseExpression =
-    CASE [ caseOperand ] whenClause (whenClause)* [ elseClause ] END
+    CASE [ caseOperand ] whenClause (whenClause)* [ elseClause ] END [CASE]
 
   # Guarded so a searched CASE's first WHEN is never taken for a simple-CASE operand column.
   where def caseOperand =
       (%not WHEN)
-      ( valueExpression
+      ( extendedValueExpression
       | unknown: --> WHEN
       )
   end
 
+  # Results are full expressions, which recurse through extendedValueExpression
+  # into nested CASEs, function calls and parenthesised arithmetic.
   where def whenClause =
       WHEN
       whenCondition
       THEN
-      ( valueExpression [unknown: --> (WHEN | ELSE | END)]
+      ( extendedValueExpression [unknown: --> (WHEN | ELSE | END)]
       | unknown: --> (WHEN | ELSE | END)
       )
 
@@ -1152,7 +1154,7 @@ def caseExpression =
 
   where def elseClause =
       ELSE
-      ( valueExpression [unknown: --> END]
+      ( extendedValueExpression [unknown: --> END]
       | unknown: --> END
       )
   end

@@ -5568,7 +5568,10 @@ public class SQLGrammar extends SQLBaseGrammar {
             optional(
               caseExpression$elseClause()
             ),
-            keyword("END")
+            keyword("END"),
+            optional(
+              keyword("CASE")
+            )
           )
         );
       }
@@ -5594,7 +5597,7 @@ public class SQLGrammar extends SQLBaseGrammar {
               keyword("WHEN")
             ),
             choice(
-              valueExpression(),
+              extendedValueExpression(),
               as("unknown",
                 skipto(
                   keyword("WHEN")
@@ -5627,7 +5630,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("THEN"),
             choice(
               sequence(
-                valueExpression(),
+                extendedValueExpression(),
                 optional(
                   as("unknown",
                     skipto(
@@ -5712,7 +5715,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("ELSE"),
             choice(
               sequence(
-                valueExpression(),
+                extendedValueExpression(),
                 optional(
                   as("unknown",
                     skipto(

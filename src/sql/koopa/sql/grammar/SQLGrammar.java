@@ -1710,18 +1710,29 @@ public class SQLGrammar extends SQLBaseGrammar {
         insertRowsParser = future;
         future.setParser(
           sequence(
-            keyword("FOR"),
-            choice(
-              hostParameterSpecification(),
-              numericLiteral()
+            optional(
+              sequence(
+                keyword("FOR"),
+                choice(
+                  hostParameterSpecification(),
+                  numericLiteral()
+                ),
+                keyword("ROWS")
+              )
             ),
-            keyword("ROWS"),
             optional(
               sequence(
                 optional(
                   keyword("NOT")
                 ),
-                keyword("ATOMIC")
+                keyword("ATOMIC"),
+                optional(
+                  sequence(
+                    keyword("CONTINUE"),
+                    keyword("ON"),
+                    keyword("SQLEXCEPTION")
+                  )
+                )
               )
             )
           )
@@ -4825,6 +4836,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           choice(
             specialRegister(),
+            sequenceReference(),
             hostParameterSpecification(),
             hexLiteral(),
             stringLiteral(),
@@ -4837,6 +4849,34 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return comparandParser;
+    }
+    
+    // ========================================================
+    // sequenceReference
+    // ........................................................
+    
+    private ParserCombinator sequenceReferenceParser = null;
+    
+    public final Start sequenceReference = Start.on(getNamespace(), "sequenceReference");
+    
+    public ParserCombinator sequenceReference() {
+      if (sequenceReferenceParser == null) {
+        FutureParser future = scoped("sequenceReference", PUBLIC, true);
+        sequenceReferenceParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              keyword("NEXT"),
+              keyword("PREVIOUS")
+            ),
+            keyword("VALUE"),
+            keyword("FOR"),
+            tableName()
+          )
+        );
+      }
+    
+      return sequenceReferenceParser;
     }
     
     // ========================================================

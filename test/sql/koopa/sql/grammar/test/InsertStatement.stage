@@ -30,3 +30,11 @@ target insertStatement;
 # Arithmetic value expressions as row values.
 +[ INSERT INTO T316 (TMP_CON_ID, TMP_TS)
    VALUES (:FCC316.CON-ID, CURRENT TIMESTAMP - CURRENT TIMEZONE) ]
+
+# Sequence value reference as a row value: NEXT VALUE FOR seq.
++[ INSERT INTO T316 (TMP_ID, TMP_NM)
+   VALUES (NEXT VALUE FOR MY_SEQ, :WS-NM) ]
+
+# Multi-row insert with NOT ATOMIC CONTINUE ON SQLEXCEPTION tail.
++[ INSERT INTO T316 (TMP_CON_ID) VALUES (:CONSUB-ARR)
+   FOR :CONSUB ROWS NOT ATOMIC CONTINUE ON SQLEXCEPTION ]

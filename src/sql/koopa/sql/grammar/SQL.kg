@@ -322,8 +322,8 @@ end
 # Db2 multi-row form. eg:
 # ... FOR :n ROWS [NOT] ATOMIC.
 def insertRows =                                     # [IBM DB2 SQL Statements]
-    FOR ( hostParameterSpecification | numericLiteral ) ROWS
-    [ [NOT] ATOMIC ]
+    [ FOR ( hostParameterSpecification | numericLiteral ) ROWS ]
+    [ [NOT] ATOMIC [ CONTINUE ON SQLEXCEPTION ] ]
 end
 
 def insertValues =
@@ -962,6 +962,7 @@ private def concatOperator =  '|' ++ '|'  end
 
 hiding def comparand =
     ( specialRegister
+    | sequenceReference
     | hostParameterSpecification
     | hexLiteral
     | stringLiteral
@@ -972,9 +973,12 @@ hiding def comparand =
     )
 end
 
-# Two-character operators must be tried before their one-character
-# prefixes: with greaterThanOp first, X >= Y matched '>' alone and the
-# '= Y' tail fell to water.
+# Db2 sequence value: NEXT VALUE FOR seq / PREVIOUS VALUE FOR seq.
+def sequenceReference =                               # [IBM DB2 SQL Statements]
+    ( NEXT | PREVIOUS ) VALUE FOR tableName
+end
+
+# NOTE: Two-character operators must be tried before their one-character prefixes
 def comparisonOp =
     ( notEqualsOp
     | greaterThanOrEqualsOp

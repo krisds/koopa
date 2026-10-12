@@ -153,14 +153,19 @@ def declareCursorStatement =
   # its trailing clauses (ORDER BY, FETCH FIRST, FOR UPDATE / FOR READ ONLY),
   # so there is nothing to handle at the cursor level after it.
   # A dynamic cursor is declared FOR a prepared statement name; the
-  # query itself may be parenthesised.
+  # query itself may be parenthesised, and parenthesised branches may
+  # chain with set operators: (SELECT ...) UNION ALL (SELECT ...).
   where def queryExpression =
       ( selectStatement
       | withSelectStatement
-      | subquery
+      | subquery ( cursorSetOperator subquery )*
       | statementName: identifier
       | unknown: --> eof
       )
+
+    where def cursorSetOperator =
+        ( UNION | EXCEPT | INTERSECT ) [ ALL | DISTINCT ]
+    end
   end
 end
 
@@ -1265,10 +1270,11 @@ end
 
 # Glue a full COBOL word back together!
 # A host parameter name may contain hyphens and digits, which arrive as separate fragments.
-# glue a full COBOL word back together. May be qualified, as in :STRUCT.FIELD.
-# The colon may be separated from the name by whitespace; the Db2
-# precompiler accepts it and customer sources use it.
-def hostParameterName =  ':' hostIdentifier [++ (('.' ++ hostIdentifier)+)]
+# NOTEs:
+# - May be qualified, as in :STRUCT.FIELD.
+# - The colon may be separated from the name by whitespace Db2 precompiler accepts it.
+# - The dot qualification is non-tight: sources split :STRUCT. / FIELD across lines.
+def hostParameterName =  ':' hostIdentifier ( '.' hostIdentifier )*
 
   where hiding def hostIdentifier =
       identifier: ( delimitedIdentifier

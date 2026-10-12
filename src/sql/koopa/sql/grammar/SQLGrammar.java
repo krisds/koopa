@@ -759,7 +759,15 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             selectStatement(),
             withSelectStatement(),
-            subquery(),
+            sequence(
+              subquery(),
+              star(
+                sequence(
+                  declareCursorStatement$queryExpression$cursorSetOperator(),
+                  subquery()
+                )
+              )
+            ),
             as("statementName",
               identifier()
             ),
@@ -773,6 +781,38 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return declareCursorStatement$queryExpressionParser;
+    }
+    
+    // ========================================================
+    // cursorSetOperator
+    // ........................................................
+    
+    private ParserCombinator declareCursorStatement$queryExpression$cursorSetOperatorParser = null;
+    
+    public final Start declareCursorStatement$queryExpression$cursorSetOperator = Start.on(getNamespace(), "cursorSetOperator");
+    
+    public ParserCombinator declareCursorStatement$queryExpression$cursorSetOperator() {
+      if (declareCursorStatement$queryExpression$cursorSetOperatorParser == null) {
+        FutureParser future = scoped("cursorSetOperator", PUBLIC, true);
+        declareCursorStatement$queryExpression$cursorSetOperatorParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              keyword("UNION"),
+              keyword("EXCEPT"),
+              keyword("INTERSECT")
+            ),
+            optional(
+              choice(
+                keyword("ALL"),
+                keyword("DISTINCT")
+              )
+            )
+          )
+        );
+      }
+    
+      return declareCursorStatement$queryExpression$cursorSetOperatorParser;
     }
     
     // ========================================================
@@ -6311,16 +6351,10 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             literal(":"),
             hostParameterName$hostIdentifier(),
-            optional(
-              opt(NOSKIP,
-                plus(
-                  sequence(
-                    literal("."),
-                    opt(NOSKIP,
-                      hostParameterName$hostIdentifier()
-                    )
-                  )
-                )
+            star(
+              sequence(
+                literal("."),
+                hostParameterName$hostIdentifier()
               )
             )
           )

@@ -21,3 +21,10 @@ target fetchStatement;
 # Sensitivity prefix before the orientation.
 +[ FETCH INSENSITIVE ABSOLUTE :WS-ROW-NUM ACCT_CSR
    INTO :TRN-PROC-DAY, :TRN-FE ]
+
+# Qualified targets split at the dot, with tight null indicators.
++[ FETCH NEXT ROWSET FROM OAOSLCT FOR :WS-REC-COUNT ROWS
+   INTO :OMS-ALLOC-ORD-HIST-DATA.
+         ALLOC-ORDER-ID:ALLOC-ORDER-ID-NID
+       ,:OMS-ALLOC-ORD-HIST-DATA.
+         TO-STORE-NBR:TO-STORE-NBR-NID ]

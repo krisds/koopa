@@ -8,3 +8,6 @@ target prepareStatement;
 
 # PREPARE INTO SQLDA (Method 4)
 +[ PREPARE STMT1 INTO ] HostParameter:hostParameterSpecification [ FROM ] HostParameter:hostParameterSpecification
+
+# The statement text comes from a host variable.
++[ PREPARE TRNSEARH FROM :WS-SQL-STMT ]

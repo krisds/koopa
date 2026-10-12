@@ -135,9 +135,11 @@ def declareCursorStatement =
   # A cursor is declared FOR a select-statement. selectStatement owns all of
   # its trailing clauses (ORDER BY, FETCH FIRST, FOR UPDATE / FOR READ ONLY),
   # so there is nothing to handle at the cursor level after it.
+  # A dynamic cursor is declared FOR a prepared statement name.
   where def queryExpression =
       ( selectStatement
       | withSelectStatement
+      | statementName: identifier
       | unknown: --> eof
       )
   end
@@ -397,7 +399,7 @@ def set =
               <{ '{' } { '}' }>
               <{ leftBracketTrigraph } { rightBracketTrigraph }>
             ( ( assignmentTargets '='
-                ( valueExpression [unknown: _+]
+                ( extendedValueExpression [unknown: _+]
                 | subquery [unknown: _+]
                 | unknown: _+
                 )
@@ -583,7 +585,7 @@ end
 def prepareStatement =
     PREPARE identifier
     [prepareInto]
-    FROM (unknown: --> eof)
+    FROM ( hostParameterSpecification | unknown: --> eof )
     [unknown: --> eof]
 
   where def prepareInto =

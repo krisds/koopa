@@ -676,6 +676,9 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             selectStatement(),
             withSelectStatement(),
+            as("statementName",
+              identifier()
+            ),
             as("unknown",
               skipto(
                 eof()
@@ -2050,7 +2053,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 literal("="),
                 choice(
                   sequence(
-                    valueExpression(),
+                    extendedValueExpression(),
                     optional(
                       as("unknown",
                         plus(
@@ -3161,9 +3164,12 @@ public class SQLGrammar extends SQLBaseGrammar {
               prepareStatement$prepareInto()
             ),
             keyword("FROM"),
-            as("unknown",
-              skipto(
-                eof()
+            choice(
+              hostParameterSpecification(),
+              as("unknown",
+                skipto(
+                  eof()
+                )
               )
             ),
             optional(

@@ -114,3 +114,6 @@ target declareCursorStatement;
    FROM T903_FE
    ORDER BY FE_ID
    WITH UR ]
+
+# A dynamic cursor over a prepared statement name.
++[ DECLARE TRNCSR CURSOR FOR TRNSEARH ]

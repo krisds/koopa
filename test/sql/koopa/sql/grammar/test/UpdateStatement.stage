@@ -36,3 +36,13 @@ target updateStatement;
 +[ UPDATE SESSION.TEMP A
      SET (A.BR_NAME, A.BR_CD) = (SELECT FE_BR_NAME, FE_BR_CD FROM T WHERE X = 1)
      WHERE A.KEY = :WS-KEY ]
+
+# Assignment values are full expressions: CASE and bracketed
+# date arithmetic.
++[ UPDATE T200_FE SET
+     T200_START_WK = CASE WHEN ATT_LINK = :WS-C-AUTO
+                          THEN :WS-C-MAN
+                          ELSE T200_START_WK END
+    ,T200_TS = (CURRENT TIMESTAMP(9) - CURRENT TIMEZONE)
+    ,T200_DT = (CURRENT DATE - 1 DAY)
+   WHERE T200_ID = :WS-ID ]

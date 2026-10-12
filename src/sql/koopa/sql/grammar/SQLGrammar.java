@@ -1243,9 +1243,34 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("HAVING"),
-            as("unknown",
-              skipto(
-                selectStatement$nextBlockOrEnd()
+            balancing(
+              // Closure:
+              literal("("),
+              // Closure:
+              literal(")"),
+              // Closure:
+              literal("["),
+              // Closure:
+              literal("]"),
+              // Closure:
+              literal("{"),
+              // Closure:
+              literal("}"),
+              // Closure:
+              leftBracketTrigraph(),
+              // Closure:
+              rightBracketTrigraph(),
+              upto(
+                choice(
+                  searchCondition(),
+                  as("unknown",
+                    star(
+                      any()
+                    )
+                  )
+                ),
+                // Closure:
+                selectStatement$having$havingBoundary()
               )
             )
           )
@@ -1253,6 +1278,54 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$havingParser;
+    }
+    
+    // ========================================================
+    // havingBoundary
+    // ........................................................
+    
+    private ParserCombinator selectStatement$having$havingBoundaryParser = null;
+    
+    protected final Start selectStatement$having$havingBoundary = Start.on(getNamespace(), "havingBoundary");
+    
+    protected ParserCombinator selectStatement$having$havingBoundary() {
+      if (selectStatement$having$havingBoundaryParser == null) {
+        FutureParser future = scoped("havingBoundary", PRIVATE, true);
+        selectStatement$having$havingBoundaryParser = future;
+        future.setParser(
+          choice(
+            notNested(
+              choice(
+                keyword("FROM"),
+                keyword("WHERE"),
+                sequence(
+                  keyword("GROUP"),
+                  keyword("BY")
+                ),
+                sequence(
+                  keyword("ORDER"),
+                  keyword("BY")
+                ),
+                sequence(
+                  keyword("FETCH"),
+                  keyword("FIRST")
+                ),
+                keyword("UNION"),
+                keyword("EXCEPT"),
+                keyword("INTERSECT")
+              )
+            ),
+            keyword("WINDOW"),
+            keyword("FOR"),
+            keyword("WITH"),
+            keyword("OPTIMIZE"),
+            keyword("QUERYNO"),
+            eof()
+          )
+        );
+      }
+    
+      return selectStatement$having$havingBoundaryParser;
     }
     
     // ========================================================
@@ -4857,7 +4930,17 @@ public class SQLGrammar extends SQLBaseGrammar {
             comparisonOp(),
             choice(
               sequence(
-                valueExpression(),
+                subquery(),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
+              sequence(
+                extendedValueExpression(),
                 optional(
                   as("unknown",
                     plus(
@@ -5190,21 +5273,15 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             sequence(
               literal("<"),
-              opt(NOSKIP,
-                literal(">")
-              )
+              literal(">")
             ),
             sequence(
               literal("!"),
-              opt(NOSKIP,
-                literal("=")
-              )
+              literal("=")
             ),
             sequence(
               literal("^"),
-              opt(NOSKIP,
-                literal("=")
-              )
+              literal("=")
             )
           )
         );
@@ -5229,21 +5306,15 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             sequence(
               literal(">"),
-              opt(NOSKIP,
-                literal("=")
-              )
+              literal("=")
             ),
             sequence(
               literal("!"),
-              opt(NOSKIP,
-                literal("<")
-              )
+              literal("<")
             ),
             sequence(
               literal("^"),
-              opt(NOSKIP,
-                literal("<")
-              )
+              literal("<")
             )
           )
         );
@@ -5268,21 +5339,15 @@ public class SQLGrammar extends SQLBaseGrammar {
           choice(
             sequence(
               literal("<"),
-              opt(NOSKIP,
-                literal("=")
-              )
+              literal("=")
             ),
             sequence(
               literal("!"),
-              opt(NOSKIP,
-                literal(">")
-              )
+              literal(">")
             ),
             sequence(
               literal("^"),
-              opt(NOSKIP,
-                literal(">")
-              )
+              literal(">")
             )
           )
         );
@@ -5464,16 +5529,16 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              parenthesizedExpression(),
-              comparand()
+              comparand(),
+              parenthesizedExpression()
             ),
             star(
               sequence(
                 arithmeticOperator(),
                 choice(
                   duration(),
-                  parenthesizedExpression(),
-                  comparand()
+                  comparand(),
+                  parenthesizedExpression()
                 )
               )
             )

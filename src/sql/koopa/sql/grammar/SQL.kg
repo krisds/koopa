@@ -247,8 +247,25 @@ def selectStatement =
     end
   end
 
+  # HAVING condition parses like a WHERE condition:
+  # balanced search condition bounded at the next clause keyword.
   where def having =
-      HAVING (unknown: --> nextBlockOrEnd)
+      HAVING
+      ( %balancing
+            <{ '(' } { ')' }>
+            <{ '[' } { ']' }>
+            <{ '{' } { '}' }>
+            <{ leftBracketTrigraph } { rightBracketTrigraph }>
+          ( ( searchCondition
+            | unknown : _*
+            ) %upto { havingBoundary } )
+      )
+
+    where private def havingBoundary =
+        ( %notnested ( FROM | WHERE | GROUP BY | ORDER BY
+                     | FETCH FIRST | UNION | EXCEPT | INTERSECT )
+        | WINDOW | FOR | WITH | OPTIMIZE | QUERYNO | eof )
+    end
   end
 
   where def orderBy =
@@ -976,7 +993,12 @@ def comparison =
     | unknown: --> comparisonOp
     )
     comparisonOp
-    ( valueExpression [unknown: _+]
+    # The right operand may be a bracketed expression - X > (CURRENT
+    # DATE - 1 DAY).
+    # The left cannot: a left parenthesis in term position is consumed as a 
+    # parenthesised search condition before a comparison is ever tried.
+    ( subquery [unknown: _+]
+    | extendedValueExpression [unknown: _+]
     | unknown: _+
     )
 end
@@ -1039,9 +1061,9 @@ end
 def equalsOp              =  '='                                    end
 def lessThanOp            =  '<'                                    end
 def greaterThanOp         =  '>'                                    end
-def notEqualsOp           =  ( '<' ++ '>' | '!' ++ '=' | '^' ++ '=' )  end
-def greaterThanOrEqualsOp =  ( '>' ++ '=' | '!' ++ '<' | '^' ++ '<' )  end
-def lessThanOrEqualsOp    =  ( '<' ++ '=' | '!' ++ '>' | '^' ++ '>' )  end
+def notEqualsOp           =  ( '<' '>' | '!' '=' | '^' '=' )  end
+def greaterThanOrEqualsOp =  ( '>' '=' | '!' '<' | '^' '<' )  end
+def lessThanOrEqualsOp    =  ( '<' '=' | '!' '>' | '^' '>' )  end
 
 
 ## ############################################################################
@@ -1081,14 +1103,17 @@ def parenthesizedExpression =
     '(' extendedValueExpression ')'
 end
 
-# A value expression whose operands may themselves be parenthesised,
-# as in ((VENDOR_NBR * 1000) + DEPT_NBR). Only reachable outside search
-# conditions (select items, function arguments, and through them derived
-# tables), so the explicit parentheses cannot disturb the
-# search-condition balancer.
+# A value expression whose operands may themselves be parenthesised.
+# eg ((VENDOR_NBR * 1000) + DEPT_NBR).
+#
+# comparand is tried before the parenthesised form so that a
+# '(' SELECT ... subquery is matched by comparand's subquery (proven
+# inside search-condition walls by inPredicate) instead of being
+# half-consumed by a failing parenthesised-expression attempt, whose
+# deep backtrack desyncs the enclosing balancer.
 hiding def extendedValueExpression =
-    ( parenthesizedExpression | comparand )
-    ( arithmeticOperator ( duration | parenthesizedExpression | comparand ) )*
+    ( comparand | parenthesizedExpression )
+    ( arithmeticOperator ( duration | comparand | parenthesizedExpression ) )*
 end
 
 # A CASE expression is delimited by its own keywords.

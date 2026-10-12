@@ -91,6 +91,21 @@ target searchCondition;
 +[ K IN (SELECT X FROM T WHERE Y = 1) OR Q = 2 ]
 
 
+# Caret comparison operators (^= ^> ^<) are covered by the corpus
+# pipeline only: the stage BasicTokens source does not tokenise '^'
+# the way the COBOL SQL pipeline does, so a stage sample cannot
+# exercise them.
+
+# Underscore special register with date arithmetic, bracketed right
+# operand.
++[ EFF_DT > (CURRENT_DATE - :WS-LOOKBACK DAYS) ]
+
+# Signed numeric literal in operand position.
++[ ZBA_SEQ_NO = + 0 AND ZBA_LVL = -1 ]
+
+# Aggregate comparison (shared with the HAVING clause).
++[ COUNT(A.DEST_STORE_NBR) > :WS-L1 ]
+
 target inPredicate;
 
 # The predicate keyword and left comparand are named; the argument is water.

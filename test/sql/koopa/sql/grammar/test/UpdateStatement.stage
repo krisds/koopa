@@ -46,3 +46,8 @@ target updateStatement;
     ,T200_TS = (CURRENT TIMESTAMP(9) - CURRENT TIMEZONE)
     ,T200_DT = (CURRENT DATE - 1 DAY)
    WHERE T200_ID = :WS-ID ]
+
+# Row assignment with a value list.
++[ UPDATE T006 SET (ADD_LINE, ADD_PURGE_DT) =
+          (:WS-LINE, CURRENT DATE + 30 DAYS)
+   WHERE ADD_FE = :WS-FE ]

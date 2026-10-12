@@ -2188,6 +2188,16 @@ public class SQLGrammar extends SQLBaseGrammar {
                       )
                     )
                   ),
+                  sequence(
+                    set$assignment$rowValues(),
+                    optional(
+                      as("unknown",
+                        plus(
+                          any()
+                        )
+                      )
+                    )
+                  ),
                   as("unknown",
                     plus(
                       any()
@@ -2241,6 +2251,36 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return set$assignment$assignmentTargetsParser;
+    }
+    
+    // ========================================================
+    // rowValues
+    // ........................................................
+    
+    private ParserCombinator set$assignment$rowValuesParser = null;
+    
+    public final Start set$assignment$rowValues = Start.on(getNamespace(), "rowValues");
+    
+    public ParserCombinator set$assignment$rowValues() {
+      if (set$assignment$rowValuesParser == null) {
+        FutureParser future = scoped("rowValues", PUBLIC, true);
+        set$assignment$rowValuesParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            extendedValueExpression(),
+            star(
+              sequence(
+                literal(","),
+                extendedValueExpression()
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return set$assignment$rowValuesParser;
     }
     
     // ========================================================

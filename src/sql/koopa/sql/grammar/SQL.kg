@@ -422,6 +422,7 @@ def set =
             ( ( assignmentTargets '='
                 ( extendedValueExpression [unknown: _+]
                 | subquery [unknown: _+]
+                | rowValues [unknown: _+]
                 | unknown: _+
                 )
               ) %upto { %notnested (',' | WHERE) } )
@@ -433,6 +434,11 @@ def set =
           ( '(' columnReference (',' columnReference)* ')'
           | columnReference
           )
+      end
+
+      # The row form's value list: SET (a, b) = (v1, v2).
+      where def rowValues =
+          '(' extendedValueExpression (',' extendedValueExpression)* ')'
       end
     end
 end

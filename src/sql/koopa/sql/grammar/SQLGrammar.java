@@ -766,6 +766,9 @@ public class SQLGrammar extends SQLBaseGrammar {
                   declareCursorStatement$queryExpression$cursorSetOperator(),
                   subquery()
                 )
+              ),
+              optional(
+                declareCursorStatement$queryExpression$cursorTail()
               )
             ),
             as("statementName",
@@ -813,6 +816,98 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return declareCursorStatement$queryExpression$cursorSetOperatorParser;
+    }
+    
+    // ========================================================
+    // cursorTail
+    // ........................................................
+    
+    private ParserCombinator declareCursorStatement$queryExpression$cursorTailParser = null;
+    
+    public final Start declareCursorStatement$queryExpression$cursorTail = Start.on(getNamespace(), "cursorTail");
+    
+    public ParserCombinator declareCursorStatement$queryExpression$cursorTail() {
+      if (declareCursorStatement$queryExpression$cursorTailParser == null) {
+        FutureParser future = scoped("cursorTail", PUBLIC, true);
+        declareCursorStatement$queryExpression$cursorTailParser = future;
+        future.setParser(
+          sequence(
+            optional(
+              sequence(
+                keyword("ORDER"),
+                keyword("BY"),
+                declareCursorStatement$queryExpression$cursorSortKey(),
+                star(
+                  sequence(
+                    literal(","),
+                    declareCursorStatement$queryExpression$cursorSortKey()
+                  )
+                )
+              )
+            ),
+            optional(
+              choice(
+                sequence(
+                  keyword("FOR"),
+                  choice(
+                    keyword("READ"),
+                    keyword("FETCH")
+                  ),
+                  keyword("ONLY")
+                ),
+                sequence(
+                  keyword("FOR"),
+                  keyword("UPDATE")
+                )
+              )
+            ),
+            optional(
+              sequence(
+                keyword("WITH"),
+                choice(
+                  keyword("UR"),
+                  keyword("CS"),
+                  keyword("RS"),
+                  keyword("RR")
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return declareCursorStatement$queryExpression$cursorTailParser;
+    }
+    
+    // ========================================================
+    // cursorSortKey
+    // ........................................................
+    
+    private ParserCombinator declareCursorStatement$queryExpression$cursorSortKeyParser = null;
+    
+    public final Start declareCursorStatement$queryExpression$cursorSortKey = Start.on(getNamespace(), "cursorSortKey");
+    
+    public ParserCombinator declareCursorStatement$queryExpression$cursorSortKey() {
+      if (declareCursorStatement$queryExpression$cursorSortKeyParser == null) {
+        FutureParser future = scoped("cursorSortKey", PUBLIC, true);
+        declareCursorStatement$queryExpression$cursorSortKeyParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              columnReference(),
+              numericLiteral()
+            ),
+            optional(
+              choice(
+                keyword("ASC"),
+                keyword("DESC")
+              )
+            )
+          )
+        );
+      }
+    
+      return declareCursorStatement$queryExpression$cursorSortKeyParser;
     }
     
     // ========================================================
@@ -953,7 +1048,12 @@ public class SQLGrammar extends SQLBaseGrammar {
               keyword("DISTINCT")
             ),
             as("all",
-              keyword("ALL")
+              sequence(
+                keyword("ALL"),
+                not(
+                  literal(".")
+                )
+              )
             )
           )
         );
@@ -3565,9 +3665,19 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("EXECUTE"),
             keyword("IMMEDIATE"),
-            as("unknown",
-              skipto(
-                eof()
+            choice(
+              hostParameterSpecification(),
+              as("unknown",
+                skipto(
+                  eof()
+                )
+              )
+            ),
+            optional(
+              as("unknown",
+                skipto(
+                  eof()
+                )
               )
             )
           )
@@ -3946,7 +4056,7 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("DESCRIBE"),
-            identifier(),
+            cobolWord(),
             optional(
               describeStatement$describeInto()
             ),
@@ -3979,9 +4089,12 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("INTO"),
-            as("unknown",
-              skipto(
-                eof()
+            choice(
+              hostParameterSpecification(),
+              as("unknown",
+                skipto(
+                  eof()
+                )
               )
             )
           )
@@ -7189,7 +7302,8 @@ public class SQLGrammar extends SQLBaseGrammar {
                 keyword("PATH"),
                 keyword("TIMEZONE"),
                 keyword("DEGREE"),
-                keyword("MEMBER")
+                keyword("MEMBER"),
+                keyword("PACKAGESET")
               )
             ),
             sequence(

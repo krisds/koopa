@@ -297,3 +297,9 @@ target selectStatement;
    GROUP BY DATE(START_TS) ]
 +[ SELECT 1 INTO :WS-C FROM VENDOR
    WHERE VENDOR_NAME LIKE ( :WS-PAT ) ]
+
+# ALL as a correlation alias (guarded against the set quantifier);
+# plain SELECT ALL still quantifies.
++[ SELECT ALL.ALLOC_EVENT_NAME INTO :D.ALLOC-EVENT-NAME
+   FROM OMS_ALLOC_ORDER ALL WHERE ALL.X = :WS-X ]
++[ SELECT ALL COL_A INTO :WS-A FROM T_X ]

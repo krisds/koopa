@@ -152,19 +152,32 @@ def declareCursorStatement =
   # A cursor is declared FOR a select-statement. selectStatement owns all of
   # its trailing clauses (ORDER BY, FETCH FIRST, FOR UPDATE / FOR READ ONLY),
   # so there is nothing to handle at the cursor level after it.
-  # A dynamic cursor is declared FOR a prepared statement name; the
-  # query itself may be parenthesised, and parenthesised branches may
-  # chain with set operators: (SELECT ...) UNION ALL (SELECT ...).
+  # the query itself may be parenthesised, and parenthesised branches may
+  # chain with set operators and carry trailing clauses.
+  # eg: (SELECT ...) UNION ALL (SELECT ...) ORDER BY 1 DESC WITH UR.
   where def queryExpression =
       ( selectStatement
       | withSelectStatement
-      | subquery ( cursorSetOperator subquery )*
+      | subquery ( cursorSetOperator subquery )* [ cursorTail ]
       | statementName: identifier
       | unknown: --> eof
       )
 
     where def cursorSetOperator =
         ( UNION | EXCEPT | INTERSECT ) [ ALL | DISTINCT ]
+    end
+
+    # ORDER BY over column names or positions, then updatability /isolation keywords
+    # anything complicated stays parsed as water.
+    where def cursorTail =
+        [ ORDER BY cursorSortKey (',' cursorSortKey)* ]
+        [ FOR ( READ | FETCH ) ONLY | FOR UPDATE ]
+        [ WITH ( UR | CS | RS | RR ) ]
+    end
+
+    where def cursorSortKey =
+        ( columnReference | numericLiteral )
+        [ ASC | DESC ]
     end
   end
 end
@@ -189,14 +202,10 @@ def selectStatement =
     ( setOperator selectStatement )*
     [ unknown: --> eof ]
 
-  where def setQuantifier =  ( distinct: DISTINCT | all: ALL )  end
-  
-  # The list is split on commas structurally, item by item, with no comma
-  # limiter: a %upto { ',' } would make the LimitedStream treat every comma
-  # as a hard boundary, including those inside a function's argument list.
-  # Instead each item consumes its own brackets (a function call or a
-  # parenthesised subquery), so the only commas the split sees are the ones
-  # separating items. Items end at the INTO / FROM boundary.
+  where def setQuantifier =
+      ( distinct: DISTINCT | all: ALL (%not '.') )
+  end
+
   where def selectList =
       sublist ((',') sublist)*
 
@@ -649,7 +658,9 @@ def prepareStatement =
 end
 
 def executeImmediateStatement =
-    EXECUTE IMMEDIATE (unknown: --> eof)
+    EXECUTE IMMEDIATE
+    ( hostParameterSpecification | unknown: --> eof )
+    [unknown: --> eof]
 end
 
 def executeStatement =
@@ -714,12 +725,14 @@ def withSelectStatement =
 end
 
 def describeStatement =
-    DESCRIBE identifier
+    # Statement names follow COBOL conventions (PU001A-DYNSQL), so the
+    # name uses the COBOL word glue.
+    DESCRIBE cobolWord
     [describeInto]
     [unknown: --> eof]
 
   where def describeInto =
-      INTO (unknown: --> eof)
+      INTO ( hostParameterSpecification | unknown: --> eof )
   end
 end
 
@@ -1434,7 +1447,8 @@ def specialRegister =                                # [IBM DB2 SQL Statements]
     ( CURRENT ( DATE
               | TIMESTAMP [ '(' numericLiteral ')' ]
               | TIME | SERVER | SQLID | SCHEMA
-              | PATH | TIMEZONE | DEGREE | MEMBER )
+              | PATH | TIMEZONE | DEGREE | MEMBER
+              | PACKAGESET )
 
     # The SQL-standard underscore spellings (CURRENT_DATE, ...).
     | CURRENT ++ '_' ++ ( DATE

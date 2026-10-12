@@ -27,3 +27,6 @@ target setStatement;
 # Special register assignments.
 +[ SET CURRENT PACKAGESET = :W-PACKAGESET ]
 +[ SET CURRENT OPTIMIZATION HINT = :WS-SQLID ]
+
+# Reading a special register into a host variable.
++[ SET :WS-CUR-PKGSET = CURRENT PACKAGESET ]

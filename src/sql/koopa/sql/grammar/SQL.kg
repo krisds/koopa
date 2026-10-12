@@ -521,7 +521,8 @@ end
 ## ----------------------------------------------------------------------------
 
 def fetchStatement =
-    FETCH [fetchOrientation] [rowsetClause] [FROM] cursorName
+    FETCH [ SENSITIVE | INSENSITIVE ]
+    [fetchOrientation] [rowsetClause] [FROM] cursorName
     [fetchFor]
     [fetchInto]
     [fetchUsingDescriptor]
@@ -572,14 +573,24 @@ def setStatement =
 
   where def hostAssignment =
       hostParameterSpecification '='
-      ( valueExpression [unknown: --> (',' | eof)]
+      ( extendedValueExpression [unknown: --> (',' | eof)]
       | unknown: --> (',' | eof)
       )
   end
 end
 
+# GET DIAGNOSTICS [CONDITION :n] :h = ITEM_NAME, :h = ITEM_NAME ...
 def getDiagnosticsStatement =
-    GET DIAGNOSTICS [unknown: --> eof]
+    GET DIAGNOSTICS
+    [ CONDITION ( hostParameterName | numericLiteral ) ]
+    [ diagnosticsItem (',' diagnosticsItem)* ]
+    [unknown: --> eof]
+
+  where def diagnosticsItem =
+      hostParameterSpecification '=' itemName
+
+    where def itemName =  identifier  end
+  end
 end
 
 def prepareStatement =
@@ -1044,7 +1055,7 @@ end
 
 # Db2 sequence value: NEXT VALUE FOR seq / PREVIOUS VALUE FOR seq.
 def sequenceReference =                               # [IBM DB2 SQL Statements]
-    ( NEXT | PREVIOUS ) VALUE FOR tableName
+    ( ( NEXT | PREVIOUS ) VALUE | NEXTVAL | PREVVAL ) FOR tableName
 end
 
 # NOTE: Two-character operators must be tried before their one-character prefixes

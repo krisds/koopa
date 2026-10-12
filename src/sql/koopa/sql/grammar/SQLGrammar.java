@@ -2769,6 +2769,12 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("FETCH"),
             optional(
+              choice(
+                keyword("SENSITIVE"),
+                keyword("INSENSITIVE")
+              )
+            ),
+            optional(
               fetchStatement$fetchOrientation()
             ),
             optional(
@@ -3086,7 +3092,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             literal("="),
             choice(
               sequence(
-                valueExpression(),
+                extendedValueExpression(),
                 optional(
                   as("unknown",
                     skipto(
@@ -3131,6 +3137,26 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("GET"),
             keyword("DIAGNOSTICS"),
             optional(
+              sequence(
+                keyword("CONDITION"),
+                choice(
+                  hostParameterName(),
+                  numericLiteral()
+                )
+              )
+            ),
+            optional(
+              sequence(
+                getDiagnosticsStatement$diagnosticsItem(),
+                star(
+                  sequence(
+                    literal(","),
+                    getDiagnosticsStatement$diagnosticsItem()
+                  )
+                )
+              )
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -3142,6 +3168,50 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return getDiagnosticsStatementParser;
+    }
+    
+    // ========================================================
+    // diagnosticsItem
+    // ........................................................
+    
+    private ParserCombinator getDiagnosticsStatement$diagnosticsItemParser = null;
+    
+    public final Start getDiagnosticsStatement$diagnosticsItem = Start.on(getNamespace(), "diagnosticsItem");
+    
+    public ParserCombinator getDiagnosticsStatement$diagnosticsItem() {
+      if (getDiagnosticsStatement$diagnosticsItemParser == null) {
+        FutureParser future = scoped("diagnosticsItem", PUBLIC, true);
+        getDiagnosticsStatement$diagnosticsItemParser = future;
+        future.setParser(
+          sequence(
+            hostParameterSpecification(),
+            literal("="),
+            getDiagnosticsStatement$diagnosticsItem$itemName()
+          )
+        );
+      }
+    
+      return getDiagnosticsStatement$diagnosticsItemParser;
+    }
+    
+    // ========================================================
+    // itemName
+    // ........................................................
+    
+    private ParserCombinator getDiagnosticsStatement$diagnosticsItem$itemNameParser = null;
+    
+    public final Start getDiagnosticsStatement$diagnosticsItem$itemName = Start.on(getNamespace(), "itemName");
+    
+    public ParserCombinator getDiagnosticsStatement$diagnosticsItem$itemName() {
+      if (getDiagnosticsStatement$diagnosticsItem$itemNameParser == null) {
+        FutureParser future = scoped("itemName", PUBLIC, true);
+        getDiagnosticsStatement$diagnosticsItem$itemNameParser = future;
+        future.setParser(
+          identifier()
+        );
+      }
+    
+      return getDiagnosticsStatement$diagnosticsItem$itemNameParser;
     }
     
     // ========================================================
@@ -5155,10 +5225,16 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              keyword("NEXT"),
-              keyword("PREVIOUS")
+              sequence(
+                choice(
+                  keyword("NEXT"),
+                  keyword("PREVIOUS")
+                ),
+                keyword("VALUE")
+              ),
+              keyword("NEXTVAL"),
+              keyword("PREVVAL")
             ),
-            keyword("VALUE"),
             keyword("FOR"),
             tableName()
           )

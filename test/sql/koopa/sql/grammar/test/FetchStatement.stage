@@ -17,3 +17,7 @@ target fetchStatement;
      INTO :WS-GFC-CON-ID, :TMP-CON-ID ]
 +[ FETCH ABSOLUTE :K-REC T101-DDA-DEL-CSR INTO :WS-A ]
 +[ FETCH T101-DDA-DEL-CSR INTO :WS-A ]
+
+# Sensitivity prefix before the orientation.
++[ FETCH INSENSITIVE ABSOLUTE :WS-ROW-NUM ACCT_CSR
+   INTO :TRN-PROC-DAY, :TRN-FE ]

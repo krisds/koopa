@@ -19,3 +19,7 @@ target setStatement;
 
 # Special register with timestamp precision in the value.
 +[ SET :WS-TS = CURRENT TIMESTAMP(12) - CURRENT TIMEZONE ]
+
+# Bracketed date arithmetic and a sequence value as assignment values.
++[ SET :WS-DT = (CURRENT DATE - 30 DAYS)
+      ,:WS-SEQ = NEXTVAL FOR PSN_INVOICE_SEQ ]

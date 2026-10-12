@@ -2598,6 +2598,21 @@ public class SQLGrammar extends SQLBaseGrammar {
               insertValues()
             ),
             optional(
+              sequence(
+                optional(
+                  keyword("NOT")
+                ),
+                keyword("ATOMIC"),
+                optional(
+                  sequence(
+                    keyword("CONTINUE"),
+                    keyword("ON"),
+                    keyword("SQLEXCEPTION")
+                  )
+                )
+              )
+            ),
+            optional(
               as("unknown",
                 skipto(
                   choice(
@@ -3182,12 +3197,15 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("SET"),
             optional(
-              sequence(
-                setStatement$hostAssignment(),
-                star(
-                  sequence(
-                    literal(","),
-                    setStatement$hostAssignment()
+              choice(
+                setStatement$registerAssignment(),
+                sequence(
+                  setStatement$hostAssignment(),
+                  star(
+                    sequence(
+                      literal(","),
+                      setStatement$hostAssignment()
+                    )
                   )
                 )
               )
@@ -3204,6 +3222,40 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return setStatementParser;
+    }
+    
+    // ========================================================
+    // registerAssignment
+    // ........................................................
+    
+    private ParserCombinator setStatement$registerAssignmentParser = null;
+    
+    public final Start setStatement$registerAssignment = Start.on(getNamespace(), "registerAssignment");
+    
+    public ParserCombinator setStatement$registerAssignment() {
+      if (setStatement$registerAssignmentParser == null) {
+        FutureParser future = scoped("registerAssignment", PUBLIC, true);
+        setStatement$registerAssignmentParser = future;
+        future.setParser(
+          sequence(
+            keyword("CURRENT"),
+            identifier(),
+            optional(
+              identifier()
+            ),
+            optional(
+              literal("=")
+            ),
+            choice(
+              hostParameterSpecification(),
+              stringLiteral(),
+              identifier()
+            )
+          )
+        );
+      }
+    
+      return setStatement$registerAssignmentParser;
     }
     
     // ========================================================
@@ -5056,9 +5108,9 @@ public class SQLGrammar extends SQLBaseGrammar {
               keyword("NOT")
             ),
             keyword("BETWEEN"),
-            valueExpression(),
+            extendedValueExpression(),
             keyword("AND"),
-            valueExpression()
+            extendedValueExpression()
           )
         );
       }

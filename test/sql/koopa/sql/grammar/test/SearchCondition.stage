@@ -106,6 +106,9 @@ target searchCondition;
 # Aggregate comparison (shared with the HAVING clause).
 +[ COUNT(A.DEST_STORE_NBR) > :WS-L1 ]
 
+# BETWEEN bounds are full expressions.
++[ EFF_DT BETWEEN CURRENT DATE AND DATE(:WS-CURRENT-DATE) + 6 DAYS ]
+
 target inPredicate;
 
 # The predicate keyword and left comparand are named; the argument is water.

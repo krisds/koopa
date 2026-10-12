@@ -494,6 +494,7 @@ def mergeStatement =
 
     where def mergeInsert =
         INSERT [ insertColumns ] [ insertValues ]
+        [ [NOT] ATOMIC [ CONTINUE ON SQLEXCEPTION ] ]
         [ unknown: --> (WHEN | eof) ]
     end
   end
@@ -590,8 +591,16 @@ end
 
 def setStatement =
     SET
-    [ hostAssignment (',' hostAssignment)* ]
+    [ registerAssignment
+    | hostAssignment (',' hostAssignment)*
+    ]
     [unknown: --> eof]
+
+  # SET CURRENT PACKAGESET / SCHEMA / SQLID / OPTIMIZATION HINT = v.
+  where def registerAssignment =
+      CURRENT identifier [identifier] ['=']
+      ( hostParameterSpecification | stringLiteral | identifier )
+  end
 
   where def hostAssignment =
       hostParameterSpecification '='
@@ -1003,7 +1012,8 @@ def nullPredicate =
 end
 
 def betweenPredicate =
-    comparand [NOT] BETWEEN valueExpression AND valueExpression
+    comparand [NOT] BETWEEN extendedValueExpression
+    AND extendedValueExpression
 end
 
 def existsPredicate =

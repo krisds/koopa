@@ -23,3 +23,7 @@ target setStatement;
 # Bracketed date arithmetic and a sequence value as assignment values.
 +[ SET :WS-DT = (CURRENT DATE - 30 DAYS)
       ,:WS-SEQ = NEXTVAL FOR PSN_INVOICE_SEQ ]
+
+# Special register assignments.
++[ SET CURRENT PACKAGESET = :W-PACKAGESET ]
++[ SET CURRENT OPTIMIZATION HINT = :WS-SQLID ]

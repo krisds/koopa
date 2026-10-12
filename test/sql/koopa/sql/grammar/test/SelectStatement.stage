@@ -303,3 +303,7 @@ target selectStatement;
 +[ SELECT ALL.ALLOC_EVENT_NAME INTO :D.ALLOC-EVENT-NAME
    FROM OMS_ALLOC_ORDER ALL WHERE ALL.X = :WS-X ]
 +[ SELECT ALL COL_A INTO :WS-A FROM T_X ]
+
+# A parenthesised arithmetic group as the left comparison operand.
++[ SELECT 1 INTO :WS-C FROM T_IDX
+   WHERE (WEEK_01_INDEX + WEEK_02_INDEX + WEEK_03_INDEX) > 0 ]

@@ -288,11 +288,11 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             literal("("),
-            columnDefinitions$columnDefinition(),
+            columnDefinitions$columnEntry(),
             star(
               sequence(
                 literal(","),
-                columnDefinitions$columnDefinition()
+                columnDefinitions$columnEntry()
               )
             ),
             literal(")")
@@ -301,6 +301,34 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return columnDefinitionsParser;
+    }
+    
+    // ========================================================
+    // columnEntry
+    // ........................................................
+    
+    private ParserCombinator columnDefinitions$columnEntryParser = null;
+    
+    public final Start columnDefinitions$columnEntry = Start.on(getNamespace(), "columnEntry");
+    
+    public ParserCombinator columnDefinitions$columnEntry() {
+      if (columnDefinitions$columnEntryParser == null) {
+        FutureParser future = scoped("columnEntry", PUBLIC, true);
+        columnDefinitions$columnEntryParser = future;
+        future.setParser(
+          choice(
+            columnDefinitions$columnDefinition(),
+            as("strayNotNull",
+              sequence(
+                keyword("NOT"),
+                keyword("NULL")
+              )
+            )
+          )
+        );
+      }
+    
+      return columnDefinitions$columnEntryParser;
     }
     
     // ========================================================
@@ -4056,6 +4084,12 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             keyword("DESCRIBE"),
+            optional(
+              choice(
+                keyword("INPUT"),
+                keyword("OUTPUT")
+              )
+            ),
             cobolWord(),
             optional(
               describeStatement$describeInto()
@@ -5025,7 +5059,10 @@ public class SQLGrammar extends SQLBaseGrammar {
                   )
                 )
               ),
-              literal(")")
+              literal(")"),
+              not(
+                comparisonOp()
+              )
             ),
             existsPredicate(),
             inPredicate(),
@@ -5367,7 +5404,7 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             choice(
               sequence(
-                valueExpression(),
+                extendedValueExpression(),
                 optional(
                   as("unknown",
                     skipto(

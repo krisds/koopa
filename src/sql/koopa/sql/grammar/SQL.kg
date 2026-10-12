@@ -111,8 +111,25 @@ def dataType =
   end
 end
 
+# VALUES expr INTO :h / VALUES (e1, e2, ...) INTO :h1, :h2, ...
 def valuesIntoStatement =
-    VALUES [unknown: --> eof]
+    VALUES
+    [ valuesRow ]
+    [ valuesInto ]
+    [unknown: --> eof]
+
+  where def valuesRow =
+      ( '(' extendedValueExpression (',' extendedValueExpression)* ')'
+      | extendedValueExpression
+      )
+  end
+
+  where def valuesInto =
+      INTO
+      ( '(' hostParameterSpecification (',' hostParameterSpecification)* ')'
+      | hostParameterSpecification (',' hostParameterSpecification)*
+      )
+  end
 end
 
 def declareCursorStatement =
@@ -511,7 +528,8 @@ end
 
 def lockTableStatement =
     LOCK TABLE tableName
-
+    [ PART numericLiteral ]                          # [IBM DB2 SQL Statements]
+    [ IN ( SHARE | EXCLUSIVE ) MODE ]
     [unknown: --> eof]
 end
 

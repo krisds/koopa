@@ -467,6 +467,12 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             keyword("VALUES"),
             optional(
+              valuesIntoStatement$valuesRow()
+            ),
+            optional(
+              valuesIntoStatement$valuesInto()
+            ),
+            optional(
               as("unknown",
                 skipto(
                   eof()
@@ -478,6 +484,83 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return valuesIntoStatementParser;
+    }
+    
+    // ========================================================
+    // valuesRow
+    // ........................................................
+    
+    private ParserCombinator valuesIntoStatement$valuesRowParser = null;
+    
+    public final Start valuesIntoStatement$valuesRow = Start.on(getNamespace(), "valuesRow");
+    
+    public ParserCombinator valuesIntoStatement$valuesRow() {
+      if (valuesIntoStatement$valuesRowParser == null) {
+        FutureParser future = scoped("valuesRow", PUBLIC, true);
+        valuesIntoStatement$valuesRowParser = future;
+        future.setParser(
+          choice(
+            sequence(
+              literal("("),
+              extendedValueExpression(),
+              star(
+                sequence(
+                  literal(","),
+                  extendedValueExpression()
+                )
+              ),
+              literal(")")
+            ),
+            extendedValueExpression()
+          )
+        );
+      }
+    
+      return valuesIntoStatement$valuesRowParser;
+    }
+    
+    // ========================================================
+    // valuesInto
+    // ........................................................
+    
+    private ParserCombinator valuesIntoStatement$valuesIntoParser = null;
+    
+    public final Start valuesIntoStatement$valuesInto = Start.on(getNamespace(), "valuesInto");
+    
+    public ParserCombinator valuesIntoStatement$valuesInto() {
+      if (valuesIntoStatement$valuesIntoParser == null) {
+        FutureParser future = scoped("valuesInto", PUBLIC, true);
+        valuesIntoStatement$valuesIntoParser = future;
+        future.setParser(
+          sequence(
+            keyword("INTO"),
+            choice(
+              sequence(
+                literal("("),
+                hostParameterSpecification(),
+                star(
+                  sequence(
+                    literal(","),
+                    hostParameterSpecification()
+                  )
+                ),
+                literal(")")
+              ),
+              sequence(
+                hostParameterSpecification(),
+                star(
+                  sequence(
+                    literal(","),
+                    hostParameterSpecification()
+                  )
+                )
+              )
+            )
+          )
+        );
+      }
+    
+      return valuesIntoStatement$valuesIntoParser;
     }
     
     // ========================================================
@@ -2739,6 +2822,22 @@ public class SQLGrammar extends SQLBaseGrammar {
             keyword("LOCK"),
             keyword("TABLE"),
             tableName(),
+            optional(
+              sequence(
+                keyword("PART"),
+                numericLiteral()
+              )
+            ),
+            optional(
+              sequence(
+                keyword("IN"),
+                choice(
+                  keyword("SHARE"),
+                  keyword("EXCLUSIVE")
+                ),
+                keyword("MODE")
+              )
+            ),
             optional(
               as("unknown",
                 skipto(

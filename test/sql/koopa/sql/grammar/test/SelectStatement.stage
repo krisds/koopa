@@ -278,3 +278,12 @@ target selectStatement;
          ,QTY + 1
    INTO :WS-A, :WS-B, :WS-C, :WS-D
    FROM T_X ]
+
+# Aggregates continue with date arithmetic; infix CONCAT; an AS-less
+# column alias.
++[ SELECT MIN(GREGORIAN_DATE) - 1 DAY
+         ,MIN(GREGORIAN_DATE) + 3 DAY
+   INTO :WS-BEG, :WS-END FROM CALENDAR_DAY ]
++[ SELECT ACC_FE CONCAT ACW_RBAC INTO :WS-K FROM T_ACC ]
++[ SELECT REGION_NBR HOME_STORE_NBR INTO :D.HOME-STORE-NBR
+   FROM DISTRICT ]

@@ -194,11 +194,8 @@ def selectStatement =
       sublist ((',') sublist)*
 
     where private def sublist =
-      ( aggregateFunction
-      | allColumns: '*'
-      # The expression form subsumes function calls, CASE and
-      # parenthesised items, and lets each continue with arithmetic
-      # (DATE(X) + 11 DAYS, CASE ... END / 1440).
+      ( allColumns: '*'
+      # The expression form subsumes aggregates, function calls, CASE and parenthesised items
       | extendedValueExpression
       | unknown: --> (',' | INTO | FROM | eof)
       )
@@ -210,9 +207,16 @@ def selectStatement =
     end
 
     where def columnLabel =
-        AS columnAlias
+        ( AS columnAlias
+        | (%not reservedAfterSelectItem) columnAlias
+        )
 
       where def columnAlias =  identifier  end
+
+      # Keywords that can directly follow a select item, a bare alias must not take them.
+      where private def reservedAfterSelectItem =
+          ( INTO | FROM | UNION | EXCEPT | INTERSECT )
+      end
     end
   end
 
@@ -1041,7 +1045,8 @@ hiding def valueExpression =
 end
 
 def duration =                                       # [IBM DB2 SQL Statements]
-    ( numericLiteral | hostParameterSpecification )
+    ( numericLiteral | hostParameterSpecification
+    | parenthesizedExpression | scalarFunctionCall )
     ( MICROSECOND | MICROSECONDS | SECOND | SECONDS | MINUTE | MINUTES
     | HOUR | HOURS | DAY | DAYS | MONTH | MONTHS | YEAR | YEARS )
 end
@@ -1050,7 +1055,7 @@ private def arithmeticOperator =
     ( '+' | '-' | '*' | '/' | concatOperator )
 end
 
-private def concatOperator =  '|' ++ '|'  end
+private def concatOperator =  ( '|' ++ '|' | CONCAT )  end
 
 hiding def comparand =
     ( specialRegister
@@ -1142,11 +1147,16 @@ end
 # deep backtrack desyncs the enclosing balancer.
 #
 # caseExpression before comparand: CASE is a reserved word but
-# columnReference would happily take it as a column name.
+# columnReference would happily take it as a column name. Aggregates
+# likewise match before the generic function call so COUNT(*) and
+# set quantifiers keep their aggregate shape, and an aggregate item
+# can continue with arithmetic (MIN(D) - 1 DAY).
 hiding def extendedValueExpression =
-    ( caseExpression | comparand | parenthesizedExpression )
+    ( caseExpression | aggregateFunction | comparand
+    | parenthesizedExpression )
     ( arithmeticOperator
-      ( duration | caseExpression | comparand | parenthesizedExpression )
+      ( duration | caseExpression | aggregateFunction | comparand
+      | parenthesizedExpression )
     )*
 end
 
@@ -1370,7 +1380,12 @@ def targetTable =  ( ONLY '(' tableName ')' | tableName )   end
 # NOTE: Only use outside a search condition: explicitly matching parentheses
 #       inside one disturbs its balancer.
 def subquery =
-    '(' ( %balancing
+    # The SELECT/WITH lookahead fails a non-subquery parenthesis
+    # cheaply, before the balancing region and its %upto wall are set up:
+    # A failed attempt's wall otherwise leaves a stale stream limit that breaks 
+    # parenthesised-expression alternatives after it.
+    '(' (%not notSubqueryHead)
+    ( %balancing
               <{ '(' } { ')' }>
               <{ '[' } { ']' }>
               <{ '{' } { '}' }>
@@ -1378,6 +1393,8 @@ def subquery =
             ( selectStatement %upto { %notnested ')' } )
         )
     ')'
+
+  where private def notSubqueryHead =  (%not ( SELECT | WITH ))  end
 end
 
 def columnReference =

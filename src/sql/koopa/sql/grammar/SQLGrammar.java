@@ -964,7 +964,6 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             choice(
-              aggregateFunction(),
               as("allColumns",
                 literal("*")
               ),
@@ -1015,9 +1014,17 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("columnLabel", PUBLIC, true);
         selectStatement$selectList$columnLabelParser = future;
         future.setParser(
-          sequence(
-            keyword("AS"),
-            selectStatement$selectList$columnLabel$columnAlias()
+          choice(
+            sequence(
+              keyword("AS"),
+              selectStatement$selectList$columnLabel$columnAlias()
+            ),
+            sequence(
+              not(
+                selectStatement$selectList$columnLabel$reservedAfterSelectItem()
+              ),
+              selectStatement$selectList$columnLabel$columnAlias()
+            )
           )
         );
       }
@@ -1043,6 +1050,32 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return selectStatement$selectList$columnLabel$columnAliasParser;
+    }
+    
+    // ========================================================
+    // reservedAfterSelectItem
+    // ........................................................
+    
+    private ParserCombinator selectStatement$selectList$columnLabel$reservedAfterSelectItemParser = null;
+    
+    protected final Start selectStatement$selectList$columnLabel$reservedAfterSelectItem = Start.on(getNamespace(), "reservedAfterSelectItem");
+    
+    protected ParserCombinator selectStatement$selectList$columnLabel$reservedAfterSelectItem() {
+      if (selectStatement$selectList$columnLabel$reservedAfterSelectItemParser == null) {
+        FutureParser future = scoped("reservedAfterSelectItem", PRIVATE, true);
+        selectStatement$selectList$columnLabel$reservedAfterSelectItemParser = future;
+        future.setParser(
+          choice(
+            keyword("INTO"),
+            keyword("FROM"),
+            keyword("UNION"),
+            keyword("EXCEPT"),
+            keyword("INTERSECT")
+          )
+        );
+      }
+    
+      return selectStatement$selectList$columnLabel$reservedAfterSelectItemParser;
     }
     
     // ========================================================
@@ -5176,7 +5209,9 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             choice(
               numericLiteral(),
-              hostParameterSpecification()
+              hostParameterSpecification(),
+              parenthesizedExpression(),
+              scalarFunctionCall()
             ),
             choice(
               keyword("MICROSECOND"),
@@ -5240,11 +5275,14 @@ public class SQLGrammar extends SQLBaseGrammar {
         FutureParser future = scoped("concatOperator", PRIVATE, true);
         concatOperatorParser = future;
         future.setParser(
-          sequence(
-            literal("|"),
-            opt(NOSKIP,
-              literal("|")
-            )
+          choice(
+            sequence(
+              literal("|"),
+              opt(NOSKIP,
+                literal("|")
+              )
+            ),
+            keyword("CONCAT")
           )
         );
       }
@@ -5703,6 +5741,7 @@ public class SQLGrammar extends SQLBaseGrammar {
           sequence(
             choice(
               caseExpression(),
+              aggregateFunction(),
               comparand(),
               parenthesizedExpression()
             ),
@@ -5712,6 +5751,7 @@ public class SQLGrammar extends SQLBaseGrammar {
                 choice(
                   duration(),
                   caseExpression(),
+                  aggregateFunction(),
                   comparand(),
                   parenthesizedExpression()
                 )
@@ -6861,6 +6901,9 @@ public class SQLGrammar extends SQLBaseGrammar {
         future.setParser(
           sequence(
             literal("("),
+            not(
+              subquery$notSubqueryHead()
+            ),
             balancing(
               // Closure:
               literal("("),
@@ -6892,6 +6935,31 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return subqueryParser;
+    }
+    
+    // ========================================================
+    // notSubqueryHead
+    // ........................................................
+    
+    private ParserCombinator subquery$notSubqueryHeadParser = null;
+    
+    protected final Start subquery$notSubqueryHead = Start.on(getNamespace(), "notSubqueryHead");
+    
+    protected ParserCombinator subquery$notSubqueryHead() {
+      if (subquery$notSubqueryHeadParser == null) {
+        FutureParser future = scoped("notSubqueryHead", PRIVATE, true);
+        subquery$notSubqueryHeadParser = future;
+        future.setParser(
+          not(
+            choice(
+              keyword("SELECT"),
+              keyword("WITH")
+            )
+          )
+        );
+      }
+    
+      return subquery$notSubqueryHeadParser;
     }
     
     // ========================================================

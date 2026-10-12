@@ -5022,6 +5022,7 @@ public class SQLGrammar extends SQLBaseGrammar {
             hexLiteral(),
             stringLiteral(),
             numericLiteral(),
+            signedNumericLiteral(),
             subquery(),
             scalarFunctionCall(),
             columnReference()
@@ -5030,6 +5031,32 @@ public class SQLGrammar extends SQLBaseGrammar {
       }
     
       return comparandParser;
+    }
+    
+    // ========================================================
+    // signedNumericLiteral
+    // ........................................................
+    
+    private ParserCombinator signedNumericLiteralParser = null;
+    
+    public final Start signedNumericLiteral = Start.on(getNamespace(), "signedNumericLiteral");
+    
+    public ParserCombinator signedNumericLiteral() {
+      if (signedNumericLiteralParser == null) {
+        FutureParser future = scoped("signedNumericLiteral", PUBLIC, true);
+        signedNumericLiteralParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              literal("+"),
+              literal("-")
+            ),
+            numericLiteral()
+          )
+        );
+      }
+    
+      return signedNumericLiteralParser;
     }
     
     // ========================================================
@@ -5172,6 +5199,12 @@ public class SQLGrammar extends SQLBaseGrammar {
               opt(NOSKIP,
                 literal("=")
               )
+            ),
+            sequence(
+              literal("^"),
+              opt(NOSKIP,
+                literal("=")
+              )
             )
           )
         );
@@ -5205,6 +5238,12 @@ public class SQLGrammar extends SQLBaseGrammar {
               opt(NOSKIP,
                 literal("<")
               )
+            ),
+            sequence(
+              literal("^"),
+              opt(NOSKIP,
+                literal("<")
+              )
             )
           )
         );
@@ -5235,6 +5274,12 @@ public class SQLGrammar extends SQLBaseGrammar {
             ),
             sequence(
               literal("!"),
+              opt(NOSKIP,
+                literal(">")
+              )
+            ),
+            sequence(
+              literal("^"),
               opt(NOSKIP,
                 literal(">")
               )
@@ -6700,6 +6745,31 @@ public class SQLGrammar extends SQLBaseGrammar {
                 keyword("TIMEZONE"),
                 keyword("DEGREE"),
                 keyword("MEMBER")
+              )
+            ),
+            sequence(
+              keyword("CURRENT"),
+              opt(NOSKIP,
+                literal("_"),
+                choice(
+                  keyword("DATE"),
+                  sequence(
+                    keyword("TIMESTAMP"),
+                    optional(
+                      sequence(
+                        literal("("),
+                        numericLiteral(),
+                        literal(")")
+                      )
+                    )
+                  ),
+                  keyword("TIME"),
+                  keyword("TIMEZONE"),
+                  keyword("SERVER"),
+                  keyword("SQLID"),
+                  keyword("SCHEMA"),
+                  keyword("PATH")
+                )
               )
             ),
             keyword("USER")

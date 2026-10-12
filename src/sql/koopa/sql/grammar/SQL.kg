@@ -1008,10 +1008,16 @@ hiding def comparand =
     | hexLiteral
     | stringLiteral
     | numericLiteral
+    | signedNumericLiteral
     | subquery
     | scalarFunctionCall
     | columnReference
     )
+end
+
+# An explicitly signed number in operand position (X = +0).
+def signedNumericLiteral =
+    ( '+' | '-' ) numericLiteral
 end
 
 # Db2 sequence value: NEXT VALUE FOR seq / PREVIOUS VALUE FOR seq.
@@ -1033,9 +1039,9 @@ end
 def equalsOp              =  '='                                    end
 def lessThanOp            =  '<'                                    end
 def greaterThanOp         =  '>'                                    end
-def notEqualsOp           =  ( '<' ++ '>' | '!' ++ '=' )  end
-def greaterThanOrEqualsOp =  ( '>' ++ '=' | '!' ++ '<' )  end
-def lessThanOrEqualsOp    =  ( '<' ++ '=' | '!' ++ '>' )  end
+def notEqualsOp           =  ( '<' ++ '>' | '!' ++ '=' | '^' ++ '=' )  end
+def greaterThanOrEqualsOp =  ( '>' ++ '=' | '!' ++ '<' | '^' ++ '<' )  end
+def lessThanOrEqualsOp    =  ( '<' ++ '=' | '!' ++ '>' | '^' ++ '>' )  end
 
 
 ## ############################################################################
@@ -1327,6 +1333,12 @@ def specialRegister =                                # [IBM DB2 SQL Statements]
               | TIMESTAMP [ '(' numericLiteral ')' ]
               | TIME | SERVER | SQLID | SCHEMA
               | PATH | TIMEZONE | DEGREE | MEMBER )
+
+    # The SQL-standard underscore spellings (CURRENT_DATE, ...).
+    | CURRENT ++ '_' ++ ( DATE
+                        | TIMESTAMP [ '(' numericLiteral ')' ]
+                        | TIME | TIMEZONE | SERVER | SQLID
+                        | SCHEMA | PATH )
     | USER
     )
 end

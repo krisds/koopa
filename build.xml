@@ -454,6 +454,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.cobol.grammar.test.EmbeddedSqlBalancerRegressionTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 			<test name="koopa.cobol.parser.preprocessing.replacing.test.ReplacingPhraseOperandTest">
 				<fork>
 					<jvmarg value="-ea" />

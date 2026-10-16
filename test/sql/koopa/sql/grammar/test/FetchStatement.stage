@@ -11,3 +11,20 @@ target fetchStatement;
 
 # FETCH with USING DESCRIPTOR (dynamic SQL Method 4)
 +[ FETCH C1 USING DESCRIPTOR ] HostParameter:hostParameterSpecification
+
+# Rowset-positioned and scrollable fetches; hyphenated cursor names.
++[ FETCH NEXT ROWSET FROM T316CUR FOR :WS-ROWSET-LIMIT ROWS
+     INTO :WS-GFC-CON-ID, :TMP-CON-ID ]
++[ FETCH ABSOLUTE :K-REC T101-DDA-DEL-CSR INTO :WS-A ]
++[ FETCH T101-DDA-DEL-CSR INTO :WS-A ]
+
+# Sensitivity prefix before the orientation.
++[ FETCH INSENSITIVE ABSOLUTE :WS-ROW-NUM ACCT_CSR
+   INTO :TRN-PROC-DAY, :TRN-FE ]
+
+# Qualified targets split at the dot, with tight null indicators.
++[ FETCH NEXT ROWSET FROM OAOSLCT FOR :WS-REC-COUNT ROWS
+   INTO :OMS-ALLOC-ORD-HIST-DATA.
+         ALLOC-ORDER-ID:ALLOC-ORDER-ID-NID
+       ,:OMS-ALLOC-ORD-HIST-DATA.
+         TO-STORE-NBR:TO-STORE-NBR-NID ]

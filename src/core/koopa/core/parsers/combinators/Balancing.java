@@ -1,5 +1,6 @@
 package koopa.core.parsers.combinators;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -210,10 +211,8 @@ public class Balancing extends UnaryParserDecorator {
 				parse.getTrace()
 						.add("# " + hashCode() + ", pushed(" + token + ") ...");
 
-			if (!popped.isEmpty()) {
-				if (popped.peek().data == token) {
-					recyclePopped(token);
-				}
+			if (!popped.isEmpty() && popped.peek().data == token) {
+				recyclePopped(token);
 
 			} else {
 				if (tryClosing(parse.getFlow().getStream())) {
@@ -252,7 +251,8 @@ public class Balancing extends UnaryParserDecorator {
 		}
 
 		private boolean locationInProgramTextChanged(Token token) {
-			return grammar.isProgramText(token);
+			return grammar.isProgramText(token)
+					&& !grammar.canBeSkipped(token, parse);
 		}
 
 		private boolean tryClosing(Stream stream) {
@@ -373,11 +373,63 @@ public class Balancing extends UnaryParserDecorator {
 			if (lastMatch.kind != Kind.CLOSE)
 				return false;
 
-			// TODO Do we care about seeing skipped tokens ?
-			final Data lastData = parse.getFlow().getBaseStream().getTarget()
-					.peekAtLastToken();
-			return lastMatch.data == lastData;
+			final Data lastData = lastSignificantToken();
+			if (lastMatch.data == lastData)
+				return true;
+
+			// The match may itself be anchored on a skippable token
+			if (lastMatch.data instanceof Token
+					&& isInsignificant((Token) lastMatch.data))
+				return !pushedAfter(lastData, lastMatch.data);
+
+			return false;
 		}
+
+		private boolean isInsignificant(Token t) {
+			return !grammar.isProgramText(t)
+					|| grammar.canBeSkipped(t, parse);
+		}
+
+		/**
+		 * Whether candidate was pushed AFTER the anchor: walk back
+		 * from the newest; whichever is met first was pushed later.
+		 */
+		private boolean pushedAfter(Data candidate, Data anchor) {
+			final HoldingTarget target = parse.getFlow().getBaseStream()
+					.getTarget();
+			final Iterator<Data> it = target.descendingIterator();
+			while (it.hasNext()) {
+				final Data d = it.next();
+				if (d == candidate)
+					return true;
+				if (d == anchor)
+					return false;
+			}
+			return false;
+		}
+
+		/**
+		 * The most recent token in the target which a matcher would
+		 * actually see: program text which cannot be skipped.
+		 */
+		private Token lastSignificantToken() {
+			final HoldingTarget target = parse.getFlow().getBaseStream()
+					.getTarget();
+			final Iterator<Data> it = target.descendingIterator();
+			while (it.hasNext()) {
+				final Data d = it.next();
+				if (!(d instanceof Token))
+					continue;
+				final Token t = (Token) d;
+				if (!grammar.isProgramText(t))
+					continue;
+				if (grammar.canBeSkipped(t, parse))
+					continue;
+				return t;
+			}
+			return null;
+		}
+
 
 		private boolean isNowBalanced() {
 			return open.isEmpty() && !wasJustClosed();

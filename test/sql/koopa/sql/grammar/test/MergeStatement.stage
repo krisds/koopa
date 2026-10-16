@@ -11,3 +11,26 @@ target mergeStatement;
 
 # Should reject: not a MERGE
 -[ INSERT INTO COUNTRIES VALUES ( 1 ) ]
+
+# The production shape: VALUES source with correlation and column list,
+# ON over source/target columns, matched and not-matched branches.
++[ MERGE INTO T007_HOLD HLD
+   USING ( VALUES (:HLD-FE, :HLD-ACCT, :HLD-AMT) FOR :WS-N ROWS )
+     AS SRC (FE, ACCT, AMT)
+   ON HLD.HLD_FE = SRC.FE AND HLD.HLD_ACCT = SRC.ACCT
+   WHEN MATCHED THEN
+     UPDATE SET HLD_AMT = SRC.AMT,
+                HLD_UPD_TS = CURRENT TIMESTAMP
+   WHEN NOT MATCHED THEN
+     INSERT (HLD_FE, HLD_ACCT, HLD_AMT)
+     VALUES (SRC.FE, SRC.ACCT, SRC.AMT) ]
+
+# Function-valued columns in the VALUES source (the production bulk form)
+# parse without a balancing region.
++[ MERGE INTO T001 TRN
+   USING ( VALUES (:A, COALESCE(:B, 0), CAST(:C AS CHAR(2))) )
+     AS SRC (X, Y, Z)
+   ON TRN.X = SRC.X
+   WHEN MATCHED THEN UPDATE SET TRN_Y = SRC.Y
+   WHEN NOT MATCHED THEN INSERT (X, Y) VALUES (SRC.X, SRC.Y)
+   NOT ATOMIC CONTINUE ON SQLEXCEPTION ]

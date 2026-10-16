@@ -1,7 +1,9 @@
 target getDiagnosticsStatement;
 
-# Basic GET DIAGNOSTICS — number of conditions
-+[ GET DIAGNOSTICS ] HostParameter:hostParameterSpecification [ = NUMBER ]
+# Statement-level items.
++[ GET DIAGNOSTICS :WS-CNT = DB2_NUMBER_ROWS ]
 
-# GET DIAGNOSTICS — row count
-+[ GET DIAGNOSTICS ] HostParameter:hostParameterSpecification [ = ROW_COUNT ]
+# Condition items addressed by a host variable.
++[ GET DIAGNOSTICS CONDITION :WS-SUB
+       :WS-DIAG-TEXT = MESSAGE_TEXT
+      ,:WS-ROW-NBR = DB2_ROW_NUMBER ]

@@ -15,6 +15,17 @@ target comparison;
 +[ ANSWER >= 42 ]
 +[ ANSWER !< 42 ]
 
+# Named comparands: columns, host variables, literals, registers.
++[ A.NAD_KEY_ID = :WS-KEY-ID ]
++[ TRN_PROC_DAY = :TRN-PROC-DAY :TRN-PROC-DAY-IND ]
++[ REG_SYSTEM = 'GFC' ]
++[ MSS_CREATE_TMSTMP >= CURRENT TIMESTAMP ]
++[ RATE <= 42.5 ]
+
+# Complex operands stay (partly) water but must still compare.
++[ SUBSTR(NAME, 1, 3) = 'ABC' ]
++[ AMT + FEE > :WS-LIMIT ]
+
 -[ THE ANSWER IS 42 ]
 
 
@@ -49,3 +60,77 @@ target searchCondition;
 
 +[ ( A OR B ) AND C ]
 +[ ( ( A ) ) ]
+
+# Predicates combined with comparisons across AND/OR.
++[ PTY_AC_OPN_CLO_IN = 'O'
+   AND NOT EXISTS (SELECT 1 FROM T602_REL_FACILITY
+                     WHERE RFG_FAC_ID = RSG_FAC_ID
+                       AND RFG_EXP_DT < :WS-GMT-DATE) ]
+
++[ NAD_KEY_ID IN ('A', 'B') OR NAD_END_DT IS NULL ]
+
+# IS NULL (no parentheses) splits cleanly across OR.
++[ NAD_END_DT IS NULL OR NAD_KEY_ID = :WS-KEY-ID ]
+
+# A predicate ending in ')' must not break the AND / OR split that
+# follows it (regression tests for the balancer bookkeeping fix).
++[ K IN ('A') OR X = 1 ]
++[ K IN ('A', 'B') AND X = 1 ]
++[ K NOT IN ('A') OR X = 1 ]
++[ K IN (:WS-A, :WS-B) AND Y IS NULL ]
+
+# BETWEEN owns its AND; conjunction splits still work around it.
++[ RLT_TABLE_NUMBER BETWEEN 1 AND 15 ]
++[ X BETWEEN 1 AND 15 AND Y = 2 ]
++[ A = 1 AND X BETWEEN :WS-LO AND :WS-HI OR Z IS NULL ]
++[ TS NOT BETWEEN CURRENT DATE - 7 DAYS AND CURRENT DATE ]
+
+# Subqueries inside a search condition.
++[ X = (SELECT MAX(Y) FROM T3) OR Z = 1 ]
++[ EXISTS (SELECT 1 FROM T WHERE A = B) AND C = 2 ]
++[ K IN (SELECT X FROM T WHERE Y = 1) OR Q = 2 ]
+
+
+# Caret comparison operators (^= ^> ^<) are covered by the corpus
+# pipeline only: the stage BasicTokens source does not tokenise '^'
+# the way the COBOL SQL pipeline does, so a stage sample cannot
+# exercise them.
+
+# Underscore special register with date arithmetic, bracketed right
+# operand.
++[ EFF_DT > (CURRENT_DATE - :WS-LOOKBACK DAYS) ]
+
+# Signed numeric literal in operand position.
++[ ZBA_SEQ_NO = + 0 AND ZBA_LVL = -1 ]
+
+# Aggregate comparison (shared with the HAVING clause).
++[ COUNT(A.DEST_STORE_NBR) > :WS-L1 ]
+
+# BETWEEN bounds are full expressions.
++[ EFF_DT BETWEEN CURRENT DATE AND DATE(:WS-CURRENT-DATE) + 6 DAYS ]
+
+# A parenthesised sum as the BETWEEN predicand.
++[ (WEEK_01_INDEX + WEEK_02_INDEX + WEEK_03_INDEX)
+   NOT BETWEEN 46.9 AND 54.6 ]
+
+target inPredicate;
+
+# The predicate keyword and left comparand are named; the argument is water.
+# These assert the keyword is reached (comparand then IN consumed).
++[ NAD_KEY_ID IN ('A', 'B', 'C') ]
++[ A.REL_LEVEL NOT IN (:WS-LVL-1, :WS-LVL-2) ]
++[ PTY_ID IN (SELECT REL_OBJECT FROM T310_RELATION) ]
+
+
+target nullPredicate;
+
++[ NAD_END_DT IS NULL ]
++[ A.NAD_END_DT IS NOT NULL ]
+
+-[ NAD_END_DT IS DISTINCT ]
+
+
+target existsPredicate;
+
++[ EXISTS (SELECT 1 FROM T605_REL_DROPPED
+             WHERE RDF_FE = RSG_FE AND RDF_FAC_ID = RSG_FAC_ID) ]

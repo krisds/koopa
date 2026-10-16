@@ -6,6 +6,12 @@ target selectStatement;
 +[ SELECT * FROM STUDENTS
      ORDER BY SCORE ]
 
++[ SELECT * FROM STUDENTS
+     ORDER BY A.SCORE DESC, NAME ASC, 2 ]
+
++[ SELECT * FROM STUDENTS
+     ORDER BY SUBSTR(NAME, 1, 1), SCORE ]
+
 +[ SELECT DISTINCT NAME FROM STUDENTS ]
 +[ SELECT ALL      NAME FROM STUDENTS ]
 
@@ -94,3 +100,210 @@ target selectStatement;
 # Bare JOIN chained with a comma reference
 +[ SELECT COL1
    FROM T1 JOIN T2 ON COL3 = COL4, T3 ]
+
+# Aliased INNER JOIN, filter carried by ON
++[ SELECT A.NAD_KEY_ID, X.REL_OBJECT
+   FROM T305_NAME_ADDRESS A
+   JOIN T310_RELATION X
+     ON X.REL_TABLE_NUMBER = A.NAD_TABLE_NUMBER
+    AND X.REL_OBJECT = A.NAD_KEY_ID ]
+
+# Aliased LEFT OUTER JOIN, no WHERE
++[ SELECT A.ACCT_ID, B.CUST_NAME
+   FROM T100_ACCOUNT A
+   LEFT OUTER JOIN T200_CUSTOMER B
+     ON B.CUST_ID = A.ACCT_CUST_ID ]
+
+# Aliases via AS
++[ SELECT A.COL1
+   FROM T1 AS A INNER JOIN T2 AS B ON B.COL3 = A.COL4 ]
+
+# Aliased comma join with WHERE
++[ SELECT T.NAME, C.NAME
+   FROM TEACHERS T, COURSES C
+   WHERE C.TEACHER_ID = T.ID ]
+
+# Alias on a single table followed by WHERE
++[ SELECT A.NAD_KEY_ID INTO ] HostParameter:hostParameterSpecification [
+   FROM T305_NAME_ADDRESS A
+   WHERE A.NAD_TABLE_NUMBER = 42 ]
+
+# Host variables with digits in hyphenated names
++[ SELECT REG_DB2_QUAL, REG_DB_NAME
+   INTO :REG-DB2-QUAL, :REG-DB-NAME
+   FROM T_REGION
+   WHERE REG_SYSTEM = 'GFC' AND REG_PRIME = 'Y' ]
+
+# Qualified host variables in INTO
++[ SELECT JURIS_ID
+   INTO :JURISDICTION-DATA.JURIS-ID
+   FROM JURISDICTION
+   WHERE JURIS_TYPE_CODE = 1 ]
+
+# Aggregate with a column alias, null-indicator host variable, WITH UR
++[ SELECT COUNT(MSS_MESSAGE_TYPE) AS NR_OF_RECORDS
+   INTO :WS-NEW-NACK-ROW-CNT :WS-NEW-NACK-ROW-NULLIF
+   FROM T802_MSG_STORE
+   WHERE MSS_MESSAGE_TYPE = 'NACK'
+   WITH UR ]
+
+# Literals and host variables in the select list
++[ SELECT 'Y', 1, NAD_KEY_ID, :WS-DEFAULT-ID
+   FROM T305_NAME_ADDRESS
+   WHERE NAD_TABLE_NUMBER = 305 ]
+
+# Literal with a column alias
++[ SELECT 'FE' AS SRC_SYSTEM, ACCT_ID
+   FROM T100_ACCOUNT ]
+
+# Scalar subqueries as select items, including internal parentheses.
++[ SELECT (SELECT MAX(B) FROM T2 WHERE T2.K = T1.K), T1.A
+   FROM T1 ]
+
++[ SELECT (SELECT COUNT(*) FROM T310_RELATION
+             WHERE REL_OBJECT = A.NAD_KEY_ID), A.NAD_KEY_ID
+   FROM T305_NAME_ADDRESS A ]
+
+# Scalar function calls with internal commas are single items, not split.
++[ SELECT SUBSTR(NAME, 1, 3), ACCT_ID, DIGITS(BALANCE)
+   FROM ACCOUNTS ]
+
++[ SELECT COALESCE(A, B, 0) AS AA, C
+   FROM T1 ]
+
+# Subqueries as comparison operands inside a statement-level WHERE: the
+# where boundary must not cut at the subquery's internal FROM / WHERE.
++[ SELECT INP_MSG_RRN INTO ] HostParameter:hostParameterSpecification [
+   FROM T899_INP_MESSAGES
+   WHERE INP_MSG_PART_NBR = :INP-MSG-PART-NBR
+     AND INP_MSG_TIMESTAMP_GMT =
+         (SELECT MAX(INP_MSG_TIMESTAMP_GMT)
+            FROM T899_INP_MESSAGES
+           WHERE INP_MSG_SYSTEM = :INP-MSG-SYSTEM) ]
+
++[ SELECT C1 INTO ] HostParameter:hostParameterSpecification [
+   FROM T1
+   WHERE K IN (SELECT X FROM T2 WHERE Y = 1)
+     AND Z = 1 ]
+
+# Function calls, arithmetic and durations as comparison operands.
++[ SELECT C1 INTO ] HostParameter:hostParameterSpecification [
+   FROM T1
+   WHERE SUBSTR(NAME, 1, 3) = :WS-A
+     AND BAL + FEE > :WS-LIMIT
+     AND TS < CURRENT TIMESTAMP - 15 DAYS ]
+
+# subquery predicates with multi-conjunct interiors, followed by WITH UR.
++[ SELECT RRG_UCN || RUG_UCN || RFG_FAC_ID
+   INTO ] HostParameter:hostParameterSpecification [
+   FROM T604_REL_DDA, T603_REL_SUBFACILITY
+   WHERE RDG_DDA_ACCT = :RDG-DDA-ACCT
+     AND RDG_FAC_ID = RSG_FAC_ID
+     AND RFG_EXP_DT >= CURRENT DATE
+     AND RFG_FAC_TYPE IN
+       (SELECT RFT_FAC_TYPE FROM T609_REL_FAC_TYPE
+         WHERE RFT_CLASS = 'A')
+     AND NOT EXISTS
+       (SELECT 1 FROM T605_REL_DROPPED_FACILITIES
+         WHERE RDF_FAC_ID = RSG_FAC_ID
+           AND RDF_SFAC_NO = RSG_SFAC_NO
+           AND RDF_FE = RSG_FE)
+   WITH UR ]
+
+# Aggregate arguments parse structurally, including columns, arithmetic
+# and DISTINCT.
++[ SELECT MAX(INP_MSG_TIMESTAMP_GMT), SUM(TT_TR_CT + 1),
+          COUNT(DISTINCT ACCT_ID)
+   FROM T899_INP_MESSAGES ]
+
+# GROUP BY columns parse like ORDER BY sort keys.
++[ SELECT CLASS, AVG(SCORE)
+   FROM STUDENTS
+   GROUP BY CLASS, SCHOOL_ID
+   ORDER BY 2 ]
+
+# Items as full expressions: concatenation, date arithmetic with
+# durations, parenthesised groups, and AS aliases.
++[ SELECT RRG_UCN || RUG_UCN || RFG_FAC_ID AS RRD_KEY
+   FROM T604_REL_DDA ]
+
++[ SELECT CURRENT DATE + 1 DAY,
+          (B.FE_PROC_DATE - :WS-IX DAY) AS CUTOFF
+   FROM T200_FE_CONTROL B ]
+
+# FOR UPDATE OF column lists parse.
++[ SELECT CM_EXP_DTE FROM T100_COMMIT
+   FOR UPDATE OF CM_EXP_DTE, CM_STATUS ]
+
+# SELECT ... INTO without a FROM (singleton select from VALUES / registers).
++[ SELECT VALUES ( DAY ( CURRENT DATE ) ) INTO ] HostParameter:hostParameterSpecification [ ]
+
+# Trailing clauses in combination
++[ SELECT ACCT_ID FROM T100_ACCOUNT
+   WHERE ACCT_STATUS = 'A'
+   WITH UR
+   OPTIMIZE FOR 1 ROW ]
+
++[ SELECT ACCT_ID FROM T100_ACCOUNT
+   FETCH FIRST 10 ROWS ONLY
+   OPTIMIZE FOR 10 ROWS
+   WITH CS
+   QUERYNO 13 ]
+
++[ SELECT ACCT_ID FROM T100_ACCOUNT
+   FOR FETCH ONLY
+   WITH UR ]
+
+# Set operations: UNION / UNION ALL chaining full selects.
++[ SELECT A FROM T1 WHERE X = 1
+   UNION ALL
+   SELECT A FROM T2 WHERE Y = 2 ]
+
++[ SELECT A, B FROM T1
+   UNION
+   SELECT A, B FROM T2
+   ORDER BY 1
+   WITH UR ]
+
+# Expression sort keys: function call and CASE.
++[ SELECT ACC_AM FROM T_ACC
+   ORDER BY ABS(ACC_AM) DESC
+           ,CASE WHEN TMP_NOM = TMP_CHILD THEN '0' ELSE '1' END
+           ,TMP_CHILD ]
+
+# Select items continue arithmetic after functions, CASE and durations.
++[ SELECT DATE(REC_TS) + 11 DAYS
+         ,CASE WHEN A = 1 THEN B ELSE C END / 1440
+         ,CURRENT DATE - 30 DAYS
+         ,QTY + 1
+   INTO :WS-A, :WS-B, :WS-C, :WS-D
+   FROM T_X ]
+
+# Aggregates continue with date arithmetic; infix CONCAT; an AS-less
+# column alias.
++[ SELECT MIN(GREGORIAN_DATE) - 1 DAY
+         ,MIN(GREGORIAN_DATE) + 3 DAY
+   INTO :WS-BEG, :WS-END FROM CALENDAR_DAY ]
++[ SELECT ACC_FE CONCAT ACW_RBAC INTO :WS-K FROM T_ACC ]
++[ SELECT REGION_NBR HOME_STORE_NBR INTO :D.HOME-STORE-NBR
+   FROM DISTRICT ]
+
+# Function arguments continue arithmetic over parenthesised operands;
+# grouping columns are expressions; a parenthesised LIKE pattern.
++[ SELECT DIGITS((VENDOR_NBR * 1000) + (VENDOR_DEPT_NBR * 10)
+                + VENDOR_SEQ_NBR)
+   INTO :WS-V FROM ITEM ]
++[ SELECT DATE(START_TS), COUNT(*) INTO :WS-D, :WS-C FROM OMS_X
+   GROUP BY DATE(START_TS) ]
++[ SELECT 1 INTO :WS-C FROM VENDOR
+   WHERE VENDOR_NAME LIKE ( :WS-PAT ) ]
+
+# ALL as a correlation alias (guarded against the set quantifier);
+# plain SELECT ALL still quantifies.
++[ SELECT ALL.ALLOC_EVENT_NAME INTO :D.ALLOC-EVENT-NAME
+   FROM OMS_ALLOC_ORDER ALL WHERE ALL.X = :WS-X ]
++[ SELECT ALL COL_A INTO :WS-A FROM T_X ]
+
+# A parenthesised arithmetic group as the left comparison operand.
++[ SELECT 1 INTO :WS-C FROM T_IDX
+   WHERE (WEEK_01_INDEX + WEEK_02_INDEX + WEEK_03_INDEX) > 0 ]

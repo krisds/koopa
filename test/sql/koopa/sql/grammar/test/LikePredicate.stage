@@ -9,3 +9,7 @@ target likePredicate;
 +[ ANSWER LIKE '42' ]
 +[ ANSWER LIKE '42%' ]
 +[ ANSWER LIKE '%42' ]
+
+# Host-variable patterns and named predicands.
++[ NAD_NAME LIKE :WS-PATTERN ]
++[ A.CFG_KEY NOT LIKE 'GFC%' ]

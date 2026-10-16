@@ -114,3 +114,12 @@ target declareCursorStatement;
    FROM T903_FE
    ORDER BY FE_ID
    WITH UR ]
+
+# A dynamic cursor over a prepared statement name.
++[ DECLARE TRNCSR CURSOR FOR TRNSEARH ]
+
+# Parenthesised branches chained with a set operator.
++[ DECLARE C1 CURSOR FOR
+   ( SELECT A FROM T1 WHERE X = :WS-X )
+   UNION ALL
+   ( SELECT A FROM T2 WHERE Y = :WS-Y ) ]

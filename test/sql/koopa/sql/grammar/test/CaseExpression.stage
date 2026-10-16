@@ -1,0 +1,40 @@
+target caseExpression;
+
+# Searched CASE.
++[ CASE WHEN CM_EXP_DTE < FE_PROC_DATE THEN 'Y' ELSE 'N' END ]
+
+# Simple CASE with an operand.
++[ CASE TRN_PMT_TYPE WHEN 'SUPV' THEN 'SUPV' ELSE 'PMT' END ]
+
+# Multiple WHEN arms, arithmetic results.
++[ CASE WHEN A = 1 THEN X + 1
+        WHEN A = 2 THEN Y - 2
+        ELSE 0 END ]
+
+# Searched arms parse as conditions (comparisons visible), compound too.
++[ CASE WHEN A = 1 AND B > 2 THEN 'X'
+        WHEN C IN ('P', 'Q') THEN 'Y'
+        ELSE 'Z' END ]
+
+-[ CASE NO_WHEN_HERE END ]
+
+
+# END CASE closer
++[ CASE WHEN A.FLG = 'Y' THEN B.FLG ELSE 'Y' END CASE ]
+
+# Nested CASE in a result arm, with arithmetic.
++[ CASE WHEN A = 1
+        THEN CASE WHEN B = 2 THEN C * D ELSE E END
+        ELSE F
+   END ]
+
+target selectStatement;
+
++[ SELECT (CASE WHEN CM_EXP_DTE < FE_PROC_DATE THEN 'Y' ELSE 'N' END)
+          AS IS_CMT_EXP_FLAG,
+          ACCT_ID
+   FROM T100_ACCOUNT ]
+
++[ SELECT CASE TRN_PMT_TYPE WHEN 'SUPV' THEN 'SUPV' ELSE 'PMT' END
+          AS TRN_PMT_TYPE
+   FROM T001_TRANSACTION ]

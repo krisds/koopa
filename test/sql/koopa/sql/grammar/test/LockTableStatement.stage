@@ -2,3 +2,6 @@ target lockTableStatement;
 
 # NOTE: All of these are just hand-made dummies.
 +[ LOCK TABLE FOO etc etc ]
+
+# Partition and mode options.
++[ LOCK TABLE T310_RELATION PART 13 IN EXCLUSIVE MODE ]

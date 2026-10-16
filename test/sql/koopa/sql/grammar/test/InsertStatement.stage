@@ -1,0 +1,48 @@
+target insertStatement;
+
++[ INSERT INTO STUDENTS ]
+
++[ INSERT INTO T055_TR_TRK_SUM
+     ( TT_MM, TT_TYP, TT_FNEN )
+   VALUES ( :WS-MM, :WS-TYP, 'FE' ) ]
+
++[ INSERT INTO PROD.T100_ACCOUNT
+     ( ACCT_ID, ACCT_STATUS, ACCT_OPEN_TS, ACCT_NOTE )
+   VALUES ( :WS-ACCT-ID :WS-ACCT-ID-IND, 'A', CURRENT TIMESTAMP, NULL ) ]
+
+# INSERT from a query
++[ INSERT INTO T056_STR_TR_SUM ( STR_SRC_ID, STR_BC )
+   SELECT TT_SRC_ID, TT_BC FROM T055_TR_TRK_SUM
+   WHERE TT_FNEN = :WS-FE ]
+
+# Complex values fall back to water but the statement still parses.
++[ INSERT INTO T100_ACCOUNT ( ACCT_ID, ACCT_HASH )
+   VALUES ( :WS-ACCT-ID, HEX(RAND()) ) ]
+
+# Multi-row insert with host-variable row count.
++[ INSERT INTO T316 (TMP_CON_ID) VALUES (:CONSUB-ARR)
+   FOR :CONSUB ROWS ATOMIC ]
+
+# Colonless host variables (old Db2 COBOL style) as values.
++[ INSERT INTO T316 (TMP_CON_ID, TMP_TTL)
+   VALUES (CON-ID, CON-TTL-NM) ]
+
+# Arithmetic value expressions as row values.
++[ INSERT INTO T316 (TMP_CON_ID, TMP_TS)
+   VALUES (:FCC316.CON-ID, CURRENT TIMESTAMP - CURRENT TIMEZONE) ]
+
+# Sequence value reference as a row value: NEXT VALUE FOR seq.
++[ INSERT INTO T316 (TMP_ID, TMP_NM)
+   VALUES (NEXT VALUE FOR MY_SEQ, :WS-NM) ]
+
+# Multi-row insert with NOT ATOMIC CONTINUE ON SQLEXCEPTION tail.
++[ INSERT INTO T316 (TMP_CON_ID) VALUES (:CONSUB-ARR)
+   FOR :CONSUB ROWS NOT ATOMIC CONTINUE ON SQLEXCEPTION ]
+
+# Parenthesised query as the insert source.
++[ INSERT INTO ITEM_LOG_HIST
+   ( SELECT * FROM ITEM_LOG WHERE ITEM_NBR = :ITEM-LOG-DATA.ITEM-NBR ) ]
+
+# COBOL data names may start with a digit.
++[ INSERT INTO PFS_VENDOR ( "852_FILE_SENT_IND" )
+   VALUES ( :PFS-VENDOR-DATA.852-FILE-SENT-IND ) ]

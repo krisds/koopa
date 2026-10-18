@@ -5,14 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.Reader;
 import java.io.StringReader;
-import java.io.Writer;
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 import koopa.cobol.CobolProject;
 import koopa.cobol.CobolTokens;
@@ -47,16 +42,13 @@ public class EmbeddedSqlBalancerRegressionTest {
 			+ "           GOBACK.\n";
 
 	@Test
-	public void testSubqueryWhereThenOrderByLeavesNoWater(@TempDir Path dir)
+	public void testSubqueryWhereThenOrderByLeavesNoWater()
 			throws Exception {
-		final File file = dir.resolve("BALREG.cbl").toFile();
-		try (Writer w = new FileWriter(file)) {
-			w.write(PROGRAM);
-		}
-
+		final File file = new File("BALREG.cbl");
 		final CobolProject project = new BasicCobolProject();
-		final Reader reader = new StringReader(PROGRAM);
-		final Source source = CobolTokens.getNewSource(file, reader, project);
+
+		final Source source = CobolTokens.getNewSource(file, //
+								new StringReader(PROGRAM), project);
 
 		final ListTarget data = new ListTarget();
 		final Parse parse = Parse.of(source).to(data);

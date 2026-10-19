@@ -50,11 +50,25 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         FutureParser future = scoped("directive", PUBLIC, true);
         directiveParser = future;
         future.setParser(
-          choice(
-            iso(),
-            ibm(),
-            mf(),
-            listing()
+          upto(
+            choice(
+              iso(),
+              ibm(),
+              mf(),
+              listing()
+            ),
+            // Closure:
+            choice(
+              sequence(
+                tagged(FIXED),
+                sequence(
+                  ranged(73, -1),
+                  any()
+                )
+              ),
+              inlineCommentIndicator(),
+              eof()
+            )
           )
         );
       }
@@ -90,10 +104,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
               )
             ),
             iso$indicator(),
-            iso$instruction(),
-            optional(
-              inlineComment()
-            )
+            iso$instruction()
           )
         );
       }
@@ -1530,31 +1541,6 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
       }
     
       return listing$titleParser;
-    }
-    
-    // ========================================================
-    // inlineComment
-    // ........................................................
-    
-    private ParserCombinator inlineCommentParser = null;
-    
-    public final Start inlineComment = Start.on(getNamespace(), "inlineComment");
-    
-    public ParserCombinator inlineComment() {
-      if (inlineCommentParser == null) {
-        FutureParser future = scoped("inlineComment", PUBLIC, true);
-        inlineCommentParser = future;
-        future.setParser(
-          sequence(
-            inlineCommentIndicator(),
-            star(
-              any()
-            )
-          )
-        );
-      }
-    
-      return inlineCommentParser;
     }
     
     // ========================================================

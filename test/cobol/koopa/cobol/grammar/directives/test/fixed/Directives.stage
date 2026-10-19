@@ -8,7 +8,8 @@ target iso;
 -[ >> CALL-CONVENTION COBOL ]
 
 +[123456 >>CALL-CONVENTION COBOL ]
-+[123456 >> CALL-CONVENTION COBOL *> ...is worth a thousand expert opinions. ]
+# The inline comment is not part of the directive.
++[123456 >> CALL-CONVENTION COBOL ] <> [ *> ...is worth a thousand expert opinions. ]
 
 
 +[123456 >> DEFINE GRACE_HOPPER AS OFF ]
@@ -198,3 +199,8 @@ target listing;
 -[      TITLE "Stop bashing COBOL" . ]
 -[      TITLE "Stop bashing COBOL" ]
 
+target directive;
+
+# The identification area is not part of any directive.
++[ CBL NOADV XREF                                                      ] <> [00000010]
+-[ DELETE                                                                 000400]

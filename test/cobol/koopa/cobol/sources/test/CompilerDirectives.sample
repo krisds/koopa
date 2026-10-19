@@ -20,17 +20,17 @@ DIRECTIVE/SOURCE_FORMAT  !DIRECTIVE
 
 
         >> source format is free    *> witty remark
-<------------------------------------------------->^
-FIXED                                              FREE
-DIRECTIVE/SOURCE_FORMAT                            !DIRECTIVE
-!TEXT                                              EOLN
+<------------------------------><----------------->^
+FIXED                           FREE               FREE
+DIRECTIVE/SOURCE_FORMAT         !DIRECTIVE         !DIRECTIVE
+!TEXT                           TEXT               EOLN
 
 
 >> source format is fixed    *> witty remark
-<------------------------------------------>^
-FREE                                        FIXED
-DIRECTIVE/SOURCE_FORMAT                     !DIRECTIVE
-!TEXT                                       EOLN
+<-----------------------><----------------->^
+FREE                     FIXED              FIXED
+DIRECTIVE/SOURCE_FORMAT  !DIRECTIVE         !DIRECTIVE
+!TEXT                    TEXT               EOLN
 
 
        >> source free

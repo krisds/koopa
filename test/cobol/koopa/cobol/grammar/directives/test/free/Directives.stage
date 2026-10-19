@@ -7,7 +7,8 @@ target iso;
 +[ >> CALL-CONVENTION ANSIC ]
 
 +[ >>CALL-CONVENTION COBOL ]
-+[ >> CALL-CONVENTION COBOL *> One accurate measurement... ]
+# The inline comment is not part of the directive.
++[ >> CALL-CONVENTION COBOL ] <> [ *> One accurate measurement... ]
 
 -[123456 >> CALL-CONVENTION COBOL ]
 
@@ -209,3 +210,7 @@ target listing;
 # Except column 1, where (d,D,$,*,/) are indicator area tokens instead.
 +[SKIP1 . ]
 
+target directive;
+
+# The inline comment is not part of any directive.
++[ CBL FOO BAR ] <> [ *> One accurate measurement... ]

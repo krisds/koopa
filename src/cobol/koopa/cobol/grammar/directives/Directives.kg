@@ -8,6 +8,8 @@ def directive =
     | mf
     | listing
     )
+    # A directive never includes the identification area or an inline comment.
+    %upto { ( (@FIXED (<73.._> _)) | inlineCommentIndicator | eof ) }
 end
 
 ## #############################################################################
@@ -34,7 +36,7 @@ end
 
 def iso =
     [ sequenceNumber: @FIXED (<1..6> _)+ ]
-    indicator instruction [inlineComment]
+    indicator instruction
 
   where private def indicator =
       ( @FREE | <8.._> ) ('>' ++ '>')
@@ -257,7 +259,6 @@ end
 
 ###############################################################################
 
-def inlineComment                  =  inlineCommentIndicator _*  end
 private def inlineCommentIndicator =  '*' ++ '>'                 end
 
 def name     =  (@WORD _) ++ ( ( @WORD _ | @NUMBER _ )* )        end

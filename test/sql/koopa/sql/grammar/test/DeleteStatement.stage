@@ -1,0 +1,5 @@
+target deleteStatement;
+
+# Db2 accepts DELETE without FROM.
++[ DELETE QR_UPDATE_LINE_DISTR WHERE OMS_PO_NBR = :WS-OMS-PO-NBR ]
++[ DELETE T604_REL_DDA WHERE RDG_FAC_ID = :RDG-FAC-ID ]

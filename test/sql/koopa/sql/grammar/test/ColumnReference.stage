@@ -1,0 +1,23 @@
+target columnReference;
+
++[ NAD_KEY_ID ]
++[ A.NAD_KEY_ID ]
++[ T305.REL_OBJECT ]
+
+# A scalar function name is not a column reference.
+-[ SUBSTR(NAME, 1, 3) ]
+-[ TIMESTAMP(TS_COL) ]
+
+# A wildcard is not a column reference.
+-[ T.* ]
+
+
+target specialRegister;
+
++[ CURRENT DATE ]
++[ CURRENT TIME ]
++[ CURRENT TIMESTAMP ]
++[ CURRENT SERVER ]
++[ USER ]
+
+-[ CURRENT NAD_KEY_ID ]

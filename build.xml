@@ -132,6 +132,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.core.grammars.test.BalancingSeparatorTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 			<test name="koopa.core.parsers.combinators.test.BalancingTest">
 				<fork>
 					<jvmarg value="-ea" />
@@ -445,6 +450,11 @@
 				</fork>
 			</test>
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.grammar.test.EmbeddedSqlBalancerRegressionTest">
 				<fork>
 					<jvmarg value="-ea" />
 				</fork>

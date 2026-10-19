@@ -1,0 +1,64 @@
+target tableReference;
+
+# Plain table names, optionally qualified.
++[ STUDENTS ]
++[ SCHOOL.STUDENTS ]
+
+# Correlation name, with and without AS.
++[ STUDENTS S ]
++[ STUDENTS AS S ]
++[ SCHOOL.STUDENTS AS S ]
++[ T305_NAME_ADDRESS A ]
++[ PROD.T100_ACCOUNT A ]
+
+# Clause keywords must never be taken as a correlation name.
+-[ STUDENTS JOIN ]
+-[ STUDENTS INNER ]
+-[ STUDENTS LEFT ]
+-[ STUDENTS WHERE ]
+-[ STUDENTS ON ]
+-[ STUDENTS UNION ]
+-[ STUDENTS OPTIMIZE ]
+
+
+target tableReferenceList;
+
+# Comma list with aliases.
++[ TEACHERS T, COURSES C ]
+
+# Explicit joins with aliases; the ON predicate is kept as water.
++[ T305_NAME_ADDRESS A JOIN T310_RELATION X
+     ON X.REL_OBJECT = A.NAD_KEY_ID ]
++[ T100_ACCOUNT A LEFT OUTER JOIN T200_CUSTOMER B
+     ON B.CUST_ID = A.ACCT_CUST_ID ]
++[ T305_NAME_ADDRESS AS A INNER JOIN T310_RELATION AS X
+     ON X.REL_OBJECT = A.NAD_KEY_ID ]
+
+# Three-way aliased chain.
++[ PROD.T100_ACCOUNT A
+     INNER JOIN PROD.T200_CUSTOMER B ON B.CUST_ID = A.ACCT_CUST_ID
+     LEFT OUTER JOIN PROD.T300_BRANCH C ON C.BR_ID = B.CUST_BR_ID ]
+
+# Unaliased joins must keep working.
++[ T305_NAME_ADDRESS JOIN T310_RELATION ON REL_OBJECT = NAD_KEY_ID ]
++[ SYSIBM.SYSDUMMY1 CROSS JOIN ACCOUNTS ]
+
+# ON predicates parse as search conditions; a partially recognised
+# condition must never stop the next join from engaging.
++[ T305_NAME_ADDRESS A
+     JOIN T310_RELATION X
+       ON X.REL_OBJECT = A.NAD_KEY_ID
+      AND X.REL_LEVEL = 'C'
+     LEFT OUTER JOIN T320_STATUS S
+       ON S.STS_ID = X.REL_STS_ID ]
+
++[ T100_ACCOUNT A
+     JOIN T200_CUSTOMER B
+       ON SUBSTR(B.CUST_KEY, 1, 5) = A.ACCT_PFX
+     JOIN T300_BRANCH C
+       ON C.BR_ID = B.CUST_BR_ID ]
+
+# Derived table (subquery) in the FROM list, with and without a correlation.
++[ ( SELECT ACCT_ID, ACCT_CUST_ID FROM T100_ACCOUNT WHERE ACCT_STATUS = 'A' ) D ]
++[ ( SELECT 'X' AS CHK FROM SYSIBM.SYSDUMMY1 ) ]
++[ T100 A JOIN ( SELECT K FROM T2 WHERE X = 1 ) B ON B.K = A.K ]

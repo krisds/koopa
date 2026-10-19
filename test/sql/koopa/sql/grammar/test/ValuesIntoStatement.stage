@@ -11,3 +11,9 @@ target valuesIntoStatement;
 
 # Should reject: SELECT is not VALUES
 -[ SELECT CURRENT DATE FROM DUAL ]
+
+# Expression rows assigned into host variables.
++[ VALUES ( CURRENT TIMESTAMP - CURRENT TIMEZONE ) INTO :WS-GMT-TS ]
++[ VALUES IDENTITY_VAL_LOCAL() INTO :WS-ORDREQ-BATCH-ID ]
++[ VALUES ( DAYOFWEEK(CURRENT DATE), DAY(CURRENT DATE) )
+   INTO :WS-DOW, :WS-DAY ]

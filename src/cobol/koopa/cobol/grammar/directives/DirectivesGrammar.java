@@ -1048,6 +1048,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$sequenceNumberFieldParser = future;
         future.setParser(
           sequence(
+            ranged(-1, 72),
             tagged(NUMBER),
             any()
           )

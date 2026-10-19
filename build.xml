@@ -147,6 +147,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.core.trees.test.KoopaTreeBuilderTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 			<test name="koopa.core.trees.test.ProgramTextTest">
 				<fork>
 					<jvmarg value="-ea" />

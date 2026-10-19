@@ -44,6 +44,8 @@ public abstract class TreeBuildingTarget implements Target {
 				up((End) data);
 			else if (data instanceof Token)
 				leaf((Token) data);
+			else if (data instanceof Tree)
+				subtree((Tree) data);
 		}
 	}
 
@@ -65,6 +67,11 @@ public abstract class TreeBuildingTarget implements Target {
 	 * Leaf of a tree.
 	 */
 	protected abstract void leaf(Token token);
+
+	/**
+	 * A pre-built subtree arriving as a single {@linkplain Data} item.
+	 */
+	protected abstract void subtree(Tree tree);
 
 	/**
 	 * States that we're processing water.

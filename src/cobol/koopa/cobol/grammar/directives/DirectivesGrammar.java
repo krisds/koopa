@@ -14,6 +14,7 @@ import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
@@ -1129,6 +1130,23 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$controlParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                as("sequenceNumber",
+                  sequence(
+                    ranged(1, 6),
+                    tagged(NUMBER),
+                    any()
+                  )
+                ),
+                opt(NOSKIP,
+                  sequence(
+                    tagged(WHITESPACE),
+                    any()
+                  )
+                )
+              )
+            ),
             ibm$control$cblControl(),
             ibm$control$option(),
             star(
@@ -1300,6 +1318,23 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$enterParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                as("sequenceNumber",
+                  sequence(
+                    ranged(1, 6),
+                    tagged(NUMBER),
+                    any()
+                  )
+                ),
+                opt(NOSKIP,
+                  sequence(
+                    tagged(WHITESPACE),
+                    any()
+                  )
+                )
+              )
+            ),
             keyword("ENTER"),
             anything(),
             optional(
@@ -1372,6 +1407,23 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$readyTraceParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                as("sequenceNumber",
+                  sequence(
+                    ranged(1, 6),
+                    tagged(NUMBER),
+                    any()
+                  )
+                ),
+                opt(NOSKIP,
+                  sequence(
+                    tagged(WHITESPACE),
+                    any()
+                  )
+                )
+              )
+            ),
             keyword("READY"),
             keyword("TRACE"),
             literal(".")
@@ -1396,6 +1448,23 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$resetTraceParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                as("sequenceNumber",
+                  sequence(
+                    ranged(1, 6),
+                    tagged(NUMBER),
+                    any()
+                  )
+                ),
+                opt(NOSKIP,
+                  sequence(
+                    tagged(WHITESPACE),
+                    any()
+                  )
+                )
+              )
+            ),
             keyword("RESET"),
             keyword("TRACE"),
             literal(".")
@@ -1481,10 +1550,12 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 literal("INC")
               )
             ),
-            anything(),
+            as("textName",
+              anything()
+            ),
             optional(
               as("comment",
-                star(
+                plus(
                   anything()
                 )
               )
@@ -1522,10 +1593,12 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 )
               )
             ),
-            anything(),
+            as("textName",
+              anything()
+            ),
             optional(
               as("comment",
-                star(
+                plus(
                   anything()
                 )
               )
@@ -1988,7 +2061,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 star(
                   sequence(
                     not(
-                      tagged(WHITESPACE)
+                      choice(
+                        tagged(WHITESPACE),
+                        tagged(END_OF_LINE)
+                      )
                     ),
                     any()
                   )

@@ -238,7 +238,7 @@ def ibm =
   end
 
   where def control =
-      # TODO Seqnr allowed ?
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       cblControl option ([','] option)* [.]
     
     where private def cblControl =  ((<7.._> '*') ++ (CBL | CONTROL))  end
@@ -257,7 +257,7 @@ def ibm =
   end
   
   where def enter =
-      # TODO Any restrictions on positioning ?
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       ENTER anything [(%not .) anything] .
   end
   
@@ -266,13 +266,15 @@ def ibm =
       INSERT sequenceNumberField
   end
   
+  # "READY or RESET TRACE statement can appear only in the PROCEDURE DIVISION"
   where def readyTrace =
-      # TODO Any restrictions on positioning ?
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       READY TRACE .
   end
   
+  # "READY or RESET TRACE statement can appear only in the PROCEDURE DIVISION"
   where def resetTrace =
-      # TODO Any restrictions on positioning ?
+      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
       RESET TRACE .
   end
   
@@ -297,14 +299,16 @@ def mf =
     | if
     )
 
+  # -INC and ++INCLUDE pull a library text file into the source, like COPY.
+  # The operand is the file's text-name, named as in CobolPreprocessing.
   where def inc =
       ((<1..1> '-') ++ 'INC')
-      anything [comment: anything*]
+      (textName: anything) [comment: anything+]
   end
 
   where def include =
       ((<8..8> '+') ++ ('+' 'INCLUDE'))
-      anything [comment: anything*]
+      (textName: anything) [comment: anything+]
   end
   
   # [MF - $SET Statements in the Source Code]
@@ -375,7 +379,7 @@ end
 private def inlineCommentIndicator =  '*' ++ '>'                 end
 
 def name     =  (@WORD _) ++ ( ( @WORD _ | @NUMBER _ )* )        end
-def anything =  _ [++ ((%not @WHITESPACE _)*)]                   end
+def anything =  _ [++ ((%not (@WHITESPACE | @END_OF_LINE) _)*)]  end
 
 
 

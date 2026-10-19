@@ -108,6 +108,22 @@ target ibm;
 +[123ABC PROCESS FOO BAR BAZ ]
 -[ABCDEF PROCESS FOO BAR BAZ ]
 
+# keyword must not collide with a user defined name.
+-[        PROCESS_DESC) ]
+-[        INSERT INTO PARM_PROCESS ]
+
+# Modelled IBM 6.3 compiler options:
++[ CBL ADV NOADV ]
++[ CBL ARITH(EXTEND) ]
++[ CBL FLAG(I,W) ]
++[ CBL OPT(2),RENT,SOURCE ]
++[ CBL BLOCK0 ]
++[ CBL OPT DTR Q ]
++[ CBL SQL("DB2") ]
+
+# Options from other compiler levels or vendors still parse, as unknown.
++[ CBL RES NORES SIZE(4K) ]
+
 +[      *CBL SOURCE ]
 +[      *CBL SOURCE . ]
 -[     *CBL SOURCE ]

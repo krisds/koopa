@@ -11,6 +11,7 @@ FIXED                                                                        =
 FIXED                                                VARIABLE
 DIRECTIVE/SOURCE_FORMAT                              !DIRECTIVE
 !TEXT                                                EOLN
+directive                                            -
 
 
 123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567
@@ -25,6 +26,7 @@ VARIABLE                                                                     =
 VARIABLE                      FIXED
 DIRECTIVE/SOURCE_FORMAT       !DIRECTIVE
 !TEXT                         EOLN
+directive                     -
 
 
 123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12|4567

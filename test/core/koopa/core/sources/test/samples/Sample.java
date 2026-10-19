@@ -179,7 +179,11 @@ public class Sample {
 				validate(range, annotation, token, validator);
 
 			} else if (d instanceof Tree) {
-				validate(range, annotation, (Tree) d, validator);
+				final Tree tree = (Tree) d;
+				if (tree.isReplacement())
+					continue;
+
+				validate(range, annotation, tree, validator);
 
 			} else {
 				// Don't care.

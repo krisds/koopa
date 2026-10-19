@@ -444,6 +444,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.cobol.sources.test.CompilerDirectivesTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest">
 				<fork>
 					<jvmarg value="-ea" />

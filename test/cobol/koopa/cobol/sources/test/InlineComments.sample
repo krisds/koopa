@@ -5,8 +5,8 @@ FIXED = =   ====   ==      ==    = =
 SEQNR I WS  ----   --      --    - EOLN
 
        RESET TRACE. *> Stop bashing COBOL.
-<----------------->^^^^<-->^<----->^<--->^^
-FIXED              =====   ==      ==    ==
-!TEXT              T C===  ==      ==    =TEXT
-DIRECTIVE          -----   --      --    --
--                  -----   --      --    -EOLN
+<---->^<---------->^^^^<-->^<----->^<--->^^
+FIXED = =          =====   ==      ==    ==
+SEQNR I DIR/!TEXT  T C===  ==      ==    =TEXT
+!dir  = dir     !dir ====  ==      ==    ==
+-     - -          -----   --      --    -EOLN

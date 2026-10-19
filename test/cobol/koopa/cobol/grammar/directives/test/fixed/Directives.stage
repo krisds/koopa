@@ -87,7 +87,8 @@ target ibm;
 
 +[123456 BASIS FOO ]
 +[ BASIS FOO ]
--[ABCDEF BASIS FOO ]
+# "The content of this field is ignored", so any sequence area content works.
++[ABCDEF BASIS FOO ]
 -[ BASIS FOO NON BLANK ]
 
 +[ CBL ]
@@ -207,6 +208,10 @@ target listing;
 -[      EJECT .]
 -[      EJECT ]
 -[       EJECT . SOMETHING ELSE ]
+
+# From production, author initials + 4 numbers
++[AK6742     EJECT ]
++[22-    EJECT .]
 
 +[       SKIP1 . ]
 +[       SKIP2 . ]

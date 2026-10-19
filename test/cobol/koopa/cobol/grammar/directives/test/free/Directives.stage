@@ -87,7 +87,8 @@ target ibm;
 
 +[123456 BASIS FOO ]
 +[ BASIS FOO ]
--[ABCDEF BASIS FOO ]
+# "The content of this field is ignored", so any sequence area content works.
++[ABCDEF BASIS FOO ]
 -[ BASIS FOO NON BLANK ]
 
 +[ CBL ]

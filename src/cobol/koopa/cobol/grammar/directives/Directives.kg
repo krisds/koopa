@@ -114,12 +114,14 @@ def ibm =
     )
 
   where def basis =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ (%not BASIS) sequenceNumber ]
       BASIS anything
   end
 
   where def process =
       # "The first character of the sequence number must be numeric"
+      # Only the PROCESS(CBL) statement has this rule.
+      # https://www.ibm.com/docs/en/SS6SG3_6.4.0/lr/ref/rlcdscbl.html
       [ (sequenceNumber: <1..6> @NUMBER _ (<1..6> _)*) ++ (@WHITESPACE _) ]
       # The keyword stands alone or is followed by whitespace.
       # TODO: This can very easily be mistaken with user defined names,
@@ -238,7 +240,7 @@ def ibm =
   end
 
   where def control =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ sequenceNumber ]
       cblControl option ([','] option)* [.]
     
     where private def cblControl =  ((<7.._> '*') ++ (CBL | CONTROL))  end
@@ -246,7 +248,7 @@ def ibm =
   end
   
   where def delete =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ (%not DELETE) sequenceNumber ]
       DELETE sequenceNumberFieldOrRange (',' sequenceNumberFieldOrRange)*
 
     where private def sequenceNumberFieldOrRange =
@@ -257,26 +259,33 @@ def ibm =
   end
   
   where def enter =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ (%not ENTER) sequenceNumber ]
       ENTER anything [(%not .) anything] .
   end
   
   where def insert =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ (%not INSERT) sequenceNumber ]
       INSERT sequenceNumberField
   end
   
   # "READY or RESET TRACE statement can appear only in the PROCEDURE DIVISION"
   where def readyTrace =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ (%not READY) sequenceNumber ]
       READY TRACE .
   end
   
   # "READY or RESET TRACE statement can appear only in the PROCEDURE DIVISION"
   where def resetTrace =
-      [ (sequenceNumber: <1..6> @NUMBER _) ++ (@WHITESPACE _) ]
+      [ (%not RESET) sequenceNumber ]
       RESET TRACE .
   end
+  
+  # For (BASIS, DELETE, INSERT): "Can optionally appear in columns 1 through 6,
+  # followed by a space. The content of this field is ignored."
+  # For other statements use reference format:
+  # "any character in the character set of the computer".
+  # https://www.ibm.com/docs/en/SS6SG3_6.4.0/lr/ref/rlfmt.html
+  where def sequenceNumber =  ((<1..6> _)+) ++ (@WHITESPACE _)  end
   
   where def sequenceNumberField =  (<_..72> @NUMBER _)  end
 end

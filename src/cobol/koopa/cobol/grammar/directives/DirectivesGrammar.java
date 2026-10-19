@@ -680,19 +680,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("BASIS")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("BASIS"),
@@ -1131,21 +1122,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         future.setParser(
           sequence(
             optional(
-              sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
-                ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
-              )
+              ibm$sequenceNumber()
             ),
             ibm$control$cblControl(),
             ibm$control$option(),
@@ -1241,19 +1218,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("DELETE")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("DELETE"),
@@ -1320,19 +1288,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("ENTER")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("ENTER"),
@@ -1369,19 +1328,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("INSERT")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("INSERT"),
@@ -1409,19 +1359,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("READY")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("READY"),
@@ -1450,19 +1391,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("RESET")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("RESET"),
@@ -1473,6 +1405,39 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
       }
     
       return ibm$resetTraceParser;
+    }
+    
+    // ========================================================
+    // sequenceNumber
+    // ........................................................
+    
+    private ParserCombinator ibm$sequenceNumberParser = null;
+    
+    public final Start ibm$sequenceNumber = Start.on(getNamespace(), "sequenceNumber");
+    
+    public ParserCombinator ibm$sequenceNumber() {
+      if (ibm$sequenceNumberParser == null) {
+        FutureParser future = scoped("sequenceNumber", PUBLIC, true);
+        ibm$sequenceNumberParser = future;
+        future.setParser(
+          sequence(
+            plus(
+              sequence(
+                ranged(1, 6),
+                any()
+              )
+            ),
+            opt(NOSKIP,
+              sequence(
+                tagged(WHITESPACE),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return ibm$sequenceNumberParser;
     }
     
     // ========================================================

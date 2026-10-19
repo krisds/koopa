@@ -235,24 +235,22 @@ end
 
 def listing =
     [ sequenceNumber: (@FIXED | @VARIABLE) (<1..6> _)+ ]
+    ( @FREE | <8.._> )
     ( eject    # *MF *IBM
     | skip     # *MF *IBM
     | title    # *MF *IBM
     )
   
   where def eject =
-      # TODO Seqnr/Indicator allowed ?
-      (<8.._> EJECT) [.]
+      EJECT [.]
   end
   
   where def skip =
-      # TODO Seqnr/Indicator allowed ?
-      (<8.._> (SKIP ++ (1 | 2 | 3))) [.]
+      (SKIP ++ (1 | 2 | 3)) [.]
   end
   
   where def title =
-      # TODO Seqnr/Indicator allowed ?
-      (<8.._> TITLE) anything [.]
+      TITLE anything [.]
   end
 end
 

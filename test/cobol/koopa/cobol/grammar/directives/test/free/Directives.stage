@@ -181,8 +181,6 @@ target listing;
 
 +[       EJECT .]
 +[       EJECT ]
--[      EJECT .]
--[      EJECT ]
 -[       EJECT . SOMETHING ELSE ]
 
 +[       SKIP1 . ]
@@ -191,12 +189,23 @@ target listing;
 +[       SKIP1 ]
 +[       SKIP2 ]
 +[       SKIP3 ]
--[      SKIP1 . ]
--[      SKIP2 . ]
--[      SKIP3 . ]
 
 +[       TITLE "Stop bashing COBOL" . ]
 +[       TITLE "Stop bashing COBOL" ]
--[      TITLE "Stop bashing COBOL" . ]
--[      TITLE "Stop bashing COBOL" ]
+
+# Free format has no sequence area, so these statements may start in any column.
++[      EJECT .]
++[      EJECT ]
++[      SKIP1 . ]
++[      SKIP2 . ]
++[      SKIP3 . ]
++[      TITLE "Stop bashing COBOL" . ]
++[      TITLE "Stop bashing COBOL" ]
++[     SKIP1 . ]
++[    SKIP1 . ]
++[   SKIP1 . ]
++[  SKIP1 . ]
++[ SKIP1 . ]
+# Except column 1, where (d,D,$,*,/) are indicator area tokens instead.
++[SKIP1 . ]
 

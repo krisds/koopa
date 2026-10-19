@@ -1432,6 +1432,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
               )
             ),
             choice(
+              tagged(FREE),
+              ranged(8, -1)
+            ),
+            choice(
               listing$eject(),
               listing$skip(),
               listing$title()
@@ -1457,10 +1461,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         listing$ejectParser = future;
         future.setParser(
           sequence(
-            sequence(
-              ranged(8, -1),
-              keyword("EJECT")
-            ),
+            keyword("EJECT"),
             optional(
               literal(".")
             )
@@ -1486,15 +1487,12 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         future.setParser(
           sequence(
             sequence(
-              ranged(8, -1),
-              sequence(
-                keyword("SKIP"),
-                opt(NOSKIP,
-                  choice(
-                    number("1"),
-                    number("2"),
-                    number("3")
-                  )
+              keyword("SKIP"),
+              opt(NOSKIP,
+                choice(
+                  number("1"),
+                  number("2"),
+                  number("3")
                 )
               )
             ),
@@ -1522,10 +1520,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         listing$titleParser = future;
         future.setParser(
           sequence(
-            sequence(
-              ranged(8, -1),
-              keyword("TITLE")
-            ),
+            keyword("TITLE"),
             anything(),
             optional(
               literal(".")

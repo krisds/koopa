@@ -131,6 +131,14 @@ target ibm;
 +[ PROCESS NOSEQ,LIB. ]
 +[ CBL FOO=BAR ]
 
+# Residue glued to the keyword belongs to the card, a split user defined name does not.
++[ CBL. ]
++[ CBL(LIST) ]
++[ PROCESS(LIST) ]
++[ CBL,LIST ]
++[ CBL'LIT' ]
++[000100 CBL(LIST) ]
+
 +[      *CBL SOURCE ]
 +[      *CBL SOURCE . ]
 -[     *CBL SOURCE ]

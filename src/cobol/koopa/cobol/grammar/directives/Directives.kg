@@ -127,6 +127,8 @@ def ibm =
       # TODO: This can very easily be mistaken with user defined names,
       # resticting these to before identification division would avoid this.
       ( ((CBL | PROCESS) ++ (@WHITESPACE _)) [optionsList] [.] [unknown: _+]
+      # Residue glued to the keyword is still the card's, unless its a user name.
+      | ((CBL | PROCESS) ++ ((%not ('_' | (@NUMBER _))) _)) [unknown: _+]
       | (CBL | PROCESS)
       )
 
@@ -327,7 +329,7 @@ def mf =
   where def set =
       (indicator ++ SET)
       ( sourceformat: SOURCEFORMAT parameter
-      | directive: name [parameter]
+      | setting: name [parameter]
       )+
     
     where def parameter =

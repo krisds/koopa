@@ -760,6 +760,35 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                   )
                 )
               ),
+              sequence(
+                sequence(
+                  choice(
+                    keyword("CBL"),
+                    keyword("PROCESS")
+                  ),
+                  opt(NOSKIP,
+                    sequence(
+                      not(
+                        choice(
+                          literal("_"),
+                          sequence(
+                            tagged(NUMBER),
+                            any()
+                          )
+                        )
+                      ),
+                      any()
+                    )
+                  )
+                ),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
               choice(
                 keyword("CBL"),
                 keyword("PROCESS")
@@ -1616,7 +1645,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                     mf$set$parameter()
                   )
                 ),
-                as("directive",
+                as("setting",
                   sequence(
                     name(),
                     optional(

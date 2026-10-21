@@ -211,6 +211,18 @@ public class CompilerDirectivesTest {
 		assertNull(directive(stream));
 	}
 
+	@Test
+	public void aSetSettingIsNoDirectiveNode() {
+		final List<Data> stream = parsedOnly(SourceFormat.FIXED,
+				"      $SET LINKCOUNT(64)\n");
+
+		final Tree directive = directive(stream);
+		assertEquals("LINKCOUNT(64)", directive.getDescendant( //
+				"mf", "set", "setting").getAllText());
+		// The directive node is the root and nothing else
+		assertNull(directive.getDescendant("mf", "set", "directive"));
+	}
+
 	private static List<Token> collect(Tree tree) {
 		final List<Token> tokens = new LinkedList<>();
 		for (Token token : tree.allTokens())

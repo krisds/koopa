@@ -748,6 +748,16 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 ),
                 optional(
                   ibm$process$optionsList()
+                ),
+                optional(
+                  literal(".")
+                ),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
                 )
               ),
               choice(
@@ -838,11 +848,14 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             literal("("),
             star(
-              sequence(
-                not(
-                  literal(")")
-                ),
-                any()
+              choice(
+                ibm$process$optionsList$argument(),
+                sequence(
+                  not(
+                    literal(")")
+                  ),
+                  any()
+                )
               )
             ),
             literal(")")

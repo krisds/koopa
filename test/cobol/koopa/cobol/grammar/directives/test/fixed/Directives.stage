@@ -125,6 +125,12 @@ target ibm;
 # Options from other compiler levels or vendors still parse, as unknown.
 +[ CBL RES NORES SIZE(4K) ]
 
+# Nested suboption parentheses, a trailing period, and residue the options parse.
++[ CBL EXIT(INEXIT(MYEXIT)) ]
++[ CBL TEST(SEPARATE(DSNAME)) ]
++[ PROCESS NOSEQ,LIB. ]
++[ CBL FOO=BAR ]
+
 +[      *CBL SOURCE ]
 +[      *CBL SOURCE . ]
 -[     *CBL SOURCE ]

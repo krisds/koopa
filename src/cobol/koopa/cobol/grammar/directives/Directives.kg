@@ -126,15 +126,16 @@ def ibm =
       # The keyword stands alone or is followed by whitespace.
       # TODO: This can very easily be mistaken with user defined names,
       # resticting these to before identification division would avoid this.
-      ( ((CBL | PROCESS) ++ (@WHITESPACE _)) [optionsList]
+      ( ((CBL | PROCESS) ++ (@WHITESPACE _)) [optionsList] [.] [unknown: _+]
       | (CBL | PROCESS)
       )
 
     where def optionsList =
         option ([','] option)*
 
-      where def option   =  (optionName | unknown: name) [argument]  end
-      where def argument =  '(' (%not ')' _)* ')'                    end
+      where def option   =  (optionName | unknown: name) [argument]      end
+      # Suboptions can nest their own parentheses, EXIT(INEXIT(MYEXIT)).
+      where def argument =  '(' ( argument | (%not ')') _ )* ')'         end
 
       where private def optionName =
           # IBM Enterprise COBOL for z/OS 6.3 compiler options.

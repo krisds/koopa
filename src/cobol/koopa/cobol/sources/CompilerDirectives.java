@@ -75,7 +75,8 @@ public class CompilerDirectives extends ChainingSource
 			// as-yet-unparsed rest, and unshift the rest into the source.
 			LinkedList<Data> linePrefix = extractParsedPrefix(directive, line);
 
-			return nextFrom(handleCompilerDirective(directive, linePrefix));
+			return nextFrom(asTree(directive,
+					handleCompilerDirective(directive, linePrefix)));
 		}
 	}
 
@@ -85,6 +86,7 @@ public class CompilerDirectives extends ChainingSource
 	 * Splits the line into two halves, the first half containing {@code directive}
 	 * and all that comes before it, and the second half everthing else, if anything.
 	 * The second half is unshifted into {@link #source}, and the first half returned.
+	 * The second half stays untagged, it gets treated as a fresh line, with the new format.
 	 *
 	 * @param directive the directive to extract from the line
 	 * @param line the entire line, starting with {@code directive}
@@ -108,16 +110,15 @@ public class CompilerDirectives extends ChainingSource
 			Position tokenEnd = t.getEnd();
 
 			if (tokenStart.compareTo(directiveEnd) >= 0) {
-				// Since this token follows a directive, we may assume it's in the program text area
-				source.unshift(((Token) d).withTags(PROGRAM_TEXT_AREA));
+				// Since this token follows a directive, it goes back as-is.
+				source.unshift(d);
 				continue;
 			}
 
 			if (tokenEnd.compareTo(directiveEnd) > 0) {
 				// Need to split the token, since it contains both directive and suffix
 				Token[] splitToken = Tokens.split(t, directiveEnd.getPositionInFile() - tokenStart.getPositionInFile() + 1);
-				// Since this token follows a directive, we may assume it's in the program text area
-				source.unshift(splitToken[1].withTags(PROGRAM_TEXT_AREA));
+				source.unshift(splitToken[1]);
 				prefix.addFirst(splitToken[0]);
 				break;
 			} else {
@@ -134,7 +135,6 @@ public class CompilerDirectives extends ChainingSource
 	private Tree tryToParseCompilerDirective(LinkedList<Data> line) {
 		// TODO Speed: can we reuse the sources?
 		final ListSource lineSource = new ListSource(line);
-		// TODO Program-Area splits ?
 		// TODO Make TagAll (work on) a Source of Data ?
 		final TagAll tagAll //
 				= new TagAll(lineSource, format,
@@ -233,6 +233,47 @@ public class CompilerDirectives extends ChainingSource
 		format = newFormat;
 
 		return tagged;
+	}
+
+	/**
+	 * The handled line in tree form:
+	 * The directive tree takes the place of its own tokens in the output,
+	 * and takes over their tags. ProgramArea gives the tree its installation.
+	 */
+	private LinkedList<Data> asTree(Tree directive, LinkedList<Data> line) {
+		for (Data d : line)
+			if (d instanceof Token) {
+				retagContent(directive, ((Token) d).getTags().toArray());
+				break;
+			}
+
+		final LinkedList<Data> out = new LinkedList<>();
+		out.add(directive);
+
+		for (Data d : line)
+			if (!(d instanceof Token))
+				out.add(d);
+
+		return out;
+	}
+
+	/**
+	 * The directive's tokens were tagged as program text for the parse.
+	 * In the output they are directive content, carrying the directive tags.
+	 */
+	private void retagContent(Tree node, Object[] directiveTags) {
+		for (int i = 0; i < node.getChildCount(); i++) {
+			final Tree child = node.getChild(i);
+			if (child.isToken()) {
+				final Token token = (Token) child.getData();
+				node.removeChild(i);
+				node.insertChild(i, new Tree( //
+						token.withoutTags(PROGRAM_TEXT_AREA)
+								.withTags(directiveTags)));
+			} else {
+				retagContent(child, directiveTags);
+			}
+		}
 	}
 
 	private Data nextFrom(LinkedList<Data> data) {

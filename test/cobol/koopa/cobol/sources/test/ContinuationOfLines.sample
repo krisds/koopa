@@ -171,3 +171,48 @@ FIXED = =                  =   ==   ==   ==
 !SKIP = =                  =   ==   ==   ==
 -     - .                  STR -STR -STR :-
 SEQNR I -                  -   --   --   -EOLN
+
+
+
+# A directive between continuations. The lookahead deciding the join
+# carries the directive tree through unharmed.
+CONTA1 ADD 1 TO ABC-
+<---->^<->^^^<>^<-->^
+FIXED = = ==== ==   =
+!TEXT = T ==== ==   !TEXT
+!SKIP = = ==== ==   SKIPPED
+-     - W .N.W .W   -
+SEQNR I - ---- --   EOLN
+
+
+CONTA2-DEFGHIJ.
+<---->^<----->^^
+FIXED = =     ==
+!TEXT = T     ==
+SKIP  = !SKIP ==
+-     - WORD  :-
+SEQNR I -     -EOLN
+
+       EJECT
+<---->^<--->^
+FIXED =  =            =
+-     -  directive    -
+SEQNR I  DIR/LISTING  -
+!TEXT =  =            EOLN
+
+CONTB1 ADD 1 TO KLM-
+<---->^<->^^^<>^<-->^
+FIXED = = ==== ==   =
+!TEXT = T ==== ==   !TEXT
+!SKIP = = ==== ==   SKIPPED
+-     - W .N.W .W   -
+SEQNR I - ---- --   EOLN
+
+
+CONTB2-NOPQRST.
+<---->^<----->^^
+FIXED = =     ==
+!TEXT = T     ==
+SKIP  = !SKIP ==
+-     - WORD  :-
+SEQNR I -     -EOLN

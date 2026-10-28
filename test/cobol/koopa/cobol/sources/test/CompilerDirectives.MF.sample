@@ -10,6 +10,7 @@ FIXED                                                                        =
 FIXED                      =
 COMPILER_DIRECTIVE         !DIRECTIVE
 !TEXT                      EOLN
+directive                  -
 
 
        ++INCLUDE TEXTNAME  witty remark
@@ -17,6 +18,7 @@ COMPILER_DIRECTIVE         !DIRECTIVE
 FIXED                                  =
 COMPILER_DIRECTIVE                     !DIRECTIVE
 !TEXT                                  EOLN
+directive                              -
 
 
 # This one comes from the real world:
@@ -25,3 +27,4 @@ COMPILER_DIRECTIVE                     !DIRECTIVE
 FIXED                                                VARIABLE
 COMPILER_DIRECTIVE                                   !DIRECTIVE
 !TEXT                                                EOLN
+directive                                            -

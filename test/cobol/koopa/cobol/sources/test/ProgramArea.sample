@@ -66,10 +66,10 @@ SEQNR I -                                                               IDENT EO
 # Switching to FREE mode.
 
        >> source free
-<------------------->^
-FIXED                FREE
-!TEXT/DIRECTIVE      TEXT
--                    EOLN
+<---->^<------------>^
+FIXED = =            FREE
+SEQNR I !TEXT/DIR    TEXT
+!dir  = directive    EOLN
 
 
 123456789A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
@@ -97,10 +97,11 @@ TEXT              =
 # Switching to VARIABLE mode.
 
 $SET SOURCEFORMAT"VARIABLE"
-<------------------------->^
-FREE                       VARIABLE
-!TEXT/DIRECTIVE            TEXT
--                          EOLN
+^<------------------------>^
+FREE =                     VARIABLE
+INDIC directive            EOLN
+!TEXT DIRECTIVE/SOURCE_FORMAT !DIRECTIVE
+- !TEXT                    -
 
 
 123456*89A123456789B123456789C123456789D123456789E123456789F123456789G12+++++
@@ -121,10 +122,11 @@ SEQNR I -          EOLN
 # Switching to FIXED mode.
 
        >> source fixed
-<-------------------->^
-VARIABLE              FIXED
-!TEXT/DIRECTIVE       TEXT
--                     EOLN
+<---->^<------------->^
+VARIABLE = =          FIXED
+SEQNR I directive     EOLN
+!TEXT = DIRECTIVE/SOURCE_FORMAT !DIRECTIVE
+-     - !TEXT         -
 
 
        DISPLAY FOO.

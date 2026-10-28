@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.HashMap;
 
 import koopa.cobol.CobolTokens;
+import koopa.cobol.grammar.directives.DirectivesGrammar;
 import koopa.cobol.projects.StandardCobolProject;
 import koopa.cobol.sources.CompilerDirectives;
 import koopa.cobol.sources.ContinuationOfLines;
@@ -123,5 +124,11 @@ public class CobolSourcesValidationTest extends CoreSourcesValidationTest {
 
 		addNodeCategory("copy", "cobol", "copyStatement");
 		addNodeCategory("replace", "cobol", "replaceStatement");
+
+		final DirectivesGrammar directives = DirectivesGrammar.instance();
+		final String namespace = directives.getNamespace();
+		final String directive = directives.directive.getName();
+		addNodeCategory("directive", namespace, directive);
+		addNodeCategory("dir", namespace, directive);
 	}
 }

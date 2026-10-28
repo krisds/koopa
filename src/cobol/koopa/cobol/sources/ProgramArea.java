@@ -6,7 +6,11 @@ import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
+import static koopa.cobol.data.tags.CobolTag.SOURCE_FORMAT_DIRECTIVE;
+import static koopa.cobol.data.tags.CobolTag.SOURCE_LISTING_DIRECTIVE;
 import static koopa.core.data.tags.AreaTag.COMMENT;
+import static koopa.core.data.tags.AreaTag.COMPILER_DIRECTIVE;
+import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
 import static koopa.core.data.tags.AreaTag.PROGRAM_TEXT_AREA;
 import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 
@@ -22,6 +26,7 @@ import koopa.core.data.Tokens;
 import koopa.core.data.tags.AreaTag;
 import koopa.core.sources.ChainingSource;
 import koopa.core.sources.Source;
+import koopa.core.trees.Tree;
 import koopa.core.util.Strings;
 import koopa.core.util.TabStops;
 
@@ -37,7 +42,7 @@ public class ProgramArea extends ChainingSource implements Source {
 	private final int tabLength;
 	private final TabStops tabStops;
 
-	private final LinkedList<Token> pendingTokens = new LinkedList<>();
+	private final LinkedList<Data> pendingTokens = new LinkedList<>();
 
 	private final boolean cheapTabs;
 
@@ -55,6 +60,26 @@ public class ProgramArea extends ChainingSource implements Source {
 			return pendingTokens.removeFirst();
 
 		final Data d = source.next();
+
+		// A directive arrives as a tree, parsed before the split into program areas.
+		// Install it: the areas it still holds become the area tokens they should have been.
+		// Any other tree passes through.
+		if (d instanceof Tree && isDirective((Tree) d)) {
+			final LinkedList<Token> stripped = new LinkedList<>();
+			stripLeadingAreas((Tree) d, stripped);
+
+			if (stripped.isEmpty())
+				return d;
+
+			for (Token token : stripped)
+				tokenizeLine(token.withoutTags(PROGRAM_TEXT_AREA,
+						COMPILER_DIRECTIVE, SOURCE_FORMAT_DIRECTIVE,
+						SOURCE_LISTING_DIRECTIVE));
+
+			pendingTokens.add(d);
+			return pendingTokens.removeFirst();
+		}
+
 		if (!(d instanceof Token))
 			return d;
 
@@ -77,6 +102,50 @@ public class ProgramArea extends ChainingSource implements Source {
 		return pendingTokens.removeFirst();
 	}
 
+	/**
+	 * A directive's content carries the directive tag.
+	 */
+	private boolean isDirective(Tree tree) {
+		// End token is more stable due to unshifting boundary.
+		final Token end = tree.getEndToken();
+		return end != null && end.hasTag(COMPILER_DIRECTIVE);
+	}
+
+	/**
+	 * The directive was parsed before Area splitting, so it holds:
+	 * sequence number, indicator, and plain whitespace of its prefix.
+	 * The grammar labels the first two, so drop them and collect heir tokens.
+	 */
+	private void stripLeadingAreas(Tree node, LinkedList<Token> stripped) {
+		while (node.hasChildren()) {
+			final Tree child = node.getChild(0);
+
+			// Could directly couple to the grammar using 
+			// `DirectivesGrammar.instance().<production>.getName();`
+			// To catch regression with the compiler.
+			if (child.isNode("sequenceNumber") || child.isNode("indicator")) {
+				for (Token token : child.allTokens())
+					stripped.add(token);
+				node.removeChild(0);
+				continue;
+			}
+
+			if (child.isToken()) {
+				final Token token = (Token) child.getData();
+				if (!token.hasTag(WHITESPACE))
+					return;
+				stripped.add(token);
+
+			} else {
+				stripLeadingAreas(child, stripped);
+				if (child.hasChildren())
+					return;
+			}
+
+			node.removeChild(0);
+		}
+	}
+
 	protected void tokenizeLine(Token line) {
 		final String text = line.getText();
 
@@ -89,10 +158,19 @@ public class ProgramArea extends ChainingSource implements Source {
 
 		final SourceFormat format = SourceFormat.forToken(line);
 
+		// A directive's remainder starts where it ended, the area boundaries shift with it.
+		// The token may not start the line.
+		final int offset = line.getStart().getPositionInLine() - 1;
+
 		if (format == FREE) {
+			// In free format the first character of the line determines all areas.
 			int c = text.charAt(0);
 
-			if (c == 'D' || c == 'd') {
+			if (offset > 0) {
+				// An indicator can only be the start of the line in FREE.
+				extract(line, PROGRAM_TEXT_AREA);
+
+			} else if (c == 'D' || c == 'd') {
 				// This is only an indicator if it gets followed by a space.
 				// Otherwise it's program text.
 				if (text.charAt(1) == ' ') {
@@ -115,23 +193,21 @@ public class ProgramArea extends ChainingSource implements Source {
 				extract(line, PROGRAM_TEXT_AREA);
 			}
 
-		} else if (format == FIXED) {
-			extract(line, 0, 6, SEQUENCE_NUMBER_AREA, format);
+		} else if (format == FIXED || format == VARIABLE) {
+			final int startSeqArea  = 0 - offset;
+			final int startIndArea  = 6 - offset;
+			final int startAreaAB   = 7 - offset;
+			final int startIdenArea = format == FIXED ? 72 - offset : -1;
 
-			final Token indicator = extract(line, 6, 7, INDICATOR_AREA, format);
+			extract(line, startSeqArea, startIndArea, SEQUENCE_NUMBER_AREA, format);
+
+			final Token indicator = extract(line, startIndArea, startAreaAB, INDICATOR_AREA, format);
 			final boolean lineIsComment = indicator != null && indicatesComment(indicator.charAt(0));
 
-			extract(line, 7, 72, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
+			extract(line, startAreaAB, startIdenArea, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
 
-			extract(line, 72, -1, IDENTIFICATION_AREA, format);
-
-		} else if (format == VARIABLE) {
-			extract(line, 0, 6, SEQUENCE_NUMBER_AREA, format);
-
-			final Token indicator = extract(line, 6, 7, INDICATOR_AREA, format);
-			final boolean lineIsComment = indicator != null && indicatesComment(indicator.charAt(0));
-
-			extract(line, 7, -1, lineIsComment ? COMMENT : PROGRAM_TEXT_AREA, format);
+			if (format == FIXED)
+				extract(line, startIdenArea, -1, IDENTIFICATION_AREA, format);
 
 		} else {
 			throw new UnsupportedOperationException("Unexpected referenceFormat: " + format);
@@ -142,6 +218,10 @@ public class ProgramArea extends ChainingSource implements Source {
 		final int columns = getWidthInColumns(line);
 
 		if (start >= columns)
+			return null;
+
+		// The area may lie entirely before the token.
+		if (end != -1 && end <= 0)
 			return null;
 
 		int startIndex = characterIndexForColumn(line, start);

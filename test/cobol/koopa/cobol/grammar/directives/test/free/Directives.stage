@@ -7,7 +7,8 @@ target iso;
 +[ >> CALL-CONVENTION ANSIC ]
 
 +[ >>CALL-CONVENTION COBOL ]
-+[ >> CALL-CONVENTION COBOL *> One accurate measurement... ]
+# The inline comment is not part of the directive.
++[ >> CALL-CONVENTION COBOL ] <> [ *> One accurate measurement... ]
 
 -[123456 >> CALL-CONVENTION COBOL ]
 
@@ -86,7 +87,8 @@ target ibm;
 
 +[123456 BASIS FOO ]
 +[ BASIS FOO ]
--[ABCDEF BASIS FOO ]
+# "The content of this field is ignored", so any sequence area content works.
++[ABCDEF BASIS FOO ]
 -[ BASIS FOO NON BLANK ]
 
 +[ CBL ]
@@ -107,6 +109,36 @@ target ibm;
 +[123ABC PROCESS FOO BAR BAZ ]
 -[ABCDEF PROCESS FOO BAR BAZ ]
 
+# keyword must not collide with a user defined name.
+-[        PROCESS_DESC) ]
+-[        INSERT INTO PARM_PROCESS ]
+
+# Modelled IBM 6.3 compiler options:
++[ CBL ADV NOADV ]
++[ CBL ARITH(EXTEND) ]
++[ CBL FLAG(I,W) ]
++[ CBL OPT(2),RENT,SOURCE ]
++[ CBL BLOCK0 ]
++[ CBL OPT DTR Q ]
++[ CBL SQL("DB2") ]
+
+# Options from other compiler levels or vendors still parse, as unknown.
++[ CBL RES NORES SIZE(4K) ]
+
+# Nested suboption parentheses, a trailing period, and residue the options parse.
++[ CBL EXIT(INEXIT(MYEXIT)) ]
++[ CBL TEST(SEPARATE(DSNAME)) ]
++[ PROCESS NOSEQ,LIB. ]
++[ CBL FOO=BAR ]
+
+# Residue glued to the keyword belongs to the card, a split user defined name does not.
++[ CBL. ]
++[ CBL(LIST) ]
++[ PROCESS(LIST) ]
++[ CBL,LIST ]
++[ CBL'LIT' ]
++[000100 CBL(LIST) ]
+
 +[      *CBL SOURCE ]
 +[      *CBL SOURCE . ]
 -[     *CBL SOURCE ]
@@ -118,6 +150,11 @@ target ibm;
 +[      *CONTROL SOURCE NOSOURCE LIST NOLIST MAP NOMAP   ]
 +[      *CONTROL SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP . ]
 +[      *CONTROL SOURCE,NOSOURCE,LIST,NOLIST,MAP,NOMAP   ]
++[000100 *CONTROL SOURCE ]
+
+# *CONTROL takes only the modelled options.
+-[      *CONTROL FOO ]
+-[      *CONTROL SOURCE DISPLAY X ]
 
 
 # From http://publibz.boulder.ibm.com/cgi-bin/bookmgr_OS390/handheld/Connected/BOOKS/igy3lr40/8.1.5?SHELF=&DT=20071214160555&CASE=
@@ -133,6 +170,7 @@ target ibm;
 
 +[ ENTER COBOL . ]
 +[ ENTER COBOL ROUTINE-NAME . ]
++[000100 ENTER COBOL . ]
 
 +[000250 INSERT 000010 ]
 +[ INSERT 000010 ]
@@ -142,7 +180,9 @@ target ibm;
 -[ INSERT 000010-000020 ]
 
 +[ READY TRACE . ]
-+[ RESET TRACE . ] 
++[ RESET TRACE . ]
++[000100 READY TRACE . ]
++[000100 RESET TRACE . ]
 
 
 target mf;
@@ -181,8 +221,6 @@ target listing;
 
 +[       EJECT .]
 +[       EJECT ]
--[      EJECT .]
--[      EJECT ]
 -[       EJECT . SOMETHING ELSE ]
 
 +[       SKIP1 . ]
@@ -191,12 +229,27 @@ target listing;
 +[       SKIP1 ]
 +[       SKIP2 ]
 +[       SKIP3 ]
--[      SKIP1 . ]
--[      SKIP2 . ]
--[      SKIP3 . ]
 
 +[       TITLE "Stop bashing COBOL" . ]
 +[       TITLE "Stop bashing COBOL" ]
--[      TITLE "Stop bashing COBOL" . ]
--[      TITLE "Stop bashing COBOL" ]
 
+# Free format has no sequence area, so these statements may start in any column.
++[      EJECT .]
++[      EJECT ]
++[      SKIP1 . ]
++[      SKIP2 . ]
++[      SKIP3 . ]
++[      TITLE "Stop bashing COBOL" . ]
++[      TITLE "Stop bashing COBOL" ]
++[     SKIP1 . ]
++[    SKIP1 . ]
++[   SKIP1 . ]
++[  SKIP1 . ]
++[ SKIP1 . ]
+# Except column 1, where (d,D,$,*,/) are indicator area tokens instead.
++[SKIP1 . ]
+
+target directive;
+
+# The inline comment is not part of any directive.
++[ CBL FOO BAR ] <> [ *> One accurate measurement... ]

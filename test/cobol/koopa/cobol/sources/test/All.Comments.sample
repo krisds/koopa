@@ -25,10 +25,11 @@ SEQNR I -                                         EOLN
 
 
        >> source format is free
-<----------------------------->^
-FIXED                          FREE
-DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
-!TEXT                          EOLN
+<---->^<---------------------->^
+FIXED = =                      FREE
+SEQNR I DIR/SOURCE_FORMAT      !DIRECTIVE
+!TEXT = =                      EOLN
+!dir  = directive              -
 
 
 *23456789A123456789B123456789C123456789D123456789E123456789F123456789G12|4567

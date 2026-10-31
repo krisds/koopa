@@ -64,8 +64,12 @@ public class KoopaTreeBuilder extends TreeBuildingTarget {
 	/** {@inheritDoc} */
 	@Override
 	public void leaf(Token token) {
-		Tree tree = new Tree(token);
+		subtree(new Tree(token));
+	}
 
+	/** {@inheritDoc} */
+	@Override
+	public void subtree(Tree tree) {
 		if (!this.treeparts.isEmpty())
 			this.treeparts.peek().addChild(tree);
 		else

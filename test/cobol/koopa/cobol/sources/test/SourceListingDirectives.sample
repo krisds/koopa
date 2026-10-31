@@ -10,6 +10,7 @@ FIXED                                                                        =
 FIXED       =
 DIR/LISTING !DIRECTIVE
 !TEXT       EOLN
+directive   -
 
 
        SKIP2
@@ -17,6 +18,7 @@ DIR/LISTING !DIRECTIVE
 FIXED       =
 DIR/LISTING !DIRECTIVE
 !TEXT       EOLN
+directive   -
 
 
        SKIP3
@@ -24,6 +26,7 @@ DIR/LISTING !DIRECTIVE
 FIXED       =
 DIR/LISTING !DIRECTIVE
 !TEXT       EOLN
+directive   -
 
 
        EJECT
@@ -31,3 +34,4 @@ DIR/LISTING !DIRECTIVE
 FIXED       =
 DIR/LISTING !DIRECTIVE
 !TEXT       EOLN
+directive   -

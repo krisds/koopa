@@ -350,6 +350,15 @@ public class Tree implements Data {
 	}
 
 	/**
+	 * Whether this tree stands in for replaced text.
+	 * Checks via {@linkplain Token#isReplacement()} on the first token.
+	 */
+	public boolean isReplacement() {
+		final Token start = getStartToken();
+		return start != null && start.isReplacement();
+	}
+
+	/**
 	 * Return the first child node with the given name.
 	 */
 	public Tree getChild(String name) {

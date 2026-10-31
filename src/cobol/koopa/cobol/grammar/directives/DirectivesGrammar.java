@@ -14,6 +14,7 @@ import static koopa.cobol.data.tags.CobolAreaTag.SEQUENCE_NUMBER_AREA;
 import static koopa.cobol.sources.SourceFormat.FIXED;
 import static koopa.cobol.sources.SourceFormat.FREE;
 import static koopa.cobol.sources.SourceFormat.VARIABLE;
+import static koopa.core.data.tags.SyntacticTag.END_OF_LINE;
 import static koopa.core.data.tags.SyntacticTag.NUMBER;
 import static koopa.core.data.tags.SyntacticTag.STRING;
 import static koopa.core.data.tags.SyntacticTag.WHITESPACE;
@@ -50,11 +51,25 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         FutureParser future = scoped("directive", PUBLIC, true);
         directiveParser = future;
         future.setParser(
-          choice(
-            iso(),
-            ibm(),
-            mf(),
-            listing()
+          upto(
+            choice(
+              iso(),
+              ibm(),
+              mf(),
+              listing()
+            ),
+            // Closure:
+            choice(
+              sequence(
+                tagged(FIXED),
+                sequence(
+                  ranged(73, -1),
+                  any()
+                )
+              ),
+              inlineCommentIndicator(),
+              eof()
+            )
           )
         );
       }
@@ -90,10 +105,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
               )
             ),
             iso$indicator(),
-            iso$instruction(),
-            optional(
-              inlineComment()
-            )
+            iso$instruction()
           )
         );
       }
@@ -668,19 +680,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("BASIS")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("BASIS"),
@@ -730,17 +733,420 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
               )
             ),
             choice(
-              keyword("CBL"),
-              keyword("PROCESS")
-            ),
-            star(
-              anything()
+              sequence(
+                sequence(
+                  choice(
+                    keyword("CBL"),
+                    keyword("PROCESS")
+                  ),
+                  opt(NOSKIP,
+                    sequence(
+                      tagged(WHITESPACE),
+                      any()
+                    )
+                  )
+                ),
+                optional(
+                  ibm$process$optionsList()
+                ),
+                optional(
+                  literal(".")
+                ),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
+              sequence(
+                sequence(
+                  choice(
+                    keyword("CBL"),
+                    keyword("PROCESS")
+                  ),
+                  opt(NOSKIP,
+                    sequence(
+                      not(
+                        choice(
+                          literal("_"),
+                          sequence(
+                            tagged(NUMBER),
+                            any()
+                          )
+                        )
+                      ),
+                      any()
+                    )
+                  )
+                ),
+                optional(
+                  as("unknown",
+                    plus(
+                      any()
+                    )
+                  )
+                )
+              ),
+              choice(
+                keyword("CBL"),
+                keyword("PROCESS")
+              )
             )
           )
         );
       }
     
       return ibm$processParser;
+    }
+    
+    // ========================================================
+    // optionsList
+    // ........................................................
+    
+    private ParserCombinator ibm$process$optionsListParser = null;
+    
+    public final Start ibm$process$optionsList = Start.on(getNamespace(), "optionsList");
+    
+    public ParserCombinator ibm$process$optionsList() {
+      if (ibm$process$optionsListParser == null) {
+        FutureParser future = scoped("optionsList", PUBLIC, true);
+        ibm$process$optionsListParser = future;
+        future.setParser(
+          sequence(
+            ibm$process$optionsList$option(),
+            star(
+              sequence(
+                optional(
+                  literal(",")
+                ),
+                ibm$process$optionsList$option()
+              )
+            )
+          )
+        );
+      }
+    
+      return ibm$process$optionsListParser;
+    }
+    
+    // ========================================================
+    // option
+    // ........................................................
+    
+    private ParserCombinator ibm$process$optionsList$optionParser = null;
+    
+    public final Start ibm$process$optionsList$option = Start.on(getNamespace(), "option");
+    
+    public ParserCombinator ibm$process$optionsList$option() {
+      if (ibm$process$optionsList$optionParser == null) {
+        FutureParser future = scoped("option", PUBLIC, true);
+        ibm$process$optionsList$optionParser = future;
+        future.setParser(
+          sequence(
+            choice(
+              ibm$process$optionsList$optionName(),
+              as("unknown",
+                name()
+              )
+            ),
+            optional(
+              ibm$process$optionsList$argument()
+            )
+          )
+        );
+      }
+    
+      return ibm$process$optionsList$optionParser;
+    }
+    
+    // ========================================================
+    // argument
+    // ........................................................
+    
+    private ParserCombinator ibm$process$optionsList$argumentParser = null;
+    
+    public final Start ibm$process$optionsList$argument = Start.on(getNamespace(), "argument");
+    
+    public ParserCombinator ibm$process$optionsList$argument() {
+      if (ibm$process$optionsList$argumentParser == null) {
+        FutureParser future = scoped("argument", PUBLIC, true);
+        ibm$process$optionsList$argumentParser = future;
+        future.setParser(
+          sequence(
+            literal("("),
+            star(
+              choice(
+                ibm$process$optionsList$argument(),
+                sequence(
+                  not(
+                    literal(")")
+                  ),
+                  any()
+                )
+              )
+            ),
+            literal(")")
+          )
+        );
+      }
+    
+      return ibm$process$optionsList$argumentParser;
+    }
+    
+    // ========================================================
+    // optionName
+    // ........................................................
+    
+    private ParserCombinator ibm$process$optionsList$optionNameParser = null;
+    
+    protected final Start ibm$process$optionsList$optionName = Start.on(getNamespace(), "optionName");
+    
+    protected ParserCombinator ibm$process$optionsList$optionName() {
+      if (ibm$process$optionsList$optionNameParser == null) {
+        FutureParser future = scoped("optionName", PRIVATE, true);
+        ibm$process$optionsList$optionNameParser = future;
+        future.setParser(
+          choice(
+            keyword("Q"),
+            keyword("APOST"),
+            keyword("QUOTE"),
+            keyword("AR"),
+            keyword("ARITH"),
+            keyword("CICS"),
+            keyword("NOCICS"),
+            keyword("CP"),
+            keyword("CODEPAGE"),
+            keyword("CC"),
+            keyword("CONDCOMP"),
+            keyword("CPLC"),
+            keyword("NOCPLC"),
+            keyword("COPYLOC"),
+            keyword("NOCOPYLOC"),
+            keyword("CURR"),
+            keyword("NOCURR"),
+            keyword("CURRENCY"),
+            keyword("NOCURRENCY"),
+            keyword("DBCS"),
+            keyword("NODBCS"),
+            keyword("DEF"),
+            keyword("NODEF"),
+            keyword("DEFINE"),
+            keyword("NODEFINE"),
+            keyword("NS"),
+            keyword("NSYMBOL"),
+            keyword("QUA"),
+            keyword("QUALIFY"),
+            keyword("SEQ"),
+            keyword("NOSEQ"),
+            keyword("SEQUENCE"),
+            keyword("NOSEQUENCE"),
+            keyword("SQL"),
+            keyword("NOSQL"),
+            keyword("SQLC"),
+            keyword("NOSQLC"),
+            keyword("SQLCCSID"),
+            keyword("NOSQLCCSID"),
+            keyword("SQLIMS"),
+            keyword("NOSQLIMS"),
+            keyword("WD"),
+            keyword("NOWD"),
+            keyword("WORD"),
+            keyword("NOWORD"),
+            keyword("XP"),
+            keyword("XMLPARSE"),
+            keyword("INTDATE"),
+            keyword("F"),
+            keyword("NOF"),
+            keyword("FLAG"),
+            keyword("NOFLAG"),
+            keyword("FLAGSTD"),
+            keyword("NOFLAGSTD"),
+            keyword("LANG"),
+            keyword("LANGUAGE"),
+            keyword("LC"),
+            keyword("LINECOUNT"),
+            keyword("LIST"),
+            keyword("NOLIST"),
+            keyword("MAP"),
+            keyword("NOMAP"),
+            keyword("NUM"),
+            keyword("NONUM"),
+            keyword("NUMBER"),
+            keyword("NONUMBER"),
+            keyword("OFF"),
+            keyword("NOOFF"),
+            keyword("OFFSET"),
+            keyword("NOOFFSET"),
+            keyword("S"),
+            keyword("NOS"),
+            keyword("SOURCE"),
+            keyword("NOSOURCE"),
+            keyword("SPACE"),
+            keyword("TERM"),
+            keyword("NOTERM"),
+            keyword("TERMINAL"),
+            keyword("NOTERMINAL"),
+            keyword("VBREF"),
+            keyword("NOVBREF"),
+            keyword("X"),
+            keyword("NOX"),
+            keyword("XREF"),
+            keyword("NOXREF"),
+            keyword("ADATA"),
+            keyword("NOADATA"),
+            keyword("C"),
+            keyword("NOC"),
+            keyword("COMPILE"),
+            keyword("NOCOMPILE"),
+            keyword("CPYR"),
+            keyword("NOCPYR"),
+            keyword("COPYRIGHT"),
+            keyword("NOCOPYRIGHT"),
+            keyword("D"),
+            keyword("NOD"),
+            keyword("DECK"),
+            keyword("NODECK"),
+            keyword("MD"),
+            keyword("NOMD"),
+            keyword("MDECK"),
+            keyword("NOMDECK"),
+            keyword("NAME"),
+            keyword("NONAME"),
+            keyword("OBJ"),
+            keyword("NOOBJ"),
+            keyword("OBJECT"),
+            keyword("NOOBJECT"),
+            keyword("ADV"),
+            keyword("NOADV"),
+            keyword("AFP"),
+            keyword("ARCH"),
+            keyword("AWO"),
+            keyword("NOAWO"),
+            sequence(
+              keyword("BLOCK"),
+              opt(NOSKIP,
+                number("0")
+              )
+            ),
+            sequence(
+              keyword("NOBLOCK"),
+              opt(NOSKIP,
+                number("0")
+              )
+            ),
+            keyword("DATA"),
+            keyword("DS"),
+            keyword("DISPSIGN"),
+            keyword("DLL"),
+            keyword("NODLL"),
+            keyword("DYN"),
+            keyword("DYNAM"),
+            keyword("NODYN"),
+            keyword("NODYNAM"),
+            keyword("EXP"),
+            keyword("NOEXP"),
+            keyword("EXPORTALL"),
+            keyword("NOEXPORTALL"),
+            keyword("FSRT"),
+            keyword("NOFSRT"),
+            keyword("FASTSRT"),
+            keyword("NOFASTSRT"),
+            keyword("HGPR"),
+            keyword("INITIAL"),
+            keyword("NOINITIAL"),
+            keyword("INL"),
+            keyword("NOINL"),
+            keyword("INLINE"),
+            keyword("NOINLINE"),
+            keyword("LP"),
+            keyword("MAXPCF"),
+            keyword("NUMPROC"),
+            keyword("OPT"),
+            keyword("OPTIMIZE"),
+            keyword("PGMN"),
+            keyword("PGMNAME"),
+            keyword("RENT"),
+            keyword("NORENT"),
+            keyword("RMODE"),
+            keyword("SO"),
+            keyword("NOSO"),
+            keyword("STGOPT"),
+            keyword("NOSTGOPT"),
+            keyword("THREAD"),
+            keyword("NOTHREAD"),
+            keyword("TRUNC"),
+            keyword("TUNE"),
+            keyword("VLR"),
+            keyword("VS"),
+            keyword("VSAMOPENFS"),
+            keyword("ZD"),
+            keyword("ZONEDATA"),
+            keyword("ZWB"),
+            keyword("NOZWB"),
+            keyword("BUF"),
+            keyword("BUFSIZE"),
+            keyword("DTR"),
+            keyword("NODTR"),
+            keyword("DIAGTRUNC"),
+            keyword("NODIAGTRUNC"),
+            keyword("DU"),
+            keyword("DUMP"),
+            keyword("NODU"),
+            keyword("NODUMP"),
+            keyword("IC"),
+            keyword("NOIC"),
+            keyword("INITCHECK"),
+            keyword("NOINITCHECK"),
+            keyword("INVD"),
+            keyword("NOINVD"),
+            keyword("INVDATA"),
+            keyword("NOINVDATA"),
+            keyword("LSAC"),
+            keyword("NOLSAC"),
+            keyword("LSACHECK"),
+            keyword("NOLSACHECK"),
+            keyword("NC"),
+            keyword("NONC"),
+            keyword("NUMCHECK"),
+            keyword("NONUMCHECK"),
+            keyword("PC"),
+            keyword("NOPC"),
+            keyword("PARMCHECK"),
+            keyword("NOPARMCHECK"),
+            keyword("RULES"),
+            keyword("NORULES"),
+            keyword("SERV"),
+            keyword("NOSERV"),
+            keyword("SERVICE"),
+            keyword("NOSERVICE"),
+            keyword("SSR"),
+            keyword("NOSSR"),
+            keyword("SSRANGE"),
+            keyword("NOSSRANGE"),
+            keyword("TEST"),
+            keyword("NOTEST"),
+            keyword("ZC"),
+            keyword("NOZC"),
+            keyword("ZONECHECK"),
+            keyword("NOZONECHECK"),
+            keyword("EX"),
+            keyword("EXIT"),
+            keyword("NOEX"),
+            keyword("NOEXIT"),
+            keyword("OPTFILE"),
+            keyword("OUT"),
+            keyword("OUTDD"),
+            keyword("SUPP"),
+            keyword("NOSUPP"),
+            keyword("SUPPRESS"),
+            keyword("NOSUPPRESS")
+          )
+        );
+      }
+    
+      return ibm$process$optionsList$optionNameParser;
     }
     
     // ========================================================
@@ -757,6 +1163,9 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$controlParser = future;
         future.setParser(
           sequence(
+            optional(
+              ibm$sequenceNumber()
+            ),
             ibm$control$cblControl(),
             ibm$control$option(),
             star(
@@ -851,19 +1260,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("DELETE")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("DELETE"),
@@ -928,6 +1328,14 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$enterParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                not(
+                  keyword("ENTER")
+                ),
+                ibm$sequenceNumber()
+              )
+            ),
             keyword("ENTER"),
             anything(),
             optional(
@@ -962,19 +1370,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
           sequence(
             optional(
               sequence(
-                as("sequenceNumber",
-                  sequence(
-                    ranged(1, 6),
-                    tagged(NUMBER),
-                    any()
-                  )
+                not(
+                  keyword("INSERT")
                 ),
-                opt(NOSKIP,
-                  sequence(
-                    tagged(WHITESPACE),
-                    any()
-                  )
-                )
+                ibm$sequenceNumber()
               )
             ),
             keyword("INSERT"),
@@ -1000,6 +1399,14 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$readyTraceParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                not(
+                  keyword("READY")
+                ),
+                ibm$sequenceNumber()
+              )
+            ),
             keyword("READY"),
             keyword("TRACE"),
             literal(".")
@@ -1024,6 +1431,14 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         ibm$resetTraceParser = future;
         future.setParser(
           sequence(
+            optional(
+              sequence(
+                not(
+                  keyword("RESET")
+                ),
+                ibm$sequenceNumber()
+              )
+            ),
             keyword("RESET"),
             keyword("TRACE"),
             literal(".")
@@ -1032,6 +1447,39 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
       }
     
       return ibm$resetTraceParser;
+    }
+    
+    // ========================================================
+    // sequenceNumber
+    // ........................................................
+    
+    private ParserCombinator ibm$sequenceNumberParser = null;
+    
+    public final Start ibm$sequenceNumber = Start.on(getNamespace(), "sequenceNumber");
+    
+    public ParserCombinator ibm$sequenceNumber() {
+      if (ibm$sequenceNumberParser == null) {
+        FutureParser future = scoped("sequenceNumber", PUBLIC, true);
+        ibm$sequenceNumberParser = future;
+        future.setParser(
+          sequence(
+            plus(
+              sequence(
+                ranged(1, 6),
+                any()
+              )
+            ),
+            opt(NOSKIP,
+              sequence(
+                tagged(WHITESPACE),
+                any()
+              )
+            )
+          )
+        );
+      }
+    
+      return ibm$sequenceNumberParser;
     }
     
     // ========================================================
@@ -1109,10 +1557,12 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 literal("INC")
               )
             ),
-            anything(),
+            as("textName",
+              anything()
+            ),
             optional(
               as("comment",
-                star(
+                plus(
                   anything()
                 )
               )
@@ -1150,10 +1600,12 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 )
               )
             ),
-            anything(),
+            as("textName",
+              anything()
+            ),
             optional(
               as("comment",
-                star(
+                plus(
                   anything()
                 )
               )
@@ -1193,7 +1645,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                     mf$set$parameter()
                   )
                 ),
-                as("directive",
+                as("setting",
                   sequence(
                     name(),
                     optional(
@@ -1432,6 +1884,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
               )
             ),
             choice(
+              tagged(FREE),
+              ranged(8, -1)
+            ),
+            choice(
               listing$eject(),
               listing$skip(),
               listing$title()
@@ -1457,10 +1913,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         listing$ejectParser = future;
         future.setParser(
           sequence(
-            sequence(
-              ranged(8, -1),
-              keyword("EJECT")
-            ),
+            keyword("EJECT"),
             optional(
               literal(".")
             )
@@ -1486,15 +1939,12 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         future.setParser(
           sequence(
             sequence(
-              ranged(8, -1),
-              sequence(
-                keyword("SKIP"),
-                opt(NOSKIP,
-                  choice(
-                    number("1"),
-                    number("2"),
-                    number("3")
-                  )
+              keyword("SKIP"),
+              opt(NOSKIP,
+                choice(
+                  number("1"),
+                  number("2"),
+                  number("3")
                 )
               )
             ),
@@ -1522,10 +1972,7 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
         listing$titleParser = future;
         future.setParser(
           sequence(
-            sequence(
-              ranged(8, -1),
-              keyword("TITLE")
-            ),
+            keyword("TITLE"),
             anything(),
             optional(
               literal(".")
@@ -1535,31 +1982,6 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
       }
     
       return listing$titleParser;
-    }
-    
-    // ========================================================
-    // inlineComment
-    // ........................................................
-    
-    private ParserCombinator inlineCommentParser = null;
-    
-    public final Start inlineComment = Start.on(getNamespace(), "inlineComment");
-    
-    public ParserCombinator inlineComment() {
-      if (inlineCommentParser == null) {
-        FutureParser future = scoped("inlineComment", PUBLIC, true);
-        inlineCommentParser = future;
-        future.setParser(
-          sequence(
-            inlineCommentIndicator(),
-            star(
-              any()
-            )
-          )
-        );
-      }
-    
-      return inlineCommentParser;
     }
     
     // ========================================================
@@ -1646,7 +2068,10 @@ public class DirectivesGrammar extends DirectivesBaseGrammar {
                 star(
                   sequence(
                     not(
-                      tagged(WHITESPACE)
+                      choice(
+                        tagged(WHITESPACE),
+                        tagged(END_OF_LINE)
+                      )
                     ),
                     any()
                   )

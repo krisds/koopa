@@ -147,6 +147,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.core.trees.test.KoopaTreeBuilderTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 			<test name="koopa.core.trees.test.ProgramTextTest">
 				<fork>
 					<jvmarg value="-ea" />
@@ -439,6 +444,11 @@
 					<jvmarg value="-ea" />
 				</fork>
 			</test>
+			<test name="koopa.cobol.sources.test.CompilerDirectivesTest">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
 			<test name="koopa.cobol.sources.test.CobolSourcesValidationTest">
 				<fork>
 					<jvmarg value="-ea" />
@@ -450,6 +460,11 @@
 				</fork>
 			</test>
 			<test name="koopa.cobol.grammar.test.CobolGrammarTests">
+				<fork>
+					<jvmarg value="-ea" />
+				</fork>
+			</test>
+			<test name="koopa.cobol.grammar.test.CompilerDirectiveRegressionTest">
 				<fork>
 					<jvmarg value="-ea" />
 				</fork>

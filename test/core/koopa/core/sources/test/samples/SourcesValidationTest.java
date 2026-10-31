@@ -124,6 +124,11 @@ public abstract class SourcesValidationTest
 			else
 				assertForbiddenCategory(token, category, tags);
 
+		} else if (NODE_CATEGORIES.containsKey(category)) {
+			// A token is no node at all, which is fine... unless one was required.
+			assertFalse(required, "Category " + category + ": requires "
+					+ NODE_CATEGORIES.get(category) + ". Got: " + token);
+
 		} else {
 			System.out.println(
 					"Warning! Unknown category '" + category + "' on " + token);
@@ -158,6 +163,11 @@ public abstract class SourcesValidationTest
 			if (type.namespace != null)
 				assertTrue(
 						type.namespace.equals(tree.getNamespace()) == required, msg);
+
+		} else if (TOKEN_CATEGORIES.containsKey(category)) {
+			// A token category on a tree applies to each of its tokens.
+			for (Token token : tree.allTokens())
+				validate(token, category, required);
 
 		} else {
 			System.out.println(

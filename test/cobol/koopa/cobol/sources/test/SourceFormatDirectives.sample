@@ -10,6 +10,7 @@ FIXED                                                                        =
 FIXED                          FREE
 DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
 !TEXT                          EOLN
+directive                      -
 
 
 >> source format is fixed
@@ -17,20 +18,23 @@ DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
 FREE                     FIXED
 DIRECTIVE/SOURCE_FORMAT  !DIRECTIVE
 !TEXT                    EOLN
+directive                -
 
 
         >> source format is free    *> witty remark
-<------------------------------------------------->^
-FIXED                                              FREE
-DIRECTIVE/SOURCE_FORMAT                            !DIRECTIVE
-!TEXT                                              EOLN
+<------------------------------><----------------->^
+FIXED                           FREE               =
+DIRECTIVE/SOURCE_FORMAT         !DIRECTIVE         =
+!TEXT                           =                  EOLN
+directive                       -                  -
 
 
 >> source format is fixed    *> witty remark
-<------------------------------------------>^
-FREE                                        FIXED
-DIRECTIVE/SOURCE_FORMAT                     !DIRECTIVE
-!TEXT                                       EOLN
+<-----------------------><----------------->^
+FREE                     FIXED              =
+DIRECTIVE/SOURCE_FORMAT  !DIRECTIVE         =
+!TEXT                    =                  EOLN
+directive                -                  -
 
 
        >> source free
@@ -38,6 +42,7 @@ DIRECTIVE/SOURCE_FORMAT                     !DIRECTIVE
 FIXED                FREE
 DIR/SOURCE_FORMAT    !DIRECTIVE
 !TEXT                EOLN
+directive            -
 
 
 >> source fixed
@@ -45,6 +50,7 @@ DIR/SOURCE_FORMAT    !DIRECTIVE
 FREE           FIXED
 DIR/FORMAT     !DIRECTIVE
 !TEXT          EOLN
+directive      -
 
 
        >> SOURCE FORMAT IS FREE
@@ -52,6 +58,7 @@ DIR/FORMAT     !DIRECTIVE
 FIXED                          FREE
 DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
 !TEXT                          EOLN
+directive                      -
 
 
 >> SOURCE FORMAT FIXED
@@ -59,3 +66,4 @@ DIRECTIVE/SOURCE_FORMAT        !DIRECTIVE
 FREE                  FIXED
 DIR/SOURCE_FORMAT     !DIRECTIVE
 !TEXT                 EOLN
+directive             -
